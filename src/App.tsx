@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import Header from './components/Header'
 import Hero from './components/Hero/Hero'
 import Features from './components/Features/Features'
@@ -24,6 +25,7 @@ function App() {
           <ContactSection />
         </motion.main>
         <BotWidget />
+        <SpeedInsights />
       </div>
     </ErrorBoundary>
   )

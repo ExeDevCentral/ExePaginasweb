@@ -136,7 +136,8 @@ const Hero = () => {
 
         {/* CTA Buttons */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+          className="flex flex-col sm:flex-row gap-10 justify-center items-center"
+
           variants={itemVariants}
         >
           <motion.a

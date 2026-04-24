@@ -47,13 +47,22 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <motion.div
-            className="flex items-center space-x-2"
+          <motion.a
+            href="#home"
+            className="flex items-center space-x-3 cursor-pointer"
             whileHover={{ scale: 1.05 }}
+            onClick={(e) => {
+              const el = document.getElementById('home');
+              if (el) {
+                e.preventDefault();
+                el.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
           >
-            <div className="w-8 h-8 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-lg"></div>
+            <img src="/logo.png" alt="ExepaginasWeb Logo" loading="lazy" className="w-10 h-10 rounded-xl shadow-lg shadow-accent-cyan/20 border border-accent-cyan/30 object-cover" />
+
             <span className="bg-gradient-to-r from-accent-cyan to-accent-magenta bg-clip-text text-xl font-bold tracking-tight text-transparent font-montserrat">ExepaginasWeb</span>
-          </motion.div>
+          </motion.a>
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex space-x-8">

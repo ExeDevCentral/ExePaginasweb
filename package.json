@@ -22,6 +22,7 @@
     "postcss": "^8.4.32",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet-async": "^3.0.0",
     "react-markdown": "^9.0.1",
     "react-syntax-highlighter": "^15.5.0",
     "resend": "^6.12.2",
@@ -34,6 +35,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "typescript": "^6.0.3",
-    "vercel": "^52.0.0"
+    "vercel": "^52.0.0",
+    "vite-plugin-sitemap": "^0.8.2"
   }
 }

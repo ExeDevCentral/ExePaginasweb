@@ -15,8 +15,8 @@
         "commander": "^11.1.0"
     },
     "devDependencies": {
-        "typescript": "^5.3.3",
-        "@types/node": "^20.10.5",
-        "ts-node": "^10.9.2"
+        "@types/node": "^20.19.39",
+        "ts-node": "^10.9.2",
+        "typescript": "^6.0.3"
     }
 }

@@ -17,6 +17,12 @@ const Hero = () => {
         setCurrentIndex(prev => prev + 1)
       }, 100)
       return () => clearTimeout(timeout)
+    } else {
+      const repeatTimeout = setTimeout(() => {
+        setDisplayText('')
+        setCurrentIndex(0)
+      }, 120000) // 2 minutos
+      return () => clearTimeout(repeatTimeout)
     }
   }, [currentIndex, typewriterText])
 
@@ -33,14 +39,7 @@ const Hero = () => {
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: [0.4, 0, 0.2, 1]
-      }
-    }
+    visible: { y: 0, opacity: 1 }
   }
 
   return (
@@ -109,6 +108,7 @@ const Hero = () => {
         <motion.h1
           className="mb-6 font-montserrat text-5xl font-black leading-[0.95] tracking-tight sm:text-7xl lg:text-8xl"
           variants={itemVariants}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <span className="text-gradient-animated">Premium</span>
           <br />
@@ -119,6 +119,7 @@ const Hero = () => {
         <motion.div
           className="text-xl sm:text-2xl lg:text-3xl text-primary-secondary mb-8 font-inter min-h-[3rem] flex items-center justify-center"
           variants={itemVariants}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <span className="border-r-2 border-accent-cyan pr-1 animate-pulse">
             {displayText}
@@ -129,6 +130,7 @@ const Hero = () => {
         <motion.p
           className="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-primary-secondary sm:text-xl"
           variants={itemVariants}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           Experiencia web con impacto: animaciones, video y estructura clara para que tu
           proposito se entienda al instante.
@@ -139,6 +141,7 @@ const Hero = () => {
           className="flex flex-col sm:flex-row gap-10 justify-center items-center"
 
           variants={itemVariants}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <motion.a
             className="transform rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta px-8 py-4 text-lg font-semibold text-primary-bg shadow-lg shadow-accent-cyan/30 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-accent-cyan/40"

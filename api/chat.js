@@ -36,11 +36,11 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests, please try again later.' })
   }
 
-  const apiKey = process.env.GROQ_API_KEY
-  const model = process.env.GROQ_MODEL || 'llama-3.1-8b-instant'
+  const apiKey = process.env.GEMINI_API_KEY
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash'
 
   if (!apiKey) {
-    return res.status(500).json({ error: 'Missing GROQ_API_KEY on server.' })
+    return res.status(500).json({ error: 'Missing GEMINI_API_KEY on server.' })
   }
 
   const message = typeof req.body?.message === 'string' ? req.body.message.trim() : ''
@@ -53,34 +53,40 @@ export default async function handler(req, res) {
   }
 
   try {
-    const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
+    const geminiResponse = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model,
-        temperature: 0.6,
-        max_tokens: 400,
-        messages: [
+        systemInstruction: {
+          parts: [
+            {
+              text: 'Eres un asistente para una landing de servicios web. Responde en espanol claro, breve y orientado a conversion.'
+            }
+          ]
+        },
+        contents: [
           {
-            role: 'system',
-            content:
-              'Eres un asistente para una landing de servicios web. Responde en espanol claro, breve y orientado a conversion.',
-          },
-          { role: 'user', content: message },
+            role: 'user',
+            parts: [{ text: message }]
+          }
         ],
+        generationConfig: {
+          temperature: 0.6,
+          maxOutputTokens: 400
+        }
       }),
     })
 
-    if (!groqResponse.ok) {
-      const errorText = await groqResponse.text()
-      return res.status(502).json({ error: `Groq error: ${errorText}` })
+    if (!geminiResponse.ok) {
+      const errorText = await geminiResponse.text()
+      return res.status(502).json({ error: `Gemini error: ${errorText}` })
     }
 
-    const data = await groqResponse.json()
-    const reply = data?.choices?.[0]?.message?.content?.trim()
+    const data = await geminiResponse.json()
+    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
 
     if (!reply) {
       return res.status(502).json({ error: 'Model returned an empty response.' })

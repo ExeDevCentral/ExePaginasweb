@@ -45,14 +45,7 @@ const Features = () => {
 
   const cardVariants = {
     hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: [0.4, 0, 0.2, 1],
-      },
-    },
+    visible: { y: 0, opacity: 1 }
   }
 
   return (
@@ -129,7 +122,7 @@ const Features = () => {
                 className="group relative"
                 variants={cardVariants}
                 whileHover={{ y: -10 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
               >
                 <div className="h-full p-8 bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl hover:border-accent-cyan/40 transition-all duration-300">
                   {/* Icon */}

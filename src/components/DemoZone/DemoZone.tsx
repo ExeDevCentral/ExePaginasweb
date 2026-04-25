@@ -169,14 +169,7 @@ const DemoZone = () => {
 
   const itemVariants = {
     hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: [0.4, 0, 0.2, 1]
-      }
-    }
+    visible: { y: 0, opacity: 1 }
   }
 
   return (
@@ -235,6 +228,7 @@ const DemoZone = () => {
           <motion.div
             className="space-y-6"
             variants={itemVariants}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <label
               className="relative border-2 border-dashed border-accent-cyan/50 rounded-2xl p-8 text-center hover:border-accent-cyan transition-colors duration-300 cursor-pointer bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm"
@@ -284,6 +278,7 @@ const DemoZone = () => {
               <motion.div
                 className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6"
                 variants={itemVariants}
+                transition={{ duration: 0.8, ease: "easeOut" }}
               >
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <Settings className="w-5 h-5 text-accent-cyan" />
@@ -312,7 +307,7 @@ const DemoZone = () => {
             )}
 
             {/* Generate Button */}
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} transition={{ duration: 0.8, ease: "easeOut" }}>
               <motion.button
                 className="w-full px-8 py-4 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-primary-bg font-semibold text-lg hover:shadow-lg hover:shadow-accent-cyan/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={generateCode}
@@ -345,6 +340,7 @@ const DemoZone = () => {
           <motion.div
             className="space-y-6"
             variants={itemVariants}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6">
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -418,6 +414,7 @@ const DemoZone = () => {
               <motion.div
                 className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6 flex flex-col items-center justify-center text-center opacity-70"
                 variants={itemVariants}
+                transition={{ duration: 0.8, ease: "easeOut" }}
               >
                 <p className="text-primary-secondary mb-2">Presiona Generate Code para usar la IA</p>
               </motion.div>

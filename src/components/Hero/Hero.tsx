@@ -17,6 +17,12 @@ const Hero = () => {
         setCurrentIndex(prev => prev + 1)
       }, 100)
       return () => clearTimeout(timeout)
+    } else {
+      const repeatTimeout = setTimeout(() => {
+        setDisplayText('')
+        setCurrentIndex(0)
+      }, 120000) // 2 minutos
+      return () => clearTimeout(repeatTimeout)
     }
   }, [currentIndex, typewriterText])
 

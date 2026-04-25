@@ -117,7 +117,7 @@ const BotWidget = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-24 right-6 z-40 w-96 h-[500px] bg-gradient-to-br from-primary-bg/95 to-primary-bg/90 backdrop-blur-md border border-accent-cyan/20 rounded-2xl shadow-2xl overflow-hidden"
+            className="fixed bottom-24 right-6 z-40 w-[450px] h-[600px] flex flex-col bg-gradient-to-br from-primary-bg/95 to-primary-bg/90 backdrop-blur-md border border-accent-cyan/20 rounded-2xl shadow-2xl overflow-hidden"
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -141,7 +141,7 @@ const BotWidget = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 p-4 space-y-4 overflow-y-auto max-h-[350px]">
+            <div className="flex-1 p-5 space-y-4 overflow-y-auto">
               <AnimatePresence>
                 {messages.map((message) => (
                   <motion.div
@@ -158,13 +158,13 @@ const BotWidget = () => {
                     )}
 
                     <div
-                      className={`max-w-[80%] p-3 rounded-2xl ${
+                      className={`max-w-[85%] p-4 rounded-2xl ${
                         message.type === 'user'
                           ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-primary-bg'
                           : 'bg-primary-bg/50 border border-accent-cyan/20 text-primary-text'
                       }`}
                     >
-                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      <p className="text-base whitespace-pre-wrap">{message.content}</p>
                       <p className="text-xs opacity-70 mt-1">
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
@@ -212,8 +212,8 @@ const BotWidget = () => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Type a command or ask me anything..."
-                  className="flex-1 px-4 py-2 bg-primary-bg/50 border border-accent-cyan/20 rounded-full text-primary-text placeholder-primary-secondary focus:outline-none focus:border-accent-cyan transition-colors"
+                  placeholder="Escribe tu consulta aquí..."
+                  className="flex-1 px-5 py-3 text-base bg-primary-bg/50 border border-accent-cyan/20 rounded-full text-primary-text placeholder-primary-secondary focus:outline-none focus:border-accent-cyan transition-colors"
                 />
                 <motion.button
                   onClick={handleSendMessage}

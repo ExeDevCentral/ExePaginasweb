@@ -1,13 +1,14 @@
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
+import { lazy, Suspense } from 'react'
 import Header from './components/Header'
 import Hero from './components/Hero/Hero'
 import Features from './components/Features/Features'
-import DemoZone from './components/DemoZone/DemoZone'
 import BotWidget from './components/Bot/BotWidget'
-import ContactSection from './components/ContactSection'
-
 import ErrorBoundary from './components/ErrorBoundary'
+
+const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
+const ContactSection = lazy(() => import('./components/ContactSection'))
 
 function App() {
   return (
@@ -41,8 +42,22 @@ function App() {
         >
           <Hero />
           <Features />
-          <DemoZone />
-          <ContactSection />
+          <Suspense fallback={
+            <div className="py-20 text-center text-primary-secondary">
+              <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+              Cargando demo...
+            </div>
+          }>
+            <DemoZone />
+          </Suspense>
+          <Suspense fallback={
+            <div className="py-20 text-center text-primary-secondary">
+              <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+              Cargando contacto...
+            </div>
+          }>
+            <ContactSection />
+          </Suspense>
         </motion.main>
         <BotWidget />
       </div>

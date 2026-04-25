@@ -376,48 +376,50 @@ const DemoZone = () => {
             </div>
 
             {/* Code Output Placeholder */}
-            {(uploadedFile && generatedHtml) ? (
-              <motion.div
-                className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-magenta/20 rounded-2xl p-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Download className="w-5 h-5 text-accent-magenta" />
-                  Generated Code
-                </h3>
-
-                <div className="bg-primary-bg/50 rounded-lg p-4 font-mono text-sm text-primary-secondary overflow-x-auto max-h-[300px]">
-                  <pre className="whitespace-pre-wrap text-left">
-{generatedHtml}
-                  </pre>
-                </div>
-
-                <motion.button
-                  onClick={() => {
-                    const blob = new Blob([generatedHtml], { type: 'text/html' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'generated-design.html';
-                    a.click();
-                  }}
-                  className="mt-4 w-full px-4 py-2 bg-accent-magenta/20 border border-accent-magenta/40 rounded-lg text-accent-magenta hover:bg-accent-magenta/30 transition-colors duration-300"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+            {uploadedFile && (
+              generatedHtml ? (
+                <motion.div
+                  className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-magenta/20 rounded-2xl p-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
                 >
-                  Download HTML
-                </motion.button>
-              </motion.div>
-            ) : uploadedFile && !generatedHtml && !isProcessing && (
-              <motion.div
-                className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6 flex flex-col items-center justify-center text-center opacity-70"
-                variants={itemVariants}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              >
-                <p className="text-primary-secondary mb-2">Presiona Generate Code para usar la IA</p>
-              </motion.div>
+                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <Download className="w-5 h-5 text-accent-magenta" />
+                    Generated Code
+                  </h3>
+
+                  <div className="bg-primary-bg/50 rounded-lg p-4 font-mono text-sm text-primary-secondary overflow-x-auto max-h-[300px]">
+                    <pre className="whitespace-pre-wrap text-left">
+{generatedHtml}
+                    </pre>
+                  </div>
+
+                  <motion.button
+                    onClick={() => {
+                      const blob = new Blob([generatedHtml], { type: 'text/html' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = 'generated-design.html';
+                      a.click();
+                    }}
+                    className="mt-4 w-full px-4 py-2 bg-accent-magenta/20 border border-accent-magenta/40 rounded-lg text-accent-magenta hover:bg-accent-magenta/30 transition-colors duration-300"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Download HTML
+                  </motion.button>
+                </motion.div>
+              ) : !isProcessing && (
+                <motion.div
+                  className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6 flex flex-col items-center justify-center text-center opacity-70"
+                  variants={itemVariants}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                >
+                  <p className="text-primary-secondary mb-2">Presiona Generate Code para usar la IA</p>
+                </motion.div>
+              )
             )}
           </motion.div>
         </motion.div>

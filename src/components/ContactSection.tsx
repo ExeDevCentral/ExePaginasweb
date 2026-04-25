@@ -121,9 +121,9 @@ const ContactSection = () => {
                       onChange={(e) => setName(e.target.value)}
                       required
                       placeholder=" "
-                      className="peer w-full rounded-xl border border-white/10 bg-white/4 px-4 pb-3 pt-6 text-sm text-white outline-none transition-all focus:border-accent-cyan/60 focus:bg-white/6"
+                      className="peer w-full rounded-xl border border-white/10 bg-slate-100/95 px-4 pb-3 pt-6 text-sm text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-accent-cyan/60 focus:bg-slate-100"
                     />
-                    <label htmlFor="contact-name" className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70">
+                    <label htmlFor="contact-name" className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70">
                       Nombre
                     </label>
                   </div>
@@ -136,9 +136,9 @@ const ContactSection = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder=" "
-                      className="peer w-full rounded-xl border border-white/10 bg-white/4 px-4 pb-3 pt-6 text-sm text-white outline-none transition-all focus:border-accent-cyan/60 focus:bg-white/6"
+                      className="peer w-full rounded-xl border border-white/10 bg-slate-100/95 px-4 pb-3 pt-6 text-sm text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-accent-cyan/60 focus:bg-slate-100"
                     />
-                    <label htmlFor="contact-email" className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70">
+                    <label htmlFor="contact-email" className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70">
                       Correo electrónico
                     </label>
                   </div>
@@ -152,9 +152,9 @@ const ContactSection = () => {
                     required
                     placeholder=" "
                     rows={5}
-                    className="peer w-full rounded-xl border border-white/10 bg-white/4 px-4 pb-3 pt-6 text-sm text-white outline-none transition-all resize-none focus:border-accent-cyan/60 focus:bg-white/6"
+                    className="peer w-full rounded-xl border border-white/10 bg-slate-100/95 px-4 pb-3 pt-6 text-sm text-slate-900 outline-none transition-all resize-none placeholder:text-slate-400 focus:border-accent-cyan/60 focus:bg-slate-100"
                   />
-                  <label htmlFor="contact-message" className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70">
+                  <label htmlFor="contact-message" className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70">
                     ¿Qué tipo de web necesitas?
                   </label>
                 </div>

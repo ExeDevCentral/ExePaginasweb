@@ -41,6 +41,8 @@ const BotWidget = () => {
 
   const requestBotResponse = async (userMessage: string) => {
     setIsTyping(true)
+    let errorMessage = ''
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -48,11 +50,21 @@ const BotWidget = () => {
         body: JSON.stringify({ message: userMessage }),
       })
 
+      const data = (await response.json()) as { reply?: string; error?: string }
+
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`)
+        if (response.status === 429) {
+          errorMessage = '🚦 Has enviado demasiados mensajes. Espera un minuto y vuelve a intentar.'
+        } else if (response.status === 500 && data.error?.includes('GEMINI_API_KEY')) {
+          errorMessage = '⚙️ El servidor no tiene configurada la API key de Gemini. Contacta al administrador.'
+        } else if (response.status === 502) {
+          errorMessage = `🔌 Error con el modelo de IA: ${data.error || 'Servicio no disponible'}`
+        } else {
+          errorMessage = `❌ Error ${response.status}: ${data.error || 'Error desconocido del servidor'}`
+        }
+        throw new Error(errorMessage)
       }
 
-      const data = (await response.json()) as { reply?: string }
       const botMessage: Message = {
         id: Date.now().toString(),
         type: 'bot',
@@ -60,11 +72,11 @@ const BotWidget = () => {
         timestamp: new Date(),
       }
       setMessages(prev => [...prev, botMessage])
-    } catch {
+    } catch (err: any) {
       const fallbackMessage: Message = {
         id: Date.now().toString(),
         type: 'bot',
-        content: 'No pude conectar con el asistente ahora mismo. Intenta nuevamente en unos segundos.',
+        content: errorMessage || err.message || 'No pude conectar con el asistente. Verifica tu conexión e intenta nuevamente.',
         timestamp: new Date(),
       }
       setMessages(prev => [...prev, fallbackMessage])

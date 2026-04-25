@@ -1,0 +1,1 @@
+{"version":3,"file":"add-component.d.ts","sourceRoot":"","sources":["../../src/commands/add-component.ts"],"names":[],"mappings":"AAGA,UAAU,mBAAmB;IAC3B,IAAI,EAAE,MAAM,CAAA;IACZ,UAAU,CAAC,EAAE,OAAO,CAAA;IACpB,SAAS,CAAC,EAAE,OAAO,CAAA;CACpB;AAED,wBAAsB,YAAY,CAAC,IAAI,EAAE,MAAM,EAAE,OAAO,EAAE,mBAAmB,iBAuN5E"}

@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-inter antialiased text-primary-secondary;
+  }
+
+  h1, h2, h3, h4 {
+    @apply text-primary-text;
+  }
+
+  ::selection {
+    @apply bg-accent-cyan/30 text-primary-text;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-primary-bg font-semibold hover:shadow-lg hover:shadow-accent-cyan/25 transition-all duration-300;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 border-2 border-accent-cyan text-accent-cyan rounded-full font-semibold hover:bg-accent-cyan hover:text-primary-bg transition-all duration-300;
+  }
+
+  .card {
+    @apply bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6 hover:border-accent-cyan/40 transition-all duration-300;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-accent-cyan via-accent-magenta to-accent-yellow bg-clip-text text-transparent;
+  }
+
+  .glass {
+    @apply bg-primary-bg/80 backdrop-blur-md border border-accent-cyan/20;
+  }
+
+  .text-gradient-animated {
+    background: linear-gradient(
+      90deg,
+      #00ffff 0%,
+      #ff00ff 40%,
+      #ffff00 80%,
+      #00ffff 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradientShift 8s ease infinite;
+  }
+
+  .hero-grid {
+    background-image: linear-gradient(rgba(0, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000, transparent 75%);
+  }
+
+  .nav-link-active {
+    @apply text-accent-cyan;
+  }
+}
+
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}

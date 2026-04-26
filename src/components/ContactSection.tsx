@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { FormEvent, useState } from 'react'
 import { Mail, MessageCircle, Globe, ArrowRight, CheckCircle } from 'lucide-react'
+import emailjs from '@emailjs/browser'
 
 const ContactSection = () => {
   const [name, setName] = useState('')
@@ -20,30 +21,39 @@ const ContactSection = () => {
     setStatus('sending')
     setFeedback('')
 
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
+    if (!serviceId || !templateId || !publicKey) {
+      setStatus('error')
+      setFeedback('Error de configuración: faltan credenciales de EmailJS.')
+      return
+    }
+
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message }),
-      })
+      const result = await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          from_name: name,
+          from_email: email,
+          message: message,
+        },
+        publicKey
+      )
 
-      const data = (await response.json()) as { ok?: boolean; error?: string; savedLocally?: boolean; emailId?: string }
-      if (!response.ok || !data.ok) {
-        throw new Error(data.error ?? 'No se pudo enviar el mensaje.')
-      }
-
-      setStatus('success')
-      if (data.savedLocally) {
-        setFeedback('Mensaje recibido y guardado. Te contactaremos pronto por email o WhatsApp.')
-      } else if (data.emailId) {
-        setFeedback('Mensaje enviado correctamente por email. Te respondemos lo antes posible.')
+      if (result.status === 200) {
+        setStatus('success')
+        setFeedback('Mensaje enviado correctamente. Te respondemos lo antes posible.')
+        setName('')
+        setEmail('')
+        setMessage('')
       } else {
-        setFeedback('Mensaje enviado. Te respondemos lo antes posible.')
+        throw new Error('Respuesta inesperada de EmailJS')
       }
-      setName('')
-      setEmail('')
-      setMessage('')
-    } catch {
+    } catch (err) {
+      console.error('[EmailJS] Error:', err)
       setStatus('error')
       setFeedback('No pudimos enviar tu mensaje. Intenta de nuevo en unos minutos.')
     }

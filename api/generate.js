@@ -51,12 +51,12 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Ya has utilizado tu prueba gratuita de generacion web con IA.' })
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyCjjsaKjRzgMTHvc-Ll_op2St8-OKJYqhk'
-  const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash'
+  const apiKey = process.env.GROQ_API_KEY
+  const model = process.env.GROQ_VISION_MODEL || 'llama-3.2-11b-vision-preview'
 
   if (!apiKey) {
     requestLog.delete(ip) // allow retry
-    return res.status(500).json({ error: 'Missing GEMINI_API_KEY on server.' })
+    return res.status(500).json({ error: 'Missing GROQ_API_KEY environment variable. Check your .env file.' })
   }
 
   const { imageBase64, mimeType } = req.body
@@ -66,56 +66,53 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Image is required.' })
   }
 
-  const modelsToTry = [model, 'gemini-2.0-flash', 'gemini-1.5-flash']
+  const modelsToTry = [model, 'meta-llama/llama-4-scout-17b-16e-instruct']
   let lastError = null
 
   for (const tryModel of modelsToTry) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${tryModel}:generateContent?key=${apiKey}`
-      const geminiResponse = await fetch(url, {
+      const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          systemInstruction: {
-            parts: [
-              {
-                text: 'Eres un experto desarrollador frontend especializado en Tailwind CSS. Tu objetivo es convertir el boceto, dibujo o diseño subido en una pagina web funcional. Debes generar un UNICO archivo HTML que contenga todo: HTML5 semantico, clases de Tailwind CSS integradas via CDN, y cualquier CSS personalizado necesario dentro de etiquetas <style>. El diseno debe ser hermoso, moderno, responsive y coincidir lo mas posible con la imagen proporcionada. MUY IMPORTANTE: Responde UNICA Y EXCLUSIVAMENTE con el codigo HTML crudo. NO incluyas markdown, no incluyas bloques de codigo como ```html, simplemente empieza con <!DOCTYPE html> y termina con </html>. No des explicaciones.'
-              }
-            ]
-          },
-          contents: [
+          model: tryModel,
+          messages: [
+            {
+              role: 'system',
+              content: 'Eres un experto desarrollador frontend especializado en Tailwind CSS. Tu objetivo es convertir el boceto, dibujo o diseño subido en una pagina web funcional. Debes generar un UNICO archivo HTML que contenga todo: HTML5 semantico, clases de Tailwind CSS integradas via CDN, y cualquier CSS personalizado necesario dentro de etiquetas <style>. El diseno debe ser hermoso, moderno, responsive y coincidir lo mas posible con la imagen proporcionada. MUY IMPORTANTE: Responde UNICA Y EXCLUSIVAMENTE con el codigo HTML crudo. NO incluyas markdown, no incluyas bloques de codigo como ```html, simplemente empieza con <!DOCTYPE html> y termina con </html>. No des explicaciones.'
+            },
             {
               role: 'user',
-              parts: [
+              content: [
                 {
+                  type: 'text',
                   text: 'Genera el codigo HTML + Tailwind para este diseno. Asegurate de que funcione renderizandolo directamente en un iframe.'
                 },
                 {
-                  inlineData: {
-                    mimeType: mimeType,
-                    data: imageBase64
+                  type: 'image_url',
+                  image_url: {
+                    url: `data:${mimeType};base64,${imageBase64}`
                   }
                 }
               ]
             }
           ],
-          generationConfig: {
-            temperature: 0.2,
-            maxOutputTokens: 8192
-          }
+          temperature: 0.2,
+          max_tokens: 4096
         }),
       })
 
-      if (!geminiResponse.ok) {
-        const errorText = await geminiResponse.text()
-        lastError = `Gemini error (${tryModel}): ${errorText}`
+      if (!groqResponse.ok) {
+        const errorText = await groqResponse.text()
+        lastError = `Groq error (${tryModel}): ${errorText}`
         continue
       }
 
-      const data = await geminiResponse.json()
-      let reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || ''
+      const data = await groqResponse.json()
+      let reply = data?.choices?.[0]?.message?.content?.trim() || ''
 
       // Clean markdown if AI still includes it despite prompt
       if (reply.startsWith('```html')) {
@@ -142,3 +139,4 @@ export default async function handler(req, res) {
   requestLog.delete(ip)
   return res.status(500).json({ error: lastError || 'All models failed.' })
 }
+

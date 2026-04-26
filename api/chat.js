@@ -48,11 +48,11 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests, please try again later.' })
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyCjjsaKjRzgMTHvc-Ll_op2St8-OKJYqhk'
-  const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash'
+  const apiKey = process.env.GROQ_API_KEY
+  const model = process.env.GROQ_MODEL || 'llama-3.1-70b-versatile'
 
   if (!apiKey) {
-    return res.status(500).json({ error: 'Missing GEMINI_API_KEY on server.' })
+    return res.status(500).json({ error: 'Missing GROQ_API_KEY environment variable. Check your .env file.' })
   }
 
   const message = typeof req.body?.message === 'string' ? req.body.message.trim() : ''
@@ -64,46 +64,42 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message is too long.' })
   }
 
-  const modelsToTry = [model, 'gemini-2.0-flash', 'gemini-1.5-flash']
+  const modelsToTry = [model, 'llama-3.1-70b-versatile', 'llama-3.1-8b-instant', 'mixtral-8x7b-32768']
   let lastError = null
 
   for (const tryModel of modelsToTry) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${tryModel}:generateContent?key=${apiKey}`
-      const geminiResponse = await fetch(url, {
+      const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          systemInstruction: {
-            parts: [
-              {
-                text: 'Eres un asistente para una landing de servicios web. Responde en espanol claro, breve y orientado a conversion.'
-              }
-            ]
-          },
-          contents: [
+          model: tryModel,
+          messages: [
+            {
+              role: 'system',
+              content: 'Eres un asistente para una landing de servicios web. Responde en español claro, breve y orientado a conversión.'
+            },
             {
               role: 'user',
-              parts: [{ text: message }]
+              content: message
             }
           ],
-          generationConfig: {
-            temperature: 0.6,
-            maxOutputTokens: 400
-          }
+          temperature: 0.6,
+          max_tokens: 400
         }),
       })
 
-      if (!geminiResponse.ok) {
-        const errorText = await geminiResponse.text()
-        lastError = `Gemini error (${tryModel}): ${errorText}`
+      if (!groqResponse.ok) {
+        const errorText = await groqResponse.text()
+        lastError = `Groq error (${tryModel}): ${errorText}`
         continue
       }
 
-      const data = await geminiResponse.json()
-      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+      const data = await groqResponse.json()
+      const reply = data?.choices?.[0]?.message?.content?.trim()
 
       if (!reply) {
         lastError = `Model ${tryModel} returned an empty response.`
@@ -118,3 +114,4 @@ export default async function handler(req, res) {
 
   return res.status(502).json({ error: lastError || 'All models failed.' })
 }
+

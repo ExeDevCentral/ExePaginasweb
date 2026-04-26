@@ -18,6 +18,15 @@
 - [x] Simplificar api/contact.js (sin envío de email)
 - [x] Verificar que no queden referencias a Resend
 
+## Fase 3.6: Variables de entorno y seguridad
+- [x] Crear .env.example con todas las variables documentadas
+- [x] Crear .env (ignorado por git)
+- [x] Quitar API key hardcodeada de api/chat.js
+- [x] Quitar API key hardcodeada de api/generate.js
+- [x] Implementar envío real de emails con Resend en api/contact.js
+- [x] Añadir dotenv para cargar variables en api-dev-server.js
+- [x] Añadir resend y dotenv a package.json
+
 ## Fase 4: Corregir errores JSX
 - [x] DemoZone.tsx - Corregir ternarios anidados
 

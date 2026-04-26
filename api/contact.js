@@ -1,9 +1,34 @@
 import { Resend } from 'resend'
+import fs from 'fs'
+import path from 'path'
+
+const MESSAGES_FILE = path.join(process.cwd(), 'messages-local.json')
 
 function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+}
+
+function saveMessageLocally(contactData) {
+  try {
+    let messages = []
+    if (fs.existsSync(MESSAGES_FILE)) {
+      const content = fs.readFileSync(MESSAGES_FILE, 'utf-8')
+      messages = JSON.parse(content)
+    }
+    messages.push({
+      ...contactData,
+      receivedAt: new Date().toISOString(),
+      source: 'contact_form'
+    })
+    fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages, null, 2))
+    console.log(`[contact] Mensaje guardado localmente en ${MESSAGES_FILE}`)
+    return true
+  } catch (err) {
+    console.error('[contact] Error guardando mensaje localmente:', err)
+    return false
+  }
 }
 
 export default async function handler(req, res) {
@@ -17,7 +42,17 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { name, email, message } = req.body
+  if (!req.body) {
+    return res.status(400).json({ error: 'No se recibieron datos en el cuerpo de la petición.' })
+  }
+
+  // Asegurar que el body esté parseado correctamente
+  let body = req.body || {}
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body) } catch (e) { body = {} }
+  }
+
+  const { name, email, message } = body
 
   // Validación de campos
   if (!name || !email || !message) {
@@ -39,9 +74,17 @@ export default async function handler(req, res) {
   const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
   const toEmail = process.env.RESEND_TO_EMAIL || 'Exemetal@hotmail.com'
 
-  // Si no hay API key de Resend, devolvemos un error claro
+  // Si no hay API key de Resend, guardamos localmente como fallback
   if (!resendApiKey) {
-    console.error('[contact] Missing RESEND_API_KEY environment variable')
+    console.warn('[contact] Sin RESEND_API_KEY, guardando mensaje localmente')
+    const saved = saveMessageLocally({ name, email, message })
+    if (saved) {
+      return res.status(200).json({
+        ok: true,
+        savedLocally: true,
+        message: 'Mensaje recibido. Te contactaremos pronto.',
+      })
+    }
     return res.status(500).json({
       error: 'El servidor no está configurado para enviar emails. Contacta al administrador.',
       code: 'MISSING_RESEND_KEY'
@@ -85,6 +128,17 @@ export default async function handler(req, res) {
 
     if (error) {
       console.error('[contact] Resend error:', error)
+      // Si es error 403 (dominio no verificado), guardar localmente como fallback
+      if (error.statusCode === 403 || error.message?.includes('domain')) {
+        const saved = saveMessageLocally({ name, email, message, resendError: error.message })
+        if (saved) {
+          return res.status(200).json({
+            ok: true,
+            savedLocally: true,
+            message: 'Mensaje recibido y guardado. Te contactaremos pronto.',
+          })
+        }
+      }
       return res.status(500).json({
         error: 'No se pudo enviar el email. Intenta de nuevo más tarde.',
         details: error.message,
@@ -100,6 +154,15 @@ export default async function handler(req, res) {
     })
   } catch (err) {
     console.error('[contact] Unexpected error:', err)
+    // Guardar localmente como último recurso
+    const saved = saveMessageLocally({ name, email, message, error: err.message })
+    if (saved) {
+      return res.status(200).json({
+        ok: true,
+        savedLocally: true,
+        message: 'Mensaje recibido y guardado. Te contactaremos pronto.',
+      })
+    }
     return res.status(500).json({
       error: 'Error inesperado al enviar el mensaje. Intenta de nuevo en unos minutos.',
     })
@@ -107,12 +170,7 @@ export default async function handler(req, res) {
 }
 
 function escapeHtml(text) {
-  const div = typeof document !== 'undefined' ? document.createElement('div') : null
-  if (div) {
-    div.textContent = text
-    return div.innerHTML
-  }
-  // Fallback server-side
+  if (typeof text !== 'string') return ''
   return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '<')

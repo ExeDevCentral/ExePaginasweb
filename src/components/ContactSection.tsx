@@ -27,13 +27,19 @@ const ContactSection = () => {
         body: JSON.stringify({ name, email, message }),
       })
 
-      const data = (await response.json()) as { ok?: boolean; error?: string }
+      const data = (await response.json()) as { ok?: boolean; error?: string; savedLocally?: boolean; emailId?: string }
       if (!response.ok || !data.ok) {
         throw new Error(data.error ?? 'No se pudo enviar el mensaje.')
       }
 
       setStatus('success')
-      setFeedback('Mensaje enviado. Te respondemos lo antes posible.')
+      if (data.savedLocally) {
+        setFeedback('Mensaje recibido y guardado. Te contactaremos pronto por email o WhatsApp.')
+      } else if (data.emailId) {
+        setFeedback('Mensaje enviado correctamente por email. Te respondemos lo antes posible.')
+      } else {
+        setFeedback('Mensaje enviado. Te respondemos lo antes posible.')
+      }
       setName('')
       setEmail('')
       setMessage('')
@@ -236,3 +242,4 @@ const ContactSection = () => {
 }
 
 export default ContactSection
+

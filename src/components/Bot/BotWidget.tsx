@@ -50,15 +50,21 @@ const BotWidget = () => {
         body: JSON.stringify({ message: userMessage }),
       })
 
-      const data = (await response.json()) as { reply?: string; error?: string }
+      let data: { reply?: string; error?: string } = {}
+      try {
+        data = await response.json()
+      } catch (e) {
+        console.error('Error parsing JSON:', e)
+        throw new Error('El servidor devolvió una respuesta inválida (no JSON).')
+      }
 
       if (!response.ok) {
         if (response.status === 429) {
           errorMessage = '🚦 Has enviado demasiados mensajes. Espera un minuto y vuelve a intentar.'
-        } else if (response.status === 500 && data.error?.includes('GEMINI_API_KEY')) {
-          errorMessage = '⚙️ El servidor no tiene configurada la API key de Gemini. Contacta al administrador.'
+        } else if (response.status === 500 && (data.error?.includes('GROQ_API_KEY') || data.error?.includes('API key'))) {
+          errorMessage = '⚙️ Error de configuración: Falta la API Key de Groq en el servidor.'
         } else if (response.status === 502) {
-          errorMessage = `🔌 Error con el modelo de IA: ${data.error || 'Servicio no disponible'}`
+          errorMessage = `🔌 Error con el modelo de IA (Groq): ${data.error || 'Servicio no disponible'}`
         } else {
           errorMessage = `❌ Error ${response.status}: ${data.error || 'Error desconocido del servidor'}`
         }

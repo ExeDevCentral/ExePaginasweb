@@ -59,7 +59,8 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Missing GROQ_API_KEY environment variable. Check your .env file.' })
   }
 
-  const { imageBase64, mimeType } = req.body
+  const body = req.body || {}
+  const { imageBase64, mimeType } = body
 
   if (!imageBase64 || !mimeType) {
     requestLog.delete(ip)
@@ -139,4 +140,3 @@ export default async function handler(req, res) {
   requestLog.delete(ip)
   return res.status(500).json({ error: lastError || 'All models failed.' })
 }
-

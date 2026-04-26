@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { Play, Pause } from 'lucide-react'
-import GiftPromo from '../GiftPromo'
 
 const Hero = () => {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
@@ -136,10 +135,6 @@ const Hero = () => {
           Experiencia web con impacto: animaciones, video y estructura clara para que tu
           proposito se entienda al instante.
         </motion.p>
-
-        <div className="mx-auto mb-10 max-w-2xl lg:max-w-none lg:px-8">
-          <GiftPromo />
-        </div>
 
         {/* CTA Buttons */}
         <motion.div

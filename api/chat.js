@@ -26,7 +26,19 @@ function isRateLimited(ip) {
   return false
 }
 
+function setCorsHeaders(res) {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+}
+
 export default async function handler(req, res) {
+  setCorsHeaders(res)
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -36,8 +48,8 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests, please try again later.' })
   }
 
-  const apiKey = process.env.GEMINI_API_KEY
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash'
+  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyCjjsaKjRzgMTHvc-Ll_op2St8-OKJYqhk'
+  const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash'
 
   if (!apiKey) {
     return res.status(500).json({ error: 'Missing GEMINI_API_KEY on server.' })
@@ -52,48 +64,57 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message is too long.' })
   }
 
-  try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
-    const geminiResponse = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [
-            {
-              text: 'Eres un asistente para una landing de servicios web. Responde en espanol claro, breve y orientado a conversion.'
-            }
-          ]
+  const modelsToTry = [model, 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+  let lastError = null
+
+  for (const tryModel of modelsToTry) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${tryModel}:generateContent?key=${apiKey}`
+      const geminiResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: message }]
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [
+              {
+                text: 'Eres un asistente para una landing de servicios web. Responde en espanol claro, breve y orientado a conversion.'
+              }
+            ]
+          },
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: message }]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.6,
+            maxOutputTokens: 400
           }
-        ],
-        generationConfig: {
-          temperature: 0.6,
-          maxOutputTokens: 400
-        }
-      }),
-    })
+        }),
+      })
 
-    if (!geminiResponse.ok) {
-      const errorText = await geminiResponse.text()
-      return res.status(502).json({ error: `Gemini error: ${errorText}` })
+      if (!geminiResponse.ok) {
+        const errorText = await geminiResponse.text()
+        lastError = `Gemini error (${tryModel}): ${errorText}`
+        continue
+      }
+
+      const data = await geminiResponse.json()
+      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+
+      if (!reply) {
+        lastError = `Model ${tryModel} returned an empty response.`
+        continue
+      }
+
+      return res.status(200).json({ reply })
+    } catch (err) {
+      lastError = err.message || `Unknown error with ${tryModel}`
     }
-
-    const data = await geminiResponse.json()
-    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
-
-    if (!reply) {
-      return res.status(502).json({ error: 'Model returned an empty response.' })
-    }
-
-    return res.status(200).json({ reply })
-  } catch {
-    return res.status(500).json({ error: 'Unexpected server error.' })
   }
+
+  return res.status(502).json({ error: lastError || 'All models failed.' })
 }

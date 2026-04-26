@@ -64,7 +64,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message is too long.' })
   }
 
-  const modelsToTry = [model, 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+  const modelsToTry = [model, 'gemini-2.0-flash', 'gemini-1.5-flash']
   let lastError = null
 
   for (const tryModel of modelsToTry) {

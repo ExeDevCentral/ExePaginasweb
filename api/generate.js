@@ -22,9 +22,12 @@ function isRateLimited(ip) {
 }
 
 function setCorsHeaders(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  // En producción (Vercel) esto es necesario, en local (api-dev-server) lo hace el middleware cors()
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  }
 }
 
 export const config = {
@@ -72,6 +75,9 @@ export default async function handler(req, res) {
 
   for (const tryModel of modelsToTry) {
     try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 45000) // 45 segundos de timeout
+
       const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -104,7 +110,10 @@ export default async function handler(req, res) {
           temperature: 0.2,
           max_tokens: 4096
         }),
+        signal: controller.signal
       })
+
+      clearTimeout(timeoutId)
 
       if (!groqResponse.ok) {
         const errorText = await groqResponse.text()

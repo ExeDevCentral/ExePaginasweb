@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
-import { MessageCircle, X, Send, Bot, User, Zap } from 'lucide-react'
+import { MessageCircle, X, Send, Bot, User, Zap, Trash2 } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
 
 interface Message {
   id: string
@@ -10,16 +11,39 @@ interface Message {
   isTyping?: boolean
 }
 
+const QUICK_REPLIES = [
+  "💰 ¿Cuánto cuesta una landing?",
+  "⏱️ ¿Cuánto tiempo tardan?",
+  "⚡ ¿Qué tecnologías usan?",
+  "📬 Quiero contactarlos"
+]
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { y: 10, opacity: 0 },
+  visible: { y: 0, opacity: 1 }
+}
+
+const INITIAL_MESSAGE: Message = {
+  id: '1',
+  type: 'bot',
+  content: "¡Hola! 👋 Soy el asistente de **ExepaginasWeb**. Puedo ayudarte con info sobre presupuestos, tiempos de entrega y tecnologías. ¿En qué puedo asesorarte hoy?",
+  timestamp: new Date()
+}
+
 const BotWidget = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'bot',
-      content: "👋 Hi! I'm your AI assistant. I can help you create projects, add components, and deploy your apps. Try typing `/help` to see available commands!",
-      timestamp: new Date()
-    }
-  ])
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE])
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -47,42 +71,96 @@ const BotWidget = () => {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({ 
+          message: userMessage,
+          history: messages.slice(-6) // Enviamos los últimos 6 mensajes para dar contexto
+        }),
       })
 
-      let data: { reply?: string; error?: string } = {}
-      try {
-        data = await response.json()
-      } catch (e) {
-        console.error('Error parsing JSON:', e)
-        throw new Error('El servidor devolvió una respuesta inválida (no JSON).')
-      }
-
-      if (!response.ok) {
-        if (response.status === 429) {
-          errorMessage = '🚦 Has enviado demasiados mensajes. Espera un minuto y vuelve a intentar.'
-        } else if (response.status === 500 && (data.error?.includes('GROQ_API_KEY') || data.error?.includes('API key'))) {
-          errorMessage = '⚙️ Error de configuración: Falta la API Key de Groq en el servidor.'
-        } else if (response.status === 502) {
-          errorMessage = `🔌 Error con el modelo de IA (Groq): ${data.error || 'Servicio no disponible'}`
-        } else {
-          errorMessage = `❌ Error ${response.status}: ${data.error || 'Error desconocido del servidor'}`
+      const contentType = response.headers.get('Content-Type')
+      
+      // CASO A: Respuesta tipo Streaming (IA Activa)
+      if (contentType?.includes('text/event-stream')) {
+        if (!response.ok) {
+          throw new Error(`Error del servidor durante el streaming: ${response.status}`)
         }
-        throw new Error(errorMessage)
+        const reader = response.body?.getReader()
+        if (!reader) throw new Error('No se pudo inicializar el lector de stream.')
+
+        const decoder = new TextDecoder()
+        let botContent = ''
+        const botId = Date.now().toString()
+        let partialLine = '' // Buffer para manejar fragmentos de JSON cortados
+
+        // Añadimos mensaje vacío para ir llenándolo
+        setMessages(prev => [...prev, {
+          id: botId,
+          type: 'bot',
+          content: '',
+          timestamp: new Date(),
+        }])
+        
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+
+          const chunk = decoder.decode(value, { stream: true })
+          const lines = (partialLine + chunk).split('\n')
+          partialLine = lines.pop() || '' // Guardamos la última línea si está incompleta
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const dataStr = line.replace('data: ', '').trim()
+              if (dataStr === '[DONE]') break
+              
+              try {
+                const json = JSON.parse(dataStr)
+                const token = json.choices[0]?.delta?.content || ''
+                if (token) {
+                  botContent += token
+                  // Actualizamos el mensaje en tiempo real
+                  setMessages(prev => prev.map(msg => 
+                    msg.id === botId ? { ...msg, content: botContent } : msg
+                  ))
+                }
+              } catch (e) {
+                console.warn("Fragmento de JSON incompleto, esperando más datos...");
+              }
+            }
+          }
+        }
+      } 
+      // CASO B: Respuesta JSON estándar (Modo Desarrollo / Fallback)
+      else {
+        const text = await response.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          if (text.includes('<!DOCTYPE html>') || contentType?.includes('text/html')) {
+            throw new Error('El servidor devolvió HTML (posible error 404/500 de Vite). Revisa que node api-dev-server.js esté corriendo.');
+          }
+          throw new Error('El servidor devolvió una respuesta no válida (No JSON).');
+        }
+
+        if (!response.ok) {
+          throw new Error(data.error || `Error ${response.status}`);
+        }
+
+        const botMessage: Message = {
+          id: Date.now().toString(),
+          type: 'bot',
+          content: data.reply ?? 'No pude generar una respuesta.',
+          timestamp: new Date(),
+        }
+        setMessages(prev => [...prev, botMessage])
       }
 
-      const botMessage: Message = {
-        id: Date.now().toString(),
-        type: 'bot',
-        content: data.reply ?? 'No pude generar una respuesta en este momento.',
-        timestamp: new Date(),
-      }
-      setMessages(prev => [...prev, botMessage])
     } catch (err: any) {
       const fallbackMessage: Message = {
         id: Date.now().toString(),
         type: 'bot',
-        content: errorMessage || err.message || 'No pude conectar con el asistente. Verifica tu conexión e intenta nuevamente.',
+        content: `❌ **Error:** ${err.message || 'No pude conectar con el asistente.'} \n\nVerifica que el servidor de la API esté activo.`,
         timestamp: new Date(),
       }
       setMessages(prev => [...prev, fallbackMessage])
@@ -91,20 +169,28 @@ const BotWidget = () => {
     }
   }
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return
+  const clearHistory = () => {
+    setMessages([INITIAL_MESSAGE]);
+    setInputValue('');
+  }
+
+  const sendMessage = async (text: string) => {
+    if (!text.trim()) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: inputValue,
+      content: text,
       timestamp: new Date()
     }
 
     setMessages(prev => [...prev, userMessage])
     setInputValue('')
+    await requestBotResponse(text)
+  }
 
-    await requestBotResponse(inputValue)
+  const handleSendMessage = async () => {
+    await sendMessage(inputValue)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -144,13 +230,28 @@ const BotWidget = () => {
             {/* Header */}
             <div className="p-4 bg-gradient-to-r from-accent-cyan/10 to-accent-magenta/10 border-b border-accent-cyan/20">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full flex items-center justify-center">
+                <motion.div 
+                  className="w-10 h-10 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(0,255,255,0.4)]"
+                  animate={isTyping ? { 
+                    boxShadow: ["0_0_15px_rgba(0,255,255,0.4)", "0_0_25px_rgba(0,255,255,0.8)", "0_0_15px_rgba(0,255,255,0.4)"] 
+                  } : {}}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
                   <Bot className="w-5 h-5 text-primary-bg" />
-                </div>
+                </motion.div>
                 <div>
                   <h3 className="font-bold text-primary-text">AI Assistant</h3>
                   <p className="text-sm text-primary-secondary">Online • Ready to help</p>
                 </div>
+                <motion.button 
+                  onClick={clearHistory}
+                  className="ml-2 p-2 hover:bg-white/10 rounded-lg text-primary-secondary transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  title="Reiniciar conversación"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </motion.button>
                 <div className="ml-auto flex items-center gap-1">
                   <div className="w-2 h-2 bg-accent-cyan rounded-full animate-pulse"></div>
                   <Zap className="w-4 h-4 text-accent-cyan" />
@@ -182,7 +283,9 @@ const BotWidget = () => {
                           : 'bg-primary-bg/50 border border-accent-cyan/20 text-primary-text'
                       }`}
                     >
-                      <p className="text-base whitespace-pre-wrap">{message.content}</p>
+                      <div className="text-base prose prose-invert max-w-none">
+                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                      </div>
                       <p className="text-xs opacity-70 mt-1">
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
@@ -215,6 +318,29 @@ const BotWidget = () => {
                       <div className="w-2 h-2 bg-accent-cyan rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
                   </div>
+                </motion.div>
+              )}
+
+              {/* Botones de Respuesta Rápida */}
+              {!isTyping && (
+                <motion.div 
+                  className="flex flex-wrap gap-2 pt-2"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {QUICK_REPLIES.map((reply) => (
+                    <motion.button
+                      key={reply}
+                      variants={itemVariants}
+                      onClick={() => sendMessage(reply)}
+                      className="text-xs px-3 py-2 bg-accent-cyan/10 border border-accent-cyan/30 rounded-full text-accent-cyan hover:bg-accent-cyan/20 hover:border-accent-cyan transition-all duration-200"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {reply}
+                    </motion.button>
+                  ))}
                 </motion.div>
               )}
 

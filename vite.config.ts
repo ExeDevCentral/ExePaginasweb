@@ -1,24 +1,20 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import Sitemap from 'vite-plugin-sitemap'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    Sitemap({
-      hostname: 'https://exepaginasweb.com',
-      dynamicRoutes: ['/'],
-    }),
+    // Genera 'dist/stats.html' al compilar para optimizar el peso del bundle
+    visualizer({
+      open: false, // Cambia a true para que se abra automáticamente
+      filename: 'dist/stats.html',
+    })
   ],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
+      '/api': 'http://localhost:3000'
+    }
+  }
 })
-

@@ -5,13 +5,21 @@ import path from 'path'
 const MESSAGES_FILE = path.join(process.cwd(), 'messages-local.json')
 
 function setCorsHeaders(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  // En producción (Vercel) esto es necesario, en local (api-dev-server) lo hace el middleware cors()
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  }
 }
 
 function saveMessageLocally(contactData) {
   try {
+    // En Vercel no podemos escribir archivos. Solo permitimos esto en desarrollo.
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('[contact] No se puede guardar localmente en producción (Sistema de archivos Read-Only)')
+      return false
+    }
     let messages = []
     if (fs.existsSync(MESSAGES_FILE)) {
       const content = fs.readFileSync(MESSAGES_FILE, 'utf-8')
@@ -178,4 +186,3 @@ function escapeHtml(text) {
     .replace(/"/g, '"')
     .replace(/'/g, '&#039;')
 }
-

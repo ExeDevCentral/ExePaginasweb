@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite",
     "api": "node api-dev-server.js",
+    "test": "node test-api.js",
     "build": "tsc --noEmit -p tsconfig.app.json && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write .",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -24,6 +26,7 @@
     "react-helmet-async": "^2.0.5",
     "react-markdown": "^9.0.3",
     "react-syntax-highlighter": "^15.6.1",
+    "resend": "^3.0.0",
     "@emailjs/browser": "^4.4.1",
     "tailwindcss": "^3.4.17",
     "three": "^0.173.0",
@@ -43,6 +46,8 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "express": "^5.2.1",
     "globals": "^15.15.0",
+    "prettier": "^3.2.5",
+    "rollup-plugin-visualizer": "^5.14.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.24.0",
     "vite-plugin-sitemap": "^0.7.1"

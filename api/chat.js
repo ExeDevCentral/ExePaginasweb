@@ -108,30 +108,40 @@ export default async function handler(req, res) {
     try { body = JSON.parse(body) } catch (e) { body = {} }
   }
 
-  const message = (body && typeof body.message === 'string') ? body.message.trim() : ''
+  const { message, history = [] } = body
+  const userMessage = typeof message === 'string' ? message.trim() : ''
 
-  if (!message) {
+  if (!userMessage && history.length === 0) {
     return res.status(400).json({ error: 'Message is required.' })
   }
 
-  if (message.length > 1500) {
+  if (userMessage.length > 1500) {
     return res.status(400).json({ error: 'Message is too long.' })
   }
 
   // Fallback de desarrollo: si no hay API key, responder con respuestas locales
   if (!apiKey) {
     console.log('[chat] Modo desarrollo: sin GROQ_API_KEY, usando fallback local')
-    const fallbackReply = getDevFallbackResponse(message)
+    const fallbackReply = getDevFallbackResponse(userMessage)
     return res.status(200).json({ reply: fallbackReply, fallback: true })
   }
 
   const modelsToTry = [...new Set([defaultModel, 'llama-3.3-70b-specdec', 'llama-3.1-70b-versatile', 'mixtral-8x7b-32768'])]
   let lastError = null
 
+  // Controlador para abortar la petición si el cliente desconecta
+  const abortController = new AbortController()
+  if (req.on) {
+    req.on('close', () => {
+      abortController.abort()
+    })
+  }
+
   for (const tryModel of modelsToTry) {
     try {
       const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
+        signal: abortController.signal,
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
@@ -141,15 +151,17 @@ export default async function handler(req, res) {
           messages: [
             {
               role: 'system',
-              content: 'Eres un asistente para una landing de servicios web. Responde en español claro, breve y orientado a conversión.'
+              content: 'Eres el asistente oficial de ExepaginasWeb. Ofreces servicios de desarrollo web (Landings desde $200 USD, Tiendas desde $500 USD). Responde en español de Argentina/Latinoamérica, de forma profesional pero cercana. Usa Markdown para dar formato (negritas, listas).'
             },
-            {
-              role: 'user',
-              content: message
-            }
+            ...history.map(msg => ({
+              role: msg.type === 'user' ? 'user' : 'assistant',
+              content: msg.content
+            })),
+            { role: 'user', content: userMessage }
           ],
           temperature: 0.6,
-          max_tokens: 400
+          max_tokens: 400,
+          stream: true
         }),
       })
 
@@ -159,22 +171,31 @@ export default async function handler(req, res) {
         continue
       }
 
-      const data = await groqResponse.json()
-      const reply = data?.choices?.[0]?.message?.content?.trim()
+      // Configuramos cabeceras para streaming
+      res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
+      res.setHeader('Cache-Control', 'no-cache')
+      res.setHeader('Connection', 'keep-alive')
 
-      if (!reply) {
-        lastError = `Model ${tryModel} returned an empty response.`
-        continue
+      const reader = groqResponse.body.getReader()
+      const decoder = new TextDecoder()
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        res.write(value) // Reenviamos los chunks directamente al cliente
       }
-
-      return res.status(200).json({ reply })
+      return res.end()
     } catch (err) {
+      if (err.name === 'AbortError' || err.message?.includes('aborted')) {
+        console.log('[chat] Conexión abortada: Deteniendo generación para ahorrar tokens.');
+        return;
+      }
       lastError = err.message || `Unknown error with ${tryModel}`
     }
   }
 
   // Si todos los modelos fallan, usar fallback de desarrollo como último recurso
   console.log('[chat] Todos los modelos fallaron. Usando fallback local. Error:', lastError)
-  const fallbackReply = getDevFallbackResponse(message)
+  const fallbackReply = getDevFallbackResponse(userMessage)
   return res.status(200).json({ reply: fallbackReply, fallback: true, error: lastError })
 }

@@ -1,5 +1,6 @@
 # ⚡ ExePaginasWeb — AI-Powered Landing Platform
 
+![CI Status](https://github.com/ExeDevCentral/ExePaginasweb/actions/workflows/verify.yml/badge.svg)
 [![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://prueba-hiper-web-full-ai-video-super-b0fps6ubv.vercel.app)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -22,7 +23,7 @@
 
 | Feature | Tecnología | Descripción |
 |---------|-----------|-------------|
-| 🤖 **AI Chat Assistant** | Groq API (Llama 3.1/3.2) | Chatbot en tiempo real con fallback de modelos y rate limiting |
+| 🤖 **AI Chat Assistant** | Groq API (Llama 3.3/3.1) | Chatbot con **Streaming palabra por palabra**, botones de respuesta rápida, memoria contextual y manejo robusto de fragmentos de red. |
 | 🎨 **Generación de Código** | Groq Vision API | Convierte diseños en imágenes a HTML/CSS funcional vía IA |
 | 📧 **Contacto Inteligente** | Resend API | Envío de emails transaccionales con validación de datos |
 | 🧊 **Experiencias 3D** | React Three Fiber + Drei | Elementos 3D interactivos en la interfaz |
@@ -131,8 +132,8 @@ ExePaginasWeb/
 ## 🧠 APIs de IA Integradas
 
 ### Groq Chat Completions
-- **Modelos:** `llama-3.1-70b-versatile`, `llama-3.1-8b-instant`, `mixtral-8x7b-32768`
-- **Features:** Rate limiting por IP (20 req/min), fallback automático entre modelos, validación de inputs
+- **Modelos:** `llama-3.3-70b-specdec`, `llama-3.1-70b-versatile`, `mixtral-8x7b-32768`
+- **Features:** Streaming palabra por palabra, historial de contexto (6 mensajes), botones de respuesta rápida, rate limiting y manejo de fragmentos de red inestables.
 - **Temperatura:** 0.6 (balance entre creatividad y coherencia)
 
 ### Groq Vision (Code Generation)
@@ -171,7 +172,7 @@ npm install
 # 3. Configurar variables de entorno
 cp .env.example .env
 # Editar .env con tus API keys:
-# - GROQ_API_KEY
+# - GROQ_API_KEY (Requerida para Streaming)
 # - RESEND_API_KEY (opcional para contacto)
 
 # 4. Iniciar servidor de desarrollo

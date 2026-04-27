@@ -16,7 +16,7 @@ import contactHandler from './api/contact.js'
 
 // Manejador de errores global para evitar que el server muera
 process.on('uncaughtException', (err) => {
-  console.error('💥 Error no capturado (server mueriendo):', err)
+  console.error('💥 Error no capturado (server muriendo):', err.stack || err)
 })
 
 process.on('unhandledRejection', (reason, promise) => {
@@ -34,7 +34,12 @@ app.get('/', (req, res) => {
 // Mount routes
 app.all('/api/chat', async (req, res) => {
   try {
-    // Simulamos entorno Vercel: si Express ya parseó el body, lo pasamos
+    const USE_BETA_CHAT = process.env.ENABLE_BETA_CHAT === 'true'
+
+    if (USE_BETA_CHAT) {
+      console.log('\x1b[35m%s\x1b[0m', '[Feature Flag] 🚀 Ejecutando lógica BETA para /api/chat')
+      // Podrías llamar a un chatHandlerBeta(req, res) aquí
+    }
     await chatHandler(req, res)
   } catch (error) {
     console.error('[Dev Server] Chat Error:', error)

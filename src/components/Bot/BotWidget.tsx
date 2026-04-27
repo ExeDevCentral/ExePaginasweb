@@ -65,7 +65,6 @@ const BotWidget = () => {
 
   const requestBotResponse = async (userMessage: string) => {
     setIsTyping(true)
-    let errorMessage = ''
 
     try {
       const response = await fetch('/api/chat', {

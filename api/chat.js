@@ -171,6 +171,12 @@ export default async function handler(req, res) {
         continue
       }
 
+      // Si por algún motivo falló a mitad de un intento anterior y las cabeceras ya se enviaron,
+      // no podemos intentar otro modelo.
+      if (res.headersSent) {
+        return res.end();
+      }
+
       // Configuramos cabeceras para streaming
       res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
       res.setHeader('Cache-Control', 'no-cache')
@@ -194,7 +200,9 @@ export default async function handler(req, res) {
     }
   }
 
-  // Si todos los modelos fallan, usar fallback de desarrollo como último recurso
+  // Si todos los modelos fallan y no hemos enviado cabeceras (stream no empezó)
+  if (res.headersSent) return res.end();
+
   console.log('[chat] Todos los modelos fallaron. Usando fallback local. Error:', lastError)
   const fallbackReply = getDevFallbackResponse(userMessage)
   return res.status(200).json({ reply: fallbackReply, fallback: true, error: lastError })

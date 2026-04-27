@@ -19,6 +19,12 @@ process.on('uncaughtException', (err) => {
   console.error('💥 Error no capturado (server muriendo):', err.stack || err)
 })
 
+// Middleware para loguear peticiones de chat
+app.use('/api/chat', (req, res, next) => {
+  if (req.method === 'POST') console.log(`[${new Date().toLocaleTimeString()}] 💬 Nueva consulta al chat...`);
+  next();
+})
+
 process.on('unhandledRejection', (reason, promise) => {
   console.error('💥 Promesa no manejada:', reason)
 })

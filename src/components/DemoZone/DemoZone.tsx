@@ -1,31 +1,49 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { Upload, Image as ImageIcon, Settings, Download, Play, X, ShoppingCart } from 'lucide-react'
+import { CoffeePortal3D } from '../Effects/CoffeePortal3D'
+
+// --- CONSTANTES ESTÁTICAS (Optimizadas fuera del componente) ---
+const PROJECTS = [
+  {
+    title: 'Salon Bloom',
+    category: 'Landing de servicios',
+    summary: 'Pagina para reservas, promociones y testimonios con estilo visual premium.',
+  },
+  {
+    title: 'NeoFit Studio',
+    category: 'Web de membresias',
+    summary: 'Sitio de gimnasio con planes, agenda de clases y CTA para conversion.',
+  },
+  {
+    title: 'Casa Aura',
+    category: 'Catalogo inmobiliario',
+    summary: 'Subpaginas de propiedades con filtros y contacto directo por WhatsApp.',
+  },
+  {
+    title: 'Pixel Coffee',
+    category: 'Ecommerce ligero',
+    summary: 'Tienda online con carrito rapido y fichas de producto visuales.',
+  },
+];
+
+const COFFEE_PRODUCTS = [
+  { id: 1, name: 'Espresso Oscuro', price: 8.90, emoji: '☕', origin: 'Etiopía' },
+  { id: 2, name: 'Cold Brew Clásico', price: 11.50, emoji: '🧊', origin: 'Colombia' },
+  { id: 3, name: 'Latte de Avena', price: 9.90, emoji: '🥛', origin: 'Brasil' },
+  { id: 4, name: 'Blend Especial', price: 14.00, emoji: '✨', origin: 'Perú' },
+];
+
+const PROPERTIES = [
+  { id: 1, type: 'casa', name: 'Villa Serena', location: 'Zona Norte · Buenos Aires', price: 'USD 285,000', beds: 4, baths: 3, m2: 220, gradient: 'from-stone-700 to-stone-900', tag: 'Destacada' },
+  { id: 2, type: 'depto', name: 'Loft Aura Centro', location: 'Microcentro · CABA', price: 'USD 95,000', beds: 1, baths: 1, m2: 58, gradient: 'from-slate-700 to-slate-900', tag: 'Nuevo' },
+  { id: 3, type: 'casa', name: 'Casa del Lago', location: 'Tigre · GBA', price: 'USD 420,000', beds: 5, baths: 4, m2: 380, gradient: 'from-emerald-900 to-stone-900', tag: 'Premium' },
+  { id: 4, type: 'depto', name: 'Studio Palermo', location: 'Palermo · CABA', price: 'USD 72,000', beds: 1, baths: 1, m2: 42, gradient: 'from-zinc-700 to-zinc-900', tag: 'Oportunidad' },
+  { id: 5, type: 'casa', name: 'Chalet Andino', location: 'Bariloche · Río Negro', price: 'USD 350,000', beds: 3, baths: 2, m2: 190, gradient: 'from-amber-900 to-stone-900', tag: 'Exclusiva' },
+  { id: 6, type: 'depto', name: 'Depto Recoleta', location: 'Recoleta · CABA', price: 'USD 130,000', beds: 2, baths: 2, m2: 85, gradient: 'from-neutral-700 to-neutral-900', tag: 'Clásico' },
+];
 
 const DemoZone = () => {
-  const projects = [
-    {
-      title: 'Salon Bloom',
-      category: 'Landing de servicios',
-      summary: 'Pagina para reservas, promociones y testimonios con estilo visual premium.',
-    },
-    {
-      title: 'NeoFit Studio',
-      category: 'Web de membresias',
-      summary: 'Sitio de gimnasio con planes, agenda de clases y CTA para conversion.',
-    },
-    {
-      title: 'Casa Aura',
-      category: 'Catalogo inmobiliario',
-      summary: 'Subpaginas de propiedades con filtros y contacto directo por WhatsApp.',
-    },
-    {
-      title: 'Pixel Coffee',
-      category: 'Ecommerce ligero',
-      summary: 'Tienda online con carrito rapido y fichas de producto visuales.',
-    },
-  ]
-
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   type FilterKey = 'brightness' | 'contrast' | 'saturation' | 'blur'
@@ -40,17 +58,35 @@ const DemoZone = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [selectedProject, setSelectedProject] = useState<{title: string, category: string, summary: string} | null>(null)
   const [glitchActive, setGlitchActive] = useState(false)
+  const [isCoffeeTransitioning, setIsCoffeeTransitioning] = useState(false)
   const [cartItems, setCartItems] = useState<{id: number, name: string, price: number}[]>([])
   const [flyingItem, setFlyingItem] = useState<number | null>(null)
   const [cartBounce, setCartBounce] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
-  const coffeeProducts = [
-    { id: 1, name: 'Espresso Oscuro', price: 8.90, emoji: '☕', origin: 'Etiopía' },
-    { id: 2, name: 'Cold Brew Clásico', price: 11.50, emoji: '🧊', origin: 'Colombia' },
-    { id: 3, name: 'Latte de Avena', price: 9.90, emoji: '🥛', origin: 'Brasil' },
-    { id: 4, name: 'Blend Especial', price: 14.00, emoji: '✨', origin: 'Perú' },
-  ]
+  // Configuración estable de partículas de vapor (Pixel Coffee)
+  const steamParticles = useMemo(() => Array.from({ length: 12 }).map((_, i) => ({
+    id: i,
+    width: 100 + Math.random() * 150,
+    height: 150 + Math.random() * 150,
+    left: `${20 + Math.random() * 60}%`,
+    duration: 6 + Math.random() * 6,
+    delay: i * 0.8,
+    drift: (i % 2 === 0 ? 80 : -80)
+  })), [])
+
+  // Configuración estable de partículas de datos (Portal Genérico)
+  const digitalParticles = useMemo(() => Array.from({ length: 25 }).map((_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    duration: 5 + Math.random() * 7,
+    delay: Math.random() * 10,
+    // Variaciones para el efecto "glitch"
+    opacityKeyframes: [0, 1, 0.4, 1, 0.2, 1, 0],
+    scaleKeyframes: [1, 1.5, 0.8, 2, 0.5],
+    xDrift: Math.random() * 20 - 10,
+    flickerTimes: [0, 0.1, 0.15, 0.3, 0.5, 0.8, 1]
+  })), [])
 
   const addToCart = (product: {id: number, name: string, price: number, emoji: string, origin: string}) => {
     setFlyingItem(product.id)
@@ -66,15 +102,6 @@ const DemoZone = () => {
 
   const [propFilter, setPropFilter] = useState<'todos' | 'casa' | 'depto'>('todos')
   const [whatsappProp, setWhatsappProp] = useState<number | null>(null)
-  const properties = [
-    { id: 1, type: 'casa', name: 'Villa Serena', location: 'Zona Norte · Buenos Aires', price: 'USD 285,000', beds: 4, baths: 3, m2: 220, gradient: 'from-stone-700 to-stone-900', tag: 'Destacada' },
-    { id: 2, type: 'depto', name: 'Loft Aura Centro', location: 'Microcentro · CABA', price: 'USD 95,000', beds: 1, baths: 1, m2: 58, gradient: 'from-slate-700 to-slate-900', tag: 'Nuevo' },
-    { id: 3, type: 'casa', name: 'Casa del Lago', location: 'Tigre · GBA', price: 'USD 420,000', beds: 5, baths: 4, m2: 380, gradient: 'from-emerald-900 to-stone-900', tag: 'Premium' },
-    { id: 4, type: 'depto', name: 'Studio Palermo', location: 'Palermo · CABA', price: 'USD 72,000', beds: 1, baths: 1, m2: 42, gradient: 'from-zinc-700 to-zinc-900', tag: 'Oportunidad' },
-    { id: 5, type: 'casa', name: 'Chalet Andino', location: 'Bariloche · Río Negro', price: 'USD 350,000', beds: 3, baths: 2, m2: 190, gradient: 'from-amber-900 to-stone-900', tag: 'Exclusiva' },
-    { id: 6, type: 'depto', name: 'Depto Recoleta', location: 'Recoleta · CABA', price: 'USD 130,000', beds: 2, baths: 2, m2: 85, gradient: 'from-neutral-700 to-neutral-900', tag: 'Clásico' },
-  ]
-
   const openProject = (project: {title: string, category: string, summary: string}) => {
     if (project.title === 'NeoFit Studio') {
       setGlitchActive(true)
@@ -82,6 +109,13 @@ const DemoZone = () => {
         setGlitchActive(false)
         setSelectedProject(project)
       }, 600)
+    } else if (project.title === 'Pixel Coffee') {
+      setIsCoffeeTransitioning(true)
+      setTimeout(() => {
+        setSelectedProject(project)
+        // Pequeño delay extra para que el flash coincida con la aparición del modal
+        setTimeout(() => setIsCoffeeTransitioning(false), 500)
+      }, 1000)
     } else {
       setSelectedProject(project)
     }
@@ -95,6 +129,13 @@ const DemoZone = () => {
       setPreviewUrl(url)
     }
   }, [])
+
+  // Cleanup para las URLs de previsualización para evitar fugas de memoria
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+    }
+  }, [previewUrl])
 
   const handleDrop = useCallback((event: React.DragEvent<HTMLElement>) => {
     event.preventDefault()
@@ -163,9 +204,9 @@ const DemoZone = () => {
     }
   }
 
-  // Casa Aura derived state (computed here to avoid IIFE in JSX)
-  const auraFeatured = properties.find(p => p.id === (whatsappProp ?? 1)) ?? properties[0]
-  const auraFiltered = properties.filter(p => propFilter === 'todos' || p.type === propFilter)
+  // Casa Aura derived state optimizado
+  const auraFeatured = useMemo(() => PROPERTIES.find(p => p.id === (whatsappProp ?? 1)) ?? PROPERTIES[0], [whatsappProp]);
+  const auraFiltered = useMemo(() => PROPERTIES.filter(p => propFilter === 'todos' || p.type === propFilter), [propFilter]);
 
   const itemVariants = {
     hidden: { y: 30, opacity: 0 },
@@ -199,7 +240,7 @@ const DemoZone = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          {projects.map((project) => (
+          {PROJECTS.map((project) => (
             <article key={project.title} className="rounded-2xl border border-accent-cyan/20 bg-primary-bg/40 p-5 backdrop-blur-sm">
               <p className="text-xs uppercase tracking-[0.2em] text-accent-cyan">{project.category}</p>
               <h3 className="mt-2 text-2xl font-bold">{project.title}</h3>
@@ -449,6 +490,9 @@ const DemoZone = () => {
         )}
       </AnimatePresence>
 
+      {/* Efecto Alucinante 3D para Café */}
+      <CoffeePortal3D isVisible={isCoffeeTransitioning} />
+
       {/* Portal de Cristal (Modal Exagerado) */}
       <AnimatePresence>
         {selectedProject && (
@@ -624,14 +668,25 @@ const DemoZone = () => {
                   <div className="absolute top-0 right-1/4 w-64 h-64 bg-orange-900/20 blur-[80px] rounded-full" />
                 </div>
 
-                {/* Steam particles */}
-                <div className="absolute bottom-0 left-1/2 pointer-events-none">
-                  {[0,1,2,3].map(i => (
-                    <motion.div key={i}
-                      className="absolute w-2 h-8 bg-amber-100/10 rounded-full"
-                      style={{ left: `${i * 20 - 30}px` }}
-                      animate={{ y: [0, -120, -200], opacity: [0, 0.4, 0], scaleX: [1, 1.5, 2] }}
-                      transition={{ duration: 3, repeat: Infinity, delay: i * 0.7, ease: 'easeOut' }}
+                {/* Steam particles - Versión Atmosférica */}
+                <div className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 w-full h-full pointer-events-none overflow-hidden">
+                  {steamParticles.map((p) => (
+                    <motion.div
+                      key={p.id}
+                      className="absolute bottom-0 bg-amber-100/5 rounded-full blur-[40px]"
+                      style={{ width: p.width, height: p.height, left: p.left }}
+                      animate={{ 
+                        y: [0, -400, -900], 
+                        opacity: [0, 0.3, 0.5, 0.1, 0],
+                        scale: [1, 2.5, 5],
+                        x: [0, p.drift, p.drift / 2]
+                      }}
+                      transition={{ 
+                        duration: p.duration, 
+                        repeat: Infinity, 
+                        delay: p.delay, 
+                        ease: "easeOut" 
+                      }}
                     />
                   ))}
                 </div>
@@ -689,7 +744,7 @@ const DemoZone = () => {
                 {/* Products grid */}
                 <div className="flex-1 overflow-auto p-8">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
-                    {coffeeProducts.map(product => (
+                    {COFFEE_PRODUCTS.map(product => (
                       <motion.div
                         key={product.id}
                         className="relative bg-[#221208] border border-amber-900/40 rounded-2xl p-5 flex flex-col gap-3 hover:border-amber-600/60 transition-colors"
@@ -869,7 +924,29 @@ const DemoZone = () => {
                       <div className="w-3.5 h-3.5 rounded-full bg-accent-cyan/80" />
                       <div className="mx-auto w-1/3 h-5 bg-primary-secondary/10 rounded-full" />
                     </div>
-                    <div className="flex-1 overflow-hidden">
+                    <div className="flex-1 overflow-hidden relative">
+                      {/* Digital Vapor / Data Particles */}
+                      <div className="absolute inset-0 pointer-events-none z-10">
+                        {digitalParticles.map((p) => (
+                          <motion.div
+                            key={p.id}
+                            className="absolute w-1 h-1 bg-accent-cyan/20 rounded-full blur-[1px]"
+                            style={{ left: p.left, bottom: "-5%" }}
+                            animate={{
+                              y: -600,
+                              opacity: p.opacityKeyframes,
+                              scale: p.scaleKeyframes,
+                              x: [0, p.xDrift, 0]
+                            }}
+                            transition={{
+                              duration: p.duration,
+                              repeat: Infinity,
+                              delay: p.delay,
+                              times: p.flickerTimes
+                            }}
+                          />
+                        ))}
+                      </div>
                       <motion.div
                         className="w-full h-[350%] bg-gradient-to-b from-primary-bg via-accent-cyan/5 to-accent-magenta/5"
                         animate={{ y: ['0%', '-65%'] }}

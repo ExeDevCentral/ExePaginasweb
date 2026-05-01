@@ -1,18 +1,22 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { SalonBloomButton } from './SalonBloomButton';
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
+import { useTypewriter } from '../../hooks/useTypewriter';
+import { HERO_TYPEWRITER_TEXT, PARTICLES_CONFIG } from './constants';
 
 const Hero: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  
-  // Typewriter effect
-  const [typedText, setTypedText] = useState('');
-  const fullText = 'Software de gestión, reservas online y automatizaciones inteligentes para potenciar tu negocio local.';
+  const [particlesInit, setParticlesInit] = useState(false);
 
+  // Usamos el hook personalizado para el efecto typewriter
+  const { typedText } = useTypewriter(HERO_TYPEWRITER_TEXT, { 
+    typingSpeed: 100, // Escritura muy pausada y tranquila
+    endDelay: 1000
+  });
   useEffect(() => {
     let isMounted = true;
     if (videoRef.current) {
@@ -26,8 +30,6 @@ const Hero: React.FC = () => {
     return () => { isMounted = false; };
   }, []);
 
-const [particlesInit, setParticlesInit] = useState(false);
-
   useEffect(() => {
     if (!particlesInit) {
       initParticlesEngine(async (engine) => {
@@ -38,28 +40,13 @@ const [particlesInit, setParticlesInit] = useState(false);
     }
   }, [particlesInit]);
 
-  // Typewriter effect
-  useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index <= fullText.length) {
-        setTypedText(fullText.slice(0, index));
-        index++;
-      } else {
-        // Efecto de pausa al final antes de terminar
-        setTimeout(() => clearInterval(interval), 1000);
-      }
-    }, 35); // Un poco más rápido para mejorar el tiempo de lectura percibido
-    return () => clearInterval(interval);
-  }, [fullText]);
-
-  const handleScrollToProducts = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleScrollToProducts = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const productsSection = document.getElementById('products');
     if (productsSection) {
       productsSection.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
   return (
     <section id="home" className="relative h-screen w-full overflow-hidden bg-black">
@@ -70,58 +57,11 @@ const [particlesInit, setParticlesInit] = useState(false);
         }`} 
       />
 
-      {/* Componente de partículas */}
+      {/* Componente de partículas con configuración premium */}
       {particlesInit && (
         <Particles
           id="tsparticles"
-          options={{
-            background: {
-              color: {
-                value: "#000000", // Fondo negro, ya lo tienes en el hero
-              },
-              opacity: 0, // Hacemos el fondo de las partículas transparente para ver el video/gradiente
-            },
-            fpsLimit: 60,
-interactivity: {
-              events: {
-                onClick: {
-                  enable: false,
-                  mode: "push",
-                },
-                onHover: {
-                  enable: false, // Puedes cambiar a true para efectos interactivos
-                  mode: "repulse",
-                },
-              },
-              modes: {
-                push: {
-                  quantity: 4,
-                },
-                repulse: {
-                  distance: 100,
-                  duration: 0.4,
-                },
-              },
-            },
-            particles: {
-              color: {
-                value: ["#00FFFF", "#FF00FF", "#FFFF00"], // Tonos cian, magenta, amarillo para un look neón
-              },
-              links: {
-                enable: false, // Sin líneas que conecten las partículas
-              },
-              move: {
-                direction: "top", // Mover hacia arriba
-                enable: true,
-                speed: 1, // Velocidad de subida
-                random: true,
-              },
-number: { density: { enable: true }, value: 80 }, // Cantidad de partículas
-              opacity: { value: { min: 0.3, max: 0.8 } }, // Opacidad variada
-              size: { value: { min: 1, max: 3 } }, // Tamaño variado
-            },
-            detectRetina: true,
-          }}
+          options={PARTICLES_CONFIG} 
         />
       )}
 

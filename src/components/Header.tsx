@@ -1,41 +1,15 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { useState, useEffect } from 'react'
-
-const sectionIds = ['home', 'products', 'features', 'contact'] as const
+import { useState } from 'react'
+import { useScrollSpy } from '../hooks/useScrollSpy'
+import { NAV_ITEMS, SCROLL_OFFSET } from './constants'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeId, setActiveId] = useState<string>('home')
-
-  const menuItems = [
-    { label: 'Home', id: 'home' as const, href: '#home' },
-    { label: 'Sistemas', id: 'products' as const, href: '#products' },
-    { label: 'Features', id: 'features' as const, href: '#features' },
-    { label: 'Contacto', id: 'contact' as const, href: '#contact' },
-  ]
-
-  useEffect(() => {
-    const updateActive = () => {
-      const scrollY = globalThis.scrollY
-      const bar = 120
-      let current: string = 'home'
-      for (const id of sectionIds) {
-        const el = document.getElementById(id)
-        if (!el) continue
-        const top = el.getBoundingClientRect().top + scrollY
-        if (scrollY + bar >= top) current = id
-      }
-      setActiveId(current)
-    }
-    updateActive()
-    globalThis.addEventListener('scroll', updateActive, { passive: true })
-    globalThis.addEventListener('resize', updateActive)
-    return () => {
-      globalThis.removeEventListener('scroll', updateActive)
-      globalThis.removeEventListener('resize', updateActive)
-    }
-  }, [])
+  
+  // Usamos el hook personalizado para detectar la sección activa
+  // Convertimos el array readonly a mutable para el hook
+  const activeId = useScrollSpy([...NAV_ITEMS.map(item => item.id)], { offset: SCROLL_OFFSET })
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     const el = document.getElementById(id);
@@ -76,7 +50,7 @@ const Header = () => {
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex space-x-8">
-            {menuItems.map((item) => {
+            {NAV_ITEMS.map((item) => {
               const isActive = activeId === item.id
               return (
                 <motion.a
@@ -133,7 +107,7 @@ const Header = () => {
               transition={{ duration: 0.2 }}
             >
               <nav className="flex flex-col space-y-4">
-                {menuItems.map((item) => (
+                {NAV_ITEMS.map((item) => (
                   <a
                     key={item.label}
                     href={item.href}

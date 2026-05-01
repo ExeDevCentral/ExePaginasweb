@@ -1,14 +1,10 @@
 import { motion, useMotionValue, useSpring, useMotionTemplate, useTransform } from 'framer-motion'
 import { useRef } from 'react'
-import { LayoutDashboard, BellRing, BarChart3, UsersRound } from 'lucide-react'
+import type { FeatureData } from './constants'
+import { FEATURES_LIST, DASHBOARD_STATS, SPRING_CONFIG } from './constants'
 
 interface FeatureCardProps {
-  feature: {
-    icon: any;
-    title: string;
-    description: string;
-    color: string;
-  };
+  feature: FeatureData;
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ feature }) => {
@@ -16,12 +12,12 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ feature }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Configuración de resortes para suavidad premium
-  const springConfig = { damping: 25, stiffness: 200 };
+  // Usamos la configuración de resortes compartida
+  const springConfig = SPRING_CONFIG;
   const rotateX = useSpring(useTransform(mouseY, [-150, 150], [10, -10]), springConfig);
   const rotateY = useSpring(useTransform(mouseX, [-150, 150], [-10, 10]), springConfig);
 
-function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -104,32 +100,8 @@ function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
 const Features = () => {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const features = [
-    {
-      icon: LayoutDashboard,
-      title: 'Dashboard claro',
-      description: 'Resumen de ventas, leads y tareas con widgets visuales que cualquier cliente entiende al instante.',
-      color: 'from-accent-yellow to-accent-cyan',
-    },
-    {
-      icon: BellRing,
-      title: 'Notificaciones smart',
-      description: 'Alertas en tiempo real para formularios, pagos y eventos clave de tu web para no perder oportunidades.',
-      color: 'from-accent-cyan to-accent-magenta',
-    },
-    {
-      icon: BarChart3,
-      title: 'Analitica accionable',
-      description: 'Graficas simples con conversion, clics y rendimiento para tomar decisiones sin tecnicismos.',
-      color: 'from-accent-magenta to-accent-yellow',
-    },
-    {
-      icon: UsersRound,
-      title: 'Equipo conectado',
-      description: 'Roles por usuario y seguimiento de tareas para marketing, ventas y soporte en una sola app web.',
-      color: 'from-accent-cyan to-accent-magenta',
-    },
-  ]
+  // Usamos las features desde constantes
+  const features = FEATURES_LIST
 
   return (
     <section
@@ -182,11 +154,7 @@ Sistemas Online
               </span>
             </div>
             <div className="grid gap-6 md:grid-cols-3">
-              {[
-                { label: 'Consultas hoy', value: '42', color: 'text-accent-cyan', trend: '+12%' },
-                { label: 'Nuevos Clientes', value: '12', color: 'text-white', trend: '+5' },
-                { label: 'Crecimiento', value: '24%', color: 'text-accent-magenta', trend: 'In crescendo' }
-              ].map((stat, i) => (
+              {DASHBOARD_STATS.map((stat, i) => (
                 <div key={i} className="group/stat rounded-2xl bg-white/5 p-6 border border-white/5 hover:border-white/10 transition-all">
                   <p className="text-sm text-slate-500 font-medium mb-2">{stat.label}</p>
                   <div className="flex items-end gap-3">

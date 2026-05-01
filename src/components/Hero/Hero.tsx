@@ -8,6 +8,10 @@ const Hero: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  
+  // Typewriter effect
+  const [typedText, setTypedText] = useState('');
+  const fullText = 'Software de gestión, reservas online y automatizaciones inteligentes para potenciar tu negocio local.';
 
   useEffect(() => {
     let isMounted = true;
@@ -22,7 +26,7 @@ const Hero: React.FC = () => {
     return () => { isMounted = false; };
   }, []);
 
-  const [particlesInit, setParticlesInit] = useState(false);
+const [particlesInit, setParticlesInit] = useState(false);
 
   useEffect(() => {
     if (!particlesInit) {
@@ -33,6 +37,20 @@ const Hero: React.FC = () => {
       });
     }
   }, [particlesInit]);
+
+  // Typewriter effect
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index <= fullText.length) {
+        setTypedText(fullText.slice(0, index));
+        index++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 40);
+    return () => clearInterval(interval);
+  }, [fullText]);
 
   const handleScrollToProducts = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -139,9 +157,9 @@ number: { density: { enable: true }, value: 80 }, // Cantidad de partículas
             <span className="text-4xl md:text-6xl opacity-90">A MEDIDA</span>
           </h1>
           
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-primary-secondary font-inter mb-10">
-            Software de gestión, reservas online y automatizaciones inteligentes 
-            para potenciar tu negocio local.
+<p className="max-w-2xl mx-auto text-lg md:text-xl text-primary-secondary font-inter mb-10 min-h-[1.5em]">
+            {typedText}
+            <span className="animate-pulse border-r-2 border-accent-cyan ml-1"></span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">

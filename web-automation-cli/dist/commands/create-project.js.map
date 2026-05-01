@@ -1,0 +1,1 @@
+{"version":3,"file":"create-project.js","sourceRoot":"","sources":["../../src/commands/create-project.ts"],"names":[],"mappings":";;AAGA,sCAGC;AAHM,KAAK,UAAU,aAAa,CAAC,OAAY;IAC9C,OAAO,CAAC,GAAG,CAAC,gCAAgC,EAAE,OAAO,CAAC,CAAA;IACtD,OAAO,CAAC,GAAG,CAAC,uCAAuC,CAAC,CAAA;AACtD,CAAC"}

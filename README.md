@@ -1,21 +1,21 @@
-# ⚡ ExePaginasWeb — AI-Powered Landing Platform
+# ⚡ ExeSistemasWEB — Sistema Web Inteligente para Negocios
 
-![CI Status](https://github.com/ExeDevCentral/ExePaginasweb/actions/workflows/verify.yml/badge.svg)
-[![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://prueba-hiper-web-full-ai-video-super-b0fps6ubv.vercel.app)
+![Status](https://img.shields.io/badge/Status-Active-00d4ff?style=for-the-badge)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Three.js](https://img.shields.io/badge/Three.js-0.173-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org)
-[![Groq](https://img.shields.io/badge/Groq-AI%20Inference-F55036?style=for-the-badge&logo=openai&logoColor=white)](https://groq.com)
 
-> **Landing page premium con inteligencia artificial integrada.** Chatbot con LLMs, generación de código desde imágenes, formulario de contacto con email automatizado y experiencias 3D interactivas — todo desplegado en serverless.
+> **Plataforma web inteligente con IA integrada para negocios locales.** Reservas online, gestión de stock, CRM, chatbot con LLMs y experiencias 3D interactivas — todo desplegado en serverless.
+>
+> *Creamos sistemas que no solo presentan tu negocio, sino que trabajan 24/7 para él.*
 
 ---
 
-## 🚀 Demo en Vivo
+## 🌐 En Vivo
 
-🔗 **[https://prueba-hiper-web-full-ai-video-super-b0fps6ubv.vercel.app](https://prueba-hiper-web-full-ai-video-super-b0fps6ubv.vercel.app)**
+🔗 **[https://ExeSistemasWEB.vercel.app](https://exesistemasweb.vercel.app)**
 
 ---
 
@@ -102,7 +102,7 @@
 ## 📁 Estructura del Proyecto
 
 ```bash
-ExePaginasWeb/
+ExeSistemasWEB/
 ├── api/                    # Serverless functions (Vercel)
 │   ├── chat.js            # Groq LLM chat endpoint
 │   ├── generate.js        # Groq Vision code generation
@@ -115,7 +115,6 @@ ExePaginasWeb/
 │   │   ├── Hero/          # Hero with 3D elements
 │   │   ├── ContactSection.tsx
 │   │   ├── ErrorBoundary.tsx
-│   │   ├── GiftPromo.tsx
 │   │   └── Header.tsx
 │   ├── App.tsx
 │   ├── main.tsx
@@ -164,7 +163,7 @@ ExePaginasWeb/
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/ExeDevCentral/ExePaginasweb.git
-cd ExePaginasweb
+cd ExeSistemasWEB
 
 # 2. Instalar dependencias
 npm install
@@ -184,14 +183,16 @@ npm run api        # API server en http://localhost:3000
 
 ## 🔮 Roadmap Futuro
 
-- [ ] **Dark/Light Mode Toggle** — Temas dinámicos con TailwindCSS
-- [ ] **Calendly Integration** — Agendamiento de reuniones directo
-- [ ] **Notion CMS** — Portfolio dinámico vía Notion API
-- [ ] **Mapbox Maps** — Mapas interactivos personalizados
+- [ ] **Módulo Reservas** — Sistema de citas y turnos para negocios
+- [ ] **Gestión de Stock** — CRM con control de inventario
+- [ ] **Pasarela de Pagos** — MercadoPago/Stripe integración
+- [ ] **Panel Admin** — Dashboard con métricas y analytics
+- [ ] **Multi-idioma** — Español/Inglés/Portugués
+- [ ] **Dark/Light Mode** — Temas dinámicos
+- [ ] **Notificaciones Push** — Web PWA con Service Worker
+- [ ] **Mapas Interactivos** — Mapbox para ubica
 - [ ] **Vitest + Playwright** — Testing unitario y E2E
-- [ ] **GitHub Actions CI/CD** — Pipeline de calidad automática
-- [ ] **i18n (react-i18next)** — Soporte multi-idioma
-- [ ] **PWA Full Offline** — Service worker con cache estratégico
+- [ ] **GitHub Actions CI/CD** — Pipeline de calidad
 
 ---
 
@@ -205,4 +206,4 @@ npm run api        # API server en http://localhost:3000
 
 ---
 
-> *"El futuro del desarrollo web no es solo mostrar información, es crear experiencias que piensen por sí mismas."*
+> *"No creamos páginas web. Creamos empleados digitales que trabajan 24/7 para tu negocio."*

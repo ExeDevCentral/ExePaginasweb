@@ -21,10 +21,11 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ feature }) => {
   const rotateX = useSpring(useTransform(mouseY, [-150, 150], [10, -10]), springConfig);
   const rotateY = useSpring(useTransform(mouseX, [-150, 150], [-10, 10]), springConfig);
 
-  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+function handleMouseMove(e: React.MouseEvent) {
+    const currentTarget = e.currentTarget as HTMLDivElement;
     const { left, top } = currentTarget.getBoundingClientRect();
-    const x = clientX - left;
-    const y = clientY - top;
+    const x = e.clientX - left;
+    const y = e.clientY - top;
     
     // Centramos el valor para el efecto de rotación
     mouseX.set(x - currentTarget.offsetWidth / 2);

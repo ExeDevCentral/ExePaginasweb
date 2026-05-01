@@ -224,7 +224,7 @@ const BotWidget = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-24 right-6 z-40 w-[450px] h-[600px] flex flex-col bg-gradient-to-br from-primary-bg/95 to-primary-bg/90 backdrop-blur-md border border-accent-cyan/20 rounded-2xl shadow-2xl overflow-hidden"
+            className="fixed bottom-4 right-0 sm:bottom-24 sm:right-6 z-40 w-full sm:w-[450px] h-[calc(100dvh-5rem)] sm:h-[600px] max-w-[100vw] flex flex-col bg-gradient-to-br from-primary-bg/95 to-primary-bg/90 backdrop-blur-md border border-accent-cyan/20 rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden"
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -286,15 +286,15 @@ const BotWidget = () => {
                           : 'bg-primary-bg/50 border border-accent-cyan/20 text-primary-text'
                       }`}
                     >
-<div className="text-base max-w-none prose prose-invert" style={{ color: '#f8fafc' }}>
+                      <div className="text-sm sm:text-base max-w-none prose prose-invert selection:bg-accent-cyan/30">
                         <ReactMarkdown
                           components={{
-                            p: ({...props}) => <p style={{ color: '#f8fafc', marginBottom: '0.5rem' }} {...props} />,
+                            p: ({...props}) => <p className="text-slate-100 mb-2 last:mb-0 leading-relaxed" {...props} />,
                             strong: ({...props}) => <strong style={{ color: '#00d4ff', fontWeight: 'bold' }} {...props} />,
                             em: ({...props}) => <em style={{ color: '#ff00a0' }} {...props} />,
-                            code: ({...props}) => <code style={{ backgroundColor: '#1e1e2e', color: '#00d4ff', padding: '2px 4px', borderRadius: '4px' }} {...props} />,
-                            ul: ({...props}) => <ul style={{ color: '#f8fafc', paddingLeft: '1.5rem', margin: '0.5rem 0' }} {...props} />,
-                            li: ({...props}) => <li style={{ color: '#f8fafc', marginBottom: '0.25rem' }} {...props} />,
+                            code: ({...props}) => <code className="bg-[#1e1e2e] text-accent-cyan px-1.5 py-0.5 rounded text-[0.9em]" {...props} />,
+                            ul: ({...props}) => <ul className="text-slate-100 list-disc pl-5 my-2 space-y-1" {...props} />,
+                            li: ({...props}) => <li className="text-slate-100" {...props} />,
                             a: ({...props}) => <a style={{ color: '#00d4ff', textDecoration: 'underline' }} {...props} />,
                           }}
                         >

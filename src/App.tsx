@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useSpring } from 'framer-motion'
 import { lazy, Suspense } from 'react'
 import Header from './components/Header'
 import Hero from './components/Hero/Hero'
@@ -12,6 +12,16 @@ const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
 const ContactSection = lazy(() => import('./components/ContactSection'))
 
 function App() {
+  // Capturamos el progreso del scroll (0 a 1)
+  const { scrollYProgress } = useScroll()
+  
+  // Aplicamos un efecto de resorte (Spring) para que el movimiento sea ultra fluido
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
+
   return (
     <ErrorBoundary>
       <Helmet>
@@ -34,6 +44,12 @@ function App() {
         <link rel="canonical" href="https://exepaginasweb.com" />
       </Helmet>
       <div className="min-h-screen bg-primary-bg text-primary-text">
+
+        {/* Barra de progreso de lectura */}
+        <motion.div
+          className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-cyan to-accent-magenta origin-left z-[100]"
+          style={{ scaleX }}
+        />
 
         <Header />
         <motion.main

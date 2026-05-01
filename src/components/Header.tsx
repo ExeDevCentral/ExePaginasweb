@@ -37,6 +37,14 @@ const Header = () => {
     }
   }, [])
 
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      e.preventDefault();
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <motion.header
       className="fixed top-0 w-full z-50 border-b border-accent-cyan/20 bg-primary-bg/70 backdrop-blur-xl supports-[backdrop-filter]:bg-primary-bg/50"
@@ -51,15 +59,17 @@ const Header = () => {
             href="#home"
             className="flex items-center space-x-3 cursor-pointer"
             whileHover={{ scale: 1.05 }}
-            onClick={(e) => {
-              const el = document.getElementById('home');
-              if (el) {
-                e.preventDefault();
-                el.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
+            onClick={(e) => scrollToSection(e, 'home')}
           >
-            <img src="/logo.webp" alt="ExepaginasWeb Logo" loading="lazy" className="w-10 h-10 rounded-xl shadow-lg shadow-accent-cyan/20 border border-accent-cyan/30 object-cover" />
+            <img 
+              src="/logo.webp" 
+              alt="ExepaginasWeb Logo" 
+              loading="lazy" 
+              className="w-10 h-10 rounded-xl shadow-lg shadow-accent-cyan/20 border border-accent-cyan/30 object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/logo.png';
+              }}
+            />
 
             <span className="bg-gradient-to-r from-accent-cyan to-accent-magenta bg-clip-text text-xl font-bold tracking-tight text-transparent font-montserrat">ExepaginasWeb</span>
           </motion.a>
@@ -72,6 +82,7 @@ const Header = () => {
                 <motion.a
                   key={item.label}
                   href={item.href}
+                  onClick={(e) => scrollToSection(e, item.id)}
                   className={`relative text-sm font-medium transition-colors duration-300 ${
                     isActive
                       ? 'text-accent-cyan'
@@ -95,6 +106,7 @@ const Header = () => {
             className="hidden md:inline-block rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta px-6 py-2 text-sm font-semibold text-primary-bg shadow-md shadow-accent-cyan/20 transition-all hover:shadow-lg hover:shadow-accent-cyan/30"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.98 }}
+            onClick={(e) => scrollToSection(e, 'contact')}
           >
             Contacto
           </motion.a>
@@ -126,7 +138,10 @@ const Header = () => {
                     key={item.label}
                     href={item.href}
                     className={activeId === item.id ? 'font-semibold text-accent-cyan' : 'text-primary-secondary transition-colors duration-300 hover:text-accent-cyan'}
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={(e) => {
+                      setIsMenuOpen(false);
+                      scrollToSection(e, item.id);
+                    }}
                   >
                     {item.label}
                   </a>
@@ -134,7 +149,10 @@ const Header = () => {
                 <a
                   href="#contact"
                   className="self-start rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta px-6 py-2 text-sm font-semibold text-primary-bg"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => {
+                    setIsMenuOpen(false);
+                    scrollToSection(e, 'contact');
+                  }}
                 >
                   Contacto
                 </a>

@@ -46,9 +46,10 @@ const [particlesInit, setParticlesInit] = useState(false);
         setTypedText(fullText.slice(0, index));
         index++;
       } else {
-        clearInterval(interval);
+        // Efecto de pausa al final antes de terminar
+        setTimeout(() => clearInterval(interval), 1000);
       }
-    }, 40);
+    }, 35); // Un poco más rápido para mejorar el tiempo de lectura percibido
     return () => clearInterval(interval);
   }, [fullText]);
 
@@ -61,7 +62,7 @@ const [particlesInit, setParticlesInit] = useState(false);
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
+    <section id="home" className="relative h-screen w-full overflow-hidden bg-black">
       {/* Fallback de gradiente si el video falla o carga */}
       <div 
         className={`absolute inset-0 bg-gradient-to-br from-primary-bg via-black to-accent-magenta/20 transition-opacity duration-1000 ${

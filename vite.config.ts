@@ -24,9 +24,9 @@ export default defineConfig({
     }
   },
   // Optimizaciones para Vercel
-  build: {
+build: {
     sourcemap: false,
-    minify: 'terser',
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks: {

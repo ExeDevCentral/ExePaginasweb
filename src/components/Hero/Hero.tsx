@@ -63,7 +63,7 @@ const Hero: React.FC = () => {
               opacity: 0, // Hacemos el fondo de las partículas transparente para ver el video/gradiente
             },
             fpsLimit: 60,
-            interactivity: {
+interactivity: {
               events: {
                 onClick: {
                   enable: false,
@@ -73,7 +73,6 @@ const Hero: React.FC = () => {
                   enable: false, // Puedes cambiar a true para efectos interactivos
                   mode: "repulse",
                 },
-                resize: true,
               },
               modes: {
                 push: {
@@ -98,7 +97,7 @@ const Hero: React.FC = () => {
                 speed: 1, // Velocidad de subida
                 random: true,
               },
-              number: { density: { enable: true, area: 800 }, value: 80 }, // Cantidad de partículas
+number: { density: { enable: true }, value: 80 }, // Cantidad de partículas
               opacity: { value: { min: 0.3, max: 0.8 } }, // Opacidad variada
               size: { value: { min: 1, max: 3 } }, // Tamaño variado
             },

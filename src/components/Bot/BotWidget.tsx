@@ -55,7 +55,7 @@ const BotWidget = () => {
 
   useEffect(() => {
     scrollToBottom()
-  }, [messages, isTyping, inputValue])
+  }, [messages, isTyping])
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -92,7 +92,7 @@ const BotWidget = () => {
 
         const decoder = new TextDecoder()
         let botContent = ''
-        const botId = Date.now().toString()
+        const botId = crypto.randomUUID()
         let partialLine = '' // Buffer para manejar fragmentos de JSON cortados
 
         // Añadimos mensaje vacío para ir llenándolo
@@ -151,7 +151,7 @@ const BotWidget = () => {
         }
 
         const botMessage: Message = {
-          id: Date.now().toString(),
+          id: crypto.randomUUID(),
           type: 'bot',
           content: data.reply ?? 'No pude generar una respuesta.',
           timestamp: new Date(),
@@ -161,7 +161,7 @@ const BotWidget = () => {
 
     } catch (err: any) {
       const fallbackMessage: Message = {
-        id: Date.now().toString(),
+        id: crypto.randomUUID(),
         type: 'bot',
         content: `❌ **Error:** ${err.message || 'No pude conectar con el asistente.'} \n\nVerifica que el servidor de la API esté activo.`,
         timestamp: new Date(),
@@ -181,7 +181,7 @@ const BotWidget = () => {
     if (!text.trim()) return
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       type: 'user',
       content: text,
       timestamp: new Date()

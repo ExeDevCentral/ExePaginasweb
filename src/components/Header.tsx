@@ -59,7 +59,7 @@ const Header = () => {
               }
             }}
           >
-            <img src="/logo.png" alt="ExepaginasWeb Logo" loading="lazy" className="w-10 h-10 rounded-xl shadow-lg shadow-accent-cyan/20 border border-accent-cyan/30 object-cover" />
+            <img src="/logo.webp" alt="ExepaginasWeb Logo" loading="lazy" className="w-10 h-10 rounded-xl shadow-lg shadow-accent-cyan/20 border border-accent-cyan/30 object-cover" />
 
             <span className="bg-gradient-to-r from-accent-cyan to-accent-magenta bg-clip-text text-xl font-bold tracking-tight text-transparent font-montserrat">ExepaginasWeb</span>
           </motion.a>

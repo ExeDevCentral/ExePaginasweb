@@ -5,9 +5,9 @@ import Header from './components/Header'
 import Hero from './components/Hero/Hero'
 import Products from './components/Products/Products'
 import Features from './components/Features/Features'
-import BotWidget from './components/Bot/BotWidget'
 import ErrorBoundary from './components/ErrorBoundary'
 
+const BotWidget = lazy(() => import('./components/Bot/BotWidget'))
 const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
 const ContactSection = lazy(() => import('./components/ContactSection'))
 
@@ -23,13 +23,13 @@ function App() {
         <meta property="og:type" content="website" />
 <meta property="og:title" content="ExeSistemasWEB | Sistemas Web para Negocios Locales" />
         <meta property="og:description" content="Sistemas web a medida para canchas de pádel, kioscos, veterinarias y más. Reservas online, gestión de stock y CRM." />
-        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:image" content="/og-image.webp" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="ExeSistemasWEB | Sistemas Web para Negocios Locales" />
         <meta name="twitter:description" content="Sistemas web a medida para canchas de pádel, kioscos, veterinarias y más. Reservas online, gestión de stock y CRM." />
-        <meta name="twitter:image" content="/og-image.png" />
+        <meta name="twitter:image" content="/og-image.webp" />
         
         <link rel="canonical" href="https://exepaginasweb.com" />
       </Helmet>
@@ -61,7 +61,9 @@ function App() {
             <ContactSection />
           </Suspense>
         </motion.main>
-        <BotWidget />
+        <Suspense fallback={null}>
+          <BotWidget />
+        </Suspense>
       </div>
     </ErrorBoundary>
   )

@@ -25,8 +25,6 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
 
-    console.log('[EmailJS] Config:', { serviceId, templateId, publicKey: publicKey ? 'OK' : 'MISSING' })
-
     if (!serviceId || !templateId || !publicKey) {
       setStatus('error')
       setFeedback('Error de configuración: faltan credenciales de EmailJS.')
@@ -265,4 +263,3 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
 }
 
 export default ContactSection
-

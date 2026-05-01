@@ -1,6 +1,13 @@
 {
   "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "framework": "vite",
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
     {
       "source": "/((?!api/).*)",
       "destination": "/index.html"

@@ -73,11 +73,7 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
   return (
     <section
       id="contact"
-      className="relative px-4 py-28 sm:px-6 lg:px-8 overflow-hidden"
-      style={{
-        backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)`,
-        backgroundSize: '32px 32px',
-      }}
+      className="relative px-4 py-28 sm:px-6 lg:px-8 overflow-hidden z-10"
     >
       {/* Ambient blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">

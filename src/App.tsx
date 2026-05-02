@@ -6,6 +6,7 @@ import Hero from './components/Hero/Hero'
 import Products from './components/Products/Products'
 import Features from './components/Features/Features'
 import ErrorBoundary from './components/ErrorBoundary'
+import PremiumBackground from './components/Effects/PremiumBackground'
 
 const BotWidget = lazy(() => import('./components/Bot/BotWidget'))
 const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
@@ -43,7 +44,8 @@ function App() {
         
         <link rel="canonical" href="https://exepaginasweb.com" />
       </Helmet>
-      <div className="min-h-screen bg-primary-bg text-primary-text">
+      <div className="min-h-screen bg-transparent text-primary-text relative">
+        <PremiumBackground />
 
         {/* Barra de progreso de lectura */}
         <motion.div

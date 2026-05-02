@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { Upload, Image as ImageIcon, Settings, Download, Play, X, ShoppingCart } from 'lucide-react'
 import { CoffeePortal3D } from '../Effects/CoffeePortal3D'
+import { useFocusTrap } from '../../hooks/useFocusTrap'
 
 // --- CONSTANTES ESTÁTICAS (Optimizadas fuera del componente) ---
 const PROJECTS = [
@@ -63,6 +64,7 @@ const DemoZone = () => {
   const [flyingItem, setFlyingItem] = useState<number | null>(null)
   const [cartBounce, setCartBounce] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
+  const modalRef = useFocusTrap(!!selectedProject)
 
   // Configuración estable de partículas de vapor (Pixel Coffee)
   const steamParticles = useMemo(() => Array.from({ length: 12 }).map((_, i) => ({
@@ -214,7 +216,7 @@ const DemoZone = () => {
   }
 
   return (
-    <section id="demo" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-primary-bg/95 to-primary-bg">
+    <section id="demo" className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -501,6 +503,8 @@ const DemoZone = () => {
       <AnimatePresence>
         {selectedProject && (
           <motion.div
+            ref={modalRef}
+            tabIndex={-1}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -549,7 +553,8 @@ const DemoZone = () => {
                         </motion.button>
                       ))}
                       <button onClick={() => { setSelectedProject(null); setWhatsappProp(null) }}
-                        className="ml-3 p-2.5 rounded-full border border-white/10 text-zinc-500 hover:text-white hover:border-white/30 transition-all">
+                        className="ml-3 p-2.5 rounded-full border border-white/10 text-zinc-500 hover:text-white hover:border-white/30 transition-all"
+                        aria-label="Cerrar">
                         <X size={18} />
                       </button>
                     </div>
@@ -725,7 +730,8 @@ const DemoZone = () => {
                       )}
                     </motion.div>
                     <button onClick={() => { setSelectedProject(null); setCartItems([]) }}
-                      className="p-3 bg-amber-900/20 hover:bg-red-900/30 border border-amber-800/40 hover:border-red-700/50 rounded-full text-amber-400 hover:text-red-400 transition-all">
+                      className="p-3 bg-amber-900/20 hover:bg-red-900/30 border border-amber-800/40 hover:border-red-700/50 rounded-full text-amber-400 hover:text-red-400 transition-all"
+                      aria-label="Cerrar">
                       <X size={22} />
                     </button>
                   </div>
@@ -831,7 +837,8 @@ const DemoZone = () => {
 
                 {/* Close */}
                 <button onClick={() => setSelectedProject(null)}
-                  className="absolute top-5 right-5 z-20 p-3 bg-yellow-400/10 hover:bg-yellow-400/25 border border-yellow-400/40 rounded-full text-yellow-400 transition-all duration-200">
+                  className="absolute top-5 right-5 z-20 p-3 bg-yellow-400/10 hover:bg-yellow-400/25 border border-yellow-400/40 rounded-full text-yellow-400 transition-all duration-200"
+                  aria-label="Cerrar">
                   <X size={26} />
                 </button>
 
@@ -911,7 +918,8 @@ const DemoZone = () => {
                 transition={{ type: 'spring', stiffness: 180, damping: 20 }}
               >
                 <button onClick={() => setSelectedProject(null)}
-                  className="absolute top-6 right-6 z-20 p-4 bg-primary-bg/50 hover:bg-accent-magenta/20 border border-accent-cyan/20 hover:border-accent-magenta rounded-full text-primary-text transition-all duration-300 backdrop-blur-md">
+                  className="absolute top-6 right-6 z-20 p-4 bg-primary-bg/50 hover:bg-accent-magenta/20 border border-accent-cyan/20 hover:border-accent-magenta rounded-full text-primary-text transition-all duration-300 backdrop-blur-md"
+                  aria-label="Cerrar">
                   <X size={28} />
                 </button>
                 <div className="p-10 border-b border-accent-cyan/20 bg-gradient-to-r from-accent-cyan/10 to-transparent relative overflow-hidden">

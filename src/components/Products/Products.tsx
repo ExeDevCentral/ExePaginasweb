@@ -72,7 +72,7 @@ const Products = () => {
       className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
     >
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary-bg via-primary-bg/95 to-primary-bg">
+      <div className="absolute inset-0 bg-transparent">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent-cyan rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent-magenta rounded-full blur-3xl"></div>

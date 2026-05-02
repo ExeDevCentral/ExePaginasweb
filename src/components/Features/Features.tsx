@@ -107,7 +107,7 @@ const Features = () => {
     <section
       id="features"
       ref={containerRef}
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-primary-bg via-primary-bg/98 to-primary-bg relative overflow-hidden"
+      className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10"
     >
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-20">
@@ -146,7 +146,7 @@ const Features = () => {
             <div className="mb-8 flex items-center justify-between border-b border-white/5 pb-6">
               <div>
                 <p className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Status Global</p>
-                <h4 className="text-2xl font-bold text-white">Dashboard Operativo</h4>
+                <h3 className="text-2xl font-bold text-white">Dashboard Operativo</h3>
               </div>
               <span className="flex items-center gap-2 rounded-full bg-emerald-500/10 px-4 py-1.5 text-xs font-bold text-emerald-400 border border-emerald-500/20">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />

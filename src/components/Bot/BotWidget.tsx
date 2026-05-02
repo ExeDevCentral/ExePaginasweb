@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
 import { MessageCircle, X, Send, Bot, User, Zap, Trash2 } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
+import { useFocusTrap } from '../../hooks/useFocusTrap'
 
 interface Message {
   id: string
@@ -48,6 +49,7 @@ const BotWidget = () => {
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const modalRef = useFocusTrap(isOpen)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -209,6 +211,7 @@ const BotWidget = () => {
       <motion.button
         className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? "Cerrar chat" : "Abrir chat"}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         animate={isOpen ? { rotate: 45 } : { rotate: 0 }}
@@ -224,6 +227,8 @@ const BotWidget = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            ref={modalRef}
+            tabIndex={-1}
             className="fixed bottom-4 right-0 sm:bottom-24 sm:right-6 z-40 w-full sm:w-[450px] h-[calc(100dvh-5rem)] sm:h-[600px] max-w-[100vw] flex flex-col bg-gradient-to-br from-primary-bg/95 to-primary-bg/90 backdrop-blur-md border border-accent-cyan/20 rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden"
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -252,6 +257,7 @@ const BotWidget = () => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   title="Reiniciar conversación"
+                  aria-label="Reiniciar conversación"
                 >
                   <Trash2 className="w-4 h-4" />
                 </motion.button>
@@ -383,6 +389,7 @@ const BotWidget = () => {
                   className="px-4 py-2 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-primary-bg disabled:opacity-50 disabled:cursor-not-allowed"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  aria-label="Enviar mensaje"
                 >
                   <Send className="w-4 h-4" />
                 </motion.button>

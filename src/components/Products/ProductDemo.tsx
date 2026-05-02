@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Calendar, Clock, User, Check, CreditCard, Search, ShoppingCart, BarChart3, PawPrint, Users } from 'lucide-react'
 import { useState } from 'react'
+import { useFocusTrap } from '../../hooks/useFocusTrap'
 
 interface ProductDemoProps {
   isOpen: boolean
@@ -10,6 +11,7 @@ interface ProductDemoProps {
 
 const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
   const [activeTab, setActiveTab] = useState('calendar')
+  const modalRef = useFocusTrap(isOpen)
 
   // Demo data for each product type
   const demoData = {
@@ -46,7 +48,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               })}
             </div>
             <div className="bg-white/5 rounded-xl p-4">
-              <h4 className="text-sm font-semibold mb-3 text-accent-cyan">Turnos Disponibles - Hoy</h4>
+              <h3 className="text-sm font-semibold mb-3 text-accent-cyan">Turnos Disponibles - Hoy</h3>
               <div className="space-y-2">
                 {['16:00 - Libre', '17:00 - Reservado', '18:00 - Libre', '19:00 - Reservado', '20:00 - Libre', '21:00 - Libre'].map((slot, idx) => (
                   <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
@@ -100,7 +102,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               </div>
             </div>
             <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-primary-secondary">Últimos Pagos</h4>
+              <h3 className="text-sm font-semibold text-primary-secondary">Últimos Pagos</h3>
               {[
                 { name: 'Juan Pérez', amount: '$8.500', method: 'Mercado Pago', time: '18:05' },
                 { name: 'María López', amount: '$6.200', method: 'Efectivo', time: '17:30' },
@@ -202,7 +204,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               </div>
             </div>
             <div className="bg-white/5 rounded-xl p-4">
-              <h4 className="text-sm font-semibold mb-3">Productos Más Vendidos</h4>
+              <h3 className="text-sm font-semibold mb-3">Productos Más Vendidos</h3>
               <div className="space-y-2">
                 {[
                   { name: 'Coca-Cola 2L', sold: 45 },
@@ -342,7 +344,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               </div>
             </div>
             <div className="bg-white/5 rounded-xl p-4">
-              <h4 className="text-sm font-semibold mb-3">Últimas Ventas</h4>
+              <h3 className="text-sm font-semibold mb-3">Últimas Ventas</h3>
               {[
                 { client: 'Juan Pérez', amount: '$15.000', product: 'Sistema Web' },
                 { client: 'María López', amount: '$8.500', product: 'Landing Page' },
@@ -409,6 +411,8 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
 
           {/* Modal */}
           <motion.div
+            ref={modalRef}
+            tabIndex={-1}
             className="fixed inset-0 flex items-center justify-center z-50 p-4"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -419,12 +423,13 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-white/10">
                 <div>
-                  <h3 className="text-xl font-bold text-primary-text">{currentDemo.title}</h3>
+                  <h2 className="text-xl font-bold text-primary-text">{currentDemo.title}</h2>
                   <p className="text-sm text-primary-secondary mt-1">Demo interactiva - Explorá las funcionalidades</p>
                 </div>
                 <button
                   onClick={onClose}
                   className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+                  aria-label="Cerrar"
                 >
                   <X size={20} className="text-primary-secondary" />
                 </button>

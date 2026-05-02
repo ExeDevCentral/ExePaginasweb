@@ -7,6 +7,10 @@ import Products from './components/Products/Products'
 import Features from './components/Features/Features'
 import ErrorBoundary from './components/ErrorBoundary'
 import PremiumBackground from './components/Effects/PremiumBackground'
+import SocialProof from './components/SocialProof/SocialProof'
+import Process from './components/Process/Process'
+import FAQ from './components/FAQ/FAQ'
+import Footer from './components/Footer/Footer'
 
 const BotWidget = lazy(() => import('./components/Bot/BotWidget'))
 const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
@@ -60,8 +64,10 @@ function App() {
           transition={{ duration: 0.5 }}
         >
           <Hero />
+          <SocialProof />
           <Products />
           <Features />
+          <Process />
           <Suspense fallback={
             <div className="py-20 text-center text-primary-secondary">
               <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
@@ -78,7 +84,9 @@ function App() {
           }>
             <ContactSection />
           </Suspense>
+          <FAQ />
         </motion.main>
+        <Footer />
         <Suspense fallback={null}>
           <BotWidget />
         </Suspense>

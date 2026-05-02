@@ -36,12 +36,11 @@ const COFFEE_PRODUCTS = [
 ];
 
 const PROPERTIES = [
-  { id: 1, type: 'casa', name: 'Villa Serena', location: 'Zona Norte · Buenos Aires', price: 'USD 285,000', beds: 4, baths: 3, m2: 220, gradient: 'from-stone-700 to-stone-900', tag: 'Destacada' },
-  { id: 2, type: 'depto', name: 'Loft Aura Centro', location: 'Microcentro · CABA', price: 'USD 95,000', beds: 1, baths: 1, m2: 58, gradient: 'from-slate-700 to-slate-900', tag: 'Nuevo' },
-  { id: 3, type: 'casa', name: 'Casa del Lago', location: 'Tigre · GBA', price: 'USD 420,000', beds: 5, baths: 4, m2: 380, gradient: 'from-emerald-900 to-stone-900', tag: 'Premium' },
-  { id: 4, type: 'depto', name: 'Studio Palermo', location: 'Palermo · CABA', price: 'USD 72,000', beds: 1, baths: 1, m2: 42, gradient: 'from-zinc-700 to-zinc-900', tag: 'Oportunidad' },
-  { id: 5, type: 'casa', name: 'Chalet Andino', location: 'Bariloche · Río Negro', price: 'USD 350,000', beds: 3, baths: 2, m2: 190, gradient: 'from-amber-900 to-stone-900', tag: 'Exclusiva' },
-  { id: 6, type: 'depto', name: 'Depto Recoleta', location: 'Recoleta · CABA', price: 'USD 130,000', beds: 2, baths: 2, m2: 85, gradient: 'from-neutral-700 to-neutral-900', tag: 'Clásico' },
+  { id: 1, type: 'casa', name: 'Villa Serena', location: 'Zona Norte · Buenos Aires', price: 'USD 285,000', beds: 4, baths: 3, m2: 220, gradient: 'from-stone-700 to-stone-900', image: '/assets/casa-aura/1.jpg', tag: 'Destacada' },
+  { id: 2, type: 'depto', name: 'Loft Aura Centro', location: 'Microcentro · CABA', price: 'USD 95,000', beds: 1, baths: 1, m2: 58, gradient: 'from-slate-700 to-slate-900', image: '/assets/casa-aura/2.jpg', tag: 'Nuevo' },
+  { id: 3, type: 'casa', name: 'Casa del Lago', location: 'Tigre · GBA', price: 'USD 420,000', beds: 5, baths: 4, m2: 380, gradient: 'from-emerald-900 to-stone-900', image: '/assets/casa-aura/3.jpg', tag: 'Premium' },
+  { id: 4, type: 'depto', name: 'Studio Palermo', location: 'Palermo · CABA', price: 'USD 72,000', beds: 1, baths: 1, m2: 42, gradient: 'from-zinc-700 to-zinc-900', image: '/assets/casa-aura/4.jpg', tag: 'Oportunidad' },
+  { id: 5, type: 'casa', name: 'Chalet Andino', location: 'Bariloche · Río Negro', price: 'USD 350,000', beds: 3, baths: 2, m2: 190, gradient: 'from-amber-900 to-stone-900', image: '/assets/casa-aura/5.jpg', tag: 'Exclusiva' },
 ];
 
 const DemoZone = () => {
@@ -566,7 +565,8 @@ const DemoZone = () => {
                     <div className="w-[52%] shrink-0 relative overflow-hidden border-r border-white/6">
                       <AnimatePresence mode="wait">
                         <motion.div key={auraFeatured.id}
-                          className={`absolute inset-0 bg-gradient-to-br ${auraFeatured.gradient}`}
+                          className={`absolute inset-0 bg-cover bg-center bg-gradient-to-br ${auraFeatured.gradient}`}
+                          style={auraFeatured.image ? { backgroundImage: `url(${auraFeatured.image})` } : {}}
                           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                           transition={{ duration: 0.35 }}
                         />
@@ -628,8 +628,13 @@ const DemoZone = () => {
                             whileHover={{ x: -2 }}
                           >
                             {/* Mini thumb */}
-                            <div className={`w-20 h-16 rounded-xl bg-gradient-to-br ${prop.gradient} shrink-0 flex items-center justify-center text-white/30 text-xs font-bold`}>
-                              {prop.type === 'casa' ? '🏡' : '🏙'}
+                            <div 
+                              className={`w-20 h-16 rounded-xl bg-gradient-to-br ${prop.gradient} shrink-0 flex items-center justify-center text-white/30 text-xs font-bold bg-cover bg-center relative overflow-hidden`}
+                            >
+                              {prop.image && (
+                                <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${prop.image})` }} />
+                              )}
+                              {!prop.image && (prop.type === 'casa' ? '🏡' : '🏙')}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between gap-1">

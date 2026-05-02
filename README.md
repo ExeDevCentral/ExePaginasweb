@@ -26,6 +26,8 @@
 | 🤖 **AI Chat Assistant** | Groq API (Llama 3.3/3.1) | Chatbot con **Streaming palabra por palabra**, botones de respuesta rápida, memoria contextual y manejo robusto de fragmentos de red. |
 | 🎨 **Generación de Código** | Groq Vision API | Convierte diseños en imágenes a HTML/CSS funcional vía IA |
 | 📧 **Contacto Inteligente** | Resend API | Envío de emails transaccionales con validación de datos |
+| ⚖️ **Cumplimiento Legal** | GDPR Ready | Subpáginas dedicadas de Términos de Servicio y Política de Privacidad con navegación fluida. |
+| 💎 **Footer Premium** | Glassmorphism | Pie de página interactivo con efectos de resplandor neón y diseño de cristal. |
 | 🧊 **Experiencias 3D** | React Three Fiber + Drei | Elementos 3D interactivos en la interfaz |
 | ⚡ **Animaciones Fluidas** | Framer Motion | Transiciones y micro-interacciones de 60fps |
 | 🎭 **UI Premium** | TailwindCSS + CSS Variables | Diseño oscuro con gradientes neón y glassmorphism |
@@ -113,6 +115,9 @@ ExeSistemasWEB/
 │   │   ├── DemoZone/      # Interactive demo section
 │   │   ├── Features/      # Feature cards
 │   │   ├── Hero/          # Hero with 3D elements
+│   │   │   ├── Footer.tsx         # Pie de página Premium
+│   │   │   ├── TermsOfService.tsx # Subpágina legal de términos
+│   │   │   └── PrivacyPolicy.tsx  # Subpágina de privacidad (GDPR)
 │   │   ├── ContactSection.tsx
 │   │   ├── ErrorBoundary.tsx
 │   │   └── Header.tsx

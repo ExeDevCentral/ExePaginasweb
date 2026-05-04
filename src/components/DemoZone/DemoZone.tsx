@@ -1,12 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { Upload, Image as ImageIcon, Settings, Download, Play, X, ShoppingCart } from 'lucide-react'
-=======
 import { CoffeePortal3D } from '../Effects/CoffeePortal3D'
 import PaywallModal from '../PaywallModal'
-
-=======
->>>>>>> c1e54a0f9b19a4ea4446d57fb16e5921e53014ae
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 
 // --- CONSTANTES ESTÁTICAS (Optimizadas fuera del componente) ---
@@ -68,15 +64,8 @@ const DemoZone = () => {
   const [flyingItem, setFlyingItem] = useState<number | null>(null)
   const [cartBounce, setCartBounce] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
->>>>>>> c1e54a0f9b19a4ea4446d57fb16e5921e53014ae
-=======
-
-=======
   const modalRef = useFocusTrap(!!selectedProject)
   const [isPaywallOpen, setIsPaywallOpen] = useState(false)
-
-=======
->>>>>>> c1e54a0f9b19a4ea4446d57fb16e5921e53014ae
 
   // Configuración estable de partículas de vapor (Pixel Coffee)
   const steamParticles = useMemo(() => Array.from({ length: 12 }).map((_, i) => ({
@@ -165,19 +154,12 @@ const DemoZone = () => {
     event.preventDefault()
   }, [])
 
->>>>>>> c1e54a0f9b19a4ea4446d57fb16e5921e53014ae
-    if (!uploadedFile) return
-=======
   const generateCode = async () => {
     if (!import.meta.env.VITE_GROQ_API_KEY) {
       setIsPaywallOpen(true)
       return
     }
 
-    if (!uploadedFile) return
-
-=======
->>>>>>> c1e54a0f9b19a4ea4446d57fb16e5921e53014ae
     if (!uploadedFile) return
 
     setIsProcessing(true)
@@ -404,13 +386,10 @@ const DemoZone = () => {
                   {errorMsg}
                 </p>
               )}
-<<<<<<< HEAD
               <PaywallModal 
                 isOpen={isPaywallOpen} 
                 onClose={() => setIsPaywallOpen(false)} 
               />
-=======
->>>>>>> c1e54a0f9b19a4ea4446d57fb16e5921e53014ae
             </motion.div>
           </motion.div>
 
@@ -1035,3 +1014,4 @@ const DemoZone = () => {
 }
 
 export default DemoZone
+

@@ -143,7 +143,7 @@ export default function StorePage() {
 
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { type: 'spring', damping: 25 } }
+    visible: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 25 } }
   };
 
   return (

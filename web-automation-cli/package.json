@@ -1,0 +1,22 @@
+{
+    "name": "web-automation-cli",
+    "version": "1.0.0",
+    "description": "AI-powered web development automation CLI",
+    "main": "dist/index.js",
+    "bin": {
+        "web-automation": "./dist/index.js"
+    },
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "dev": "ts-node src/index.ts"
+    },
+    "dependencies": {
+        "commander": "^11.1.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.19.39",
+        "ts-node": "^10.9.2",
+        "typescript": "^6.0.3"
+    }
+}

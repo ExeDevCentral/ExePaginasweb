@@ -48,7 +48,8 @@ const Header = () => {
             onClick={(e) => scrollToSection(e, 'home')}
           >
             <img 
-              src="/logo.webp" 
+              src="/logo-40.webp"
+              srcSet="/logo-40.webp 1x, /logo.webp 2x"
               alt="ExepaginasWeb Logo" 
               loading="eager" 
               fetchPriority="high"

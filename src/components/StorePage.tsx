@@ -87,41 +87,51 @@ export default function StorePage() {
     return () => clearInterval(timer);
   }, []);
 
-  // Inicializar botones de PayPal
+  // Inicializar botones de PayPal — el SDK se carga solo cuando esta página es visitada
   useEffect(() => {
+    const PAYPAL_SDK_URL = 'https://www.paypal.com/sdk/js?client-id=BAAk35iJNDDb0XFoKMN7Iv69Bs6nEXtfS8yZfoxfTw1pCutfmDI7JsfQ4_olqk-sCabj9ByUDT3jTiDMCs&components=hosted-buttons&disable-funding=venmo&currency=USD';
+
     const renderPayPalButtons = () => {
-      // @ts-ignore - PayPal es inyectado globalmente
+      // @ts-ignore
       if (window.paypal && window.paypal.HostedButtons) {
         PLANS.forEach(plan => {
           if (plan.paypalButtonId) {
             const containerId = `#paypal-container-${plan.paypalButtonId}`;
-            // Evitar renderizado múltiple si ya existe contenido
             const container = document.querySelector(containerId);
             if (container && container.innerHTML === '') {
-               // @ts-ignore
-              window.paypal.HostedButtons({
-                hostedButtonId: plan.paypalButtonId
-              }).render(containerId);
+              // @ts-ignore
+              window.paypal.HostedButtons({ hostedButtonId: plan.paypalButtonId }).render(containerId);
             }
           }
         });
       }
     };
 
+    // Si el SDK ya fue cargado por alguna razón, renderizamos directamente
     // @ts-ignore
     if (window.paypal) {
       renderPayPalButtons();
+      return;
+    }
+
+    // Verificar que el script no esté ya en el DOM
+    if (!document.querySelector(`script[src*="paypal.com/sdk"]`)) {
+      const script = document.createElement('script');
+      script.src = PAYPAL_SDK_URL;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.onload = renderPayPalButtons;
+      document.body.appendChild(script);
     } else {
+      // El script ya está en el DOM, esperar a que cargue
       const interval = setInterval(() => {
         // @ts-ignore
-        if (window.paypal) {
-          renderPayPalButtons();
-          clearInterval(interval);
-        }
-      }, 500);
+        if (window.paypal) { renderPayPalButtons(); clearInterval(interval); }
+      }, 300);
       return () => clearInterval(interval);
     }
   }, []);
+
 
   // Floating particles background (Recuperadas y mejoradas)
   const particles = Array.from({ length: 40 }, (_, i) => ({

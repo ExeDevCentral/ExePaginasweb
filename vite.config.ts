@@ -26,6 +26,7 @@ export default defineConfig({
     minify: 'esbuild',
     // Separar CSS por chunk para reducir el CSS crítico inicial
     cssCodeSplit: true,
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks(id) {

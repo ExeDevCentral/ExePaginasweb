@@ -7,14 +7,12 @@ import sitemap from 'vite-plugin-sitemap'
 export default defineConfig({
   plugins: [
     react(),
-    // Genera 'dist/stats.html' al compilar para optimizar el peso del bundle
     visualizer({
       open: false,
       filename: 'dist/stats.html',
     }),
-    // Sitemap automático para SEO
     sitemap({
-      hostname: 'https://exesistemasweb.vercel.app',
+      hostname: 'https://exepaginasweb.com',
       exclude: ['/404', '/500'],
     })
   ],
@@ -23,16 +21,31 @@ export default defineConfig({
       '/api': 'http://localhost:3000'
     }
   },
-  // Optimizaciones para Vercel
-build: {
+  build: {
     sourcemap: false,
     minify: 'esbuild',
+    // Separar CSS por chunk para reducir el CSS crítico inicial
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          'framer-motion': ['framer-motion'],
-          three: ['three', '@react-three/fiber', '@react-three/drei'],
+        manualChunks(id) {
+          // React core — siempre necesario
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'react-core'
+          }
+          // Framer Motion — necesario para las animaciones del Hero
+          if (id.includes('node_modules/framer-motion')) {
+            return 'framer-motion'
+          }
+          // three.js — SOLO se carga al hacer clic en Pixel Coffee
+          // NO incluir en manualChunks para que sea un chunk verdaderamente dinámico
+          if (id.includes('node_modules/three') || id.includes('@react-three')) {
+            return 'three-3d'
+          }
+          // react-markdown y react-syntax-highlighter — solo en el BotWidget
+          if (id.includes('react-markdown') || id.includes('react-syntax-highlighter') || id.includes('remark') || id.includes('rehype')) {
+            return 'markdown'
+          }
         }
       }
     }

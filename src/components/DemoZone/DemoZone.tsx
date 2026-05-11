@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useCallback, useEffect, useMemo, lazy, Suspense } from 'react'
+import { useState, useCallback, useEffect, useMemo, Suspense } from 'react'
 import { Upload, Image as ImageIcon, Settings, Download, Play, X, ShoppingCart } from 'lucide-react'
 import PaywallModal from '../PaywallModal'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 
-const CoffeePortal3D = lazy(() => import('../Effects/CoffeePortal3D').then(module => ({ default: module.CoffeePortal3D })))
+// CoffeePortal3D se importa dinámicamente SOLO cuando el usuario hace clic en Pixel Coffee
+// Esto evita que three.js (288KB) se cargue en la página principal
 
 // --- CONSTANTES ESTÁTICAS (Optimizadas fuera del componente) ---
 const PROJECTS = [
@@ -61,6 +62,7 @@ const DemoZone = () => {
   const [selectedProject, setSelectedProject] = useState<{title: string, category: string, summary: string} | null>(null)
   const [glitchActive, setGlitchActive] = useState(false)
   const [isCoffeeTransitioning, setIsCoffeeTransitioning] = useState(false)
+  const [CoffeePortalComponent, setCoffeePortalComponent] = useState<React.ComponentType<{isVisible: boolean}> | null>(null)
   const [cartItems, setCartItems] = useState<{id: number, name: string, price: number}[]>([])
   const [flyingItem, setFlyingItem] = useState<number | null>(null)
   const [cartBounce, setCartBounce] = useState(false)
@@ -114,6 +116,12 @@ const DemoZone = () => {
         setSelectedProject(project)
       }, 600)
     } else if (project.title === 'Pixel Coffee') {
+      // Cargamos three.js solo la primera vez que el usuario hace clic en Pixel Coffee
+      if (!CoffeePortalComponent) {
+        import('../Effects/CoffeePortal3D').then(module => {
+          setCoffeePortalComponent(() => module.CoffeePortal3D)
+        })
+      }
       setIsCoffeeTransitioning(true)
       setTimeout(() => {
         setSelectedProject(project)
@@ -507,10 +515,12 @@ const DemoZone = () => {
         )}
       </AnimatePresence>
 
-      {/* Efecto Alucinante 3D para Café */}
-      <Suspense fallback={null}>
-        <CoffeePortal3D isVisible={isCoffeeTransitioning} />
-      </Suspense>
+      {/* Efecto Alucinante 3D para Café — solo se monta si el componente fue cargado */}
+      {CoffeePortalComponent && (
+        <Suspense fallback={null}>
+          <CoffeePortalComponent isVisible={isCoffeeTransitioning} />
+        </Suspense>
+      )}
 
       {/* Portal de Cristal (Modal Exagerado) */}
       <AnimatePresence>

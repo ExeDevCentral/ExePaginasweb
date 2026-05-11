@@ -104,16 +104,19 @@ const Hero: React.FC = () => {
       )}
 
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
+        {/* H1 visible inmediatamente para Lighthouse LCP */}
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-white tracking-tighter leading-none mb-6">
+          SISTEMAS <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">WEB</span>
+          <br />
+          <span className="text-4xl md:text-6xl opacity-90">A MEDIDA</span>
+        </h1>
+        
+        {/* Resto animado con motion */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
         >
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-white tracking-tighter leading-none mb-6">
-            SISTEMAS <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">WEB</span>
-            <br />
-            <span className="text-4xl md:text-6xl opacity-90">A MEDIDA</span>
-          </h1>
           
 <p className="max-w-2xl mx-auto text-lg md:text-xl text-primary-secondary font-inter mb-10 min-h-[1.5em]">
             {typedText}

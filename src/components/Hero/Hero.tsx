@@ -118,10 +118,18 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
         >
           
-<p className="max-w-2xl mx-auto text-lg md:text-xl text-primary-secondary font-inter mb-10 min-h-[1.5em]">
-            {typedText}
-            <span className="animate-pulse border-r-2 border-accent-cyan ml-1"></span>
-          </p>
+          {/* Contenedor relativo para evitar saltos de diseño (CLS) */}
+          <div className="relative mb-10">
+            {/* Texto invisible que reserva el espacio total desde el inicio */}
+            <p className="max-w-2xl mx-auto text-lg md:text-xl font-inter opacity-0 select-none pointer-events-none" aria-hidden="true">
+              {HERO_TYPEWRITER_TEXT}
+            </p>
+            {/* Texto animado que se superpone perfectamente */}
+            <p className="absolute inset-0 max-w-2xl mx-auto text-lg md:text-xl text-primary-secondary font-inter">
+              {typedText}
+              <span className="animate-pulse border-r-2 border-accent-cyan ml-1"></span>
+            </p>
+          </div>
 
           <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
             <SalonBloomButton href="#products" onClick={handleScrollToProducts} />

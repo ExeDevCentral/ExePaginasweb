@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 import { motion, useScroll, useSpring } from 'framer-motion'
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import Header from './components/Header'
 import Hero from './components/Hero/Hero'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -17,6 +17,28 @@ const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
 const ContactSection = lazy(() => import('./components/ContactSection'))
 
 function App() {
+  const [loadHeavyComponents, setLoadHeavyComponents] = useState(false)
+
+  // Diferir la carga de componentes pesados como el Bot que no son críticos para LCP
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoadHeavyComponents(true)
+    }, 3500)
+    
+    // Si el usuario hace scroll antes, los cargamos
+    const handleScroll = () => {
+      setLoadHeavyComponents(true)
+      window.removeEventListener('scroll', handleScroll)
+      clearTimeout(timer)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   // Capturamos el progreso del scroll (0 a 1)
   const { scrollYProgress } = useScroll()
   
@@ -93,10 +115,10 @@ function App() {
           </Suspense>
         </motion.main>
         <Suspense fallback={<div className="h-20" />}>
-          <Footer />
+          {loadHeavyComponents && <Footer />}
         </Suspense>
         <Suspense fallback={null}>
-          <BotWidget />
+          {loadHeavyComponents && <BotWidget />}
         </Suspense>
       </div>
     </ErrorBoundary>

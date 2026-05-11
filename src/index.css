@@ -166,7 +166,12 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: gradientShift 8s ease infinite;
+  }
+  
+  @media (min-width: 768px) {
+    .text-gradient-animated {
+      animation: gradientShift 8s ease infinite;
+    }
   }
 
   .hero-grid {

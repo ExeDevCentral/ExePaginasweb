@@ -114,87 +114,101 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <motion.button
-            className="md:hidden p-2 -mr-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+            className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center -mr-2 rounded-lg text-white hover:bg-white/10 transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             whileTap={{ scale: 0.9 }}
             aria-label="Menú principal"
           >
-            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
           </motion.button>
         </div>
 
         {/* Mobile Menu Premium Overlay */}
         <AnimatePresence>
           {isMenuOpen && (
-            <motion.div
-              key="mobile-menu"
-              className="md:hidden absolute top-full left-0 w-full bg-primary-bg/98 backdrop-blur-xl border-b border-accent-cyan/20 h-[calc(100dvh-73px)] flex flex-col overflow-y-auto"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              {/* Ambient glow */}
-              <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                <div className="absolute -top-24 left-1/3 h-72 w-72 rounded-full bg-accent-cyan/5 blur-[100px]" />
-                <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-accent-magenta/5 blur-[90px]" />
-              </div>
+            <>
+              {/* Overlay oscuro detrás del menú */}
+              <motion.div
+                key="mobile-overlay"
+                className="md:hidden fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                onClick={() => setIsMenuOpen(false)}
+              />
 
-              <nav className="relative flex flex-col px-6 pt-12 pb-8 space-y-1 flex-1">
-                {NAV_ITEMS.map((item, index) => (
+              {/* Menú propiamente dicho */}
+              <motion.div
+                key="mobile-menu"
+                className="md:hidden fixed top-[73px] left-0 w-full bg-[#050508] border-b border-accent-cyan/20 h-[calc(100dvh-73px)] flex flex-col overflow-y-auto z-50"
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+              >
+                {/* Ambient glow */}
+                <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                  <div className="absolute -top-24 left-1/3 h-72 w-72 rounded-full bg-accent-cyan/5 blur-[100px]" />
+                  <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-accent-magenta/5 blur-[90px]" />
+                </div>
+
+                <nav className="relative flex flex-col px-6 pt-12 pb-8 space-y-1 flex-1">
+                  {NAV_ITEMS.map((item, index) => (
+                    <motion.a
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.07 }}
+                      key={item.label}
+                      href={item.href}
+                      className={`text-xl font-bold tracking-wide transition-all duration-200 py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] ${
+                        activeId === item.id
+                          ? 'text-accent-cyan bg-accent-cyan/8'
+                          : 'text-white/90 hover:text-accent-cyan hover:bg-white/5'
+                      }`}
+                      onClick={(e) => {
+                        setIsMenuOpen(false);
+                        scrollToSection(e, item.id);
+                      }}
+                    >
+                      {item.label}
+                    </motion.a>
+                  ))}
+                  
                   <motion.a
-                    initial={{ opacity: 0, y: 12 }}
+                    initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.06 }}
-                    key={item.label}
-                    href={item.href}
-                    className={`text-xl font-bold tracking-wide transition-all duration-200 py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] ${
-                      activeId === item.id
-                        ? 'text-accent-cyan bg-accent-cyan/8'
-                        : 'text-white/90 hover:text-accent-cyan hover:bg-white/5'
-                    }`}
-                    onClick={(e) => {
-                      setIsMenuOpen(false);
-                      scrollToSection(e, item.id);
-                    }}
+                    transition={{ delay: NAV_ITEMS.length * 0.07 }}
+                    href="/tienda"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xl font-bold tracking-wide text-accent-magenta hover:text-accent-cyan transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98]"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    {item.label}
+                    Tienda Online
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                   </motion.a>
-                ))}
-                
-                <motion.a
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: NAV_ITEMS.length * 0.06 }}
-                  href="/tienda"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xl font-bold tracking-wide text-accent-magenta hover:text-accent-cyan transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98]"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Tienda Online
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                </motion.a>
 
-                <motion.div 
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: (NAV_ITEMS.length + 1) * 0.06 }}
-                  className="pt-6 mt-auto"
-                >
-                  <a
-                    href="#contact"
-                    className="block w-full text-center rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta px-6 py-4 text-lg font-bold text-primary-bg shadow-lg shadow-accent-cyan/20 active:scale-[0.97] transition-all duration-150"
-                    onClick={(e) => {
-                      setIsMenuOpen(false);
-                      scrollToSection(e, 'contact');
-                    }}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: (NAV_ITEMS.length + 1) * 0.07 }}
+                    className="pt-6 mt-auto"
                   >
-                    Contactar Ahora
-                  </a>
-                </motion.div>
-              </nav>
-            </motion.div>
+                    <a
+                      href="#contact"
+                      className="block w-full text-center rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta px-6 py-4 text-lg font-bold text-white shadow-lg shadow-accent-cyan/20 active:scale-[0.97] transition-all duration-150"
+                      onClick={(e) => {
+                        setIsMenuOpen(false);
+                        scrollToSection(e, 'contact');
+                      }}
+                    >
+                      Contactar Ahora
+                    </a>
+                  </motion.div>
+                </nav>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
       </div>

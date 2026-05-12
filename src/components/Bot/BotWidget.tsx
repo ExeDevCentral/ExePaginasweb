@@ -276,13 +276,13 @@ const BotWidget = () => {
                 </div>
                 <motion.button 
                   onClick={clearHistory}
-                  className="ml-2 p-2 hover:bg-white/10 rounded-lg text-primary-secondary transition-colors"
+                  className="ml-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/10 rounded-lg text-primary-secondary transition-colors"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   title="Reiniciar conversación"
                   aria-label="Reiniciar conversación"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-5 h-5" />
                 </motion.button>
                 <div className="ml-auto flex items-center gap-1">
                   <div className="w-2 h-2 bg-accent-cyan rounded-full animate-pulse"></div>
@@ -380,7 +380,7 @@ const BotWidget = () => {
                         key={reply}
                         variants={itemVariants}
                         onClick={() => sendMessage(reply)}
-                        className="text-xs px-3 py-2 bg-accent-cyan/10 border border-accent-cyan/30 rounded-full text-accent-cyan hover:bg-accent-cyan/20 hover:border-accent-cyan transition-all duration-200"
+                        className="text-sm px-4 py-2.5 min-h-[44px] bg-accent-cyan/10 border border-accent-cyan/30 rounded-full text-accent-cyan hover:bg-accent-cyan/20 hover:border-accent-cyan transition-all duration-200 leading-tight"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -421,12 +421,12 @@ const BotWidget = () => {
                 <motion.button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim()}
-                  className="px-4 py-2 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-primary-bg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-primary-bg disabled:opacity-50 disabled:cursor-not-allowed"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   aria-label="Enviar mensaje"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-5 h-5" />
                 </motion.button>
               </div>
             </div>

@@ -88,9 +88,10 @@ export default function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                 {/* Botón cerrar */}
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-full transition-colors"
+                  className="absolute top-4 right-4 min-w-[44px] min-h-[44px] flex items-center justify-center bg-black/40 hover:bg-black/60 border border-white/20 hover:border-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-10"
+                  aria-label="Cerrar"
                 >
-                  <X className="w-5 h-5 text-white" />
+                  <X className="w-6 h-6 text-white" />
                 </button>
 
                 {/* Icono animado */}

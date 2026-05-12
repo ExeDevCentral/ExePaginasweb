@@ -565,9 +565,9 @@ const DemoZone = () => {
                         <span className="text-xs text-zinc-500 uppercase tracking-widest hidden sm:inline">{auraFiltered.length} propiedades</span>
                       </div>
                       <button onClick={() => { setSelectedProject(null); setWhatsappProp(null) }}
-                        className="sm:hidden p-2 rounded-full border border-white/10 text-zinc-500 hover:text-white hover:border-white/30 transition-all"
+                        className="sm:hidden min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full border border-white/20 text-zinc-400 hover:text-white hover:border-white/50 transition-all bg-black/30"
                         aria-label="Cerrar">
-                        <X size={18} />
+                        <X size={22} />
                       </button>
                     </div>
                     <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 scrollbar-hide">
@@ -583,9 +583,9 @@ const DemoZone = () => {
                         </motion.button>
                       ))}
                       <button onClick={() => { setSelectedProject(null); setWhatsappProp(null) }}
-                        className="hidden sm:block ml-3 p-2.5 rounded-full border border-white/10 text-zinc-500 hover:text-white hover:border-white/30 transition-all"
+                        className="hidden sm:flex ml-3 min-w-[44px] min-h-[44px] items-center justify-center rounded-full border border-white/20 text-zinc-400 hover:text-white hover:border-white/50 transition-all bg-black/30"
                         aria-label="Cerrar">
-                        <X size={18} />
+                        <X size={22} />
                       </button>
                     </div>
                   </div>
@@ -766,9 +766,9 @@ const DemoZone = () => {
                       )}
                     </motion.div>
                     <button onClick={() => { setSelectedProject(null); setCartItems([]) }}
-                      className="p-3 bg-amber-900/20 hover:bg-red-900/30 border border-amber-800/40 hover:border-red-700/50 rounded-full text-amber-400 hover:text-red-400 transition-all"
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-amber-900/20 hover:bg-red-900/40 border border-amber-800/40 hover:border-red-700/60 rounded-full text-amber-400 hover:text-red-300 transition-all"
                       aria-label="Cerrar">
-                      <X size={22} />
+                      <X size={24} />
                     </button>
                   </div>
                 </div>
@@ -873,7 +873,7 @@ const DemoZone = () => {
 
                 {/* Close */}
                 <button onClick={() => setSelectedProject(null)}
-                  className="absolute top-5 right-5 z-20 p-3 bg-yellow-400/10 hover:bg-yellow-400/25 border border-yellow-400/40 rounded-full text-yellow-400 transition-all duration-200"
+                  className="absolute top-5 right-5 z-20 min-w-[44px] min-h-[44px] flex items-center justify-center bg-black/40 hover:bg-black/60 border border-yellow-400/50 hover:border-yellow-400/70 rounded-full text-yellow-400 transition-all duration-200 backdrop-blur-sm"
                   aria-label="Cerrar">
                   <X size={26} />
                 </button>
@@ -954,9 +954,9 @@ const DemoZone = () => {
                 transition={{ type: 'spring', stiffness: 180, damping: 20 }}
               >
                 <button onClick={() => setSelectedProject(null)}
-                  className="absolute top-6 right-6 z-20 p-4 bg-primary-bg/50 hover:bg-accent-magenta/20 border border-accent-cyan/20 hover:border-accent-magenta rounded-full text-primary-text transition-all duration-300 backdrop-blur-md"
+                  className="absolute top-6 right-6 z-20 min-w-[48px] min-h-[48px] flex items-center justify-center bg-black/50 hover:bg-accent-magenta/30 border border-accent-cyan/30 hover:border-accent-magenta/60 rounded-full text-primary-text hover:text-white transition-all duration-200 backdrop-blur-md shadow-lg"
                   aria-label="Cerrar">
-                  <X size={28} />
+                  <X size={26} />
                 </button>
                 <div className="p-10 border-b border-accent-cyan/20 bg-gradient-to-r from-accent-cyan/10 to-transparent relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-accent-magenta/20 blur-[100px] rounded-full pointer-events-none" />

@@ -9,9 +9,9 @@ const requestLog = new Map();
 const ChatRequestSchema = z.object({
   message: z.string().min(1).max(1500),
   history: z.array(z.object({
-    type: z.enum(['user', 'bot']),
+    role: z.enum(['user', 'assistant']),
     content: z.string()
-  })).optional()
+  })).nullish()
 });
 
 const DEV_FALLBACK_RESPONSES = [
@@ -78,14 +78,15 @@ export default async function handler(req, res) {
   if (isRateLimited(ip)) {
     return res.status(429).json({ error: 'Demasiadas solicitudes. Intente de nuevo en un minuto.' });
   }
-
+  
   // Validación con Zod
   const validation = ChatRequestSchema.safeParse(req.body);
   if (!validation.success) {
+    console.error('[chat] Error de validación:', validation.error.format());
     return res.status(400).json({ error: 'Datos de mensaje inválidos.', details: validation.error.format() });
   }
-
-  const { message: userMessage, history = [] } = validation.data;
+  const { message: userMessage, history: rawHistory } = validation.data;
+  const history = rawHistory || [];
   const apiKey = process.env.GROQ_API_KEY;
   const defaultModel = process.env.GROQ_MODEL || 'llama-3.1-70b-versatile';
 
@@ -116,10 +117,7 @@ export default async function handler(req, res) {
               role: 'system',
               content: 'Eres el asistente oficial de ExeSistemasWEB. Ofreces servicios de desarrollo web (Landings desde $200 USD, Tiendas desde $500 USD). Responde en español de Argentina/Latinoamérica, de forma profesional pero cercana.'
             },
-            ...history.map(msg => ({
-              role: msg.type === 'user' ? 'user' : 'assistant',
-              content: msg.content
-            })),
+            ...history,
             { role: 'user', content: userMessage }
           ],
           temperature: 0.6,

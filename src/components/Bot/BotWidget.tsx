@@ -4,6 +4,8 @@ import { MessageCircle, X, Send, Bot, User, Zap, Trash2 } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 
+const MAX_MESSAGE_LENGTH = 1500
+
 interface Message {
   id: string
   type: 'user' | 'bot'
@@ -65,20 +67,23 @@ const BotWidget = () => {
     }
   }, [isOpen])
 
-  const requestBotResponse = async (userMessage: string) => {
+  const requestBotResponse = async (userMessage: string, currentMessages: Message[]) => {
     setIsTyping(true)
 
     try {
+      // Mapeamos el historial excluyendo el último mensaje de usuario que acabamos de agregar
+      // para que la API reciba (Historial previo) + (Mensaje actual)
+      const chatHistory = currentMessages.slice(-6).map(m => ({
+        role: m.type === 'bot' ? 'assistant' : 'user' as const,
+        content: m.content
+      }))
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           message: userMessage,
-          // Mapeamos el historial al formato estándar role/content para la API
-          history: messages.slice(-6).map(m => ({
-            role: m.type === 'bot' ? 'assistant' : 'user',
-            content: m.content
-          }))
+          history: chatHistory
         }),
       })
 
@@ -149,7 +154,10 @@ const BotWidget = () => {
         }
 
         if (!response.ok) {
-          throw new Error(data.error || `Error ${response.status}`);
+          const details = data.details 
+            ? Object.entries(data.details).map(([k, v]) => `${k}: ${JSON.stringify(v)}`).join(', ')
+            : ''
+          throw new Error(`${data.error}${details ? ' — ' + details : ''}`);
         }
 
         const botMessage: Message = {
@@ -162,10 +170,13 @@ const BotWidget = () => {
       }
 
     } catch (err: any) {
+      const isValidationError = err.message?.includes('Datos de mensaje inválidos')
       const fallbackMessage: Message = {
         id: crypto.randomUUID(),
         type: 'bot',
-        content: `❌ **Error:** ${err.message || 'No pude conectar con el asistente.'} \n\nVerifica que el servidor de la API esté activo.`,
+        content: isValidationError
+          ? `❌ **Error:** ${err.message}`
+          : `❌ **Error:** ${err.message || 'No pude conectar con el asistente.'} \n\nVerifica que el servidor de la API esté activo.`,
         timestamp: new Date(),
       }
       setMessages(prev => [...prev, fallbackMessage])
@@ -180,18 +191,30 @@ const BotWidget = () => {
   }
 
   const sendMessage = async (text: string) => {
-    if (!text.trim()) return
+    const trimmed = text.trim()
+    if (!trimmed) return
+    if (trimmed.length > MAX_MESSAGE_LENGTH) {
+      const errorMessage: Message = {
+        id: crypto.randomUUID(),
+        type: 'bot',
+        content: `❌ El mensaje es demasiado largo (${trimmed.length}/${MAX_MESSAGE_LENGTH} caracteres). Acórtalo para continuar.`,
+        timestamp: new Date(),
+      }
+      setMessages(prev => [...prev, errorMessage])
+      return
+    }
 
     const userMessage: Message = {
       id: crypto.randomUUID(),
       type: 'user',
-      content: text,
+      content: trimmed,
       timestamp: new Date()
     }
 
-    setMessages(prev => [...prev, userMessage])
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
     setInputValue('')
-    await requestBotResponse(text)
+    await requestBotResponse(trimmed, updatedMessages)
   }
 
   const handleSendMessage = async () => {
@@ -374,15 +397,27 @@ const BotWidget = () => {
             {/* Input */}
             <div className="p-4 border-t border-accent-cyan/20 bg-[#0f172a]">
               <div className="flex gap-2">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Escribe tu consulta aquí..."
-                  className="flex-1 px-5 py-3 text-base bg-[#1e293b] text-white border border-accent-cyan/30 rounded-full placeholder-slate-400 focus:outline-none focus:border-accent-cyan transition-all shadow-inner focus:ring-1 focus:ring-accent-cyan/50"
-                />
+                <div className="flex-1 relative">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => {
+                      if (e.target.value.length <= MAX_MESSAGE_LENGTH) {
+                        setInputValue(e.target.value)
+                      }
+                    }}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Escribe tu consulta aquí..."
+                    maxLength={MAX_MESSAGE_LENGTH}
+                    className="w-full px-5 py-3 pr-16 text-base bg-[#1e293b] text-white border border-accent-cyan/30 rounded-full placeholder-slate-400 focus:outline-none focus:border-accent-cyan transition-all shadow-inner focus:ring-1 focus:ring-accent-cyan/50"
+                  />
+                  <span className={`absolute right-4 top-1/2 -translate-y-1/2 text-xs ${
+                    inputValue.length >= MAX_MESSAGE_LENGTH ? 'text-red-400' : 'text-slate-500'
+                  }`}>
+                    {inputValue.length}/{MAX_MESSAGE_LENGTH}
+                  </span>
+                </div>
                 <motion.button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim()}

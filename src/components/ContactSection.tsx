@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { FormEvent, useState } from 'react'
-import { Mail, MessageCircle, Globe, ArrowRight, CheckCircle } from 'lucide-react'
+import { MessageCircle, Globe, ArrowRight, CheckCircle } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 
 const ContactSection = () => {

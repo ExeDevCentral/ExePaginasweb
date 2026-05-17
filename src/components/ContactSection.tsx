@@ -11,7 +11,7 @@ const ContactSection = () => {
   const [feedback, setFeedback] = useState('')
 
   const channels = [
-    { icon: MessageCircle, label: 'WhatsApp', value: '+54 9 341 6874786', href: 'https://wa.me/5493416874786', color: '#22c55e' },
+    { icon: MessageCircle, label: 'WhatsApp', value: '+54 9 341 6874786', href: 'https://wa.me/5493416874786?text=¡Hola%20ExeSistemasWEB!%20Me%20contacto%20desde%20la%20web.%20Me%20interesa%20agendar%20una%20sesión%20de%20consultoría%20para%20automatizar%20las%20operaciones%20de%20mi%20negocio%20con%20un%20sistema%20a%20medida.', color: '#22c55e' },
     { icon: Globe, label: 'Web', value: 'Exepaginasweb.com', href: 'https://Exepaginasweb.com', color: '#a855f7' },
   ]
 

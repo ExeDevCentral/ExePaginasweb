@@ -104,6 +104,16 @@ const Hero: React.FC = () => {
       )}
 
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
+        {/* Statement de Posicionamiento */}
+        <div className="max-w-4xl mb-8">
+          <h2 className="font-montserrat text-2xl md:text-4xl font-black text-white uppercase tracking-tight mb-3">
+            Tu negocio no necesita<br className="sm:hidden" /> otra página web.
+          </h2>
+          <p className="text-base md:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
+            Necesita un sistema que responda clientes, gestione reservas y ordene operaciones incluso mientras dormís.
+          </p>
+        </div>
+
         {/* H1 visible inmediatamente para Lighthouse LCP */}
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-white tracking-tighter leading-none mb-6">
           AUTOMATIZAMOS <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">RESERVAS</span>
@@ -132,7 +142,19 @@ const Hero: React.FC = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
-            <SalonBloomButton href="#products" onClick={handleScrollToProducts} />
+            <motion.a
+              href="#demo"
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById('demo');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-8 py-4 rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta text-primary-bg font-bold hover:shadow-lg hover:shadow-accent-cyan/25 transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              VER DEMOS
+            </motion.a>
             <motion.a
               href="#contact"
               className="px-8 py-4 rounded-full border border-white/20 text-white font-bold hover:bg-white/10 transition-all"

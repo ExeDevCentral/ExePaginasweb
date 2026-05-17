@@ -2,7 +2,7 @@
  * Texto principal para el efecto typewriter en el Hero
  */
 export const HERO_TYPEWRITER_TEXT = 
-  'Automatizamos tus reservas, ventas y gestión para que puedas crecer sin aumentar tus horas de trabajo.'
+  'No hacemos páginas web comunes. Creamos el software interno que tu negocio necesita para operar en piloto automático.'
 
 /**
  * Configuración de partículas para el Hero - Sensación premium

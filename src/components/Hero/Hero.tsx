@@ -106,9 +106,9 @@ const Hero: React.FC = () => {
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
         {/* H1 visible inmediatamente para Lighthouse LCP */}
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-white tracking-tighter leading-none mb-6">
-          SISTEMAS QUE <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">ESCALAN</span>
+          AUTOMATIZAMOS <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">RESERVAS</span>
           <br />
-          <span className="text-4xl md:text-6xl opacity-90">TU NEGOCIO</span>
+          <span className="text-4xl md:text-6xl opacity-90">Y OPERACIONES</span>
         </h1>
         
         {/* Resto animado con motion */}

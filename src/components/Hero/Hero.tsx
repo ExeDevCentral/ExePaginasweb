@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTypewriter } from '../../hooks/useTypewriter';
 import { HERO_TYPEWRITER_TEXT } from './constants';

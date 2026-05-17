@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { SalonBloomButton } from './SalonBloomButton';
 import { useTypewriter } from '../../hooks/useTypewriter';
 import { HERO_TYPEWRITER_TEXT } from './constants';
 
@@ -135,19 +136,14 @@ const Hero: React.FC = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
-            <motion.a
+            <SalonBloomButton
               href="#demo"
               onClick={(e) => {
                 e.preventDefault();
                 const el = document.getElementById('demo');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="px-8 py-4 rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta text-primary-bg font-bold hover:shadow-lg hover:shadow-accent-cyan/25 transition-all"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              VER DEMOS
-            </motion.a>
+            />
             <motion.a
               href="#contact"
               className="px-8 py-4 rounded-full border border-white/20 text-white font-bold hover:bg-white/10 transition-all"

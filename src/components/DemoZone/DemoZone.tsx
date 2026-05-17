@@ -46,6 +46,12 @@ const PROPERTIES = [
   { id: 5, type: 'casa', name: 'Chalet Andino', location: 'Bariloche · Río Negro', price: 'USD 350,000', beds: 3, baths: 2, m2: 190, gradient: 'from-amber-900 to-stone-900', image: '/assets/casa-aura/5.webp', tag: 'Exclusiva' },
 ];
 
+const TESTIMONIALS = [
+  { id: 1, name: 'Sofía R.', text: 'El mejor servicio de coloración que he probado. El sistema de reservas es súper cómodo.', role: 'Cliente Frecuente', avatar: '👩' },
+  { id: 2, name: 'Martina G.', text: 'Me encantó el ambiente y la atención. Los turnos siempre a tiempo.', role: 'Cliente Premium', avatar: '👱‍♀️' },
+  { id: 3, name: 'Valentina P.', text: 'La web me permitió agendar un domingo a la noche sin molestar a nadie. Genial.', role: 'Nueva Cliente', avatar: '👩‍🦰' },
+];
+
 const DemoZone = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
@@ -69,6 +75,7 @@ const DemoZone = () => {
   const [toast, setToast] = useState<string | null>(null)
   const modalRef = useFocusTrap(!!selectedProject)
   const [isPaywallOpen, setIsPaywallOpen] = useState(false)
+  const [activeTestimonial, setActiveTestimonial] = useState(0)
 
   // Configuración estable de partículas de vapor (Pixel Coffee)
   const steamParticles = useMemo(() => Array.from({ length: 12 }).map((_, i) => ({
@@ -944,6 +951,120 @@ const DemoZone = () => {
                 </div>
               </motion.div>
 
+            ) : selectedProject.title === 'Salon Bloom' ? (
+              <motion.div
+                className="relative z-10 flex flex-col w-full max-w-6xl h-[85vh] bg-[#0c050a] border border-pink-900/50 rounded-[2rem] shadow-[0_0_120px_-20px_rgba(236,72,153,0.3)] overflow-hidden"
+                initial={{ opacity: 0, scale: 0.9, y: 50 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 30 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {/* Ambient glow */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute -top-20 right-1/4 w-96 h-96 bg-pink-500/10 blur-[120px] rounded-full" />
+                  <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-purple-900/20 blur-[100px] rounded-full" />
+                </div>
+
+                {/* Close button */}
+                <button onClick={() => setSelectedProject(null)}
+                  className="absolute top-6 right-6 z-20 min-w-[44px] min-h-[44px] flex items-center justify-center bg-black/40 hover:bg-pink-900/40 border border-pink-800/40 hover:border-pink-700/60 rounded-full text-pink-400 transition-all"
+                  aria-label="Cerrar">
+                  <X size={24} />
+                </button>
+
+                {/* Header */}
+                <div className="px-10 pt-10 pb-6 border-b border-pink-900/20 relative">
+                  <p className="text-sm uppercase tracking-[0.3em] text-pink-500 font-bold mb-2">Landing de Servicios</p>
+                  <h2 className="text-5xl font-montserrat font-black text-white">
+                    Salon <span className="text-pink-500">Bloom</span>
+                  </h2>
+                  <p className="mt-3 text-lg text-gray-400 max-w-xl">Página para reservas, promociones y testimonios con estilo visual premium.</p>
+                </div>
+
+                {/* Body with 3D Carousel */}
+                <div className="flex-1 overflow-hidden p-10 flex flex-col items-center justify-center">
+                  <h3 className="text-xl font-montserrat font-bold text-white uppercase tracking-[0.3em] mb-10 text-center">
+                    Lo que dicen nuestras clientas
+                  </h3>
+                  
+                  {/* Carousel Container */}
+                  <div className="relative w-full max-w-4xl h-64 flex items-center justify-center" style={{ perspective: 1000 }}>
+                    {TESTIMONIALS.map((testimonial, index) => {
+                      const isActive = index === activeTestimonial;
+                      const isPrev = index === (activeTestimonial - 1 + TESTIMONIALS.length) % TESTIMONIALS.length;
+                      const isNext = index === (activeTestimonial + 1) % TESTIMONIALS.length;
+                      
+                      let rotateY = 0;
+                      let translateZ = 0;
+                      let translateX = 0;
+                      let opacity = 0;
+                      let zIndex = 0;
+                      
+                      if (isActive) {
+                        rotateY = 0;
+                        translateZ = 100;
+                        translateX = 0;
+                        opacity = 1;
+                        zIndex = 10;
+                      } else if (isPrev) {
+                        rotateY = 45;
+                        translateZ = 0;
+                        translateX = -200;
+                        opacity = 0.5;
+                        zIndex = 5;
+                      } else if (isNext) {
+                        rotateY = -45;
+                        translateZ = 0;
+                        translateX = 200;
+                        opacity = 0.5;
+                        zIndex = 5;
+                      } else {
+                        opacity = 0;
+                      }
+                      
+                      return (
+                        <motion.div
+                          key={testimonial.id}
+                          className="absolute w-80 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl cursor-pointer"
+                          style={{ transformStyle: 'preserve-3d' }}
+                          animate={{
+                            rotateY,
+                            translateZ,
+                            translateX,
+                            opacity,
+                            zIndex
+                          }}
+                          transition={{ duration: 0.6, ease: 'easeInOut' }}
+                          onClick={() => setActiveTestimonial(index)}
+                        >
+                          <div className="text-4xl mb-4">{testimonial.avatar}</div>
+                          <p className="text-gray-300 font-inter text-sm mb-4">"{testimonial.text}"</p>
+                          <div>
+                            <p className="text-white font-montserrat font-bold text-sm">{testimonial.name}</p>
+                            <p className="text-pink-500 font-montserrat font-semibold text-xs">{testimonial.role}</p>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Controls */}
+                  <div className="flex gap-4 mt-8">
+                    <button
+                      onClick={() => setActiveTestimonial((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)}
+                      className="p-3 bg-pink-500/20 border border-pink-500/40 rounded-full text-pink-400 hover:bg-pink-500/40 transition-colors"
+                    >
+                      ←
+                    </button>
+                    <button
+                      onClick={() => setActiveTestimonial((prev) => (prev + 1) % TESTIMONIALS.length)}
+                      className="p-3 bg-pink-500/20 border border-pink-500/40 rounded-full text-pink-400 hover:bg-pink-500/40 transition-colors"
+                    >
+                      →
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
             ) : (
               /* ─── PORTAL GENÉRICO (resto de proyectos) ─── */
               <motion.div

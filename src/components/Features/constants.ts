@@ -1,4 +1,4 @@
-import { LayoutDashboard, BellRing, BarChart3, UsersRound } from 'lucide-react'
+import { LayoutDashboard, BellRing, BarChart3, Code2 } from 'lucide-react'
 
 /**
  * Tipo para las propiedades de una feature card
@@ -33,9 +33,9 @@ export const FEATURES_LIST: FeatureData[] = [
     color: 'from-accent-magenta to-accent-yellow',
   },
   {
-    icon: UsersRound,
-    title: 'Equipo conectado',
-    description: 'Roles por usuario y seguimiento de tareas para marketing, ventas y soporte en una sola app web.',
+    icon: Code2,
+    title: 'Arquitectura Robusta',
+    description: 'Construimos con TDD (Test Driven Development) y código optimizado para asegurar un sistema rápido, seguro y escalable.',
     color: 'from-accent-cyan to-accent-magenta',
   },
 ] as const

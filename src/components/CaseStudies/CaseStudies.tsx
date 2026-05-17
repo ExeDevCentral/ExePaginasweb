@@ -1,5 +1,6 @@
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import { TrendingUp, Clock, Users } from 'lucide-react'
+import DashboardMock from './DashboardMock'
 
 const CASES = [
   {
@@ -129,10 +130,21 @@ const CaseStudies = () => {
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {CASES.map((study, index) => (
-            <CaseCard key={index} study={study} index={index} />
-          ))}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Tarjetas de Casos */}
+          <div className="lg:col-span-7 space-y-6">
+            {CASES.map((study, index) => (
+              <CaseCard key={index} study={study} index={index} />
+            ))}
+          </div>
+          
+          {/* Mockup del Dashboard (Evidencia Visual) */}
+          <div className="lg:col-span-5 lg:sticky lg:top-32">
+            <div className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-accent-cyan/80">
+              Evidencia Visual del Sistema
+            </div>
+            <DashboardMock />
+          </div>
         </div>
       </div>
     </section>

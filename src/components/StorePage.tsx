@@ -43,7 +43,7 @@ const PLANS = [
       'Soporte técnico prioritario 24/7'
     ],
     popular: true,
-    paypalButtonId: undefined
+    paypalButtonId: 'X93LPCZ9LPDC4'
   },
   {
     id: 'mantenimiento-premium',

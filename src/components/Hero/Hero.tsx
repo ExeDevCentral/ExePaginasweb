@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { SalonBloomButton } from './SalonBloomButton';
 import { useTypewriter } from '../../hooks/useTypewriter';
 import { HERO_TYPEWRITER_TEXT } from './constants';
 
@@ -40,13 +39,7 @@ const Hero: React.FC = () => {
 
 
 
-  const handleScrollToProducts = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const productsSection = document.getElementById('products');
-    if (productsSection) {
-      productsSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
+
 
   return (
     <section id="home" className="relative h-screen w-full overflow-hidden bg-black">

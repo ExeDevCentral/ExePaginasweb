@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
           <div className="md:col-span-2 space-y-6">
             <Link to="/" className="inline-block group">
               <h2 className="font-montserrat text-3xl font-black text-white tracking-tighter leading-none">
-                EXE<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFFF] to-[#FF00FF] group-hover:from-[#FF00FF] group-hover:to-[#00FFFF] transition-all duration-500">PAGINASWEB</span>
+                EXE<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFFF] to-[#FF00FF] group-hover:from-[#FF00FF] group-hover:to-[#00FFFF] transition-all duration-500">SISTEMASWEB</span>
               </h2>
             </Link>
             <p className="font-inter text-gray-400 text-base max-w-md leading-relaxed">
@@ -53,7 +53,7 @@ const Footer: React.FC = () => {
             </h3>
             <div className="font-inter text-gray-300 space-y-2">
               <p className="text-sm">España</p>
-              <p className="text-[#00FFFF] hover:underline cursor-pointer transition-all text-sm">contacto@exepaginasweb.com</p>
+              <a href="#contact" className="text-[#00FFFF] hover:underline cursor-pointer transition-all text-sm">Formulario de Contacto</a>
             </div>
           </div>
 
@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
         {/* Créditos finales */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="font-inter text-gray-500 text-xs tracking-wide">
-            © {new Date().getFullYear()} EXEPAGINASWEB. TODOS LOS DERECHOS RESERVADOS.
+            © {new Date().getFullYear()} EXESISTEMASWEB. TODOS LOS DERECHOS RESERVADOS.
           </p>
           <div className="flex items-center gap-8">
              <span className="text-gray-600 font-montserrat text-[10px] tracking-[0.4em] uppercase">Premium Experience</span>

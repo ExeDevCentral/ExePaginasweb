@@ -50,7 +50,7 @@ const Header = () => {
             <img 
               src="/logo-40.webp"
               srcSet="/logo-40.webp 1x, /logo.webp 2x"
-              alt="ExepaginasWeb Logo" 
+              alt="ExeSistemasWEB Logo" 
               loading="eager" 
               fetchPriority="high"
               width="40"
@@ -61,7 +61,7 @@ const Header = () => {
               }}
             />
 
-            <span className="bg-gradient-to-r from-accent-cyan to-accent-magenta bg-clip-text text-xl font-bold tracking-tight text-transparent font-montserrat">ExepaginasWeb</span>
+            <span className="bg-gradient-to-r from-accent-cyan to-accent-magenta bg-clip-text text-xl font-bold tracking-tight text-transparent font-montserrat">ExeSistemasWEB</span>
           </motion.a>
 
           {/* Desktop Menu */}

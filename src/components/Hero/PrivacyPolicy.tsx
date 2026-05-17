@@ -21,7 +21,7 @@ const PrivacyPolicy: React.FC = () => {
               Responsable del Tratamiento
             </h2>
             <p>
-              **ExePaginasWeb** es el responsable de los datos personales recopilados a través de este sitio. Nos comprometemos a proteger la privacidad de nuestros clientes de acuerdo con el **GDPR**.
+              **ExeSistemasWEB** es el responsable de los datos personales recopilados a través de este sitio. Nos comprometemos a proteger la privacidad de nuestros clientes de acuerdo con el **GDPR**.
             </p>
           </section>
 

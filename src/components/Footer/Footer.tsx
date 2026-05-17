@@ -47,10 +47,12 @@ const Footer = () => {
               <li><a href="#" className="text-primary-secondary hover:text-white transition-colors">Términos de Servicio</a></li>
               <li><a href="#" className="text-primary-secondary hover:text-white transition-colors">Política de Privacidad</a></li>
               <li className="pt-4 flex items-center gap-3 text-white font-medium">
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                  <Mail size={14} className="text-accent-cyan" />
-                </div>
-                Exemetal@hotmail.com
+                <a href="#contact" className="flex items-center gap-3 hover:text-accent-cyan transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                    <Mail size={14} className="text-accent-cyan" />
+                  </div>
+                  Formulario de Contacto
+                </a>
               </li>
             </ul>
           </div>

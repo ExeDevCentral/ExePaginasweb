@@ -21,7 +21,7 @@ const TermsOfService: React.FC = () => {
               1. Aceptación de los Términos
             </h2>
             <p>
-              Al contratar o utilizar los servicios de **ExePaginasWeb**, usted acepta estos términos. Si no está de acuerdo, le rogamos se abstenga de utilizar nuestra plataforma.
+              Al contratar o utilizar los servicios de **ExeSistemasWEB**, usted acepta estos términos. Si no está de acuerdo, le rogamos se abstenga de utilizar nuestra plataforma.
             </p>
           </section>
 
@@ -30,7 +30,7 @@ const TermsOfService: React.FC = () => {
               2. Propiedad Intelectual
             </h2>
             <p>
-              Todo el código, diseño y herramientas de automatización son propiedad exclusiva de ExePaginasWeb. Se prohíbe la reproducción total o parcial, ingeniería inversa o uso para fines distintos a los pactados sin autorización por escrito.
+              Todo el código, diseño y herramientas de automatización son propiedad exclusiva de ExeSistemasWEB. Se prohíbe la reproducción total o parcial, ingeniería inversa o uso para fines distintos a los pactados sin autorización por escrito.
             </p>
           </section>
 

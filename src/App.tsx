@@ -55,20 +55,20 @@ function App() {
   return (
     <ErrorBoundary>
       <Helmet>
-<title>ExeSistemasWEB | Sistemas Web para Negocios Locales</title>
-        <meta name="description" content="Sistemas web a medida para canchas de pádel, kioscos, veterinarias y más. Reservas online, gestión de stock, CRM y automatizaciones." />
-        <meta name="keywords" content="sistemas web, reservas online, gestión de negocios, CRM, automatización, exepaginasweb, canchas de pádel, kioscos, veterinarias" />
+<title>ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios</title>
+        <meta name="description" content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones para negocios que buscan liderar." />
+        <meta name="keywords" content="estudio de sistemas, automatización de negocios, software a medida, CRM, sistemas de reservas, dashboards, exesistemasweb" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-<meta property="og:title" content="ExeSistemasWEB | Sistemas Web para Negocios Locales" />
-        <meta property="og:description" content="Sistemas web a medida para canchas de pádel, kioscos, veterinarias y más. Reservas online, gestión de stock y CRM." />
+<meta property="og:title" content="ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios" />
+        <meta property="og:description" content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones." />
         <meta property="og:image" content="/og-image.webp" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="ExeSistemasWEB | Sistemas Web para Negocios Locales" />
-        <meta name="twitter:description" content="Sistemas web a medida para canchas de pádel, kioscos, veterinarias y más. Reservas online, gestión de stock y CRM." />
+<meta name="twitter:title" content="ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios" />
+        <meta name="twitter:description" content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones." />
         <meta name="twitter:image" content="/og-image.webp" />
         
         <link rel="canonical" href="https://exepaginasweb.com" />

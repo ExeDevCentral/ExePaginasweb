@@ -17,15 +17,15 @@ const ChatRequestSchema = z.object({
 const DEV_FALLBACK_RESPONSES = [
   {
     keywords: ['hola', 'buenas', 'hey', 'saludos'],
-    response: '¡Hola! 👋 Soy el asistente de ExeSistemasWEB. Estoy aquí para ayudarte con tu proyecto web.'
+    response: '¡Hola! 👋 Soy el asistente de ExeSistemasWEB. Te ayudo a automatizar las operaciones de tu negocio con sistemas web a medida.'
   },
   {
     keywords: ['precio', 'costo', 'cuanto', 'valor', 'presupuesto'],
-    response: '💰 Landings profesionales desde $200 USD, tiendas desde $500 USD. ¿Quieres un presupuesto?'
+    response: '💰 Desarrollamos sistemas web y software a medida (reservas, dashboards, automatización). El costo depende del alcance. ¿Querés solicitar una cotización?'
   },
   {
     keywords: ['contacto', 'whatsapp', 'hablar'],
-    response: '📬 Contacto: Exemetal@hotmail.com o WhatsApp +54 9 341 6874786.'
+    response: '📬 Usá el formulario de contacto o el chat en esta página para comunicarte con nosotros.'
   }
 ];
 
@@ -115,7 +115,7 @@ export default async function handler(req, res) {
           messages: [
             {
               role: 'system',
-              content: 'Eres el asistente oficial de ExeSistemasWEB. Ofreces servicios de desarrollo web (Landings desde $200 USD, Tiendas desde $500 USD). Responde en español de Argentina/Latinoamérica, de forma profesional pero cercana.'
+              content: 'Eres el asistente oficial de ExeSistemasWEB. Te especializas en sistemas web para automatizar operaciones de negocios locales (reservas, turnos, dashboards, gestión). No vendemos simples páginas web, hacemos software que optimiza procesos. Responde en español de Argentina/Latinoamérica, de forma profesional pero cercana.'
             },
             ...history,
             { role: 'user', content: userMessage }

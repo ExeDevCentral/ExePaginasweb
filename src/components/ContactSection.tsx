@@ -11,7 +11,6 @@ const ContactSection = () => {
   const [feedback, setFeedback] = useState('')
 
   const channels = [
-    { icon: Mail, label: 'Email', value: 'Exemetal@hotmail.com', href: 'mailto:Exemetal@hotmail.com', color: '#00ffff' },
     { icon: MessageCircle, label: 'WhatsApp', value: '+54 9 341 6874786', href: 'https://wa.me/5493416874786', color: '#22c55e' },
     { icon: Globe, label: 'Web', value: 'Exepaginasweb.com', href: 'https://Exepaginasweb.com', color: '#a855f7' },
   ]

@@ -1,4 +1,4 @@
-# 🚀 Ideas y Mejoras Futuras para ExePaginasWeb
+# 🚀 Ideas y Mejoras Futuras para ExeSistemasWEB
 
 Este documento sirve como un "Backlog" o lista de deseos de funcionalidades modernas y recursos gratuitos que podemos integrar en el futuro para llevar la landing page al siguiente nivel.
 

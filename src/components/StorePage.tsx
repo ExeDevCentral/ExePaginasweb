@@ -22,7 +22,8 @@ const PLANS = [
       'Certificado SSL automático',
       'Soporte técnico estándar'
     ],
-    popular: false
+    popular: false,
+    paypalButtonId: 'WCSE45C3YZ6E2'
   },
   {
     id: 'mantenimiento-avanzado',
@@ -41,7 +42,8 @@ const PLANS = [
       'Monitoreo de pasarelas de pago',
       'Soporte técnico prioritario 24/7'
     ],
-    popular: true
+    popular: true,
+    paypalButtonId: undefined
   },
   {
     id: 'mantenimiento-premium',
@@ -60,7 +62,8 @@ const PLANS = [
       'Consultoría estratégica',
       'Account Manager dedicado'
     ],
-    popular: false
+    popular: false,
+    paypalButtonId: undefined
   }
 ];
 
@@ -80,6 +83,48 @@ export default function StorePage() {
       }
     }, 30);
     return () => clearInterval(timer);
+  }, []);
+
+  // Inicializar botones de PayPal
+  useEffect(() => {
+    const PAYPAL_SDK_URL = 'https://www.paypal.com/sdk/js?client-id=BAAwjElC2hjoN-95DBLi8bLtLRKbmCxYWuJ0_Ksxyx7G-I56IOhq39XUItup4VL5DDxbydYvQYb1kCjD0I&components=hosted-buttons&disable-funding=venmo&currency=USD';
+
+    const renderPayPalButtons = () => {
+      // @ts-ignore
+      if (window.paypal && window.paypal.HostedButtons) {
+        PLANS.forEach(plan => {
+          if (plan.paypalButtonId) {
+            const containerId = `#paypal-container-${plan.paypalButtonId}`;
+            const container = document.querySelector(containerId);
+            if (container && container.innerHTML === '') {
+              // @ts-ignore
+              window.paypal.HostedButtons({ hostedButtonId: plan.paypalButtonId }).render(containerId);
+            }
+          }
+        });
+      }
+    };
+
+    // @ts-ignore
+    if (window.paypal) {
+      renderPayPalButtons();
+      return;
+    }
+
+    if (!document.querySelector(`script[src*="paypal.com/sdk"]`)) {
+      const script = document.createElement('script');
+      script.src = PAYPAL_SDK_URL;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.onload = renderPayPalButtons;
+      document.body.appendChild(script);
+    } else {
+      const interval = setInterval(() => {
+        // @ts-ignore
+        if (window.paypal) { renderPayPalButtons(); clearInterval(interval); }
+      }, 300);
+      return () => clearInterval(interval);
+    }
   }, []);
 
 
@@ -223,17 +268,21 @@ export default function StorePage() {
                 </ul>
 
                 <div className="mt-auto pt-4 min-h-[50px]">
-                  <button
-                    onClick={() => window.location.href = '/#contact'}
-                    className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 relative z-20
-                      ${plan.popular 
-                        ? `bg-gradient-to-r ${plan.color} shadow-lg ${plan.shadow} hover:opacity-90` 
-                        : 'bg-white/10 hover:bg-white/20 border border-white/10'
-                      }
-                    `}
-                  >
-                    Suscribirme <ArrowRight className="w-4 h-4" />
-                  </button>
+                  {plan.paypalButtonId ? (
+                    <div id={`paypal-container-${plan.paypalButtonId}`} className="w-full relative z-20"></div>
+                  ) : (
+                    <button
+                      onClick={() => window.location.href = '/#contact'}
+                      className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 relative z-20
+                        ${plan.popular 
+                          ? `bg-gradient-to-r ${plan.color} shadow-lg ${plan.shadow} hover:opacity-90` 
+                          : 'bg-white/10 hover:bg-white/20 border border-white/10'
+                        }
+                      `}
+                    >
+                      Suscribirme <ArrowRight className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               </motion.div>
             ))}

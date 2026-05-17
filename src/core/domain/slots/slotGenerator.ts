@@ -1,7 +1,7 @@
 import { WeeklySchedule } from '../availability/types';
 import { ExistingReservation } from '../reservations/types';
 
-import { DayOfWeek, ScheduleException } from '../availability/types';
+import { ScheduleException } from '../availability/types';
 import { getEffectiveShifts } from '../availability/availabilityEngine';
 import { hasConflict } from '../reservations/conflictDetector';
 

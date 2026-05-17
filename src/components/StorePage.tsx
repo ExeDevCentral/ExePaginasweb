@@ -82,50 +82,7 @@ export default function StorePage() {
     return () => clearInterval(timer);
   }, []);
 
-  // Inicializar botones de PayPal — el SDK se carga solo cuando esta página es visitada
-  useEffect(() => {
-    const PAYPAL_SDK_URL = 'https://www.paypal.com/sdk/js?client-id=BAAk35iJNDDb0XFoKMN7Iv69Bs6nEXtfS8yZfoxfTw1pCutfmDI7JsfQ4_olqk-sCabj9ByUDT3jTiDMCs&components=hosted-buttons&disable-funding=venmo&currency=USD';
 
-    const renderPayPalButtons = () => {
-      // @ts-ignore
-      if (window.paypal && window.paypal.HostedButtons) {
-        PLANS.forEach(plan => {
-          if (plan.paypalButtonId) {
-            const containerId = `#paypal-container-${plan.paypalButtonId}`;
-            const container = document.querySelector(containerId);
-            if (container && container.innerHTML === '') {
-              // @ts-ignore
-              window.paypal.HostedButtons({ hostedButtonId: plan.paypalButtonId }).render(containerId);
-            }
-          }
-        });
-      }
-    };
-
-    // Si el SDK ya fue cargado por alguna razón, renderizamos directamente
-    // @ts-ignore
-    if (window.paypal) {
-      renderPayPalButtons();
-      return;
-    }
-
-    // Verificar que el script no esté ya en el DOM
-    if (!document.querySelector(`script[src*="paypal.com/sdk"]`)) {
-      const script = document.createElement('script');
-      script.src = PAYPAL_SDK_URL;
-      script.async = true;
-      script.crossOrigin = 'anonymous';
-      script.onload = renderPayPalButtons;
-      document.body.appendChild(script);
-    } else {
-      // El script ya está en el DOM, esperar a que cargue
-      const interval = setInterval(() => {
-        // @ts-ignore
-        if (window.paypal) { renderPayPalButtons(); clearInterval(interval); }
-      }, 300);
-      return () => clearInterval(interval);
-    }
-  }, []);
 
 
   // Floating particles background (Recuperadas y mejoradas)
@@ -266,21 +223,17 @@ export default function StorePage() {
                 </ul>
 
                 <div className="mt-auto pt-4 min-h-[50px]">
-                  {plan.paypalButtonId ? (
-                    <div id={`paypal-container-${plan.paypalButtonId}`} className="w-full relative z-20"></div>
-                  ) : (
-                    <button
-                      onClick={() => window.location.href = '/#contact'}
-                      className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 relative z-20
-                        ${plan.popular 
-                          ? `bg-gradient-to-r ${plan.color} shadow-lg ${plan.shadow} hover:opacity-90` 
-                          : 'bg-white/10 hover:bg-white/20 border border-white/10'
-                        }
-                      `}
-                    >
-                      Suscribirme <ArrowRight className="w-4 h-4" />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => window.location.href = '/#contact'}
+                    className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 relative z-20
+                      ${plan.popular 
+                        ? `bg-gradient-to-r ${plan.color} shadow-lg ${plan.shadow} hover:opacity-90` 
+                        : 'bg-white/10 hover:bg-white/20 border border-white/10'
+                      }
+                    `}
+                  >
+                    Suscribirme <ArrowRight className="w-4 h-4" />
+                  </button>
                 </div>
               </motion.div>
             ))}

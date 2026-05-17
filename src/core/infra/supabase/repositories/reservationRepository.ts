@@ -1,6 +1,6 @@
 import { IReservationRepository } from '../../../domain/reservations/reservationRepository.interface';
 import { ExistingReservation } from '../../../domain/reservations/types';
-import { supabase } from '../client';
+// import { supabase } from '../client';
 
 export class SupabaseReservationRepository implements IReservationRepository {
   async findByEmployeeAndDate(

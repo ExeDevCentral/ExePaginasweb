@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { hasConflict } from './conflictDetector';
-import { BookingRequest } from './types';
+import { BookingRequest, ExistingReservation } from './types';
 
 describe('Conflict Detector Engine', () => {
   it('no hay conflicto si la agenda del empleado está vacía', () => {

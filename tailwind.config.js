@@ -70,10 +70,11 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "Montserrat", "sans-serif"],
+        sans: ["var(--font-sans)", "Outfit", "sans-serif"],
         serif: ["var(--font-serif)", "Playfair Display", "serif"],
         mono: ["var(--font-mono)", "Source Code Pro", "monospace"],
-        montserrat: ["Montserrat", "sans-serif"],
+        montserrat: ["Outfit", "sans-serif"], // Keep class name to prevent breaking existing components, but use Outfit
+        outfit: ["Outfit", "sans-serif"],
         inter: ["Inter", "sans-serif"],
       },
       letterSpacing: {

@@ -2,7 +2,7 @@
  * Texto principal para el efecto typewriter en el Hero
  */
 export const HERO_TYPEWRITER_TEXT = 
-  'Software de gestión, reservas online y automatizaciones inteligentes para potenciar tu negocio local.'
+  'Automatizamos tus reservas, ventas y gestión para que puedas crecer sin aumentar tus horas de trabajo.'
 
 /**
  * Configuración de partículas para el Hero - Sensación premium

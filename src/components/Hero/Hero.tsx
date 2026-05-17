@@ -106,9 +106,9 @@ const Hero: React.FC = () => {
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
         {/* H1 visible inmediatamente para Lighthouse LCP */}
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-white tracking-tighter leading-none mb-6">
-          SISTEMAS <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">WEB</span>
+          SISTEMAS QUE <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">ESCALAN</span>
           <br />
-          <span className="text-4xl md:text-6xl opacity-90">A MEDIDA</span>
+          <span className="text-4xl md:text-6xl opacity-90">TU NEGOCIO</span>
         </h1>
         
         {/* Resto animado con motion */}
@@ -139,7 +139,7 @@ const Hero: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              SOLICITAR PRESUPUESTO
+              INICIAR PROYECTO
             </motion.a>
           </div>
         </motion.div>

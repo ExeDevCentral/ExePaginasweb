@@ -6,72 +6,67 @@ import { Helmet } from 'react-helmet-async';
 
 const PLANS = [
   {
-    id: 'web',
-    title: 'Páginas Web',
-    description: 'Ideal para presencia online, landings y portfolios.',
+    id: 'mantenimiento-basico',
+    title: 'Abono Básico',
+    description: 'Mantenimiento mensual para Landing Pages y sitios institucionales.',
     icon: Monitor,
-    price: '$29',
+    price: '$10',
     period: '/mes',
     color: 'from-blue-400 to-cyan-400',
     shadow: 'shadow-cyan-500/20',
     border: 'border-cyan-500/30',
     features: [
-      'Hosting de alta velocidad incluido',
-      'Dominio personalizado (.com / .ar)',
-      'Mantenimiento técnico mensual',
-      'Certificado SSL (Sitio seguro)',
-      'Soporte vía email/WhatsApp'
+      'Hosting de alta velocidad Vercel',
+      'Renovación de dominio anual',
+      'Actualizaciones de seguridad',
+      'Certificado SSL automático',
+      'Soporte técnico estándar'
     ],
-    popular: false,
-    paypalButtonId: 'L9W2ZUJYWTLPU'
+    popular: false
   },
   {
-    id: 'small-biz',
-    title: 'Negocios Pequeños',
-    description: 'Sistemas para kioscos, veterinarias o reservas.',
+    id: 'mantenimiento-avanzado',
+    title: 'Abono Avanzado',
+    description: 'Mantenimiento integral para Sistemas Web, Reservas y E-Commerce.',
     icon: Building,
-    price: '$79',
+    price: '$25',
     period: '/mes',
     color: 'from-cyan-400 to-purple-500',
     shadow: 'shadow-purple-500/30',
     border: 'border-purple-500/50',
     features: [
-      'Todo lo del plan Páginas Web',
-      'Panel de control administrativo',
-      'Base de datos en tiempo real',
-      'Integración Mercado Pago',
-      'Sistema de turnos / stock',
-      'Soporte prioritario 24/7'
+      'Todo lo del Abono Básico',
+      'Gestión de Base de Datos',
+      'Backups diarios automáticos',
+      'Monitoreo de pasarelas de pago',
+      'Soporte técnico prioritario 24/7'
     ],
-    popular: true,
-    paypalButtonId: 'AY9FHBGCJX2KJ'
+    popular: true
   },
   {
-    id: 'large-biz',
-    title: 'Negocios Grandes',
-    description: 'ERPs, franquicias y plataformas a gran escala.',
+    id: 'mantenimiento-premium',
+    title: 'Abono Premium',
+    description: 'Evolución continua, nuevas funcionalidades y bolsa de horas de desarrollo.',
     icon: Building2,
-    price: '$199',
+    price: '$50',
     period: '/mes',
     color: 'from-purple-500 to-pink-500',
     shadow: 'shadow-pink-500/20',
     border: 'border-pink-500/30',
     features: [
-      'Todo lo del plan Pequeños',
-      'Servidor dedicado escalable',
-      'Múltiples sucursales / roles',
-      'Integración API (AFIP, etc)',
-      'Desarrollo a medida continuo',
+      'Todo lo del Abono Avanzado',
+      'Servidor Edge de máxima prioridad',
+      'Modificaciones de contenido (2hs/mes)',
+      'Consultoría estratégica',
       'Account Manager dedicado'
     ],
-    popular: false,
-    paypalButtonId: 'BSJQQBZJFKY72'
+    popular: false
   }
 ];
 
 export default function StorePage() {
   const [displayedText, setDisplayedText] = useState('');
-  const fullText = 'Acceso exclusivo para clientes activos de';
+  const fullText = 'Gestión de abonos para clientes activos de';
   
   useEffect(() => {
     setDisplayedText('');
@@ -206,13 +201,13 @@ export default function StorePage() {
             transition={{ duration: 0.6 }}
           >
             <p className="text-sm font-bold uppercase tracking-[0.3em] text-accent-cyan/80 mb-4">
-              Impulsa tu negocio
+              Portal de Clientes
             </p>
             <h1 className="text-4xl md:text-6xl font-montserrat font-black text-white mb-6">
-              Nuestros <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">Planes</span>
+              Abonos de <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">Mantenimiento</span>
             </h1>
             <p className="text-lg md:text-xl text-primary-secondary max-w-2xl mx-auto mb-16">
-              Elige el nivel de servicio que mejor se adapte a tus necesidades. Mantenimiento, servidores y desarrollo continuo en una sola suscripción.
+              Suscripciones mensuales para garantizar que tu sistema esté siempre rápido, seguro y actualizado. Elige tu plan correspondiente.
             </p>
           </motion.div>
 
@@ -283,7 +278,7 @@ export default function StorePage() {
                         }
                       `}
                     >
-                      Próximamente <ArrowRight className="w-4 h-4" />
+                      Suscribirme <ArrowRight className="w-4 h-4" />
                     </button>
                   )}
                 </div>

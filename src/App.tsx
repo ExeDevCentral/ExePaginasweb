@@ -15,6 +15,9 @@ const PremiumBackground = lazy(() => import('./components/Effects/PremiumBackgro
 const BotWidget = lazy(() => import('./components/Bot/BotWidget'))
 const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
 const ContactSection = lazy(() => import('./components/ContactSection'))
+const CaseStudies = lazy(() => import('./components/CaseStudies/CaseStudies'))
+const TechStack = lazy(() => import('./components/TechStack/TechStack'))
+const Pricing = lazy(() => import('./components/Pricing/Pricing'))
 
 function App() {
   const [loadHeavyComponents, setLoadHeavyComponents] = useState(false)
@@ -90,6 +93,7 @@ function App() {
           <Hero />
           <Suspense fallback={<div className="h-20" />}>
             <SocialProof />
+            <CaseStudies />
             <Products />
             <Features />
             <Process />
@@ -101,6 +105,10 @@ function App() {
             </div>
           }>
             <DemoZone />
+          </Suspense>
+          <Suspense fallback={<div className="h-20" />}>
+            <TechStack />
+            <Pricing />
           </Suspense>
           <Suspense fallback={
             <div className="py-20 text-center text-primary-secondary">

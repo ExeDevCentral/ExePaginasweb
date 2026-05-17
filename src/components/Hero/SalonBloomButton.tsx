@@ -21,7 +21,7 @@ export const SalonBloomButton: React.FC<SalonBloomButtonProps> = ({ href, onClic
       {/* Cuerpo del botón con Glassmorphism */}
       <div className="relative px-8 py-4 bg-black/80 backdrop-blur-xl rounded-full flex items-center gap-3">
         <span className="text-white font-montserrat font-bold tracking-widest text-sm md:text-base">
-          EXPLORAR SALÓN BLOOM
+          VER DEMOS
         </span>
         
         {/* Icono animado */}

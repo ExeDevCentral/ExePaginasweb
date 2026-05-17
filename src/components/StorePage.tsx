@@ -63,7 +63,7 @@ const PLANS = [
       'Account Manager dedicado'
     ],
     popular: false,
-    paypalButtonId: undefined
+    paypalButtonId: 'LCC32BMGA9JXA'
   }
 ];
 

@@ -1,10 +1,11 @@
-import { LayoutDashboard, BellRing, BarChart3, Code2 } from 'lucide-react'
+import React from 'react'
+import { Sparkles, ShieldCheck, Zap, Repeat } from 'lucide-react'
 
 /**
  * Tipo para las propiedades de una feature card
  */
 export interface FeatureData {
-  icon: typeof LayoutDashboard
+  icon: React.ComponentType<{ className?: string }>
   title: string
   description: string
   color: string
@@ -15,27 +16,28 @@ export interface FeatureData {
  */
 export const FEATURES_LIST: FeatureData[] = [
   {
-    icon: LayoutDashboard,
-    title: 'Dashboard claro',
-    description: 'Resumen de ventas, leads y tareas con widgets visuales que cualquier cliente entiende al instante.',
-    color: 'from-accent-yellow to-accent-cyan',
-  },
-  {
-    icon: BellRing,
-    title: 'Notificaciones smart',
-    description: 'Alertas en tiempo real para formularios, pagos y eventos clave de tu web para no perder oportunidades.',
+    icon: Sparkles,
+    title: 'Arquitectura que escala',
+
+    description: 'Sistemas diseñados desde cero para crecer sin downtime: de 100 a 100.000 usuarios.',
     color: 'from-accent-cyan to-accent-magenta',
   },
   {
-    icon: BarChart3,
-    title: 'Analitica accionable',
-    description: 'Graficas simples con conversion, clics y rendimiento para tomar decisiones sin tecnicismos.',
+    icon: Zap,
+    title: 'Automatización real',
+    description: 'Reservas, pagos y notificaciones automáticas: menos caos, más ingresos 24/7.',
     color: 'from-accent-magenta to-accent-yellow',
   },
   {
-    icon: Code2,
-    title: 'Arquitectura Robusta',
-    description: 'Construimos con TDD (Test Driven Development) y código optimizado para asegurar un sistema rápido, seguro y escalable.',
+    icon: Repeat,
+    title: '99.9% uptime garantizado',
+    description: 'Redundancia + respaldo automático. Si algo cae, lo resolvemos en menos de 4 horas.',
+    color: 'from-accent-yellow to-accent-cyan',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Soporte técnico premium',
+    description: 'Respuesta técnica prioritaria con SLAs claros y actualizaciones constantes.',
     color: 'from-accent-cyan to-accent-magenta',
   },
 ] as const

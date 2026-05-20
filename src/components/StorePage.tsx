@@ -3,6 +3,7 @@ import { Lock, Sparkles, X, Check, ArrowRight, Monitor, Building, Building2 } fr
 import { useEffect, useState } from 'react';
 import PremiumBackground from './Effects/PremiumBackground';
 import { Helmet } from 'react-helmet-async';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const PLANS = [
   {
@@ -68,6 +69,7 @@ const PLANS = [
 ];
 
 export default function StorePage() {
+  const isMobile = useIsMobile()
   const [displayedText, setDisplayedText] = useState('');
   const fullText = 'Gestión de abonos para clientes activos de';
   
@@ -131,7 +133,7 @@ export default function StorePage() {
 
 
   // Floating particles background (Recuperadas y mejoradas)
-  const particles = Array.from({ length: 40 }, (_, i) => ({
+  const particles = Array.from({ length: isMobile ? 20 : 40 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
@@ -173,6 +175,7 @@ export default function StorePage() {
             style={{
               left: `${particle.x}%`,
               top: `${particle.y}%`,
+              willChange: 'transform, opacity',
             }}
             animate={{
               y: [0, -50, 0],

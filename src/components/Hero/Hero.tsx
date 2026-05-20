@@ -2,15 +2,16 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { SalonBloomButton } from './SalonBloomButton';
 import { useTypewriter } from '../../hooks/useTypewriter';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import { HERO_TYPEWRITER_TEXT } from './constants';
 
 const Hero: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const isMobile = useIsMobile();
 
-  // Generar partículas fluidas estables
-  const particles = useMemo(() => Array.from({ length: 40 }, (_, i) => ({
+  const particles = useMemo(() => Array.from({ length: isMobile ? 20 : 40 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
@@ -60,6 +61,7 @@ const Hero: React.FC = () => {
             style={{
               left: `${particle.x}%`,
               top: `${particle.y}%`,
+              willChange: 'transform, opacity',
             }}
             animate={{
               y: [0, -50, 0],

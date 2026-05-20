@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useMemo, Suspense } from 'react'
 import { Upload, Image as ImageIcon, Settings, Download, Play, X, ShoppingCart } from 'lucide-react'
 import PaywallModal from '../PaywallModal'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 // CoffeePortal3D se importa dinámicamente SOLO cuando el usuario hace clic en Pixel Coffee
 // Esto evita que three.js (288KB) se cargue en la página principal
@@ -54,6 +55,7 @@ const TESTIMONIALS = [
 ];
 
 const DemoZone = () => {
+  const isMobile = useIsMobile()
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   type FilterKey = 'brightness' | 'contrast' | 'saturation' | 'blur'
@@ -78,10 +80,11 @@ const DemoZone = () => {
   const [isPaywallOpen, setIsPaywallOpen] = useState(false)
 
 
+
   const [activeTestimonial, setActiveTestimonial] = useState(0)
 
   // Configuración estable de partículas de vapor (Pixel Coffee)
-  const steamParticles = useMemo(() => Array.from({ length: 12 }).map((_, i) => ({
+  const steamParticles = useMemo(() => Array.from({ length: isMobile ? 6 : 12 }).map((_, i) => ({
     id: i,
     width: 100 + Math.random() * 150,
     height: 150 + Math.random() * 150,
@@ -89,10 +92,10 @@ const DemoZone = () => {
     duration: 6 + Math.random() * 6,
     delay: i * 0.8,
     drift: (i % 2 === 0 ? 80 : -80)
-  })), [])
+  })), [isMobile])
 
   // Configuración estable de partículas de datos (Portal Genérico)
-  const digitalParticles = useMemo(() => Array.from({ length: 25 }).map((_, i) => ({
+  const digitalParticles = useMemo(() => Array.from({ length: isMobile ? 12 : 25 }).map((_, i) => ({
     id: i,
     left: `${Math.random() * 100}%`,
     duration: 5 + Math.random() * 7,
@@ -102,7 +105,7 @@ const DemoZone = () => {
     scaleKeyframes: [1, 1.5, 0.8, 2, 0.5],
     xDrift: Math.random() * 20 - 10,
     flickerTimes: [0, 0.1, 0.15, 0.3, 0.5, 0.8, 1]
-  })), [])
+  })), [isMobile])
 
   const addToCart = (product: {id: number, name: string, price: number, emoji: string, origin: string}) => {
     setFlyingItem(product.id)
@@ -545,7 +548,7 @@ const DemoZone = () => {
           >
             {/* Backdrop */}
             <div
-              className="absolute inset-0 bg-primary-bg/80 backdrop-blur-xl cursor-pointer"
+              className="absolute inset-0 bg-primary-bg/80 backdrop-blur-md md:backdrop-blur-xl cursor-pointer"
               onClick={() => setSelectedProject(null)}
             />
 
@@ -728,12 +731,12 @@ const DemoZone = () => {
                   {steamParticles.map((p) => (
                     <motion.div
                       key={p.id}
-                      className="absolute bottom-0 bg-amber-100/5 rounded-full blur-[40px]"
-                      style={{ width: p.width, height: p.height, left: p.left }}
+                      className={`absolute bottom-0 bg-amber-100/5 rounded-full ${isMobile ? 'blur-[20px]' : 'blur-[40px]'}`}
+                      style={{ width: p.width, height: p.height, left: p.left, willChange: 'transform, opacity' }}
                       animate={{ 
                         y: [0, -400, -900], 
                         opacity: [0, 0.3, 0.5, 0.1, 0],
-                        scale: [1, 2.5, 5],
+                        scale: [1, 2.5, isMobile ? 3 : 5],
                         x: [0, p.drift, p.drift / 2]
                       }}
                       transition={{ 
@@ -1103,7 +1106,7 @@ const DemoZone = () => {
                           <motion.div
                             key={p.id}
                             className="absolute w-1 h-1 bg-accent-cyan/20 rounded-full blur-[1px]"
-                            style={{ left: p.left, bottom: "-5%" }}
+                            style={{ left: p.left, bottom: "-5%", willChange: 'transform, opacity' }}
                             animate={{
                               y: -600,
                               opacity: p.opacityKeyframes,

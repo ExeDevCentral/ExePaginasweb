@@ -70,7 +70,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Image is required.' })
   }
 
-  const modelsToTry = [model, 'meta-llama/llama-4-scout-17b-16e-instruct']
+  const modelsToTry = [model, 'llama-3.2-90b-vision-preview', 'llama-3.2-11b-vision-instruct']
   let lastError = null
 
   for (const tryModel of modelsToTry) {
@@ -117,7 +117,7 @@ export default async function handler(req, res) {
 
       if (!groqResponse.ok) {
         const errorText = await groqResponse.text()
-        lastError = `Groq error (${tryModel}): ${errorText}`
+        lastError = errorText
         continue
       }
 
@@ -147,5 +147,10 @@ export default async function handler(req, res) {
   }
 
   requestLog.delete(ip)
-  return res.status(500).json({ error: lastError || 'All models failed.' })
+  const friendlyMessage = lastError?.includes('does not support image')
+    ? 'El modelo de IA actual no soporta el analisis de imagenes. Intenta de nuevo mas tarde.'
+    : lastError?.includes('rate_limit')
+      ? 'Limite de solicitudes alcanzado. Intenta de nuevo en unos minutos.'
+      : lastError || 'Todos los modelos fallaron. Intenta de nuevo mas tarde.'
+  return res.status(500).json({ error: friendlyMessage })
 }

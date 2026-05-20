@@ -1,5 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useCallback, useEffect, useMemo, Suspense } from 'react'
+import { useAuthRole } from '../../core/auth/userAuth'
+import { ADMIN_EMAILS } from '../../core/auth/roleConfig'
+
 import { Upload, Image as ImageIcon, Settings, Download, Play, X, ShoppingCart } from 'lucide-react'
 import PaywallModal from '../PaywallModal'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
@@ -75,6 +78,8 @@ const DemoZone = () => {
   const [toast, setToast] = useState<string | null>(null)
   const modalRef = useFocusTrap(!!selectedProject)
   const [isPaywallOpen, setIsPaywallOpen] = useState(false)
+
+
   const [activeTestimonial, setActiveTestimonial] = useState(0)
 
   // Configuración estable de partículas de vapor (Pixel Coffee)

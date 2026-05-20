@@ -4,6 +4,8 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import Header from './components/Header'
 import Hero from './components/Hero/Hero'
 import ErrorBoundary from './components/ErrorBoundary'
+import { AdSense } from './components/Auth/AdSense'
+import AdSlot from './components/Ads/AdSlot'
 
 const Products = lazy(() => import('./components/Products/Products'))
 const Features = lazy(() => import('./components/Features/Features'))
@@ -91,6 +93,8 @@ function App() {
           transition={{ duration: 0.5 }}
         >
           <Hero />
+          <AdSense />
+          <AdSlot />
           <Suspense fallback={<div className="h-20" />}>
             <SocialProof />
             <CaseStudies />

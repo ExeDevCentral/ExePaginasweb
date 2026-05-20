@@ -1,5 +1,4 @@
 import { streamText } from 'ai'
-import { groq } from '@ai-sdk/groq'
 import { z } from 'zod'
 
 const RATE_LIMIT_WINDOW_MS = 60_000
@@ -107,7 +106,7 @@ export default async function handler(req, res) {
 
   try {
     const result = streamText({
-      model: groq(process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'),
+      model: `groq/${process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'}`,
       system: SYSTEM_PROMPT,
       messages,
       temperature: 0.6,

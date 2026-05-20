@@ -1,4 +1,6 @@
-const RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000 // 24 hours
+import { generateText } from 'ai'
+
+const RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000
 const requestLog = new Map()
 
 function getClientIp(req) {
@@ -12,17 +14,12 @@ function getClientIp(req) {
 function isRateLimited(ip) {
   const now = Date.now()
   const previous = requestLog.get(ip)
-
-  if (previous && now - previous < RATE_LIMIT_WINDOW_MS) {
-    return true
-  }
-
+  if (previous && now - previous < RATE_LIMIT_WINDOW_MS) return true
   requestLog.set(ip, now)
   return false
 }
 
 function setCorsHeaders(res) {
-  // En producción (Vercel) esto es necesario, en local (api-dev-server) lo hace el middleware cors()
   if (process.env.NODE_ENV === 'production') {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
@@ -32,34 +29,26 @@ function setCorsHeaders(res) {
 
 export const config = {
   api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
+    bodyParser: { sizeLimit: '10mb' },
   },
 }
+
+const SYSTEM_PROMPT = 'Eres un experto desarrollador frontend especializado en Tailwind CSS. Tu objetivo es convertir el boceto, dibujo o diseno subido en una pagina web funcional. Debes generar un UNICO archivo HTML que contenga todo: HTML5 semantico, clases de Tailwind CSS integradas via CDN, y cualquier CSS personalizado necesario dentro de etiquetas <style>. El diseno debe ser hermoso, moderno, responsive y coincidir lo mas posible con la imagen proporcionada. MUY IMPORTANTE: Responde UNICA Y EXCLUSIVAMENTE con el codigo HTML crudo. NO incluyas markdown, no incluyas bloques de codigo como ```html, simplemente empieza con <!DOCTYPE html> y termina con </html>. No des explicaciones.'
+
+const VISION_MODELS = [
+  'groq/llama-3.2-11b-vision-preview',
+  'groq/llama-3.2-90b-vision-preview',
+]
 
 export default async function handler(req, res) {
   setCorsHeaders(res)
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end()
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   const ip = getClientIp(req)
   if (isRateLimited(ip)) {
     return res.status(429).json({ error: 'Ya has utilizado tu prueba gratuita de generacion web con IA.' })
-  }
-
-  const apiKey = process.env.GROQ_API_KEY
-  const model = process.env.GROQ_VISION_MODEL || 'llama-3.2-11b-vision-preview'
-
-  if (!apiKey) {
-    requestLog.delete(ip) // allow retry
-    return res.status(500).json({ error: 'Missing GROQ_API_KEY environment variable. Check your .env file.' })
   }
 
   const body = req.body || {}
@@ -70,69 +59,31 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Image is required.' })
   }
 
-  const modelsToTry = [model, 'llama-3.2-90b-vision-preview', 'llama-3.2-11b-vision-instruct']
   let lastError = null
 
-  for (const tryModel of modelsToTry) {
+  for (const tryModel of VISION_MODELS) {
     try {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 45000) // 45 segundos de timeout
-
-      const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: tryModel,
-          messages: [
-            {
-              role: 'system',
-              content: 'Eres un experto desarrollador frontend especializado en Tailwind CSS. Tu objetivo es convertir el boceto, dibujo o diseño subido en una pagina web funcional. Debes generar un UNICO archivo HTML que contenga todo: HTML5 semantico, clases de Tailwind CSS integradas via CDN, y cualquier CSS personalizado necesario dentro de etiquetas <style>. El diseno debe ser hermoso, moderno, responsive y coincidir lo mas posible con la imagen proporcionada. MUY IMPORTANTE: Responde UNICA Y EXCLUSIVAMENTE con el codigo HTML crudo. NO incluyas markdown, no incluyas bloques de codigo como ```html, simplemente empieza con <!DOCTYPE html> y termina con </html>. No des explicaciones.'
-            },
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'text',
-                  text: 'Genera el codigo HTML + Tailwind para este diseno. Asegurate de que funcione renderizandolo directamente en un iframe.'
-                },
-                {
-                  type: 'image_url',
-                  image_url: {
-                    url: `data:${mimeType};base64,${imageBase64}`
-                  }
-                }
-              ]
-            }
-          ],
-          temperature: 0.2,
-          max_tokens: 4096
-        }),
-        signal: controller.signal
+      const result = await generateText({
+        model: tryModel,
+        system: SYSTEM_PROMPT,
+        messages: [
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: 'Genera el codigo HTML + Tailwind para este diseno. Asegurate de que funcione renderizandolo directamente en un iframe.' },
+              { type: 'image', image: `data:${mimeType};base64,${imageBase64}` },
+            ],
+          },
+        ],
+        temperature: 0.2,
+        maxTokens: 4096,
       })
 
-      clearTimeout(timeoutId)
+      let reply = result.text.trim()
 
-      if (!groqResponse.ok) {
-        const errorText = await groqResponse.text()
-        lastError = errorText
-        continue
-      }
-
-      const data = await groqResponse.json()
-      let reply = data?.choices?.[0]?.message?.content?.trim() || ''
-
-      // Clean markdown if AI still includes it despite prompt
-      if (reply.startsWith('```html')) {
-        reply = reply.slice(7)
-      } else if (reply.startsWith('```')) {
-        reply = reply.slice(3)
-      }
-      if (reply.endsWith('```')) {
-        reply = reply.slice(0, -3)
-      }
+      if (reply.startsWith('```html')) reply = reply.slice(7)
+      else if (reply.startsWith('```')) reply = reply.slice(3)
+      if (reply.endsWith('```')) reply = reply.slice(0, -3)
       reply = reply.trim()
 
       if (!reply) {

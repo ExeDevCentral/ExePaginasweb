@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { User as UserIcon, Shield, Mail, Trash2, CheckCircle } from 'lucide-react'
+import { User as UserIcon, Mail, Trash2 } from 'lucide-react'
 import { SupabaseUserRepository } from '../../infra/repositories/SupabaseUserRepository'
 import { User as UserEntity } from '../../core/domain/entities/User'
 

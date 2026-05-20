@@ -1,7 +1,6 @@
-import React from 'react'
 import { motion } from 'framer-motion'
 import { signInWithGoogle, signInWithFacebook } from './authService'
-import { Mail, Facebook, Github } from 'lucide-react'
+import { Facebook } from 'lucide-react'
 
 const AuthModal = () => {
   return (

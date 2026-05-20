@@ -1,7 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useCallback, useEffect, useMemo, Suspense } from 'react'
-import { useAuthRole } from '../../core/auth/userAuth'
-import { ADMIN_EMAILS } from '../../core/auth/roleConfig'
 
 import { Upload, Image as ImageIcon, Settings, Download, Play, X, ShoppingCart } from 'lucide-react'
 import PaywallModal from '../PaywallModal'

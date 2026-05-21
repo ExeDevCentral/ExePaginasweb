@@ -1,15 +1,9 @@
 
-import { Helmet } from 'react-helmet-async';
-
 export const AdSense = () => {
-  return (
-    <Helmet>
-      <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9450015187260945"
-        crossOrigin="anonymous"
-      ></script>
-    </Helmet>
-  );
+  // El script de Google AdSense se carga en index.html (fuente única).
+  // Este componente se mantiene para no romper imports/usos existentes.
+  return null;
 };
+
+
 

@@ -54,6 +54,88 @@ const TESTIMONIALS = [
   { id: 3, name: 'Valentina P.', text: 'La web me permitió agendar un domingo a la noche sin molestar a nadie. Genial.', role: 'Nueva Cliente', avatar: '👩‍🦰' },
 ];
 
+
+
+const TiltCard = ({
+  category,
+  title,
+  summary,
+  onOpen
+}: {
+  category: string
+  title: string
+  summary: string
+  onOpen: () => void
+}) => {
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0, tx: 0, ty: 0 })
+  const [active, setActive] = useState(false)
+
+  return (
+    <motion.article
+      className="relative rounded-2xl border border-accent-cyan/20 bg-primary-bg/40 p-5 backdrop-blur-sm overflow-hidden"
+      style={{ perspective: 900 }}
+      onPointerMove={(e) => {
+        const el = e.currentTarget
+        const rect = el.getBoundingClientRect()
+        const px = (e.clientX - rect.left) / rect.width
+        const py = (e.clientY - rect.top) / rect.height
+        const ry = (px - 0.5) * 14
+        const rx = -(py - 0.5) * 10
+        const tx = (px - 0.5) * 10
+        const ty = (py - 0.5) * 8
+        setTilt({ rx, ry, tx, ty })
+      }}
+      onPointerEnter={() => setActive(true)}
+      onPointerLeave={() => {
+        setActive(false)
+        setTilt({ rx: 0, ry: 0, tx: 0, ty: 0 })
+      }}
+      animate={{
+        rotateX: tilt.rx,
+        rotateY: tilt.ry,
+        x: tilt.tx,
+        y: tilt.ty
+      }}
+      transition={{ type: 'spring', stiffness: 220, damping: 22 }}
+    >
+      {/* Sheen */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+        style={{ transform: 'translateX(-60%) skewX(-20deg)' }}
+        animate={active ? { x: '160%' } : { x: '-60%' }}
+        transition={{ duration: 0.65, ease: 'easeOut' }}
+      />
+
+      {/* Glow */}
+      <div
+        className="pointer-events-none absolute -inset-1 opacity-0 hover:opacity-100 transition-opacity"
+        style={{
+          background:
+            'radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(34,211,238,0.16), rgba(236,72,153,0.06) 40%, transparent 65%)'
+        }}
+      />
+
+      <p className="text-xs uppercase tracking-[0.2em] text-accent-cyan">{category}</p>
+      <h3 className="mt-2 text-2xl font-bold">{title}</h3>
+      <p className="mt-3 text-primary-secondary">{summary}</p>
+
+      <motion.button
+        type="button"
+        className="mt-4 rounded-full border border-accent-cyan/40 px-4 py-2 text-sm text-accent-cyan transition hover:bg-accent-cyan/10 flex items-center gap-2"
+        onClick={onOpen}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        Ver subpagina
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 12h14" />
+          <path d="m12 5 7 7-7 7" />
+        </svg>
+      </motion.button>
+    </motion.article>
+  )
+}
+
 const DemoZone = () => {
   const isMobile = useIsMobile()
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
@@ -271,24 +353,13 @@ const DemoZone = () => {
           viewport={{ once: true }}
         >
           {PROJECTS.map((project) => (
-            <article key={project.title} className="rounded-2xl border border-accent-cyan/20 bg-primary-bg/40 p-5 backdrop-blur-sm">
-              <p className="text-xs uppercase tracking-[0.2em] text-accent-cyan">{project.category}</p>
-              <h3 className="mt-2 text-2xl font-bold">{project.title}</h3>
-              <p className="mt-3 text-primary-secondary">{project.summary}</p>
-              <motion.button 
-                type="button" 
-                className="mt-4 rounded-full border border-accent-cyan/40 px-4 py-2 text-sm text-accent-cyan transition hover:bg-accent-cyan/10 flex items-center gap-2"
-                onClick={() => openProject(project)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Ver subpagina
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14"/>
-                  <path d="m12 5 7 7-7 7"/>
-                </svg>
-              </motion.button>
-            </article>
+            <TiltCard
+              key={project.title}
+              category={project.category}
+              title={project.title}
+              summary={project.summary}
+              onOpen={() => openProject(project)}
+            />
           ))}
         </motion.div>
 

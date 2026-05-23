@@ -26,6 +26,7 @@ export function useAuthRole(adminEmails: readonly string[]) {
 
   useEffect(() => {
     let isMounted = true;
+    let didResolveInitialSession = false;
 
     async function init() {
       try {
@@ -40,8 +41,12 @@ export function useAuthRole(adminEmails: readonly string[]) {
           setRole(nextRole);
         }
       } catch {
-        if (isMounted) setRole('unknown');
+        if (isMounted) {
+          setRole('unknown');
+          setUser(null);
+        }
       } finally {
+        didResolveInitialSession = true;
         if (isMounted) setLoading(false);
       }
     }
@@ -52,16 +57,21 @@ export function useAuthRole(adminEmails: readonly string[]) {
       const u = session?.user;
       const nextUser = u ? { id: u.id, email: u.email ?? null } : null;
       const nextRole = u ? computeRole(u.email) : 'unknown';
-      setUser(nextUser);
-      setRole(nextRole);
-      setLoading(false);
+
+      if (isMounted) {
+        setUser(nextUser);
+        setRole(nextRole);
+        // Evita doble setLoading(false) antes/después del init.
+        if (!didResolveInitialSession) setLoading(false);
+      }
     });
 
     return () => {
       isMounted = false;
-      sub.subscription.unsubscribe();
+      sub?.subscription?.unsubscribe();
     };
   }, [adminEmailsNormalized]);
+
 
   const signInWithGoogle = async () => {
     await supabase.auth.signInWithOAuth({

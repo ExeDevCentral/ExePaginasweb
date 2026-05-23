@@ -14,22 +14,22 @@ const PROJECTS = [
   {
     title: 'Salon Bloom',
     category: 'Landing de servicios',
-    summary: 'Pagina para reservas, promociones y testimonios con estilo visual premium.',
+    summary: 'Página para reservas, promociones y testimonios con estilo visual premium.',
   },
   {
     title: 'NeoFit Studio',
-    category: 'Web de membresias',
-    summary: 'Sitio de gimnasio con planes, agenda de clases y CTA para conversion.',
+    category: 'Web de membresías',
+    summary: 'Sitio de gimnasio con planes, agenda de clases y CTA para conversión.',
   },
   {
     title: 'Casa Aura',
-    category: 'Catalogo inmobiliario',
-    summary: 'Subpaginas de propiedades con filtros y contacto directo por WhatsApp.',
+    category: 'Catálogo inmobiliario',
+    summary: 'Subpáginas de propiedades con filtros y contacto directo por WhatsApp.',
   },
   {
     title: 'Pixel Coffee',
-    category: 'Ecommerce ligero',
-    summary: 'Tienda online con carrito rapido y fichas de producto visuales.',
+    category: 'E-commerce ligero',
+    summary: 'Tienda online con carrito rápido y fichas de producto visuales.',
   },
 ];
 
@@ -342,7 +342,7 @@ const DemoZone = () => {
             </span>
           </h2>
           <p className="text-xl text-primary-secondary max-w-3xl mx-auto leading-relaxed">
-            Mira ejemplos reales de subpaginas web y luego prueba una carga de diseno para simular una generacion rapida.
+            Mira ejemplos reales de subpáginas web y luego prueba una carga de diseño para simular una generación rápida.
           </p>
         </motion.div>
 
@@ -1232,4 +1232,3 @@ const DemoZone = () => {
 }
 
 export default DemoZone
-

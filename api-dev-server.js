@@ -16,6 +16,8 @@ app.use(express.json({ limit: '10mb' }))
 import chatHandler from './api/chat.js'
 import generateHandler from './api/generate.js'
 import contactHandler from './api/contact.js'
+import createPreferenceHandler from './api/create-preference.js'
+import mercadopagoWebhookHandler from './api/mercadopago-webhook.js'
 
 // Manejador de errores global para evitar que el server muera
 process.on('uncaughtException', (err) => {
@@ -71,6 +73,24 @@ app.all('/api/contact', async (req, res) => {
   } catch (error) {
     console.error('[Dev Server] Contact Error:', error)
     res.status(500).json({ error: 'Error interno en el handler de contacto.' })
+  }
+})
+
+app.all('/api/create-preference', async (req, res) => {
+  try {
+    await createPreferenceHandler(req, res)
+  } catch (error) {
+    console.error('[Dev Server] Create Preference Error:', error)
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.all('/api/mercadopago-webhook', async (req, res) => {
+  try {
+    await mercadopagoWebhookHandler(req, res)
+  } catch (error) {
+    console.error('[Dev Server] MP Webhook Error:', error)
+    res.status(200).json({ error: error.message })
   }
 })
 

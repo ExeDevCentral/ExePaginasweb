@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { supabase } from '../core/infra/supabase/client'
-import { Sparkles, ShieldCheck, User, RefreshCw, Crown } from 'lucide-react'
+import { Sparkles, ShieldCheck, User, RefreshCw, Crown, CreditCard } from 'lucide-react'
 import { useDashboard } from '../hooks/useDashboard'
 import { useAuthRole } from '../core/auth/userAuth'
 
@@ -20,7 +20,7 @@ function formatDate(d?: string | null) {
 
 export default function Dashboard() {
   const navigate = useNavigate()
-  const { loading, error, cliente, suscripciones, isPremium, refresh } = useDashboard()
+  const { loading, error, cliente, suscripciones, pagos, isPremium, refresh } = useDashboard()
   const { role } = useAuthRole(ADMIN_EMAILS)
   const isAdmin = role === 'admin'
 
@@ -234,7 +234,39 @@ export default function Dashboard() {
           </motion.div>
         </div>
 
-        {/* CTA for non-premium clients */}
+        {/* Payment History */}
+        {pagos.length > 0 && (
+          <div className="mt-10">
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-3xl border border-white/10 bg-primary-bg/40 backdrop-blur-xl p-6 shadow-2xl"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <CreditCard className="w-5 h-5 text-accent-cyan" />
+                <h2 className="text-lg font-bold text-white">Historial de Pagos</h2>
+              </div>
+              <div className="space-y-3">
+                {pagos.map((p) => (
+                  <div key={p.id} className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/10 p-4">
+                    <div>
+                      <p className="text-white font-semibold">{p.plan_nombre || 'Pago'}</p>
+                      <p className="text-xs text-white/50 mt-0.5">{formatDate(p.created_at)}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-white font-bold">
+                        ${p.monto} {p.moneda}
+                      </p>
+                      <span className={`text-xs font-semibold ${p.estado === 'aprobado' ? 'text-green-400' : 'text-yellow-400'}`}>
+                        {p.estado === 'aprobado' ? '✅ Aprobado' : '⏳ Pendiente'}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        )}
         {!isPremium && !isAdmin && (
           <div className="mt-10">
             <motion.div

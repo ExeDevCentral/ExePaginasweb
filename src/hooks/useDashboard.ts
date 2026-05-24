@@ -5,6 +5,15 @@ import { SupabaseSubscriptionRepository } from '../infra/repositories/SupabaseSu
 import { Cliente } from '../core/domain/entities/Cliente'
 import { Suscripcion } from '../core/domain/entities/Suscripcion'
 
+export interface Pago {
+  id: string
+  monto: number
+  moneda: string
+  estado: string
+  plan_nombre: string | null
+  created_at: string
+}
+
 const clienteRepo = new SupabaseClienteRepository()
 const subscriptionRepo = new SupabaseSubscriptionRepository()
 
@@ -13,6 +22,7 @@ export function useDashboard() {
   const [error, setError] = useState<string | null>(null)
   const [cliente, setCliente] = useState<Cliente | null>(null)
   const [suscripciones, setSuscripciones] = useState<Suscripcion[]>([])
+  const [pagos, setPagos] = useState<Pago[]>([])
 
   const isPremium = useMemo(() => suscripciones.length > 0, [suscripciones.length])
 
@@ -34,7 +44,6 @@ export function useDashboard() {
       try {
         clienteData = await clienteRepo.getByEmail(user.email)
       } catch {
-        // tabla clientes no existe — usamos datos del auth user
         clienteData = {
           id: user.id,
           nombre: user.user_metadata?.full_name ?? null,
@@ -54,7 +63,6 @@ export function useDashboard() {
             .single()
           if (!insertError) clienteData = newCliente as Cliente
         } catch {
-          // si no se puede insertar, usamos auth user
           clienteData = {
             id: user.id,
             nombre: user.user_metadata?.full_name ?? null,
@@ -71,8 +79,19 @@ export function useDashboard() {
           const subsData = await subscriptionRepo.getByClienteId(clienteData.id)
           if (active) setSuscripciones(subsData)
         } catch {
-          // tabla suscripciones no existe
           if (active) setSuscripciones([])
+        }
+
+        try {
+          const { data: pagosData } = await supabase
+            .from('pagos')
+            .select('id, monto, moneda, estado, plan_nombre, created_at')
+            .eq('cliente_id', clienteData.id)
+            .order('created_at', { ascending: false })
+            .limit(10)
+          if (active) setPagos(pagosData as Pago[] || [])
+        } catch {
+          if (active) setPagos([])
         }
       }
     } catch (e: any) {
@@ -88,5 +107,5 @@ export function useDashboard() {
     return () => { active = false }
   }, [loadData])
 
-  return { loading, error, cliente, suscripciones, isPremium, refresh: () => loadData(true) }
+  return { loading, error, cliente, suscripciones, pagos, isPremium, refresh: () => loadData(true) }
 }

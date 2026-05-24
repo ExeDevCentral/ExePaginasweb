@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
-import { Lock, Sparkles, X, Check, ArrowRight, Monitor, Building, Building2 } from 'lucide-react';
+import { Lock, Sparkles, X, Check, ArrowRight, Monitor, Building, Building2, Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PremiumBackground from './Effects/PremiumBackground';
 import { Helmet } from 'react-helmet-async';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { supabase } from '../core/infra/supabase/client';
 
 const PLANS = [
   {
@@ -24,7 +26,6 @@ const PLANS = [
       'Soporte técnico estándar'
     ],
     popular: false,
-    paypalButtonId: 'WCSE45C3YZ6E2'
   },
   {
     id: 'mantenimiento-avanzado',
@@ -44,7 +45,6 @@ const PLANS = [
       'Soporte técnico prioritario 24/7'
     ],
     popular: true,
-    paypalButtonId: 'X93LPCZ9LPDC4'
   },
   {
     id: 'mantenimiento-premium',
@@ -64,12 +64,13 @@ const PLANS = [
       'Account Manager dedicado'
     ],
     popular: false,
-    paypalButtonId: 'LCC32BMGA9JXA'
   }
 ];
 
 export default function StorePage() {
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
+  const [buying, setBuying] = useState<string | null>(null)
   const [displayedText, setDisplayedText] = useState('');
   const fullText = 'Gestión de abonos para clientes activos de';
   
@@ -87,47 +88,40 @@ export default function StorePage() {
     return () => clearInterval(timer);
   }, []);
 
-  // Inicializar botones de PayPal
-  useEffect(() => {
-    const PAYPAL_SDK_URL = 'https://www.paypal.com/sdk/js?client-id=BAAwjElC2hjoN-95DBLi8bLtLRKbmCxYWuJ0_Ksxyx7G-I56IOhq39XUItup4VL5DDxbydYvQYb1kCjD0I&components=hosted-buttons&disable-funding=venmo&currency=USD';
+  const handleBuy = async (plan: typeof PLANS[0]) => {
+    setBuying(plan.id)
 
-    const renderPayPalButtons = () => {
-      // @ts-ignore
-      if (window.paypal && window.paypal.HostedButtons) {
-        PLANS.forEach(plan => {
-          if (plan.paypalButtonId) {
-            const containerId = `#paypal-container-${plan.paypalButtonId}`;
-            const container = document.querySelector(containerId);
-            if (container && container.innerHTML === '') {
-              // @ts-ignore
-              window.paypal.HostedButtons({ hostedButtonId: plan.paypalButtonId }).render(containerId);
-            }
-          }
-        });
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user?.email) {
+      navigate('/login')
+      setBuying(null)
+      return
+    }
+
+    try {
+      const resp = await fetch('/api/create-preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: plan.title,
+          price: parseInt(plan.price.replace('$', '')),
+          email: user.email,
+          planId: plan.id,
+        }),
+      })
+
+      const data = await resp.json()
+      if (data.init_point) {
+        window.location.href = data.init_point
+      } else {
+        alert('Error al crear el pago. Intenta de nuevo.')
+        setBuying(null)
       }
-    };
-
-    // @ts-ignore
-    if (window.paypal) {
-      renderPayPalButtons();
-      return;
+    } catch {
+      alert('Error de conexión. Intenta de nuevo.')
+      setBuying(null)
     }
-
-    if (!document.querySelector(`script[src*="paypal.com/sdk"]`)) {
-      const script = document.createElement('script');
-      script.src = PAYPAL_SDK_URL;
-      script.async = true;
-      script.crossOrigin = 'anonymous';
-      script.onload = renderPayPalButtons;
-      document.body.appendChild(script);
-    } else {
-      const interval = setInterval(() => {
-        // @ts-ignore
-        if (window.paypal) { renderPayPalButtons(); clearInterval(interval); }
-      }, 300);
-      return () => clearInterval(interval);
-    }
-  }, []);
+  }
 
 
 
@@ -271,21 +265,23 @@ export default function StorePage() {
                 </ul>
 
                 <div className="mt-auto pt-4 min-h-[50px]">
-                  {plan.paypalButtonId ? (
-                    <div id={`paypal-container-${plan.paypalButtonId}`} className="w-full relative z-20"></div>
-                  ) : (
-                    <button
-                      onClick={() => window.location.href = '/#contact'}
-                      className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 relative z-20
-                        ${plan.popular 
-                          ? `bg-gradient-to-r ${plan.color} shadow-lg ${plan.shadow} hover:opacity-90` 
-                          : 'bg-white/10 hover:bg-white/20 border border-white/10'
-                        }
-                      `}
-                    >
-                      Suscribirme <ArrowRight className="w-4 h-4" />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => handleBuy(plan)}
+                    disabled={buying === plan.id}
+                    className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 relative z-20
+                      ${plan.popular 
+                        ? `bg-gradient-to-r ${plan.color} shadow-lg ${plan.shadow} hover:opacity-90` 
+                        : 'bg-white/10 hover:bg-white/20 border border-white/10'
+                      }
+                      disabled:opacity-50 disabled:cursor-not-allowed
+                    `}
+                  >
+                    {buying === plan.id ? (
+                      <><Loader className="w-4 h-4 animate-spin" /> Procesando...</>
+                    ) : (
+                      <><ArrowRight className="w-4 h-4" /> Suscribirme</>
+                    )}
+                  </button>
                 </div>
               </motion.div>
             ))}

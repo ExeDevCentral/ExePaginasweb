@@ -4,13 +4,19 @@ import { useState, useEffect } from 'react'
 import { useScrollSpy } from '../hooks/useScrollSpy'
 import { NAV_ITEMS, SCROLL_OFFSET } from './constants'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../core/infra/supabase/client'
+import { useAuthRole } from '../core/auth/userAuth'
+
+const ADMIN_EMAILS = [
+  'exemetal@hotmail.com',
+  'exedevcentral@gmail.com',
+]
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
-  
-  // Bloquear scroll cuando el menú móvil está abierto
+  const { user, signOut } = useAuthRole(ADMIN_EMAILS)
+  const isLoggedIn = user !== null
+
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -22,8 +28,6 @@ const Header = () => {
     };
   }, [isMenuOpen]);
 
-  // Usamos el hook personalizado para detectar la sección activa
-  // Convertimos el array readonly a mutable para el hook
   const activeId = useScrollSpy([...NAV_ITEMS.map(item => item.id)], { offset: SCROLL_OFFSET })
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -35,7 +39,7 @@ const Header = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    await signOut()
     setIsMenuOpen(false)
     navigate('/login')
   }
@@ -112,13 +116,33 @@ const Header = () => {
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center gap-4">
-            <motion.button
-              onClick={() => navigate('/login')}
-              className="text-sm font-bold text-white/70 hover:text-accent-cyan transition-colors px-4"
-              whileHover={{ scale: 1.05 }}
-            >
-              Área Clientes
-            </motion.button>
+            {isLoggedIn ? (
+              <>
+                <motion.button
+                  onClick={() => navigate('/dashboard')}
+                  className="text-sm font-bold text-accent-cyan hover:text-white transition-colors px-4"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  Mi Panel
+                </motion.button>
+                <motion.button
+                  onClick={handleLogout}
+                  className="text-sm font-bold text-white/50 hover:text-accent-magenta transition-colors px-2 flex items-center gap-1"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <LogOut size={14} />
+                  Cerrar Sesión
+                </motion.button>
+              </>
+            ) : (
+              <motion.button
+                onClick={() => navigate('/login')}
+                className="text-sm font-bold text-white/70 hover:text-accent-cyan transition-colors px-4"
+                whileHover={{ scale: 1.05 }}
+              >
+                Área Clientes
+              </motion.button>
+            )}
             <motion.a
               href="#contact"
               className="rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta px-6 py-2 text-sm font-semibold text-primary-bg shadow-md shadow-accent-cyan/20 transition-all hover:shadow-lg hover:shadow-accent-cyan/30"
@@ -207,21 +231,44 @@ const Header = () => {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                   </motion.a>
 
-                  <motion.button
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: (NAV_ITEMS.length + 1) * 0.07 }}
-                    onClick={handleLogout}
-                    className="text-xl font-bold tracking-wide text-accent-magenta/80 hover:text-accent-cyan transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] w-full text-left"
-                  >
-                    Cerrar Sesión
-                    <LogOut size={20} />
-                  </motion.button>
+                  {isLoggedIn ? (
+                    <>
+                      <motion.button
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: (NAV_ITEMS.length + 1) * 0.07 }}
+                        onClick={() => { navigate('/dashboard'); setIsMenuOpen(false) }}
+                        className="text-xl font-bold tracking-wide text-accent-cyan hover:text-white transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] w-full text-left"
+                      >
+                        Mi Panel
+                      </motion.button>
+                      <motion.button
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: (NAV_ITEMS.length + 2) * 0.07 }}
+                        onClick={handleLogout}
+                        className="text-xl font-bold tracking-wide text-accent-magenta/80 hover:text-accent-cyan transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] w-full text-left"
+                      >
+                        Cerrar Sesión
+                        <LogOut size={20} />
+                      </motion.button>
+                    </>
+                  ) : (
+                    <motion.button
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: (NAV_ITEMS.length + 1) * 0.07 }}
+                      onClick={() => { navigate('/login'); setIsMenuOpen(false) }}
+                      className="text-xl font-bold tracking-wide text-white/70 hover:text-accent-cyan transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] w-full text-left"
+                    >
+                      Iniciar Sesión
+                    </motion.button>
+                  )}
 
                   <motion.div 
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: (NAV_ITEMS.length + 2) * 0.07 }}
+                    transition={{ delay: (NAV_ITEMS.length + (isLoggedIn ? 3 : 2)) * 0.07 }}
                     className="pt-6 mt-auto"
                   >
                     <a

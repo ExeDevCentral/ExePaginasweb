@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { signInWithFacebook } from './authService'
+import { signInWithGoogle, signInWithFacebook } from './authService'
 import { Facebook } from 'lucide-react'
 
 
@@ -17,7 +17,7 @@ const AuthModal = () => {
         <motion.button
           whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.1)' }}
           whileTap={{ scale: 0.98 }}
-         
+          onClick={signInWithGoogle}
           className="w-full flex items-center justify-center gap-3 py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-semibold transition-all"
         >
           <img src="https://www.gstatic.com/firebase/explore/google-logo.svg" className="w-5 h-5" alt="Google" />

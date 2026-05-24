@@ -29,12 +29,19 @@ export function useDashboard() {
         return
       }
 
-      const clienteData = await clienteRepo.getByEmail(user.email)
+      let clienteData = await clienteRepo.getByEmail(user.email)
 
       if (!active) return
 
       if (!clienteData) {
-        throw new Error('No se encontró el perfil de cliente. Reintente en unos momentos.')
+        const { data: newCliente, error: insertError } = await supabase
+          .from('clientes')
+          .insert({ nombre: user.user_metadata?.full_name ?? null, email: user.email, telefono: null })
+          .select('id, nombre, email, telefono')
+          .single()
+
+        if (insertError) throw insertError
+        clienteData = newCliente as Cliente
       }
 
       setCliente(clienteData)

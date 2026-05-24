@@ -1,11 +1,14 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, LogOut } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useScrollSpy } from '../hooks/useScrollSpy'
 import { NAV_ITEMS, SCROLL_OFFSET } from './constants'
+import { useNavigate } from 'react-router-dom'
+import { supabase } from '../core/infra/supabase/client'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const navigate = useNavigate()
   
   // Bloquear scroll cuando el menú móvil está abierto
   useEffect(() => {
@@ -30,6 +33,12 @@ const Header = () => {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    setIsMenuOpen(false)
+    navigate('/login')
+  }
 
   return (
     <motion.header
@@ -102,15 +111,24 @@ const Header = () => {
           </nav>
 
           {/* CTA Button */}
-          <motion.a
-            href="#contact"
-            className="hidden md:inline-block rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta px-6 py-2 text-sm font-semibold text-primary-bg shadow-md shadow-accent-cyan/20 transition-all hover:shadow-lg hover:shadow-accent-cyan/30"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={(e) => scrollToSection(e, 'contact')}
-          >
-            Contacto
-          </motion.a>
+          <div className="hidden md:flex items-center gap-4">
+            <motion.button
+              onClick={() => navigate('/login')}
+              className="text-sm font-bold text-white/70 hover:text-accent-cyan transition-colors px-4"
+              whileHover={{ scale: 1.05 }}
+            >
+              Área Clientes
+            </motion.button>
+            <motion.a
+              href="#contact"
+              className="rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta px-6 py-2 text-sm font-semibold text-primary-bg shadow-md shadow-accent-cyan/20 transition-all hover:shadow-lg hover:shadow-accent-cyan/30"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => scrollToSection(e, 'contact')}
+            >
+              Contacto
+            </motion.a>
+          </div>
 
           {/* Mobile Menu Button */}
           <motion.button
@@ -189,10 +207,21 @@ const Header = () => {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                   </motion.a>
 
-                  <motion.div 
+                  <motion.button
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: (NAV_ITEMS.length + 1) * 0.07 }}
+                    onClick={handleLogout}
+                    className="text-xl font-bold tracking-wide text-accent-magenta/80 hover:text-accent-cyan transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] w-full text-left"
+                  >
+                    Cerrar Sesión
+                    <LogOut size={20} />
+                  </motion.button>
+
+                  <motion.div 
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: (NAV_ITEMS.length + 2) * 0.07 }}
                     className="pt-6 mt-auto"
                   >
                     <a

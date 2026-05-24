@@ -90,7 +90,7 @@ export default async function handler(req, res) {
   const { message: userMessage, history: rawHistory } = validation.data
   const history = rawHistory || []
 
-  if (!process.env.GROQ_API_KEY) {
+  if (!process.env.GROQ_API_KEY && !process.env.AI_GATEWAY_API_KEY) {
     console.log('[chat] Modo desarrollo: usando fallback local')
     const fallbackReply = getDevFallbackResponse(userMessage)
     return res.status(200).json({ reply: fallbackReply, fallback: true })
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
 
   try {
     const result = streamText({
-      model: `groq/${process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'}`,
+      model: 'groq/llama-3.3-70b-versatile',
       system: SYSTEM_PROMPT,
       messages,
       temperature: 0.6,

@@ -43,7 +43,7 @@ No es un template HTML ni un WordPress. Es un **sistema web avanzado** construid
 |--------|---------|
 | 🤖 **Chatbot IA** | Chat en vivo con Groq LLM (Llama 3.3), streaming palabra por palabra, memoria de contexto, respuestas instantáneas |
 | 🎨 **Generador de Código por IA** | Subí una imagen de diseño → obtené HTML/CSS funcional generado por Groq Vision |
-| 📧 **Contacto Inteligente** | Formulario con EmailJS + Resend, validación Zod, rate limiting, guardado local de respaldo |
+| 📧 **Contacto Inteligente** | Formulario con EmailJS, validación Zod, rate limiting, guardado local de respaldo |
 | 🧊 **Experiencias 3D Interactivas** | Productos, propiedades inmobiliarias y demos con Three.js / React Three Fiber |
 | 🏪 **Tienda / Suscripciones** | Planes de pago con PayPal, carrito de compras, membresías |
 | ⚖️ **Páginas Legales** | Términos de Servicio, Política de Privacidad, GDPR-ready |
@@ -103,7 +103,6 @@ No es un template HTML ni un WordPress. Es un **sistema web avanzado** construid
 | **Node.js** | 20+ | Runtime serverless en Vercel Edge |
 | **Express** | 5.2.1 | Router HTTP para funciones serverless |
 | **Zod** | 4.4.3 | Validación de esquemas en runtime (type-safe) |
-| **Resend** | 3.0.0 | Email API transaccional (delivery rate >99%) |
 | **CORS** | 2.8.6 | Seguridad cross-origin |
 | **dotenv** | 16.6.1 | Variables de entorno |
 
@@ -113,7 +112,6 @@ No es un template HTML ni un WordPress. Es un **sistema web avanzado** construid
 |-----|----------|-----|
 | **Groq Cloud** | Llama 3.3 / Llama 3.1 / Vision | Chatbot streaming + generación de código por imágenes |
 | **EmailJS** | Email client-side | Envío de formulario de contacto directo desde el frontend |
-| **Resend** | Email server-side | Respaldo de emails con validación Zod |
 | **PayPal** | Checkout | Suscripciones y pagos en la tienda |
 
 ### DevOps y Tooling
@@ -152,7 +150,7 @@ No es un template HTML ni un WordPress. Es un **sistema web avanzado** construid
 │   React SPA     │      │  Serverless Functions │
 │   (Vite Build)  │─────▶│  /api/chat            │─────▶ Groq Cloud
 │                 │      │  /api/generate        │─────▶ Groq Vision
-│  ┌───────────┐  │      │  /api/contact         │─────▶ Resend API
+│  ┌───────────┐  │      │  /api/contact (Logs)  │
 │  │ BotWidget │  │      └──────────────────────┘
 │  │ (Stream)  │  │
 │  ├───────────┤  │      ┌──────────────────────┐
@@ -175,7 +173,7 @@ No es un template HTML ni un WordPress. Es un **sistema web avanzado** construid
 | **Three.js lazy-loaded** | Three.js en bundle principal | Three.js pesa ~785KB. Al cargarlo solo cuando el usuario hace clic en "Pixel Coffee", ahorramos 785KB en la carga inicial |
 | **Serverless Functions** | Backend dedicado (Express server) | Sin servidor que mantener, escalado automático, pagás solo por uso, deploy integrado con Vercel |
 | **Zod en runtime** | TypeScript solamente | TypeScript solo protege en desarrollo. Zod valida en producción también, evitando datos corruptos |
-| **Dos vías de email** (EmailJS + Resend) | Una sola API | Si EmailJS falla (límite de plan gratuito), Resend funciona. Si Resend no tiene API key, guarda localmente. Tolerancia a fallos total |
+| **EmailJS Directo** | Servidor propio | EmailJS permite el envío directo sin backend, reduciendo la latencia y la complejidad del servidor. |
 | **Streaming en chatbot** | Respuestas completas | Streaming palabra por palabra da sensación de IA pensando en tiempo real. Mejora la experiencia percibida |
 
 ---
@@ -247,8 +245,7 @@ No es un template HTML ni un WordPress. Es un **sistema web avanzado** construid
 
 ### 📧 Sistema de Contacto Dual
 
-- **EmailJS** (client-side): Envío directo desde el frontend
-- **Resend** (server-side): Respaldo con validación Zod
+- **EmailJS** (client-side): Envío directo desde el frontend para máxima velocidad.
 - **Fallback local**: Si ninguna API funciona, guarda el mensaje en `messages-local.json`
 - **Rate limiting**: Máximo 5 consultas/hora por IP
 - Validación: nombre (2-100), email (formato), mensaje (10-5000)
@@ -295,14 +292,6 @@ No es un template HTML ni un WordPress. Es un **sistema web avanzado** construid
 | `llama-3.3-70b-versatile` | Chatbot principal (streaming) | 400 | 0.6 |
 | `llama-3.1-8b-instant` | Fallback si el principal falla | 400 | 0.6 |
 | `llama-3.2-11b-vision-preview` | Generación de código desde imágenes | 2000 | 0.3 |
-
-### Resend
-
-| Propiedad | Valor |
-|-----------|-------|
-| From | `onboarding@resend.dev` (personalizable) |
-| Delivery rate | >99% |
-| Spam rate | <0.01% |
 
 ### EmailJS
 
@@ -352,7 +341,6 @@ npm install
 cp .env.example .env
 # Editar .env con tus claves:
 #   GROQ_API_KEY=     → Necesaria para el chatbot con IA
-#   RESEND_API_KEY=   → Opcional, para emails server-side
 #   VITE_EMAILJS_*    → Opcional, para emails client-side
 
 # 4. Iniciar (dos terminales)
@@ -431,9 +419,6 @@ ExePaginasweb/
 |----------|-----------|-------------|
 | `GROQ_API_KEY` | ✅ Sí | API key de Groq Cloud para el chatbot |
 | `GROQ_MODEL` | ❌ No | Modelo por defecto (default: `llama-3.1-70b-versatile`) |
-| `RESEND_API_KEY` | ❌ No | API key de Resend para emails server-side |
-| `RESEND_FROM_EMAIL` | ❌ No | Email remitente (default: `onboarding@resend.dev`) |
-| `RESEND_TO_EMAIL` | ❌ No | Email destino de consultas |
 | `ENABLE_BETA_CHAT` | ❌ No | Feature flag para chat experimental |
 | `VITE_EMAILJS_SERVICE_ID` | ❌ No | EmailJS service ID |
 | `VITE_EMAILJS_TEMPLATE_ID` | ❌ No | EmailJS template ID |

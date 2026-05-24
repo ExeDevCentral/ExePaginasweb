@@ -1,101 +1,97 @@
-import React, { useState } from 'react';
-import { supabase } from '../../core/auth/supabaseClient';
-import { SupabaseUserRepository } from '../../infra/repositories/SupabaseUserRepository';
-import { motion } from 'framer-motion';
-import { Mail, Lock, User, Loader2 } from 'lucide-react';
+import { useState } from 'react'
+import { supabase } from '../../core/infra/supabase/client'
+import { motion } from 'framer-motion'
+import { Mail, Lock, ArrowRight } from 'lucide-react'
 
-const userRepository = new SupabaseUserRepository();
-
-export const RegisterForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export function RegisterForm() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    e.preventDefault()
+    setLoading(true)
+    setMessage(null)
 
     try {
-      const { data, error: authError } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
-      });
+        options: {
+          emailRedirectTo: window.location.origin + '/dashboard',
+        },
+      })
 
-      if (authError) throw authError;
-
-      if (data.user) {
-        await userRepository.createProfile({
-          id: data.user.id,
-          email: data.user.email!,
-          fullName,
-          role: 'customer',
-          createdAt: new Date().toISOString(),
-        });
-      }
-      alert('Registro exitoso. Revisa tu email para confirmar tu cuenta.');
+      if (error) throw error
+      
+      setMessage({ 
+        type: 'success', 
+        text: '¡Registro exitoso! Por favor revisa tu email para confirmar tu cuenta.' 
+      })
     } catch (err: any) {
-      setError(err.message);
+      setMessage({ type: 'error', text: err.message || 'Error al registrarse' })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-md p-8 bg-primary-bg/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl"
-    >
-      <h2 className="text-3xl font-montserrat font-black text-white mb-6">Crear <span className="text-accent-cyan">Cuenta</span></h2>
-      
-      <form onSubmit={handleRegister} className="space-y-4">
+    <form onSubmit={handleRegister} className="space-y-4">
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-white/60 ml-1 uppercase tracking-wider">Email</label>
         <div className="relative">
-          <User className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-secondary" size={18} />
-          <input
-            type="text"
-            placeholder="Nombre Completo"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:border-accent-cyan outline-none transition-all placeholder:text-white/20"
-            required
-          />
-        </div>
-        <div className="relative">
-          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-secondary" size={18} />
+          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
           <input
             type="email"
-            placeholder="Email"
+            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:border-accent-cyan outline-none transition-all placeholder:text-white/20"
-            required
+            placeholder="nombre@ejemplo.com"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-accent-cyan/50 transition-colors"
           />
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-white/60 ml-1 uppercase tracking-wider">Contraseña</label>
         <div className="relative">
-          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-secondary" size={18} />
+          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
           <input
             type="password"
-            placeholder="Contraseña"
+            required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:border-accent-cyan outline-none transition-all placeholder:text-white/20"
-            required
+            placeholder="••••••••"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-accent-cyan/50 transition-colors"
           />
         </div>
+      </div>
 
-        {error && <p className="text-accent-magenta text-xs font-bold bg-accent-magenta/10 p-3 rounded-lg border border-accent-magenta/20">{error}</p>}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-gradient-to-r from-accent-cyan to-accent-magenta py-4 rounded-2xl font-bold text-primary-bg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg shadow-accent-cyan/20"
+      {message && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`p-4 rounded-2xl text-sm font-bold border ${
+            message.type === 'error' 
+              ? 'bg-accent-magenta/10 border-accent-magenta/20 text-accent-magenta' 
+              : 'bg-accent-cyan/10 border-accent-cyan/20 text-accent-cyan'
+          }`}
         >
-          {loading ? <Loader2 className="animate-spin" /> : 'Registrarse'}
-        </button>
-      </form>
-    </motion.div>
-  );
-};
+          {message.text}
+        </motion.div>
+      )}
+
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        disabled={loading}
+        type="submit"
+        className="w-full bg-white text-primary-bg py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-accent-cyan transition-colors disabled:opacity-50"
+      >
+        {loading ? 'Procesando...' : 'Crear mi cuenta'}
+        <ArrowRight className="w-5 h-5" />
+      </motion.button>
+    </form>
+  )
+}

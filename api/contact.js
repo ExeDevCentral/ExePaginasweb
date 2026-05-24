@@ -1,4 +1,3 @@
-import { Resend } from 'resend';
 import { z } from 'zod';
 import fs from 'fs';
 import path from 'path';
@@ -81,35 +80,9 @@ export default async function handler(req, res) {
   }
 
   const { name, email, message } = validation.data;
-  const resendApiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
-  const toEmail = process.env.RESEND_TO_EMAIL || 'Exemetal@hotmail.com';
 
-  if (!resendApiKey) {
-    const saved = saveMessageLocally({ name, email, message });
-    return saved 
-      ? res.status(200).json({ ok: true, savedLocally: true, message: 'Mensaje guardado localmente.' })
-      : res.status(500).json({ error: 'Servidor no configurado para emails.' });
-  }
-
-  try {
-    const resend = new Resend(resendApiKey);
-    const { data, error } = await resend.emails.send({
-      from: `ExeSistemasWEB <${fromEmail}>`,
-      to: [toEmail],
-      replyTo: email,
-      subject: `Nuevo mensaje de ${name}`,
-      text: `Nombre: ${name}\nEmail: ${email}\n\nMensaje:\n${message}`,
-    });
-
-    if (error) {
-      saveMessageLocally({ name, email, message, error: error.message });
-      return res.status(500).json({ error: 'Error al enviar email.' });
-    }
-
-    return res.status(200).json({ ok: true, message: 'Mensaje enviado correctamente.' });
-  } catch (err) {
-    saveMessageLocally({ name, email, message, error: err.message });
-    return res.status(500).json({ error: 'Error inesperado.' });
-  }
+  const saved = saveMessageLocally({ name, email, message });
+  return saved 
+    ? res.status(200).json({ ok: true, savedLocally: true, message: 'Mensaje recibido y registrado localmente.' })
+    : res.status(500).json({ error: 'Error al procesar el registro local del mensaje.' });
 }

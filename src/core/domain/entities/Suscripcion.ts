@@ -5,5 +5,6 @@ export interface Suscripcion {
   cliente_id: string
   plan_id: string
   fecha_inicio: string | null
+  estado?: string | null
   plan: Plan | null
 }

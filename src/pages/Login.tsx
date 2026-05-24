@@ -3,29 +3,28 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Lock } from 'lucide-react'
 import { supabase } from '../core/infra/supabase/client'
+import { getAuthRedirectUrl } from '../core/auth/siteUrl'
+import { useAuthSession } from '../core/auth/AuthSessionProvider'
 
 export default function Login() {
   const navigate = useNavigate()
+  const { ready, session } = useAuthSession()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  // Redirigir al dashboard si ya hay sesión activa
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session) navigate('/dashboard')
-    }
-    checkSession()
-  }, [navigate])
+    if (ready && session) navigate('/dashboard', { replace: true })
+  }, [ready, session, navigate])
 
   const signInWithGoogle = async () => {
     try {
       setError(null)
       setLoading(true)
-      await supabase.auth.signInWithOAuth({
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: window.location.origin },
+        options: { redirectTo: getAuthRedirectUrl('/dashboard') },
       })
+      if (oauthError) throw oauthError
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Error al iniciar sesión'
       setError(message)

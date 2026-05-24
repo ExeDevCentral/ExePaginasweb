@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, LogOut, Home, Cpu, Sparkles, ShoppingBag, LayoutDashboard, LogIn } from 'lucide-react'
+import { Menu, X, LogOut, Home, Cpu, Sparkles, ShoppingBag, LayoutDashboard } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useScrollSpy } from '../hooks/useScrollSpy'
 import { NAV_ITEMS, SCROLL_OFFSET } from './constants'
@@ -42,6 +42,11 @@ const Header = () => {
     await signOut()
     setIsMenuOpen(false)
     navigate('/login')
+  }
+
+  const goToClientArea = () => {
+    setIsMenuOpen(false)
+    navigate(isLoggedIn ? '/dashboard' : '/login')
   }
 
   return (
@@ -134,24 +139,16 @@ const Header = () => {
                   Cerrar Sesión
                 </motion.button>
               </>
-            ) : (
-              <motion.button
-                onClick={() => navigate('/login')}
-                className="text-sm font-bold text-white/70 hover:text-accent-cyan transition-colors px-4"
-                whileHover={{ scale: 1.05 }}
-              >
-                Área Clientes
-              </motion.button>
-            )}
-            <motion.a
-              href="#contact"
+            ) : null}
+            <motion.button
+              type="button"
+              onClick={goToClientArea}
               className="rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta px-6 py-2 text-sm font-semibold text-primary-bg shadow-md shadow-accent-cyan/20 transition-all hover:shadow-lg hover:shadow-accent-cyan/30"
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.98 }}
-              onClick={(e) => scrollToSection(e, 'contact')}
             >
-              Contacto
-            </motion.a>
+              Clientes
+            </motion.button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -283,35 +280,21 @@ const Header = () => {
                         <span>Cerrar Sesión</span>
                       </motion.button>
                     </>
-                  ) : (
-                    <motion.button
-                      initial={{ opacity: 0, x: -24 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 4 * 0.06, type: 'spring', stiffness: 200 }}
-                      whileHover={{ scale: 1.03, x: 6 }}
-                      whileTap={{ scale: 0.96 }}
-                      onClick={() => { navigate('/login'); setIsMenuOpen(false) }}
-                      className="group flex items-center gap-4 text-lg font-bold tracking-wide py-3.5 px-4 -mx-2 rounded-2xl text-white/70 hover:text-accent-cyan hover:bg-white/5 border border-transparent hover:border-white/10 transition-all duration-200 w-full text-left"
-                    >
-                      <LogIn size={22} className="shrink-0 text-white/40 group-hover:text-accent-cyan transition-colors" />
-                      <span>Iniciar Sesión</span>
-                    </motion.button>
-                  )}
+                  ) : null}
 
-                  {/* CTA Contacto — único lugar donde aparece */}
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 6 * 0.06, type: 'spring', stiffness: 150 }}
+                    transition={{ delay: 4 * 0.06, type: 'spring', stiffness: 150 }}
                     className="pt-6 mt-auto"
                   >
-                    <a
-                      href="#contact"
+                    <button
+                      type="button"
+                      onClick={goToClientArea}
                       className="group relative block w-full text-center overflow-hidden rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan/80 to-accent-magenta px-6 py-4 text-lg font-black text-white shadow-xl shadow-accent-cyan/25 active:scale-[0.97] transition-all duration-150"
-                      onClick={(e) => { setIsMenuOpen(false); scrollToSection(e, 'contact') }}
                     >
-                      <span className="relative z-10 tracking-wide">✨ Contactar Ahora</span>
-                    </a>
+                      <span className="relative z-10 tracking-wide">Clientes</span>
+                    </button>
                   </motion.div>
                 </nav>
               </motion.div>

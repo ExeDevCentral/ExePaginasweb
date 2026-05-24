@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../infra/supabase/client';
+import { getAuthRedirectUrl } from './siteUrl';
 
 export type AppUser = {
   id: string;
@@ -74,13 +75,13 @@ export function useAuthRole(adminEmails: readonly string[]) {
 
 
   const signInWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        // For OAuth, Supabase handles redirect; this is just a common setting.
-        redirectTo: window.location.origin,
+        redirectTo: getAuthRedirectUrl('/dashboard'),
       },
     });
+    if (error) throw error;
   };
 
   const signOut = async () => {

@@ -4,6 +4,7 @@ import { SupabaseClienteRepository } from '../infra/repositories/SupabaseCliente
 import { SupabaseSubscriptionRepository } from '../infra/repositories/SupabaseSubscriptionRepository'
 import { Cliente } from '../core/domain/entities/Cliente'
 import { Suscripcion } from '../core/domain/entities/Suscripcion'
+import { resolvePlanTier, type PlanTier } from '../components/dashboard/resolvePlanTier'
 
 export interface Pago {
   id: string
@@ -11,13 +12,14 @@ export interface Pago {
   moneda: string
   estado: string
   plan_nombre: string | null
+  plan_slug: string | null
   created_at: string
 }
 
 const clienteRepo = new SupabaseClienteRepository()
 const subscriptionRepo = new SupabaseSubscriptionRepository()
 
-export function useDashboard() {
+export function useDashboard(enabled = true) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [cliente, setCliente] = useState<Cliente | null>(null)
@@ -25,6 +27,11 @@ export function useDashboard() {
   const [pagos, setPagos] = useState<Pago[]>([])
 
   const isPremium = useMemo(() => suscripciones.length > 0, [suscripciones.length])
+
+  const planTier = useMemo<PlanTier>(
+    () => resolvePlanTier(suscripciones, pagos[0]?.plan_nombre, pagos[0]?.plan_slug),
+    [suscripciones, pagos]
+  )
 
   const loadData = useCallback(async (active: boolean) => {
     try {
@@ -85,7 +92,7 @@ export function useDashboard() {
         try {
           const { data: pagosData } = await supabase
             .from('pagos')
-            .select('id, monto, moneda, estado, plan_nombre, created_at')
+            .select('id, monto, moneda, estado, plan_nombre, plan_slug, created_at')
             .eq('cliente_id', clienteData.id)
             .order('created_at', { ascending: false })
             .limit(10)
@@ -102,10 +109,23 @@ export function useDashboard() {
   }, [])
 
   useEffect(() => {
+    if (!enabled) {
+      setLoading(true)
+      return
+    }
     let active = true
     loadData(active)
     return () => { active = false }
-  }, [loadData])
+  }, [enabled, loadData])
 
-  return { loading, error, cliente, suscripciones, pagos, isPremium, refresh: () => loadData(true) }
+  return {
+    loading,
+    error,
+    cliente,
+    suscripciones,
+    pagos,
+    isPremium,
+    planTier,
+    refresh: () => loadData(true),
+  }
 }

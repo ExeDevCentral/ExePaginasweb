@@ -44,7 +44,8 @@ export default async function handler(req, res) {
         },
         auto_return: 'approved',
         notification_url: `${siteUrl}/api/mercadopago-webhook`,
-        metadata: { plan_id: planId || '', email },
+        external_reference: `${planId || 'plan'}|${email}`,
+        metadata: { plan_id: planId || '', plan_slug: planId || '', email },
       }),
     })
 

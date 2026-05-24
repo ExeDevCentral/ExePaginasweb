@@ -58,10 +58,33 @@ export default async function handler(req, res) {
       const payment = await mpResp.json()
 
       if (payment.status === 'approved') {
-        const email = payment.payer?.email
+        const email =
+          payment.metadata?.email ||
+          payment.payer?.email
         const monto = payment.transaction_amount
-        const planNombre = payment.description || 'Plan'
+        let planNombre = payment.description || payment.metadata?.plan_title || 'Plan'
         const mpPaymentId = String(payment.id)
+
+        let planSlug =
+          payment.metadata?.plan_slug ||
+          payment.metadata?.plan_id ||
+          null
+
+        if (!planSlug && payment.external_reference?.includes('|')) {
+          planSlug = payment.external_reference.split('|')[0]
+        }
+
+        const PLAN_SLUGS = [
+          'mantenimiento-basico',
+          'mantenimiento-avanzado',
+          'mantenimiento-premium',
+        ]
+        if (!planSlug || !PLAN_SLUGS.includes(planSlug)) {
+          const lower = (planNombre || '').toLowerCase()
+          if (lower.includes('premium')) planSlug = 'mantenimiento-premium'
+          else if (lower.includes('avanzado')) planSlug = 'mantenimiento-avanzado'
+          else if (lower.includes('basico') || lower.includes('básico')) planSlug = 'mantenimiento-basico'
+        }
 
         if (!email) {
           console.error('[mp-webhook] No payer email')
@@ -90,17 +113,37 @@ export default async function handler(req, res) {
           return res.status(200).json({ ok: true })
         }
 
-        const { data: planes } = await supabase
-          .from('planes')
-          .select('id, nombre')
-          .ilike('nombre', `%${planNombre}%`)
-          .limit(1)
+        let planId = null
+        if (planSlug) {
+          const { data: planRow } = await supabase
+            .from('planes')
+            .select('id, nombre')
+            .eq('slug', planSlug)
+            .maybeSingle()
+          planId = planRow?.id ?? null
+          if (!planNombre && planRow?.nombre) {
+            planNombre = planRow.nombre
+          }
+        }
 
-        const planId = planes?.[0]?.id
+        if (!planId) {
+          const { data: planes } = await supabase
+            .from('planes')
+            .select('id, nombre')
+            .ilike('nombre', `%${planNombre}%`)
+            .limit(1)
+          planId = planes?.[0]?.id ?? null
+        }
+
+        await supabase
+          .from('suscripciones')
+          .update({ estado: 'cancelada' })
+          .eq('cliente_id', clienteId)
+          .eq('estado', 'activa')
 
         await supabase.from('suscripciones').insert({
           cliente_id: clienteId,
-          plan_id: planId || null,
+          plan_id: planId,
           fecha_inicio: new Date().toISOString(),
           estado: 'activa',
         })
@@ -112,7 +155,10 @@ export default async function handler(req, res) {
           estado: 'aprobado',
           mp_payment_id: mpPaymentId,
           plan_nombre: planNombre,
+          plan_slug: planSlug,
         })
+
+        console.log('[mp-webhook] suscripcion activada', { email, planSlug, clienteId })
 
         if (process.env.RESEND_API_KEY) {
           try {

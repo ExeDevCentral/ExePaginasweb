@@ -4,14 +4,21 @@ const dbUrl = import.meta.env.VITE_SUPABASE_URL;
 const dbAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!dbUrl || !dbAnonKey) {
-  console.warn(
-    'DB URL o anon key no encontradas en las variables de entorno. Las consultas a la base de datos fallarán.'
+  console.error(
+    '[supabase] Faltan VITE_SUPABASE_URL y/o VITE_SUPABASE_ANON_KEY. ' +
+      'Configuralas en Vercel (Settings → Environment Variables) y en .env.local para desarrollo.'
   );
 }
 
-// Backward compatible export: el resto del código espera `supabase`
-// Si las variables no existen, usamos placeholders que pasen la validación de la librería
 export const supabase = createClient(
-  dbUrl || 'https://placeholder.supabase.co', 
-  dbAnonKey || 'placeholder-key'
+  dbUrl || 'https://placeholder.supabase.co',
+  dbAnonKey || 'placeholder-key',
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+      flowType: 'pkce',
+    },
+  }
 );

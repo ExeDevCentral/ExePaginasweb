@@ -9,8 +9,9 @@ export class SupabaseSubscriptionRepository {
         id, 
         cliente_id, 
         plan_id, 
-        fecha_inicio, 
-        plan:planes(id, nombre, precio, caracteristicas)
+        fecha_inicio,
+        estado,
+        plan:planes(id, slug, nombre, precio, caracteristicas)
       `)
       .eq('cliente_id', clienteId)
       .order('fecha_inicio', { ascending: false })

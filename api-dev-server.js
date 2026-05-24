@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 dotenv.config({ debug: process.env.DEBUG === 'true' }) // Activa el modo debug si la variable DEBUG está en true
 console.log('Estado de carga de variables de entorno:');
 console.log(`  - GROQ_API_KEY: ${process.env.GROQ_API_KEY ? 'Cargada (valor oculto por seguridad)' : 'NO cargada'}`);
+console.log(`  - RESEND_API_KEY: ${process.env.RESEND_API_KEY ? 'Cargada (valor oculto por seguridad)' : 'NO cargada'}`);
 console.log(`  - DEBUG: ${process.env.DEBUG ? 'Activo' : 'Inactivo'}`);
 
 const app = express()
@@ -108,5 +109,11 @@ app.listen(PORT, () => {
     console.log(`   ✅ Groq API Key cargada correctamente (${process.env.GROQ_API_KEY.slice(0, 7)}...)`);
   } else {
     console.log('   ⚠️ ERROR: No se encontró GROQ_API_KEY en el archivo .env');
+  }
+
+  if (process.env.RESEND_API_KEY) {
+    console.log(`   ✅ Resend API Key cargada correctamente (${process.env.RESEND_API_KEY.slice(0, 7)}...)`);
+  } else {
+    console.log('   ⚠️ ADVERTENCIA: No se encontró RESEND_API_KEY en el archivo .env');
   }
 })

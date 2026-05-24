@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Lock, UserRoundPlus } from 'lucide-react'
+import { Lock } from 'lucide-react'
 import { supabase } from '../core/infra/supabase/client'
-import { RegisterForm } from '../components/Auth/RegisterForm'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -51,9 +50,9 @@ export default function Login() {
           <p className="mt-3 text-primary-secondary">Acceso de clientes para activar el dashboard premium.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="flex justify-center">
           <motion.div
-            className="bg-primary-bg/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-8"
+            className="bg-primary-bg/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-8 max-w-md w-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.08 }}
@@ -94,23 +93,7 @@ export default function Login() {
             </motion.div>
           </motion.div>
 
-          <div className="lg:sticky lg:top-[100px] self-start">
-            <div className="bg-primary-bg/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-2">
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-cyan to-accent-magenta flex items-center justify-center">
-                    <UserRoundPlus className="w-6 h-6 text-primary-bg" />
-                  </div>
-                  <div className="text-left">
-                    <h2 className="text-2xl font-bold text-white">Crear cuenta</h2>
-                    <p className="text-sm text-primary-secondary">Se vincula con tu email.</p>
-                  </div>
-                </div>
 
-                <RegisterForm />
-              </div>
-            </div>
-          </div>
         </div>
       </motion.div>
     </div>

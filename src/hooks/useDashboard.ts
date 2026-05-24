@@ -29,25 +29,52 @@ export function useDashboard() {
         return
       }
 
-      let clienteData = await clienteRepo.getByEmail(user.email)
+      let clienteData: Cliente | null = null
+
+      try {
+        clienteData = await clienteRepo.getByEmail(user.email)
+      } catch {
+        // tabla clientes no existe — usamos datos del auth user
+        clienteData = {
+          id: user.id,
+          nombre: user.user_metadata?.full_name ?? null,
+          email: user.email,
+          telefono: null,
+        }
+      }
 
       if (!active) return
 
       if (!clienteData) {
-        const { data: newCliente, error: insertError } = await supabase
-          .from('clientes')
-          .insert({ nombre: user.user_metadata?.full_name ?? null, email: user.email, telefono: null })
-          .select('id, nombre, email, telefono')
-          .single()
-
-        if (insertError) throw insertError
-        clienteData = newCliente as Cliente
+        try {
+          const { data: newCliente, error: insertError } = await supabase
+            .from('clientes')
+            .insert({ nombre: user.user_metadata?.full_name ?? null, email: user.email, telefono: null })
+            .select('id, nombre, email, telefono')
+            .single()
+          if (!insertError) clienteData = newCliente as Cliente
+        } catch {
+          // si no se puede insertar, usamos auth user
+          clienteData = {
+            id: user.id,
+            nombre: user.user_metadata?.full_name ?? null,
+            email: user.email,
+            telefono: null,
+          }
+        }
       }
 
       setCliente(clienteData)
-      const subsData = await subscriptionRepo.getByClienteId(clienteData.id)
-      
-      if (active) setSuscripciones(subsData)
+
+      if (clienteData) {
+        try {
+          const subsData = await subscriptionRepo.getByClienteId(clienteData.id)
+          if (active) setSuscripciones(subsData)
+        } catch {
+          // tabla suscripciones no existe
+          if (active) setSuscripciones([])
+        }
+      }
     } catch (e: any) {
       if (active) setError(e?.message ?? 'Error cargando dashboard')
     } finally {

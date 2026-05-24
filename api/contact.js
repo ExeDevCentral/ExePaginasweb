@@ -1,19 +1,6 @@
-import { z } from 'zod';
-import fs from 'fs';
-import path from 'path';
-
-const RATE_LIMIT_WINDOW_MS = 3600_000; // 1 hora
-const RATE_LIMIT_MAX_REQUESTS = 5; // Máximo 5 consultas por hora por IP
-
+const RATE_LIMIT_WINDOW_MS = 3600_000;
+const RATE_LIMIT_MAX_REQUESTS = 5;
 const requestLog = new Map();
-const MESSAGES_FILE = path.join(process.cwd(), 'messages-local.json');
-
-// Schema de validación con Zod
-const ContactSchema = z.object({
-  name: z.string().min(2).max(100),
-  email: z.string().email(),
-  message: z.string().min(10).max(5000)
-});
 
 function getClientIp(req) {
   const forwardedFor = req.headers['x-forwarded-for'];
@@ -27,12 +14,10 @@ function isRateLimited(ip) {
   const now = Date.now();
   const previous = requestLog.get(ip) ?? [];
   const recent = previous.filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS);
-
   if (recent.length >= RATE_LIMIT_MAX_REQUESTS) {
     requestLog.set(ip, recent);
     return true;
   }
-
   recent.push(now);
   requestLog.set(ip, recent);
   return false;
@@ -46,43 +31,25 @@ function setCorsHeaders(res) {
   }
 }
 
-function saveMessageLocally(contactData) {
-  try {
-    if (process.env.NODE_ENV === 'production') return false;
-    let messages = [];
-    if (fs.existsSync(MESSAGES_FILE)) {
-      messages = JSON.parse(fs.readFileSync(MESSAGES_FILE, 'utf-8'));
-    }
-    messages.push({ ...contactData, receivedAt: new Date().toISOString() });
-    fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages, null, 2));
-    return true;
-  } catch (err) {
-    console.error('[contact] Error local save:', err);
-    return false;
-  }
-}
-
 export default async function handler(req, res) {
   setCorsHeaders(res);
-
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const ip = getClientIp(req);
   if (isRateLimited(ip)) {
-    return res.status(429).json({ error: 'Demasiados mensajes de contacto. Intente más tarde.' });
+    return res.status(429).json({ error: 'Demasiados mensajes. Intenta más tarde.' });
   }
 
-  // Validación con Zod
-  const validation = ContactSchema.safeParse(req.body);
-  if (!validation.success) {
-    return res.status(400).json({ error: 'Datos de contacto inválidos.', details: validation.error.format() });
+  const { name, email, message } = req.body || {};
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'Faltan campos requeridos.' });
+  }
+  if (name.length < 2 || email.length < 5 || message.length < 10) {
+    return res.status(400).json({ error: 'Campos demasiado cortos.' });
   }
 
-  const { name, email, message } = validation.data;
+  console.log(`[contact] Mensaje de ${name} <${email}>: ${message.slice(0, 100)}...`);
 
-  const saved = saveMessageLocally({ name, email, message });
-  return saved 
-    ? res.status(200).json({ ok: true, savedLocally: true, message: 'Mensaje recibido y registrado localmente.' })
-    : res.status(500).json({ error: 'Error al procesar el registro local del mensaje.' });
+  return res.status(200).json({ ok: true, message: 'Mensaje recibido correctamente.' });
 }

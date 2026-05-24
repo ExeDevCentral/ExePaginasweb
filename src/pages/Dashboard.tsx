@@ -8,7 +8,7 @@ import { useAuthRole } from '../core/auth/userAuth'
 
 const ADMIN_EMAILS = [
   'exemetal@hotmail.com',
-  'exedevcentral@gmail.com',
+  'echevarria270@gmail.com',
 ]
 
 function formatDate(d?: string | null) {

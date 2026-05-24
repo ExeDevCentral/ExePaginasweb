@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, LogOut } from 'lucide-react'
+import { Menu, X, LogOut, Home, Cpu, Sparkles, ShoppingBag, LayoutDashboard, LogIn } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useScrollSpy } from '../hooks/useScrollSpy'
 import { NAV_ITEMS, SCROLL_OFFSET } from './constants'
@@ -195,91 +195,122 @@ const Header = () => {
                   <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-accent-magenta/5 blur-[90px]" />
                 </div>
 
-                <nav className="relative flex flex-col px-6 pt-12 pb-8 space-y-1 flex-1">
-                  {NAV_ITEMS.map((item, index) => (
-                    <motion.a
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.07 }}
-                      key={item.label}
-                      href={item.href}
-                      className={`text-xl font-bold tracking-wide transition-all duration-200 py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] ${
-                        activeId === item.id
-                          ? 'text-accent-cyan bg-accent-cyan/8'
-                          : 'text-white/90 hover:text-accent-cyan hover:bg-white/5'
-                      }`}
-                      onClick={(e) => {
-                        setIsMenuOpen(false);
-                        scrollToSection(e, item.id);
-                      }}
-                    >
-                      {item.label}
-                    </motion.a>
-                  ))}
-                  
+                <nav className="relative flex flex-col px-5 pt-10 pb-8 gap-1 flex-1">
+                  {/* Nav items (sin Contacto — va como CTA abajo) */}
+                  {NAV_ITEMS.filter(i => i.id !== 'contact').map((item, index) => {
+                    const iconMap: Record<string, React.ReactNode> = {
+                      home: <Home size={22} />,
+                      products: <Cpu size={22} />,
+                      features: <Sparkles size={22} />,
+                    }
+                    const isActive = activeId === item.id
+                    return (
+                      <motion.a
+                        key={item.label}
+                        href={item.href}
+                        initial={{ opacity: 0, x: -24 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.06, type: 'spring', stiffness: 200 }}
+                        whileHover={{ scale: 1.03, x: 6 }}
+                        whileTap={{ scale: 0.96 }}
+                        className={`group flex items-center gap-4 text-lg font-bold tracking-wide py-3.5 px-4 -mx-2 rounded-2xl transition-all duration-200 ${
+                          isActive
+                            ? 'bg-gradient-to-r from-accent-cyan/15 to-accent-magenta/10 text-white border border-accent-cyan/20 shadow-lg shadow-accent-cyan/5'
+                            : 'text-white/80 hover:text-white hover:bg-white/5 border border-transparent'
+                        }`}
+                        onClick={(e) => { setIsMenuOpen(false); scrollToSection(e, item.id) }}
+                      >
+                        <span className={`shrink-0 ${isActive ? 'text-accent-cyan' : 'text-white/40 group-hover:text-accent-cyan'} transition-colors`}>
+                          {iconMap[item.id]}
+                        </span>
+                        <span className={isActive ? 'bg-gradient-to-r from-accent-cyan to-white bg-clip-text text-transparent' : ''}>
+                          {item.label}
+                        </span>
+                        {isActive && (
+                          <span className="ml-auto w-1.5 h-1.5 rounded-full bg-accent-cyan shadow-[0_0_8px_rgba(0,255,255,0.6)]" />
+                        )}
+                      </motion.a>
+                    )
+                  })}
+
+                  <div className="h-px bg-gradient-to-r from-accent-cyan/30 via-accent-magenta/30 to-transparent my-3 mx-2" />
+
+                  {/* Tienda */}
                   <motion.a
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: NAV_ITEMS.length * 0.07 }}
+                    initial={{ opacity: 0, x: -24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 3 * 0.06, type: 'spring', stiffness: 200 }}
+                    whileHover={{ scale: 1.03, x: 6 }}
+                    whileTap={{ scale: 0.96 }}
                     href="/tienda"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xl font-bold tracking-wide text-accent-magenta hover:text-accent-cyan transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98]"
+                    className="group flex items-center gap-4 text-lg font-bold tracking-wide py-3.5 px-4 -mx-2 rounded-2xl text-accent-magenta hover:text-white hover:bg-accent-magenta/10 border border-transparent hover:border-accent-magenta/20 transition-all duration-200"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Tienda Online
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    <ShoppingBag size={22} className="shrink-0 text-accent-magenta/70 group-hover:text-accent-magenta transition-colors" />
+                    <span>Tienda Online</span>
+                    <svg className="ml-auto w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                   </motion.a>
 
+                  <div className="h-px bg-gradient-to-r from-accent-magenta/30 via-accent-cyan/30 to-transparent my-3 mx-2" />
+
+                  {/* Auth section */}
                   {isLoggedIn ? (
                     <>
                       <motion.button
-                        initial={{ opacity: 0, y: 16 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: (NAV_ITEMS.length + 1) * 0.07 }}
+                        initial={{ opacity: 0, x: -24 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 4 * 0.06, type: 'spring', stiffness: 200 }}
+                        whileHover={{ scale: 1.03, x: 6 }}
+                        whileTap={{ scale: 0.96 }}
                         onClick={() => { navigate('/dashboard'); setIsMenuOpen(false) }}
-                        className="text-xl font-bold tracking-wide text-accent-cyan hover:text-white transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] w-full text-left"
+                        className="group flex items-center gap-4 text-lg font-bold tracking-wide py-3.5 px-4 -mx-2 rounded-2xl text-accent-cyan hover:text-white hover:bg-accent-cyan/10 border border-transparent hover:border-accent-cyan/20 transition-all duration-200 w-full text-left"
                       >
-                        Mi Panel
+                        <LayoutDashboard size={22} className="shrink-0 text-accent-cyan/70 group-hover:text-accent-cyan transition-colors" />
+                        <span>Mi Panel</span>
                       </motion.button>
                       <motion.button
-                        initial={{ opacity: 0, y: 16 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: (NAV_ITEMS.length + 2) * 0.07 }}
+                        initial={{ opacity: 0, x: -24 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 5 * 0.06, type: 'spring', stiffness: 200 }}
+                        whileHover={{ scale: 1.03, x: 6 }}
+                        whileTap={{ scale: 0.96 }}
                         onClick={handleLogout}
-                        className="text-xl font-bold tracking-wide text-accent-magenta/80 hover:text-accent-cyan transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] w-full text-left"
+                        className="group flex items-center gap-4 text-lg font-bold tracking-wide py-3.5 px-4 -mx-2 rounded-2xl text-red-400/80 hover:text-red-300 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all duration-200 w-full text-left"
                       >
-                        Cerrar Sesión
-                        <LogOut size={20} />
+                        <LogOut size={22} className="shrink-0 text-red-400/50 group-hover:text-red-300 transition-colors" />
+                        <span>Cerrar Sesión</span>
                       </motion.button>
                     </>
                   ) : (
                     <motion.button
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: (NAV_ITEMS.length + 1) * 0.07 }}
+                      initial={{ opacity: 0, x: -24 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 4 * 0.06, type: 'spring', stiffness: 200 }}
+                      whileHover={{ scale: 1.03, x: 6 }}
+                      whileTap={{ scale: 0.96 }}
                       onClick={() => { navigate('/login'); setIsMenuOpen(false) }}
-                      className="text-xl font-bold tracking-wide text-white/70 hover:text-accent-cyan transition-all duration-200 flex items-center justify-between py-3 px-4 -mx-4 rounded-xl active:scale-[0.98] w-full text-left"
+                      className="group flex items-center gap-4 text-lg font-bold tracking-wide py-3.5 px-4 -mx-2 rounded-2xl text-white/70 hover:text-accent-cyan hover:bg-white/5 border border-transparent hover:border-white/10 transition-all duration-200 w-full text-left"
                     >
-                      Iniciar Sesión
+                      <LogIn size={22} className="shrink-0 text-white/40 group-hover:text-accent-cyan transition-colors" />
+                      <span>Iniciar Sesión</span>
                     </motion.button>
                   )}
 
+                  {/* CTA Contacto — único lugar donde aparece */}
                   <motion.div 
-                    initial={{ opacity: 0, y: 16 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: (NAV_ITEMS.length + (isLoggedIn ? 3 : 2)) * 0.07 }}
+                    transition={{ delay: 6 * 0.06, type: 'spring', stiffness: 150 }}
                     className="pt-6 mt-auto"
                   >
                     <a
                       href="#contact"
-                      className="block w-full text-center rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta px-6 py-4 text-lg font-bold text-white shadow-lg shadow-accent-cyan/20 active:scale-[0.97] transition-all duration-150"
-                      onClick={(e) => {
-                        setIsMenuOpen(false);
-                        scrollToSection(e, 'contact');
-                      }}
+                      className="group relative block w-full text-center overflow-hidden rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan/80 to-accent-magenta px-6 py-4 text-lg font-black text-white shadow-xl shadow-accent-cyan/25 active:scale-[0.97] transition-all duration-150"
+                      onClick={(e) => { setIsMenuOpen(false); scrollToSection(e, 'contact') }}
                     >
-                      Contactar Ahora
+                      <span className="relative z-10 tracking-wide">✨ Contactar Ahora</span>
                     </a>
                   </motion.div>
                 </nav>

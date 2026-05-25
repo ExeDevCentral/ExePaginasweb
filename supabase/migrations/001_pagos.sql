@@ -11,9 +11,12 @@ CREATE TABLE IF NOT EXISTS public.pagos (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Agregar estado y fecha_fin a suscripciones
-ALTER TABLE public.suscripciones ADD COLUMN IF NOT EXISTS estado TEXT DEFAULT 'activa';
-ALTER TABLE public.suscripciones ADD COLUMN IF NOT EXISTS fecha_fin TIMESTAMPTZ;
+-- Índices para mejorar la velocidad de búsqueda del Webhook y Dashboard
+CREATE INDEX IF NOT EXISTS idx_pagos_cliente_id ON public.pagos(cliente_id);
+CREATE INDEX IF NOT EXISTS idx_pagos_mp_payment_id ON public.pagos(mp_payment_id);
+
+-- Nota: las columnas de suscripciones (estado/fecha_fin) se gestionan en la migración de suscripciones.
+
 
 -- RLS (opcional, por ahora todo abierto con service_role)
 ALTER TABLE public.pagos ENABLE ROW LEVEL SECURITY;
@@ -21,5 +24,5 @@ ALTER TABLE public.pagos ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Usuarios pueden ver sus propios pagos"
   ON public.pagos FOR SELECT
   USING (cliente_id IN (
-    SELECT id FROM public.clientes WHERE email = auth.jwt() ->> 'email'
+    SELECT id FROM public.clientes WHERE id = auth.uid()
   ));

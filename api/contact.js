@@ -1,7 +1,3 @@
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const RATE_LIMIT_WINDOW_MS = 3600_000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
 const requestLog = new Map();
@@ -50,36 +46,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Faltan campos requeridos.' });
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (name.length < 2 || !emailRegex.test(email) || message.length < 10) {
-    return res.status(400).json({ error: 'Campos demasiado cortos.' });
-  }
+  console.log(`[contact] Mensaje de ${name} <${email}>: ${message.slice(0, 100)}...`);
 
-  try {
-    const { data, error } = await resend.emails.send({
-      from: 'ExeSistemasWEB <onboarding@resend.dev>',
-      to: ['exeme@live.com.ar'], // Tu correo de destino
-      subject: `🚀 Nuevo contacto: ${name}`,
-      html: `
-        <div style="font-family: sans-serif; padding: 20px; color: #333;">
-          <h2>Has recibido un nuevo mensaje</h2>
-          <p><strong>Nombre:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Mensaje:</strong></p>
-          <p style="background: #f4f4f4; padding: 15px; border-left: 4px solid #00cfd5;">${message}</p>
-        </div>
-      `,
-    });
-
-    if (error) {
-      console.error('[contact] Error de Resend:', error);
-      return res.status(500).json({ error: 'Error al enviar el email.' });
-    }
-
-    console.log(`[contact] Mensaje de ${name} enviado con éxito. ID: ${data.id}`);
-    return res.status(200).json({ ok: true, message: 'Mensaje enviado correctamente.' });
-  } catch (err) {
-    console.error('[contact] Excepción:', err);
-    return res.status(500).json({ error: 'Error interno del servidor.' });
-  }
+  return res.status(200).json({ ok: true, message: 'Mensaje recibido. Te contactaremos pronto.' });
 }

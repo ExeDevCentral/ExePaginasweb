@@ -1,10 +1,14 @@
-export default async function handler(req, res) {
-  if (req.method === 'OPTIONS') {
+function setCorsHeaders(res) {
+  if (process.env.NODE_ENV === 'production') {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-    return res.status(200).end()
   }
+}
+
+export default async function handler(req, res) {
+  setCorsHeaders(res)
+  if (req.method === 'OPTIONS') return res.status(200).end()
 
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
@@ -18,7 +22,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Faltan campos: title, price, email' })
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://exepaginasweb.com'
+  const siteUrl = process.env.VITE_SITE_URL || process.env.SITE_URL || 'https://exepaginasweb.com'
 
   try {
     const mpResp = await fetch('https://api.mercadopago.com/checkout/preferences', {

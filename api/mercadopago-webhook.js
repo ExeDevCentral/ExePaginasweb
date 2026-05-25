@@ -17,13 +17,17 @@ function buffer(req) {
   })
 }
 
-export default async function handler(req, res) {
-  if (req.method === 'OPTIONS') {
+function setCorsHeaders(res) {
+  if (process.env.NODE_ENV === 'production') {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-    return res.status(200).end()
   }
+}
+
+export default async function handler(req, res) {
+  setCorsHeaders(res)
+  if (req.method === 'OPTIONS') return res.status(200).end()
 
   if (req.method !== 'POST') return res.status(405).end()
 
@@ -179,7 +183,7 @@ export default async function handler(req, res) {
                     <p>Tu pago por <strong>${planNombre}</strong> fue procesado correctamente.</p>
                     <p style="font-size:24px;font-weight:bold;">$${monto} ${payment.currency_id || 'ARS'}</p>
                     <p>Ya podés acceder a todas las funcionalidades de tu plan desde tu panel.</p>
-                    <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://exepaginasweb.com'}/dashboard"
+                    <a href="${process.env.VITE_SITE_URL || process.env.SITE_URL || 'https://exepaginasweb.com'}/dashboard"
                        style="display:inline-block;padding:12px 24px;background:linear-gradient(135deg,#00d4ff,#ff00ff);color:#000;text-decoration:none;border-radius:12px;font-weight:bold;margin-top:16px;">
                       Ir al Dashboard
                     </a>

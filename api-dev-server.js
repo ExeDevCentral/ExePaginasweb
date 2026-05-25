@@ -95,6 +95,16 @@ app.all('/api/mercadopago-webhook', async (req, res) => {
   }
 })
 
+app.all('/api/send-email', async (req, res) => {
+  try {
+    const { sendEmailHandler } = await import('./api/send-email.js')
+    await sendEmailHandler(req, res)
+  } catch (error) {
+    console.error('[Dev Server] Send Email Error:', error)
+    res.status(500).json({ error: error.message })
+  }
+})
+
 app.use((req, res) => {
   res.status(404).json({ error: `Ruta no encontrada: ${req.url}` })
 })

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { SalonBloomButton } from './SalonBloomButton';
+import { SalonBloomButton } from '../shared/SalonBloomButton';
 import { useTypewriter } from '../../hooks/useTypewriter';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { HERO_TYPEWRITER_TEXT } from './constants';

@@ -1,4 +1,4 @@
-import { supabase } from '../../core/auth/supabaseClient'
+import { supabase } from '../../core/infra/supabase/client'
 import { User } from '../../core/domain/entities/User'
 import { IUserRepository } from '../../core/domain/repositories/IUserRepository'
 

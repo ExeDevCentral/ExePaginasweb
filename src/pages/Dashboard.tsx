@@ -5,14 +5,10 @@ import { supabase } from '../core/infra/supabase/client'
 import { Crown, RefreshCw } from 'lucide-react'
 import { useDashboard } from '../hooks/useDashboard'
 import { useAuthRole } from '../core/auth/userAuth'
+import { ADMIN_EMAILS } from '../core/auth/roleConfig'
 import { useAuthSession } from '../core/auth/AuthSessionProvider'
 import ClientDashboard from '../components/dashboard/ClientDashboard'
 import type { PlanTier } from '../components/dashboard/resolvePlanTier'
-
-const ADMIN_EMAILS = [
-  'exemetal@hotmail.com',
-  'echevarria270@gmail.com',
-]
 
 const PREVIEW_TIERS: PlanTier[] = ['basico', 'avanzado', 'premium']
 

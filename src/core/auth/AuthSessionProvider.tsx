@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from '../infra/supabase/client'
 import { resolveAuthSession } from './resolveAuthSession'
-import { hasAuthCallbackInUrl } from './siteUrl'
 
 type AuthSessionContextValue = {
   ready: boolean
@@ -31,21 +30,15 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
       setReady(true)
     })
 
-    async function bootstrap() {
-      try {
-        const isCallback = hasAuthCallbackInUrl()
-        await resolveAuthSession()
-        const { data } = await supabase.auth.getSession()
-        if (mounted) setSession(data.session)
-        if (!isCallback || data.session) {
-          if (mounted) setReady(true)
-        }
-      } catch {
-        if (mounted) setReady(true)
-      }
+    async function init() {
+      await resolveAuthSession()
+      const { data } = await supabase.auth.getSession()
+      if (!mounted) return
+      setSession(data.session)
+      setReady(true)
     }
 
-    bootstrap()
+    init()
 
     return () => {
       mounted = false

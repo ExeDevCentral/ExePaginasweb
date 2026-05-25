@@ -32,7 +32,6 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
     }
 
     try {
-      console.log('[EmailJS] Sending email...')
       const result = await emailjs.send(
         serviceId,
         templateId,

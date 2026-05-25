@@ -1,2 +1,2 @@
-export const ADMIN_EMAILS = ['Exemetal@hotmail.com'] as const;
+export const ADMIN_EMAILS = ['exemetal@hotmail.com', 'echevarria270@gmail.com'] as const;
 

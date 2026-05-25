@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import { Lock, Sparkles, X, Check, ArrowRight, Monitor, Building, Building2, Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PremiumBackground from './Effects/PremiumBackground';
+import PremiumBackground from '../Effects/PremiumBackground';
 import { Helmet } from 'react-helmet-async';
-import { useIsMobile } from '../hooks/useIsMobile';
-import { supabase } from '../core/infra/supabase/client';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import { supabase } from '../../core/infra/supabase/client';
 
 const PLANS = [
   {

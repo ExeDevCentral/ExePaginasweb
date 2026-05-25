@@ -43,8 +43,8 @@ export default defineConfig({
           if (id.includes('node_modules/three') || id.includes('@react-three')) {
             return 'three-3d'
           }
-          // react-markdown y react-syntax-highlighter — solo en el BotWidget
-          if (id.includes('react-markdown') || id.includes('react-syntax-highlighter') || id.includes('remark') || id.includes('rehype')) {
+          // react-markdown — solo en el BotWidget
+          if (id.includes('react-markdown') || id.includes('remark') || id.includes('rehype')) {
             return 'markdown'
           }
         }

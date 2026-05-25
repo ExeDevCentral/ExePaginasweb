@@ -5,9 +5,11 @@ import { SpeedInsights } from '@vercel/speed-insights/react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthSessionProvider } from './core/auth/AuthSessionProvider'
 import App from './App.tsx'
-import StorePage from './components/StorePage'
+import StorePage from './components/store/StorePage'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsOfService from './pages/TermsOfService'
 import NotFound from './pages/NotFound'
 import './index.css'
 
@@ -21,6 +23,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Route path="/tienda" element={<StorePage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/privacidad" element={<PrivacyPolicy />} />
+            <Route path="/terminos" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

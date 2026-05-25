@@ -1,15 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, LogOut, Home, Cpu, Sparkles, ShoppingBag, LayoutDashboard } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { useScrollSpy } from '../hooks/useScrollSpy'
-import { NAV_ITEMS, SCROLL_OFFSET } from './constants'
+import { useScrollSpy } from '../../hooks/useScrollSpy'
+import { NAV_ITEMS, SCROLL_OFFSET } from '../landing/constants'
 import { useNavigate } from 'react-router-dom'
-import { useAuthRole } from '../core/auth/userAuth'
-
-const ADMIN_EMAILS = [
-  'exemetal@hotmail.com',
-  'echevarria270@gmail.com',
-]
+import { useAuthRole } from '../../core/auth/userAuth'
+import { ADMIN_EMAILS } from '../../core/auth/roleConfig'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

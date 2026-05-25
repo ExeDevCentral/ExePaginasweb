@@ -1,9 +1,9 @@
 import { Helmet } from 'react-helmet-async'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import { lazy, Suspense, useEffect, useState } from 'react'
-import Header from './components/Header'
+import Header from './components/layout/Header'
 import Hero from './components/Hero/Hero'
-import ErrorBoundary from './components/ErrorBoundary'
+import ErrorBoundary from './components/layout/ErrorBoundary'
 import { AdSense } from './components/Auth/AdSense'
 import AdSlot from './components/Ads/AdSlot'
 
@@ -12,11 +12,11 @@ const Features = lazy(() => import('./components/Features/Features'))
 const SocialProof = lazy(() => import('./components/SocialProof/SocialProof'))
 const Process = lazy(() => import('./components/Process/Process'))
 const FAQ = lazy(() => import('./components/FAQ/FAQ'))
-const Footer = lazy(() => import('./components/Footer/Footer'))
+const Footer = lazy(() => import('./components/layout/Footer'))
 const PremiumBackground = lazy(() => import('./components/Effects/PremiumBackground'))
-const BotWidget = lazy(() => import('./components/Bot/BotWidget'))
+const BotWidget = lazy(() => import('./components/chat/BotWidget'))
 const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
-const ContactSection = lazy(() => import('./components/ContactSection'))
+const ContactSection = lazy(() => import('./components/landing/ContactSection'))
 const CaseStudies = lazy(() => import('./components/CaseStudies/CaseStudies'))
 const TechStack = lazy(() => import('./components/TechStack/TechStack'))
 const Pricing = lazy(() => import('./components/Pricing/Pricing'))

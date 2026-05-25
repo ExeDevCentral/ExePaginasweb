@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useCallback, useEffect, useMemo, Suspense } from 'react'
 
 import { Upload, Image as ImageIcon, Settings, Download, Play, X, ShoppingCart } from 'lucide-react'
-import PaywallModal from '../PaywallModal'
+import PaywallModal from '../store/PaywallModal'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 import { useIsMobile } from '../../hooks/useIsMobile'
 

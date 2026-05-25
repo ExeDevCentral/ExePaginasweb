@@ -1,1 +1,0 @@
-export { supabase } from '../../core/infra/supabase/client'

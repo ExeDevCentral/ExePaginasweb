@@ -58,7 +58,7 @@ DROP POLICY IF EXISTS "Usuarios crean su propio cliente" ON public.clientes;
 CREATE POLICY "Usuarios crean su propio cliente"
   ON public.clientes FOR INSERT
   TO authenticated
-  USING (id = auth.uid());
+  WITH CHECK (id = auth.uid());
 
 DROP POLICY IF EXISTS "Usuarios actualizan su propio cliente" ON public.clientes;
 CREATE POLICY "Usuarios actualizan su propio cliente"

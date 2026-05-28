@@ -67,6 +67,7 @@ const Header = () => {
               alt="ExeSistemasWEB Logo" 
               loading="eager" 
               fetchPriority="high"
+
               width="40"
               height="40"
               className="w-10 h-10 rounded-xl shadow-lg shadow-accent-cyan/20 border border-accent-cyan/30 object-cover"

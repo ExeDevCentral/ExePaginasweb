@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import { FormEvent, useState } from 'react'
 import { MessageCircle, Globe, ArrowRight, CheckCircle } from 'lucide-react'
-import emailjs from '@emailjs/browser'
 
 const ContactSection = () => {
   const [name, setName] = useState('')
@@ -11,8 +10,20 @@ const ContactSection = () => {
   const [feedback, setFeedback] = useState('')
 
   const channels = [
-    { icon: MessageCircle, label: 'WhatsApp', value: '+54 9 341 6874786', href: 'https://wa.me/5493416874786?text=¡Hola%20ExeSistemasWEB!%20Me%20contacto%20desde%20la%20web.%20Me%20interesa%20agendar%20una%20sesión%20de%20consultoría%20para%20automatizar%20las%20operaciones%20de%20mi%20negocio%20con%20un%20sistema%20a%20medida.', color: '#22c55e' },
-    { icon: Globe, label: 'Web', value: 'Exepaginasweb.com', href: 'https://Exepaginasweb.com', color: '#a855f7' },
+    {
+      icon: MessageCircle,
+      label: 'WhatsApp',
+      value: '+54 9 341 6874786',
+      href: 'https://wa.me/5493416874786?text=¡Hola%20ExeSistemasWEB!%20Me%20contacto%20desde%20la%20web.%20Me%20interesa%20agendar%20una%20sesión%20de%20consultoría%20para%20automatizar%20las%20operaciones%20de%20mi%20negocio%20con%20un%20sistema%20a%20medida.',
+      color: '#22c55e',
+    },
+    {
+      icon: Globe,
+      label: 'Web',
+      value: 'Exepaginasweb.com',
+      href: 'https://Exepaginasweb.com',
+      color: '#a855f7',
+    },
   ]
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -20,59 +31,35 @@ const ContactSection = () => {
     setStatus('sending')
     setFeedback('')
 
-const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-
-    if (!serviceId || !templateId || !publicKey) {
-      setStatus('error')
-      setFeedback('Error de configuración: faltan credenciales de EmailJS.')
-      console.error('[EmailJS] Missing config:', { serviceId, templateId, publicKey })
-      return
-    }
+    const apiUrl = import.meta.env.DEV ? 'http://localhost:3000/api/contact' : '/api/contact'
 
     try {
-      const result = await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: name,
-          from_email: email,
-          message: message,
-        },
-        publicKey
-      )
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      })
 
-      if (result.status === 200) {
+      if (res.ok) {
         setStatus('success')
         setFeedback('Mensaje enviado correctamente. Te respondemos lo antes posible.')
         setName('')
         setEmail('')
         setMessage('')
       } else {
-        throw new Error('Respuesta inesperada de EmailJS')
+        const data = await res.json()
+        throw new Error(data.error || 'Error al enviar el mensaje')
       }
-} catch (err) {
-      console.error('[EmailJS] Error completo:', err)
-      // Mostrar error detallado
-      let errorMsg = 'Error desconocido'
-      if (err && typeof err === 'object') {
-        if ('text' in err) errorMsg = String((err as { text: unknown }).text)
-        else if ('message' in err) errorMsg = String((err as { message: unknown }).message)
-        else errorMsg = JSON.stringify(err).slice(0, 200)
-      } else if (typeof err === 'string') {
-        errorMsg = err
-      }
+    } catch (err) {
+      console.error('[Contact] Error:', err)
+      const errorMsg = err instanceof Error ? err.message : 'Error de conexión'
       setStatus('error')
       setFeedback(`Error: ${errorMsg}`)
     }
   }
 
   return (
-    <section
-      id="contact"
-      className="relative px-4 py-28 sm:px-6 lg:px-8 overflow-hidden z-10"
-    >
+    <section id="contact" className="relative px-4 py-28 sm:px-6 lg:px-8 overflow-hidden z-10">
       {/* Ambient blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-24 left-1/3 h-72 w-72 rounded-full bg-accent-cyan/8 blur-[100px]" />
@@ -88,7 +75,9 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mb-14"
         >
-          <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] text-accent-cyan/80">Contacto</p>
+          <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] text-accent-cyan/80">
+            Contacto
+          </p>
           <h2 className="font-montserrat text-5xl font-black leading-tight tracking-tight md:text-6xl lg:text-7xl">
             Hablemos de
             <br />
@@ -101,7 +90,6 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
 
         {/* Bento grid */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-
           {/* FORM — big left card */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -113,7 +101,8 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
             {status === 'success' ? (
               <div className="flex h-full flex-col items-center justify-center gap-5 py-12 text-center">
                 <motion.div
-                  initial={{ scale: 0 }} animate={{ scale: 1 }}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
                   <CheckCircle className="h-16 w-16 text-accent-cyan" />
@@ -130,7 +119,8 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
                 <p className="text-sm text-primary-secondary mb-2">
-                  Estructura simple y moderna: eliges plan, definimos estilo y arrancamos tu página en tiempo récord.
+                  Estructura simple y moderna: eliges plan, definimos estilo y arrancamos tu página
+                  en tiempo récord.
                 </p>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -144,7 +134,10 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
                       placeholder=" "
                       className="peer w-full rounded-xl border border-white/10 bg-slate-100/95 px-4 pb-3 pt-6 text-sm text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-accent-cyan/60 focus:bg-slate-100"
                     />
-                    <label htmlFor="contact-name" className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70">
+                    <label
+                      htmlFor="contact-name"
+                      className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70"
+                    >
                       Nombre
                     </label>
                   </div>
@@ -159,7 +152,10 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
                       placeholder=" "
                       className="peer w-full rounded-xl border border-white/10 bg-slate-100/95 px-4 pb-3 pt-6 text-sm text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-accent-cyan/60 focus:bg-slate-100"
                     />
-                    <label htmlFor="contact-email" className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70">
+                    <label
+                      htmlFor="contact-email"
+                      className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70"
+                    >
                       Correo electrónico
                     </label>
                   </div>
@@ -175,14 +171,15 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
                     rows={5}
                     className="peer w-full rounded-xl border border-white/10 bg-slate-100/95 px-4 pb-3 pt-6 text-sm text-slate-900 outline-none transition-all resize-none placeholder:text-slate-400 focus:border-accent-cyan/60 focus:bg-slate-100"
                   />
-                  <label htmlFor="contact-message" className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70">
+                  <label
+                    htmlFor="contact-message"
+                    className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70"
+                  >
                     ¿Qué tipo de web necesitas?
                   </label>
                 </div>
 
-                {status === 'error' && (
-                  <p className="text-sm text-accent-magenta">{feedback}</p>
-                )}
+                {status === 'error' && <p className="text-sm text-accent-magenta">{feedback}</p>}
 
                 <motion.button
                   type="submit"
@@ -237,8 +234,12 @@ const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-600 mb-1">{ch.label}</p>
-                    <p className="text-sm font-semibold text-white leading-snug break-all">{ch.value}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-600 mb-1">
+                      {ch.label}
+                    </p>
+                    <p className="text-sm font-semibold text-white leading-snug break-all">
+                      {ch.value}
+                    </p>
                   </div>
                   <div
                     className="mt-4 flex items-center gap-1.5 text-xs font-medium opacity-0 transition-all group-hover:opacity-100"

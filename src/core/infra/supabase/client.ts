@@ -18,3 +18,5 @@ export const supabase = createClient(
     },
   }
 )
+
+console.log('🔌 Supabase Client Initialized with URL:', dbUrl)

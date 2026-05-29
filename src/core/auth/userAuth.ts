@@ -78,7 +78,7 @@ export function useAuthRole(adminEmails: readonly string[]) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: getAuthRedirectUrl('/dashboard'),
+        redirectTo: getAuthRedirectUrl('/auth/callback'),
       },
     });
     if (error) throw error;

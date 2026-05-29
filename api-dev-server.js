@@ -1,9 +1,8 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 
-// Cargar variables de entorno desde .env
-dotenv.config({ debug: process.env.DEBUG === 'true' }) // Activa el modo debug si la variable DEBUG está en true
+// Estado de carga de variables de entorno (ya cargadas por el primer import)
 console.log('Estado de carga de variables de entorno:');
 console.log(`  - GROQ_API_KEY: ${process.env.GROQ_API_KEY ? 'Cargada (valor oculto por seguridad)' : 'NO cargada'}`);
 console.log(`  - RESEND_API_KEY: ${process.env.RESEND_API_KEY ? 'Cargada (valor oculto por seguridad)' : 'NO cargada'}`);

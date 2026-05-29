@@ -48,14 +48,14 @@ export default function Login() {
         password,
         options: {
           data: {
-            full_name: 'Exe Dev Admin'
-          }
-        }
+            full_name: 'Exe Dev Admin',
+          },
+        },
       })
       if (signUpError) throw signUpError
       alert('¡Cuenta de pruebas creada con éxito! Ahora puedes hacer clic en "Iniciar Sesión".')
-    } catch (e: any) {
-      setError(e.message || 'Error al crear la cuenta de pruebas.')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Error al crear la cuenta de pruebas.')
     } finally {
       setLoading(false)
     }
@@ -67,12 +67,12 @@ export default function Login() {
       setLoading(true)
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       })
       if (signInError) throw signInError
       navigate('/dashboard', { replace: true })
-    } catch (e: any) {
-      setError(e.message || 'Credenciales de pruebas incorrectas.')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Credenciales de pruebas incorrectas.')
     } finally {
       setLoading(false)
     }
@@ -87,18 +87,39 @@ export default function Login() {
         className="w-full max-w-6xl"
       >
         <div className="text-center mb-10">
-          <motion.button
-            onClick={() => navigate('/')}
-            className="inline-flex items-center gap-1 text-sm text-white/40 hover:text-white/70 transition-colors mb-6"
+          <motion.a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault()
+              navigate('/')
+            }}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/20 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/40 transition-all text-sm font-medium mb-8"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            ← Volver a inicio
-          </motion.button>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M19 12H5" />
+              <path d="M12 19l-7-7 7-7" />
+            </svg>
+            Volver al inicio
+          </motion.a>
           <h1 className="text-4xl sm:text-5xl font-montserrat font-black text-white">
             Ingreso / <span className="text-accent-cyan">Registro</span>
           </h1>
-          <p className="mt-3 text-primary-secondary">Acceso de clientes para activar el dashboard premium.</p>
+          <p className="mt-3 text-primary-secondary">
+            Acceso de clientes para activar el dashboard premium.
+          </p>
         </div>
 
         <div className="flex justify-center">
@@ -122,7 +143,9 @@ export default function Login() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               disabled={loading}
-              onClick={() => { signInWithGoogle() }}
+              onClick={() => {
+                signInWithGoogle()
+              }}
               className="w-full bg-gradient-to-r from-accent-cyan to-accent-magenta py-4 rounded-2xl font-bold text-primary-bg hover:opacity-90 transition-opacity disabled:opacity-50"
             >
               {loading ? (
@@ -140,7 +163,9 @@ export default function Login() {
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-white/10"></div>
               </div>
-              <span className="relative px-3 bg-[#0a0a0f] text-xs text-white/40 uppercase tracking-[0.2em]">O BIEN</span>
+              <span className="relative px-3 bg-[#0a0a0f] text-xs text-white/40 uppercase tracking-[0.2em]">
+                O BIEN
+              </span>
             </div>
 
             {/* Botón para abrir Modo Desarrollador */}
@@ -164,7 +189,9 @@ export default function Login() {
                   className="overflow-hidden mt-4 space-y-4"
                 >
                   <div className="space-y-1">
-                    <label className="text-xs text-white/55 font-medium ml-1">Email de pruebas</label>
+                    <label className="text-xs text-white/55 font-medium ml-1">
+                      Email de pruebas
+                    </label>
                     <input
                       type="email"
                       value={email}
@@ -228,7 +255,8 @@ export default function Login() {
               transition={{ delay: 0.15 }}
               className="mt-6 text-xs text-white/60 leading-relaxed text-center"
             >
-              Al iniciar sesión, accederás a tu panel en <span className="text-white/80 font-semibold">clientes</span>.
+              Al iniciar sesión, accederás a tu panel en{' '}
+              <span className="text-white/80 font-semibold">clientes</span>.
             </motion.div>
           </motion.div>
         </div>

@@ -23,6 +23,22 @@ function setCorsHeaders(res) {
   }
 }
 
+async function getPayPalAccessToken() {
+  const clientId = process.env.PAYPAL_CLIENT_ID
+  const clientSecret = process.env.PAYPAL_CLIENT_SECRET
+  const base64 = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
+  const resp = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${base64}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'grant_type=client_credentials',
+  })
+  const data = await resp.json()
+  return data.access_token
+}
+
 async function getOrCreateCliente(email, nombre) {
   const { data: existentes } = await supabase
     .from('clientes')
@@ -59,6 +75,24 @@ async function getPlanBySlug(slug) {
   return porNombre?.[0] || null
 }
 
+async function capturePayPalOrder(orderId, token) {
+  const resp = await fetch(`https://api-m.paypal.com/v2/checkout/orders/${orderId}/capture`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+
+  if (!resp.ok) {
+    const err = await resp.text()
+    console.error('[paypal-webhook] capture error:', resp.status, err)
+    return null
+  }
+
+  return resp.json()
+}
+
 export default async function handler(req, res) {
   setCorsHeaders(res)
   if (req.method === 'OPTIONS') return res.status(200).end()
@@ -72,61 +106,55 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true })
   }
 
-  console.log('[mp-webhook] event:', body.action || body.type, '| id:', body.data?.id)
+  console.log('[paypal-webhook] event:', body.event_type, '| id:', body.resource?.id)
 
-  const paymentId = body.data?.id || req.query.id
-  if (!paymentId) return res.status(200).json({ ok: true })
+  const eventType = body.event_type
+  const resource = body.resource || {}
 
-  try {
-    const mpResp = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-      headers: { Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}` },
-    })
-    if (!mpResp.ok) {
-      console.error('[mp-webhook] Error fetching payment:', mpResp.status)
+  if (eventType === 'CHECKOUT.ORDER.APPROVED') {
+    const orderId = resource.id
+    const token = await getPayPalAccessToken()
+    const captured = await capturePayPalOrder(orderId, token)
+
+    if (!captured || captured.status !== 'COMPLETED') {
+      console.error('[paypal-webhook] capture failed or incomplete')
       return res.status(200).json({ ok: true })
     }
 
-    const payment = await mpResp.json()
-    console.log('[mp-webhook] payment status:', payment.status)
+    const purchaseUnit = captured.purchase_units?.[0]
+    const customId = purchaseUnit?.custom_id || ''
+    const [planSlug, email, tipoProyecto] = customId.split('|')
+    const amount = purchaseUnit?.amount?.value
+    const payerName = captured.payer?.name?.given_name || ''
+    const paypalOrderId = captured.id
 
-    if (payment.status !== 'approved') return res.status(200).json({ ok: true })
-
-    const email = payment.payer?.email
-    const monto = payment.transaction_amount
-    const mpPaymentId = String(payment.id)
-    const externalRef = payment.external_reference || ''
-    const refParts = externalRef.split('|')
-    const planSlug = refParts[0] || payment.metadata?.plan_slug || ''
-    const tipoProyecto = refParts[2] || payment.metadata?.tipo_proyecto || 'mantenimiento'
-    const payerName = payment.payer?.first_name || payment.payer?.last_name || ''
-
-    if (!email) {
-      console.error('[mp-webhook] No payer email')
+    if (!email || !amount) {
+      console.error('[paypal-webhook] missing email or amount')
       return res.status(200).json({ ok: true })
     }
 
     const clienteId = await getOrCreateCliente(email, payerName)
     if (!clienteId) {
-      console.error('[mp-webhook] Could not get or create cliente')
+      console.error('[paypal-webhook] Could not get or create cliente')
       return res.status(200).json({ ok: true })
     }
 
     const plan = await getPlanBySlug(planSlug)
-    const planNombre = plan?.nombre || payment.description || 'Plan'
+    const planNombre = plan?.nombre || purchaseUnit?.description || 'Plan'
 
     const { error: pagoError } = await supabase.from('pagos').insert({
       cliente_id: clienteId,
-      monto,
-      moneda: payment.currency_id || 'ARS',
+      monto: parseFloat(amount),
+      moneda: 'USD',
       estado: 'aprobado',
-      mp_payment_id: mpPaymentId,
       plan_nombre: planNombre,
       plan_slug: plan?.slug || planSlug || null,
-      tipo_proyecto: tipoProyecto,
-      provider: 'mercadopago',
+      tipo_proyecto: tipoProyecto || 'mantenimiento',
+      provider: 'paypal',
+      paypal_order_id: paypalOrderId,
     })
 
-    if (pagoError) console.error('[mp-webhook] Error inserting pago:', pagoError)
+    if (pagoError) console.error('[paypal-webhook] Error inserting pago:', pagoError)
 
     const { error: subError } = await supabase.from('suscripciones').insert({
       cliente_id: clienteId,
@@ -135,9 +163,8 @@ export default async function handler(req, res) {
       fecha_inicio: new Date().toISOString(),
     })
 
-    if (subError) console.error('[mp-webhook] Error inserting suscripcion:', subError)
+    if (subError) console.error('[paypal-webhook] Error inserting suscripcion:', subError)
 
-    // Notificación email
     if (process.env.RESEND_API_KEY) {
       try {
         await fetch('https://api.resend.com/emails', {
@@ -153,8 +180,8 @@ export default async function handler(req, res) {
             html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
               <h1 style="color:#00d4ff;">¡Pago aprobado!</h1>
               <p>Hola <strong>${payerName || ''}</strong>,</p>
-              <p>Tu pago por <strong>${planNombre}</strong> fue procesado correctamente.</p>
-              <p style="font-size:24px;font-weight:bold;">$${monto} ${payment.currency_id || 'ARS'}</p>
+              <p>Tu pago por <strong>${planNombre}</strong> fue procesado correctamente via PayPal.</p>
+              <p style="font-size:24px;font-weight:bold;">$${amount} USD</p>
               <p>Ya podés acceder a tu plan desde tu panel.</p>
               <a href="${process.env.VITE_SITE_URL || 'https://exepaginasweb.com'}/dashboard"
                  style="display:inline-block;padding:12px 24px;background:linear-gradient(135deg,#00d4ff,#ff00ff);color:#000;text-decoration:none;border-radius:12px;font-weight:bold;margin-top:16px;">
@@ -164,11 +191,9 @@ export default async function handler(req, res) {
           }),
         })
       } catch (e) {
-        console.error('[mp-webhook] Email error:', e)
+        console.error('[paypal-webhook] Email error:', e)
       }
     }
-  } catch (err) {
-    console.error('[mp-webhook] Error:', err)
   }
 
   res.status(200).json({ ok: true })

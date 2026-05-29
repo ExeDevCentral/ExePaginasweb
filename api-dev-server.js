@@ -3,10 +3,14 @@ import express from 'express'
 import cors from 'cors'
 
 // Estado de carga de variables de entorno (ya cargadas por el primer import)
-console.log('Estado de carga de variables de entorno:');
-console.log(`  - GROQ_API_KEY: ${process.env.GROQ_API_KEY ? 'Cargada (valor oculto por seguridad)' : 'NO cargada'}`);
-console.log(`  - RESEND_API_KEY: ${process.env.RESEND_API_KEY ? 'Cargada (valor oculto por seguridad)' : 'NO cargada'}`);
-console.log(`  - DEBUG: ${process.env.DEBUG ? 'Activo' : 'Inactivo'}`);
+console.log('Estado de carga de variables de entorno:')
+console.log(
+  `  - GROQ_API_KEY: ${process.env.GROQ_API_KEY ? 'Cargada (valor oculto por seguridad)' : 'NO cargada'}`
+)
+console.log(
+  `  - RESEND_API_KEY: ${process.env.RESEND_API_KEY ? 'Cargada (valor oculto por seguridad)' : 'NO cargada'}`
+)
+console.log(`  - DEBUG: ${process.env.DEBUG ? 'Activo' : 'Inactivo'}`)
 
 const app = express()
 app.use(cors()) // Express maneja CORS, eliminaremos los manuales para evitar duplicados
@@ -18,6 +22,8 @@ import generateHandler from './api/generate.js'
 import contactHandler from './api/contact.js'
 import createPreferenceHandler from './api/create-preference.js'
 import mercadopagoWebhookHandler from './api/mercadopago-webhook.js'
+import createPayPalOrderHandler from './api/create-paypal-order.js'
+import paypalWebhookHandler from './api/paypal-webhook.js'
 
 // Manejador de errores global para evitar que el server muera
 process.on('uncaughtException', (err) => {
@@ -26,8 +32,9 @@ process.on('uncaughtException', (err) => {
 
 // Middleware para loguear peticiones de chat
 app.use('/api/chat', (req, res, next) => {
-  if (req.method === 'POST') console.log(`[${new Date().toLocaleTimeString()}] 💬 Nueva consulta al chat...`);
-  next();
+  if (req.method === 'POST')
+    console.log(`[${new Date().toLocaleTimeString()}] 💬 Nueva consulta al chat...`)
+  next()
 })
 
 process.on('unhandledRejection', (reason, promise) => {
@@ -36,9 +43,9 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // Ruta de prueba para verificar que el servidor funciona
 app.get('/', (req, res) => {
-  res.json({ 
-    status: 'online', 
-    message: 'Backend de ExepaginasW activo en puerto 3000' 
+  res.json({
+    status: 'online',
+    message: 'Backend de ExepaginasW activo en puerto 3000',
   })
 })
 
@@ -94,6 +101,24 @@ app.all('/api/mercadopago-webhook', async (req, res) => {
   }
 })
 
+app.all('/api/create-paypal-order', async (req, res) => {
+  try {
+    await createPayPalOrderHandler(req, res)
+  } catch (error) {
+    console.error('[Dev Server] Create PayPal Order Error:', error)
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.all('/api/paypal-webhook', async (req, res) => {
+  try {
+    await paypalWebhookHandler(req, res)
+  } catch (error) {
+    console.error('[Dev Server] PayPal Webhook Error:', error)
+    res.status(200).json({ error: error.message })
+  }
+})
+
 app.all('/api/send-email', async (req, res) => {
   try {
     const { sendEmailHandler } = await import('./api/send-email.js')
@@ -115,14 +140,18 @@ app.listen(PORT, () => {
 
   // Verificación de carga de variables de entorno
   if (process.env.GROQ_API_KEY) {
-    console.log(`   ✅ Groq API Key cargada correctamente (${process.env.GROQ_API_KEY.slice(0, 7)}...)`);
+    console.log(
+      `   ✅ Groq API Key cargada correctamente (${process.env.GROQ_API_KEY.slice(0, 7)}...)`
+    )
   } else {
-    console.log('   ⚠️ ERROR: No se encontró GROQ_API_KEY en el archivo .env');
+    console.log('   ⚠️ ERROR: No se encontró GROQ_API_KEY en el archivo .env')
   }
 
   if (process.env.RESEND_API_KEY) {
-    console.log(`   ✅ Resend API Key cargada correctamente (${process.env.RESEND_API_KEY.slice(0, 7)}...)`);
+    console.log(
+      `   ✅ Resend API Key cargada correctamente (${process.env.RESEND_API_KEY.slice(0, 7)}...)`
+    )
   } else {
-    console.log('   ⚠️ ADVERTENCIA: No se encontró RESEND_API_KEY en el archivo .env');
+    console.log('   ⚠️ ADVERTENCIA: No se encontró RESEND_API_KEY en el archivo .env')
   }
 })

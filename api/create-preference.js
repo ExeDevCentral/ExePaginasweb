@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'MERCADOPAGO_ACCESS_TOKEN no configurado' })
   }
 
-  const { title, price, email, planId } = req.body || {}
+  const { title, price, email, planId, tipoProyecto } = req.body || {}
   if (!title || !price || !email) {
     return res.status(400).json({ error: 'Faltan campos: title, price, email' })
   }
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     const mpResp = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -48,8 +48,14 @@ export default async function handler(req, res) {
         },
         auto_return: 'approved',
         notification_url: `${siteUrl}/api/mercadopago-webhook`,
-        external_reference: `${planId || 'plan'}|${email}`,
-        metadata: { plan_id: planId || '', plan_slug: planId || '', email },
+        external_reference: `${planId || 'plan'}|${email}|${tipoProyecto || 'mantenimiento'}`,
+        metadata: {
+          plan_id: planId || '',
+          plan_slug: planId || '',
+          email,
+          tipo_proyecto: tipoProyecto || 'mantenimiento',
+          provider: 'mercadopago',
+        },
       }),
     })
 

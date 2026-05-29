@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { supabase } from '../core/infra/supabase/client'
-import { Crown, RefreshCw } from 'lucide-react'
+import { Crown, RefreshCw, CheckCircle } from 'lucide-react'
 import { useDashboard } from '../hooks/useDashboard'
 import { useAuthRole } from '../core/auth/userAuth'
 import { ADMIN_EMAILS } from '../core/auth/roleConfig'
@@ -14,13 +14,25 @@ const PREVIEW_TIERS: PlanTier[] = ['basico', 'avanzado', 'premium']
 
 export default function Dashboard() {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { ready, session } = useAuthSession()
   const { loading, error, cliente, suscripciones, pagos, planTier, refresh } = useDashboard(
     ready && !!session
   )
   const { role } = useAuthRole(ADMIN_EMAILS)
   const isAdmin = role === 'admin'
+  const [paymentBanner, setPaymentBanner] = useState<string | null>(null)
+
+  useEffect(() => {
+    const payment = searchParams.get('payment')
+    const pago = searchParams.get('pago')
+    if (pago === 'ok' || payment === 'mp_ok' || payment === 'paypal_ok') {
+      setPaymentBanner(payment || 'mp_ok')
+      setSearchParams({}, { replace: true })
+      refresh()
+      setTimeout(() => setPaymentBanner(null), 8000)
+    }
+  }, [searchParams, setSearchParams, refresh])
 
   const previewTier = searchParams.get('tier') as PlanTier | null
   const activeTier = useMemo(() => {
@@ -75,6 +87,29 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        {paymentBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mb-6 rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 to-transparent p-6 backdrop-blur-xl"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-lg font-bold text-white">¡Pago aprobado!</p>
+                <p className="text-sm text-white/60">
+                  {paymentBanner === 'paypal_ok'
+                    ? 'Tu pago vía PayPal fue procesado correctamente. Ya podés acceder a tu plan.'
+                    : 'Tu suscripción está activa. Bienvenido a tu panel de cliente.'}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {isAdmin && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -86,7 +121,9 @@ export default function Dashboard() {
                 <Crown className="w-6 h-6 text-yellow-400" />
               </div>
               <div className="flex-1 min-w-[200px]">
-                <p className="text-[10px] uppercase tracking-[0.3em] text-yellow-400 font-bold">Super Admin</p>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-yellow-400 font-bold">
+                  Super Admin
+                </p>
                 <p className="text-white/60 text-sm mt-1">
                   Vista previa:{' '}
                   <span className="font-mono text-yellow-300">
@@ -100,7 +137,10 @@ export default function Dashboard() {
                 disabled={loading}
                 className="p-3 rounded-xl border border-white/10 hover:bg-white/5"
               >
-                <RefreshCw size={18} className={loading ? 'animate-spin text-yellow-400' : 'text-white/60'} />
+                <RefreshCw
+                  size={18}
+                  className={loading ? 'animate-spin text-yellow-400' : 'text-white/60'}
+                />
               </button>
             </div>
           </motion.div>

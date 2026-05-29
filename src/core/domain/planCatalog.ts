@@ -13,13 +13,13 @@ export type PlanCatalogEntry = {
   id: StorePlanId
   tier: Exclude<PlanTier, 'none'>
   nombre: string
-  precioUsd: number
+  precio: number
 }
 
 export const PLAN_CATALOG: PlanCatalogEntry[] = [
-  { id: 'mantenimiento-basico', tier: 'basico', nombre: 'Abono Básico', precioUsd: 10 },
-  { id: 'mantenimiento-avanzado', tier: 'avanzado', nombre: 'Abono Avanzado', precioUsd: 25 },
-  { id: 'mantenimiento-premium', tier: 'premium', nombre: 'Abono Premium', precioUsd: 50 },
+  { id: 'mantenimiento-basico', tier: 'basico', nombre: 'Abono Básico', precio: 25000 },
+  { id: 'mantenimiento-avanzado', tier: 'avanzado', nombre: 'Abono Avanzado', precio: 50000 },
+  { id: 'mantenimiento-premium', tier: 'premium', nombre: 'Abono Premium', precio: 150000 },
 ]
 
 export function tierFromStorePlanId(planId: string | null | undefined): PlanTier {
@@ -29,16 +29,15 @@ export function tierFromStorePlanId(planId: string | null | undefined): PlanTier
 
 export function tierFromPlanLabel(label: string | null | undefined): PlanTier {
   if (!label) return 'none'
-  const n = label
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/\p{M}/gu, '')
+  const n = label.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '')
 
   if (n.includes('premium') || n.includes('enterprise')) return 'premium'
   if (n.includes('avanzado') || n.includes('pro')) return 'avanzado'
   if (n.includes('basico')) return 'basico'
 
-  const byNombre = PLAN_CATALOG.find((p) => n.includes(p.nombre.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '')))
+  const byNombre = PLAN_CATALOG.find((p) =>
+    n.includes(p.nombre.toLowerCase().normalize('NFD').replace(/\p{M}/gu, ''))
+  )
   return byNombre?.tier ?? 'none'
 }
 

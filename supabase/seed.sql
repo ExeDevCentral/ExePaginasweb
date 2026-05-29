@@ -23,9 +23,9 @@ CREATE TABLE IF NOT EXISTS public.planes (
 );
 
 INSERT INTO public.planes (slug, nombre, precio, caracteristicas, intervalo_meses) VALUES
-  ('mantenimiento-basico', 'Abono Básico', 10, 'Landing · SSL · Hosting Vercel', 1),
-  ('mantenimiento-avanzado', 'Abono Avanzado', 25, 'Sistemas · Reservas · BD · Backups', 1),
-  ('mantenimiento-premium', 'Abono Premium', 50, 'Edge prioritario · 2h dev · Account Manager', 1)
+  ('mantenimiento-basico', 'Abono Básico', 25000, 'Landing · SSL · Hosting Vercel', 1),
+  ('mantenimiento-avanzado', 'Abono Avanzado', 50000, 'Sistemas · Reservas · BD · Backups', 1),
+  ('mantenimiento-premium', 'Abono Premium', 150000, 'Edge prioritario · 2h dev · Account Manager', 1)
 ON CONFLICT (slug) DO NOTHING;
 
 -- 3. Pagos

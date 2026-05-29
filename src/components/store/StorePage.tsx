@@ -1,11 +1,32 @@
-import { motion } from 'framer-motion';
-import { Lock, Sparkles, X, Check, ArrowRight, Monitor, Building, Building2, Loader } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PremiumBackground from '../Effects/PremiumBackground';
-import { Helmet } from 'react-helmet-async';
-import { useIsMobile } from '../../hooks/useIsMobile';
-import { supabase } from '../../core/infra/supabase/client';
+import { motion } from 'framer-motion'
+import {
+  Lock,
+  Sparkles,
+  X,
+  Check,
+  ArrowRight,
+  Monitor,
+  Building,
+  Building2,
+  Loader,
+  Palette,
+  ShoppingBag,
+  Calendar,
+} from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import PremiumBackground from '../Effects/PremiumBackground'
+import { Helmet } from 'react-helmet-async'
+import { useIsMobile } from '../../hooks/useIsMobile'
+import { supabase } from '../../core/infra/supabase/client'
+import { usePayment } from '../../hooks/usePayment'
+
+const TIPO_PROYECTO_OPTIONS = [
+  { value: 'mantenimiento', label: 'Mantenimiento', icon: Monitor },
+  { value: 'desarrollo', label: 'Desarrollo Web', icon: Palette },
+  { value: 'ecommerce', label: 'E-Commerce', icon: ShoppingBag },
+  { value: 'reservas', label: 'Sistema de Reservas', icon: Calendar },
+]
 
 const PLANS = [
   {
@@ -13,7 +34,7 @@ const PLANS = [
     title: 'Abono Básico',
     description: 'Mantenimiento mensual para Landing Pages y sitios institucionales.',
     icon: Monitor,
-    price: '$10',
+    price: '$25.000',
     period: '/mes',
     color: 'from-blue-400 to-cyan-400',
     shadow: 'shadow-cyan-500/20',
@@ -23,7 +44,7 @@ const PLANS = [
       'Renovación de dominio anual',
       'Actualizaciones de seguridad',
       'Certificado SSL automático',
-      'Soporte técnico estándar'
+      'Soporte técnico estándar',
     ],
     popular: false,
   },
@@ -32,7 +53,7 @@ const PLANS = [
     title: 'Abono Avanzado',
     description: 'Mantenimiento integral para Sistemas Web, Reservas y E-Commerce.',
     icon: Building,
-    price: '$25',
+    price: '$50.000',
     period: '/mes',
     color: 'from-cyan-400 to-purple-500',
     shadow: 'shadow-purple-500/30',
@@ -42,7 +63,7 @@ const PLANS = [
       'Gestión de Base de Datos',
       'Backups diarios automáticos',
       'Monitoreo de pasarelas de pago',
-      'Soporte técnico prioritario 24/7'
+      'Soporte técnico prioritario 24/7',
     ],
     popular: true,
   },
@@ -51,7 +72,7 @@ const PLANS = [
     title: 'Abono Premium',
     description: 'Evolución continua, nuevas funcionalidades y bolsa de horas de desarrollo.',
     icon: Building2,
-    price: '$50',
+    price: '$150.000',
     period: '/mes',
     color: 'from-purple-500 to-pink-500',
     shadow: 'shadow-pink-500/20',
@@ -61,106 +82,98 @@ const PLANS = [
       'Servidor Edge de máxima prioridad',
       'Modificaciones de contenido (2hs/mes)',
       'Consultoría estratégica',
-      'Account Manager dedicado'
+      'Account Manager dedicado',
     ],
     popular: false,
-  }
-];
+  },
+]
 
 export default function StorePage() {
   const isMobile = useIsMobile()
   const navigate = useNavigate()
-  const [buying, setBuying] = useState<string | null>(null)
-  const [displayedText, setDisplayedText] = useState('');
-  const fullText = 'Gestión de abonos para clientes activos de';
-  
+  const { buying, error: paymentError, createMPPreference, reset } = usePayment()
+  const [tipoProyecto, setTipoProyecto] = useState('mantenimiento')
+  const [selectedPlan, setSelectedPlan] = useState<(typeof PLANS)[0] | null>(null)
+  const [showCheckout, setShowCheckout] = useState(false)
+  const [displayedText, setDisplayedText] = useState('')
+  const fullText = 'Gestión de abonos para clientes activos de'
+
   useEffect(() => {
-    setDisplayedText('');
-    let index = 0;
+    setDisplayedText('')
+    let index = 0
     const timer = setInterval(() => {
       if (index <= fullText.length) {
-        setDisplayedText(fullText.slice(0, index));
-        index++;
+        setDisplayedText(fullText.slice(0, index))
+        index++
       } else {
-        clearInterval(timer);
+        clearInterval(timer)
       }
-    }, 30);
-    return () => clearInterval(timer);
-  }, []);
+    }, 30)
+    return () => clearInterval(timer)
+  }, [])
 
-  const handleBuy = async (plan: typeof PLANS[0]) => {
-    setBuying(plan.id)
-
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user?.email) {
-      navigate('/login')
-      setBuying(null)
-      return
-    }
-
-    try {
-      const resp = await fetch('/api/create-preference', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: plan.title,
-          price: parseInt(plan.price.replace('$', '')),
-          email: user.email,
-          planId: plan.id,
-        }),
-      })
-
-      const data = await resp.json()
-      if (data.init_point) {
-        window.location.href = data.init_point
-      } else {
-        alert('Error al crear el pago. Intenta de nuevo.')
-        setBuying(null)
-      }
-    } catch {
-      alert('Error de conexión. Intenta de nuevo.')
-      setBuying(null)
-    }
+  const openCheckout = async (plan: (typeof PLANS)[0]) => {
+    setSelectedPlan(plan)
+    setShowCheckout(true)
+    reset()
   }
 
+  const handleMP = async () => {
+    if (!selectedPlan) return
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user?.email) {
+      navigate('/login')
+      return
+    }
+    await createMPPreference({
+      planId: selectedPlan.id,
+      planTitle: selectedPlan.title,
+      price: parseInt(selectedPlan.price.replace(/[$.]/g, '')),
+      email: user.email,
+      tipoProyecto,
+    })
+  }
 
+  const closeCheckout = () => {
+    setShowCheckout(false)
+    setSelectedPlan(null)
+    reset()
+  }
 
-
-  // Floating particles background (Recuperadas y mejoradas)
   const particles = Array.from({ length: isMobile ? 20 : 40 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
     scale: Math.random() * 0.8 + 0.2,
     duration: Math.random() * 5 + 3,
-    color: i % 2 === 0 ? 'bg-accent-cyan' : 'bg-accent-magenta'
-  }));
+    color: i % 2 === 0 ? 'bg-accent-cyan' : 'bg-accent-magenta',
+  }))
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2 }
-    }
-  };
+      transition: { staggerChildren: 0.2 },
+    },
+  }
 
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 25 } }
-  };
+    visible: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 25 } },
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-primary-bg py-20 px-4 sm:px-6 lg:px-8">
       <Helmet>
         <title>Suscripciones y Tienda | ExeSistemasWEB</title>
       </Helmet>
-      
+
       <PremiumBackground />
 
-      {/* Hero Grid Overlay */}
       <div className="absolute inset-0 pointer-events-none hero-grid opacity-20" />
 
-      {/* Partículas Flotantes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         {particles.map((particle) => (
           <motion.div
@@ -186,13 +199,10 @@ export default function StorePage() {
         ))}
       </div>
 
-      {/* Luces Ambientales */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-cyan/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-magenta/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto z-10 space-y-24">
-        
-        {/* Header and Plans Section */}
         <section className="text-center pt-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -203,15 +213,18 @@ export default function StorePage() {
               Portal de Clientes
             </p>
             <h1 className="text-4xl md:text-6xl font-montserrat font-black text-white mb-6">
-              Abonos de <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">Mantenimiento</span>
+              Abonos de{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">
+                Mantenimiento
+              </span>
             </h1>
             <p className="text-lg md:text-xl text-primary-secondary max-w-2xl mx-auto mb-16">
-              Suscripciones mensuales para garantizar que tu sistema esté siempre rápido, seguro y actualizado. Elige tu plan correspondiente.
+              Suscripciones mensuales para garantizar que tu sistema esté siempre rápido, seguro y
+              actualizado. Elige tu plan correspondiente.
             </p>
           </motion.div>
 
-          {/* Pricing Grid */}
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
             variants={containerVariants}
             initial="hidden"
@@ -224,13 +237,12 @@ export default function StorePage() {
                 className={`relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border rounded-3xl p-8 flex flex-col text-left transition-all duration-300 hover:bg-white/10 ${plan.border} ${plan.popular ? 'md:-translate-y-4 shadow-2xl ' + plan.shadow : ''}`}
               >
                 {plan.popular && (
-                  <motion.div 
+                  <motion.div
                     className="absolute -top-4 left-0 right-0 flex justify-center"
                     animate={{ y: [0, -4, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                   >
                     <div className="relative">
-                      {/* Glow effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 blur-md opacity-50 rounded-full" />
                       <span className="relative bg-gradient-to-r from-cyan-400 to-purple-500 text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-lg border border-white/20">
                         ⭐ MÁS ELEGIDO
@@ -238,7 +250,7 @@ export default function StorePage() {
                     </div>
                   </motion.div>
                 )}
-                
+
                 <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${plan.color} p-0.5 mb-6`}>
                   <div className="w-full h-full bg-primary-bg/80 backdrop-blur-sm rounded-[14px] flex items-center justify-center">
                     <plan.icon className="w-7 h-7 text-white" />
@@ -250,13 +262,15 @@ export default function StorePage() {
 
                 <div className="mb-8">
                   <span className="text-4xl font-black text-white">{plan.price}</span>
-                  <span className="text-primary-secondary font-medium"> USD{plan.period}</span>
+                  <span className="text-primary-secondary font-medium"> ARS{plan.period}</span>
                 </div>
 
                 <ul className="space-y-4 mb-8 flex-1">
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <div className={`mt-1 flex-shrink-0 w-4 h-4 rounded-full bg-gradient-to-br ${plan.color} flex items-center justify-center`}>
+                      <div
+                        className={`mt-1 flex-shrink-0 w-4 h-4 rounded-full bg-gradient-to-br ${plan.color} flex items-center justify-center`}
+                      >
                         <Check className="w-3 h-3 text-white" />
                       </div>
                       <span className="text-sm text-primary-secondary/90">{feature}</span>
@@ -266,21 +280,18 @@ export default function StorePage() {
 
                 <div className="mt-auto pt-4 min-h-[50px]">
                   <button
-                    onClick={() => handleBuy(plan)}
-                    disabled={buying === plan.id}
+                    onClick={() => openCheckout(plan)}
                     className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 relative z-20
-                      ${plan.popular 
-                        ? `bg-gradient-to-r ${plan.color} shadow-lg ${plan.shadow} hover:opacity-90` 
-                        : 'bg-white/10 hover:bg-white/20 border border-white/10'
+                      ${
+                        plan.popular
+                          ? `bg-gradient-to-r ${plan.color} shadow-lg ${plan.shadow} hover:opacity-90`
+                          : 'bg-white/10 hover:bg-white/20 border border-white/10'
                       }
-                      disabled:opacity-50 disabled:cursor-not-allowed
                     `}
                   >
-                    {buying === plan.id ? (
-                      <><Loader className="w-4 h-4 animate-spin" /> Procesando...</>
-                    ) : (
-                      <><ArrowRight className="w-4 h-4" /> Suscribirme</>
-                    )}
+                    <>
+                      <ArrowRight className="w-4 h-4" /> Suscribirme
+                    </>
                   </button>
                 </div>
               </motion.div>
@@ -288,10 +299,8 @@ export default function StorePage() {
           </motion.div>
         </section>
 
-        {/* Separator */}
         <div className="w-full max-w-4xl mx-auto h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-        {/* Existing Locked Client Area */}
         <section className="flex justify-center pb-20">
           <motion.div
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -332,7 +341,7 @@ export default function StorePage() {
                   className="inline-block w-0.5 h-6 bg-cyan-400 ml-1 align-middle"
                 />
               </motion.p>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -351,8 +360,8 @@ export default function StorePage() {
             <motion.a
               href="/"
               onClick={(e) => {
-                e.preventDefault();
-                window.location.href = '/#contact';
+                e.preventDefault()
+                window.location.href = '/#contact'
               }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -366,15 +375,96 @@ export default function StorePage() {
             </motion.a>
           </motion.div>
 
-          {/* Efecto de brillo detrás del modal de clientes */}
           <motion.div
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] max-w-2xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-full blur-3xl -z-10 pointer-events-none"
             animate={{ opacity: [0.5, 0.8, 0.5] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           />
         </section>
-
       </div>
+
+      {showCheckout && selectedPlan && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          onClick={closeCheckout}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, y: 40 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ type: 'spring', damping: 25 }}
+            className="bg-[#0a0a0f] border border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">Confirmar suscripción</h2>
+              <button onClick={closeCheckout} className="p-2 hover:bg-white/5 rounded-xl">
+                <X className="w-5 h-5 text-white/60" />
+              </button>
+            </div>
+
+            <div className="bg-white/5 rounded-2xl p-5 mb-6">
+              <p className="text-sm text-white/50 mb-1">Plan seleccionado</p>
+              <p className="text-xl font-bold text-white">{selectedPlan.title}</p>
+              <p className="text-3xl font-black text-white mt-2">
+                {selectedPlan.price}{' '}
+                <span className="text-sm font-medium text-white/50">ARS{selectedPlan.period}</span>
+              </p>
+            </div>
+
+            <div className="mb-6">
+              <p className="block text-sm font-bold text-white/70 mb-2 uppercase tracking-wider">
+                Tipo de proyecto
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {TIPO_PROYECTO_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setTipoProyecto(opt.value)}
+                    className={`flex items-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all border ${
+                      tipoProyecto === opt.value
+                        ? 'border-accent-cyan bg-accent-cyan/10 text-accent-cyan'
+                        : 'border-white/10 text-white/60 hover:bg-white/5'
+                    }`}
+                  >
+                    <opt.icon className="w-4 h-4" />
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {paymentError && (
+              <p className="text-sm text-red-400 mb-4 bg-red-400/10 rounded-xl p-3">
+                {paymentError}
+              </p>
+            )}
+
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={handleMP}
+                disabled={!!buying}
+                className="w-full py-4 rounded-xl font-bold text-[#050508] bg-gradient-to-r from-cyan-400 to-blue-500 hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {buying === 'mercadopago' ? (
+                  <>
+                    <Loader className="w-4 h-4 animate-spin" /> Procesando...
+                  </>
+                ) : (
+                  'Pagar con Mercado Pago'
+                )}
+              </button>
+            </div>
+
+            <p className="text-xs text-white/30 text-center mt-4">
+              Pago único por mes. Podés cancelar cuando quieras desde tu panel.
+            </p>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
-  );
+  )
 }

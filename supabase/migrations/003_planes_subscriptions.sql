@@ -18,38 +18,29 @@ INSERT INTO public.planes (slug, nombre, precio, caracteristicas, intervalo_mese
   (
     'mantenimiento-basico', 
     'Abono Básico', 
-    10, 
+    25000, 
     ARRAY['Landing', 'SSL', 'Hosting Vercel'], 
     1, 
     true, 
-    'USD'
+    'ARS'
   ),
   (
     'mantenimiento-avanzado', 
     'Abono Avanzado', 
-    25, 
+    50000, 
     ARRAY['Sistemas', 'Reservas', 'BD', 'Backups'], 
     1, 
     true, 
-    'USD'
+    'ARS'
   ),
   (
     'mantenimiento-premium', 
     'Abono Premium', 
-    50, 
+    150000, 
     ARRAY['Edge prioritario', '2h dev', 'Account Manager'], 
     1, 
     true, 
-    'USD'
-  ),
-  (
-    'mantenimiento-basico-anual', 
-    'Abono Básico Anual', 
-    100, 
-    ARRAY['Landing', 'SSL', 'Hosting Vercel (Ahorro 2 meses)'], 
-    12, 
-    true, 
-    'USD'
+    'ARS'
   )
 ON CONFLICT (slug) DO UPDATE SET
   nombre = EXCLUDED.nombre,

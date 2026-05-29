@@ -11,7 +11,7 @@ const Process = lazy(() => import('./components/Process/Process'))
 const FAQ = lazy(() => import('./components/FAQ/FAQ'))
 const Footer = lazy(() => import('./components/layout/Footer'))
 const PremiumBackground = lazy(() => import('./components/Effects/PremiumBackground'))
-const ChatbaseWidget = lazy(() => import('./components/chat/ChatbaseWidget'))
+// Chatbase widget ahora se inyecta directo desde index.html
 const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
 const ContactSection = lazy(() => import('./components/landing/ContactSection'))
 const CaseStudies = lazy(() => import('./components/CaseStudies/CaseStudies'))
@@ -144,7 +144,6 @@ function App() {
           </Suspense>
         </motion.main>
         <Suspense fallback={<div className="h-20" />}>{loadHeavyComponents && <Footer />}</Suspense>
-        <Suspense fallback={null}>{loadHeavyComponents && <ChatbaseWidget />}</Suspense>
       </div>
     </ErrorBoundary>
   )

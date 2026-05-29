@@ -4,9 +4,6 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import Header from './components/layout/Header'
 import Hero from './components/Hero/Hero'
 import ErrorBoundary from './components/layout/ErrorBoundary'
-import { AdSense } from './components/Auth/AdSense'
-import AdSlot from './components/Ads/AdSlot'
-
 const Products = lazy(() => import('./components/Products/Products'))
 const Features = lazy(() => import('./components/Features/Features'))
 const SocialProof = lazy(() => import('./components/SocialProof/SocialProof'))
@@ -29,7 +26,7 @@ function App() {
     const timer = setTimeout(() => {
       setLoadHeavyComponents(true)
     }, 3500)
-    
+
     // Si el usuario hace scroll antes, los cargamos
     const handleScroll = () => {
       setLoadHeavyComponents(true)
@@ -37,7 +34,7 @@ function App() {
       clearTimeout(timer)
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
-    
+
     return () => {
       clearTimeout(timer)
       window.removeEventListener('scroll', handleScroll)
@@ -46,33 +43,51 @@ function App() {
 
   // Capturamos el progreso del scroll (0 a 1)
   const { scrollYProgress } = useScroll()
-  
+
   // Aplicamos un efecto de resorte (Spring) para que el movimiento sea ultra fluido
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
   })
 
   return (
     <ErrorBoundary>
       <Helmet>
-<title>ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios</title>
-        <meta name="description" content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones para negocios que buscan liderar." />
-        <meta name="keywords" content="estudio de sistemas, automatización de negocios, software a medida, CRM, sistemas de reservas, dashboards, exesistemasweb" />
-        
+        <title>ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios</title>
+        <meta
+          name="description"
+          content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones para negocios que buscan liderar."
+        />
+        <meta
+          name="keywords"
+          content="estudio de sistemas, automatización de negocios, software a medida, CRM, sistemas de reservas, dashboards, exesistemasweb"
+        />
+
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-<meta property="og:title" content="ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios" />
-        <meta property="og:description" content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones." />
+        <meta
+          property="og:title"
+          content="ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios"
+        />
+        <meta
+          property="og:description"
+          content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones."
+        />
         <meta property="og:image" content="/og-image.webp" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios" />
-        <meta name="twitter:description" content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones." />
+        <meta
+          name="twitter:title"
+          content="ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios"
+        />
+        <meta
+          name="twitter:description"
+          content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones."
+        />
         <meta name="twitter:image" content="/og-image.webp" />
-        
+
         <link rel="canonical" href="https://exepaginasweb.com" />
       </Helmet>
       <div className="min-h-screen bg-transparent text-primary-text relative">
@@ -93,8 +108,6 @@ function App() {
           transition={{ duration: 0.5 }}
         >
           <Hero />
-          <AdSense />
-          <AdSlot />
           <Suspense fallback={<div className="h-20" />}>
             <SocialProof />
             <CaseStudies />
@@ -102,36 +115,36 @@ function App() {
             <Features />
             <Process />
           </Suspense>
-          <Suspense fallback={
-            <div className="py-20 text-center text-primary-secondary">
-              <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-              Cargando demo...
-            </div>
-          }>
+          <Suspense
+            fallback={
+              <div className="py-20 text-center text-primary-secondary">
+                <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                Cargando demo...
+              </div>
+            }
+          >
             <DemoZone />
           </Suspense>
           <Suspense fallback={<div className="h-20" />}>
             <TechStack />
             <Pricing />
           </Suspense>
-          <Suspense fallback={
-            <div className="py-20 text-center text-primary-secondary">
-              <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-              Cargando contacto...
-            </div>
-          }>
+          <Suspense
+            fallback={
+              <div className="py-20 text-center text-primary-secondary">
+                <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                Cargando contacto...
+              </div>
+            }
+          >
             <ContactSection />
           </Suspense>
           <Suspense fallback={<div className="h-20" />}>
             <FAQ />
           </Suspense>
         </motion.main>
-        <Suspense fallback={<div className="h-20" />}>
-          {loadHeavyComponents && <Footer />}
-        </Suspense>
-        <Suspense fallback={null}>
-          {loadHeavyComponents && <BotWidget />}
-        </Suspense>
+        <Suspense fallback={<div className="h-20" />}>{loadHeavyComponents && <Footer />}</Suspense>
+        <Suspense fallback={null}>{loadHeavyComponents && <BotWidget />}</Suspense>
       </div>
     </ErrorBoundary>
   )

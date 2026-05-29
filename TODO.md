@@ -1,9 +1,7 @@
-# TODO - Recargar proyecto y encender servidor
+# TODO
 
-- [x] Detener servidores existentes (`stop-servers.cmd`)
-- [x] Reiniciar todo (`start-servers.cmd`) y confirmar que levanta backend (3000) y frontend (5173)
-- [x] Verificar endpoints rápidos:
-  - [x] Backend: `http://localhost:3000/`
-  - [x] Frontend: `http://localhost:5173`
-
+- [ ] Confirmar si el proyecto usa alias `@/` en imports (ej: `@/components/...`).
+- [ ] Actualizar `tsconfig.app.json` agregando `baseUrl` y `paths` para `@/*`.
+- [ ] Actualizar `vite.config.ts` agregando `resolve.alias` para `@` hacia `src`.
+- [ ] Ejecutar build/typecheck para validar que TypeScript y Vite resuelven el alias.
 

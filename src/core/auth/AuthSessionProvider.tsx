@@ -32,10 +32,16 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
 
     async function init() {
       const { data } = await supabase.auth.getSession()
-      await resolveAuthSession()
       if (!mounted) return
       setSession(data.session)
       setReady(true)
+
+      // Deferimos la limpieza del hash para evitar condiciones de carrera con el cliente de Supabase
+      setTimeout(() => {
+        if (mounted) {
+          resolveAuthSession()
+        }
+      }, 800)
     }
 
     init()

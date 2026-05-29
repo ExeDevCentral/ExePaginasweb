@@ -1,3 +1,2 @@
--- Deshabilitado temporalmente.
--- Este proyecto ya define RLS/policies y triggers en 000_clientes.sql.
-
+-- 002_clientes_rls.sql: Reservado para futuras adiciones de RLS o triggers en clientes.
+-- Actualmente consolidado en 000_clientes.sql para orden y claridad.

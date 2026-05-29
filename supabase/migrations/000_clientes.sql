@@ -37,7 +37,7 @@ BEGIN
   ON CONFLICT (email) DO NOTHING;
   RETURN new;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- TRIGGER para activar la función anterior
 CREATE OR REPLACE TRIGGER on_auth_user_created
@@ -58,7 +58,7 @@ DROP POLICY IF EXISTS "Usuarios crean su propio cliente" ON public.clientes;
 CREATE POLICY "Usuarios crean su propio cliente"
   ON public.clientes FOR INSERT
   TO authenticated
-  WITH CHECK (id = auth.uid());
+  USING (id = auth.uid());
 
 DROP POLICY IF EXISTS "Usuarios actualizan su propio cliente" ON public.clientes;
 CREATE POLICY "Usuarios actualizan su propio cliente"

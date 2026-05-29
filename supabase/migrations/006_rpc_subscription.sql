@@ -43,4 +43,4 @@ BEGIN
     v_fecha_fin
   );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;

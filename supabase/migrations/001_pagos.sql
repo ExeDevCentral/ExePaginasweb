@@ -23,6 +23,4 @@ ALTER TABLE public.pagos ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Usuarios pueden ver sus propios pagos"
   ON public.pagos FOR SELECT
-  USING (cliente_id IN (
-    SELECT id FROM public.clientes WHERE id = auth.uid()
-  ));
+  USING (cliente_id = auth.uid());

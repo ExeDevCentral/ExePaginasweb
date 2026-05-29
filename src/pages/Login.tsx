@@ -87,6 +87,14 @@ export default function Login() {
         className="w-full max-w-6xl"
       >
         <div className="text-center mb-10">
+          <motion.button
+            onClick={() => navigate('/')}
+            className="inline-flex items-center gap-1 text-sm text-white/40 hover:text-white/70 transition-colors mb-6"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            ← Volver a inicio
+          </motion.button>
           <h1 className="text-4xl sm:text-5xl font-montserrat font-black text-white">
             Ingreso / <span className="text-accent-cyan">Registro</span>
           </h1>

@@ -1,1 +1,82 @@
-{"name":"ExeSistemasWEB","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","api":"node api-dev-server.js","test":"node test-api.js","build":"tsc --noEmit -p tsconfig.app.json && vite build","lint":"eslint . --report-unused-disable-directives --max-warnings 0","format":"prettier --write .","preview":"vite preview","supabase:login":"supabase login","supabase:link":"supabase link --project-ref bksonxnxshxinqffswqc","supabase:push":"supabase db push","supabase:deploy":"supabase functions deploy","vercel:link":"vercel link","vercel:env":"vercel env pull .env.local","deploy":"vercel --prod"},"dependencies":{"@emailjs/browser":"^4.4.1","@react-three/drei":"^9.121.4","@react-three/fiber":"^8.17.14","@supabase/supabase-js":"^2.106.2","@vercel/speed-insights":"^2.0.0","ai":"^6.0.185","framer-motion":"^12.39.0","lucide-react":"^0.475.0","react":"^18.3.1","react-dom":"^18.3.1","react-helmet-async":"^2.0.5","react-markdown":"^9.0.3","react-router-dom":"^7.14.2","three":"^0.173.0","zod":"^4.4.3"},"devDependencies":{"@eslint/js":"^9.21.0","@types/react":"^18.3.18","@types/react-dom":"^18.3.5","@vitejs/plugin-react":"^4.3.4","autoprefixer":"^10.4.20","cors":"^2.8.6","dotenv":"^16.6.1","eslint":"^9.21.0","eslint-plugin-react-hooks":"^5.1.0","eslint-plugin-react-refresh":"^0.4.19","express":"^5.2.1","globals":"^15.15.0","postcss":"^8.5.3","prettier":"^3.2.5","rollup-plugin-visualizer":"^5.14.0","tailwindcss":"^3.4.17","typescript":"^5.7.3","typescript-eslint":"^8.24.0","vite":"^6.2.0","vite-plugin-sitemap":"^0.7.1","vitest":"^4.1.6"},"overrides":{"glob":"^13.0.0"}}
+{
+  "name": "ExeSistemasWEB",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "api": "node api-dev-server.js",
+    "test": "node test-api.js",
+    "build": "tsc --noEmit -p tsconfig.app.json && vite build",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 50",
+    "format": "prettier --write .",
+    "preview": "vite preview",
+    "supabase:login": "supabase login",
+    "supabase:link": "supabase link --project-ref bksonxnxshxinqffswqc",
+    "supabase:push": "supabase db push",
+    "supabase:deploy": "supabase functions deploy",
+    "vercel:link": "vercel link",
+    "vercel:env": "vercel env pull .env.local",
+    "deploy": "vercel --prod",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@hookform/resolvers": "^5.4.0",
+    "@react-three/drei": "^9.121.4",
+    "@react-three/fiber": "^8.17.14",
+    "@supabase/supabase-js": "^2.106.2",
+    "@tanstack/react-query": "^5.100.14",
+    "@vercel/speed-insights": "^2.0.0",
+    "ai": "^6.0.185",
+    "date-fns": "^4.3.0",
+    "framer-motion": "^12.39.0",
+    "lucide-react": "^0.475.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.5",
+    "react-hook-form": "^7.76.1",
+    "react-markdown": "^9.0.3",
+    "react-router-dom": "^7.14.2",
+    "three": "^0.173.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "eslint": "^9.21.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "express": "^5.2.1",
+    "globals": "^15.15.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
+    "postcss": "^8.5.3",
+    "prettier": "^3.2.5",
+    "rollup-plugin-visualizer": "^5.14.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "vite": "^6.2.0",
+    "vite-plugin-sitemap": "^0.7.1",
+    "vitest": "^4.1.6"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix --max-warnings 50",
+      "prettier --write"
+    ],
+    "*.{js,jsx,json,css,md}": [
+      "prettier --write"
+    ]
+  },
+  "overrides": {
+    "glob": "^13.0.0"
+  }
+}

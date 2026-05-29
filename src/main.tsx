@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
 import { SpeedInsights } from '@vercel/speed-insights/react'
+import { Analytics } from '@vercel/analytics/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthSessionProvider } from './core/auth/AuthSessionProvider'
@@ -37,6 +38,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         </AuthSessionProvider>
       </QueryClientProvider>
       <SpeedInsights />
+      <Analytics />
     </HelmetProvider>
   </React.StrictMode>
 )

@@ -22,7 +22,7 @@ export default function Login() {
       setLoading(true)
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: getAuthRedirectUrl('/dashboard') },
+        options: { redirectTo: getAuthRedirectUrl('/auth/callback') },
       })
       if (oauthError) throw oauthError
     } catch (e) {

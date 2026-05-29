@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 import NotFound from './pages/NotFound'
+import AuthCallback from './pages/AuthCallback'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -23,6 +24,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Route path="/tienda" element={<StorePage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/privacidad" element={<PrivacyPolicy />} />
             <Route path="/terminos" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />

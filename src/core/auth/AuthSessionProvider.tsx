@@ -35,13 +35,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
       if (!mounted) return
       setSession(data.session)
       setReady(true)
-
-      // Deferimos la limpieza del hash para evitar condiciones de carrera con el cliente de Supabase
-      setTimeout(() => {
-        if (mounted) {
-          resolveAuthSession()
-        }
-      }, 800)
+      resolveAuthSession() // no-op con PKCE, pero se mantiene por compatibilidad
     }
 
     init()

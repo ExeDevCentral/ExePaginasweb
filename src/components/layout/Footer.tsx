@@ -133,7 +133,7 @@ const Footer = () => {
             © {new Date().getFullYear()} ExeSistemasWEB. {t('footer.derechos')}
           </p>
           <p className="text-primary-secondary text-sm flex items-center gap-1.5">
-            {t('footer.hecho_por')}{' '}
+            Built &amp; maintained by{' '}
             <a
               href="https://github.com/ExeDevCentral"
               target="_blank"

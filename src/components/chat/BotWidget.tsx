@@ -1,0 +1,476 @@
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useRef, useEffect } from 'react'
+import { MessageCircle, X, Send, Bot, User, Zap, Trash2 } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import { useFocusTrap } from '../../hooks/useFocusTrap'
+import { useTranslation } from 'react-i18next'
+
+const MAX_MESSAGE_LENGTH = 1500
+
+interface Message {
+  id: string
+  type: 'user' | 'bot'
+  content: string
+  timestamp: Date
+  isTyping?: boolean
+}
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { y: 10, opacity: 0 },
+  visible: { y: 0, opacity: 1 },
+}
+
+const BotWidget = () => {
+  const { t } = useTranslation()
+
+  const QUICK_REPLIES = [
+    t('bot.qr_1'),
+    t('bot.qr_2'),
+    t('bot.qr_3'),
+    t('bot.qr_4'),
+  ]
+
+  const INITIAL_MESSAGE: Message = {
+    id: '1',
+    type: 'bot',
+    content: t('bot.saludo_inicial'),
+    timestamp: new Date(),
+  }
+
+  const [isOpen, setIsOpen] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE])
+  const [inputValue, setInputValue] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const modalRef = useFocusTrap(isOpen)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, isTyping])
+
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [isOpen])
+
+  const requestBotResponse = async (userMessage: string, currentMessages: Message[]) => {
+    setIsTyping(true)
+
+    try {
+      const chatHistory = currentMessages.slice(-6).map((m) => ({
+        role: m.type === 'bot' ? 'assistant' : ('user' as const),
+        content: m.content,
+      }))
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage,
+          history: chatHistory,
+        }),
+      })
+
+      const contentType = response.headers.get('Content-Type')
+
+      if (contentType?.includes('text/event-stream')) {
+        if (!response.ok) {
+          throw new Error(`Error del servidor durante el streaming: ${response.status}`)
+        }
+        const reader = response.body?.getReader()
+        if (!reader) throw new Error('No se pudo inicializar el lector de stream.')
+
+        const decoder = new TextDecoder()
+        let botContent = ''
+        const botId = crypto.randomUUID()
+        let partialLine = ''
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: botId,
+            type: 'bot',
+            content: '',
+            timestamp: new Date(),
+          },
+        ])
+
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+
+          const chunk = decoder.decode(value, { stream: true })
+          const lines = (partialLine + chunk).split('\n')
+          partialLine = lines.pop() || ''
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const dataStr = line.replace('data: ', '').trim()
+              if (!dataStr || dataStr === '[DONE]') continue
+
+              try {
+                const json = JSON.parse(dataStr)
+                const token = json.choices?.[0]?.delta?.content || ''
+                if (token) {
+                  botContent += token
+                  setMessages((prev) =>
+                    prev.map((msg) => (msg.id === botId ? { ...msg, content: botContent } : msg))
+                  )
+                }
+              } catch {
+              }
+            }
+          }
+        }
+      } else {
+        const text = await response.text()
+        let data
+        try {
+          data = JSON.parse(text)
+        } catch {
+          if (text.includes('<!DOCTYPE html>') || contentType?.includes('text/html')) {
+            throw new Error(
+              'El servidor devolvió HTML (posible error 404/500 de Vite). Revisa que node api-dev-server.js esté corriendo.'
+            )
+          }
+          throw new Error('El servidor devolvió una respuesta no válida (No JSON).')
+        }
+
+        if (!response.ok) {
+          const details = data.details
+            ? Object.entries(data.details)
+                .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
+                .join(', ')
+            : ''
+          throw new Error(`${data.error}${details ? ' — ' + details : ''}`)
+        }
+
+        const botMessage: Message = {
+          id: crypto.randomUUID(),
+          type: 'bot',
+          content: data.reply ?? 'No pude generar una respuesta.',
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, botMessage])
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Error desconocido'
+      const isValidationError = message.includes('Datos de mensaje inválidos')
+      const fallbackMessage: Message = {
+        id: crypto.randomUUID(),
+        type: 'bot',
+        content: isValidationError
+          ? `❌ **Error:** ${message}`
+          : `❌ **Error:** ${message} \n\nVerifica que el servidor de la API esté activo.`,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, fallbackMessage])
+    } finally {
+      setIsTyping(false)
+    }
+  }
+
+  const clearHistory = () => {
+    setMessages([INITIAL_MESSAGE])
+    setInputValue('')
+  }
+
+  const sendMessage = async (text: string) => {
+    const trimmed = text.trim()
+    if (!trimmed) return
+    if (trimmed.length > MAX_MESSAGE_LENGTH) {
+      const errorMessage: Message = {
+        id: crypto.randomUUID(),
+        type: 'bot',
+        content: `❌ El mensaje es demasiado largo (${trimmed.length}/${MAX_MESSAGE_LENGTH} caracteres). Acórtalo para continuar.`,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
+      return
+    }
+
+    const userMessage: Message = {
+      id: crypto.randomUUID(),
+      type: 'user',
+      content: trimmed,
+      timestamp: new Date(),
+    }
+
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
+    setInputValue('')
+    await requestBotResponse(trimmed, updatedMessages)
+  }
+
+  const handleSendMessage = async () => {
+    await sendMessage(inputValue)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage()
+    }
+  }
+
+  return (
+    <>
+      <motion.button
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? t('bot.cerrar_chat') : t('bot.abrir_chat')}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        animate={isOpen ? { rotate: 45 } : { rotate: 0 }}
+      >
+        {isOpen ? (
+          <X className="w-6 h-6 text-primary-bg" />
+        ) : (
+          <MessageCircle className="w-6 h-6 text-primary-bg" />
+        )}
+      </motion.button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            ref={modalRef}
+            tabIndex={-1}
+            className="fixed bottom-4 right-0 sm:bottom-24 sm:right-6 z-40 w-full sm:w-[450px] h-[calc(100dvh-5rem)] sm:h-[600px] max-w-[100vw] flex flex-col bg-gradient-to-br from-primary-bg/95 to-primary-bg/90 backdrop-blur-md border border-accent-cyan/20 rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden"
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="p-4 bg-gradient-to-r from-accent-cyan/10 to-accent-magenta/10 border-b border-accent-cyan/20">
+              <div className="flex items-center gap-3">
+                <motion.div
+                  className="w-10 h-10 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(0,255,255,0.4)]"
+                  animate={
+                    isTyping
+                      ? {
+                          boxShadow: [
+                            '0_0_15px_rgba(0,255,255,0.4)',
+                            '0_0_25px_rgba(0,255,255,0.8)',
+                            '0_0_15px_rgba(0,255,255,0.4)',
+                          ],
+                        }
+                      : {}
+                  }
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  <Bot className="w-5 h-5 text-primary-bg" />
+                </motion.div>
+                <div>
+                  <h3 className="font-bold text-primary-text">{t('bot.titulo')}</h3>
+                  <p className="text-sm text-primary-secondary">{t('bot.estado')}</p>
+                </div>
+                <motion.button
+                  onClick={clearHistory}
+                  className="ml-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-muted rounded-lg text-primary-secondary transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  title={t('bot.reiniciar')}
+                  aria-label={t('bot.reiniciar')}
+                >
+                  <Trash2 className="w-5 h-5" />
+                </motion.button>
+                <div className="ml-auto flex items-center gap-1">
+                  <div className="w-2 h-2 bg-accent-cyan rounded-full animate-pulse"></div>
+                  <Zap className="w-4 h-4 text-accent-cyan" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 p-5 space-y-4 overflow-y-auto">
+              <AnimatePresence>
+                {messages.map((message) => (
+                  <motion.div
+                    key={message.id}
+                    className={`flex gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                  >
+                    {message.type === 'bot' && (
+                      <div className="w-8 h-8 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full flex items-center justify-center flex-shrink-0">
+                        <Bot className="w-4 h-4 text-primary-bg" />
+                      </div>
+                    )}
+
+                    <div
+                      className={`max-w-[85%] p-4 rounded-2xl ${
+                        message.type === 'user'
+                          ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-primary-bg'
+                          : 'bg-primary-bg/50 border border-accent-cyan/20 text-primary-text'
+                      }`}
+                    >
+                      <div className="text-sm sm:text-base max-w-none prose prose-invert selection:bg-accent-cyan/30">
+                        <ReactMarkdown
+                          components={{
+                            p: ({ ...props }) => (
+                              <p
+                                className="text-foreground mb-2 last:mb-0 leading-relaxed"
+                                {...props}
+                              />
+                            ),
+                            strong: ({ ...props }) => (
+                              <strong style={{ color: '#00d4ff', fontWeight: 'bold' }} {...props} />
+                            ),
+                            em: ({ ...props }) => <em style={{ color: '#ff00a0' }} {...props} />,
+                            code: ({ ...props }) => (
+                              <code
+                                className="bg-muted text-accent-cyan px-1.5 py-0.5 rounded text-[0.9em]"
+                                {...props}
+                              />
+                            ),
+                            ul: ({ ...props }) => (
+                              <ul
+                                className="text-foreground list-disc pl-5 my-2 space-y-1"
+                                {...props}
+                              />
+                            ),
+                            li: ({ ...props }) => <li className="text-foreground" {...props} />,
+                            a: ({ ...props }) => (
+                              <a
+                                style={{ color: '#00d4ff', textDecoration: 'underline' }}
+                                {...props}
+                              />
+                            ),
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      </div>
+                      <p className="text-xs opacity-70 mt-1">
+                        {message.timestamp.toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </p>
+                    </div>
+
+                    {message.type === 'user' && (
+                      <div className="w-8 h-8 bg-gradient-to-r from-accent-magenta to-accent-yellow rounded-full flex items-center justify-center flex-shrink-0">
+                        <User className="w-4 h-4 text-primary-bg" />
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+
+              {isTyping && (
+                <motion.div
+                  className="flex gap-3 justify-start"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <div className="w-8 h-8 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full flex items-center justify-center">
+                    <Bot className="w-4 h-4 text-primary-bg" />
+                  </div>
+                  <div className="bg-primary-bg/50 border border-accent-cyan/20 p-3 rounded-2xl">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-accent-cyan rounded-full animate-bounce"></div>
+                      <div
+                        className="w-2 h-2 bg-accent-cyan rounded-full animate-bounce"
+                        style={{ animationDelay: '0.1s' }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-accent-cyan rounded-full animate-bounce"
+                        style={{ animationDelay: '0.2s' }}
+                      ></div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              <AnimatePresence mode="wait">
+                {!isTyping && messages[messages.length - 1]?.type === 'bot' && (
+                  <motion.div
+                    className="flex flex-wrap gap-2 pt-2"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+                  >
+                    {QUICK_REPLIES.map((reply) => (
+                      <motion.button
+                        key={reply}
+                        variants={itemVariants}
+                        onClick={() => sendMessage(reply)}
+                        className="text-sm px-4 py-2.5 min-h-[44px] bg-accent-cyan/10 border border-accent-cyan/30 rounded-full text-accent-cyan hover:bg-accent-cyan/20 hover:border-accent-cyan transition-all duration-200 leading-tight"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        {reply}
+                      </motion.button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div className="p-4 border-t border-accent-cyan/20 bg-muted">
+              <div className="flex gap-2">
+                <div className="flex-1 relative">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => {
+                      if (e.target.value.length <= MAX_MESSAGE_LENGTH) {
+                        setInputValue(e.target.value)
+                      }
+                    }}
+                    onKeyDown={handleKeyDown}
+                    placeholder={t('bot.placeholder')}
+                    maxLength={MAX_MESSAGE_LENGTH}
+                    className="w-full px-5 py-3 pr-16 text-base bg-muted text-foreground border border-accent-cyan/30 rounded-full placeholder-muted-foreground focus:outline-none focus:border-accent-cyan transition-all shadow-inner focus:ring-1 focus:ring-accent-cyan/50"
+                  />
+                  <span
+                    className={`absolute right-4 top-1/2 -translate-y-1/2 text-xs ${
+                      inputValue.length >= MAX_MESSAGE_LENGTH ? 'text-red-400' : 'text-muted-foreground'
+                    }`}
+                  >
+                    {inputValue.length}/{MAX_MESSAGE_LENGTH}
+                  </span>
+                </div>
+                <motion.button
+                  onClick={handleSendMessage}
+                  disabled={!inputValue.trim()}
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-primary-bg disabled:opacity-50 disabled:cursor-not-allowed"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-label={t('bot.enviar')}
+                >
+                  <Send className="w-5 h-5" />
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}
+
+export default BotWidget

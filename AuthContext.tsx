@@ -25,11 +25,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { data, error } = await supabase.from('clientes').select('*').eq('id', userId).single()
 
       if (error) {
-        console.warn('AuthProvider: No se encontró perfil en clientes:', error.message)
+        // RLS / permisos suelen venir como error.code / error.details
+        console.warn('AuthProvider: fetchProfile error:', {
+          message: error.message,
+          code: (error as any).code,
+          details: (error as any).details,
+          hint: (error as any).hint,
+        })
         return null
       }
       return data
-    } catch {
+    } catch (err) {
+      console.error('AuthProvider: fetchProfile exception:', err)
       return null
     }
   }, [])

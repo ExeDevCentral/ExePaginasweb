@@ -38,31 +38,6 @@ async function testContact() {
   }
 }
 
-async function testGenerate() {
-  console.log('\n🧪 Probando /api/generate...')
-  try {
-    // Imagen mínima de 1x1 transparente para la prueba
-    const dummyImage =
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
-    const res = await fetch('http://localhost:3000/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ imageBase64: dummyImage, mimeType: 'image/png' }),
-    })
-
-    if (res.status === 429) {
-      console.log('⚠️ Rate limit alcanzado (resultado esperado en pruebas repetitivas)')
-      return 'OK'
-    }
-
-    console.log('✅ Generate response status:', res.status)
-    return res.ok ? 'OK' : 'FAIL'
-  } catch (err) {
-    console.error('❌ Generate error:', err.message)
-    return 'FAIL'
-  }
-}
-
 async function main() {
   console.log('🔍 Verificando conexión con el servidor...')
   try {
@@ -77,14 +52,12 @@ async function main() {
   console.log('🚀 Servidor detectado. Iniciando pruebas...\n')
   const chatResult = await testChat()
   const contactResult = await testContact()
-  const generateResult = await testGenerate()
 
   console.log('\n📊 Resultados:')
   console.log('   Chat:', chatResult)
   console.log('   Contact:', contactResult)
-  console.log('   Generate:', generateResult)
 
-  if ([chatResult, contactResult, generateResult].includes('FAIL')) {
+  if ([chatResult, contactResult].includes('FAIL')) {
     console.error('\n❌ Algunas pruebas fallaron.')
     process.exit(1)
   }

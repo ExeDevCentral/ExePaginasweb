@@ -1,9 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useCallback, useEffect, useMemo, Suspense } from 'react'
+import { useState, useMemo, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { Upload, Image as ImageIcon, Settings, Download, Play, X, ShoppingCart } from 'lucide-react'
-import PaywallModal from '../store/PaywallModal'
+import { X, ShoppingCart } from 'lucide-react'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
@@ -240,18 +238,6 @@ const TiltCard = ({
 const DemoZone = () => {
   const { t } = useTranslation()
   const isMobile = useIsMobile()
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  type FilterKey = 'brightness' | 'contrast' | 'saturation' | 'blur'
-  const [filters, setFilters] = useState<Record<FilterKey, number>>({
-    brightness: 100,
-    contrast: 100,
-    saturation: 100,
-    blur: 0,
-  })
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [generatedHtml, setGeneratedHtml] = useState<string | null>(null)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [selectedProject, setSelectedProject] = useState<{
     title: string
     category: string
@@ -267,16 +253,7 @@ const DemoZone = () => {
   const [cartBounce, setCartBounce] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const modalRef = useFocusTrap(!!selectedProject)
-  const [isPaywallOpen, setIsPaywallOpen] = useState(false)
-
   const [activeTestimonial, setActiveTestimonial] = useState(0)
-
-  const filterLabels: Record<FilterKey, string> = {
-    brightness: t('demozone.filter_brightness'),
-    contrast: t('demozone.filter_contrast'),
-    saturation: t('demozone.filter_saturation'),
-    blur: t('demozone.filter_blur'),
-  }
 
   // Configuración estable de partículas de vapor (Pixel Coffee)
   const steamParticles = useMemo(
@@ -358,94 +335,6 @@ const DemoZone = () => {
     }
   }
 
-  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file?.type.startsWith('image/')) {
-      setUploadedFile(file)
-      const url = URL.createObjectURL(file)
-      setPreviewUrl(url)
-    }
-  }, [])
-
-  // Cleanup para las URLs de previsualización para evitar fugas de memoria
-  useEffect(() => {
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
-    }
-  }, [previewUrl])
-
-  const handleDrop = useCallback((event: React.DragEvent<HTMLElement>) => {
-    event.preventDefault()
-    const file = event.dataTransfer.files?.[0]
-    if (file?.type.startsWith('image/')) {
-      setUploadedFile(file)
-      const url = URL.createObjectURL(file)
-      setPreviewUrl(url)
-    }
-  }, [])
-
-  const handleDragOver = useCallback((event: React.DragEvent<HTMLElement>) => {
-    event.preventDefault()
-  }, [])
-
-  const generateCode = async () => {
-    if (!import.meta.env.VITE_GROQ_ENABLED) {
-      setIsPaywallOpen(true)
-      return
-    }
-
-    if (!uploadedFile) return
-
-    setIsProcessing(true)
-    setErrorMsg(null)
-
-    try {
-      const reader = new FileReader()
-      const base64Promise = new Promise<string>((resolve, reject) => {
-        reader.onload = () => {
-          const result = reader.result as string
-          const base64 = result.split(',')[1] // remove data:image/mime;base64,
-          resolve(base64)
-        }
-        reader.onerror = reject
-        reader.readAsDataURL(uploadedFile)
-      })
-
-      const base64Data = await base64Promise
-
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          imageBase64: base64Data,
-          mimeType: uploadedFile.type,
-        }),
-      })
-
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || t('demozone.error_processing'))
-      }
-
-      setGeneratedHtml(data.code)
-    } catch (err: any) {
-      setErrorMsg(err.message || t('demozone.error_unexpected'))
-    } finally {
-      setIsProcessing(false)
-    }
-  }
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  }
-
   // Casa Aura derived state optimizado
   const auraFeatured = useMemo(
     () => PROPERTIES.find((p) => p.id === (whatsappProp ?? 1)) ?? PROPERTIES[0],
@@ -455,11 +344,6 @@ const DemoZone = () => {
     () => PROPERTIES.filter((p) => propFilter === 'todos' || p.type === propFilter),
     [propFilter]
   )
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: { y: 0, opacity: 1 },
-  }
 
   return (
     <section id="demo" className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
@@ -503,222 +387,6 @@ const DemoZone = () => {
               }
             />
           ))}
-        </motion.div>
-
-        <motion.div
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-        >
-          {/* Upload Area */}
-          <motion.div
-            className="space-y-6"
-            variants={itemVariants}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-            <label
-              className="relative border-2 border-dashed border-accent-cyan/50 rounded-2xl p-8 text-center hover:border-accent-cyan transition-colors duration-300 cursor-pointer bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm"
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              htmlFor="file-upload"
-            >
-              <input
-                id="file-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-
-              <motion.div
-                className="flex flex-col items-center space-y-4"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="w-20 h-20 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full flex items-center justify-center">
-                  <Upload className="w-10 h-10 text-primary-bg" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-primary-text mb-2">
-                    {t('demozone.upload_heading')}
-                  </h3>
-                  <p className="text-primary-secondary">
-                    {t('demozone.upload_desc')}
-                    <br />
-                    <span className="text-sm">{t('demozone.upload_format')}</span>
-                  </p>
-                </div>
-              </motion.div>
-
-              {uploadedFile && (
-                <motion.div
-                  className="mt-4 p-3 bg-accent-cyan/10 rounded-lg border border-accent-cyan/20"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <p className="text-accent-cyan font-semibold">✓ {uploadedFile.name}</p>
-                </motion.div>
-              )}
-            </label>
-
-            {/* Filter Controls */}
-            {previewUrl && (
-              <motion.div
-                className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6"
-                variants={itemVariants}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-              >
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-accent-cyan" />
-                  {t('demozone.adjust_filters')}
-                </h3>
-
-                <div className="space-y-4">
-                  {(Object.entries(filters) as [FilterKey, number][]).map(([key, value]) => (
-                    <div key={key} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="capitalize text-primary-secondary">
-                          {filterLabels[key]}
-                        </span>
-                        <span className="text-accent-cyan font-semibold">
-                          {value}
-                          {key === 'blur' ? 'px' : '%'}
-                        </span>
-                      </div>
-                      <input
-                        type="range"
-                        min={0}
-                        max={key === 'blur' ? 10 : 200}
-                        value={value}
-                        onChange={(e) =>
-                          setFilters((prev) => ({ ...prev, [key]: Number(e.target.value) }))
-                        }
-                        className="w-full h-2 bg-primary-bg/50 rounded-lg appearance-none cursor-pointer slider"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {/* Generate Button */}
-            <motion.div variants={itemVariants} transition={{ duration: 0.8, ease: 'easeOut' }}>
-              <motion.button
-                className="w-full px-8 py-4 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-primary-bg font-semibold text-lg hover:shadow-lg hover:shadow-accent-cyan/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={generateCode}
-                disabled={!uploadedFile || isProcessing}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {isProcessing ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-primary-bg border-t-transparent rounded-full animate-spin"></div>
-                    {t('demozone.processing_ai')}
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center gap-2">
-                    <Play className="w-5 h-5" />
-                    {t('demozone.generate_code')}
-                  </div>
-                )}
-              </motion.button>
-
-              {errorMsg && (
-                <p className="mt-4 text-accent-magenta text-center text-sm font-semibold">
-                  {errorMsg}
-                </p>
-              )}
-              <PaywallModal isOpen={isPaywallOpen} onClose={() => setIsPaywallOpen(false)} />
-            </motion.div>
-          </motion.div>
-
-          {/* Preview Panel */}
-          <motion.div
-            className="space-y-6"
-            variants={itemVariants}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-            <div className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6">
-              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <ImageIcon className="w-5 h-5 text-accent-cyan" />
-                {t('demozone.live_preview')}
-              </h3>
-
-              <div className="aspect-video bg-primary-bg/50 rounded-xl overflow-hidden border border-accent-cyan/10 relative">
-                {generatedHtml ? (
-                  <iframe
-                    srcDoc={generatedHtml}
-                    className="w-full h-full bg-white"
-                    title={t('demozone.live_preview')}
-                  />
-                ) : previewUrl ? (
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                    style={{
-                      filter: `brightness(${filters.brightness}%) contrast(${filters.contrast}%) saturate(${filters.saturation}%) blur(${filters.blur}px)`,
-                    }}
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-primary-secondary">
-                    <div className="text-center">
-                      <ImageIcon className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                      <p>{t('demozone.upload_to_preview')}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Code Output Placeholder */}
-            {uploadedFile &&
-              (generatedHtml ? (
-                <motion.div
-                  className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-magenta/20 rounded-2xl p-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <Download className="w-5 h-5 text-accent-magenta" />
-                    {t('demozone.generated_code')}
-                  </h3>
-
-                  <div className="bg-primary-bg/50 rounded-lg p-4 font-mono text-sm text-primary-secondary overflow-x-auto max-h-[300px]">
-                    <pre className="whitespace-pre-wrap text-left">{generatedHtml}</pre>
-                  </div>
-
-                  <motion.button
-                    onClick={() => {
-                      const blob = new Blob([generatedHtml], { type: 'text/html' })
-                      const url = URL.createObjectURL(blob)
-                      const a = document.createElement('a')
-                      a.href = url
-                      a.download = 'generated-design.html'
-                      a.click()
-                    }}
-                    className="mt-4 w-full px-4 py-2 bg-accent-magenta/20 border border-accent-magenta/40 rounded-lg text-accent-magenta hover:bg-accent-magenta/30 transition-colors duration-300"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {t('demozone.download_html')}
-                  </motion.button>
-                </motion.div>
-              ) : (
-                !isProcessing && (
-                  <motion.div
-                    className="bg-gradient-to-br from-primary-bg/50 to-primary-bg/30 backdrop-blur-sm border border-accent-cyan/20 rounded-2xl p-6 flex flex-col items-center justify-center text-center opacity-70"
-                    variants={itemVariants}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
-                  >
-                    <p className="text-primary-secondary mb-2">{t('demozone.press_generate')}</p>
-                  </motion.div>
-                )
-              ))}
-          </motion.div>
         </motion.div>
       </div>
 

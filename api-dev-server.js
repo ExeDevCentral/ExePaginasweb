@@ -5,9 +5,6 @@ import cors from 'cors'
 // Estado de carga de variables de entorno (ya cargadas por el primer import)
 console.log('Estado de carga de variables de entorno:')
 console.log(
-  `  - GROQ_API_KEY: ${process.env.GROQ_API_KEY ? 'Cargada (valor oculto por seguridad)' : 'NO cargada'}`
-)
-console.log(
   `  - RESEND_API_KEY: ${process.env.RESEND_API_KEY ? 'Cargada (valor oculto por seguridad)' : 'NO cargada'}`
 )
 console.log(`  - DEBUG: ${process.env.DEBUG ? 'Activo' : 'Inactivo'}`)
@@ -18,7 +15,6 @@ app.use(express.json({ limit: '10mb' }))
 
 // Import API handlers
 import chatHandler from './api/chat.js'
-import generateHandler from './api/generate.js'
 import contactHandler from './api/contact.js'
 import createPayPalOrderHandler from './api/create-paypal-order.js'
 import paypalWebhookHandler from './api/paypal-webhook.js'
@@ -60,15 +56,6 @@ app.all('/api/chat', async (req, res) => {
   } catch (error) {
     console.error('[Dev Server] Chat Error:', error)
     if (!res.headersSent) res.status(500).json({ error: error.message })
-  }
-})
-
-app.all('/api/generate', async (req, res) => {
-  try {
-    await generateHandler(req, res)
-  } catch (error) {
-    console.error('[Dev Server] Generate Error:', error)
-    res.status(500).json({ error: 'Error interno en el handler de generación.' })
   }
 })
 
@@ -116,16 +103,7 @@ app.use((req, res) => {
 const PORT = process.env.API_PORT || 3000
 app.listen(PORT, () => {
   console.log(`🚀 API dev server running at http://localhost:${PORT}`)
-  console.log('   Endpoints: /api/chat, /api/generate, /api/contact')
-
-  // Verificación de carga de variables de entorno
-  if (process.env.GROQ_API_KEY) {
-    console.log(
-      `   ✅ Groq API Key cargada correctamente (${process.env.GROQ_API_KEY.slice(0, 7)}...)`
-    )
-  } else {
-    console.log('   ⚠️ ERROR: No se encontró GROQ_API_KEY en el archivo .env')
-  }
+  console.log('   Endpoints: /api/chat, /api/contact')
 
   if (process.env.RESEND_API_KEY) {
     console.log(

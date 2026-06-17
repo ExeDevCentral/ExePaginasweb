@@ -151,29 +151,31 @@ export default function StorePage() {
   }
 
   const paypalContainerRef = useRef<HTMLDivElement>(null)
-  const paypalRenderedRef = useRef(false)
 
   useEffect(() => {
     if (!showCheckout || !selectedPlan || paymentMethod !== 'paypal') return
-    if (paypalRenderedRef.current) return
+
+    const container = document.getElementById('paypal-button-container')
+    if (!container) return
 
     const price = parseInt(selectedPlan.price.replace(/[^0-9]/g, ''))
     const usdPrice = Math.round(price / 1200)
 
-    const scriptId = 'paypal-sdk'
-    let script = document.getElementById(scriptId) as HTMLScriptElement | null
-    if (script) script.remove()
-
     const renderButton = async () => {
-      if (!window.paypal?.Buttons) return
+      if (!window.paypal?.Buttons) {
+        setTimeout(renderButton, 500)
+        return
+      }
 
       try {
+        container.innerHTML = ''
+
         const {
           data: { user },
         } = await supabase.auth.getUser()
         const email = user?.email || ''
 
-        window.paypal
+        await window.paypal
           .Buttons({
             createOrder: async () => {
               const resp = await fetch('/api/create-paypal-order', {
@@ -205,23 +207,27 @@ export default function StorePage() {
             },
           })
           .render('#paypal-button-container')
-
-        paypalRenderedRef.current = true
       } catch (e) {
         console.error('PayPal render error:', e)
       }
     }
 
-    script = document.createElement('script')
-    script.id = scriptId
-    script.src = `https://www.paypal.com/sdk/js?client-id=BAAAvwRKJ9kv0-cQu3OgJ4dpcjVTVzozUEkt00PIg2UxxQpwJk-RMIAMct0xwjTBNbMXTVeqhvVH6jkAAQ&currency=USD&intent=capture`
-    script.crossOrigin = 'anonymous'
-    script.async = true
-    script.onload = renderButton
-    document.head.appendChild(script)
+    if (window.paypal?.Buttons) {
+      renderButton()
+    } else {
+      const scriptId = 'paypal-sdk'
+      const existing = document.getElementById(scriptId) as HTMLScriptElement | null
+      if (existing) {
+        existing.remove()
+      }
 
-    return () => {
-      paypalRenderedRef.current = false
+      const script = document.createElement('script')
+      script.id = scriptId
+      script.src = `https://www.paypal.com/sdk/js?client-id=BAAAvwRKJ9kv0-cQu3OgJ4dpcjVTVzozUEkt00PIg2UxxQpwJk-RMIAMct0xwjTBNbMXTVeqhvVH6jkAAQ&currency=USD&intent=capture`
+      script.crossOrigin = 'anonymous'
+      script.async = true
+      script.onload = renderButton
+      document.head.appendChild(script)
     }
   }, [showCheckout, selectedPlan, paymentMethod, tipoProyecto])
 

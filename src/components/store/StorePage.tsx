@@ -15,14 +15,26 @@ import {
   Globe,
   Copy,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PremiumBackground from '../Effects/PremiumBackground'
 import { Helmet } from 'react-helmet-async'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { supabase } from '../../core/infra/supabase/client'
 import { usePayment } from '../../hooks/usePayment'
-import PayPalCheckoutButton from './PayPalCheckoutButton'
+
+declare global {
+  interface Window {
+    paypal?: {
+      Buttons: (opts: {
+        createOrder: () => Promise<string>
+        onApprove: (data: { orderID: string }) => void
+        onError: (err: unknown) => void
+        style?: Record<string, string>
+      }) => { render: (sel: string) => void }
+    }
+  }
+}
 
 const TIPO_PROYECTO_OPTIONS = [
   { value: 'mantenimiento', label: 'Mantenimiento', icon: Monitor },
@@ -138,9 +150,80 @@ export default function StorePage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const usdPrice = selectedPlan
-    ? Math.round(parseInt(selectedPlan.price.replace(/[^0-9]/g, '')) / 1200)
-    : 0
+  const paypalContainerRef = useRef<HTMLDivElement>(null)
+  const paypalRenderedRef = useRef(false)
+
+  useEffect(() => {
+    if (!showCheckout || !selectedPlan || paymentMethod !== 'paypal') return
+    if (paypalRenderedRef.current) return
+
+    const price = parseInt(selectedPlan.price.replace(/[^0-9]/g, ''))
+    const usdPrice = Math.round(price / 1200)
+
+    const scriptId = 'paypal-sdk'
+    let script = document.getElementById(scriptId) as HTMLScriptElement | null
+    if (script) script.remove()
+
+    const renderButton = async () => {
+      if (!window.paypal?.Buttons) return
+
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+        const email = user?.email || ''
+
+        window.paypal
+          .Buttons({
+            createOrder: async () => {
+              const resp = await fetch('/api/create-paypal-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  planId: selectedPlan.id,
+                  planTitle: selectedPlan.title,
+                  price: usdPrice,
+                  email,
+                  tipoProyecto,
+                }),
+              })
+              const data = await resp.json()
+              if (!resp.ok) throw new Error(data.error || 'Error creating order')
+              return data.order_id
+            },
+            onApprove: async () => {
+              window.location.href = '/dashboard?payment=paypal_ok'
+            },
+            onError: (err) => {
+              console.error('PayPal Checkout error:', err)
+            },
+            style: {
+              color: 'gold',
+              shape: 'rect',
+              label: 'paypal',
+              height: '45',
+            },
+          })
+          .render('#paypal-button-container')
+
+        paypalRenderedRef.current = true
+      } catch (e) {
+        console.error('PayPal render error:', e)
+      }
+    }
+
+    script = document.createElement('script')
+    script.id = scriptId
+    script.src = `https://www.paypal.com/sdk/js?client-id=BAAAvwRKJ9kv0-cQu3OgJ4dpcjVTVzozUEkt00PIg2UxxQpwJk-RMIAMct0xwjTBNbMXTVeqhvVH6jkAAQ&currency=USD&intent=capture`
+    script.crossOrigin = 'anonymous'
+    script.async = true
+    script.onload = renderButton
+    document.head.appendChild(script)
+
+    return () => {
+      paypalRenderedRef.current = false
+    }
+  }, [showCheckout, selectedPlan, paymentMethod, tipoProyecto])
 
   const closeCheckout = () => {
     setShowCheckout(false)
@@ -538,18 +621,12 @@ export default function StorePage() {
             </div>
 
             <div className={paymentMethod === 'paypal' ? 'block' : 'hidden'}>
-              <div className="space-y-4 min-h-[50px]">
-                {selectedPlan && (
-                  <PayPalCheckoutButton
-                    planId={selectedPlan.id}
-                    planTitle={selectedPlan.title}
-                    price={usdPrice}
-                    tipoProyecto={tipoProyecto}
-                    onSuccess={() => {
-                      window.location.href = '/dashboard?payment=paypal_ok'
-                    }}
-                  />
-                )}
+              <div className="space-y-4">
+                <div
+                  id="paypal-button-container"
+                  ref={paypalContainerRef}
+                  className="min-h-[50px]"
+                />
               </div>
             </div>
 

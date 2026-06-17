@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
-    "@paypal/react-paypal-js": "^10.0.0",
     "@react-three/drei": "^9.121.4",
     "@react-three/fiber": "^8.17.14",
     "@supabase/supabase-js": "^2.106.2",

@@ -5,7 +5,6 @@ import { supabase } from '../core/infra/supabase/client'
 import { Crown, RefreshCw, CheckCircle } from 'lucide-react'
 import { useDashboard } from '../hooks/useDashboard'
 import { useAuthRole } from '../core/auth/userAuth'
-import { ADMIN_EMAILS } from '../core/auth/roleConfig'
 import { useAuthSession } from '../core/auth/AuthSessionProvider'
 import ClientDashboard from '../components/dashboard/ClientDashboard'
 import type { PlanTier } from '../components/dashboard/resolvePlanTier'
@@ -23,7 +22,7 @@ export default function Dashboard() {
   const { loading, error, cliente, suscripciones, pagos, planTier, refresh } = useDashboard(
     ready && !!session
   )
-  const { role } = useAuthRole(ADMIN_EMAILS)
+  const { role } = useAuthRole()
   const isAdmin = role === 'admin'
   const [viewMode, setViewMode] = useState<'admin' | 'client'>('admin')
   const [paymentBanner, setPaymentBanner] = useState<string | null>(null)
@@ -87,7 +86,9 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-xl w-full rounded-3xl border border-accent-magenta/30 bg-primary-bg/50 p-8 backdrop-blur-xl"
         >
-          <h1 className="text-2xl font-bold text-foreground">{t('dashboard.error_conexion_titulo')}</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            {t('dashboard.error_conexion_titulo')}
+          </h1>
           <p className="mt-3 text-accent-magenta text-sm font-bold">{error}</p>
           <button
             type="button"
@@ -145,7 +146,9 @@ export default function Dashboard() {
                 <CheckCircle className="w-6 h-6 text-emerald-400" />
               </div>
               <div>
-                <p className="text-lg font-bold text-foreground">{t('dashboard.pago_aprobado_titulo')}</p>
+                <p className="text-lg font-bold text-foreground">
+                  {t('dashboard.pago_aprobado_titulo')}
+                </p>
                 <p className="text-sm text-muted-foreground">
                   {paymentBanner === 'paypal_ok'
                     ? t('dashboard.pago_aprobado_paypal')
@@ -213,7 +216,9 @@ export default function Dashboard() {
                   <RefreshCw
                     size={18}
                     className={
-                      loading || adminLoading ? 'animate-spin text-yellow-400' : 'text-muted-foreground'
+                      loading || adminLoading
+                        ? 'animate-spin text-yellow-400'
+                        : 'text-muted-foreground'
                     }
                   />
                 </button>

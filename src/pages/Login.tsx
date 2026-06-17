@@ -16,8 +16,8 @@ export default function Login() {
 
   // Estados para el acceso alternativo de desarrollo
   const [showDev, setShowDev] = useState(false)
-  const [email, setEmail] = useState('echevarria270@gmail.com')
-  const [password, setPassword] = useState('Password123!')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
@@ -117,11 +117,10 @@ export default function Login() {
             {t('login.volver_inicio')}
           </motion.a>
           <h1 className="text-4xl sm:text-5xl font-montserrat font-black text-foreground">
-            {t('login.titulo_main')} <span className="text-accent-cyan">{t('login.titulo_span')}</span>
+            {t('login.titulo_main')}{' '}
+            <span className="text-accent-cyan">{t('login.titulo_span')}</span>
           </h1>
-          <p className="mt-3 text-primary-secondary">
-            {t('login.descripcion')}
-          </p>
+          <p className="mt-3 text-primary-secondary">{t('login.descripcion')}</p>
         </div>
 
         <div className="flex justify-center">
@@ -204,7 +203,9 @@ export default function Login() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs text-foreground/60 font-medium ml-1">{t('login.contrasena')}</label>
+                    <label className="text-xs text-foreground/60 font-medium ml-1">
+                      {t('login.contrasena')}
+                    </label>
                     <div className="relative">
                       <input
                         type={showPassword ? 'text' : 'password'}
@@ -258,7 +259,10 @@ export default function Login() {
               className="mt-6 text-xs text-muted-foreground leading-relaxed text-center"
             >
               {t('login.footer_aviso_1')}{' '}
-              <span className="text-foreground/80 font-semibold">{t('login.footer_aviso_span')}</span>.
+              <span className="text-foreground/80 font-semibold">
+                {t('login.footer_aviso_span')}
+              </span>
+              .
             </motion.div>
           </motion.div>
         </div>

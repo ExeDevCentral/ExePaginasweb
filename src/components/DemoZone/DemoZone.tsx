@@ -389,7 +389,7 @@ const DemoZone = () => {
   }, [])
 
   const generateCode = async () => {
-    if (!import.meta.env.VITE_GROQ_API_KEY) {
+    if (!import.meta.env.VITE_GROQ_ENABLED) {
       setIsPaywallOpen(true)
       return
     }
@@ -494,11 +494,13 @@ const DemoZone = () => {
               category={t(project.categoryKey)}
               title={project.title}
               summary={t(project.summaryKey)}
-              onOpen={() => openProject({
-                title: project.title,
-                category: t(project.categoryKey),
-                summary: t(project.summaryKey),
-              })}
+              onOpen={() =>
+                openProject({
+                  title: project.title,
+                  category: t(project.categoryKey),
+                  summary: t(project.summaryKey),
+                })
+              }
             />
           ))}
         </motion.div>
@@ -539,7 +541,9 @@ const DemoZone = () => {
                   <Upload className="w-10 h-10 text-primary-bg" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-primary-text mb-2">{t('demozone.upload_heading')}</h3>
+                  <h3 className="text-2xl font-bold text-primary-text mb-2">
+                    {t('demozone.upload_heading')}
+                  </h3>
                   <p className="text-primary-secondary">
                     {t('demozone.upload_desc')}
                     <br />
@@ -575,7 +579,9 @@ const DemoZone = () => {
                   {(Object.entries(filters) as [FilterKey, number][]).map(([key, value]) => (
                     <div key={key} className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="capitalize text-primary-secondary">{filterLabels[key]}</span>
+                        <span className="capitalize text-primary-secondary">
+                          {filterLabels[key]}
+                        </span>
                         <span className="text-accent-cyan font-semibold">
                           {value}
                           {key === 'blur' ? 'px' : '%'}
@@ -708,9 +714,7 @@ const DemoZone = () => {
                     variants={itemVariants}
                     transition={{ duration: 0.8, ease: 'easeOut' }}
                   >
-                    <p className="text-primary-secondary mb-2">
-                      {t('demozone.press_generate')}
-                    </p>
+                    <p className="text-primary-secondary mb-2">{t('demozone.press_generate')}</p>
                   </motion.div>
                 )
               ))}
@@ -817,7 +821,11 @@ const DemoZone = () => {
                             : 'border-border text-muted-foreground hover:border-violet-600/50 hover:text-violet-400 bg-muted'
                         }`}
                       >
-                        {f === 'todos' ? t('demozone.casa_aura_todos') : f === 'casa' ? `🏡 ${t('demozone.casa_aura_casas')}` : `🏙 ${t('demozone.casa_aura_deptos')}`}
+                        {f === 'todos'
+                          ? t('demozone.casa_aura_todos')
+                          : f === 'casa'
+                            ? `🏡 ${t('demozone.casa_aura_casas')}`
+                            : `🏙 ${t('demozone.casa_aura_deptos')}`}
                       </motion.button>
                     ))}
                     <button
@@ -934,7 +942,7 @@ const DemoZone = () => {
                           key={prop.id}
                           layout
                           className={`flex gap-3 p-3 rounded-2xl border cursor-pointer transition-all ${
-                              (whatsappProp ?? 1) === prop.id ||
+                            (whatsappProp ?? 1) === prop.id ||
                             (!whatsappProp && prop.id === 1 && i === 0)
                               ? 'border-violet-500/60 bg-violet-600/8'
                               : 'border-border hover:border-border bg-muted hover:bg-muted'
@@ -963,13 +971,19 @@ const DemoZone = () => {
                               <p className="text-foreground text-sm font-semibold truncate">
                                 {prop.name}
                               </p>
-                              <span className="text-muted-foreground text-[10px] shrink-0">{prop.tag}</span>
+                              <span className="text-muted-foreground text-[10px] shrink-0">
+                                {prop.tag}
+                              </span>
                             </div>
-                            <p className="text-muted-foreground text-xs truncate mt-0.5">{prop.location}</p>
+                            <p className="text-muted-foreground text-xs truncate mt-0.5">
+                              {prop.location}
+                            </p>
                             <div className="flex items-center justify-between mt-1.5">
                               <p className="text-violet-400 text-sm font-black">{prop.price}</p>
                               <p className="text-muted-foreground text-[10px]">
-                                {prop.m2}{t('demozone.casa_aura_m2_short')} · {prop.beds}{t('demozone.casa_aura_hab_short')}
+                                {prop.m2}
+                                {t('demozone.casa_aura_m2_short')} · {prop.beds}
+                                {t('demozone.casa_aura_hab_short')}
                               </p>
                             </div>
                           </div>
@@ -1042,7 +1056,7 @@ const DemoZone = () => {
                       {t('demozone.coffee_ecommerce')}
                     </p>
                     <h2 className="text-4xl sm:text-6xl font-montserrat font-black text-foreground">
-                       Pixel <span className="text-amber-400">Coffee</span>
+                      Pixel <span className="text-amber-400">Coffee</span>
                     </h2>
                   </div>
 
@@ -1107,7 +1121,9 @@ const DemoZone = () => {
                         <div className="text-5xl mb-1 text-center">{product.emoji}</div>
                         <div>
                           <p className="font-bold text-foreground text-sm">{product.name}</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">{t('demozone.coffee_origin')} {product.origin}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {t('demozone.coffee_origin')} {product.origin}
+                          </p>
                         </div>
                         <p className="text-2xl font-black text-amber-400">
                           ${product.price.toFixed(2)}
@@ -1153,7 +1169,8 @@ const DemoZone = () => {
                           {cartItems.length} {t('demozone.coffee_products_in_order')}
                         </p>
                         <p className="text-foreground text-2xl font-black mt-1">
-                          {t('demozone.coffee_total')} ${cartItems.reduce((s, i) => s + i.price, 0).toFixed(2)}
+                          {t('demozone.coffee_total')} $
+                          {cartItems.reduce((s, i) => s + i.price, 0).toFixed(2)}
                         </p>
                       </div>
                       <motion.button
@@ -1224,12 +1241,21 @@ const DemoZone = () => {
                       whileHover={{ y: -8, borderColor: 'rgba(234,179,8,0.4)' }}
                       transition={{ type: 'spring', stiffness: 300 }}
                     >
-                      <p className="text-xs uppercase tracking-widest text-muted-foreground">{t('demozone.neofit_basico')}</p>
+                      <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                        {t('demozone.neofit_basico')}
+                      </p>
                       <div className="text-5xl font-black text-foreground">
-                        $29<span className="text-lg text-muted-foreground">{t('demozone.neofit_mes')}</span>
+                        $29
+                        <span className="text-lg text-muted-foreground">
+                          {t('demozone.neofit_mes')}
+                        </span>
                       </div>
                       <ul className="space-y-2 text-sm text-muted-foreground flex-1">
-                        {['demozone.neofit_feat_basico_1', 'demozone.neofit_feat_basico_2', 'demozone.neofit_feat_basico_3'].map((k) => (
+                        {[
+                          'demozone.neofit_feat_basico_1',
+                          'demozone.neofit_feat_basico_2',
+                          'demozone.neofit_feat_basico_3',
+                        ].map((k) => (
                           <li key={k} className="flex items-center gap-2">
                             <span className="text-yellow-400">✓</span>
                             {t(k)}
@@ -1257,12 +1283,22 @@ const DemoZone = () => {
                       <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-xs font-black px-4 py-1.5 rounded-full tracking-wider">
                         ⚡ {t('demozone.neofit_mas_popular')}
                       </div>
-                      <p className="text-xs uppercase tracking-widest text-yellow-400">{t('demozone.neofit_elite')}</p>
+                      <p className="text-xs uppercase tracking-widest text-yellow-400">
+                        {t('demozone.neofit_elite')}
+                      </p>
                       <div className="text-5xl font-black text-foreground">
-                        $59<span className="text-lg text-muted-foreground">{t('demozone.neofit_mes')}</span>
+                        $59
+                        <span className="text-lg text-muted-foreground">
+                          {t('demozone.neofit_mes')}
+                        </span>
                       </div>
                       <ul className="space-y-2 text-sm text-muted-foreground flex-1">
-                        {['demozone.neofit_feat_elite_1', 'demozone.neofit_feat_elite_2', 'demozone.neofit_feat_elite_3', 'demozone.neofit_feat_elite_4'].map((k) => (
+                        {[
+                          'demozone.neofit_feat_elite_1',
+                          'demozone.neofit_feat_elite_2',
+                          'demozone.neofit_feat_elite_3',
+                          'demozone.neofit_feat_elite_4',
+                        ].map((k) => (
                           <li key={k} className="flex items-center gap-2">
                             <span className="text-yellow-400">✓</span>
                             {t(k)}
@@ -1280,12 +1316,22 @@ const DemoZone = () => {
                       whileHover={{ y: -8, borderColor: 'rgba(234,179,8,0.4)' }}
                       transition={{ type: 'spring', stiffness: 300 }}
                     >
-                      <p className="text-xs uppercase tracking-widest text-muted-foreground">{t('demozone.neofit_bestia')}</p>
+                      <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                        {t('demozone.neofit_bestia')}
+                      </p>
                       <div className="text-5xl font-black text-foreground">
-                        $99<span className="text-lg text-muted-foreground">{t('demozone.neofit_mes')}</span>
+                        $99
+                        <span className="text-lg text-muted-foreground">
+                          {t('demozone.neofit_mes')}
+                        </span>
                       </div>
                       <ul className="space-y-2 text-sm text-muted-foreground flex-1">
-                        {['demozone.neofit_feat_bestia_1', 'demozone.neofit_feat_bestia_2', 'demozone.neofit_feat_bestia_3', 'demozone.neofit_feat_bestia_4'].map((k) => (
+                        {[
+                          'demozone.neofit_feat_bestia_1',
+                          'demozone.neofit_feat_bestia_2',
+                          'demozone.neofit_feat_bestia_3',
+                          'demozone.neofit_feat_bestia_4',
+                        ].map((k) => (
                           <li key={k} className="flex items-center gap-2">
                             <span className="text-yellow-400">✓</span>
                             {t(k)}

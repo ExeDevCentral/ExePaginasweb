@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '../infra/supabase/client'
 import { getAuthRedirectUrl } from './siteUrl'
 
@@ -9,25 +9,24 @@ export type AppUser = {
 
 export type Role = 'admin' | 'client' | 'unknown'
 
-export function useAuthRole(adminEmails: readonly string[]) {
+export function useAuthRole() {
   const [user, setUser] = useState<AppUser | null>(null)
   const [role, setRole] = useState<Role>('unknown')
   const [loading, setLoading] = useState(true)
 
-  const adminEmailsNormalized = useMemo(
-    () => adminEmails.map((e) => e.trim().toLowerCase()),
-    [adminEmails]
-  )
-
-  const computeRole = (email: string | null | undefined): Role => {
-    const e = (email ?? '').trim().toLowerCase()
-    if (!e) return 'unknown'
-    return adminEmailsNormalized.includes(e) ? 'admin' : 'client'
-  }
-
   useEffect(() => {
     let isMounted = true
-    let didResolveInitialSession = false
+
+    async function resolveRole(u: { id: string; email: string | null } | null): Promise<Role> {
+      if (!u?.id) return 'unknown'
+      try {
+        const { data: isAdmin, error } = await supabase.rpc('is_admin')
+        if (error) return 'unknown'
+        return isAdmin === true ? 'admin' : 'client'
+      } catch {
+        return 'unknown'
+      }
+    }
 
     async function init() {
       try {
@@ -35,7 +34,7 @@ export function useAuthRole(adminEmails: readonly string[]) {
         const s = sessionData.session
         const u = s?.user
         const nextUser = u ? { id: u.id, email: u.email ?? null } : null
-        const nextRole = u ? computeRole(u.email) : 'unknown'
+        const nextRole = await resolveRole(nextUser)
 
         if (isMounted) {
           setUser(nextUser)
@@ -47,23 +46,21 @@ export function useAuthRole(adminEmails: readonly string[]) {
           setUser(null)
         }
       } finally {
-        didResolveInitialSession = true
         if (isMounted) setLoading(false)
       }
     }
 
     init()
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const u = session?.user
       const nextUser = u ? { id: u.id, email: u.email ?? null } : null
-      const nextRole = u ? computeRole(u.email) : 'unknown'
+      const nextRole = await resolveRole(nextUser)
 
       if (isMounted) {
         setUser(nextUser)
         setRole(nextRole)
-        // Evita doble setLoading(false) antes/después del init.
-        if (!didResolveInitialSession) setLoading(false)
+        setLoading(false)
       }
     })
 
@@ -71,7 +68,7 @@ export function useAuthRole(adminEmails: readonly string[]) {
       isMounted = false
       sub?.subscription?.unsubscribe()
     }
-  }, [adminEmailsNormalized])
+  }, [])
 
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({

@@ -6,7 +6,6 @@ import { useScrollSpy } from '../../hooks/useScrollSpy'
 import { NAV_ITEMS, SCROLL_OFFSET } from '../landing/constants'
 import { useNavigate } from 'react-router-dom'
 import { useAuthRole } from '../../core/auth/userAuth'
-import { ADMIN_EMAILS } from '../../core/auth/roleConfig'
 import ThemeToggle from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
 
@@ -22,7 +21,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const navigate = useNavigate()
-  const { user, signOut } = useAuthRole(ADMIN_EMAILS)
+  const { user, signOut } = useAuthRole()
   const isLoggedIn = user !== null
 
   useEffect(() => {
@@ -64,7 +63,9 @@ const Header = () => {
       style={{
         background: scrolled ? 'rgba(5, 5, 7, 0.95)' : 'rgba(10, 10, 12, 1)',
         backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(0, 242, 254, 0.2)' : '1px solid rgba(255, 255, 255, 0.05)',
+        borderBottom: scrolled
+          ? '1px solid rgba(0, 242, 254, 0.2)'
+          : '1px solid rgba(255, 255, 255, 0.05)',
       }}
       className="fixed top-0 w-full z-50 transition-all duration-300 font-mono"
       initial={{ y: -100, opacity: 0 }}
@@ -73,7 +74,6 @@ const Header = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 lg:h-[70px]">
-          
           {/* Logo & Nombre */}
           <motion.a
             href="#home"
@@ -94,7 +94,8 @@ const Header = () => {
               />
             </div>
             <span className="text-zinc-100 text-xs font-bold tracking-widest uppercase flex items-center gap-1">
-              EXE<span className="text-[#00f2fe] font-light">//</span>SISTEMAS<span className="text-zinc-500 font-light">.WEB</span>
+              EXE<span className="text-[#00f2fe] font-light">//</span>SISTEMAS
+              <span className="text-zinc-500 font-light">.WEB</span>
             </span>
           </motion.a>
 
@@ -114,7 +115,7 @@ const Header = () => {
                   whileHover={{ color: '#00f2fe' }}
                 >
                   <span className="relative z-10">{t(navLabelKeys[item.id] || item.label)}</span>
-                  
+
                   {/* Underline animado */}
                   <span
                     className="absolute bottom-1.5 left-3 right-3 h-[1px] bg-[#00f2fe] transition-transform duration-300 origin-left"
@@ -310,7 +311,9 @@ const Header = () => {
                 {/* Controls and CTA at the bottom */}
                 <div className="mt-auto pt-6 border-t border-zinc-900 flex flex-col gap-5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-zinc-500 tracking-wider uppercase">System Config</span>
+                    <span className="text-[10px] text-zinc-500 tracking-wider uppercase">
+                      System Config
+                    </span>
                     <div className="flex items-center gap-3">
                       <LanguageSwitcher />
                       <ThemeToggle />

@@ -2,7 +2,6 @@ import { motion } from 'framer-motion'
 import { useMemo } from 'react'
 import { Mail } from 'lucide-react'
 import { useAuthRole } from '../../core/auth/userAuth'
-import { ADMIN_EMAILS } from '../../core/auth/roleConfig'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -10,7 +9,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const { role, loading, signInWithGoogle } = useAuthRole(ADMIN_EMAILS)
+  const { role, loading, signInWithGoogle } = useAuthRole()
 
   const statusText = useMemo(() => {
     if (loading) return 'Cargando sesión...'

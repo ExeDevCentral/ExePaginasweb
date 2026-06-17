@@ -16,11 +16,10 @@ function buffer(req) {
 }
 
 function setCorsHeaders(res) {
-  if (process.env.NODE_ENV === 'production') {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  }
+  const origin = process.env.VITE_SITE_URL || process.env.SITE_URL || 'https://exepaginasweb.com'
+  res.setHeader('Access-Control-Allow-Origin', origin)
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 }
 
 async function getPayPalAccessToken() {
@@ -156,14 +155,16 @@ export default async function handler(req, res) {
     const amount = resource.amount?.value
     const email = resource.payer?.email_address || resource.custom_id?.split('|')?.[1]
     console.log(`[paypal-webhook] Pago completado: ${paypalOrderId} - $${amount} USD`)
-  }
-
-  else if (eventType === 'PAYMENT.CAPTURE.DENIED') {
+  } else if (eventType === 'PAYMENT.CAPTURE.DENIED') {
     const paypalOrderId = resource.id
     const email = resource.payer?.email_address || resource.custom_id?.split('|')?.[1]
     console.error(`[paypal-webhook] Pago DENEGADO: ${paypalOrderId} - ${email}`)
     if (email) {
-      const { data: clientes } = await supabase.from('clientes').select('id').eq('email', email).limit(1)
+      const { data: clientes } = await supabase
+        .from('clientes')
+        .select('id')
+        .eq('email', email)
+        .limit(1)
       if (clientes?.[0]) {
         await supabase.from('notificaciones').insert({
           cliente_id: clientes[0].id,
@@ -172,21 +173,27 @@ export default async function handler(req, res) {
         })
       }
     }
-  }
-
-  else if (eventType === 'PAYMENT.CAPTURE.REFUNDED') {
+  } else if (eventType === 'PAYMENT.CAPTURE.REFUNDED') {
     const paypalOrderId = resource.id
     const amount = resource.amount?.value
     console.log(`[paypal-webhook] Reembolso: ${paypalOrderId} - $${amount} USD`)
     const { data: pagos } = await supabase
-      .from('pagos').select('cliente_id').eq('paypal_order_id', paypalOrderId).limit(1)
+      .from('pagos')
+      .select('cliente_id')
+      .eq('paypal_order_id', paypalOrderId)
+      .limit(1)
     if (pagos?.[0]) {
-      await supabase.from('pagos').update({ estado: 'reembolsado' }).eq('paypal_order_id', paypalOrderId)
-      await supabase.from('suscripciones').update({ estado: 'cancelada', fecha_fin: new Date().toISOString() }).eq('cliente_id', pagos[0].cliente_id).eq('estado', 'activa')
+      await supabase
+        .from('pagos')
+        .update({ estado: 'reembolsado' })
+        .eq('paypal_order_id', paypalOrderId)
+      await supabase
+        .from('suscripciones')
+        .update({ estado: 'cancelada', fecha_fin: new Date().toISOString() })
+        .eq('cliente_id', pagos[0].cliente_id)
+        .eq('estado', 'activa')
     }
-  }
-
-  else if (eventType === 'CHECKOUT.ORDER.APPROVED') {
+  } else if (eventType === 'CHECKOUT.ORDER.APPROVED') {
     const orderId = resource.id
     const token = await getPayPalAccessToken()
     const captured = await capturePayPalOrder(orderId, token)

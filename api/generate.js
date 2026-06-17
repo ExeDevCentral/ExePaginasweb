@@ -18,11 +18,10 @@ function isRateLimited(ip) {
 }
 
 function setCorsHeaders(res) {
-  if (process.env.NODE_ENV === 'production') {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  }
+  const origin = process.env.VITE_SITE_URL || process.env.SITE_URL || 'https://exepaginasweb.com'
+  res.setHeader('Access-Control-Allow-Origin', origin)
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 }
 
 export const config = {
@@ -34,7 +33,10 @@ export const config = {
 const SYSTEM_PROMPT =
   'Eres un experto desarrollador frontend especializado en Tailwind CSS. Tu objetivo es convertir el boceto, dibujo o diseno subido en una pagina web funcional. Debes generar un UNICO archivo HTML que contenga todo: HTML5 semantico, clases de Tailwind CSS integradas via CDN, y cualquier CSS personalizado necesario dentro de etiquetas <style>. El diseno debe ser hermoso, moderno, responsive y coincidir lo mas posible con la imagen proporcionada. MUY IMPORTANTE: Responde UNICA Y EXCLUSIVAMENTE con el codigo HTML crudo. NO incluyas markdown, no incluyas bloques de codigo como ```html, simplemente empieza con <!DOCTYPE html> y termina con </html>. No des explicaciones.'
 
-const VISION_MODELS = ['meta-llama/llama-4-scout-17b-16e-instruct', 'meta-llama/llama-4-maverick-17b-128e-instruct']
+const VISION_MODELS = [
+  'meta-llama/llama-4-scout-17b-16e-instruct',
+  'meta-llama/llama-4-maverick-17b-128e-instruct',
+]
 
 async function callGroqDirect(model, systemPrompt, messages, apiKey) {
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -63,7 +65,9 @@ async function callGroqDirect(model, systemPrompt, messages, apiKey) {
     try {
       const errJson = JSON.parse(errText)
       parsedError = errJson.error?.message || errText
-    } catch { /* ignore parse error */ }
+    } catch {
+      /* ignore parse error */
+    }
     throw new Error(parsedError)
   }
 

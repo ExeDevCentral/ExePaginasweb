@@ -39,18 +39,18 @@ export default function ServicePulseHub({
         <div>
           <div className="flex items-center gap-2 mb-2">
             <Zap className={`w-4 h-4 ${theme.accent}`} />
-            <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-white/45">
+            <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-muted-foreground">
               Pulse del servicio
             </p>
           </div>
-          <h3 className="text-xl font-black text-white">Tu operación en un solo lugar</h3>
-          <p className="mt-1 text-sm text-white/55 max-w-md">{sla}</p>
+          <h3 className="text-xl font-black text-foreground">Tu operación en un solo lugar</h3>
+          <p className="mt-1 text-sm text-muted-foreground/80 max-w-md">{sla}</p>
         </div>
 
         <button
           type="button"
           onClick={onOpenTickets}
-          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 border border-white/15 px-5 py-3 text-sm font-bold text-white hover:bg-white/15 transition-colors shrink-0"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-muted border border-border px-5 py-3 text-sm font-bold text-foreground hover:bg-muted/80 transition-colors shrink-0"
         >
           <LifeBuoy size={18} className={theme.accent} />
           Abrir ticket
@@ -69,7 +69,7 @@ export default function ServicePulseHub({
           label="Alertas"
           value={String(unreadNotifications)}
           icon={Bell}
-          accent={unreadNotifications > 0 ? 'text-amber-400' : 'text-white/50'}
+          accent={unreadNotifications > 0 ? 'text-amber-400' : 'text-muted-foreground'}
         />
         <PulseStat label="Infra" value="Vercel" icon={Shield} accent="text-emerald-400" />
         <PulseStat label="Estado" value="Online" icon={Zap} accent="text-emerald-400" />
@@ -81,12 +81,12 @@ export default function ServicePulseHub({
             <li
               key={n.id}
               className={`flex items-start justify-between gap-3 rounded-xl border px-3 py-2.5 ${
-                n.leida ? 'border-white/5 bg-black/10' : 'border-amber-500/20 bg-amber-500/5'
+                n.leida ? 'border-border bg-muted/30' : 'border-amber-500/20 bg-amber-500/5'
               }`}
             >
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-white truncate">{n.titulo}</p>
-                <p className="text-xs text-white/50 line-clamp-1">{n.mensaje}</p>
+                <p className="text-sm font-semibold text-foreground truncate">{n.titulo}</p>
+                <p className="text-xs text-muted-foreground line-clamp-1">{n.mensaje}</p>
               </div>
               {!n.leida && (
                 <button
@@ -117,10 +117,12 @@ function PulseStat({
   accent: string
 }) {
   return (
-    <div className="rounded-xl border border-white/8 bg-black/25 px-3 py-2.5">
+    <div className="rounded-xl border border-border bg-muted/50 px-3 py-2.5">
       <Icon className={`w-3.5 h-3.5 mb-1 ${accent}`} />
-      <p className="text-lg font-black text-white leading-none">{value}</p>
-      <p className="text-[9px] uppercase tracking-wider text-white/40 mt-1 font-bold">{label}</p>
+      <p className="text-lg font-black text-foreground leading-none">{value}</p>
+      <p className="text-[9px] uppercase tracking-wider text-muted-foreground mt-1 font-bold">
+        {label}
+      </p>
     </div>
   )
 }

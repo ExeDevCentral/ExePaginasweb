@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Lock, Eye, EyeOff, Terminal } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Lock, Eye, EyeOff } from 'lucide-react'
 import { supabase } from '../core/infra/supabase/client'
 import { getAuthRedirectUrl } from '../core/auth/siteUrl'
 import { useAuthSession } from '../core/auth/AuthSessionProvider'
@@ -14,8 +14,6 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  // Estados para el acceso alternativo de desarrollo
-  const [showDev, setShowDev] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -41,18 +39,13 @@ export default function Login() {
     }
   }
 
-  const handleDevSignUp = async () => {
+  const handleSignUp = async () => {
     try {
       setError(null)
       setLoading(true)
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            full_name: 'Exe Dev Admin',
-          },
-        },
       })
       if (signUpError) throw signUpError
       alert(t('login.alert_registro_exito'))
@@ -63,7 +56,7 @@ export default function Login() {
     }
   }
 
-  const handleDevSignIn = async () => {
+  const handleSignIn = async () => {
     try {
       setError(null)
       setLoading(true)
@@ -144,9 +137,7 @@ export default function Login() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               disabled={loading}
-              onClick={() => {
-                signInWithGoogle()
-              }}
+              onClick={signInWithGoogle}
               className="w-full bg-gradient-to-r from-accent-cyan to-accent-magenta py-4 rounded-2xl font-bold text-primary-bg hover:opacity-90 transition-opacity disabled:opacity-50"
             >
               {loading ? (
@@ -159,7 +150,6 @@ export default function Login() {
               )}
             </motion.button>
 
-            {/* Separador de acceso alternativo */}
             <div className="relative my-6 text-center">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-border"></div>
@@ -169,82 +159,61 @@ export default function Login() {
               </span>
             </div>
 
-            {/* Botón para abrir Modo Desarrollador */}
-            <button
-              type="button"
-              onClick={() => setShowDev(!showDev)}
-              className="w-full py-3 px-4 rounded-2xl bg-muted border border-border hover:bg-muted/80 text-foreground/80 font-medium text-sm flex items-center justify-center gap-2 transition-all"
-            >
-              <Terminal size={16} className="text-accent-cyan" />
-              {showDev ? t('login.ocultar_dev') : t('login.mostrar_dev')}
-            </button>
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-xs text-foreground/60 font-medium ml-1">
+                  {t('login.email_pruebas')}
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="email@ejemplo.com"
+                  className="w-full bg-muted border border-border rounded-2xl px-4 py-3 text-foreground text-sm focus:outline-none focus:border-accent-cyan/50"
+                />
+              </div>
 
-            {/* Formulario de Acceso Alternativo */}
-            <AnimatePresence>
-              {showDev && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden mt-4 space-y-4"
+              <div className="space-y-1">
+                <label className="text-xs text-foreground/60 font-medium ml-1">
+                  {t('login.contrasena')}
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-muted border border-border rounded-2xl px-4 py-3 pr-10 text-foreground text-sm focus:outline-none focus:border-accent-cyan/50"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground/70"
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={handleSignUp}
+                  className="w-full py-3 rounded-2xl bg-muted border border-border text-foreground font-semibold text-xs hover:bg-muted/80 transition-colors"
                 >
-                  <div className="space-y-1">
-                    <label className="text-xs text-foreground/60 font-medium ml-1">
-                      {t('login.email_pruebas')}
-                    </label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="email@ejemplo.com"
-                      className="w-full bg-muted border border-border rounded-2xl px-4 py-3 text-foreground text-sm focus:outline-none focus:border-accent-cyan/50"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs text-foreground/60 font-medium ml-1">
-                      {t('login.contrasena')}
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className="w-full bg-muted border border-border rounded-2xl px-4 py-3 pr-10 text-foreground text-sm focus:outline-none focus:border-accent-cyan/50"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground/70"
-                      >
-                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 pt-2">
-                    <button
-                      type="button"
-                      disabled={loading}
-                      onClick={handleDevSignUp}
-                      className="w-full py-3 rounded-2xl bg-muted border border-border text-foreground font-semibold text-xs hover:bg-muted/80 transition-colors"
-                    >
-                      {t('login.registrar')}
-                    </button>
-                    <button
-                      type="button"
-                      disabled={loading}
-                      onClick={handleDevSignIn}
-                      className="w-full py-3 rounded-2xl bg-gradient-to-r from-cyan-500/80 to-purple-600/80 text-white font-semibold text-xs hover:opacity-90 transition-opacity"
-                    >
-                      {t('login.iniciar_sesion')}
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {t('login.registrar')}
+                </button>
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={handleSignIn}
+                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-cyan-500/80 to-purple-600/80 text-white font-semibold text-xs hover:opacity-90 transition-opacity"
+                >
+                  {t('login.iniciar_sesion')}
+                </button>
+              </div>
+            </div>
 
             {error && (
               <p className="mt-4 text-accent-magenta text-sm font-bold bg-accent-magenta/10 p-3 rounded-lg border border-accent-magenta/20">

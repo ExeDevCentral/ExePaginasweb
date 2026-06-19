@@ -1,22 +1,25 @@
 import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar as CalendarIcon, Clock, Terminal, User, Mail, CheckCircle } from 'lucide-react'
-import { supabase } from '../../lib/supabaseClient'
+import { supabase } from '../../core/infra/supabase/client'
 import { useTranslation } from 'react-i18next'
 
 export default function BookingDemo() {
   const { t, i18n } = useTranslation()
 
-  const AUTOMATION_LOGS = useMemo(() => [
-    { text: `⚡ ${t('bookingdemo.log_1')}`, delay: 0 },
-    { text: `🔍 ${t('bookingdemo.log_2')}`, delay: 1000 },
-    { text: `📅 ${t('bookingdemo.log_3')}`, delay: 2000 },
-    { text: `💾 ${t('bookingdemo.log_4')}`, delay: 3000 },
-    { text: `✉️ ${t('bookingdemo.log_5')}`, delay: 4200 },
-    { text: `🟢 ${t('bookingdemo.log_6')}`, delay: 5300 },
-    { text: `🎫 ${t('bookingdemo.log_7')}`, delay: 6500 },
-    { text: `✨ ${t('bookingdemo.log_8')}`, delay: 7500 },
-  ], [])
+  const AUTOMATION_LOGS = useMemo(
+    () => [
+      { text: `⚡ ${t('bookingdemo.log_1')}`, delay: 0 },
+      { text: `🔍 ${t('bookingdemo.log_2')}`, delay: 1000 },
+      { text: `📅 ${t('bookingdemo.log_3')}`, delay: 2000 },
+      { text: `💾 ${t('bookingdemo.log_4')}`, delay: 3000 },
+      { text: `✉️ ${t('bookingdemo.log_5')}`, delay: 4200 },
+      { text: `🟢 ${t('bookingdemo.log_6')}`, delay: 5300 },
+      { text: `🎫 ${t('bookingdemo.log_7')}`, delay: 6500 },
+      { text: `✨ ${t('bookingdemo.log_8')}`, delay: 7500 },
+    ],
+    []
+  )
 
   const [selectedDate, setSelectedDate] = useState<number | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
@@ -69,12 +72,15 @@ export default function BookingDemo() {
     e.preventDefault()
     if (!selectedDate || !selectedTime || !name || !email) return
 
-    supabase.from('leads').insert({
-      email,
-      lead_type: 'booking_demo',
-      name,
-      metadata: { selectedDate, selectedTime },
-    }).then(() => {})
+    supabase
+      .from('leads')
+      .insert({
+        email,
+        lead_type: 'booking_demo',
+        name,
+        metadata: { selectedDate, selectedTime },
+      })
+      .then(() => {})
 
     setStep('console')
   }
@@ -242,7 +248,9 @@ export default function BookingDemo() {
                   className="space-y-6"
                 >
                   <div className="flex items-center gap-2 pb-4 border-b border-border">
-                    <h4 className="text-foreground font-bold text-lg">{t('bookingdemo.step2_titulo')}</h4>
+                    <h4 className="text-foreground font-bold text-lg">
+                      {t('bookingdemo.step2_titulo')}
+                    </h4>
                     <span className="text-xs text-accent-cyan font-mono ml-auto">
                       {t('bookingdemo.fecha_hora', { date: selectedDate, time: selectedTime })}
                     </span>
@@ -324,7 +332,9 @@ export default function BookingDemo() {
                   ) : (
                     <>
                       <div className="w-12 h-12 rounded-full border-2 border-accent-cyan border-t-transparent animate-spin mb-4" />
-                      <h4 className="text-lg font-bold text-foreground">{t('bookingdemo.procesando')}</h4>
+                      <h4 className="text-lg font-bold text-foreground">
+                        {t('bookingdemo.procesando')}
+                      </h4>
                       <p className="text-xs text-muted-foreground font-mono">
                         {t('bookingdemo.procesando_desc')}
                       </p>
@@ -367,7 +377,11 @@ export default function BookingDemo() {
             <div className="border-t border-border pt-4 mt-4 text-[10px] text-muted-foreground flex justify-between">
               <span>
                 {t('bookingdemo.estado_label')}:{' '}
-                {step === 'console' ? t('bookingdemo.estado_procesando') : step === 'success' ? t('bookingdemo.estado_inactivo') : t('bookingdemo.estado_esperando')}
+                {step === 'console'
+                  ? t('bookingdemo.estado_procesando')
+                  : step === 'success'
+                    ? t('bookingdemo.estado_inactivo')
+                    : t('bookingdemo.estado_esperando')}
               </span>
               <span>
                 SEC: {logs.length} / {AUTOMATION_LOGS.length}

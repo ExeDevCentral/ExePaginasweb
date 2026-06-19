@@ -1,7 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 
+// En entorno serverless (Node.js) NO existe el prefijo VITE_.
+// Usamos SUPABASE_URL (sin prefijo) que debe estar en Vercel → Settings → Env Variables.
 const supabase = createClient(
-  process.env.VITE_SUPABASE_URL || '',
+  process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '',
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 )
 

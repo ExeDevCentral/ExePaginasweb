@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Brain, Sparkles, Send, Zap, Clock, Smartphone, MessageSquare } from 'lucide-react'
-import { supabase } from '../../lib/supabaseClient'
+import { supabase } from '../../core/infra/supabase/client'
 
 const QUESTIONS = [
   { id: 'industry', qIdx: 1 },
@@ -56,11 +56,14 @@ export default function AutomationAudit() {
     e.preventDefault()
     if (!email) return
 
-    supabase.from('leads').insert({
-      email,
-      lead_type: 'automation_audit',
-      metadata: { answers },
-    }).then(() => {})
+    supabase
+      .from('leads')
+      .insert({
+        email,
+        lead_type: 'automation_audit',
+        metadata: { answers },
+      })
+      .then(() => {})
 
     setStep('loading')
     setTimeout(() => {
@@ -147,7 +150,10 @@ export default function AutomationAudit() {
               >
                 <div className="flex justify-between items-center pb-4 border-b border-border">
                   <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest font-black">
-                    {t('audit.pregunta_label', { current: currentQuestion + 1, total: QUESTIONS.length })}
+                    {t('audit.pregunta_label', {
+                      current: currentQuestion + 1,
+                      total: QUESTIONS.length,
+                    })}
                   </span>
                   <div className="flex gap-1 h-1.5 w-24 bg-muted rounded-full overflow-hidden">
                     {QUESTIONS.map((_, i) => (
@@ -195,9 +201,7 @@ export default function AutomationAudit() {
                   <h4 className="text-xl md:text-2xl font-bold text-foreground">
                     {t('audit.email_titulo')}
                   </h4>
-                  <p className="text-muted-foreground text-sm">
-                    {t('audit.email_desc')}
-                  </p>
+                  <p className="text-muted-foreground text-sm">{t('audit.email_desc')}</p>
                 </div>
 
                 <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-3 pt-4">

@@ -1,5 +1,5 @@
-import { supabase } from '../../core/infra/supabase/client'
-import type { Notificacion, Ticket, TicketPrioridad } from '../../core/domain/entities/Ticket'
+import { supabase } from '../supabase/client'
+import type { Notificacion, Ticket, TicketPrioridad } from '../../domain/entities/Ticket'
 
 export type CreateTicketInput = {
   clienteId: string

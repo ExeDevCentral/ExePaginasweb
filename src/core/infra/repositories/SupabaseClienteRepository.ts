@@ -1,5 +1,5 @@
-import { supabase } from '../../core/infra/supabase/client'
-import { Cliente } from '../../core/domain/entities/Cliente'
+import { supabase } from '../supabase/client'
+import { Cliente } from '../../domain/entities/Cliente'
 
 export class SupabaseClienteRepository {
   async getByAuthId(authId: string): Promise<Cliente | null> {

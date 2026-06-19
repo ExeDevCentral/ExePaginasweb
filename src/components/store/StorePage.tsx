@@ -21,6 +21,7 @@ import PremiumBackground from '../Effects/PremiumBackground'
 import { Helmet } from 'react-helmet-async'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { supabase } from '../../core/infra/supabase/client'
+import { PLAN_CATALOG } from '../../core/domain/planCatalog'
 declare global {
   interface Window {
     paypal?: {
@@ -36,15 +37,15 @@ const TIPO_PROYECTO_OPTIONS = [
   { value: 'reservas', label: 'Sistema de Reservas', icon: Calendar },
 ]
 
-const PLANS = [
+const formatARS = (n: number) => '$' + n.toLocaleString('es-AR').replace(/,/g, '.')
+const formatUSD = (n: number) => '$' + n
+
+const basePlans = [
   {
-    id: 'mantenimiento-basico',
+    id: 'mantenimiento-basico' as const,
     title: 'Abono Básico',
     description: 'Mantenimiento mensual para Landing Pages y sitios institucionales.',
     icon: Monitor,
-    price: '$25.000',
-    priceUSD: '$20',
-    period: '/mes',
     color: 'from-blue-400 to-cyan-400',
     shadow: 'shadow-cyan-500/20',
     border: 'border-cyan-500/30',
@@ -58,13 +59,10 @@ const PLANS = [
     popular: false,
   },
   {
-    id: 'mantenimiento-avanzado',
+    id: 'mantenimiento-avanzado' as const,
     title: 'Abono Avanzado',
     description: 'Mantenimiento integral para Sistemas Web, Reservas y E-Commerce.',
     icon: Building,
-    price: '$50.000',
-    priceUSD: '$40',
-    period: '/mes',
     color: 'from-cyan-400 to-purple-500',
     shadow: 'shadow-purple-500/30',
     border: 'border-purple-500/50',
@@ -78,13 +76,10 @@ const PLANS = [
     popular: true,
   },
   {
-    id: 'mantenimiento-premium',
+    id: 'mantenimiento-premium' as const,
     title: 'Abono Premium',
     description: 'Evolución continua, nuevas funcionalidades y bolsa de horas de desarrollo.',
     icon: Building2,
-    price: '$150.000',
-    priceUSD: '$100',
-    period: '/mes',
     color: 'from-purple-500 to-pink-500',
     shadow: 'shadow-pink-500/20',
     border: 'border-pink-500/30',
@@ -98,6 +93,16 @@ const PLANS = [
     popular: false,
   },
 ]
+
+const PLANS = basePlans.map((p) => {
+  const entry = PLAN_CATALOG.find((c) => c.id === p.id)
+  return {
+    ...p,
+    price: formatARS(entry?.precio ?? 0),
+    priceUSD: formatUSD(entry?.precioUSD ?? 0),
+    period: '/mes',
+  }
+})
 
 const HOSTED_BUTTONS: Record<string, string> = {
   'mantenimiento-basico': '27YN9Y5VT3UVQ',
@@ -383,21 +388,34 @@ export default function StorePage() {
                   ))}
                 </ul>
 
-                <div className="mt-auto pt-4 min-h-[50px]">
-                  <button
+                <div className="mt-auto pt-4 min-h-[60px]">
+                  <motion.button
                     onClick={() => openCheckout(plan)}
-                    className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 relative z-20
-                      ${
-                        plan.popular
-                          ? `bg-gradient-to-r ${plan.color} shadow-lg ${plan.shadow} hover:opacity-90`
-                          : 'bg-zinc-800/10 hover:bg-zinc-800/20 dark:bg-white/10 dark:hover:bg-white/20 border border-zinc-200 dark:border-white/10 text-foreground'
-                      }
-                    `}
+                    className="relative w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 overflow-hidden group cursor-pointer"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 15 }}
                   >
-                    <>
-                      <ArrowRight className="w-4 h-4" /> Suscribirme
-                    </>
-                  </button>
+                    <motion.div
+                      className={`absolute inset-0 bg-gradient-to-r ${plan.color}`}
+                      animate={{ opacity: [0.8, 1, 0.8] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                    <motion.div
+                      className="absolute -inset-full top-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/25 to-transparent skew-x-[-20deg]"
+                      animate={{ left: ['-100%', '200%'] }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        repeatDelay: 1.5,
+                      }}
+                    />
+                    <span className="relative z-10 flex items-center gap-2 text-sm md:text-base">
+                      <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                      Suscribirme
+                    </span>
+                  </motion.button>
                 </div>
               </motion.div>
             ))}

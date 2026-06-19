@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from '../infra/supabase/client'
-import { resolveAuthSession } from './resolveAuthSession'
 
 type AuthSessionContextValue = {
   ready: boolean
@@ -35,7 +34,6 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
       if (!mounted) return
       setSession(data.session)
       setReady(true)
-      resolveAuthSession() // no-op con PKCE, pero se mantiene por compatibilidad
     }
 
     init()

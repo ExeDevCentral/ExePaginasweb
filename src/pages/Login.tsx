@@ -80,6 +80,12 @@ export default function Login() {
         setLoading(false)
         setError('La autenticación tardó demasiado. Intenta de nuevo.')
       }, 300000)
+
+      return () => {
+        window.removeEventListener('message', handleMessage)
+        clearTimeout(timeoutId)
+        if (!popup.closed) popup.close()
+      }
     } catch (e) {
       const message = e instanceof Error ? e.message : t('login.err_iniciar_sesion')
       setError(message)

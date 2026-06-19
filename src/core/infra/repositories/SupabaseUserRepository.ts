@@ -1,6 +1,6 @@
-import { supabase } from '../../core/infra/supabase/client'
-import { User } from '../../core/domain/entities/User'
-import { IUserRepository } from '../../core/domain/repositories/IUserRepository'
+import { supabase } from '../supabase/client'
+import { User } from '../../domain/entities/User'
+import { IUserRepository } from '../../domain/repositories/IUserRepository'
 
 export class SupabaseUserRepository implements IUserRepository {
   async getAll(): Promise<User[]> {

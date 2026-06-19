@@ -52,9 +52,8 @@ export default function AdminDashboardView({
   const filteredClientes = useMemo(() => {
     return clientes.filter((c) => {
       const matchSearch =
-        (c.nombre ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (c.telefono ?? '').includes(searchQuery)
+        (c.full_name ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        c.email.toLowerCase().includes(searchQuery.toLowerCase())
 
       if (!matchSearch) return false
 
@@ -92,7 +91,7 @@ export default function AdminDashboardView({
   const getClienteDetails = (clienteId: string) => {
     const found = clientes.find((c) => c.id === clienteId)
     return found
-      ? { nombre: found.nombre ?? 'Sin nombre', email: found.email }
+      ? { full_name: found.full_name ?? 'Sin nombre', email: found.email }
       : { nombre: 'Desconocido', email: 'N/A' }
   }
 
@@ -363,7 +362,10 @@ export default function AdminDashboardView({
                   <tbody>
                     {filteredClientes.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="text-center py-12 text-muted-foreground font-medium">
+                        <td
+                          colSpan={4}
+                          className="text-center py-12 text-muted-foreground font-medium"
+                        >
                           No se encontraron clientes que coincidan con la búsqueda.
                         </td>
                       </tr>
@@ -386,17 +388,17 @@ export default function AdminDashboardView({
                                 {c.avatar_url ? (
                                   <img
                                     src={c.avatar_url}
-                                    alt={c.nombre ?? ''}
+                                    alt={c.full_name ?? ''}
                                     className="w-10 h-10 rounded-xl object-cover border border-border"
                                   />
                                 ) : (
                                   <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-accent-cyan to-accent-magenta flex items-center justify-center font-bold text-primary-bg">
-                                    {(c.nombre ?? c.email).charAt(0).toUpperCase()}
+                                    {(c.full_name ?? c.email).charAt(0).toUpperCase()}
                                   </div>
                                 )}
                                 <div>
                                   <h4 className="text-foreground font-bold text-sm">
-                                    {c.nombre || 'Nuevo Usuario'}
+                                    {c.full_name || 'Nuevo Usuario'}
                                   </h4>
                                   <p className="text-muted-foreground text-xs font-mono select-all">
                                     {c.id.substring(0, 8)}...
@@ -406,9 +408,6 @@ export default function AdminDashboardView({
                             </td>
                             <td className="px-6 py-4 border-y border-border">
                               <p className="text-foreground/80 text-sm select-all">{c.email}</p>
-                              <p className="text-muted-foreground text-xs mt-0.5">
-                                {c.telefono || 'Sin teléfono'}
-                              </p>
                             </td>
                             <td className="px-6 py-4 border-y border-border">
                               {hasPlan ? (
@@ -514,7 +513,7 @@ export default function AdminDashboardView({
                             <span>
                               De:{' '}
                               <strong className="text-foreground/60 hover:text-foreground transition-colors select-all">
-                                {client.nombre} ({client.email})
+                                {client.full_name} ({client.email})
                               </strong>
                             </span>
                             <span>•</span>
@@ -581,7 +580,9 @@ export default function AdminDashboardView({
                         Ticket
                       </p>
                       <p className="text-foreground font-bold text-sm">{editingTicket.asunto}</p>
-                      <p className="text-muted-foreground text-xs truncate">{editingTicket.mensaje}</p>
+                      <p className="text-muted-foreground text-xs truncate">
+                        {editingTicket.mensaje}
+                      </p>
                     </div>
 
                     <form onSubmit={handleResolveTicket} className="space-y-4">
@@ -647,7 +648,10 @@ export default function AdminDashboardView({
                   <tbody>
                     {pagos.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="text-center py-12 text-muted-foreground font-medium">
+                        <td
+                          colSpan={7}
+                          className="text-center py-12 text-muted-foreground font-medium"
+                        >
                           No se han registrado pagos en el sistema.
                         </td>
                       </tr>
@@ -665,8 +669,12 @@ export default function AdminDashboardView({
                               {p.id.substring(0, 8)}...
                             </td>
                             <td className="px-6 py-4 border-y border-border">
-                              <h4 className="text-foreground font-bold text-sm">{client.nombre}</h4>
-                              <p className="text-muted-foreground text-xs select-all">{client.email}</p>
+                              <h4 className="text-foreground font-bold text-sm">
+                                {client.full_name}
+                              </h4>
+                              <p className="text-muted-foreground text-xs select-all">
+                                {client.email}
+                              </p>
                             </td>
                             <td className="px-6 py-4 border-y border-border">
                               <p className="text-foreground font-semibold text-sm">

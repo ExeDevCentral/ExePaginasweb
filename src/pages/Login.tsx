@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Lock, Eye, EyeOff } from 'lucide-react'
 import { supabase } from '../core/infra/supabase/client'
@@ -9,9 +9,10 @@ import { useTranslation } from 'react-i18next'
 
 export default function Login() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { ready, session } = useAuthSession()
   const { t } = useTranslation()
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(searchParams.get('error'))
   const [loading, setLoading] = useState(false)
 
   const [email, setEmail] = useState('')
@@ -26,14 +27,77 @@ export default function Login() {
     try {
       setError(null)
       setLoading(true)
-      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+
+      const { data } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: getAuthRedirectUrl('/auth/callback') },
+        options: {
+          skipBrowserRedirect: true,
+          redirectTo: getAuthRedirectUrl('/auth/callback'),
+        },
       })
-      if (oauthError) throw oauthError
+
+      if (!data?.url) throw new Error('No se pudo obtener la URL de autenticación')
+
+      // Store verifier in window.name for redirect fallback
+      const url = new URL(import.meta.env.VITE_SUPABASE_URL)
+      const storageKey = `sb-${url.hostname.split('.')[0]}-auth-token-code-verifier`
+      const verifierRaw = localStorage.getItem(storageKey)
+      if (verifierRaw) {
+        try {
+          window.name = JSON.parse(verifierRaw)
+        } catch {
+          /* ignore */
+        }
+      }
+
+      // Try popup
+      const popup = window.open(data.url, 'google-login', 'width=600,height=700')
+      if (!popup || popup.closed) {
+        window.location.href = data.url
+        return
+      }
+
+      const handleMessage = (event: MessageEvent) => {
+        if (event.origin !== window.location.origin) return
+        if (event.data.type === 'PKCE_CODE') {
+          window.removeEventListener('message', handleMessage)
+          clearTimeout(timeoutId)
+          completeGoogleAuth(event.data.code)
+        }
+        if (event.data.type === 'PKCE_ERROR') {
+          window.removeEventListener('message', handleMessage)
+          clearTimeout(timeoutId)
+          if (!popup.closed) popup.close()
+          setError(event.data.error)
+          setLoading(false)
+        }
+      }
+      window.addEventListener('message', handleMessage)
+
+      const timeoutId = setTimeout(() => {
+        window.removeEventListener('message', handleMessage)
+        if (!popup.closed) popup.close()
+        setLoading(false)
+        setError('La autenticación tardó demasiado. Intenta de nuevo.')
+      }, 300000)
     } catch (e) {
       const message = e instanceof Error ? e.message : t('login.err_iniciar_sesion')
       setError(message)
+      setLoading(false)
+    }
+  }
+
+  const completeGoogleAuth = async (code: string) => {
+    try {
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+      if (error) throw error
+      if (data.session) {
+        navigate('/dashboard', { replace: true })
+      } else {
+        setError('No se pudo establecer la sesión')
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Error al completar la autenticación')
     } finally {
       setLoading(false)
     }

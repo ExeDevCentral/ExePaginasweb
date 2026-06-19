@@ -15,23 +15,16 @@ import {
   Globe,
   Copy,
 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PremiumBackground from '../Effects/PremiumBackground'
 import { Helmet } from 'react-helmet-async'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { supabase } from '../../core/infra/supabase/client'
-import { usePayment } from '../../hooks/usePayment'
-
 declare global {
   interface Window {
     paypal?: {
-      Buttons: (opts: {
-        createOrder: () => Promise<string>
-        onApprove: (data: { orderID: string }) => void
-        onError: (err: unknown) => void
-        style?: Record<string, string>
-      }) => { render: (sel: string) => void }
+      HostedButtons: (opts: { hostedButtonId: string }) => { render: (sel: string) => void }
     }
   }
 }
@@ -50,6 +43,7 @@ const PLANS = [
     description: 'Mantenimiento mensual para Landing Pages y sitios institucionales.',
     icon: Monitor,
     price: '$25.000',
+    priceUSD: '$20',
     period: '/mes',
     color: 'from-blue-400 to-cyan-400',
     shadow: 'shadow-cyan-500/20',
@@ -69,6 +63,7 @@ const PLANS = [
     description: 'Mantenimiento integral para Sistemas Web, Reservas y E-Commerce.',
     icon: Building,
     price: '$50.000',
+    priceUSD: '$40',
     period: '/mes',
     color: 'from-cyan-400 to-purple-500',
     shadow: 'shadow-purple-500/30',
@@ -88,6 +83,7 @@ const PLANS = [
     description: 'Evolución continua, nuevas funcionalidades y bolsa de horas de desarrollo.',
     icon: Building2,
     price: '$150.000',
+    priceUSD: '$100',
     period: '/mes',
     color: 'from-purple-500 to-pink-500',
     shadow: 'shadow-pink-500/20',
@@ -103,10 +99,15 @@ const PLANS = [
   },
 ]
 
+const HOSTED_BUTTONS: Record<string, string> = {
+  'mantenimiento-basico': '27YN9Y5VT3UVQ',
+  'mantenimiento-avanzado': 'Y88QXE3UHZNHE',
+  'mantenimiento-premium': 'LMKVPLYDGVXJC',
+}
+
 export default function StorePage() {
   const isMobile = useIsMobile()
   const navigate = useNavigate()
-  const { error: paymentError, reset } = usePayment()
   const [tipoProyecto, setTipoProyecto] = useState('mantenimiento')
   const [selectedPlan, setSelectedPlan] = useState<(typeof PLANS)[0] | null>(null)
   const [showCheckout, setShowCheckout] = useState(false)
@@ -134,7 +135,6 @@ export default function StorePage() {
     setShowCheckout(true)
     setPaymentMethod('transfer')
     setCopied(false)
-    reset()
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -150,91 +150,74 @@ export default function StorePage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const paypalContainerRef = useRef<HTMLDivElement>(null)
+  const [paypalStatus, setPaypalStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
 
   useEffect(() => {
-    if (!showCheckout || !selectedPlan || paymentMethod !== 'paypal') return
+    if (!showCheckout || !selectedPlan || paymentMethod !== 'paypal') {
+      setPaypalStatus('idle')
+      return
+    }
 
-    const container = document.getElementById('paypal-button-container')
-    if (!container) return
+    const buttonId = HOSTED_BUTTONS[selectedPlan.id]
+    if (!buttonId) return
 
-    const price = parseInt(selectedPlan.price.replace(/[^0-9]/g, ''))
-    const usdPrice = Math.round(price / 1200)
+    setPaypalStatus('loading')
 
-    const renderButton = async () => {
-      if (!window.paypal?.Buttons) {
-        setTimeout(renderButton, 500)
+    const containerId = `paypal-container-${buttonId}`
+    let cancelled = false
+    let timeoutId: ReturnType<typeof setTimeout>
+
+    const renderButton = () => {
+      if (!window.paypal?.HostedButtons) {
+        timeoutId = setTimeout(renderButton, 500)
         return
       }
 
-      try {
-        container.innerHTML = ''
+      if (cancelled) return
+      setPaypalStatus('ready')
 
-        const {
-          data: { user },
-        } = await supabase.auth.getUser()
-        const email = user?.email || ''
-
-        await window.paypal
-          .Buttons({
-            createOrder: async () => {
-              const resp = await fetch('/api/create-paypal-order', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  planId: selectedPlan.id,
-                  planTitle: selectedPlan.title,
-                  price: usdPrice,
-                  email,
-                  tipoProyecto,
-                }),
-              })
-              const data = await resp.json()
-              if (!resp.ok) throw new Error(data.error || 'Error creating order')
-              return data.order_id
-            },
-            onApprove: async () => {
-              window.location.href = '/dashboard?payment=paypal_ok'
-            },
-            onError: (err) => {
-              console.error('PayPal Checkout error:', err)
-            },
-            style: {
-              color: 'gold',
-              shape: 'rect',
-              label: 'paypal',
-              height: '45',
-            },
-          })
-          .render('#paypal-button-container')
-      } catch (e) {
-        console.error('PayPal render error:', e)
-      }
+      window.paypal.HostedButtons({ hostedButtonId: buttonId }).render(`#${containerId}`)
     }
 
-    if (window.paypal?.Buttons) {
+    if (window.paypal?.HostedButtons) {
       renderButton()
     } else {
-      const scriptId = 'paypal-sdk'
-      const existing = document.getElementById(scriptId) as HTMLScriptElement | null
-      if (existing) {
-        existing.remove()
+      const scriptId = 'paypal-hosted-sdk'
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement('script')
+        script.id = scriptId
+        script.src = `https://www.paypal.com/sdk/js?client-id=BAAwjElC2hjoN-95DBLi8bLtLRKbmCxYWuJ0_Ksxyx7G-I56IOhq39XUItup4VL5DDxbydYvQYb1kCjD0I&components=hosted-buttons&disable-funding=venmo&currency=USD`
+        script.crossOrigin = 'anonymous'
+        script.onload = () => {
+          if (window.paypal?.HostedButtons) renderButton()
+          else if (!cancelled) setPaypalStatus('error')
+        }
+        script.onerror = () => {
+          if (!cancelled) setPaypalStatus('error')
+        }
+        document.head.appendChild(script)
+      } else {
+        renderButton()
       }
-
-      const script = document.createElement('script')
-      script.id = scriptId
-      script.src = `https://www.paypal.com/sdk/js?client-id=BAAAvwRKJ9kv0-cQu3OgJ4dpcjVTVzozUEkt00PIg2UxxQpwJk-RMIAMct0xwjTBNbMXTVeqhvVH6jkAAQ&currency=USD&intent=capture`
-      script.crossOrigin = 'anonymous'
-      script.async = true
-      script.onload = renderButton
-      document.head.appendChild(script)
     }
-  }, [showCheckout, selectedPlan, paymentMethod, tipoProyecto])
+
+    timeoutId = setTimeout(() => {
+      if (!cancelled && !window.paypal?.HostedButtons) {
+        setPaypalStatus('error')
+      }
+    }, 30000)
+
+    return () => {
+      cancelled = true
+      clearTimeout(timeoutId)
+      const container = document.getElementById(containerId)
+      if (container) container.innerHTML = ''
+    }
+  }, [showCheckout, selectedPlan, paymentMethod])
 
   const closeCheckout = () => {
     setShowCheckout(false)
     setSelectedPlan(null)
-    reset()
   }
 
   const particles = Array.from({ length: isMobile ? 20 : 40 }, (_, i) => ({
@@ -331,6 +314,33 @@ export default function StorePage() {
                 variants={cardVariants}
                 className={`relative bg-gradient-to-br from-zinc-100/40 to-zinc-50/10 dark:from-white/5 dark:to-white/[0.02] backdrop-blur-xl border rounded-3xl p-8 flex flex-col text-left transition-all duration-300 hover:bg-zinc-200/40 dark:hover:bg-white/10 ${plan.border} ${plan.popular ? 'md:-translate-y-4 shadow-2xl ' + plan.shadow : ''}`}
               >
+                {plan.id === 'mantenimiento-premium' && (
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-3xl">
+                    {Array.from({ length: isMobile ? 15 : 30 }).map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-1 h-1 bg-pink-400 rounded-full"
+                        style={{
+                          left: `${Math.random() * 100}%`,
+                          top: `${Math.random() * 100}%`,
+                        }}
+                        animate={{
+                          y: [0, -30 - Math.random() * 40, 0],
+                          x: [0, Math.random() * 20 - 10, 0],
+                          scale: [0, Math.random() * 1.5 + 0.5, 0],
+                          opacity: [0, 0.8, 0],
+                        }}
+                        transition={{
+                          duration: Math.random() * 3 + 2,
+                          repeat: Infinity,
+                          delay: Math.random() * 2,
+                          ease: 'easeInOut',
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+
                 {plan.popular && (
                   <motion.div
                     className="absolute -top-4 left-0 right-0 flex justify-center"
@@ -506,9 +516,10 @@ export default function StorePage() {
               <p className="text-sm text-muted-foreground mb-1">Plan seleccionado</p>
               <p className="text-xl font-bold text-foreground">{selectedPlan.title}</p>
               <p className="text-3xl font-black text-foreground mt-2">
-                {selectedPlan.price}{' '}
+                {paymentMethod === 'paypal' ? selectedPlan.priceUSD : selectedPlan.price}{' '}
                 <span className="text-sm font-medium text-muted-foreground">
-                  ARS{selectedPlan.period}
+                  {paymentMethod === 'paypal' ? 'USD' : 'ARS'}
+                  {selectedPlan.period}
                 </span>
               </p>
             </div>
@@ -535,12 +546,6 @@ export default function StorePage() {
                 ))}
               </div>
             </div>
-
-            {paymentError && (
-              <p className="text-sm text-red-400 mb-4 bg-red-400/10 rounded-xl p-3">
-                {paymentError}
-              </p>
-            )}
 
             {/* Selector de Método de Pago */}
             <div className="mb-6">
@@ -628,11 +633,30 @@ export default function StorePage() {
 
             <div className={paymentMethod === 'paypal' ? 'block' : 'hidden'}>
               <div className="space-y-4">
-                <div
-                  id="paypal-button-container"
-                  ref={paypalContainerRef}
-                  className="min-h-[50px]"
-                />
+                {paypalStatus === 'loading' && (
+                  <div className="flex items-center justify-center min-h-[50px]">
+                    <div className="w-6 h-6 border-2 border-accent-magenta border-t-transparent rounded-full animate-spin" />
+                    <span className="ml-3 text-sm text-muted-foreground">Cargando PayPal...</span>
+                  </div>
+                )}
+                {paypalStatus === 'error' && (
+                  <div className="text-center min-h-[50px] flex flex-col items-center justify-center gap-2">
+                    <p className="text-sm text-accent-magenta">No se pudo cargar PayPal</p>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod('transfer')}
+                      className="text-xs text-muted-foreground underline hover:text-foreground"
+                    >
+                      Probá con transferencia bancaria
+                    </button>
+                  </div>
+                )}
+                {selectedPlan && (
+                  <div
+                    id={`paypal-container-${HOSTED_BUTTONS[selectedPlan.id]}`}
+                    className={paypalStatus === 'ready' ? 'min-h-[50px]' : 'hidden'}
+                  />
+                )}
               </div>
             </div>
 

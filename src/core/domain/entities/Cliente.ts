@@ -1,6 +1,5 @@
 export interface Cliente {
   id: string
-  nombre: string | null
+  full_name: string | null
   email: string
-  telefono: string | null
 }

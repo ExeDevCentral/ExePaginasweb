@@ -3,9 +3,8 @@ import { supabase } from '../core/infra/supabase/client'
 
 export interface AdminCliente {
   id: string
-  nombre: string | null
+  full_name: string | null
   email: string
-  telefono: string | null
   avatar_url: string | null
   created_at: string
 }

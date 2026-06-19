@@ -1,80 +1,82 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../core/infra/supabase/client'
 
 export default function AuthCallback() {
   const navigate = useNavigate()
   const handled = useRef(false)
-  const [debugMsg, setDebugMsg] = useState('auth.callback · handshake')
 
   useEffect(() => {
-    let mounted = true
+    if (handled.current) return
+    handled.current = true
 
-    const timeout = setTimeout(() => {
-      if (!handled.current) {
-        setDebugMsg('auth.error · timeout_15s')
-        setTimeout(() => {
-          if (mounted) navigate('/login?error=timeout', { replace: true })
-        }, 2000)
-      }
-    }, 15_000)
+    const run = async () => {
+      const params = new URLSearchParams(window.location.search)
+      const code = params.get('code')
+      const err = params.get('error')
+      const errDesc = params.get('error_description')
 
-    // Verificar si ya hay sesión PRIMERO (el exchange pudo haber ocurrido ya)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!mounted || handled.current) return
-      if (session) {
-        handled.current = true
-        clearTimeout(timeout)
-        setDebugMsg('auth.ok · sesión encontrada')
-        setTimeout(() => {
-          if (mounted) navigate('/dashboard', { replace: true })
-        }, 500)
-      }
-    })
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!mounted || handled.current) return
-      console.log('AuthCallback event:', event, !!session)
-
-      if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
-        handled.current = true
-        clearTimeout(timeout)
-        subscription.unsubscribe()
-        setDebugMsg('auth.ok · redirigiendo...')
-        setTimeout(() => {
-          if (mounted) navigate('/dashboard', { replace: true })
-        }, 500)
+      if (err) {
+        const msg = errDesc || err
+        if (window.opener) {
+          window.opener.postMessage({ type: 'PKCE_ERROR', error: msg }, window.location.origin)
+          window.close()
+        } else {
+          navigate('/login?error=' + encodeURIComponent(msg), { replace: true })
+        }
+        return
       }
 
-      if (event === 'SIGNED_OUT') {
-        handled.current = true
-        clearTimeout(timeout)
-        subscription.unsubscribe()
-        setDebugMsg('auth.error · signed_out')
-        setTimeout(() => {
-          if (mounted) navigate('/login?error=signed_out', { replace: true })
-        }, 2000)
+      if (!code) {
+        if (window.opener) {
+          window.opener.postMessage(
+            { type: 'PKCE_ERROR', error: 'No code in URL' },
+            window.location.origin
+          )
+          window.close()
+        } else {
+          navigate('/login?error=no_code', { replace: true })
+        }
+        return
       }
-    })
 
-    return () => {
-      mounted = false
-      clearTimeout(timeout)
-      subscription.unsubscribe()
+      // Popup mode: send code to opener and close
+      if (window.opener) {
+        window.opener.postMessage({ type: 'PKCE_CODE', code }, window.location.origin)
+        window.close()
+        return
+      }
+
+      // Redirect mode (popup blocked / mobile): try window.name fallback
+      const verifier = window.name
+      if (verifier) {
+        const url = new URL(import.meta.env.VITE_SUPABASE_URL)
+        const storageKey = `sb-${url.hostname.split('.')[0]}-auth-token-code-verifier`
+        localStorage.setItem(storageKey, JSON.stringify(verifier))
+      }
+
+      try {
+        const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+        if (data?.session) {
+          navigate('/dashboard', { replace: true })
+        } else {
+          navigate('/login?error=' + encodeURIComponent(error?.message || 'no_session'), {
+            replace: true,
+          })
+        }
+      } catch (e) {
+        navigate('/login?error=' + encodeURIComponent(e instanceof Error ? e.message : 'error'), {
+          replace: true,
+        })
+      }
     }
+
+    run()
   }, [navigate])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center p-6 max-w-lg w-full bg-card border border-border rounded-3xl backdrop-blur-xl">
-        <div className="w-12 h-12 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-foreground font-medium text-lg">Verificando sesión segura...</p>
-        <p className="mt-2 text-xs text-muted-foreground font-mono bg-muted p-4 rounded-xl border border-border text-left break-all">
-          {debugMsg}
-        </p>
-      </div>
+      <div className="w-12 h-12 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin" />
     </div>
   )
 }

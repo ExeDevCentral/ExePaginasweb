@@ -38,10 +38,10 @@ async function getPayPalAccessToken() {
   return data.access_token
 }
 
-async function getOrCreateCliente(email, nombre) {
+async function getOrCreateCliente(email, fullName) {
   const { data: existentes } = await supabase
     .from('clientes')
-    .select('id, nombre, email')
+    .select('id, full_name, email')
     .eq('email', email)
     .limit(1)
 
@@ -49,7 +49,7 @@ async function getOrCreateCliente(email, nombre) {
 
   const { data: nuevo } = await supabase
     .from('clientes')
-    .insert({ email, nombre: nombre || null })
+    .insert({ email, full_name: fullName || null })
     .select('id')
     .single()
 

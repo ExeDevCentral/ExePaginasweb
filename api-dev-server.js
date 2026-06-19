@@ -16,7 +16,6 @@ app.use(express.json({ limit: '10mb' }))
 // Import API handlers
 import chatHandler from './api/chat.js'
 import contactHandler from './api/contact.js'
-import createPayPalOrderHandler from './api/create-paypal-order.js'
 import paypalWebhookHandler from './api/paypal-webhook.js'
 
 // Manejador de errores global para evitar que el server muera
@@ -65,15 +64,6 @@ app.all('/api/contact', async (req, res) => {
   } catch (error) {
     console.error('[Dev Server] Contact Error:', error)
     res.status(500).json({ error: 'Error interno en el handler de contacto.' })
-  }
-})
-
-app.all('/api/create-paypal-order', async (req, res) => {
-  try {
-    await createPayPalOrderHandler(req, res)
-  } catch (error) {
-    console.error('[Dev Server] Create PayPal Order Error:', error)
-    res.status(500).json({ error: error.message })
   }
 })
 

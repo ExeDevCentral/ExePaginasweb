@@ -43,7 +43,16 @@ export function useDashboard(enabled = true) {
         error: authError,
       } = await supabase.auth.getUser()
 
-      if (authError) throw authError
+      if (authError) {
+        console.error('[useDashboard] auth.getUser error:', {
+          message: authError.message,
+          code: (authError as any).code,
+          details: (authError as any).details,
+          hint: (authError as any).hint,
+        })
+        throw authError
+      }
+
       if (!user || !user.email) {
         if (active) setLoading(false)
         return
@@ -53,7 +62,8 @@ export function useDashboard(enabled = true) {
 
       try {
         clienteData = await clienteRepo.getByAuthId(user.id)
-      } catch {
+      } catch (e: unknown) {
+        console.error('[useDashboard] clienteRepo.getByAuthId error:', e)
         clienteData = null
       }
 
@@ -65,19 +75,18 @@ export function useDashboard(enabled = true) {
             .from('clientes')
             .insert({
               id: user.id,
-              nombre: user.user_metadata?.full_name ?? null,
+              full_name: user.user_metadata?.full_name ?? null,
               email: user.email,
-              telefono: null,
             })
-            .select('id, nombre, email, telefono')
+            .select('id, full_name, email')
             .single()
           if (!insertError) clienteData = newCliente as Cliente
-        } catch {
+        } catch (e: unknown) {
+          console.error('[useDashboard] insert clientes error (fallback will be used):', e)
           clienteData = {
             id: user.id,
-            nombre: user.user_metadata?.full_name ?? null,
+            full_name: user.user_metadata?.full_name ?? null,
             email: user.email,
-            telefono: null,
           }
         }
       }
@@ -105,7 +114,18 @@ export function useDashboard(enabled = true) {
         }
       }
     } catch (e: unknown) {
-      if (active) setError(e instanceof Error ? e.message : 'Error cargando dashboard')
+      console.error('[useDashboard] loadData fatal error:', e)
+      if (active) {
+        if (e instanceof Error) {
+          setError(e.message)
+        } else {
+          const anyErr = e as any
+          setError(
+            anyErr?.message ||
+              `Error cargando dashboard: ${JSON.stringify({ code: anyErr?.code, details: anyErr?.details, hint: anyErr?.hint })}`
+          )
+        }
+      }
     } finally {
       if (active) setLoading(false)
     }

@@ -21,7 +21,7 @@ type DashboardFreeProps = {
 
 export default function DashboardFree({ cliente, onLogout }: DashboardFreeProps) {
   const navigate = useNavigate()
-  const nombre = cliente?.nombre?.split(' ')[0] ?? 'Cliente'
+  const nombre = cliente?.full_name?.split(' ')[0] ?? 'Cliente'
   const theme = PLAN_THEMES.basico
   const [ticketPanelOpen, setTicketPanelOpen] = useState(false)
   const {

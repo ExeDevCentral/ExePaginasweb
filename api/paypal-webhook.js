@@ -41,7 +41,7 @@ async function getPayPalAccessToken() {
 async function getOrCreateCliente(email, fullName) {
   const { data: existentes } = await supabase
     .from('clientes')
-    .select('id, nombre as full_name, email')
+    .select('id, nombre:full_name, email')
     .eq('email', email)
     .limit(1)
 

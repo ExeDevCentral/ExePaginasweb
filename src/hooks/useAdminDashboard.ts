@@ -83,7 +83,7 @@ export function useAdminDashboard(enabled = true) {
       const [clientesRes, suscripcionesRes, pagosRes, ticketsRes] = await Promise.all([
         supabase
           .from('clientes')
-          .select('id, nombre as full_name, email, avatar_url, created_at')
+          .select('id, nombre:full_name, email, avatar_url, created_at')
           .order('created_at', { ascending: false }),
         supabase.from('suscripciones').select('*').order('created_at', { ascending: false }),
         supabase.from('pagos').select('*').order('created_at', { ascending: false }),

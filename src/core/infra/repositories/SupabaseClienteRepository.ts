@@ -5,7 +5,7 @@ export class SupabaseClienteRepository {
   async getByAuthId(authId: string): Promise<Cliente | null> {
     const { data, error } = await supabase
       .from('clientes')
-      .select('id, full_name, email')
+      .select('id, nombre as full_name, email')
       .eq('id', authId)
       .maybeSingle()
 

@@ -75,10 +75,10 @@ export function useDashboard(enabled = true) {
             .from('clientes')
             .insert({
               id: user.id,
-              full_name: user.user_metadata?.full_name ?? null,
+              nombre: user.user_metadata?.full_name ?? null,
               email: user.email,
             })
-            .select('id, full_name, email')
+            .select('id, nombre as full_name, email')
             .single()
           if (!insertError) clienteData = newCliente as Cliente
         } catch (e: unknown) {

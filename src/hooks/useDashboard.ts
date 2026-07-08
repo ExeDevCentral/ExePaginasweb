@@ -80,7 +80,7 @@ export function useDashboard(enabled = true) {
             })
             .select('id, nombre:full_name, email')
             .single()
-          if (!insertError) clienteData = newCliente as Cliente
+          if (!insertError) clienteData = newCliente as unknown as Cliente
         } catch (e: unknown) {
           console.error('[useDashboard] insert clientes error (fallback will be used):', e)
           clienteData = {

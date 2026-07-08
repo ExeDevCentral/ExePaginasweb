@@ -11,6 +11,7 @@ import type { PlanTier } from '../components/dashboard/resolvePlanTier'
 import { useAdminDashboard } from '../hooks/useAdminDashboard'
 import AdminDashboardView from '../components/dashboard/AdminDashboardView'
 import { useTranslation } from 'react-i18next'
+import { sileo } from 'sileo'
 
 const PREVIEW_TIERS: PlanTier[] = ['basico', 'avanzado', 'premium']
 
@@ -44,6 +45,13 @@ export default function Dashboard() {
       setPaymentBanner(payment || 'mp_ok')
       setSearchParams({}, { replace: true })
       refresh()
+      sileo.success({
+        title: 'Pago aprobado',
+        description:
+          payment === 'paypal_ok'
+            ? 'Pago con PayPal confirmado'
+            : 'Suscripción activada correctamente',
+      })
       setTimeout(() => setPaymentBanner(null), 8000)
     }
   }, [searchParams, setSearchParams, refresh])

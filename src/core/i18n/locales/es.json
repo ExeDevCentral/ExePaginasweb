@@ -319,6 +319,37 @@
     "web_label": "Web",
     "abrir": "Abrir"
   },
+  "privacypolicy": {
+    "titulo_main": "Política de",
+    "titulo_span": "Privacidad",
+    "sec1_titulo": "1. Información que Recopilamos",
+    "sec1_texto": "En ExeSistemasWEB recopilamos únicamente la información necesaria para brindar nuestros servicios. Esto incluye: nombre, correo electrónico y número de teléfono cuando nos contactas o solicitas una demo; datos técnicos como dirección IP y tipo de navegador para mejorar la experiencia del sitio; e información de tu negocio cuando contratas nuestros servicios de desarrollo de sistemas web. Toda la información se obtiene de forma voluntaria y con tu consentimiento explícito.",
+    "sec2_titulo": "2. Uso de la Información",
+    "sec2_texto": "Utilizamos tu información para:",
+    "sec2_li1": "Proveer, mantener y mejorar nuestros servicios de desarrollo web y automatización.",
+    "sec2_li2": "Comunicarnos contigo respecto a tu proyecto, consultas o solicitudes de servicio.",
+    "sec2_li3": "Cumplir con obligaciones legales y regulatorias aplicables.",
+    "sec3_titulo": "3. Protección de Datos",
+    "sec3_texto": "Implementamos medidas de seguridad técnicas y organizativas para proteger tu información personal contra acceso no autorizado, pérdida o divulgación. No compartimos tus datos personales con terceros, excepto cuando sea necesario para la prestación de nuestros servicios (procesadores de pago, plataformas de hosting) o por requerimiento legal. Todos nuestros proveedores cumplen con estándares internacionales de protección de datos.",
+    "sec4_titulo": "4. Tus Derechos",
+    "sec4_texto": "Tienes derecho a acceder, rectificar, cancelar y oponerte al tratamiento de tus datos personales (derechos ARCO) en cualquier momento. Puedes solicitar la eliminación de tu información contactándonos a nuestro correo. También puedes retirar tu consentimiento para comunicaciones comerciales en cualquier momento. Ejercer tus derechos no afectará la licitud del tratamiento previo a su retiro.",
+    "footer_alerta": "Esta política de privacidad puede ser actualizada periódicamente. Te recomendamos revisarla cada cierto tiempo. Última actualización: junio 2025.",
+    "boton_volver": "← Volver al inicio"
+  },
+  "termsofservice": {
+    "titulo_main": "Términos del",
+    "titulo_span": "Servicio",
+    "sec1_titulo": "1. Aceptación de los Términos",
+    "sec1_texto": "Al acceder y utilizar los servicios de ExeSistemasWEB, aceptas cumplir con estos términos y condiciones. Si no estás de acuerdo con alguna parte, no debes utilizar nuestros servicios. Nos reservamos el derecho de modificar estos términos en cualquier momento, notificando los cambios a través de nuestro sitio web.",
+    "sec2_titulo": "2. Servicios Ofrecidos",
+    "sec2_texto": "ExeSistemasWEB se dedica al diseño, desarrollo e implementación de sistemas web a medida, automatización de procesos digitales y soluciones de comercio electrónico. El alcance específico de cada proyecto se definirá en el contrato o propuesta correspondiente. Nos comprometemos a entregar los servicios acordados con los estándares de calidad y plazos establecidos.",
+    "sec3_titulo": "3. Responsabilidades del Cliente",
+    "sec3_texto": "El cliente se compromete a proporcionar información veraz y actualizada necesaria para el desarrollo del proyecto, así como a cumplir con los plazos de revisión y aprobación acordados. El cliente es responsable del uso que se dé a los sistemas desarrollados y del cumplimiento de las leyes aplicables en su jurisdicción.",
+    "sec4_titulo": "4. Limitación de Responsabilidad",
+    "sec4_texto": "ExeSistemasWEB no será responsable por daños indirectos, pérdida de datos o interrupción del negocio derivados del uso de nuestros servicios, siempre que hayamos cumplido con nuestras obligaciones contractuales. Nuestra responsabilidad máxima se limita al monto total pagado por los servicios en los últimos 12 meses.",
+    "footer_alerta": "Estos términos fueron actualizados por última vez en junio 2025. Para consultas legales, contáctanos a través de nuestro formulario de contacto.",
+    "boton_volver": "← Volver al inicio"
+  },
   "footer": {
     "descripcion": "Sistemas web boutique para negocios que quieren escalar sin fricción.",
     "navegacion": "Navegación",

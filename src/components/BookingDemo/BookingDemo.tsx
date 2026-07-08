@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar as CalendarIcon, Clock, Terminal, User, Mail, CheckCircle } from 'lucide-react'
 import { supabase } from '../../core/infra/supabase/client'
 import { useTranslation } from 'react-i18next'
+import { sileo } from 'sileo'
 
 export default function BookingDemo() {
   const { t, i18n } = useTranslation()
@@ -83,6 +84,10 @@ export default function BookingDemo() {
       .then(() => {})
 
     setStep('console')
+    sileo.success({
+      title: t('bookingdemo.success_titulo'),
+      description: t('bookingdemo.success_desc'),
+    })
   }
 
   const resetDemo = () => {

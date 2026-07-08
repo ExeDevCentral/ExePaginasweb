@@ -44,6 +44,9 @@ const Header = () => {
     if (el) {
       e.preventDefault()
       el.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      e.preventDefault()
+      navigate('/#' + id)
     }
   }
 

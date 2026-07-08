@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Brain, Sparkles, Send, Zap, Clock, Smartphone, MessageSquare } from 'lucide-react'
 import { supabase } from '../../core/infra/supabase/client'
+import { sileo } from 'sileo'
 
 const QUESTIONS = [
   { id: 'industry', qIdx: 1 },
@@ -68,6 +69,10 @@ export default function AutomationAudit() {
     setStep('loading')
     setTimeout(() => {
       setStep('report')
+      sileo.success({
+        title: 'Reporte listo',
+        description: 'Tu auditoría de automatización está disponible',
+      })
     }, 3000)
   }
 

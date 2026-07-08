@@ -18,6 +18,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 import NotFound from './pages/NotFound'
 import AuthCallback from './pages/AuthCallback'
+import { Toaster } from 'sileo'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -26,18 +27,19 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <AuthSessionProvider>
           <ThemeProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<App />} />
-              <Route path="/tienda" element={<StorePage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/auth/callback" element={<AuthCallback />} />
-              <Route path="/privacidad" element={<PrivacyPolicy />} />
-              <Route path="/terminos" element={<TermsOfService />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+            <BrowserRouter>
+              <Toaster position="top-right" />
+              <Routes>
+                <Route path="/" element={<App />} />
+                <Route path="/tienda" element={<StorePage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/privacidad" element={<PrivacyPolicy />} />
+                <Route path="/terminos" element={<TermsOfService />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
           </ThemeProvider>
         </AuthSessionProvider>
       </QueryClientProvider>

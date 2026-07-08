@@ -97,7 +97,7 @@ export function useAdminDashboard(enabled = true) {
 
       if (!active) return
 
-      const clientList = (clientesRes.data || []) as AdminCliente[]
+      const clientList = (clientesRes.data || []) as unknown as AdminCliente[]
       const subList = (suscripcionesRes.data || []) as AdminSuscripcion[]
       const paymentList = (pagosRes.data || []) as AdminPago[]
       const ticketList = (ticketsRes.data || []) as AdminTicket[]

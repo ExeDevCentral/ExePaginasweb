@@ -3,6 +3,7 @@ import { FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MessageCircle, Globe, ArrowRight, CheckCircle } from 'lucide-react'
 import { supabase } from '../../core/infra/supabase/client'
+import { sileo } from 'sileo'
 
 const ContactSection = () => {
   const { t } = useTranslation()
@@ -56,6 +57,7 @@ const ContactSection = () => {
 
         setStatus('success')
         setFeedback(t('contact.form_exito'))
+        sileo.success({ title: t('contact.success_titulo'), description: t('contact.form_exito') })
         setName('')
         setEmail('')
         setMessage('')

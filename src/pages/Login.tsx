@@ -6,6 +6,7 @@ import { supabase } from '../core/infra/supabase/client'
 import { getAuthRedirectUrl } from '../core/auth/siteUrl'
 import { useAuthSession } from '../core/auth/AuthSessionProvider'
 import { useTranslation } from 'react-i18next'
+import { sileo } from 'sileo'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -98,6 +99,7 @@ export default function Login() {
       const { data, error } = await supabase.auth.exchangeCodeForSession(code)
       if (error) throw error
       if (data.session) {
+        sileo.success({ title: 'Bienvenido', description: 'Inicio de sesión exitoso' })
         navigate('/dashboard', { replace: true })
       } else {
         setError('No se pudo establecer la sesión')
@@ -135,6 +137,7 @@ export default function Login() {
         password,
       })
       if (signInError) throw signInError
+      sileo.success({ title: 'Bienvenido', description: 'Inicio de sesión exitoso' })
       navigate('/dashboard', { replace: true })
     } catch (e) {
       setError(e instanceof Error ? e.message : t('login.err_credenciales'))

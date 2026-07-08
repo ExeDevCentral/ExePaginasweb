@@ -327,6 +327,37 @@
     "web_label": "Web",
     "abrir": "Open"
   },
+  "privacypolicy": {
+    "titulo_main": "Privacy",
+    "titulo_span": "Policy",
+    "sec1_titulo": "1. Information We Collect",
+    "sec1_texto": "At ExeSistemasWEB we collect only the information necessary to provide our services. This includes: name, email address, and phone number when you contact us or request a demo; technical data such as IP address and browser type to improve site experience; and business information when you contract our web system development services. All information is obtained voluntarily with your explicit consent.",
+    "sec2_titulo": "2. Use of Information",
+    "sec2_texto": "We use your information to:",
+    "sec2_li1": "Provide, maintain, and improve our web development and automation services.",
+    "sec2_li2": "Communicate with you regarding your project, inquiries, or service requests.",
+    "sec2_li3": "Comply with applicable legal and regulatory obligations.",
+    "sec3_titulo": "3. Data Protection",
+    "sec3_texto": "We implement technical and organizational security measures to protect your personal information against unauthorized access, loss, or disclosure. We do not share your personal data with third parties except when necessary to provide our services (payment processors, hosting platforms) or as required by law. All our providers comply with international data protection standards.",
+    "sec4_titulo": "4. Your Rights",
+    "sec4_texto": "You have the right to access, rectify, cancel, and object to the processing of your personal data at any time. You can request deletion of your information by contacting us. You may also withdraw your consent for commercial communications at any time. Exercising your rights will not affect the lawfulness of processing prior to withdrawal.",
+    "footer_alerta": "This privacy policy may be updated periodically. We recommend reviewing it regularly. Last updated: June 2025.",
+    "boton_volver": "← Back to home"
+  },
+  "termsofservice": {
+    "titulo_main": "Terms of",
+    "titulo_span": "Service",
+    "sec1_titulo": "1. Acceptance of Terms",
+    "sec1_texto": "By accessing and using ExeSistemasWEB services, you agree to comply with these terms and conditions. If you do not agree with any part, you must not use our services. We reserve the right to modify these terms at any time, notifying changes through our website.",
+    "sec2_titulo": "2. Services Offered",
+    "sec2_texto": "ExeSistemasWEB specializes in the design, development, and implementation of custom web systems, digital process automation, and e-commerce solutions. The specific scope of each project will be defined in the corresponding contract or proposal. We commit to delivering agreed services with the established quality standards and timelines.",
+    "sec3_titulo": "3. Client Responsibilities",
+    "sec3_texto": "The client agrees to provide accurate and up-to-date information necessary for project development, and to meet agreed review and approval deadlines. The client is responsible for the use of the developed systems and compliance with applicable laws in their jurisdiction.",
+    "sec4_titulo": "4. Limitation of Liability",
+    "sec4_texto": "ExeSistemasWEB shall not be liable for indirect damages, data loss, or business interruption arising from the use of our services, provided we have fulfilled our contractual obligations. Our maximum liability is limited to the total amount paid for services in the last 12 months.",
+    "footer_alerta": "These terms were last updated in June 2025. For legal inquiries, contact us through our contact form.",
+    "boton_volver": "← Back to home"
+  },
   "footer": {
     "descripcion": "Boutique web systems for businesses that want to scale without friction.",
     "navegacion": "Navigation",

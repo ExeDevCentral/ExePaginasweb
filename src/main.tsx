@@ -28,7 +28,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <AuthSessionProvider>
           <ThemeProvider>
             <BrowserRouter>
-              <Toaster position="top-right" />
+              <div style={{ position: 'relative', zIndex: 9999 }}>
+                <Toaster position="top-right" offset={80} />
+              </div>
               <Routes>
                 <Route path="/" element={<App />} />
                 <Route path="/tienda" element={<StorePage />} />

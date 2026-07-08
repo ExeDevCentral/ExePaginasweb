@@ -69,6 +69,7 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
+    sileo.success({ title: 'Sesión cerrada', description: 'Has cerrado sesión correctamente' })
     navigate('/login')
   }
 

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthRole } from '../../core/auth/userAuth'
 import ThemeToggle from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
+import { sileo } from 'sileo'
 
 const navLabelKeys: Record<string, string> = {
   home: 'nav.inicio',
@@ -53,6 +54,7 @@ const Header = () => {
   const handleLogout = async () => {
     await signOut()
     setIsMenuOpen(false)
+    sileo.success({ title: 'Sesión cerrada', description: 'Has cerrado sesión correctamente' })
     navigate('/login')
   }
 

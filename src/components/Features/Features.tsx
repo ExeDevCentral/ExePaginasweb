@@ -10,10 +10,9 @@ function rand(min: number, max: number) {
 
 function generarStats() {
   return DASHBOARD_STATS.map((s) => {
-    if (s.tKey === 'consultas')
-      return { ...s, value: String(rand(20, 80)), trend: `+${rand(5, 25)}%` }
-    if (s.tKey === 'clientes') return { ...s, value: String(rand(5, 30)), trend: `+${rand(1, 15)}` }
-    return { ...s, value: `${rand(10, 50)}%`, trend: 'In crescendo' }
+    if (s.tKey === 'consultas') return { ...s, value: String(rand(2, 12)), trend: `+${rand(1, 8)}` }
+    if (s.tKey === 'clientes') return { ...s, value: String(rand(0, 5)), trend: `+${rand(0, 4)}` }
+    return { ...s, value: `${rand(5, 25)}%`, trend: 'In crescendo' }
   })
 }
 

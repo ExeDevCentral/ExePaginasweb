@@ -2,7 +2,8 @@ import { motion } from 'framer-motion'
 import { FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MessageCircle, Globe, ArrowRight, CheckCircle } from 'lucide-react'
-import { supabase } from '../../lib/supabaseClient'
+import { supabase } from '../../core/infra/supabase/client'
+import { toast } from 'sonner'
 
 const ContactSection = () => {
   const { t } = useTranslation()
@@ -44,15 +45,19 @@ const ContactSection = () => {
       })
 
       if (res.ok) {
-        supabase.from('leads').insert({
-          email,
-          lead_type: 'contact',
-          name,
-          message,
-        }).then(() => {})
+        supabase
+          .from('leads')
+          .insert({
+            email,
+            lead_type: 'contact',
+            name,
+            message,
+          })
+          .then(() => {})
 
         setStatus('success')
         setFeedback(t('contact.form_exito'))
+        toast.success(t('contact.success_titulo'), { description: t('contact.form_exito') })
         setName('')
         setEmail('')
         setMessage('')
@@ -128,9 +133,7 @@ const ContactSection = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
-                <p className="text-sm text-primary-secondary mb-2">
-                  {t('contact.form_desc')}
-                </p>
+                <p className="text-sm text-primary-secondary mb-2">{t('contact.form_desc')}</p>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="group relative">
@@ -185,7 +188,7 @@ const ContactSection = () => {
                     className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70"
                   >
                     {t('contact.form_mensaje')}
-                    </label>
+                  </label>
                 </div>
 
                 {status === 'error' && <p className="text-sm text-accent-magenta">{feedback}</p>}
@@ -244,7 +247,9 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground mb-1">
-                      {ch.label === 'WhatsApp' ? t('contact.whatsapp_label') : t('contact.web_label')}
+                      {ch.label === 'WhatsApp'
+                        ? t('contact.whatsapp_label')
+                        : t('contact.web_label')}
                     </p>
                     <p className="text-sm font-semibold text-foreground leading-snug break-all">
                       {ch.value}

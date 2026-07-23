@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PhoneCall, Code2, Rocket, Headphones } from 'lucide-react'
 
@@ -11,8 +12,15 @@ const STEPS = [
 
 const Process = () => {
   const { t } = useTranslation()
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start 0.8', 'end 0.4'],
+  })
+  const lineWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
+
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 relative z-10 overflow-hidden">
+    <section ref={sectionRef} className="py-24 px-4 sm:px-6 lg:px-8 relative z-10 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <motion.div
           className="text-center mb-20"
@@ -32,9 +40,12 @@ const Process = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 relative">
-          {/* Línea conectora (solo en desktop) */}
-          <div className="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-1 bg-muted rounded-full z-0">
-            <div className="h-full bg-gradient-to-r from-accent-cyan via-accent-magenta to-accent-yellow opacity-50" />
+          {/* Línea conectora (solo en desktop) — se llena con scroll */}
+          <div className="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-1 bg-muted rounded-full z-0 overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-accent-cyan via-accent-magenta to-accent-yellow"
+              style={{ width: lineWidth }}
+            />
           </div>
 
           {STEPS.map((step, i) => {

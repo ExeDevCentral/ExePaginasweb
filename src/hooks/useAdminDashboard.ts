@@ -3,9 +3,8 @@ import { supabase } from '../core/infra/supabase/client'
 
 export interface AdminCliente {
   id: string
-  nombre: string | null
+  full_name: string | null
   email: string
-  telefono: string | null
   avatar_url: string | null
   created_at: string
 }
@@ -58,7 +57,7 @@ export interface AdminStats {
 }
 
 export function useAdminDashboard(enabled = true) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [clientes, setClientes] = useState<AdminCliente[]>([])
   const [suscripciones, setSuscripciones] = useState<AdminSuscripcion[]>([])
@@ -82,7 +81,10 @@ export function useAdminDashboard(enabled = true) {
 
       // Fetch concurrent tables
       const [clientesRes, suscripcionesRes, pagosRes, ticketsRes] = await Promise.all([
-        supabase.from('clientes').select('*').order('created_at', { ascending: false }),
+        supabase
+          .from('clientes')
+          .select('id, full_name, email, avatar_url, created_at')
+          .order('created_at', { ascending: false }),
         supabase.from('suscripciones').select('*').order('created_at', { ascending: false }),
         supabase.from('pagos').select('*').order('created_at', { ascending: false }),
         supabase.from('tickets').select('*').order('created_at', { ascending: false }),
@@ -95,7 +97,7 @@ export function useAdminDashboard(enabled = true) {
 
       if (!active) return
 
-      const clientList = (clientesRes.data || []) as AdminCliente[]
+      const clientList = (clientesRes.data || []) as unknown as AdminCliente[]
       const subList = (suscripcionesRes.data || []) as AdminSuscripcion[]
       const paymentList = (pagosRes.data || []) as AdminPago[]
       const ticketList = (ticketsRes.data || []) as AdminTicket[]

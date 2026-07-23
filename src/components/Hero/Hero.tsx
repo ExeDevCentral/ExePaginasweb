@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { SalonBloomButton } from '../shared/SalonBloomButton'
 import { useIsMobile } from '../../hooks/useIsMobile'
+import Hero3DImage from './Hero3DImage'
 
 const Hero: React.FC = () => {
   const { t } = useTranslation()
@@ -23,7 +24,10 @@ const Hero: React.FC = () => {
   )
 
   return (
-    <section id="home" className="relative min-h-screen w-full overflow-hidden bg-background flex items-center justify-center pt-28 pb-16 md:pt-36 md:pb-24">
+    <section
+      id="home"
+      className="relative min-h-screen w-full overflow-hidden bg-background flex items-center justify-center pt-28 pb-16 md:pt-36 md:pb-24"
+    >
       {/* Gradiente de fondo base */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary-bg via-[var(--background)] to-accent-magenta/10" />
 
@@ -62,10 +66,10 @@ const Hero: React.FC = () => {
       <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto w-full">
         {/* Live Badge Premium */}
         <motion.div
-          initial={{ opacity: 0, y: -15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-border bg-muted backdrop-blur-md mb-6 hover:border-accent-cyan/40 transition-colors cursor-pointer group/badge"
+          initial={{ opacity: 0, y: -20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-border bg-muted backdrop-blur-md mb-8 hover:border-accent-cyan/40 transition-colors cursor-pointer group/badge"
         >
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-cyan opacity-75"></span>
@@ -77,22 +81,32 @@ const Hero: React.FC = () => {
         </motion.div>
 
         {/* H1 con Alto Impacto Visual y Animación de Degradé Spectacular */}
-        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-foreground tracking-tight leading-[1.1] md:leading-[1.05] mb-6 max-w-4xl">
+        <motion.h1
+          initial={{ opacity: 0, y: 30, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+          className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-foreground tracking-tight leading-[1.1] md:leading-[1.05] mb-6 max-w-4xl"
+        >
           {t('hero.titulo_1')}
           <br />
           <span className="text-gradient-spectacular block mt-2 pb-2">{t('hero.titulo_2')}</span>
-        </h1>
+        </motion.h1>
 
         {/* Descripción de Posicionamiento */}
-        <p className="text-base sm:text-lg md:text-xl text-primary-secondary leading-relaxed max-w-3xl mx-auto mb-10 font-medium">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+          className="text-base sm:text-lg md:text-xl text-primary-secondary leading-relaxed max-w-3xl mx-auto mb-10 font-medium"
+        >
           {t('hero.descripcion')}
-        </p>
+        </motion.p>
 
         {/* Botones de Acción */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: 'easeOut', delay: 0.1 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
           className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full sm:w-auto px-4"
         >
           <SalonBloomButton
@@ -111,6 +125,16 @@ const Hero: React.FC = () => {
           >
             {t('hero.cta_proyecto')}
           </motion.a>
+        </motion.div>
+
+        {/* Hero 3D Image */}
+        <motion.div
+          initial={{ opacity: 0, y: 60, scale: 0.94 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+          className="w-full"
+        >
+          <Hero3DImage />
         </motion.div>
       </div>
     </section>

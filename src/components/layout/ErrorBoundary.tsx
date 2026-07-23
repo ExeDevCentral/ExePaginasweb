@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react'
+import { toast } from 'sonner'
 
 interface Props {
   children: ReactNode
@@ -21,6 +22,10 @@ class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo)
+    toast.error('Error inesperado', {
+      description: error.message || 'Ocurrió un error en la aplicación',
+      duration: 5000,
+    })
   }
 
   public render() {

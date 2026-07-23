@@ -4,10 +4,15 @@ type Theme = 'dark' | 'light'
 
 interface ThemeContextValue {
   theme: Theme
+  setTheme: (t: Theme) => void
   toggleTheme: () => void
 }
 
-const ThemeContext = createContext<ThemeContextValue>({ theme: 'dark', toggleTheme: () => {} })
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: 'dark',
+  setTheme: () => {},
+  toggleTheme: () => {},
+})
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
@@ -18,15 +23,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return 'dark'
   })
 
+  const applyTheme = (t: Theme) => {
+    setTheme(t)
+    document.documentElement.classList.toggle('dark', t === 'dark')
+    localStorage.setItem('theme', t)
+  }
+
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  const toggleTheme = () => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+  const toggleTheme = () => applyTheme(theme === 'dark' ? 'light' : 'dark')
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme: applyTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   )

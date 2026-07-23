@@ -68,21 +68,33 @@ BEGIN
     DELETE FROM public.clientes WHERE id = old_id;
 
   ELSE
-    -- Comportamiento normal si no hay conflicto de email
+    -- Comportamiento normal si no hay conflicto de email.
+    -- Importante: idempotente para evitar fallos por duplicados.
     INSERT INTO public.clientes (id, email, nombre, avatar_url)
     VALUES (
-      new.id, 
-      new.email, 
+      new.id,
+      new.email,
       COALESCE(
-        new.raw_user_meta_data->>'full_name', 
-        new.raw_user_meta_data->>'name', 
+        new.raw_user_meta_data->>'full_name',
+        new.raw_user_meta_data->>'name',
         'Nuevo Usuario'
       ),
       new.raw_user_meta_data->>'avatar_url'
     )
-    ON CONFLICT (email) DO UPDATE SET
+    ON CONFLICT (id) DO UPDATE SET
+      email = EXCLUDED.email,
       nombre = COALESCE(EXCLUDED.nombre, public.clientes.nombre),
-      avatar_url = COALESCE(EXCLUDED.avatar_url, public.clientes.avatar_url);
+      avatar_url = COALESCE(EXCLUDED.avatar_url, public.clientes.avatar_url)
+    WHERE public.clientes.id = EXCLUDED.id
+    ;
+
+    -- Si el conflicto fue por email (y no por id) también actualizamos nombre/avatar.
+    -- (Esto cubre casos raros de sincronización).
+    UPDATE public.clientes
+    SET
+      nombre = COALESCE(COALESCE(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', 'Nuevo Usuario'), public.clientes.nombre),
+      avatar_url = COALESCE(new.raw_user_meta_data->>'avatar_url', public.clientes.avatar_url)
+    WHERE public.clientes.email = new.email;
   END IF;
 
   RETURN new;

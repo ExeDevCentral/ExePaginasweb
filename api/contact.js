@@ -1,3 +1,6 @@
+import { sendEmail } from './lib/email/send.js'
+import { contactNotification } from './lib/email/templates.js'
+
 const RATE_LIMIT_WINDOW_MS = 3600_000
 const RATE_LIMIT_MAX_REQUESTS = 5
 const requestLog = new Map()
@@ -23,16 +26,23 @@ function isRateLimited(ip) {
   return false
 }
 
-function setCorsHeaders(res) {
-  if (process.env.NODE_ENV === 'production') {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+function setCorsHeaders(res, req) {
+  const allowedOrigins = [
+    process.env.VITE_SITE_URL,
+    process.env.SITE_URL,
+    'https://exepaginasweb.com',
+    'https://www.exepaginasweb.com',
+  ].filter(Boolean)
+  const origin = req.headers?.origin
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
   }
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 }
 
 export default async function handler(req, res) {
-  setCorsHeaders(res)
+  setCorsHeaders(res, req)
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
@@ -49,29 +59,12 @@ export default async function handler(req, res) {
   console.log(`[contact] Mensaje de ${name} <${email}>: ${message.slice(0, 100)}...`)
 
   try {
-    const RESEND_API_KEY = process.env.RESEND_API_KEY
-    const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
-
-    if (RESEND_API_KEY) {
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${RESEND_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: fromEmail,
-          to: ['exemetal@hotmail.com'],
-          replyTo: email,
-          subject: `Nuevo contacto de ${name} <${email}>`,
-          html: `
-            <h2>Nuevo mensaje de contacto</h2>
-            <p><strong>Nombre:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Mensaje:</strong></p>
-            <p>${message.replace(/\n/g, '<br>')}</p>
-          `,
-        }),
+    if (process.env.RESEND_API_KEY) {
+      await sendEmail({
+        to: ['exemetal@hotmail.com'],
+        subject: `Nuevo contacto de ${name} <${email}>`,
+        html: contactNotification({ name, email, message }),
+        replyTo: email,
       })
     } else {
       console.warn('[contact] RESEND_API_KEY no configurada — email no enviado')

@@ -32,14 +32,14 @@ const SocialProof = () => {
         {t('socialproof.texto')}
       </p>
 
-      <div className="flex w-full overflow-hidden">
-        <div className="flex animate-marquee whitespace-nowrap">
+      <div className="flex w-full overflow-hidden group">
+        <div className="flex animate-marquee whitespace-nowrap group-hover:[animation-play-state:paused]">
           {[...CLIENTS, ...CLIENTS, ...CLIENTS].map((client, i) => {
             const Icon = client.icon
             return (
               <div
                 key={i}
-                className="flex items-center gap-3 mx-8 opacity-40 hover:opacity-100 transition-opacity duration-300 cursor-default"
+                className="flex items-center gap-3 mx-8 opacity-40 hover:opacity-100 hover:scale-105 transition-all duration-300 cursor-default"
               >
                 <Icon className="w-5 h-5 text-accent-cyan" />
                 <span className="text-base font-bold font-montserrat text-foreground">

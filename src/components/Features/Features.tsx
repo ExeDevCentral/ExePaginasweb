@@ -1,14 +1,34 @@
 import { motion } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FEATURES_LIST, DASHBOARD_STATS } from './constants'
 import EnhancedFeatureCard from './EnhancedFeatureCard'
 
+function rand(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function generarStats() {
+  return DASHBOARD_STATS.map((s) => {
+    if (s.tKey === 'consultas') return { ...s, value: String(rand(2, 12)), trend: `+${rand(1, 8)}` }
+    if (s.tKey === 'clientes') return { ...s, value: String(rand(0, 5)), trend: `+${rand(0, 4)}` }
+    return { ...s, value: `${rand(5, 25)}%`, trend: 'In crescendo' }
+  })
+}
+
+const INTERVALO_36HS = 129600000
+
 const Features = () => {
   const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
+  const [stats, setStats] = useState(generarStats)
 
   const features = FEATURES_LIST
+
+  useEffect(() => {
+    const id = setInterval(() => setStats(generarStats()), INTERVALO_36HS)
+    return () => clearInterval(id)
+  }, [])
 
   return (
     <section
@@ -57,7 +77,9 @@ const Features = () => {
                 <p className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-1">
                   {t('features.dashboard_status')}
                 </p>
-                <h3 className="text-2xl font-bold text-foreground">{t('features.dashboard_titulo')}</h3>
+                <h3 className="text-2xl font-bold text-foreground">
+                  {t('features.dashboard_titulo')}
+                </h3>
               </div>
               <span className="flex items-center gap-2 rounded-full bg-emerald-500/10 px-4 py-1.5 text-xs font-bold text-emerald-400 border border-emerald-500/20">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -65,12 +87,14 @@ const Features = () => {
               </span>
             </div>
             <div className="grid gap-6 md:grid-cols-3">
-              {DASHBOARD_STATS.map((stat, i) => (
+              {stats.map((stat, i) => (
                 <div
                   key={i}
                   className="group/stat rounded-2xl bg-muted p-6 border border-border hover:border-border transition-all"
                 >
-                  <p className="text-sm text-muted-foreground font-medium mb-2">{t(`features.dashboard_${stat.tKey as string}`)}</p>
+                  <p className="text-sm text-muted-foreground font-medium mb-2">
+                    {t(`features.dashboard_${stat.tKey as string}`)}
+                  </p>
                   <div className="flex items-end gap-3">
                     <p className={`text-4xl font-black ${stat.color}`}>{stat.value}</p>
                     <span className="text-[10px] bg-muted px-2 py-0.5 rounded-md text-muted-foreground mb-1.5">

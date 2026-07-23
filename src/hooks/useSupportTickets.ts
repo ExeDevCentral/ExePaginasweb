@@ -3,7 +3,7 @@ import type { Cliente } from '../core/domain/entities/Cliente'
 import type { Notificacion, Ticket } from '../core/domain/entities/Ticket'
 import { priorityForTier } from '../core/domain/ticketConfig'
 import type { PlanTier } from '../core/domain/planCatalog'
-import { SupabaseTicketRepository } from '../infra/repositories/SupabaseTicketRepository'
+import { SupabaseTicketRepository } from '../core/infra/repositories/SupabaseTicketRepository'
 
 const repo = new SupabaseTicketRepository()
 

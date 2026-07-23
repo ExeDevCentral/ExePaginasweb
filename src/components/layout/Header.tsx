@@ -6,9 +6,9 @@ import { useScrollSpy } from '../../hooks/useScrollSpy'
 import { NAV_ITEMS, SCROLL_OFFSET } from '../landing/constants'
 import { useNavigate } from 'react-router-dom'
 import { useAuthRole } from '../../core/auth/userAuth'
-import { ADMIN_EMAILS } from '../../core/auth/roleConfig'
 import ThemeToggle from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
+import { toast } from 'sonner'
 
 const navLabelKeys: Record<string, string> = {
   home: 'nav.inicio',
@@ -22,7 +22,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const navigate = useNavigate()
-  const { user, signOut } = useAuthRole(ADMIN_EMAILS)
+  const { user, signOut } = useAuthRole()
   const isLoggedIn = user !== null
 
   useEffect(() => {
@@ -45,12 +45,16 @@ const Header = () => {
     if (el) {
       e.preventDefault()
       el.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      e.preventDefault()
+      navigate('/#' + id)
     }
   }
 
   const handleLogout = async () => {
     await signOut()
     setIsMenuOpen(false)
+    toast.success('Sesión cerrada', { description: 'Has cerrado sesión correctamente' })
     navigate('/login')
   }
 
@@ -62,18 +66,29 @@ const Header = () => {
   return (
     <motion.header
       style={{
-        background: scrolled ? 'rgba(5, 5, 7, 0.95)' : 'rgba(10, 10, 12, 1)',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(0, 242, 254, 0.2)' : '1px solid rgba(255, 255, 255, 0.05)',
+        background: scrolled ? 'rgba(5, 5, 7, 0.92)' : 'rgba(10, 10, 12, 1)',
+        backdropFilter: scrolled ? 'blur(16px) saturate(1.4)' : 'none',
+        borderBottom: scrolled
+          ? '1px solid rgba(0, 242, 254, 0.2)'
+          : '1px solid rgba(255, 255, 255, 0.05)',
+        boxShadow: scrolled
+          ? '0 0 40px -10px rgba(0, 242, 254, 0.2), 0 1px 0 0 rgba(0, 242, 254, 0.08) inset'
+          : 'none',
       }}
       className="fixed top-0 w-full z-50 transition-all duration-300 font-mono"
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
+      {scrolled && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-accent-cyan/60 to-transparent blur-sm"
+        />
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 lg:h-[70px]">
-          
           {/* Logo & Nombre */}
           <motion.a
             href="#home"
@@ -81,7 +96,8 @@ const Header = () => {
             whileTap={{ scale: 0.98 }}
             onClick={(e) => scrollToSection(e, 'home')}
           >
-            <div className="w-8 h-8 overflow-hidden shrink-0 border border-zinc-800 group-hover:border-[#00f2fe] transition-colors duration-300">
+            <div className="relative w-8 h-8 overflow-hidden shrink-0 border border-zinc-800 group-hover:border-[#00f2fe] transition-colors duration-300">
+              <div className="absolute inset-0 bg-[#00f2fe]/0 group-hover:bg-[#00f2fe]/10 transition-colors duration-300" />
               <img
                 src="/logo-40.webp"
                 srcSet="/logo-40.webp 1x, /logo.webp 2x"
@@ -90,11 +106,12 @@ const Header = () => {
                 fetchPriority="high"
                 width="32"
                 height="32"
-                className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 relative z-10"
               />
             </div>
             <span className="text-zinc-100 text-xs font-bold tracking-widest uppercase flex items-center gap-1">
-              EXE<span className="text-[#00f2fe] font-light">//</span>SISTEMAS<span className="text-zinc-500 font-light">.WEB</span>
+              EXE<span className="text-[#00f2fe] font-light">//</span>SISTEMAS
+              <span className="text-zinc-500 font-light">.WEB</span>
             </span>
           </motion.a>
 
@@ -107,14 +124,17 @@ const Header = () => {
                   key={item.label}
                   href={item.href}
                   onClick={(e) => scrollToSection(e, item.id)}
-                  className="relative px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300"
+                  className="relative px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 group"
                   style={{
                     color: isActive ? '#00f2fe' : 'rgba(240, 240, 245, 0.6)',
                   }}
                   whileHover={{ color: '#00f2fe' }}
                 >
                   <span className="relative z-10">{t(navLabelKeys[item.id] || item.label)}</span>
-                  
+
+                  {/* Glow on hover */}
+                  <span className="absolute inset-0 rounded-sm bg-[#00f2fe]/0 group-hover:bg-[#00f2fe]/5 transition-colors duration-300" />
+
                   {/* Underline animado */}
                   <span
                     className="absolute bottom-1.5 left-3 right-3 h-[1px] bg-[#00f2fe] transition-transform duration-300 origin-left"
@@ -135,11 +155,14 @@ const Header = () => {
               href="/tienda"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative flex items-center gap-1 px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-[#00f2fe]/80 hover:text-[#00f2fe]"
+              className="relative flex items-center gap-1 px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-[#00f2fe]/80 hover:text-[#00f2fe] group"
             >
               <span>{t('nav.tienda_online')}</span>
-              <ExternalLink size={10} className="opacity-70" />
-              <span className="absolute bottom-1.5 left-3 right-5 h-[1px] bg-[#00f2fe]/40 transition-transform duration-300 origin-left scale-x-0 hover:scale-x-100" />
+              <ExternalLink
+                size={10}
+                className="opacity-70 group-hover:rotate-45 transition-transform duration-300"
+              />
+              <span className="absolute bottom-1.5 left-3 right-5 h-[1px] bg-[#00f2fe]/40 transition-transform duration-300 origin-left scale-x-0 group-hover:scale-x-100" />
             </motion.a>
           </nav>
 
@@ -310,7 +333,9 @@ const Header = () => {
                 {/* Controls and CTA at the bottom */}
                 <div className="mt-auto pt-6 border-t border-zinc-900 flex flex-col gap-5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-zinc-500 tracking-wider uppercase">System Config</span>
+                    <span className="text-[10px] text-zinc-500 tracking-wider uppercase">
+                      System Config
+                    </span>
                     <div className="flex items-center gap-3">
                       <LanguageSwitcher />
                       <ThemeToggle />

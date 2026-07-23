@@ -45,7 +45,7 @@ const FAQ = () => {
   )
 
   return (
-    <section className="h-auto bg-card overflow-hidden">
+    <section className="h-auto overflow-hidden relative z-10">
       <div className="h-auto max-w-5xl w-screen mx-auto text-foreground py-16 px-4 sm:px-6 lg:px-8">
         {/* Spotlight */}
         <div
@@ -126,7 +126,7 @@ const FAQ = () => {
                     animate="visible"
                     exit="hidden"
                     layout
-                    className="border border-border rounded-lg overflow-hidden"
+                    className="border border-border/50 bg-muted/30 backdrop-blur-sm rounded-lg overflow-hidden"
                   >
                     <button
                       type="button"
@@ -151,7 +151,9 @@ const FAQ = () => {
                           variants={contentVariants}
                           className="overflow-hidden"
                         >
-                          <div className="p-4 text-muted-foreground bg-muted">{t(`faq.a_${faq.qIdx}`)}</div>
+                          <div className="p-4 text-muted-foreground bg-muted/40 backdrop-blur-sm">
+                            {t(`faq.a_${faq.qIdx}`)}
+                          </div>
                         </motion.div>
                       )}
                     </AnimatePresence>

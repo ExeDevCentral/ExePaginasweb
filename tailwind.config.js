@@ -128,6 +128,17 @@ export default {
           '0%, 100%': { opacity: '0.45' },
           '50%': { opacity: '0.85' },
         },
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        },
+        grain: {
+          '0%, 100%': { transform: 'translate(0, 0)' },
+          '10%': { transform: 'translate(-5%, -10%)' },
+          '30%': { transform: 'translate(3%, -15%)' },
+          '50%': { transform: 'translate(12%, 9%)' },
+          '70%': { transform: 'translate(9%, 4%)' },
+          '90%': { transform: 'translate(-1%, 7%)' },
+        },
         floatSlow: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-8px)' },

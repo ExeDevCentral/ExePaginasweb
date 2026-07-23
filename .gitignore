@@ -12,6 +12,8 @@ dist
 messages-local.json
 dist-ssr
 *.local
+docs/paypal-env.local.md
+docs/supabase-env.local.md
 
 # Editor directories and files
 .vscode/*

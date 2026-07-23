@@ -1,9 +1,20 @@
 import { createClient } from '@supabase/supabase-js'
+import { sendEmail } from './lib/email/send.js'
+import { paymentConfirmation, paymentNotification } from './lib/email/templates.js'
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-)
+let supabase = null
+function getSupabase() {
+  if (!supabase) {
+    const url = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || ''
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    if (!url || !key) {
+      console.warn('[paypal-webhook] Supabase not configured — DB operations will be skipped')
+      return null
+    }
+    supabase = createClient(url, key)
+  }
+  return supabase
+}
 
 export const config = { api: { bodyParser: false } }
 
@@ -15,19 +26,28 @@ function buffer(req) {
   })
 }
 
-function setCorsHeaders(res) {
-  if (process.env.NODE_ENV === 'production') {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+function setCorsHeaders(res, req) {
+  const allowedOrigins = [
+    process.env.VITE_SITE_URL,
+    process.env.SITE_URL,
+    'https://exepaginasweb.com',
+    'https://www.exepaginasweb.com',
+  ].filter(Boolean)
+  const origin = req.headers?.origin
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
   }
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 }
+
+const PAYPAL_API_BASE = process.env.PAYPAL_API_BASE || 'https://api-m.sandbox.paypal.com'
 
 async function getPayPalAccessToken() {
   const clientId = process.env.PAYPAL_CLIENT_ID
   const clientSecret = process.env.PAYPAL_CLIENT_SECRET
   const base64 = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
-  const resp = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
+  const resp = await fetch(`${PAYPAL_API_BASE}/v1/oauth2/token`, {
     method: 'POST',
     headers: {
       Authorization: `Basic ${base64}`,
@@ -39,18 +59,21 @@ async function getPayPalAccessToken() {
   return data.access_token
 }
 
-async function getOrCreateCliente(email, nombre) {
-  const { data: existentes } = await supabase
+async function getOrCreateCliente(email, fullName) {
+  const db = getSupabase()
+  if (!db) return null
+
+  const { data: existentes } = await db
     .from('clientes')
-    .select('id, nombre, email')
+    .select('id, nombre:full_name, email')
     .eq('email', email)
     .limit(1)
 
   if (existentes?.[0]) return existentes[0].id
 
-  const { data: nuevo } = await supabase
+  const { data: nuevo } = await db
     .from('clientes')
-    .insert({ email, nombre: nombre || null })
+    .insert({ email, nombre: fullName || null })
     .select('id')
     .single()
 
@@ -58,15 +81,14 @@ async function getOrCreateCliente(email, nombre) {
 }
 
 async function getPlanBySlug(slug) {
-  const { data: planes } = await supabase
-    .from('planes')
-    .select('slug, nombre')
-    .eq('slug', slug)
-    .limit(1)
+  const db = getSupabase()
+  if (!db) return null
+
+  const { data: planes } = await db.from('planes').select('slug, nombre').eq('slug', slug).limit(1)
 
   if (planes?.[0]) return planes[0]
 
-  const { data: porNombre } = await supabase
+  const { data: porNombre } = await db
     .from('planes')
     .select('slug, nombre')
     .ilike('nombre', `%${slug}%`)
@@ -76,7 +98,7 @@ async function getPlanBySlug(slug) {
 }
 
 async function capturePayPalOrder(orderId, token) {
-  const resp = await fetch(`https://api-m.paypal.com/v2/checkout/orders/${orderId}/capture`, {
+  const resp = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}/capture`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -95,11 +117,14 @@ async function capturePayPalOrder(orderId, token) {
 
 async function verifyWebhookSignature(req, rawBody) {
   const webhookId = process.env.PAYPAL_WEBHOOK_ID
-  if (!webhookId) return true
+  if (!webhookId) {
+    console.error('[paypal-webhook] PAYPAL_WEBHOOK_ID not set — REJECTING webhook for security')
+    return false
+  }
 
   try {
     const token = await getPayPalAccessToken()
-    const resp = await fetch('https://api-m.paypal.com/v1/notifications/verify-webhook-signature', {
+    const resp = await fetch(`${PAYPAL_API_BASE}/v1/notifications/verify-webhook-signature`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -128,7 +153,7 @@ async function verifyWebhookSignature(req, rawBody) {
 }
 
 export default async function handler(req, res) {
-  setCorsHeaders(res)
+  setCorsHeaders(res, req)
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).end()
 
@@ -154,39 +179,52 @@ export default async function handler(req, res) {
   if (eventType === 'PAYMENT.CAPTURE.COMPLETED') {
     const paypalOrderId = resource.id
     const amount = resource.amount?.value
-    const email = resource.payer?.email_address || resource.custom_id?.split('|')?.[1]
     console.log(`[paypal-webhook] Pago completado: ${paypalOrderId} - $${amount} USD`)
-  }
-
-  else if (eventType === 'PAYMENT.CAPTURE.DENIED') {
+  } else if (eventType === 'PAYMENT.CAPTURE.DENIED') {
     const paypalOrderId = resource.id
     const email = resource.payer?.email_address || resource.custom_id?.split('|')?.[1]
     console.error(`[paypal-webhook] Pago DENEGADO: ${paypalOrderId} - ${email}`)
     if (email) {
-      const { data: clientes } = await supabase.from('clientes').select('id').eq('email', email).limit(1)
-      if (clientes?.[0]) {
-        await supabase.from('notificaciones').insert({
-          cliente_id: clientes[0].id,
-          mensaje: 'Tu pago por PayPal fue denegado. Revisá tu método de pago.',
-          tipo: 'alerta',
-        })
+      const db = getSupabase()
+      if (db) {
+        const { data: clientes } = await db
+          .from('clientes')
+          .select('id')
+          .eq('email', email)
+          .limit(1)
+        if (clientes?.[0]) {
+          await db.from('notificaciones').insert({
+            cliente_id: clientes[0].id,
+            mensaje: 'Tu pago por PayPal fue denegado. Revisá tu método de pago.',
+            tipo: 'alerta',
+          })
+        }
       }
     }
-  }
-
-  else if (eventType === 'PAYMENT.CAPTURE.REFUNDED') {
+  } else if (eventType === 'PAYMENT.CAPTURE.REFUNDED') {
     const paypalOrderId = resource.id
     const amount = resource.amount?.value
     console.log(`[paypal-webhook] Reembolso: ${paypalOrderId} - $${amount} USD`)
-    const { data: pagos } = await supabase
-      .from('pagos').select('cliente_id').eq('paypal_order_id', paypalOrderId).limit(1)
-    if (pagos?.[0]) {
-      await supabase.from('pagos').update({ estado: 'reembolsado' }).eq('paypal_order_id', paypalOrderId)
-      await supabase.from('suscripciones').update({ estado: 'cancelada', fecha_fin: new Date().toISOString() }).eq('cliente_id', pagos[0].cliente_id).eq('estado', 'activa')
+    const db = getSupabase()
+    if (db) {
+      const { data: pagos } = await db
+        .from('pagos')
+        .select('cliente_id')
+        .eq('paypal_order_id', paypalOrderId)
+        .limit(1)
+      if (pagos?.[0]) {
+        await db
+          .from('pagos')
+          .update({ estado: 'reembolsado' })
+          .eq('paypal_order_id', paypalOrderId)
+        await db
+          .from('suscripciones')
+          .update({ estado: 'cancelada', fecha_fin: new Date().toISOString() })
+          .eq('cliente_id', pagos[0].cliente_id)
+          .eq('estado', 'activa')
+      }
     }
-  }
-
-  else if (eventType === 'CHECKOUT.ORDER.APPROVED') {
+  } else if (eventType === 'CHECKOUT.ORDER.APPROVED') {
     const orderId = resource.id
     const token = await getPayPalAccessToken()
     const captured = await capturePayPalOrder(orderId, token)
@@ -217,83 +255,73 @@ export default async function handler(req, res) {
     const plan = await getPlanBySlug(planSlug)
     const planNombre = plan?.nombre || purchaseUnit?.description || 'Plan'
 
-    const { error: pagoError } = await supabase.from('pagos').insert({
-      cliente_id: clienteId,
-      monto: parseFloat(amount),
-      moneda: 'USD',
-      estado: 'aprobado',
-      plan_nombre: planNombre,
-      plan_slug: plan?.slug || planSlug || null,
-      tipo_proyecto: tipoProyecto || 'mantenimiento',
-      provider: 'paypal',
-      paypal_order_id: paypalOrderId,
-    })
+    const db = getSupabase()
+    if (db) {
+      const { error: pagoError } = await db.from('pagos').insert({
+        cliente_id: clienteId,
+        monto: parseFloat(amount),
+        moneda: 'USD',
+        estado: 'aprobado',
+        plan_nombre: planNombre,
+        plan_slug: plan?.slug || planSlug || null,
+        tipo_proyecto: tipoProyecto || 'mantenimiento',
+        provider: 'paypal',
+        paypal_order_id: paypalOrderId,
+      })
 
-    if (pagoError) console.error('[paypal-webhook] Error inserting pago:', pagoError)
+      if (pagoError) console.error('[paypal-webhook] Error inserting pago:', pagoError)
 
-    const { error: subError } = await supabase.from('suscripciones').insert({
-      cliente_id: clienteId,
-      plan_slug: plan?.slug || planSlug || 'mantenimiento-basico',
-      estado: 'activa',
-      fecha_inicio: new Date().toISOString(),
-    })
+      const { error: subError } = await db.from('suscripciones').insert({
+        cliente_id: clienteId,
+        plan_slug: plan?.slug || planSlug || 'mantenimiento-basico',
+        estado: 'activa',
+        fecha_inicio: new Date().toISOString(),
+      })
 
-    if (subError) console.error('[paypal-webhook] Error inserting suscripcion:', subError)
+      if (subError) console.error('[paypal-webhook] Error inserting suscripcion:', subError)
+
+      try {
+        const { data: invoiceResult } = await db.rpc('create_invoice_from_payment', {
+          p_cliente_id: clienteId,
+          p_pago_id: null,
+          p_monto: parseFloat(amount),
+          p_moneda: 'USD',
+          p_concepto: `Suscripcion ${planNombre}`,
+        })
+        if (invoiceResult) console.log('[paypal-webhook] Invoice created:', invoiceResult)
+      } catch (invoiceErr) {
+        console.error('[paypal-webhook] Error creating invoice via RPC:', invoiceErr)
+      }
+    }
 
     if (process.env.RESEND_API_KEY) {
       try {
-        const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
+        const dashboardUrl = `${process.env.VITE_SITE_URL || 'https://exepaginasweb.com'}/dashboard`
 
-        // 1. Email de confirmación para el cliente
-        await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: fromEmail,
-            to: [email],
-            subject: `✅ Pago aprobado - ${planNombre}`,
-            html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
-              <h1 style="color:#00d4ff;">¡Pago aprobado!</h1>
-              <p>Hola <strong>${payerName || ''}</strong>,</p>
-              <p>Tu pago por <strong>${planNombre}</strong> fue procesado correctamente via PayPal.</p>
-              <p style="font-size:24px;font-weight:bold;">$${amount} USD</p>
-              <p>Ya podés acceder a tu plan desde tu panel.</p>
-              <a href="${process.env.VITE_SITE_URL || 'https://exepaginasweb.com'}/dashboard"
-                 style="display:inline-block;padding:12px 24px;background:linear-gradient(135deg,#00d4ff,#ff00ff);color:#000;text-decoration:none;border-radius:12px;font-weight:bold;margin-top:16px;">
-                Ir al Dashboard
-              </a>
-            </div>`,
+        await sendEmail({
+          to: [email],
+          subject: `Pago aprobado - ${planNombre}`,
+          html: paymentConfirmation({
+            name: payerName,
+            plan: planNombre,
+            amount,
+            currency: 'USD',
+            orderId: paypalOrderId,
+            dashboardUrl,
           }),
         })
 
-        // 2. Email de notificación para el administrador
-        const adminEmail = 'exemetal@hotmail.com'
-        await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: fromEmail,
-            to: [adminEmail],
-            subject: `🚨 ¡Nueva venta! ${payerName || 'Un cliente'} compró ${planNombre}`,
-            html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;border:1px solid #eee;border-radius:12px;">
-              <h1 style="color:#ff00ff;margin-bottom:20px;">¡Nueva suscripción recibida! 🚀</h1>
-              <p>Se ha registrado una nueva venta a través de PayPal:</p>
-              <table style="width:100%;border-collapse:collapse;margin:20px 0;">
-                <tr style="background:#f9f9f9;"><td style="padding:10px;font-weight:bold;border-bottom:1px solid #eee;">Cliente:</td><td style="padding:10px;border-bottom:1px solid #eee;">${payerName || 'N/A'}</td></tr>
-                <tr><td style="padding:10px;font-weight:bold;border-bottom:1px solid #eee;">Email:</td><td style="padding:10px;border-bottom:1px solid #eee;">${email}</td></tr>
-                <tr style="background:#f9f9f9;"><td style="padding:10px;font-weight:bold;border-bottom:1px solid #eee;">Plan:</td><td style="padding:10px;border-bottom:1px solid #eee;">${planNombre} (${planSlug})</td></tr>
-                <tr><td style="padding:10px;font-weight:bold;border-bottom:1px solid #eee;">Proyecto:</td><td style="padding:10px;border-bottom:1px solid #eee;">${tipoProyecto || 'mantenimiento'}</td></tr>
-                <tr style="background:#f9f9f9;"><td style="padding:10px;font-weight:bold;border-bottom:1px solid #eee;">Monto Pagado:</td><td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;color:#22c55e;">$${amount} USD</td></tr>
-                <tr><td style="padding:10px;font-weight:bold;border-bottom:1px solid #eee;">ID Orden PayPal:</td><td style="padding:10px;border-bottom:1px solid #eee;font-family:monospace;font-size:12px;">${paypalOrderId}</td></tr>
-              </table>
-              <p style="margin-top:20px;">Los datos ya fueron guardados en la base de datos de Supabase y el plan del cliente se encuentra activo.</p>
-            </div>`,
+        await sendEmail({
+          to: ['exemetal@hotmail.com'],
+          subject: `Nueva venta! ${payerName || 'Un cliente'} compro ${planNombre}`,
+          html: paymentNotification({
+            name: payerName,
+            email,
+            plan: planNombre,
+            slug: planSlug,
+            amount,
+            tipoProyecto,
+            orderId: paypalOrderId,
           }),
         })
       } catch (e) {

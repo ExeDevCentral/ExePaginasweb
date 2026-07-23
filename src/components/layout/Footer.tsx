@@ -56,34 +56,34 @@ const Footer = () => {
               {t('footer.navegacion')}
             </h4>
             <ul className="space-y-4">
-              <li>
+              <li className="group">
                 <a
                   href="#products"
-                  className="text-primary-secondary hover:text-accent-cyan transition-colors"
+                  className="text-primary-secondary hover:text-accent-cyan transition-all group-hover:translate-x-1 inline-block"
                 >
                   {t('footer.nav_sistemas')}
                 </a>
               </li>
-              <li>
+              <li className="group">
                 <a
                   href="#features"
-                  className="text-primary-secondary hover:text-accent-cyan transition-colors"
+                  className="text-primary-secondary hover:text-accent-cyan transition-all group-hover:translate-x-1 inline-block"
                 >
                   {t('footer.nav_caracteristicas')}
                 </a>
               </li>
-              <li>
+              <li className="group">
                 <a
                   href="#demo"
-                  className="text-primary-secondary hover:text-accent-cyan transition-colors"
+                  className="text-primary-secondary hover:text-accent-cyan transition-all group-hover:translate-x-1 inline-block"
                 >
                   {t('footer.nav_demo')}
                 </a>
               </li>
-              <li>
+              <li className="group">
                 <a
                   href="#contact"
-                  className="text-primary-secondary hover:text-accent-cyan transition-colors"
+                  className="text-primary-secondary hover:text-accent-cyan transition-all group-hover:translate-x-1 inline-block"
                 >
                   {t('footer.nav_contacto')}
                 </a>
@@ -97,18 +97,18 @@ const Footer = () => {
               {t('footer.soporte_legal')}
             </h4>
             <ul className="space-y-4">
-              <li>
+              <li className="group">
                 <Link
                   to="/terminos"
-                  className="text-primary-secondary hover:text-foreground transition-colors"
+                  className="text-primary-secondary hover:text-foreground transition-all group-hover:translate-x-1 inline-block"
                 >
                   {t('footer.terminos')}
                 </Link>
               </li>
-              <li>
+              <li className="group">
                 <Link
                   to="/privacidad"
-                  className="text-primary-secondary hover:text-foreground transition-colors"
+                  className="text-primary-secondary hover:text-foreground transition-all group-hover:translate-x-1 inline-block"
                 >
                   {t('footer.privacidad')}
                 </Link>
@@ -133,7 +133,7 @@ const Footer = () => {
             © {new Date().getFullYear()} ExeSistemasWEB. {t('footer.derechos')}
           </p>
           <p className="text-primary-secondary text-sm flex items-center gap-1.5">
-            {t('footer.hecho_por')}{' '}
+            Built &amp; maintained by{' '}
             <a
               href="https://github.com/ExeDevCentral"
               target="_blank"

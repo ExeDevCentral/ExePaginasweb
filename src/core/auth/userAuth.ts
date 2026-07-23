@@ -1,77 +1,59 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { supabase } from '../infra/supabase/client'
 import { getAuthRedirectUrl } from './siteUrl'
+import { useAuthSession } from './AuthSessionProvider'
 
 export type AppUser = {
   id: string
   email: string | null
 }
 
-export type Role = 'admin' | 'client' | 'unknown'
+export type Role = 'admin' | 'client' | 'work_member' | 'unknown'
 
-export function useAuthRole(adminEmails: readonly string[]) {
+let cachedRole: Role | null = null
+let cachedUserId: string | null = null
+
+export function useAuthRole() {
+  const { ready, session } = useAuthSession()
   const [user, setUser] = useState<AppUser | null>(null)
   const [role, setRole] = useState<Role>('unknown')
   const [loading, setLoading] = useState(true)
 
-  const adminEmailsNormalized = useMemo(
-    () => adminEmails.map((e) => e.trim().toLowerCase()),
-    [adminEmails]
-  )
-
-  const computeRole = (email: string | null | undefined): Role => {
-    const e = (email ?? '').trim().toLowerCase()
-    if (!e) return 'unknown'
-    return adminEmailsNormalized.includes(e) ? 'admin' : 'client'
-  }
+  const resolveRole = useCallback(async (userId: string): Promise<Role> => {
+    if (cachedUserId === userId && cachedRole) return cachedRole
+    try {
+      const { data: isAdmin, error } = await supabase.rpc('is_admin')
+      if (error) return 'client'
+      const resolved = isAdmin === true ? 'admin' : 'client'
+      cachedUserId = userId
+      cachedRole = resolved
+      return resolved
+    } catch {
+      return 'client'
+    }
+  }, [])
 
   useEffect(() => {
-    let isMounted = true
-    let didResolveInitialSession = false
+    if (!ready) return
 
-    async function init() {
-      try {
-        const { data: sessionData } = await supabase.auth.getSession()
-        const s = sessionData.session
-        const u = s?.user
-        const nextUser = u ? { id: u.id, email: u.email ?? null } : null
-        const nextRole = u ? computeRole(u.email) : 'unknown'
-
-        if (isMounted) {
-          setUser(nextUser)
-          setRole(nextRole)
-        }
-      } catch {
-        if (isMounted) {
-          setRole('unknown')
-          setUser(null)
-        }
-      } finally {
-        didResolveInitialSession = true
-        if (isMounted) setLoading(false)
-      }
+    const u = session?.user
+    if (!u) {
+      setUser(null)
+      setRole('unknown')
+      setLoading(false)
+      cachedRole = null
+      cachedUserId = null
+      return
     }
 
-    init()
+    const appUser = { id: u.id, email: u.email ?? null }
+    setUser(appUser)
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      const u = session?.user
-      const nextUser = u ? { id: u.id, email: u.email ?? null } : null
-      const nextRole = u ? computeRole(u.email) : 'unknown'
-
-      if (isMounted) {
-        setUser(nextUser)
-        setRole(nextRole)
-        // Evita doble setLoading(false) antes/después del init.
-        if (!didResolveInitialSession) setLoading(false)
-      }
+    resolveRole(u.id).then((resolvedRole) => {
+      setRole(resolvedRole)
+      setLoading(false)
     })
-
-    return () => {
-      isMounted = false
-      sub?.subscription?.unsubscribe()
-    }
-  }, [adminEmailsNormalized])
+  }, [ready, session, resolveRole])
 
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -84,8 +66,10 @@ export function useAuthRole(adminEmails: readonly string[]) {
   }
 
   const signOut = async () => {
+    cachedRole = null
+    cachedUserId = null
     await supabase.auth.signOut()
   }
 
-  return { user, role, loading, signInWithGoogle, signOut }
+  return { user, role, loading: !ready || loading, signInWithGoogle, signOut }
 }

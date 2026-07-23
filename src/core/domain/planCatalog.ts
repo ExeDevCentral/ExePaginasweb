@@ -14,12 +14,31 @@ export type PlanCatalogEntry = {
   tier: Exclude<PlanTier, 'none'>
   nombre: string
   precio: number
+  precioUSD: number
 }
 
 export const PLAN_CATALOG: PlanCatalogEntry[] = [
-  { id: 'mantenimiento-basico', tier: 'basico', nombre: 'Abono Básico', precio: 25000 },
-  { id: 'mantenimiento-avanzado', tier: 'avanzado', nombre: 'Abono Avanzado', precio: 50000 },
-  { id: 'mantenimiento-premium', tier: 'premium', nombre: 'Abono Premium', precio: 150000 },
+  {
+    id: 'mantenimiento-basico',
+    tier: 'basico',
+    nombre: 'Abono Básico',
+    precio: 25000,
+    precioUSD: 20,
+  },
+  {
+    id: 'mantenimiento-avanzado',
+    tier: 'avanzado',
+    nombre: 'Abono Avanzado',
+    precio: 50000,
+    precioUSD: 40,
+  },
+  {
+    id: 'mantenimiento-premium',
+    tier: 'premium',
+    nombre: 'Abono Premium',
+    precio: 150000,
+    precioUSD: 100,
+  },
 ]
 
 export function tierFromStorePlanId(planId: string | null | undefined): PlanTier {

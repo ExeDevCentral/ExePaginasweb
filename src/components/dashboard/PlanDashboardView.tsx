@@ -52,7 +52,7 @@ export default function PlanDashboardView({
 }: PlanDashboardViewProps) {
   const theme = PLAN_THEMES[tier]
   const Icon = tier === 'premium' ? Crown : TIER_ICONS[tier]
-  const nombre = cliente?.nombre?.split(' ')[0] ?? 'Cliente'
+  const nombre = cliente?.full_name?.split(' ')[0] ?? 'Cliente'
   const planSlug = suscripciones[0]?.plan?.slug ?? pagos[0]?.plan_slug ?? null
   const [ticketPanelOpen, setTicketPanelOpen] = useState(false)
 
@@ -182,12 +182,16 @@ export default function PlanDashboardView({
             <div className="space-y-2 text-sm">
               <div className="flex justify-between gap-2">
                 <span className="text-muted-foreground">Email</span>
-                <span className="text-foreground font-medium truncate">{cliente?.email ?? '—'}</span>
+                <span className="text-foreground font-medium truncate">
+                  {cliente?.email ?? '—'}
+                </span>
               </div>
               {suscripciones[0] && (
                 <div className="flex justify-between gap-2">
                   <span className="text-muted-foreground">Desde</span>
-                  <span className="text-foreground/80">{formatDate(suscripciones[0].fecha_inicio)}</span>
+                  <span className="text-foreground/80">
+                    {formatDate(suscripciones[0].fecha_inicio)}
+                  </span>
                 </div>
               )}
             </div>

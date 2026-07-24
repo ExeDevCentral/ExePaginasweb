@@ -1,5 +1,7 @@
-import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useMemo } from 'react'
+import { motion, AnimatePresence, useMotionValue, useMotionTemplate } from 'framer-motion'
+import { useState, useMemo, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { Helmet } from 'react-helmet-async'
 import {
   ArrowLeft,
@@ -15,9 +17,64 @@ import {
   Smartphone,
   ChevronRight,
   Sparkles,
+  Coins,
+  Star,
 } from 'lucide-react'
 import Header from '../layout/Header'
 import PremiumBackground from '../Effects/PremiumBackground'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Float, PerspectiveCamera } from '@react-three/drei'
+import * as THREE from 'three'
+
+interface PlanData {
+  id: string
+  name: string
+  description: string
+  setup: { ARS: string; USD: string }
+  monthly: { ARS: string; USD: string }
+  features: string[]
+  popular: boolean
+  icon: typeof Layout
+}
+
+const PLANS: PlanData[] = [
+  {
+    id: 'plan-landing',
+    name: 'Landing Page',
+    description:
+      'Sitio profesional de una página. Ideal para campañas, portfolio o negocio en lanzamiento.',
+    setup: { ARS: '$200.000', USD: 'u$s 400' },
+    monthly: { ARS: '$10.000', USD: 'u$s 20' },
+    features: [
+      'Diseño responsive premium',
+      'SEO técnico integrado',
+      'Formulario de contacto',
+      'Hosting + dominio .com.ar',
+      'Analytics y performance',
+      'Mantenimiento mensual',
+    ],
+    popular: false,
+    icon: Layout,
+  },
+  {
+    id: 'plan-ecommerce',
+    name: 'Tienda Online',
+    description:
+      'E-commerce completo listo para vender. Catálogo, carrito, pagos y panel de gestión.',
+    setup: { ARS: '$450.000', USD: 'u$s 900' },
+    monthly: { ARS: '$25.000', USD: 'u$s 50' },
+    features: [
+      'Catálogo ilimitado de productos',
+      'Carrito + pasarela de pagos',
+      'Panel administrador',
+      'Dashboard de ventas',
+      'SEO + optimización de velocidad',
+      'Soporte prioritario 24/7',
+    ],
+    popular: true,
+    icon: ShoppingCart,
+  },
+]
 
 interface ProjectType {
   id: string
@@ -25,13 +82,6 @@ interface ProjectType {
   icon: typeof Layout
   description: string
   basePrice: number
-}
-
-interface Feature {
-  id: string
-  label: string
-  price: number
-  popular?: boolean
 }
 
 const PROJECT_TYPES: ProjectType[] = [
@@ -79,6 +129,13 @@ const PROJECT_TYPES: ProjectType[] = [
   },
 ]
 
+interface Feature {
+  id: string
+  label: string
+  price: number
+  popular?: boolean
+}
+
 const FEATURES: Feature[] = [
   { id: 'admin', label: 'Panel Administrador', price: 100000, popular: true },
   { id: 'payments', label: 'Pasarela de Pagos', price: 80000 },
@@ -119,8 +176,349 @@ function formatPrice(n: number): string {
   return '$ ' + n.toLocaleString('es-AR')
 }
 
+function FloatingGeos() {
+  const group = useRef<THREE.Group>(null!)
+  useFrame((state) => {
+    group.current.rotation.y = state.clock.elapsedTime * 0.025
+    group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.015) * 0.05
+  })
+
+  const shapes = useMemo(
+    () =>
+      Array.from({ length: 10 }).map((_, i) => ({
+        pos: [(Math.random() - 0.5) * 22, (Math.random() - 0.5) * 14, -6 + Math.random() * -4] as [
+          number,
+          number,
+          number,
+        ],
+        color: i % 2 === 0 ? '#22d3ee' : '#ec4899',
+        scale: 0.4 + Math.random() * 0.8,
+        type: i % 4,
+      })),
+    []
+  )
+
+  return (
+    <group ref={group}>
+      {shapes.map((s, i) => (
+        <Float
+          key={i}
+          speed={0.3 + Math.random() * 0.8}
+          rotationIntensity={0.2}
+          floatIntensity={0.2}
+        >
+          <mesh position={s.pos} scale={s.scale}>
+            {s.type === 0 && <icosahedronGeometry args={[1, 0]} />}
+            {s.type === 1 && <octahedronGeometry args={[1, 0]} />}
+            {s.type === 2 && <dodecahedronGeometry args={[1, 0]} />}
+            {s.type === 3 && <torusKnotGeometry args={[0.6, 0.2, 24, 12]} />}
+            <meshPhysicalMaterial
+              color={s.color}
+              transparent
+              opacity={0.12}
+              roughness={0.1}
+              metalness={0.9}
+              wireframe
+            />
+          </mesh>
+        </Float>
+      ))}
+    </group>
+  )
+}
+
+function Quote3DCanvas() {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  if (!mounted) return null
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[1] opacity-60">
+      <Canvas dpr={[1, 1.5]} gl={{ antialias: true, alpha: true }}>
+        <PerspectiveCamera makeDefault position={[0, 0, 14]} fov={60} />
+        <ambientLight intensity={0.4} />
+        <pointLight position={[10, 10, 10]} intensity={0.8} />
+        <FloatingGeos />
+      </Canvas>
+    </div>
+  )
+}
+
+interface Particle {
+  x: number
+  y: number
+  color: string
+  size: number
+  rotation: number
+  shape: number
+}
+
+function ConfettiBurst({ trigger, intensity = 24 }: { trigger: number; intensity?: number }) {
+  const [particles, setParticles] = useState<Particle[]>([])
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: intensity }).map((_, i) => {
+        const angle = (i / intensity) * Math.PI * 2 + (Math.random() - 0.5) * 0.5
+        const distance = 60 + Math.random() * (intensity <= 24 ? 120 : 200)
+        const colors = ['#22d3ee', '#ec4899', '#f59e0b', '#10b981', '#8b5cf6', '#f97316']
+        return {
+          x: Math.cos(angle) * distance,
+          y: Math.sin(angle) * distance - 30,
+          color: colors[i % colors.length],
+          size: 3 + Math.random() * 7,
+          rotation: Math.random() * 720,
+          shape: i % 3,
+        }
+      })
+    )
+  }, [trigger, intensity])
+
+  return (
+    <div className="absolute inset-0 pointer-events-none z-50" key={trigger}>
+      {particles.map((p, i) => (
+        <motion.div
+          key={i}
+          initial={{ x: 0, y: 0, opacity: 1, scale: 0, rotate: 0 }}
+          animate={{
+            x: p.x,
+            y: p.y,
+            opacity: 0,
+            scale: 1,
+            rotate: p.rotation,
+          }}
+          transition={{
+            duration: 0.5 + Math.random() * 0.6,
+            ease: 'easeOut',
+            delay: Math.random() * 0.12,
+          }}
+          className="absolute left-1/2 top-1/2"
+          style={{
+            width: p.size,
+            height: p.size,
+            backgroundColor: p.color,
+            borderRadius:
+              p.shape === 0 ? '50%' : p.shape === 1 ? '2px' : '30% 70% 70% 30% / 30% 30% 70% 70%',
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+function GlowCard({
+  children,
+  className = '',
+  popular = false,
+  onClick,
+}: {
+  children: React.ReactNode
+  className?: string
+  popular?: boolean
+  onClick?: () => void
+}) {
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const rotateX = useMotionValue(0)
+  const rotateY = useMotionValue(0)
+
+  function handleMouseMove(e: React.MouseEvent) {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - left
+    const y = e.clientY - top
+    mouseX.set(x)
+    mouseY.set(y)
+    rotateX.set(((y - height / 2) / height) * -8)
+    rotateY.set(((x - width / 2) / width) * 8)
+  }
+
+  function handleMouseLeave() {
+    mouseX.set(0)
+    mouseY.set(0)
+    rotateX.set(0)
+    rotateY.set(0)
+  }
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onClick={onClick}
+      style={{ rotateX, rotateY, transformStyle: 'preserve-3d' as any, perspective: 1000 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className={`group relative rounded-2xl border overflow-hidden transition-shadow duration-500 ${
+        popular
+          ? 'border-accent-magenta/50 shadow-lg shadow-accent-magenta/10'
+          : 'border-border hover:border-accent-cyan/30 hover:shadow-lg hover:shadow-accent-cyan/5'
+      } ${className}`}
+    >
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`radial-gradient(500px circle at ${mouseX}px ${mouseY}px, ${popular ? 'rgba(236,72,153, 0.15)' : 'rgba(34,211,238, 0.1)'}, transparent 80%)`,
+        }}
+      />
+      <div style={{ transform: 'translateZ(24px)' }}>{children}</div>
+    </motion.div>
+  )
+}
+
+function PlanCard({
+  plan,
+  currency,
+  onSelect,
+  index,
+}: {
+  plan: PlanData
+  currency: 'ARS' | 'USD'
+  onSelect: () => void
+  index: number
+}) {
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const rotateX = useMotionValue(0)
+  const rotateY = useMotionValue(0)
+  const Icon = plan.icon
+
+  function handleMouseMove(e: React.MouseEvent) {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - left
+    const y = e.clientY - top
+    mouseX.set(x)
+    mouseY.set(y)
+    rotateX.set(((y - height / 2) / height) * -6)
+    rotateY.set(((x - width / 2) / width) * 6)
+  }
+
+  function handleMouseLeave() {
+    mouseX.set(0)
+    mouseY.set(0)
+    rotateX.set(0)
+    rotateY.set(0)
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        delay: index * 0.15,
+        type: 'spring',
+        stiffness: 100,
+        damping: 15,
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX, rotateY, transformStyle: 'preserve-3d' as any, perspective: 1000 }}
+      className={`group relative rounded-[2.5rem] bg-gradient-to-b from-card/90 to-card/50 backdrop-blur-xl border overflow-hidden transition-shadow duration-500 hover:-translate-y-2 p-8 flex flex-col ${
+        plan.popular
+          ? 'border-accent-magenta/50 shadow-2xl shadow-accent-magenta/10 hover:shadow-accent-magenta/20'
+          : 'border-border hover:border-accent-cyan/30 hover:shadow-lg hover:shadow-accent-cyan/5'
+      }`}
+    >
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, ${plan.popular ? 'rgba(236,72,153, 0.15)' : 'rgba(34,211,238, 0.1)'}, transparent 80%)`,
+        }}
+      />
+
+      {plan.popular && (
+        <>
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-magenta to-transparent" />
+          <motion.div
+            animate={{ scale: [1, 1.05, 1], opacity: [1, 0.8, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-xs font-bold text-foreground uppercase tracking-wider shadow-lg z-10"
+          >
+            Más elegido
+          </motion.div>
+        </>
+      )}
+
+      <div className="relative z-10 flex-1 flex flex-col" style={{ transform: 'translateZ(32px)' }}>
+        <motion.div
+          className="w-14 h-14 rounded-xl bg-gradient-to-br from-accent-cyan/20 to-accent-magenta/20 flex items-center justify-center mb-4 relative overflow-hidden"
+          whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-cyan/10 via-accent-magenta/10 to-accent-cyan/10 bg-[length:200%_200%] animate-gradient-shift" />
+          <Icon className="w-7 h-7 text-accent-cyan relative z-10" />
+        </motion.div>
+
+        <h3 className="text-2xl font-montserrat font-black text-foreground mb-2">{plan.name}</h3>
+        <p className="text-sm text-muted-foreground mb-6">{plan.description}</p>
+
+        <div className="mb-6 p-5 rounded-2xl bg-muted/80 border border-border relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-accent-cyan/[0.03] to-transparent" />
+          <div className="relative z-10">
+            <div className="mb-3 pb-3 border-b border-border/50">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">
+                Desarrollo único
+              </p>
+              <p className="text-3xl font-montserrat font-black text-foreground">
+                {plan.setup[currency]}
+              </p>
+            </div>
+            <div className="flex items-end gap-1">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+                Mantenimiento / mes
+              </p>
+              <p className="text-xl font-montserrat font-bold text-accent-cyan ml-auto">
+                {plan.monthly[currency]}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <ul className="space-y-3 mb-8 flex-1">
+          {plan.features.map((feat, i) => (
+            <motion.li
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.15 + i * 0.05 }}
+              className="flex items-center gap-3"
+            >
+              <div className="shrink-0 w-5 h-5 rounded-full bg-emerald-500/15 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-emerald-500/20 transition-shadow">
+                <Check className="w-3 h-3 text-emerald-400" />
+              </div>
+              <span className="text-sm text-muted-foreground">{feat}</span>
+            </motion.li>
+          ))}
+        </ul>
+
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={onSelect}
+          className={`w-full py-4 rounded-xl text-center font-bold transition-all duration-300 relative overflow-hidden group/btn ${
+            plan.popular
+              ? 'bg-gradient-to-r from-accent-cyan via-accent-cyan/90 to-accent-magenta text-foreground shadow-lg shadow-accent-cyan/20 hover:shadow-xl hover:shadow-accent-magenta/20 bg-[length:200%_200%] animate-gradient-shift'
+              : 'border border-border bg-card/50 text-foreground hover:border-accent-cyan/40 hover:bg-card/80'
+          }`}
+        >
+          <span className="relative z-10">Elegir Plan</span>
+          {plan.popular && (
+            <motion.div
+              className="absolute inset-0 -translate-x-full"
+              animate={{ x: ['-100%', '200%'] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent w-1/2" />
+            </motion.div>
+          )}
+        </motion.button>
+      </div>
+    </motion.div>
+  )
+}
+
 export default function QuoteBuilder() {
+  const navigate = useNavigate()
+  const [mode, setMode] = useState<'plans' | 'custom'>('plans')
   const [step, setStep] = useState(0)
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+  const [currency, setCurrency] = useState<'ARS' | 'USD'>('ARS')
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [selectedFeatures, setSelectedFeatures] = useState<Set<string>>(new Set())
   const [designTier, setDesignTier] = useState<string>('template')
@@ -128,7 +526,8 @@ export default function QuoteBuilder() {
   const [email, setEmail] = useState('')
   const [company, setCompany] = useState('')
   const [sending, setSending] = useState(false)
-  const [sent, setSent] = useState(false)
+  const [confettiTrigger, setConfettiTrigger] = useState(0)
+  const [planConfetti, setPlanConfetti] = useState(0)
 
   const toggleFeature = (id: string) => {
     setSelectedFeatures((prev) => {
@@ -176,407 +575,540 @@ export default function QuoteBuilder() {
         body: JSON.stringify({
           name: name || 'Sin nombre',
           email: email || 'Sin email',
-          message: `Cotización automática:
-Proyecto: ${selectedTypeData?.label ?? ''}
-Diseño: ${DESIGN_TIERS.find((d) => d.id === designTier)?.label ?? ''}
-Funcionalidades: ${FEATURES.filter((f) => selectedFeatures.has(f.id))
+          message: `Cotización automática:\nProyecto: ${selectedTypeData?.label ?? ''}\nDiseño: ${DESIGN_TIERS.find((d) => d.id === designTier)?.label ?? ''}\nFuncionalidades: ${FEATURES.filter(
+            (f) => selectedFeatures.has(f.id)
+          )
             .map((f) => f.label)
-            .join(', ')}
-Presupuesto: ${formatPrice(total)}
-Empresa: ${company || '-'}`,
+            .join(', ')}\nPresupuesto: ${formatPrice(total)}\nEmpresa: ${company || '-'}`,
         }),
       })
+      toast.success('Cotización enviada con éxito', {
+        description: 'Te respondo en menos de 24 horas.',
+      })
     } catch {
-      console.error('[QuoteBuilder] Error al enviar cotización')
+      toast.error('Error al enviar', {
+        description: 'Probá enviando por WhatsApp directo.',
+      })
     }
     setSending(false)
-    setSent(true)
+    setTimeout(() => navigate('/'), 1200)
   }
 
-  if (sent) {
-    return (
-      <div className="min-h-screen bg-transparent text-primary-text relative">
-        <PremiumBackground />
-        <Header />
-        <div className="flex items-center justify-center pt-36 px-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="max-w-lg w-full text-center"
-          >
-            <div className="w-20 h-20 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-6">
-              <Check className="w-10 h-10 text-emerald-400" />
-            </div>
-            <h1 className="text-4xl font-montserrat font-black text-foreground mb-4">
-              Cotización Enviada
-            </h1>
-            <p className="text-muted-foreground mb-8">
-              Te voy a responder en menos de 24 horas. Mientras tanto, podés escribirme directo por
-              WhatsApp.
-            </p>
-            <a
-              href={`https://wa.me/${WHAATSAPP_NUMBER}?text=${buildWhatsAppMessage()}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground font-bold hover:opacity-90 transition-opacity"
-            >
-              <MessageCircle className="w-5 h-5" />
-              Hablar por WhatsApp
-            </a>
-          </motion.div>
-        </div>
-      </div>
-    )
+  const handlePlanSelect = (planId: string) => {
+    setSelectedPlan(planId)
+    setPlanConfetti((c) => c + 1)
+    if (planId === 'plan-landing') {
+      setSelectedType('landing')
+      setSelectedFeatures(new Set(['admin', 'notifications']))
+      setDesignTier('template')
+    } else {
+      setSelectedType('ecommerce')
+      setSelectedFeatures(new Set(['admin', 'payments', 'dashboard', 'database']))
+      setDesignTier('custom')
+    }
+    setTimeout(() => {
+      setMode('custom')
+      setStep(3)
+    }, 600)
   }
+
+  const goToCustom = () => {
+    setMode('custom')
+    setStep(0)
+    setConfettiTrigger((c) => c + 1)
+  }
+
+  const changeStep = (newStep: number) => {
+    setStep(newStep)
+    setConfettiTrigger((c) => c + 1)
+  }
+
+  const stepLabels = ['Proyecto', 'Funcionalidades', 'Diseño', 'Resumen']
 
   return (
-    <div className="min-h-screen bg-transparent text-primary-text relative">
+    <div className="min-h-screen bg-transparent text-primary-text relative overflow-hidden">
       <Helmet>
         <title>Cotizador Online | ExeSistemasWEB</title>
         <meta
           name="description"
-          content="Cotizá tu proyecto web en minutos. Seleccioná tipo, funcionalidades y recibí un presupuesto estimado al instante."
+          content="Cotizá tu proyecto web en minutos. Seleccioná plan, tipo y funcionalidades, y recibí un presupuesto estimado al instante."
         />
       </Helmet>
+      <Quote3DCanvas />
       <PremiumBackground />
       <Header />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 pt-36 pb-24">
-        {/* Progress */}
-        <div className="flex items-center gap-2 mb-12 justify-center">
-          {['Proyecto', 'Funcionalidades', 'Diseño', 'Resumen'].map((label, i) => (
-            <div key={label} className="flex items-center gap-2">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                  i <= step
-                    ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground'
-                    : 'bg-muted text-muted-foreground'
-                }`}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 pt-36 pb-24">
+        {mode === 'plans' && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <div className="text-center mb-12">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-xs font-bold uppercase tracking-wider mb-6">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Planes de Desarrollo
+                </div>
+              </motion.div>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="text-4xl md:text-6xl font-montserrat font-black text-foreground tracking-tight mb-6"
               >
-                {i + 1}
-              </div>
-              <span
-                className={`text-xs font-semibold hidden sm:block ${i <= step ? 'text-foreground' : 'text-muted-foreground'}`}
+                Modelo{' '}
+                <span className="bg-gradient-to-r from-accent-cyan via-accent-magenta to-accent-cyan bg-clip-text text-transparent bg-[length:200%_200%] animate-gradient-shift">
+                  Híbrido
+                </span>
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-muted-foreground max-w-2xl mx-auto text-lg"
               >
-                {label}
-              </span>
-              {i < 3 && <ChevronRight className="w-4 h-4 text-muted-foreground/40" />}
+                Pagás el desarrollo una sola vez, y una cuota mínima de mantenimiento para que tu
+                web esté siempre online, segura y rápida.
+              </motion.p>
             </div>
-          ))}
-        </div>
 
-        <AnimatePresence mode="wait">
-          {step === 0 && (
             <motion.div
-              key="step0"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3 }}
+              className="flex justify-center mb-10"
             >
-              <div className="text-center mb-10">
-                <Sparkles className="w-8 h-8 text-accent-cyan mx-auto mb-4" />
-                <h1 className="text-4xl md:text-5xl font-montserrat font-black text-foreground mb-3">
-                  ¿Qué necesitás?
-                </h1>
-                <p className="text-muted-foreground">
-                  Elegí el tipo de proyecto y te doy un presupuesto estimado al instante
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {PROJECT_TYPES.map((pt) => {
-                  const Icon = pt.icon
-                  const isSelected = selectedType === pt.id
-                  return (
-                    <motion.button
-                      key={pt.id}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => setSelectedType(pt.id)}
-                      className={`text-left p-6 rounded-2xl border transition-all ${
-                        isSelected
-                          ? 'border-accent-cyan bg-accent-cyan/5 shadow-lg shadow-accent-cyan/10'
-                          : 'border-border bg-muted/50 hover:border-border hover:bg-muted'
-                      }`}
-                    >
-                      <div
-                        className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
-                          isSelected
-                            ? 'bg-accent-cyan/20 text-accent-cyan'
-                            : 'bg-muted text-muted-foreground'
-                        }`}
-                      >
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-lg font-bold text-foreground mb-1">{pt.label}</h3>
-                      <p className="text-sm text-muted-foreground mb-3">{pt.description}</p>
-                      <p className="text-xl font-black font-montserrat text-accent-cyan">
-                        {formatPrice(pt.basePrice)}
-                      </p>
-                    </motion.button>
-                  )
-                })}
-              </div>
-              <div className="flex justify-center mt-10">
+              <div className="inline-flex items-center gap-2 bg-muted/80 border border-border rounded-2xl p-1.5">
                 <button
-                  disabled={!selectedType}
-                  onClick={() => setStep(1)}
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground font-bold disabled:opacity-30 transition-opacity"
+                  onClick={() => setCurrency('ARS')}
+                  className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
+                    currency === 'ARS'
+                      ? 'bg-gradient-to-r from-accent-cyan to-accent-cyan/80 text-black shadow-lg shadow-accent-cyan/25 bg-[length:200%_200%] animate-gradient-shift'
+                      : 'text-foreground/60 hover:text-foreground'
+                  }`}
                 >
-                  Siguiente <ArrowRight className="w-4 h-4" />
+                  <Coins size={14} />
+                  ARS ($)
+                </button>
+                <button
+                  onClick={() => setCurrency('USD')}
+                  className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
+                    currency === 'USD'
+                      ? 'bg-gradient-to-r from-accent-magenta to-accent-magenta/80 text-foreground shadow-lg shadow-accent-magenta/25 bg-[length:200%_200%] animate-gradient-shift'
+                      : 'text-foreground/60 hover:text-foreground'
+                  }`}
+                >
+                  <Coins size={14} />
+                  USD (u$s)
                 </button>
               </div>
             </motion.div>
-          )}
 
-          {step === 1 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+              {PLANS.map((plan, i) => (
+                <PlanCard
+                  key={plan.id}
+                  plan={plan}
+                  currency={currency}
+                  index={i}
+                  onSelect={() => handlePlanSelect(plan.id)}
+                />
+              ))}
+            </div>
+
+            <ConfettiBurst trigger={planConfetti} intensity={20} />
+
             <motion.div
-              key="step1"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="text-center"
             >
-              <div className="text-center mb-10">
-                <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
-                  Funcionalidades
-                </h2>
-                <p className="text-muted-foreground">
-                  Seleccioná las que necesites (podés cambiar después)
-                </p>
+              <div className="relative mb-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="px-4 bg-background text-muted-foreground text-sm">o</span>
+                </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
-                {FEATURES.map((feat) => {
-                  const isSelected = selectedFeatures.has(feat.id)
-                  return (
-                    <motion.button
-                      key={feat.id}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => toggleFeature(feat.id)}
-                      className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
-                        isSelected
-                          ? 'border-accent-cyan bg-accent-cyan/5'
-                          : 'border-border bg-muted/30 hover:border-border hover:bg-muted'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
-                            isSelected ? 'border-accent-cyan bg-accent-cyan' : 'border-border'
-                          }`}
-                        >
-                          {isSelected && <Check className="w-4 h-4 text-foreground" />}
-                        </div>
-                        <span className="text-sm font-medium text-foreground">{feat.label}</span>
-                      </div>
-                      <span className="text-sm font-bold text-accent-cyan">
-                        + {formatPrice(feat.price)}
-                      </span>
-                    </motion.button>
-                  )
-                })}
-              </div>
-              <div className="flex justify-between">
-                <button
-                  onClick={() => setStep(0)}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
-                >
-                  <ArrowLeft className="w-4 h-4" /> Atrás
-                </button>
-                <button
-                  onClick={() => setStep(2)}
-                  className="inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground font-bold transition-opacity"
-                >
-                  Siguiente <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={goToCustom}
+                className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan/20 via-accent-cyan/15 to-accent-magenta/20 border border-accent-cyan/30 text-foreground font-bold transition-all bg-[length:200%_200%] animate-gradient-shift hover:from-accent-cyan/30 hover:to-accent-magenta/30 hover:shadow-lg hover:shadow-accent-cyan/10"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_4s_ease-in-out_infinite]" />
+                <Star className="w-5 h-5 text-accent-cyan relative z-10" />
+                <span className="relative z-10">Armá tu proyecto a medida</span>
+                <ArrowRight className="w-4 h-4 relative z-10" />
+              </motion.button>
             </motion.div>
-          )}
+          </motion.div>
+        )}
 
-          {step === 2 && (
-            <motion.div
-              key="step2"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-            >
-              <div className="text-center mb-10">
-                <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
-                  Diseño
-                </h2>
-                <p className="text-muted-foreground">
-                  Elegí el nivel de diseño que quieras para tu proyecto
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-                {DESIGN_TIERS.map((d) => {
-                  const isSelected = designTier === d.id
-                  return (
-                    <motion.button
-                      key={d.id}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => setDesignTier(d.id)}
-                      className={`text-left p-6 rounded-2xl border transition-all ${
-                        isSelected
-                          ? 'border-accent-cyan bg-accent-cyan/5 shadow-lg shadow-accent-cyan/10'
-                          : 'border-border bg-muted/50 hover:border-border hover:bg-muted'
-                      }`}
-                    >
-                      <h3 className="text-lg font-bold text-foreground mb-2">{d.label}</h3>
-                      <p className="text-sm text-muted-foreground mb-4">{d.description}</p>
-                      <p className="text-xl font-black font-montserrat text-accent-cyan">
-                        {d.price === 0 ? 'Incluido' : formatPrice(d.price)}
-                      </p>
-                    </motion.button>
-                  )
-                })}
-              </div>
-              <div className="flex justify-between">
-                <button
-                  onClick={() => setStep(1)}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
+        {mode === 'custom' && (
+          <>
+            <div className="flex items-center gap-2 mb-12 justify-center">
+              {stepLabels.map((label, i) => (
+                <div key={label} className="flex items-center gap-2">
+                  <motion.div
+                    animate={
+                      i === step
+                        ? {
+                            scale: [1, 1.18, 1],
+                            boxShadow: [
+                              '0 0 20px rgba(34,211,238,0.3)',
+                              '0 0 40px rgba(236,72,153,0.4)',
+                              '0 0 20px rgba(34,211,238,0.3)',
+                            ],
+                            transition: { repeat: Infinity, duration: 2 },
+                          }
+                        : {}
+                    }
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                      i <= step
+                        ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground shadow-lg shadow-accent-cyan/20 bg-[length:200%_200%] animate-gradient-shift'
+                        : 'bg-muted text-muted-foreground'
+                    }`}
+                  >
+                    {i + 1}
+                  </motion.div>
+                  <span
+                    className={`text-xs font-semibold hidden sm:block ${i <= step ? 'text-foreground' : 'text-muted-foreground'}`}
+                  >
+                    {label}
+                  </span>
+                  {i < 3 && <ChevronRight className="w-4 h-4 text-muted-foreground/40" />}
+                </div>
+              ))}
+            </div>
+
+            <AnimatePresence mode="wait">
+              <ConfettiBurst key={`step-${step}`} trigger={confettiTrigger} intensity={16} />
+
+              {step === 0 && (
+                <motion.div
+                  key="step0"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
                 >
-                  <ArrowLeft className="w-4 h-4" /> Atrás
-                </button>
-                <button
-                  onClick={() => setStep(3)}
-                  className="inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground font-bold transition-opacity"
-                >
-                  Ver Cotización <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </motion.div>
-          )}
-
-          {step === 3 && (
-            <motion.div
-              key="step3"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-            >
-              <div className="text-center mb-10">
-                <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
-                  Tu Cotización
-                </h2>
-                <p className="text-muted-foreground">Completá tus datos y recibí el presupuesto</p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                {/* Resumen */}
-                <div className="lg:col-span-3 space-y-4">
-                  <div className="rounded-2xl border border-border bg-muted/50 p-6">
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
-                      Resumen
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Proyecto</span>
-                        <span className="text-sm font-bold text-foreground">
-                          {selectedTypeData?.label}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Diseño</span>
-                        <span className="text-sm font-bold text-foreground">
-                          {DESIGN_TIERS.find((d) => d.id === designTier)?.label}
-                        </span>
-                      </div>
-                      {FEATURES.filter((f) => selectedFeatures.has(f.id)).map((f) => (
-                        <div key={f.id} className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">{f.label}</span>
-                          <span className="text-sm font-bold text-accent-cyan">
-                            + {formatPrice(f.price)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-6 pt-4 border-t border-border flex justify-between items-center">
-                      <span className="text-lg font-black text-foreground">Total estimado</span>
-                      <span className="text-3xl font-black font-montserrat text-foreground">
-                        {formatPrice(total)}
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      *Presupuesto estimado. El precio final puede variar según requerimientos
-                      específicos.
+                  <div className="text-center mb-10">
+                    <Sparkles className="w-8 h-8 text-accent-cyan mx-auto mb-4" />
+                    <h1 className="text-4xl md:text-5xl font-montserrat font-black text-foreground mb-3">
+                      ¿Qué necesitás?
+                    </h1>
+                    <p className="text-muted-foreground">
+                      Elegí el tipo de proyecto y te doy un presupuesto estimado al instante
                     </p>
                   </div>
-                </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {PROJECT_TYPES.map((pt) => {
+                      const Icon = pt.icon
+                      const isSelected = selectedType === pt.id
+                      return (
+                        <GlowCard
+                          key={pt.id}
+                          onClick={() => setSelectedType(pt.id)}
+                          popular={isSelected}
+                        >
+                          <div className={`p-6 ${isSelected ? 'bg-accent-cyan/5' : ''}`}>
+                            <div
+                              className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all ${
+                                isSelected
+                                  ? 'bg-accent-cyan/20 text-accent-cyan'
+                                  : 'bg-muted text-muted-foreground'
+                              }`}
+                            >
+                              <Icon className="w-6 h-6" />
+                            </div>
+                            <h3 className="text-lg font-bold text-foreground mb-1">{pt.label}</h3>
+                            <p className="text-sm text-muted-foreground mb-3">{pt.description}</p>
+                            <p className="text-xl font-black font-montserrat text-accent-cyan">
+                              {formatPrice(pt.basePrice)}
+                            </p>
+                          </div>
+                        </GlowCard>
+                      )
+                    })}
+                  </div>
+                  <div className="flex justify-center mt-10">
+                    <button
+                      disabled={!selectedType}
+                      onClick={() => changeStep(1)}
+                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold disabled:opacity-30 transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
+                      <span className="relative z-10">Siguiente</span>{' '}
+                      <ArrowRight className="w-4 h-4 relative z-10" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
 
-                {/* Form */}
-                <div className="lg:col-span-2">
-                  <div className="rounded-2xl border border-border bg-muted/50 p-6">
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
-                      Tus datos
-                    </h3>
-                    <div className="space-y-4">
-                      <div>
-                        <input
-                          type="text"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          placeholder="Nombre *"
-                          className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="Email *"
-                          className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="text"
-                          value={company}
-                          onChange={(e) => setCompany(e.target.value)}
-                          placeholder="Empresa (opcional)"
-                          className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
-                        />
-                      </div>
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
+                >
+                  <div className="text-center mb-10">
+                    <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
+                      Funcionalidades
+                    </h2>
+                    <p className="text-muted-foreground">
+                      Seleccioná las que necesites (podés cambiar después)
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+                    {FEATURES.map((feat) => {
+                      const isSelected = selectedFeatures.has(feat.id)
+                      return (
+                        <GlowCard
+                          key={feat.id}
+                          onClick={() => toggleFeature(feat.id)}
+                          popular={isSelected}
+                        >
+                          <div
+                            className={`flex items-center justify-between p-4 ${isSelected ? 'bg-accent-cyan/5' : ''}`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
+                                  isSelected ? 'border-accent-cyan bg-accent-cyan' : 'border-border'
+                                }`}
+                              >
+                                {isSelected && <Check className="w-4 h-4 text-foreground" />}
+                              </div>
+                              <span className="text-sm font-medium text-foreground">
+                                {feat.label}
+                              </span>
+                            </div>
+                            <span className="text-sm font-bold text-accent-cyan">
+                              + {formatPrice(feat.price)}
+                            </span>
+                          </div>
+                        </GlowCard>
+                      )
+                    })}
+                  </div>
+                  <div className="flex justify-between">
+                    <button
+                      onClick={() => changeStep(0)}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
+                    >
+                      <ArrowLeft className="w-4 h-4" /> Atrás
+                    </button>
+                    <button
+                      onClick={() => changeStep(2)}
+                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
+                      <span className="relative z-10">Siguiente</span>{' '}
+                      <ArrowRight className="w-4 h-4 relative z-10" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
 
-                      <button
-                        onClick={handleSendQuote}
-                        disabled={sending || !name || !email}
-                        className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground font-bold disabled:opacity-30 transition-opacity"
-                      >
-                        {sending ? (
-                          'Enviando...'
-                        ) : (
-                          <>
-                            <Send className="w-4 h-4" /> Enviar Cotización
-                          </>
-                        )}
-                      </button>
+              {step === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
+                >
+                  <div className="text-center mb-10">
+                    <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
+                      Diseño
+                    </h2>
+                    <p className="text-muted-foreground">
+                      Elegí el nivel de diseño que quieras para tu proyecto
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+                    {DESIGN_TIERS.map((d) => {
+                      const isSelected = designTier === d.id
+                      return (
+                        <GlowCard
+                          key={d.id}
+                          onClick={() => setDesignTier(d.id)}
+                          popular={isSelected}
+                        >
+                          <div className={`p-6 ${isSelected ? 'bg-accent-cyan/5' : ''}`}>
+                            <h3 className="text-lg font-bold text-foreground mb-2">{d.label}</h3>
+                            <p className="text-sm text-muted-foreground mb-4">{d.description}</p>
+                            <p className="text-xl font-black font-montserrat text-accent-cyan">
+                              {d.price === 0 ? 'Incluido' : formatPrice(d.price)}
+                            </p>
+                          </div>
+                        </GlowCard>
+                      )
+                    })}
+                  </div>
+                  <div className="flex justify-between">
+                    <button
+                      onClick={() => changeStep(1)}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
+                    >
+                      <ArrowLeft className="w-4 h-4" /> Atrás
+                    </button>
+                    <button
+                      onClick={() => changeStep(3)}
+                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
+                      <span className="relative z-10">Ver Cotización</span>{' '}
+                      <ArrowRight className="w-4 h-4 relative z-10" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
 
-                      <a
-                        href={`https://wa.me/${WHAATSAPP_NUMBER}?text=${buildWhatsAppMessage()}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-3 w-full px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors text-sm"
-                      >
-                        <MessageCircle className="w-4 h-4 text-green-400" />
-                        Enviar por WhatsApp
-                      </a>
+              {step === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
+                >
+                  <div className="text-center mb-10">
+                    <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
+                      Tu Cotización
+                    </h2>
+                    <p className="text-muted-foreground">
+                      Completá tus datos y recibí el presupuesto
+                    </p>
+                  </div>
+
+                  {selectedPlan && (
+                    <div className="max-w-lg mx-auto mb-8 p-4 rounded-2xl bg-gradient-to-r from-accent-cyan/10 to-accent-magenta/10 border border-accent-cyan/20 text-center">
+                      <p className="text-xs font-bold uppercase tracking-widest text-accent-cyan mb-1">
+                        Plan seleccionado
+                      </p>
+                      <p className="text-lg font-black text-foreground">
+                        {PLANS.find((p) => p.id === selectedPlan)?.name}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                    <div className="lg:col-span-3 space-y-4">
+                      <div className="rounded-2xl border border-border bg-muted/50 p-6">
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
+                          Resumen
+                        </h3>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Proyecto</span>
+                            <span className="text-sm font-bold text-foreground">
+                              {selectedTypeData?.label}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Diseño</span>
+                            <span className="text-sm font-bold text-foreground">
+                              {DESIGN_TIERS.find((d) => d.id === designTier)?.label}
+                            </span>
+                          </div>
+                          {FEATURES.filter((f) => selectedFeatures.has(f.id)).map((f) => (
+                            <div key={f.id} className="flex justify-between items-center">
+                              <span className="text-sm text-muted-foreground">{f.label}</span>
+                              <span className="text-sm font-bold text-accent-cyan">
+                                + {formatPrice(f.price)}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-6 pt-4 border-t border-border flex justify-between items-center">
+                          <span className="text-lg font-black text-foreground">Total estimado</span>
+                          <span className="text-3xl font-black font-montserrat text-foreground">
+                            {formatPrice(total)}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          *Presupuesto estimado. El precio final puede variar según requerimientos
+                          específicos.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="lg:col-span-2">
+                      <div className="rounded-2xl border border-border bg-muted/50 p-6">
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
+                          Tus datos
+                        </h3>
+                        <div className="space-y-4">
+                          <div>
+                            <input
+                              type="text"
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
+                              placeholder="Nombre *"
+                              className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
+                            />
+                          </div>
+                          <div>
+                            <input
+                              type="email"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              placeholder="Email *"
+                              className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
+                            />
+                          </div>
+                          <div>
+                            <input
+                              type="text"
+                              value={company}
+                              onChange={(e) => setCompany(e.target.value)}
+                              placeholder="Empresa (opcional)"
+                              className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
+                            />
+                          </div>
+
+                          <button
+                            onClick={handleSendQuote}
+                            disabled={sending || !name || !email}
+                            className="relative overflow-hidden w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold disabled:opacity-30 transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
+                          >
+                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
+                            {sending ? (
+                              <span className="relative z-10">Enviando...</span>
+                            ) : (
+                              <span className="relative z-10 flex items-center gap-3">
+                                <Send className="w-4 h-4" /> Enviar Cotización
+                              </span>
+                            )}
+                          </button>
+
+                          <a
+                            href={`https://wa.me/${WHAATSAPP_NUMBER}?text=${buildWhatsAppMessage()}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-3 w-full px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors text-sm"
+                          >
+                            <MessageCircle className="w-4 h-4 text-green-400" />
+                            Enviar por WhatsApp
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <div className="flex justify-start mt-8">
-                <button
-                  onClick={() => setStep(2)}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
-                >
-                  <ArrowLeft className="w-4 h-4" /> Atrás
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  <div className="flex justify-start mt-8">
+                    <button
+                      onClick={() => changeStep(2)}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
+                    >
+                      <ArrowLeft className="w-4 h-4" /> Atrás
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </>
+        )}
       </div>
     </div>
   )

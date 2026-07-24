@@ -15,14 +15,14 @@ interface PlanData {
 const PRICING_PLANS: PlanData[] = [
   {
     tKey: 'landing',
-    setupFee: { ARS: '$200.000', USD: 'u$s 400' },
+    setupFee: { ARS: '$200.000', USD: 'u$s 300' },
     monthlyFee: { ARS: '$10.000', USD: 'u$s 20' },
     includedFeatures: [true, true, true, true, false, false],
     popular: false,
   },
   {
     tKey: 'ecommerce',
-    setupFee: { ARS: '$450.000', USD: 'u$s 900' },
+    setupFee: { ARS: '$450.000', USD: 'u$s 700' },
     monthlyFee: { ARS: '$25.000', USD: 'u$s 50' },
     includedFeatures: [true, true, true, true, true, true],
     popular: true,
@@ -84,22 +84,30 @@ const PricingCard = ({
       )}
 
       <div className="relative z-10 flex-1 flex flex-col">
-        <h3 className="text-3xl font-outfit font-black text-foreground mb-3">{t(`pricing.${plan.tKey}_nombre`)}</h3>
-        <p className="text-sm text-muted-foreground mb-8 min-h-[40px]">{t(`pricing.${plan.tKey}_desc`)}</p>
+        <h3 className="text-3xl font-outfit font-black text-foreground mb-3">
+          {t(`pricing.${plan.tKey}_nombre`)}
+        </h3>
+        <p className="text-sm text-muted-foreground mb-8 min-h-[40px]">
+          {t(`pricing.${plan.tKey}_desc`)}
+        </p>
 
         <div className="mb-8 p-6 rounded-2xl bg-muted border border-border">
           <div className="mb-4 pb-4 border-b border-border">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">
               {t('pricing.setup_label')}
             </p>
-            <p className="text-4xl font-outfit font-black text-foreground">{plan.setupFee[currency]}</p>
+            <p className="text-4xl font-outfit font-black text-foreground">
+              {plan.setupFee[currency]}
+            </p>
           </div>
           <div>
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">
               {t('pricing.monthly_label')}
             </p>
             <div className="flex items-end gap-1">
-              <p className="text-2xl font-outfit font-bold text-accent-cyan">{plan.monthlyFee[currency]}</p>
+              <p className="text-2xl font-outfit font-bold text-accent-cyan">
+                {plan.monthlyFee[currency]}
+              </p>
               <span className="text-xs text-muted-foreground mb-1">{t('pricing.per_month')}</span>
             </div>
           </div>

@@ -148,6 +148,15 @@ const Header = () => {
               )
             })}
 
+            {/* Cotizador */}
+            <motion.a
+              href="/cotizador"
+              className="relative flex items-center gap-1 px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-emerald-400/80 hover:text-emerald-400 group"
+            >
+              <span>Cotizador</span>
+              <span className="absolute bottom-1.5 left-3 right-3 h-[1px] bg-emerald-400/40 transition-transform duration-300 origin-left scale-x-0 group-hover:scale-x-100" />
+            </motion.a>
+
             <span className="w-px h-3 mx-2 shrink-0 bg-zinc-800" />
 
             {/* Tienda Online */}
@@ -285,11 +294,23 @@ const Header = () => {
                   )
                 })}
 
-                {/* Tienda */}
+                {/* Cotizador */}
                 <motion.a
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 3 * 0.05 }}
+                  href="/cotizador"
+                  className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-zinc-900/60 text-emerald-400/80 flex items-center gap-1.5"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span>Cotizador</span>
+                </motion.a>
+
+                {/* Tienda */}
+                <motion.a
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 4 * 0.05 }}
                   href="/tienda"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -306,7 +327,7 @@ const Header = () => {
                     <motion.button
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 4 * 0.05 }}
+                      transition={{ delay: 5 * 0.05 }}
                       onClick={() => {
                         navigate('/dashboard')
                         setIsMenuOpen(false)
@@ -320,7 +341,7 @@ const Header = () => {
                     <motion.button
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 5 * 0.05 }}
+                      transition={{ delay: 6 * 0.05 }}
                       onClick={handleLogout}
                       className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-zinc-900/60 text-zinc-500 text-left flex items-center gap-2"
                     >

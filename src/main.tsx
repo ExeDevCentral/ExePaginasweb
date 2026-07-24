@@ -27,6 +27,7 @@ const queryClient = new QueryClient({
 import App from './App.tsx'
 import StorePage from './components/store/StorePage'
 import Login from './pages/Login'
+import QuoteBuilder from './components/QuoteBuilder/QuoteBuilder'
 import Dashboard from './pages/Dashboard'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
@@ -65,6 +66,14 @@ function AnimatedRoutes() {
           element={
             <AnimatedPage>
               <StorePage />
+            </AnimatedPage>
+          }
+        />
+        <Route
+          path="/cotizador"
+          element={
+            <AnimatedPage>
+              <QuoteBuilder />
             </AnimatedPage>
           }
         />

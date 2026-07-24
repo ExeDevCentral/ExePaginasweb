@@ -159,13 +159,15 @@ export default function Hero3DImage() {
         {/* Main image with depth layers */}
         <div className="relative rounded-2xl overflow-hidden">
           {/* Base image */}
-          <img
-            src="/assets/hero-spline.png"
-            alt="ExeSistemasWEB Platform"
-            className="w-full rounded-2xl object-cover"
-            loading="eager"
-            draggable={false}
-          />
+          <div className="w-full aspect-square">
+            <img
+              src="/assets/hero-spline.png"
+              alt="ExeSistemasWEB Platform"
+              className="w-full h-full rounded-2xl object-cover"
+              loading="eager"
+              draggable={false}
+            />
+          </div>
 
           {/* Mid layer - floating UI elements */}
           <motion.div className="absolute inset-0 pointer-events-none" style={{ x: midX, y: midY }}>

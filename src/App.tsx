@@ -15,7 +15,6 @@ const ChatbaseWidget = lazy(() => import('./components/chat/ChatbaseWidget'))
 const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
 const ContactSection = lazy(() => import('./components/landing/ContactSection'))
 const CaseStudies = lazy(() => import('./components/CaseStudies/CaseStudies'))
-const TechStack = lazy(() => import('./components/TechStack/TechStack'))
 const Pricing = lazy(() => import('./components/Pricing/Pricing'))
 const BookingDemo = lazy(() => import('./components/BookingDemo/BookingDemo'))
 const AutomationAudit = lazy(() => import('./components/Audit/AutomationAudit'))
@@ -188,7 +187,6 @@ function App() {
           </Suspense>
           <WaveDivider flip />
           <Suspense fallback={<SectionSkeleton />}>
-            <TechStack />
             <Pricing />
           </Suspense>
           <WaveDivider />

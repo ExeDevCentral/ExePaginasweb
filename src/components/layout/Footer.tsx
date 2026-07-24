@@ -1,6 +1,13 @@
 import { useTranslation } from 'react-i18next'
-import { Code2, Github, Instagram, Linkedin, Mail } from 'lucide-react'
+import { Code2, Github, Instagram, Linkedin, Mail, Zap, Shield, Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
+
+const TECH_ITEMS = [
+  { icon: Zap, labelKey: 'card_1_titulo', color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
+  { icon: Code2, labelKey: 'card_2_titulo', color: 'text-blue-400', bg: 'bg-blue-400/10' },
+  { icon: Shield, labelKey: 'card_3_titulo', color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
+  { icon: Search, labelKey: 'card_4_titulo', color: 'text-purple-400', bg: 'bg-purple-400/10' },
+]
 
 const Footer = () => {
   const { t } = useTranslation()
@@ -16,9 +23,24 @@ const Footer = () => {
                 ExeSistemas<span className="text-accent-cyan">WEB</span>
               </span>
             </div>
-            <p className="text-primary-secondary mb-8 max-w-sm leading-relaxed">
+            <p className="text-primary-secondary mb-6 max-w-sm leading-relaxed">
               {t('footer.descripcion')}
             </p>
+            {/* Tech badges compactas */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              {TECH_ITEMS.map((item, i) => {
+                const Icon = item.icon
+                return (
+                  <span
+                    key={i}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${item.bg} ${item.color} border border-foreground/5`}
+                  >
+                    <Icon className="w-3 h-3" />
+                    {t(`techstack.${item.labelKey}`)}
+                  </span>
+                )
+              })}
+            </div>
             <div className="flex items-center gap-4">
               <a
                 href="https://github.com/ExeDevCentral"

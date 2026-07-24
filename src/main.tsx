@@ -9,6 +9,18 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { AuthSessionProvider } from './core/auth/AuthSessionProvider'
 import { ThemeProvider } from './core/theme/ThemeContext'
 import './core/i18n/config'
+import * as Sentry from '@sentry/react'
+
+const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN
+if (SENTRY_DSN) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+    tracesSampleRate: 1.0,
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+  })
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -132,7 +144,7 @@ function AnimatedRoutes() {
   )
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const AppRoot = (
   <React.StrictMode>
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
@@ -152,3 +164,30 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </HelmetProvider>
   </React.StrictMode>
 )
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  SENTRY_DSN ? (
+    <Sentry.ErrorBoundary fallback={<SentryErrorFallback />}>{AppRoot}</Sentry.ErrorBoundary>
+  ) : (
+    AppRoot
+  )
+)
+
+function SentryErrorFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-8">
+      <div className="max-w-md text-center">
+        <h1 className="text-2xl font-bold mb-4">Algo salió mal</h1>
+        <p className="text-muted-foreground mb-6">
+          Ocurrió un error inesperado. Ya lo estamos revisando.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-6 py-3 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground font-bold"
+        >
+          Recargar página
+        </button>
+      </div>
+    </div>
+  )
+}

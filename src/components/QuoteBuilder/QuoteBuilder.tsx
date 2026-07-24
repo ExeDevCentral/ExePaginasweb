@@ -1,5 +1,5 @@
+import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useMotionValue, useMotionTemplate } from 'framer-motion'
-import { useState, useMemo, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Helmet } from 'react-helmet-async'
@@ -23,7 +23,7 @@ import {
 import Header from '../layout/Header'
 import PremiumBackground from '../Effects/PremiumBackground'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Float, PerspectiveCamera } from '@react-three/drei'
+import { PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
 
 interface PlanData {
@@ -176,9 +176,10 @@ function formatPrice(n: number): string {
   return '$ ' + n.toLocaleString('es-AR')
 }
 
-function FloatingGeos() {
+const FloatingGeos = React.memo(function FloatingGeos() {
   const group = useRef<THREE.Group>(null!)
   useFrame((state) => {
+    if (!group.current) return
     group.current.rotation.y = state.clock.elapsedTime * 0.025
     group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.015) * 0.05
   })
@@ -201,33 +202,26 @@ function FloatingGeos() {
   return (
     <group ref={group}>
       {shapes.map((s, i) => (
-        <Float
-          key={i}
-          speed={0.3 + Math.random() * 0.8}
-          rotationIntensity={0.2}
-          floatIntensity={0.2}
-        >
-          <mesh position={s.pos} scale={s.scale}>
-            {s.type === 0 && <icosahedronGeometry args={[1, 0]} />}
-            {s.type === 1 && <octahedronGeometry args={[1, 0]} />}
-            {s.type === 2 && <dodecahedronGeometry args={[1, 0]} />}
-            {s.type === 3 && <torusKnotGeometry args={[0.6, 0.2, 24, 12]} />}
-            <meshPhysicalMaterial
-              color={s.color}
-              transparent
-              opacity={0.12}
-              roughness={0.1}
-              metalness={0.9}
-              wireframe
-            />
-          </mesh>
-        </Float>
+        <mesh key={i} position={s.pos} scale={s.scale}>
+          {s.type === 0 && <icosahedronGeometry args={[1, 0]} />}
+          {s.type === 1 && <octahedronGeometry args={[1, 0]} />}
+          {s.type === 2 && <dodecahedronGeometry args={[1, 0]} />}
+          {s.type === 3 && <torusKnotGeometry args={[0.6, 0.2, 24, 12]} />}
+          <meshPhysicalMaterial
+            color={s.color}
+            transparent
+            opacity={0.12}
+            roughness={0.1}
+            metalness={0.9}
+            wireframe
+          />
+        </mesh>
       ))}
     </group>
   )
-}
+})
 
-function Quote3DCanvas() {
+const Quote3DCanvas = React.memo(function Quote3DCanvas() {
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   if (!mounted) return null
@@ -241,7 +235,7 @@ function Quote3DCanvas() {
       </Canvas>
     </div>
   )
-}
+})
 
 interface Particle {
   x: number

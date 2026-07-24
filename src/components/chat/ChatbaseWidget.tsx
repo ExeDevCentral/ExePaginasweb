@@ -5,14 +5,29 @@ const CHATBOT_ID = 'TGRKNv4moe3sA5IMOc4jV'
 
 const ChatbaseWidget = () => {
   useEffect(() => {
+    const win = window as any
+
     const init = () => {
-      ;(window as any).chatbaseConfig = {
-        chatbotId: CHATBOT_ID,
+      win.chatbaseConfig = { chatbotId: CHATBOT_ID }
+      win.embeddedChatbotConfig = { chatbotId: CHATBOT_ID }
+
+      if (!win.chatbase || win.chatbase('getState') !== 'initialized') {
+        win.chatbase = (...args: any[]) => {
+          if (!win.chatbase.q) win.chatbase.q = []
+          win.chatbase.q.push(args)
+        }
+        win.chatbase = new Proxy(win.chatbase, {
+          get(target: any, prop: string) {
+            if (prop === 'q') return target.q
+            return (...args: any[]) => target(prop, ...args)
+          },
+        })
       }
+
       const script = document.createElement('script')
       script.src = 'https://www.chatbase.co/embed.min.js'
       script.id = CHATBOT_ID
-      script.defer = true
+      script.async = true
       document.body.appendChild(script)
     }
 

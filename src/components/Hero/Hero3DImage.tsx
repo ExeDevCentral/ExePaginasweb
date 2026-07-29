@@ -1,6 +1,7 @@
-import React, { useRef, useCallback, useState } from 'react'
+import React, { useRef, useCallback, useState, lazy, Suspense } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'framer-motion'
-import ImageParticleExplosion from './ImageParticleExplosion'
+
+const HeroThreeScene = lazy(() => import('./HeroThreeScene'))
 
 interface Hotspot {
   id: string
@@ -72,7 +73,6 @@ export default function Hero3DImage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null)
-  const [particlePhase, setParticlePhase] = useState('idle')
 
   const mouseX = useMotionValue(0.5)
   const mouseY = useMotionValue(0.5)
@@ -160,19 +160,11 @@ export default function Hero3DImage() {
 
         {/* Main image with depth layers */}
         <div className="relative rounded-2xl overflow-hidden">
-          {/* Base image */}
-          <div className="w-full aspect-square relative">
-            <img
-              src="/assets/hero-spline.png"
-              alt="ExeSistemasWEB Platform"
-              className={`w-full h-full rounded-2xl object-cover transition-opacity duration-300 ${particlePhase !== 'idle' ? 'opacity-0' : 'opacity-100'}`}
-              loading="eager"
-              draggable={false}
-            />
-            <ImageParticleExplosion
-              imgSrc="/assets/hero-spline.png"
-              onPhaseChange={setParticlePhase}
-            />
+          {/* Three.js scene — lazy loaded */}
+          <div className="w-full aspect-square relative rounded-2xl overflow-hidden">
+            <Suspense fallback={null}>
+              <HeroThreeScene />
+            </Suspense>
           </div>
 
           {/* Mid layer - floating UI elements */}

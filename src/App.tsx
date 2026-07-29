@@ -107,37 +107,31 @@ function App() {
   return (
     <ErrorBoundary>
       <Helmet>
-        <title>ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios</title>
+        <title>ExeSistemasWEB | Código Propio, No Alquiler — Tu página es tuya</title>
         <meta
           name="description"
-          content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones para negocios que buscan liderar."
+          content="La mayoría de las páginas web son alquiler disfrazado de compra. Nosotros te damos código 100% tuyo, sin ataduras a ninguna plataforma. Diseño premium, propiedad real."
         />
         <meta
           name="keywords"
-          content="estudio de sistemas, automatización de negocios, software a medida, CRM, sistemas de reservas, dashboards, exesistemasweb"
+          content="páginas web, código propio, diseño web, desarrollo web, landing page, tienda online, ExeSistemasWEB, sin alquiler, página web dueño"
         />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta
-          property="og:title"
-          content="ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios"
-        />
+        <meta property="og:title" content="ExeSistemasWEB | Código Propio, No Alquiler" />
         <meta
           property="og:description"
-          content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones."
+          content="Tu página web 100% tuya. Código propio, diseño premium, sin suscripciones eternas ni plataformas que te tengan de rehén."
         />
         <meta property="og:image" content="/logo.webp" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="ExeSistemasWEB | Estudio Premium de Sistemas y Automatización de Negocios"
-        />
+        <meta name="twitter:title" content="ExeSistemasWEB | Código Propio, No Alquiler" />
         <meta
           name="twitter:description"
-          content="Estudio especializado en la creación de sistemas web a medida, software de gestión y automatización de operaciones."
+          content="Tu página web 100% tuya. Código propio, diseño premium, sin suscripciones eternas."
         />
         <meta name="twitter:image" content="/logo.webp" />
 

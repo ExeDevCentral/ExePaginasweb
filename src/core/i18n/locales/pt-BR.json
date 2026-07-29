@@ -16,12 +16,13 @@
     "tienda_online": "Loja Online"
   },
   "hero": {
-    "badge": "Sistemas Web Sob Medida • Piloto Automático v2.0",
-    "titulo_1": "SEU NEGÓCIO NO",
-    "titulo_2": "PILOTO AUTOMÁTICO",
-    "descripcion": "Projetamos e construímos sistemas digitais personalizados que atendem clientes, automatizam reservas e otimizam suas operações 24/7.",
+    "badge": "Código próprio, não aluguel",
+    "titulo_1": "Sua página. Seu código. Suas regras.",
+    "titulo_2": "O que acontece se você parar de pagar sua hospedagem?",
+    "sub_respuesta": "Com a gente, nada.",
+    "descripcion": "A maioria dos \"sites\" é aluguel disfarçado de compra — você para de pagar e perde tudo. Nós construímos a casa e entregamos as chaves: código próprio, sem amarras a nenhuma plataforma.",
     "cta_demo": "VER DEMO AO VIVO",
-    "cta_proyecto": "INICIAR PROJETO"
+    "cta_proyecto": "QUERO MEU SITE"
   },
   "features": {
     "seccion_titulo": "Por que ExeSistemasWEB?",

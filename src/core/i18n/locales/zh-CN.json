@@ -16,12 +16,13 @@
     "tienda_online": "在线商店"
   },
   "hero": {
-    "badge": "定制网页系统 · Autopilot v2.0",
-    "titulo_1": "让你的业务",
-    "titulo_2": "实现自动运行",
-    "descripcion": "我们设计和构建定制数字系统，全天候服务客户、自动化预订并简化您的业务运营。",
+    "badge": "你的代码，不是租赁",
+    "titulo_1": "你的页面。你的代码。你的规则。",
+    "titulo_2": "如果你停止支付主机费会怎样？",
+    "sub_respuesta": "在我们这里，什么都不会发生。",
+    "descripcion": "大多数\"网站\"是伪装成购买的租赁——停止付款，你就失去一切。我们为你建房并把钥匙交给你：你自己的代码，不依赖任何平台。",
     "cta_demo": "查看在线演示",
-    "cta_proyecto": "开始项目"
+    "cta_proyecto": "我想要我的网站"
   },
   "features": {
     "seccion_titulo": "为什么选择 ExeSistemasWEB？",

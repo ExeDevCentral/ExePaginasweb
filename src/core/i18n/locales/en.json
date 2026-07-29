@@ -16,12 +16,13 @@
     "tienda_online": "Online Store"
   },
   "hero": {
-    "badge": "Custom Web Systems • Autopilot v2.0",
-    "titulo_1": "YOUR BUSINESS ON",
-    "titulo_2": "AUTOPILOT",
-    "descripcion": "We don't build ordinary websites. We design and develop custom digital systems to automate your bookings, manage clients, and streamline your operations 24/7.",
+    "badge": "Own code, not a rental",
+    "titulo_1": "Your page. Your code. Your rules.",
+    "titulo_2": "What happens if you stop paying your hosting?",
+    "sub_respuesta": "With us, nothing.",
+    "descripcion": "Most \"websites\" are rent disguised as buying — stop paying and you lose everything. We build the house and hand you the keys: your own code, tied to no platform.",
     "cta_demo": "VIEW LIVE DEMO",
-    "cta_proyecto": "START PROJECT"
+    "cta_proyecto": "I WANT MY SITE"
   },
   "features": {
     "seccion_titulo": "Why ExeSistemasWEB?",

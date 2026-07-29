@@ -16,12 +16,13 @@
     "tienda_online": "Tienda Online"
   },
   "hero": {
-    "badge": "Sistemas Web a Medida • Autopilot v2.0",
-    "titulo_1": "TU NEGOCIO EN",
-    "titulo_2": "PILOTO AUTOMÁTICO",
-    "descripcion": "No hacemos páginas web comunes. Diseñamos y desarrollamos sistemas digitales a medida para automatizar tus reservas, gestionar clientes y ordenar tus operaciones comerciales las 24 horas.",
+    "badge": "Código propio, no alquiler",
+    "titulo_1": "Tu página. Tu código. Tus reglas.",
+    "titulo_2": "¿Qué pasa si dejás de pagarle a tu hosting?",
+    "sub_respuesta": "Con nosotros, nada.",
+    "descripcion": "La mayoría de las \"páginas web\" son alquiler disfrazado de compra: dejás de pagar y perdés todo. Nosotros te construimos la casa y te damos las llaves — código propio, sin ataduras a ninguna plataforma.",
     "cta_demo": "VER DEMO EN VIVO",
-    "cta_proyecto": "INICIAR PROYECTO"
+    "cta_proyecto": "QUIERO MI PÁGINA"
   },
   "features": {
     "seccion_titulo": "Por qué ExeSistemasWEB?",

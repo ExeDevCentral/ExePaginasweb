@@ -16,12 +16,13 @@
     "tienda_online": "Boutique en Ligne"
   },
   "hero": {
-    "badge": "Systèmes Web Sur Mesure • Autopilot v2.0",
-    "titulo_1": "VOTRE ENTREPRISE EN",
-    "titulo_2": "AUTOPILOTE",
-    "descripcion": "Nous concevons et construisons des systèmes numériques sur mesure qui servent vos clients, automatisent les réservations et simplifient vos opérations 24h/24 et 7j/7.",
+    "badge": "Code propriétaire, pas de location",
+    "titulo_1": "Ta page. Ton code. Tes règles.",
+    "titulo_2": "Qu'arrive-t-il si tu arrêtes de payer ton hébergement ?",
+    "sub_respuesta": "Avec nous, rien.",
+    "descripcion": "La plupart des \"sites web\" sont de la location déguisée en achat : tu arrêtes de payer et tu perds tout. Nous construisons la maison et te remettons les clés : ton propre code, sans dépendre d'aucune plateforme.",
     "cta_demo": "VOIR LA DÉMO",
-    "cta_proyecto": "LANCER LE PROJET"
+    "cta_proyecto": "JE VEUX MON SITE"
   },
   "features": {
     "seccion_titulo": "Pourquoi ExeSistemasWEB ?",

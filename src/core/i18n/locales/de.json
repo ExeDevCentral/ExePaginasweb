@@ -16,12 +16,13 @@
     "tienda_online": "Online-Shop"
   },
   "hero": {
-    "badge": "Maßgeschneiderte Web-Systeme • Autopilot v2.0",
-    "titulo_1": "IHR UNTERNEHMEN AUF",
-    "titulo_2": "AUTOPILOT",
-    "descripcion": "Wir erstellen keine gewöhnlichen Websites. Wir entwickeln maßgeschneiderte digitale Systeme zur Automatisierung Ihrer Buchungen, Kundenverwaltung und Prozessoptimierung rund um die Uhr.",
+    "badge": "Eigener Code, keine Miete",
+    "titulo_1": "Deine Seite. Dein Code. Deine Regeln.",
+    "titulo_2": "Was passiert, wenn du dein Hosting nicht mehr bezahlst?",
+    "sub_respuesta": "Bei uns: nichts.",
+    "descripcion": "Die meisten \"Websites\" sind Miete als Kauf getarnt — hörst du zu zahlen auf, verlierst du alles. Wir bauen dir das Haus und geben dir die Schlüssel: eigener Code, an keine Plattform gebunden.",
     "cta_demo": "LIVE-DEMO ANSEHEN",
-    "cta_proyecto": "PROJEKT STARTEN"
+    "cta_proyecto": "ICH WILL MEINE SEITE"
   },
   "features": {
     "seccion_titulo": "Warum ExeSistemasWEB?",

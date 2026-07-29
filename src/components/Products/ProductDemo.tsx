@@ -12,7 +12,7 @@ import {
   PawPrint,
   Users,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 
 interface ProductDemoProps {
@@ -21,9 +21,70 @@ interface ProductDemoProps {
   productType: 'padel' | 'kiosco' | 'veterinaria' | 'crm'
 }
 
+function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: string }) {
+  const [display, setDisplay] = useState(0)
+  const hasAnimated = useRef(false)
+
+  useEffect(() => {
+    if (hasAnimated.current) return
+    hasAnimated.current = true
+    const duration = 800
+    const steps = 30
+    const increment = value / steps
+    let current = 0
+    const timer = setInterval(() => {
+      current += increment
+      if (current >= value) {
+        setDisplay(value)
+        clearInterval(timer)
+      } else {
+        setDisplay(Math.floor(current))
+      }
+    }, duration / steps)
+    return () => clearInterval(timer)
+  }, [value])
+
+  return (
+    <>
+      {display.toLocaleString()}
+      {suffix}
+    </>
+  )
+}
+
+function useAutoCycle(tabs: { id: string }[], isOpen: boolean, onCycle: (id: string) => void) {
+  const intervalRef = useRef<ReturnType<typeof setInterval>>()
+  const isHovering = useRef(false)
+
+  const pause = useCallback(() => {
+    isHovering.current = true
+  }, [])
+  const resume = useCallback(() => {
+    isHovering.current = false
+  }, [])
+
+  useEffect(() => {
+    if (!isOpen) return
+    let idx = 0
+    intervalRef.current = setInterval(() => {
+      if (isHovering.current) return
+      idx = (idx + 1) % tabs.length
+      onCycle(tabs[idx].id)
+    }, 4000)
+    return () => clearInterval(intervalRef.current)
+  }, [tabs, isOpen, onCycle])
+
+  return { pause, resume }
+}
+
 const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
   const [activeTab, setActiveTab] = useState('calendar')
+  const [selectedSlots, setSelectedSlots] = useState<Record<string, boolean>>({})
   const modalRef = useFocusTrap(isOpen)
+
+  const toggleSlot = useCallback((key: string) => {
+    setSelectedSlots((prev) => ({ ...prev, [key]: !prev[key] }))
+  }, [])
 
   // Demo data for each product type
   const demoData = {
@@ -39,7 +100,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
           <div className="space-y-4">
             <div className="grid grid-cols-7 gap-2 text-center text-xs">
               {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((day) => (
-                <div key={day} className="text-primary-secondary font-medium pb-2">
+                <div key={day} className="text-foreground/60 font-medium pb-2">
                   {day}
                 </div>
               ))}
@@ -71,23 +132,42 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               </h3>
               <div className="space-y-2">
                 {[
-                  '16:00 - Libre',
-                  '17:00 - Reservado',
-                  '18:00 - Libre',
-                  '19:00 - Reservado',
-                  '20:00 - Libre',
-                  '21:00 - Libre',
-                ].map((slot, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-between p-3 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
-                  >
-                    <span className="text-sm">{slot}</span>
-                    <button className="px-3 py-1 text-xs rounded-full bg-accent-cyan/20 text-accent-cyan hover:bg-accent-cyan/30 transition-colors">
-                      {slot.includes('Libre') ? 'Reservar' : 'Ver detalle'}
-                    </button>
-                  </div>
-                ))}
+                  { time: '16:00', status: 'Libre' },
+                  { time: '17:00', status: 'Reservado' },
+                  { time: '18:00', status: 'Libre' },
+                  { time: '19:00', status: 'Reservado' },
+                  { time: '20:00', status: 'Libre' },
+                  { time: '21:00', status: 'Libre' },
+                ].map((slot) => {
+                  const isSelected = selectedSlots[slot.time]
+                  const isFree = slot.status === 'Libre' && !isSelected
+                  return (
+                    <div
+                      key={slot.time}
+                      className={`flex items-center justify-between p-3 rounded-lg transition-all ${
+                        isSelected
+                          ? 'bg-accent-cyan/10 border border-accent-cyan/20'
+                          : 'bg-muted hover:bg-muted/80'
+                      }`}
+                    >
+                      <span className="text-sm">
+                        {slot.time} - {isSelected ? 'Reservado' : slot.status}
+                      </span>
+                      <button
+                        onClick={() => toggleSlot(slot.time)}
+                        className={`px-3 py-1 text-xs rounded-full transition-all ${
+                          isFree
+                            ? 'bg-accent-cyan/20 text-accent-cyan hover:bg-accent-cyan/30'
+                            : isSelected
+                              ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
+                              : 'bg-muted text-muted-foreground'
+                        }`}
+                      >
+                        {isFree ? 'Reservar' : isSelected ? 'Cancelar' : 'Ver detalle'}
+                      </button>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </div>
@@ -110,20 +190,22 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                   </div>
                   <div>
                     <p className="font-semibold text-sm">{booking.name}</p>
-                    <p className="text-xs text-primary-secondary">
+                    <p className="text-xs text-foreground/60">
                       {booking.date} • {booking.court}
                     </p>
                   </div>
                 </div>
-                <span
+                <motion.span
                   className={`px-3 py-1 text-xs rounded-full ${
                     booking.status === 'confirmed'
                       ? 'bg-green-500/20 text-green-400'
                       : 'bg-yellow-500/20 text-yellow-400'
                   }`}
+                  animate={booking.status === 'confirmed' ? { opacity: [1, 0.7, 1] } : {}}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                 >
                   {booking.status === 'confirmed' ? 'Confirmado' : 'Pendiente'}
-                </span>
+                </motion.span>
               </div>
             ))}
           </div>
@@ -132,16 +214,20 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-gradient-to-br from-accent-cyan/20 to-accent-cyan/5 rounded-xl p-4">
-                <p className="text-xs text-primary-secondary mb-1">Ingresos Hoy</p>
-                <p className="text-2xl font-bold text-accent-cyan">$45.200</p>
+                <p className="text-xs text-foreground/60 mb-1">Ingresos Hoy</p>
+                <p className="text-2xl font-bold text-accent-cyan">
+                  $<AnimatedCounter value={45200} />
+                </p>
               </div>
               <div className="bg-gradient-to-br from-accent-magenta/20 to-accent-magenta/5 rounded-xl p-4">
-                <p className="text-xs text-primary-secondary mb-1">Pendiente Cobro</p>
-                <p className="text-2xl font-bold text-accent-magenta">$12.800</p>
+                <p className="text-xs text-foreground/60 mb-1">Pendiente Cobro</p>
+                <p className="text-2xl font-bold text-accent-magenta">
+                  $<AnimatedCounter value={12800} />
+                </p>
               </div>
             </div>
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-primary-secondary">Últimos Pagos</h3>
+              <h3 className="text-sm font-semibold text-foreground/60">Últimos Pagos</h3>
               {[
                 { name: 'Juan Pérez', amount: '$8.500', method: 'PayPal', time: '18:05' },
                 { name: 'María López', amount: '$6.200', method: 'Efectivo', time: '17:30' },
@@ -157,7 +243,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                     </div>
                     <div>
                       <p className="text-sm font-medium">{payment.name}</p>
-                      <p className="text-xs text-primary-secondary">
+                      <p className="text-xs text-foreground/60">
                         {payment.method} • {payment.time}
                       </p>
                     </div>
@@ -201,7 +287,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                       <ShoppingCart size={18} className="text-accent-cyan" />
                     </div>
                     <p className="text-xs font-medium">{item}</p>
-                    <p className="text-[10px] text-primary-secondary">$1.200</p>
+                    <p className="text-[10px] text-foreground/60">$1.200</p>
                   </div>
                 )
               )}
@@ -226,13 +312,10 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               { name: 'Leche La Serenísima', stock: 5, min: 12, status: 'low' },
               { name: 'Pan molido Bimbo', stock: 18, min: 10, status: 'ok' },
             ].map((item, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between p-3 rounded-lg bg-muted"
-              >
+              <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-muted">
                 <div>
                   <p className="text-sm font-medium">{item.name}</p>
-                  <p className="text-xs text-primary-secondary">Mínimo: {item.min}</p>
+                  <p className="text-xs text-foreground/60">Mínimo: {item.min}</p>
                 </div>
                 <div className="text-right">
                   <p
@@ -252,12 +335,16 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-gradient-to-br from-accent-cyan/20 to-accent-cyan/5 rounded-xl p-4">
-                <p className="text-xs text-primary-secondary mb-1">Ventas Hoy</p>
-                <p className="text-2xl font-bold text-accent-cyan">$125.400</p>
+                <p className="text-xs text-foreground/60 mb-1">Ventas Hoy</p>
+                <p className="text-2xl font-bold text-accent-cyan">
+                  $<AnimatedCounter value={125400} />
+                </p>
               </div>
               <div className="bg-gradient-to-br from-accent-magenta/20 to-accent-magenta/5 rounded-xl p-4">
-                <p className="text-xs text-primary-secondary mb-1">Ticket Promedio</p>
-                <p className="text-2xl font-bold text-accent-magenta">$3.200</p>
+                <p className="text-xs text-foreground/60 mb-1">Ticket Promedio</p>
+                <p className="text-2xl font-bold text-accent-magenta">
+                  $<AnimatedCounter value={3200} />
+                </p>
               </div>
             </div>
             <div className="bg-muted rounded-xl p-4">
@@ -306,7 +393,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold text-sm">{appointment.pet}</p>
-                  <p className="text-xs text-primary-secondary">
+                  <p className="text-xs text-foreground/60">
                     {appointment.owner} • {appointment.type}
                   </p>
                 </div>
@@ -334,12 +421,12 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                   </div>
                   <div>
                     <p className="font-semibold text-sm">{pet.name}</p>
-                    <p className="text-xs text-primary-secondary">
+                    <p className="text-xs text-foreground/60">
                       {pet.type} • {pet.owner}
                     </p>
                   </div>
                 </div>
-                <span className="text-xs text-primary-secondary">Última: {pet.lastVisit}</span>
+                <span className="text-xs text-foreground/60">Última: {pet.lastVisit}</span>
               </div>
             ))}
           </div>
@@ -351,18 +438,15 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               { pet: 'Michi', vaccine: 'Triple Felina', date: '10/01/2025', next: '10/01/2026' },
               { pet: 'Rocky', vaccine: 'Antirrábica', date: '08/01/2025', next: '08/01/2026' },
             ].map((vaccine, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between p-4 rounded-xl bg-muted"
-              >
+              <div key={idx} className="flex items-center justify-between p-4 rounded-xl bg-muted">
                 <div>
                   <p className="font-semibold text-sm">{vaccine.pet}</p>
-                  <p className="text-xs text-primary-secondary">
+                  <p className="text-xs text-foreground/60">
                     {vaccine.vaccine} • Aplicada: {vaccine.date}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-primary-secondary">Próxima</p>
+                  <p className="text-xs text-foreground/60">Próxima</p>
                   <p className="text-sm font-semibold text-accent-cyan">{vaccine.next}</p>
                 </div>
               </div>
@@ -417,12 +501,12 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                   </div>
                   <div>
                     <p className="font-semibold text-sm">{client.name}</p>
-                    <p className="text-xs text-primary-secondary">{client.email}</p>
+                    <p className="text-xs text-foreground/60">{client.email}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="font-semibold text-accent-cyan">{client.totalSpent}</p>
-                  <p className="text-xs text-primary-secondary">{client.lastContact}</p>
+                  <p className="text-xs text-foreground/60">{client.lastContact}</p>
                 </div>
               </div>
             ))}
@@ -432,12 +516,16 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-gradient-to-br from-accent-cyan/20 to-accent-cyan/5 rounded-xl p-4">
-                <p className="text-xs text-primary-secondary mb-1">Ventas Mes</p>
-                <p className="text-2xl font-bold text-accent-cyan">$327.500</p>
+                <p className="text-xs text-foreground/60 mb-1">Ventas Mes</p>
+                <p className="text-2xl font-bold text-accent-cyan">
+                  $<AnimatedCounter value={327500} />
+                </p>
               </div>
               <div className="bg-gradient-to-br from-accent-magenta/20 to-accent-magenta/5 rounded-xl p-4">
-                <p className="text-xs text-primary-secondary mb-1">Clientes Activos</p>
-                <p className="text-2xl font-bold text-accent-magenta">48</p>
+                <p className="text-xs text-foreground/60 mb-1">Clientes Activos</p>
+                <p className="text-2xl font-bold text-accent-magenta">
+                  <AnimatedCounter value={48} />
+                </p>
               </div>
             </div>
             <div className="bg-muted rounded-xl p-4">
@@ -450,7 +538,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 <div key={idx} className="flex items-center justify-between py-2">
                   <div>
                     <p className="text-sm font-medium">{sale.client}</p>
-                    <p className="text-xs text-primary-secondary">{sale.product}</p>
+                    <p className="text-xs text-foreground/60">{sale.product}</p>
                   </div>
                   <span className="font-semibold text-accent-cyan">{sale.amount}</span>
                 </div>
@@ -479,11 +567,11 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                         : 'border-green-400'
                   }`}
                 >
-                  <Check size={12} className="text-primary-secondary" />
+                  <Check size={12} className="text-foreground/60" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm">{task.task}</p>
-                  <p className="text-xs text-primary-secondary">Vence: {task.due}</p>
+                  <p className="text-xs text-foreground/60">Vence: {task.due}</p>
                 </div>
                 <span
                   className={`px-2 py-1 text-[10px] rounded-full ${
@@ -509,6 +597,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
   }
 
   const currentDemo = demoData[productType]
+  const autoCycle = useAutoCycle(currentDemo.tabs, isOpen, setActiveTab)
 
   return (
     <AnimatePresence>
@@ -533,12 +622,27 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ type: 'spring', duration: 0.5 }}
           >
-            <div className="relative w-full max-w-4xl max-h-[90vh] bg-gradient-to-br from-primary-bg to-primary-bg/95 rounded-3xl border border-border shadow-2xl overflow-hidden">
+            <div
+              className="relative w-full max-w-4xl max-h-[90vh] bg-gradient-to-br from-primary-bg to-primary-bg/95 rounded-3xl border border-border shadow-[0_4px_8px_rgba(0,0,0,0.12),0_16px_48px_rgba(0,0,0,0.15),0_64px_128px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.06)] overflow-hidden"
+              onMouseEnter={autoCycle.pause}
+              onMouseLeave={autoCycle.resume}
+            >
+              {/* Animated background orbs */}
+              <motion.div
+                className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-accent-cyan/[0.03] blur-3xl pointer-events-none"
+                animate={{ x: [0, 10, 0], y: [0, -10, 0] }}
+                transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <motion.div
+                className="absolute -bottom-20 -left-20 w-48 h-48 rounded-full bg-accent-magenta/[0.03] blur-3xl pointer-events-none"
+                animate={{ x: [0, -10, 0], y: [0, 10, 0] }}
+                transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+              />
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-border">
                 <div>
                   <h2 className="text-xl font-bold text-primary-text">{currentDemo.title}</h2>
-                  <p className="text-sm text-primary-secondary mt-1">
+                  <p className="text-sm text-foreground/60 mt-1">
                     Demo interactiva - Explorá las funcionalidades
                   </p>
                 </div>
@@ -547,7 +651,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                   className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
                   aria-label="Cerrar"
                 >
-                  <X size={20} className="text-primary-secondary" />
+                  <X size={20} className="text-foreground/60" />
                 </button>
               </div>
 
@@ -562,7 +666,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                       className={`flex items-center gap-2 px-6 py-4 text-sm font-medium transition-colors relative ${
                         activeTab === tab.id
                           ? 'text-accent-cyan'
-                          : 'text-primary-secondary hover:text-primary-text'
+                          : 'text-foreground/60 hover:text-primary-text'
                       }`}
                     >
                       <Icon size={16} />
@@ -592,7 +696,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
 
               {/* Footer */}
               <div className="flex items-center justify-between p-6 border-t border-border">
-                <p className="text-xs text-primary-secondary">
+                <p className="text-xs text-foreground/60">
                   Esta es una demo interactiva. El sistema real incluye todas estas funcionalidades
                   y más.
                 </p>

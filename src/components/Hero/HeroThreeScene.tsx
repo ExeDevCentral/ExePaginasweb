@@ -41,7 +41,8 @@ function InnerGlow() {
   useFrame((state) => {
     if (!meshRef.current) return
     const pulse = 0.15 + Math.sin(state.clock.elapsedTime * 0.8) * 0.08
-    meshRef.current.material.emissiveIntensity = pulse
+    const mat = meshRef.current.material as THREE.MeshPhysicalMaterial
+    mat.emissiveIntensity = pulse
     meshRef.current.rotation.y += 0.005
   })
 

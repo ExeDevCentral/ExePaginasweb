@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react'
+import React, { useState, useMemo, useRef, useEffect, lazy } from 'react'
 import { motion, AnimatePresence, useMotionValue, useMotionTemplate } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -21,7 +21,8 @@ import {
   Star,
 } from 'lucide-react'
 import Header from '../layout/Header'
-import PremiumBackground from '../Effects/PremiumBackground'
+
+const PremiumBackground = lazy(() => import('../Effects/PremiumBackground'))
 import { Canvas, useFrame } from '@react-three/fiber'
 import { PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'

@@ -1,5 +1,12 @@
 import React, { useRef, useCallback, useState, lazy, Suspense } from 'react'
-import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'framer-motion'
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  MotionValue,
+  useInView,
+} from 'framer-motion'
 
 const HeroThreeScene = lazy(() => import('./HeroThreeScene'))
 
@@ -71,6 +78,7 @@ function useMultiTransform(
 
 export default function Hero3DImage() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(containerRef, { once: false, margin: '150px 0px' })
   const [isHovered, setIsHovered] = useState(false)
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null)
 
@@ -160,11 +168,25 @@ export default function Hero3DImage() {
 
         {/* Main image with depth layers */}
         <div className="relative rounded-2xl overflow-hidden">
-          {/* Three.js scene — lazy loaded */}
+          {/* Three.js scene — lazy loaded solo cuando está visible */}
           <div className="w-full aspect-square relative rounded-2xl overflow-hidden">
-            <Suspense fallback={null}>
-              <HeroThreeScene />
-            </Suspense>
+            {isInView ? (
+              <Suspense
+                fallback={
+                  <div className="w-full h-full bg-gradient-to-br from-purple-950/40 via-black/60 to-cyan-950/40 animate-pulse flex items-center justify-center">
+                    <div className="w-28 h-28 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-md flex items-center justify-center">
+                      <span className="text-2xl animate-spin">✨</span>
+                    </div>
+                  </div>
+                }
+              >
+                <HeroThreeScene />
+              </Suspense>
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-purple-950/30 via-black/50 to-cyan-950/30 flex items-center justify-center">
+                <div className="w-28 h-28 rounded-full border border-cyan-500/20 bg-cyan-500/5 backdrop-blur-sm" />
+              </div>
+            )}
           </div>
 
           {/* Mid layer - floating UI elements */}
@@ -255,7 +277,7 @@ export default function Hero3DImage() {
               className="absolute z-20 group/hotspot"
               style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
               initial={{ opacity: 0, scale: 0 }}
-              animate={isHovered ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
+              animate={isHovered ? { opacity: 1, scale: 1 } : { opacity: 0.75, scale: 0.9 }}
               transition={{
                 delay: HOTSPOTS.indexOf(hotspot) * 0.08,
                 type: 'spring',
@@ -312,25 +334,28 @@ export default function Hero3DImage() {
         />
       </motion.div>
 
-      {/* Depth indicator */}
+      {/* Interactive 3D indicator */}
       <motion.div
-        className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 text-[10px] text-muted-foreground/50 font-mono"
-        initial={{ opacity: 0 }}
-        animate={isHovered ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ delay: 0.3 }}
+        className="mt-4 flex items-center justify-center gap-3 text-xs text-muted-foreground/80 font-mono tracking-wider"
+        initial={{ opacity: 0.8 }}
+        animate={{ opacity: 1 }}
       >
-        <span>3D DEPTH</span>
-        <div className="flex gap-1">
+        <span className="flex items-center gap-1.5 text-accent-cyan font-bold">
+          <span className="animate-pulse">✨</span> NÚCLEO 3D REACTIVO
+        </span>
+        <span className="text-white/30">·</span>
+        <div className="flex gap-1 items-center">
           {[0.6, 0.7, 0.8, 0.9, 1.0].map((_d, i) => (
             <motion.div
               key={i}
-              className="w-1 h-1 rounded-full bg-accent-cyan"
-              animate={{ opacity: [0.3, 1, 0.3] }}
+              className="w-1.5 h-1.5 rounded-full bg-accent-cyan"
+              animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
               transition={{ duration: 1.5, delay: i * 0.1, repeat: Infinity }}
             />
           ))}
         </div>
-        <span>INTERACTIVE</span>
+        <span className="text-white/30">·</span>
+        <span className="text-white/70">MOVÉ EL CURSOR O HACÉ CLIC</span>
       </motion.div>
     </div>
   )

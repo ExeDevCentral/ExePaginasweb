@@ -31,18 +31,29 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // React core — siempre necesario
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+          // React core & Router
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom/') ||
+            id.includes('node_modules/react-router-dom/')
+          ) {
             return 'react-core'
           }
-          // Framer Motion — necesario para las animaciones del Hero
+          // Framer Motion
           if (id.includes('node_modules/framer-motion')) {
             return 'framer-motion'
           }
-          // three.js — SOLO se carga al hacer clic en Pixel Coffee
-          // NO incluir en manualChunks para que sea un chunk verdaderamente dinámico
+          // Three.js & React Three Fiber
           if (id.includes('node_modules/three') || id.includes('@react-three')) {
             return 'three-3d'
+          }
+          // Supabase & TanStack React Query
+          if (id.includes('@supabase') || id.includes('@tanstack')) {
+            return 'supabase-query'
+          }
+          // UI Icons & i18n
+          if (id.includes('lucide-react') || id.includes('i18next')) {
+            return 'ui-i18n'
           }
           // react-markdown
           if (id.includes('react-markdown') || id.includes('remark') || id.includes('rehype')) {

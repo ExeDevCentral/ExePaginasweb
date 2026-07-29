@@ -1,42 +1,116 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useMemo, useRef, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-import { X, ShoppingCart } from 'lucide-react'
+import {
+  X,
+  ShoppingCart,
+  Sparkles,
+  Dumbbell,
+  Building2,
+  Coffee,
+  ArrowRight,
+  LucideIcon,
+} from 'lucide-react'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
 // CoffeePortal3D se importa dinámicamente SOLO cuando el usuario hace clic en Pixel Coffee
 // Esto evita que three.js (288KB) se cargue en la página principal
 
+interface ProjectConfig {
+  id: string
+  title: string
+  category: string
+  summary: string
+  categoryKey: string
+  summaryKey: string
+  icon: LucideIcon
+  featured?: boolean
+  badgeLabel?: string
+  accentColor: string
+  badgeClasses: string
+  cardBorder: string
+  cardHoverBorder: string
+  iconBg: string
+  iconColor: string
+  buttonClasses: string
+}
+
 // --- CONSTANTES ESTÁTICAS (Optimizadas fuera del componente) ---
-const PROJECTS = [
+const PROJECTS: ProjectConfig[] = [
   {
+    id: 'salon',
     title: 'Salon Bloom',
     category: 'Landing de servicios',
     summary: 'Página para reservas, promociones y testimonios con estilo visual premium.',
     categoryKey: 'demozone.project_category_bloom',
     summaryKey: 'demozone.project_summary_bloom',
+    icon: Sparkles,
+    featured: true,
+    badgeLabel: 'MÁS POPULAR',
+    accentColor: 'rgba(236, 72, 153, 0.25)',
+    badgeClasses:
+      'bg-pink-100 dark:bg-pink-950/70 text-pink-800 dark:text-pink-300 border-pink-300 dark:border-pink-500/40',
+    cardBorder: 'border-pink-500/30 dark:border-pink-500/40',
+    cardHoverBorder: 'hover:border-pink-500/80',
+    iconBg: 'bg-pink-100 dark:bg-pink-500/20 border-pink-300 dark:border-pink-500/40',
+    iconColor: 'text-pink-700 dark:text-pink-400',
+    buttonClasses:
+      'bg-pink-50 dark:bg-pink-500/15 text-pink-800 dark:text-pink-300 border-pink-300 dark:border-pink-500/40 hover:bg-pink-600 hover:text-white dark:hover:bg-pink-500 dark:hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(236,72,153,0.4)]',
   },
   {
+    id: 'neofit',
     title: 'NeoFit Studio',
     category: 'Web de membresías',
     summary: 'Sitio de gimnasio con planes, agenda de clases y CTA para conversión.',
     categoryKey: 'demozone.project_category_neofit',
     summaryKey: 'demozone.project_summary_neofit',
+    icon: Dumbbell,
+    accentColor: 'rgba(16, 185, 129, 0.25)',
+    badgeClasses:
+      'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/40',
+    cardBorder: 'border-emerald-500/30 dark:border-emerald-500/40',
+    cardHoverBorder: 'hover:border-emerald-500/80',
+    iconBg: 'bg-emerald-100 dark:bg-emerald-500/20 border-emerald-300 dark:border-emerald-500/40',
+    iconColor: 'text-emerald-700 dark:text-emerald-400',
+    buttonClasses:
+      'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/40 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-500 dark:hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]',
   },
   {
+    id: 'aura',
     title: 'Casa Aura',
     category: 'Catálogo inmobiliario',
     summary: 'Subpáginas de propiedades con filtros y contacto directo por WhatsApp.',
     categoryKey: 'demozone.project_category_aura',
     summaryKey: 'demozone.project_summary_aura',
+    icon: Building2,
+    accentColor: 'rgba(56, 189, 248, 0.25)',
+    badgeClasses:
+      'bg-sky-100 dark:bg-sky-950/70 text-sky-800 dark:text-sky-300 border-sky-300 dark:border-sky-500/40',
+    cardBorder: 'border-sky-500/30 dark:border-sky-500/40',
+    cardHoverBorder: 'hover:border-sky-500/80',
+    iconBg: 'bg-sky-100 dark:bg-sky-500/20 border-sky-300 dark:border-sky-500/40',
+    iconColor: 'text-sky-700 dark:text-sky-400',
+    buttonClasses:
+      'bg-sky-50 dark:bg-sky-500/15 text-sky-800 dark:text-sky-300 border-sky-300 dark:border-sky-500/40 hover:bg-sky-600 hover:text-white dark:hover:bg-sky-500 dark:hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(56,189,248,0.4)]',
   },
   {
+    id: 'coffee',
     title: 'Pixel Coffee',
     category: 'E-commerce ligero',
     summary: 'Tienda online con carrito rápido y fichas de producto visuales.',
     categoryKey: 'demozone.project_category_coffee',
     summaryKey: 'demozone.project_summary_coffee',
+    icon: Coffee,
+    accentColor: 'rgba(245, 158, 11, 0.25)',
+    badgeClasses:
+      'bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-500/40',
+    cardBorder: 'border-amber-500/30 dark:border-amber-500/40',
+    cardHoverBorder: 'hover:border-amber-500/80',
+    iconBg: 'bg-amber-100 dark:bg-amber-500/20 border-amber-300 dark:border-amber-500/40',
+    iconColor: 'text-amber-700 dark:text-amber-400',
+    buttonClasses:
+      'bg-amber-50 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-500/40 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-500 dark:hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]',
   },
 ]
 
@@ -146,11 +220,13 @@ const TESTIMONIALS = [
 ]
 
 const TiltCard = ({
+  project,
   category,
   title,
   summary,
   onOpen,
 }: {
+  project: ProjectConfig
   category: string
   title: string
   summary: string
@@ -161,11 +237,12 @@ const TiltCard = ({
   const [tilt, setTilt] = useState({ rx: 0, ry: 0, tx: 0, ty: 0 })
   const [active, setActive] = useState(false)
   const [glowPos, setGlowPos] = useState({ x: 50, y: 50 })
+  const IconComponent = project.icon
 
   return (
     <motion.article
       ref={cardRef}
-      className="relative rounded-2xl border border-accent-cyan/20 bg-primary-bg/40 p-5 backdrop-blur-sm overflow-hidden"
+      className={`group relative rounded-2xl border ${project.cardBorder} ${project.cardHoverBorder} bg-white/90 dark:bg-slate-900/70 p-6 backdrop-blur-md overflow-hidden transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col justify-between`}
       style={{ perspective: 900 }}
       onPointerMove={(e) => {
         const el = cardRef.current
@@ -196,46 +273,63 @@ const TiltCard = ({
     >
       {/* Sheen */}
       <motion.div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 dark:via-white/10 to-transparent"
         style={{ transform: 'translateX(-60%) skewX(-20deg)' }}
         animate={active ? { x: '160%' } : { x: '-60%' }}
         transition={{ duration: 0.65, ease: 'easeOut' }}
       />
 
-      {/* Glow — follows cursor */}
+      {/* Glow — follows cursor with category accent color */}
       <div
         className="pointer-events-none absolute -inset-1 transition-opacity duration-300"
         style={{
           opacity: active ? 1 : 0,
-          background: `radial-gradient(600px circle at ${glowPos.x}% ${glowPos.y}%, rgba(34,211,238,0.18), rgba(236,72,153,0.08) 40%, transparent 65%)`,
+          background: `radial-gradient(500px circle at ${glowPos.x}% ${glowPos.y}%, ${project.accentColor}, transparent 65%)`,
         }}
       />
 
-      <p className="text-xs uppercase tracking-[0.2em] text-accent-cyan">{category}</p>
-      <h3 className="mt-2 text-2xl font-bold">{title}</h3>
-      <p className="mt-3 text-primary-secondary">{summary}</p>
+      <div>
+        {/* Header with Icon + Category Pill Badge + Featured Tag */}
+        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <div className="flex items-center gap-3">
+            <div
+              className={`p-2.5 rounded-xl border ${project.iconBg} shadow-inner transition-transform duration-300 group-hover:scale-110`}
+            >
+              <IconComponent className={`w-6 h-6 ${project.iconColor}`} />
+            </div>
+            <span
+              className={`text-xs uppercase tracking-wider font-bold px-3 py-1 rounded-full border transition-all duration-300 ${project.badgeClasses}`}
+            >
+              {category}
+            </span>
+          </div>
 
+          {project.featured && project.badgeLabel && (
+            <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-sm">
+              {project.badgeLabel}
+            </span>
+          )}
+        </div>
+
+        {/* Title & Description */}
+        <h3 className="text-2xl font-bold font-montserrat tracking-tight text-slate-900 dark:text-white transition-colors duration-200">
+          {title}
+        </h3>
+        <p className="mt-2.5 text-slate-600 dark:text-slate-300 text-sm leading-relaxed font-medium">
+          {summary}
+        </p>
+      </div>
+
+      {/* Redesigned Button Pill */}
       <motion.button
         type="button"
-        className="mt-4 rounded-full border border-accent-cyan/40 px-4 py-2 text-sm text-accent-cyan transition hover:bg-accent-cyan/10 flex items-center gap-2"
+        className={`mt-6 w-full rounded-full border px-5 py-2.5 text-sm font-bold transition-all duration-300 flex items-center justify-between group/btn ${project.buttonClasses}`}
         onClick={onOpen}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.97 }}
       >
-        {t('demozone.ver_subpagina')}
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M5 12h14" />
-          <path d="m12 5 7 7-7 7" />
-        </svg>
+        <span>{t('demozone.ver_subpagina')}</span>
+        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
       </motion.button>
     </motion.article>
   )
@@ -355,8 +449,16 @@ const DemoZone = () => {
   )
 
   return (
-    <section id="demo" className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
-      <div className="max-w-7xl mx-auto">
+    <section
+      id="demo"
+      className="py-24 px-4 sm:px-6 lg:px-8 relative z-10 overflow-hidden bg-gradient-to-b from-primary-bg via-primary-bg/90 to-primary-bg"
+    >
+      {/* Background ambient pattern & lighting */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent-cyan/10 via-transparent to-transparent opacity-60" />
+      <div className="pointer-events-none absolute -top-40 -left-40 w-96 h-96 rounded-full bg-pink-500/10 blur-[120px]" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-cyan-500/10 blur-[120px]" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
           className="text-center mb-16"
@@ -366,17 +468,17 @@ const DemoZone = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 font-montserrat">
-            <span className="bg-gradient-to-r from-accent-cyan to-accent-magenta bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-600 via-slate-900 to-pink-600 dark:from-accent-cyan dark:via-white dark:to-accent-magenta bg-clip-text text-transparent">
               {t('demozone.section_heading')}
             </span>
           </h2>
-          <p className="text-xl text-primary-secondary max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium">
             {t('demozone.section_desc')}
           </p>
         </motion.div>
 
         <motion.div
-          className="mb-12 grid gap-5 md:grid-cols-2"
+          className="mb-12 grid gap-6 md:grid-cols-2"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -384,6 +486,7 @@ const DemoZone = () => {
           {PROJECTS.map((project) => (
             <TiltCard
               key={project.title}
+              project={project}
               category={t(project.categoryKey)}
               title={project.title}
               summary={t(project.summaryKey)}

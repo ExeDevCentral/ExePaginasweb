@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 import { Sparkles, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, lazy } from 'react'
 import { Helmet } from 'react-helmet-async'
-import PremiumBackground from '../Effects/PremiumBackground'
+const PremiumBackground = lazy(() => import('../Effects/PremiumBackground'))
 import { PLAN_CATALOG } from '../../core/domain/planCatalog'
 import { Monitor, Building, Building2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'

@@ -6,55 +6,59 @@ import {
   MeshDistortMaterial,
   Sparkles,
 } from '@react-three/drei'
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useState } from 'react'
 import * as THREE from 'three'
 
-function CoreCrystal() {
+function CoreCrystal({ isClicked }: { isClicked?: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null)
 
   useFrame((state) => {
     if (!meshRef.current) return
-    meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.15) * 0.1
-    meshRef.current.rotation.y += 0.003
+    // Inclinación dinámica siguiendo el puntero del mouse (orientación 3D reactiva)
+    const targetRx = -state.pointer.y * 0.45
+    const targetRy = state.pointer.x * 0.6 + state.clock.elapsedTime * 0.2
+
+    meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, targetRx, 0.08)
+    meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, targetRy, 0.08)
   })
 
   return (
     <mesh ref={meshRef}>
       <dodecahedronGeometry args={[1.4, 0]} />
       <MeshDistortMaterial
-        color="#1a0a2e"
-        emissive="#f6a623"
-        emissiveIntensity={0.08}
+        color={isClicked ? '#00d4ff' : '#1a0a2e'}
+        emissive={isClicked ? '#00d4ff' : '#f6a623'}
+        emissiveIntensity={isClicked ? 0.8 : 0.15}
         wireframe
         transparent
-        opacity={0.5}
-        distort={0.1}
-        speed={0.5}
+        opacity={0.65}
+        distort={isClicked ? 0.4 : 0.12}
+        speed={isClicked ? 3 : 0.8}
       />
     </mesh>
   )
 }
 
-function InnerGlow() {
+function InnerGlow({ isClicked }: { isClicked?: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null)
 
   useFrame((state) => {
     if (!meshRef.current) return
-    const pulse = 0.15 + Math.sin(state.clock.elapsedTime * 0.8) * 0.08
+    const pulse = 0.2 + Math.sin(state.clock.elapsedTime * 1.5) * 0.12 + (isClicked ? 0.5 : 0)
     const mat = meshRef.current.material as THREE.MeshPhysicalMaterial
     mat.emissiveIntensity = pulse
-    meshRef.current.rotation.y += 0.005
+    meshRef.current.rotation.y += 0.008
   })
 
   return (
     <mesh ref={meshRef}>
-      <icosahedronGeometry args={[0.9, 0]} />
+      <icosahedronGeometry args={[0.95, 0]} />
       <meshPhysicalMaterial
         color="#2a1a3e"
-        emissive="#f6a623"
-        emissiveIntensity={0.15}
+        emissive={isClicked ? '#00d4ff' : '#f6a623'}
+        emissiveIntensity={0.25}
         transparent
-        opacity={0.2}
+        opacity={0.3}
         roughness={0.1}
         metalness={0.9}
       />
@@ -246,17 +250,26 @@ function HouseStructure() {
   )
 }
 
-function Scene() {
+function Scene({ isClicked }: { isClicked: boolean }) {
   return (
     <>
       <ambientLight intensity={0.15} color="#1a1a2e" />
-      <directionalLight position={[5, 8, 5]} intensity={0.8} color="#f6a623" />
-      <directionalLight position={[-3, 2, -5]} intensity={0.3} color="#00d4ff" />
-      <pointLight position={[0, 0, 0]} intensity={0.3} color="#ff6b35" distance={6} />
+      <directionalLight
+        position={[5, 8, 5]}
+        intensity={isClicked ? 1.5 : 0.8}
+        color={isClicked ? '#00d4ff' : '#f6a623'}
+      />
+      <directionalLight position={[-3, 2, -5]} intensity={0.5} color="#00d4ff" />
+      <pointLight
+        position={[0, 0, 0]}
+        intensity={isClicked ? 1.2 : 0.4}
+        color={isClicked ? '#00d4ff' : '#ff6b35'}
+        distance={8}
+      />
 
       <group position={[0, 0.3, 0]}>
-        <CoreCrystal />
-        <InnerGlow />
+        <CoreCrystal isClicked={isClicked} />
+        <InnerGlow isClicked={isClicked} />
         <HouseStructure />
       </group>
 
@@ -265,13 +278,13 @@ function Scene() {
       <GoldenKey />
 
       <Sparkles
-        count={100}
+        count={isClicked ? 180 : 100}
         scale={7}
-        size={0.5}
-        speed={0.2}
+        size={isClicked ? 0.9 : 0.5}
+        speed={isClicked ? 0.6 : 0.2}
         noise={0.15}
-        color="#f6a623"
-        opacity={0.25}
+        color={isClicked ? '#00d4ff' : '#f6a623'}
+        opacity={isClicked ? 0.6 : 0.25}
       />
 
       <Sparkles
@@ -292,15 +305,23 @@ function Scene() {
 }
 
 export default function HeroThreeScene() {
+  const [isClicked, setIsClicked] = useState(false)
+
   return (
-    <div className="absolute inset-0 rounded-[inherit] pointer-events-none">
+    <div
+      className="absolute inset-0 rounded-[inherit] cursor-pointer pointer-events-auto"
+      onClick={() => {
+        setIsClicked(true)
+        setTimeout(() => setIsClicked(false), 800)
+      }}
+    >
       <Canvas
         camera={{ position: [0, 0.5, 5.5], fov: 42 }}
         dpr={[1, 1.2]}
         gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
         style={{ width: '100%', height: '100%' }}
       >
-        <Scene />
+        <Scene isClicked={isClicked} />
       </Canvas>
     </div>
   )

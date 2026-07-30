@@ -66,14 +66,10 @@ const Header = () => {
   return (
     <motion.header
       style={{
-        background: scrolled ? 'rgba(5, 5, 7, 0.92)' : 'rgba(10, 10, 12, 1)',
+        background: scrolled ? 'var(--background)' : 'transparent',
         backdropFilter: scrolled ? 'blur(16px) saturate(1.4)' : 'none',
-        borderBottom: scrolled
-          ? '1px solid rgba(0, 242, 254, 0.2)'
-          : '1px solid rgba(255, 255, 255, 0.05)',
-        boxShadow: scrolled
-          ? '0 0 40px -10px rgba(0, 242, 254, 0.2), 0 1px 0 0 rgba(0, 242, 254, 0.08) inset'
-          : 'none',
+        borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
+        boxShadow: scrolled ? 'var(--shadow-md)' : 'none',
       }}
       className="fixed top-0 w-full z-50 transition-all duration-300 font-mono"
       initial={{ y: -100, opacity: 0 }}
@@ -109,9 +105,9 @@ const Header = () => {
                 className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 relative z-10"
               />
             </div>
-            <span className="text-zinc-100 text-xs font-bold tracking-widest uppercase flex items-center gap-1">
-              EXE<span className="text-[#00f2fe] font-light">//</span>SISTEMAS
-              <span className="text-zinc-500 font-light">.WEB</span>
+            <span className="text-foreground text-xs font-bold tracking-widest uppercase flex items-center gap-1">
+              EXE<span className="text-accent-cyan font-light">//</span>SISTEMAS
+              <span className="text-muted-foreground font-light">.WEB</span>
             </span>
           </motion.a>
 
@@ -126,9 +122,9 @@ const Header = () => {
                   onClick={(e) => scrollToSection(e, item.id)}
                   className="relative px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 group"
                   style={{
-                    color: isActive ? '#00f2fe' : 'rgba(240, 240, 245, 0.6)',
+                    color: isActive ? 'var(--accent-cyan)' : 'var(--muted-foreground)',
                   }}
-                  whileHover={{ color: '#00f2fe' }}
+                  whileHover={{ color: 'var(--accent-cyan)' }}
                 >
                   <span className="relative z-10">{t(navLabelKeys[item.id] || item.label)}</span>
 
@@ -261,7 +257,7 @@ const Header = () => {
             {/* Drawer */}
             <motion.div
               key="mob-drawer"
-              className="md:hidden fixed top-16 left-0 w-full z-50 flex flex-col bg-[#050507] border-t border-zinc-800"
+              className="md:hidden fixed top-16 left-0 w-full z-50 flex flex-col bg-background border-t border-border"
               style={{
                 height: 'calc(100dvh - 64px)',
               }}
@@ -280,9 +276,9 @@ const Header = () => {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-zinc-900/60"
+                      className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-border/40"
                       style={{
-                        color: isActive ? '#00f2fe' : 'rgba(240, 240, 245, 0.65)',
+                        color: isActive ? 'var(--accent-cyan)' : 'var(--muted-foreground)',
                       }}
                       onClick={(e) => {
                         setIsMenuOpen(false)

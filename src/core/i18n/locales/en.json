@@ -137,15 +137,7 @@
     "step_3_titulo": "3. Launch",
     "step_3_desc": "We deploy your site on global premium servers (99.9% uptime).",
     "step_4_titulo": "4. Total Support",
-    "step_4_desc": "We handle maintenance, servers, and updates.",
-    "step_1_titulo_en": "1. Discovery Call",
-    "step_1_desc_en": "We meet for 30 minutes to understand what your business needs and how to automate it.",
-    "step_2_titulo_en": "2. Agile Development",
-    "step_2_desc_en": "In days we build the first version using our advanced modular system.",
-    "step_3_titulo_en": "3. Launch",
-    "step_3_desc_en": "We deploy your site on global premium servers (99.9% uptime).",
-    "step_4_titulo_en": "4. Total Support",
-    "step_4_desc_en": "We handle maintenance, servers, and updates."
+    "step_4_desc": "We handle maintenance, servers, and updates."
   },
   "techstack": {
     "seccion_titulo": "Technology",

@@ -73,10 +73,10 @@ export default function SupportTicketPanel({
             initial={{ opacity: 0, y: 40, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.98 }}
-            className={`relative w-full sm:max-w-lg max-h-[92dvh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border ${theme.border} bg-[#08080c] shadow-2xl`}
+            className={`relative w-full sm:max-w-lg max-h-[92dvh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border ${theme.border} bg-card shadow-2xl`}
           >
             <div
-              className={`sticky top-0 z-10 border-b ${theme.border} bg-[#08080c]/95 backdrop-blur-xl px-6 py-5`}
+              className={`sticky top-0 z-10 border-b ${theme.border} bg-card/95 backdrop-blur-xl px-6 py-5`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">

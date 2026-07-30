@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     process.env.RESEND_WEBHOOK_SIGNING_SECRET ||
     process.env.RESEND_WEBHOOK_SECRET ||
     process.env.SVIX_SECRET ||
-    'whsec_d9Lw9m7hTR4QABBtzxeQaLmwJu/ZRSwB'
+    'whsec_1wqr6i61tWc8Px+eyWWaLo7uljYH5cCT'
 
   const svixId = req.headers['svix-id']
   const svixTimestamp = req.headers['svix-timestamp']

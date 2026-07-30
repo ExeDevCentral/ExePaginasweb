@@ -243,4 +243,36 @@ export function invoiceReceipt({
   return baseLayout(body, 'Factura Emitida')
 }
 
+export function emailVerification({ name, verificationUrl, token }) {
+  const body = `
+    <h1 style="color:#00d4ff;">🔒 Verificación de Cuenta</h1>
+    <p>Hola <strong style="color:#fff">${escapeHtml(name || 'Cliente')}</strong>,</p>
+    <p>Gracias por registrarte en <strong style="color:#fff">${BRAND.name}</strong>. Para activar tu cuenta y acceder a todos los servicios de tu panel, confirmá tu dirección de correo electrónico.</p>
+
+    ${
+      token
+        ? `
+      <div style="background:#0d0d14;border-radius:12px;padding:20px;margin:20px 0;border:1px solid #00d4ff40;text-align:center;">
+        <div class="label" style="color:#00d4ff;">Tu Código de Verificación</div>
+        <div style="font-family:monospace;font-size:28px;font-weight:bold;letter-spacing:6px;color:#fff;margin:12px 0;">${escapeHtml(token)}</div>
+        <p style="font-size:12px;color:#888;margin:0;">Válido por 24 horas</p>
+      </div>
+    `
+        : ''
+    }
+
+    <div style="text-align:center;margin:28px 0;">
+      <a href="${escapeHtml(verificationUrl) || BRAND.domain + '/dashboard'}" class="btn" style="padding:16px 36px;font-size:16px;box-shadow:0 0 20px rgba(0,212,255,0.3);">Confirmar Correo Electrónico</a>
+    </div>
+
+    <div style="background:#0d0d14;border-radius:12px;padding:16px;margin:20px 0;border:1px solid #1e1e2e;">
+      <p style="font-size:12px;color:#888;margin:0;">💡 <strong>¿No creaste una cuenta?</strong> Si no realizaste esta solicitud, podés ignorar este correo de forma segura. Tu cuenta no será activada sin esta confirmación.</p>
+    </div>
+
+    <hr class="divider">
+    <p style="font-size:12px;color:#666;text-align:center;">Por razones de seguridad, este enlace de verificación expirará automáticamente.</p>
+  `
+  return baseLayout(body, 'Confirma tu Correo Electrónico')
+}
+
 export { baseLayout, styles }

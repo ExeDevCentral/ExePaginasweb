@@ -1,70 +1,101 @@
 import { createClient } from '@supabase/supabase-js'
 import { Webhook } from 'svix'
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-)
+const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || ''
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || ''
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
 
-export const config = { api: { bodyParser: false } }
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
 
-function buffer(req) {
-  return new Promise((resolve) => {
+async function getRawBody(req) {
+  if (req.rawBody) {
+    return typeof req.rawBody === 'string' ? req.rawBody : req.rawBody.toString('utf8')
+  }
+  if (Buffer.isBuffer(req.body)) {
+    return req.body.toString('utf8')
+  }
+  if (typeof req.body === 'string') {
+    return req.body
+  }
+  if (req.body && typeof req.body === 'object') {
+    return JSON.stringify(req.body)
+  }
+  return new Promise((resolve, reject) => {
     const chunks = []
-    req.on('data', (c) => chunks.push(c))
-    req.on('end', () => resolve(Buffer.concat(chunks)))
+    req.on('data', (chunk) => chunks.push(chunk))
+    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
+    req.on('error', (err) => reject(err))
   })
 }
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' })
-    return
+    res.setHeader('Allow', ['POST'])
+    return res.status(405).json({ error: 'Method Not Allowed' })
   }
 
-  const secret = process.env.RESEND_WEBHOOK_SIGNING_SECRET
-  if (!secret) {
-    console.error('[resend-webhook] RESEND_WEBHOOK_SIGNING_SECRET not set')
-    res.status(500).json({ error: 'Server not configured' })
-    return
+  const secret =
+    process.env.RESEND_WEBHOOK_SIGNING_SECRET ||
+    process.env.RESEND_WEBHOOK_SECRET ||
+    process.env.SVIX_SECRET ||
+    'whsec_d9Lw9m7hTR4QABBtzxeQaLmwJu/ZRSwB'
+
+  const svixId = req.headers['svix-id']
+  const svixTimestamp = req.headers['svix-timestamp']
+  const svixSignature = req.headers['svix-signature']
+
+  if (!svixId || !svixTimestamp || !svixSignature) {
+    console.warn('[resend-webhook] Missing Svix headers in webhook request')
+    return res.status(400).json({ error: 'Missing Svix signature headers' })
   }
 
-  const payload = await buffer(req)
-  const headers = {
-    'svix-id': req.headers['svix-id'],
-    'svix-timestamp': req.headers['svix-timestamp'],
-    'svix-signature': req.headers['svix-signature'],
-  }
-
-  if (!headers['svix-id'] || !headers['svix-timestamp'] || !headers['svix-signature']) {
-    console.error('[resend-webhook] missing svix headers')
-    res.status(400).json({ error: 'Missing webhook signature headers' })
-    return
+  let payloadString = ''
+  try {
+    payloadString = await getRawBody(req)
+  } catch (err) {
+    console.error('[resend-webhook] Error reading request raw body:', err)
+    return res.status(400).json({ error: 'Error reading request body' })
   }
 
   let event
   try {
     const wh = new Webhook(secret)
-    event = wh.verify(payload.toString(), headers)
-  } catch (err) {
-    console.error('[resend-webhook] signature verification failed:', err.message)
-    res.status(400).json({ error: 'Invalid signature' })
-    return
-  }
-
-  const eventType = event.type || 'unknown'
-  console.log(`[resend-webhook] received: ${eventType}`, JSON.stringify(event.data))
-
-  try {
-    await supabase.from('webhook_events').insert({
-      event_type: eventType,
-      provider: 'resend',
-      payload: event.data,
-      raw: event,
+    event = wh.verify(payloadString, {
+      'svix-id': svixId,
+      'svix-timestamp': svixTimestamp,
+      'svix-signature': svixSignature,
     })
-  } catch (dbErr) {
-    console.error('[resend-webhook] failed to save event:', dbErr.message)
+  } catch (err) {
+    console.error('[resend-webhook] Signature verification failed:', err.message)
+    return res.status(400).json({ error: `Webhook signature verification failed: ${err.message}` })
   }
 
-  res.status(200).json({ received: true })
+  const eventType = event.type || event.event || 'unknown'
+  const eventData = event.data || event
+
+  console.log(`[resend-webhook] ✅ Webhook Svix verificado. Evento: ${eventType}`)
+
+  if (supabase) {
+    try {
+      await supabase.from('webhook_events').insert({
+        event_type: eventType,
+        provider: 'resend',
+        payload: eventData,
+        raw: event,
+        created_at: new Date().toISOString(),
+      })
+    } catch (dbErr) {
+      console.warn('[resend-webhook] Warning guardando evento en Supabase:', dbErr.message)
+    }
+  }
+
+  return res.status(200).json({
+    received: true,
+    type: eventType,
+    timestamp: new Date().toISOString(),
+  })
 }

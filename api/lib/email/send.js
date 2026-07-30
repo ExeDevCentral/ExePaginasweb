@@ -1,6 +1,8 @@
 const RESEND_API = 'https://api.resend.com/emails'
 
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'Exemetal@hotmail.com'
+export const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'Contacto@exepaginasweb.com'
+export const SALES_EMAIL = process.env.SALES_EMAIL || 'Ventas@exepaginasweb.com'
 
 function getConfig() {
   const apiKey = process.env.RESEND_API_KEY
@@ -9,7 +11,7 @@ function getConfig() {
   }
   return {
     apiKey,
-    from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+    from: process.env.RESEND_FROM_EMAIL || 'Contacto@exepaginasweb.com',
   }
 }
 

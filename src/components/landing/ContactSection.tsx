@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { MessageCircle, Globe, ArrowRight, CheckCircle } from 'lucide-react'
+import { MessageCircle, Globe, ArrowRight, CheckCircle, Mail, Send } from 'lucide-react'
 import { supabase } from '../../core/infra/supabase/client'
 import { toast } from 'sonner'
 
@@ -16,14 +16,28 @@ const ContactSection = () => {
   const channels = [
     {
       icon: MessageCircle,
-      label: 'WhatsApp',
+      label: 'WhatsApp Directo',
       value: '+54 9 341 6874786',
-      href: 'https://wa.me/5493416874786?text=¡Hola%20ExeSistemasWEB!%20Me%20contacto%20desde%20la%20web.%20Me%20interesa%20agendar%20una%20sesión%20de%20consultoría%20para%20automatizar%20las%20operaciones%20de%20mi%20negocio%20con%20un%20sistema%20a%20medida.',
+      href: 'https://wa.me/5493416874786?text=¡Hola%20ExeSistemasWEB!%20Me%20contacto%20desde%20la%20web.',
       color: '#22c55e',
     },
     {
+      icon: Mail,
+      label: 'Contacto & Soporte',
+      value: 'Contacto@exepaginasweb.com',
+      href: 'mailto:Contacto@exepaginasweb.com',
+      color: '#06b6d4',
+    },
+    {
+      icon: Send,
+      label: 'Ventas & Cotizaciones',
+      value: 'Ventas@exepaginasweb.com',
+      href: 'mailto:Ventas@exepaginasweb.com',
+      color: '#ec4899',
+    },
+    {
       icon: Globe,
-      label: 'Web',
+      label: 'Sitio Web Oficial',
       value: 'Exepaginasweb.com',
       href: 'https://Exepaginasweb.com',
       color: '#a855f7',

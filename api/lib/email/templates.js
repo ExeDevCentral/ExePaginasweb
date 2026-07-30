@@ -275,4 +275,35 @@ export function emailVerification({ name, verificationUrl, token }) {
   return baseLayout(body, 'Confirma tu Correo Electrónico')
 }
 
+export function inboundEmailNotification({ fromEmail, subject, html, text }) {
+  const safeSubject = escapeHtml(subject || 'Sin Asunto')
+  const safeFrom = escapeHtml(fromEmail || 'Desconocido')
+  const body = `
+    <h1 style="color:#00d4ff;font-size:22px;margin-bottom:8px;">📩 Nuevo Mensaje Entrante</h1>
+    <p style="color:#888;font-size:13px;margin-bottom:20px;">Has recibido una consulta directa en tu dominio <strong>exepaginasweb.com</strong>.</p>
+    
+    <div style="background:#0d0d14;border-radius:12px;padding:20px;margin:16px 0;border:1px solid #1e1e2e;">
+      <div class="label" style="color:#00d4ff;font-weight:600;">Remitente</div>
+      <div class="value" style="color:#fff;font-size:15px;margin-bottom:12px;">${safeFrom}</div>
+      
+      <div class="label" style="color:#00d4ff;font-weight:600;">Asunto</div>
+      <div class="value" style="color:#fff;font-size:15px;margin-bottom:12px;">${safeSubject}</div>
+      
+      <hr class="divider" style="margin:16px 0;border-top:1px solid #1e1e2e;">
+      
+      <div class="label" style="margin-bottom:8px;">Contenido del Mensaje</div>
+      <div style="background:#0a0a0f;padding:16px;border-radius:8px;color:#d1d5db;font-size:14px;line-height:1.6;border:1px solid #1e1e2e;overflow-x:auto;">
+        ${html || `<pre style="white-space:pre-wrap;font-family:inherit;margin:0;color:#d1d5db;">${escapeHtml(text || 'Sin contenido')}</pre>`}
+      </div>
+    </div>
+    
+    <div style="background:#0d0d14;border-radius:8px;padding:12px 16px;border:1px solid #00d4ff30;margin-top:20px;">
+      <p style="font-size:12px;color:#94a3b8;margin:0;">
+        💡 <strong>Respuesta directa:</strong> Al hacer clic en <em>"Responder"</em> en tu cliente de correo, le escribirás directamente a <strong>${safeFrom}</strong>.
+      </p>
+    </div>
+  `
+  return baseLayout(body, `[Email Entrante] ${safeSubject}`)
+}
+
 export { baseLayout, styles }

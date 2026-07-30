@@ -118,7 +118,7 @@ const iosFrameStyles = {
   homeIndicatorDark: {
     background: 'rgba(255,255,255,0.5)',
   },
-};
+}
 
 function IosFrame({
   children,
@@ -131,16 +131,18 @@ function IosFrame({
   showDynamicIsland = true,
   showHomeIndicator = true,
 }) {
-  const textColor = darkMode ? '#fff' : '#000';
+  const textColor = darkMode ? '#fff' : '#000'
 
   return (
     <div style={iosFrameStyles.wrapper}>
-      <div style={{
-        ...iosFrameStyles.screen,
-        width,
-        height,
-        background: darkMode ? '#000' : '#fff',
-      }}>
+      <div
+        style={{
+          ...iosFrameStyles.screen,
+          width,
+          height,
+          background: darkMode ? '#000' : '#fff',
+        }}
+      >
         {showStatusBar && (
           <div style={{ ...iosFrameStyles.statusBar, color: textColor }}>
             <span>{time}</span>
@@ -151,19 +153,40 @@ function IosFrame({
                 <div style={{ ...iosFrameStyles.signalBar, height: 9 }} />
                 <div style={{ ...iosFrameStyles.signalBar, height: 11 }} />
               </div>
-              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style={{ color: textColor }}>
+              <svg
+                width="16"
+                height="12"
+                viewBox="0 0 16 12"
+                fill="none"
+                style={{ color: textColor }}
+              >
                 <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor" />
-                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" />
-                <path d="M1 4.5a11 11 0 0114 0" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" opacity="0.7" />
+                <path
+                  d="M3 7.5a7 7 0 0110 0"
+                  stroke="currentColor"
+                  strokeWidth="1.3"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M1 4.5a11 11 0 0114 0"
+                  stroke="currentColor"
+                  strokeWidth="1.3"
+                  fill="none"
+                  strokeLinecap="round"
+                  opacity="0.7"
+                />
               </svg>
               <div style={iosFrameStyles.batteryIcon}>
-                <div style={{
-                  width: `${battery}%`,
-                  height: '100%',
-                  background: 'currentColor',
-                  borderRadius: 1,
-                  opacity: 0.9,
-                }} />
+                <div
+                  style={{
+                    width: `${battery}%`,
+                    height: '100%',
+                    background: 'currentColor',
+                    borderRadius: 1,
+                    opacity: 0.9,
+                  }}
+                />
                 <div style={iosFrameStyles.batteryCap} />
               </div>
             </div>
@@ -172,21 +195,21 @@ function IosFrame({
 
         {showDynamicIsland && <div style={iosFrameStyles.dynamicIsland} />}
 
-        <div style={iosFrameStyles.content}>
-          {children}
-        </div>
+        <div style={iosFrameStyles.content}>{children}</div>
 
         {showHomeIndicator && (
-          <div style={{
-            ...iosFrameStyles.homeIndicator,
-            ...(darkMode ? iosFrameStyles.homeIndicatorDark : {}),
-          }} />
+          <div
+            style={{
+              ...iosFrameStyles.homeIndicator,
+              ...(darkMode ? iosFrameStyles.homeIndicatorDark : {}),
+            }}
+          />
         )}
       </div>
     </div>
-  );
+  )
 }
 
 if (typeof window !== 'undefined') {
-  window.IosFrame = IosFrame;
+  window.IosFrame = IosFrame
 }

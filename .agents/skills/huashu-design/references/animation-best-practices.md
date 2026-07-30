@@ -46,26 +46,26 @@
 你对「好」和「great」的判断标准如下。每一条都有**识别方法**——当你看到一个候选动画时，
 用这些问题判断它是否达标，而不是机械对照 14 条规则。
 
-| 美的维度 | 识别方法（观众反应） |
-|---|---|
-| **物理重量感** | 动画结束时，元素"**落**"得稳——不是"**停**"在那里。观众潜意识觉得"这有重量" |
-| **礼让观众** | 关键信息出现前有一个可感的 pause（≥300ms）——观众来得及"**看见**"再继续 |
-| **留白** | 收尾是戛然而止 + hold，不是 fade to black。最后一帧清晰、肯定、有决定感 |
-| **克制** | 全片只有一处「120% 精致」，其余 80% 恰到好处——**到处炫技是廉价的信号** |
-| **手感** | 弧线（不是直线）、不规律（不是 setInterval 的机械节奏）、有呼吸感 |
-| **敬意** | 展示 tweak 的过程、展示 bug 的修复——**不藏工作、不给"魔法"**。AI 是协作者不是魔术师 |
+| 美的维度       | 识别方法（观众反应）                                                                |
+| -------------- | ----------------------------------------------------------------------------------- |
+| **物理重量感** | 动画结束时，元素"**落**"得稳——不是"**停**"在那里。观众潜意识觉得"这有重量"          |
+| **礼让观众**   | 关键信息出现前有一个可感的 pause（≥300ms）——观众来得及"**看见**"再继续              |
+| **留白**       | 收尾是戛然而止 + hold，不是 fade to black。最后一帧清晰、肯定、有决定感             |
+| **克制**       | 全片只有一处「120% 精致」，其余 80% 恰到好处——**到处炫技是廉价的信号**              |
+| **手感**       | 弧线（不是直线）、不规律（不是 setInterval 的机械节奏）、有呼吸感                   |
+| **敬意**       | 展示 tweak 的过程、展示 bug 的修复——**不藏工作、不给"魔法"**。AI 是协作者不是魔术师 |
 
 ### §0.4 自检 · 观众第一反应法
 
 做完一支动画，**观众看完第一反应是什么？**——这是你唯一要优化的指标。
 
-| 观众反应 | 评级 | 诊断 |
-|---|---|---|
-| "看起来挺流畅的" | good | 合格但无特色，你在做 PowerPoint |
-| "这个动画真顺" | good+ | 技术对了，但没惊艳 |
-| "这个东西看起来真的像**从桌面上浮起来的**" | great | 你触到了物理重量感 |
-| "这不像是 AI 做的" | great+ | 你触到了 Anthropic 的门槛 |
-| "我想**截图**发朋友圈" | great++ | 你做到了让观众主动传播 |
+| 观众反应                                   | 评级    | 诊断                            |
+| ------------------------------------------ | ------- | ------------------------------- |
+| "看起来挺流畅的"                           | good    | 合格但无特色，你在做 PowerPoint |
+| "这个动画真顺"                             | good+   | 技术对了，但没惊艳              |
+| "这个东西看起来真的像**从桌面上浮起来的**" | great   | 你触到了物理重量感              |
+| "这不像是 AI 做的"                         | great+  | 你触到了 Anthropic 的门槛       |
+| "我想**截图**发朋友圈"                     | great++ | 你做到了让观众主动传播          |
 
 **great 和 good 的区别，不在于技术正确度，在于品味判断**。技术正确 + 品味对 = great。
 技术正确 + 品味空 = good。技术错误 = 没入门。
@@ -100,18 +100,19 @@
 
 Anthropic 三支片子无一例外遵循这个结构：
 
-| 段 | 占比 | 节奏 | 作用 |
-|---|---|---|---|
-| **S1 触发** | ~15% | 慢 | 给人类反应时间，建立真实感 |
-| **S2 生成** | ~15% | 中 | 视觉惊艳点出现 |
-| **S3 过程** | ~40% | 快 | 展示可控性/密度/细节 |
+| 段          | 占比 | 节奏 | 作用                           |
+| ----------- | ---- | ---- | ------------------------------ |
+| **S1 触发** | ~15% | 慢   | 给人类反应时间，建立真实感     |
+| **S2 生成** | ~15% | 中   | 视觉惊艳点出现                 |
+| **S3 过程** | ~40% | 快   | 展示可控性/密度/细节           |
 | **S4 爆发** | ~20% | Boom | 镜头拉远/3D pop-out/多面板涌现 |
-| **S5 落幅** | ~10% | 静 | 品牌 Logo + 戛然而止 |
+| **S5 落幅** | ~10% | 静   | 品牌 Logo + 戛然而止           |
 
 **具体时长映射**（15 秒动画为例）：
 S1 触发 2s · S2 生成 2s · S3 过程 6s · S4 爆发 3s · S5 落幅 2s
 
 **禁止做的事**：
+
 - ❌ 均匀节奏（每秒信息密度一样）— 观众疲劳
 - ❌ 持续高密度 — 无峰值无记忆点
 - ❌ 渐弱收尾（fade out 到透明）— 应该**戛然而止**
@@ -143,12 +144,12 @@ Easing.spring(t)
 
 ### 用法映射
 
-| 场景 | 用哪个 Easing |
-|---|---|
+| 场景                                                    | 用哪个 Easing                      |
+| ------------------------------------------------------- | ---------------------------------- |
 | 卡片 rise-in / 面板入场 / Terminal fade / focus overlay | **`expoOut`**（主 easing，最常用） |
-| Toggle 切换 / 按钮弹出 / 强调交互 | `overshoot` |
-| Preview 几何体归位 / 物理落位 / UI 元素抖弹 | `spring` |
-| 持续运动（如鼠标轨迹插值） | `easeInOut`（保留对称性） |
+| Toggle 切换 / 按钮弹出 / 强调交互                       | `overshoot`                        |
+| Preview 几何体归位 / 物理落位 / UI 元素抖弹             | `spring`                           |
+| 持续运动（如鼠标轨迹插值）                              | `easeInOut`（保留对称性）          |
 
 ### 反直觉洞察
 
@@ -196,17 +197,21 @@ AI 直接直线插值的鼠标轨迹**有潜意识排斥感**。
 ```js
 // 二次贝塞尔曲线插值（起点 → 控制点 → 终点）
 function bezierQuadratic(p0, p1, p2, t) {
-  const x = (1-t)*(1-t)*p0[0] + 2*(1-t)*t*p1[0] + t*t*p2[0];
-  const y = (1-t)*(1-t)*p0[1] + 2*(1-t)*t*p1[1] + t*t*p2[1];
-  return [x, y];
+  const x = (1 - t) * (1 - t) * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0]
+  const y = (1 - t) * (1 - t) * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1]
+  return [x, y]
 }
 
 // 路径：起点 → 偏离中点 → 终点（做弧线）
-const path = [[100, 100], [targetX - 200, targetY + 80], [targetX, targetY]];
+const path = [
+  [100, 100],
+  [targetX - 200, targetY + 80],
+  [targetX, targetY],
+]
 
 // 再叠加极小的 Perlin Noise（±2px）制造「手抖」
-const jitterX = (simpleNoise(t * 10) - 0.5) * 4;
-const jitterY = (simpleNoise(t * 10 + 100) - 0.5) * 4;
+const jitterX = (simpleNoise(t * 10) - 0.5) * 4
+const jitterY = (simpleNoise(t * 10 + 100) - 0.5) * 4
 ```
 
 ### 3.6 Logo「形变收束」(Morph)
@@ -253,14 +258,14 @@ tile.style.filter = `
   brightness(${1 - 0.5 * focusIntensity})
   saturate(${1 - 0.3 * focusIntensity})
   blur(${focusIntensity * 4}px)        // ← 关键：加 blur 才真的"退后"
-`;
-tile.style.opacity = 0.4 + 0.6 * (1 - focusIntensity);
+`
+tile.style.opacity = 0.4 + 0.6 * (1 - focusIntensity)
 
 // 焦点完成后在焦点位置做 150ms Flash highlight 引导视线回流
-focusOverlay.animate([
-  { background: 'rgba(255,255,255,0.3)' },
-  { background: 'rgba(255,255,255,0)' }
-], { duration: 150, easing: 'ease-out' });
+focusOverlay.animate(
+  [{ background: 'rgba(255,255,255,0.3)' }, { background: 'rgba(255,255,255,0)' }],
+  { duration: 150, easing: 'ease-out' }
+)
 ```
 
 **为什么 blur 是必须的**：只靠 opacity + brightness，焦点外的元素还是「锐利」的，
@@ -289,16 +294,17 @@ focusOverlay.animate([
 ### 4.2「呼吸式」展开（width→height）
 
 面板展开**不是同时拉 width 和 height**，而是：
+
 - 前 40% 时间：只拉 width（保持 height 小）
 - 后 60% 时间：width 保持，撑 height
 
 这模拟物理世界「先展开，再注水」的感觉。
 
 ```js
-const widthT = interpolate(t, [0, 0.4], [0, 1], Easing.expoOut);
-const heightT = interpolate(t, [0.3, 1], [0, 1], Easing.expoOut);
-style.width = `${widthT * targetW}px`;
-style.height = `${heightT * targetH}px`;
+const widthT = interpolate(t, [0, 0.4], [0, 1], Easing.expoOut)
+const heightT = interpolate(t, [0.3, 1], [0, 1], Easing.expoOut)
+style.width = `${widthT * targetW}px`
+style.height = `${heightT * targetH}px`
 ```
 
 ### 4.3 Staggered Fade-up（30ms stagger）
@@ -307,12 +313,10 @@ style.height = `${heightT * targetH}px`;
 
 ```js
 rows.forEach((row, i) => {
-  const localT = Math.max(0, t - i * 0.03);  // 30ms stagger
-  row.style.opacity = interpolate(localT, [0, 0.3], [0, 1], Easing.expoOut);
-  row.style.transform = `translateY(${
-    interpolate(localT, [0, 0.3], [10, 0], Easing.expoOut)
-  }px)`;
-});
+  const localT = Math.max(0, t - i * 0.03) // 30ms stagger
+  row.style.opacity = interpolate(localT, [0, 0.3], [0, 1], Easing.expoOut)
+  row.style.transform = `translateY(${interpolate(localT, [0, 0.3], [10, 0], Easing.expoOut)}px)`
+})
 ```
 
 ### 4.4 非线性呼吸 · 关键结果前悬停 0.5s
@@ -339,15 +343,15 @@ AI 生成文字**不要用 `setInterval` 单字符蹦出**（像老电影字幕�
 
 ```js
 // 分 chunk 而不是分字符
-const chunks = text.split(/(\s+|,\s*|\.\s*|;\s*)/);  // 按词 + 标点切
-let i = 0;
+const chunks = text.split(/(\s+|,\s*|\.\s*|;\s*)/) // 按词 + 标点切
+let i = 0
 function reveal() {
-  if (i >= chunks.length) return;
-  element.textContent += chunks[i++];
-  const delay = 40 + Math.random() * 80;  // 不规律 40-120ms
-  setTimeout(reveal, delay);
+  if (i >= chunks.length) return
+  element.textContent += chunks[i++]
+  const delay = 40 + Math.random() * 80 // 不规律 40-120ms
+  setTimeout(reveal, delay)
 }
-reveal();
+reveal()
 ```
 
 ### 4.6 Anticipation → Action → Follow-through
@@ -360,9 +364,9 @@ Disney 12 原则中的 3 条。Anthropic 用得很显式：
 
 ```js
 // 卡片入场的完整三段
-const anticip = interpolate(t, [0, 0.2], [1, 0.95], Easing.easeIn);     // 预备
-const action  = interpolate(t, [0.2, 0.7], [0.95, 1.05], Easing.expoOut); // 主动
-const settle  = interpolate(t, [0.7, 1], [1.05, 1], Easing.spring);       // 回弹
+const anticip = interpolate(t, [0, 0.2], [1, 0.95], Easing.easeIn) // 预备
+const action = interpolate(t, [0.2, 0.7], [0.95, 1.05], Easing.expoOut) // 主动
+const settle = interpolate(t, [0.7, 1], [1.05, 1], Easing.spring) // 回弹
 // 最终 scale = 三段乘积或分段应用
 ```
 
@@ -375,18 +379,25 @@ const settle  = interpolate(t, [0.7, 1], [1.05, 1], Easing.spring);       // 回
 ```css
 .stage-wrap {
   perspective: 2400px;
-  perspective-origin: 50% 30%;  /* 视线略俯视 */
+  perspective-origin: 50% 30%; /* 视线略俯视 */
 }
 .card-grid {
   transform-style: preserve-3d;
-  transform: rotateX(8deg) rotateY(-4deg);  /* 黄金比例 */
+  transform: rotateX(8deg) rotateY(-4deg); /* 黄金比例 */
 }
-.card:nth-child(3n) { transform: translateZ(30px); }
-.card:nth-child(5n) { transform: translateZ(-20px); }
-.card:nth-child(7n) { transform: translateZ(60px); }
+.card:nth-child(3n) {
+  transform: translateZ(30px);
+}
+.card:nth-child(5n) {
+  transform: translateZ(-20px);
+}
+.card:nth-child(7n) {
+  transform: translateZ(60px);
+}
 ```
 
 **为什么 rotateX 8° / rotateY -4° 是黄金比例**：
+
 - 大于 10° → 元素扭曲感过强，看起来像「倒下」
 - 小于 5° → 像「错切」而不是「透视」
 - 8° × -4° 的非对称比例模拟「镜头在桌面左上角俯视」的 natural angle
@@ -396,13 +407,13 @@ const settle  = interpolate(t, [0.7, 1], [1.05, 1], Easing.spring);       // 回
 镜头运动不是纯上下或纯左右，而是**同时动 XY** 模拟斜向移动：
 
 ```js
-const panX = Math.sin(flowT * 0.22) * 40;
-const panY = Math.sin(flowT * 0.35) * 30;
+const panX = Math.sin(flowT * 0.22) * 40
+const panY = Math.sin(flowT * 0.35) * 30
 stage.style.transform = `
   translate(-50%, -50%)
   rotateX(8deg) rotateY(-4deg)
   translate3d(${panX}px, ${panY}px, 0)
-`;
+`
 ```
 
 **关键**：X 和 Y 的频率不同（0.22 vs 0.35），避免 Lissajous 循环规则化。
@@ -444,18 +455,18 @@ stage.style.transform = `
 
 ## 6. 反例 · 这样做就是 AI slop
 
-| 反 pattern | 为什么错 | 正确做法 |
-|---|---|---|
-| `transition: all 0.3s ease` | `ease` 是 linear 的亲戚，所有元素同速 | 用 `expoOut` + 分元素 stagger |
-| 所有入场都 `opacity 0→1` | 没有运动方向感 | 配合 `translateY 10→0` + Anticipation |
-| Logo 淡入 | 没有叙事收束感 | Morph / Converge / 坍缩-展开 |
-| 鼠标直线移动 | 潜意识机器感 | 贝塞尔弧线 + Perlin Noise |
-| 打字单字蹦出（setInterval） | 像老电影字幕 | Chunk Reveal，随机间隔 |
-| 关键结果无悬停 | 观众没反应时间 | 结果前 0.5s 悬停 |
-| 焦点切换只改 opacity | 非焦点元素还锐利 | opacity + brightness + **blur** |
-| 纯黑底 / 纯白底 | 赛博感 / 反光疲劳 | 带色温的中性色（走品牌 spec） |
-| 所有动画同样快 | 无节奏 | Slow-Fast-Boom-Stop |
-| Fade out 收尾 | 无决定感 | 戛然而止（hold 最后一帧） |
+| 反 pattern                  | 为什么错                              | 正确做法                              |
+| --------------------------- | ------------------------------------- | ------------------------------------- |
+| `transition: all 0.3s ease` | `ease` 是 linear 的亲戚，所有元素同速 | 用 `expoOut` + 分元素 stagger         |
+| 所有入场都 `opacity 0→1`    | 没有运动方向感                        | 配合 `translateY 10→0` + Anticipation |
+| Logo 淡入                   | 没有叙事收束感                        | Morph / Converge / 坍缩-展开          |
+| 鼠标直线移动                | 潜意识机器感                          | 贝塞尔弧线 + Perlin Noise             |
+| 打字单字蹦出（setInterval） | 像老电影字幕                          | Chunk Reveal，随机间隔                |
+| 关键结果无悬停              | 观众没反应时间                        | 结果前 0.5s 悬停                      |
+| 焦点切换只改 opacity        | 非焦点元素还锐利                      | opacity + brightness + **blur**       |
+| 纯黑底 / 纯白底             | 赛博感 / 反光疲劳                     | 带色温的中性色（走品牌 spec）         |
+| 所有动画同样快              | 无节奏                                | Slow-Fast-Boom-Stop                   |
+| Fade out 收尾               | 无决定感                              | 戛然而止（hold 最后一帧）             |
 
 ---
 
@@ -480,16 +491,17 @@ stage.style.transform = `
 
 ## 8. 与其他 reference 的关系
 
-| reference | 定位 | 关系 |
-|---|---|---|
-| `animation-pitfalls.md` | 技术避坑（16 条） | 「**不要这样做**」· 本文件的反面 |
-| `animations.md` | Stage/Sprite 引擎用法 | 动画**怎么写**的基础 |
-| `audio-design-rules.md` | 双轨制音频规则 | 动画**配音频**的规则 |
-| `sfx-library.md` | 37 个 SFX 清单 | 音效**素材库** |
-| `apple-gallery-showcase.md` | Apple 画廊展示风格 | 一种特定运动风格的专题 |
-| **本文件** | 正向运动设计语法 | 「**应该这样做**」 |
+| reference                   | 定位                  | 关系                             |
+| --------------------------- | --------------------- | -------------------------------- |
+| `animation-pitfalls.md`     | 技术避坑（16 条）     | 「**不要这样做**」· 本文件的反面 |
+| `animations.md`             | Stage/Sprite 引擎用法 | 动画**怎么写**的基础             |
+| `audio-design-rules.md`     | 双轨制音频规则        | 动画**配音频**的规则             |
+| `sfx-library.md`            | 37 个 SFX 清单        | 音效**素材库**                   |
+| `apple-gallery-showcase.md` | Apple 画廊展示风格    | 一种特定运动风格的专题           |
+| **本文件**                  | 正向运动设计语法      | 「**应该这样做**」               |
 
 **调用顺序**：
+
 1. 先看 SKILL.md 工作流程 Step 3 的位置四问（决定叙事角色和视觉温度）
 2. 选定方向后读本文件确定**运动语言**（配方 A/B/C）
 3. 写代码时参考 `animations.md` 和 `animation-pitfalls.md`

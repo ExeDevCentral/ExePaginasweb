@@ -86,9 +86,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
               onChange={(e) => setHours(Number(e.target.value))}
               className="w-full accent-accent-cyan bg-muted h-2 rounded-lg cursor-pointer"
             />
-            <p className="text-xs text-muted-foreground">
-              {t('calculador.horas_desc')}
-            </p>
+            <p className="text-xs text-muted-foreground">{t('calculador.horas_desc')}</p>
           </div>
 
           {/* Slider Costo por hora */}
@@ -111,9 +109,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
               onChange={(e) => setHourlyCost(Number(e.target.value))}
               className="w-full accent-accent-magenta bg-muted h-2 rounded-lg cursor-pointer"
             />
-            <p className="text-xs text-muted-foreground">
-              {t('calculador.valor_desc')}
-            </p>
+            <p className="text-xs text-muted-foreground">{t('calculador.valor_desc')}</p>
           </div>
         </div>
 
@@ -129,7 +125,9 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
                 <h4 className="text-4xl font-outfit font-black text-accent-cyan font-mono">
                   {yearlyHoursSaved}
                 </h4>
-                <span className="text-sm font-bold text-muted-foreground">{t('calculador.resultado_horas_unidad')}</span>
+                <span className="text-sm font-bold text-muted-foreground">
+                  {t('calculador.resultado_horas_unidad')}
+                </span>
               </div>
             </div>
 

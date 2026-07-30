@@ -37,9 +37,7 @@ export default function LanguageSwitcher() {
             key={lang.code}
             onClick={() => change(lang.code)}
             className={`w-full px-4 py-2 text-left text-xs font-bold tracking-wider transition-colors hover:bg-muted ${
-              current === lang.code
-                ? 'text-primary-text'
-                : 'text-primary-secondary'
+              current === lang.code ? 'text-primary-text' : 'text-primary-secondary'
             }`}
           >
             {lang.label}

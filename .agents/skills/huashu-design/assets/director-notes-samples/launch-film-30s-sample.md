@@ -42,6 +42,7 @@
 **Apple — "Designed by Apple in California" (2013)**
 
 那支片子是我心目中科技公司宣传片的天花板。导演 Mark Romanek 做对了三件事：
+
 1. **纯白底 + 衬线字体**——告诉观众这是一支「关于设计的设计」，不是 demo
 2. **慢拍**——每一句话的字幕都比观众阅读速度慢半拍，强迫观众停留
 3. **Jony Ive 的旁白几乎像耳语**——不是兜售，是分享
@@ -91,6 +92,7 @@ Vignelli 的 8 字格言：「If you can design one thing, you can design everyt
 **主受众 A · 已使用 v1 的 huashu-md-html 老用户（约占 60% 流量）**
 
 他们打开片子是为了知道「升级了啥」。我们对他们的承诺：30 秒之内，你必须明确知道——
+
 - 新增能力 5：md → 出版级 PDF
 - 新增能力 6：md → 标准 EPUB
 - 这两个能力的视觉品质比想象中更高（不是「我用 wkhtmltopdf 也能搞」级别）
@@ -100,6 +102,7 @@ Vignelli 的 8 字格言：「If you can design one thing, you can design everyt
 **次受众 B · 听说过 huashu-md-html 但没用的 AI Native 创作者（约 25%）**
 
 他们关心的是「这个 skill 跟我有什么关系」。我们对他们的承诺：30 秒之内，你必须意识到——
+
 - 你写文章 / 做调研 / 做白皮书时，**md 应该是你的 source of truth**
 - 6 种下游格式，一次命令解决
 
@@ -108,6 +111,7 @@ Vignelli 的 8 字格言：「If you can design one thing, you can design everyt
 **外受众 C · 完全不熟悉的设计师 / 编辑 / 出版人（约 15%）**
 
 他们看到的是一支「漂亮的科技短片」，不一定 follow up。我们对他们的承诺：30 秒之内，你必须留下印象——
+
 - 这家做的东西**有出版社品位**
 - 跟你过去看到的 AI 工具不一样
 
@@ -131,18 +135,18 @@ Vignelli 的 8 字格言：「If you can design one thing, you can design everyt
 
 按重要性排：
 
-| 不做 | 原因 |
-|------|------|
-| 不用紫渐变 | 训练语料里「科技感」的万能公式，2026 年看是 cyber slop |
-| 不用 emoji 作图标 | 「不专业就用 emoji 凑」的病 |
-| 不画 SVG 人物 / 手 / 抽象人形 | AI 画的 SVG 人物永远五官错位、比例诡异 |
-| 不用 Inter/Roboto/Arial 作 display | 太常见，撞 system fonts |
-| 不用赛博霓虹 / 深蓝底 #0D1117 | GitHub dark mode 美学的烂大街复制 |
-| 不堆 effects（blur/glow/particle）| 一个 effect 出现两次就是装饰，三次就是 slop |
-| 不用 Lorem ipsum | 每一段假文都用真正能读的内容（含「md is the source. Anything else is product.」这种 hook） |
-| 不用 stock photo | 整支片不出现任何真实照片（it's about typography, not lifestyle） |
-| 不画进度条 + 时间码 + 版权署名条 | 这些是 player chrome，不是 content chrome——会和外部播放器撞 |
-| 不让 md 字符在每个 scene 都长得一样 | 它要在 12 镜里有 12 种状态，但保持同一个核心字形 |
+| 不做                                | 原因                                                                                       |
+| ----------------------------------- | ------------------------------------------------------------------------------------------ |
+| 不用紫渐变                          | 训练语料里「科技感」的万能公式，2026 年看是 cyber slop                                     |
+| 不用 emoji 作图标                   | 「不专业就用 emoji 凑」的病                                                                |
+| 不画 SVG 人物 / 手 / 抽象人形       | AI 画的 SVG 人物永远五官错位、比例诡异                                                     |
+| 不用 Inter/Roboto/Arial 作 display  | 太常见，撞 system fonts                                                                    |
+| 不用赛博霓虹 / 深蓝底 #0D1117       | GitHub dark mode 美学的烂大街复制                                                          |
+| 不堆 effects（blur/glow/particle）  | 一个 effect 出现两次就是装饰，三次就是 slop                                                |
+| 不用 Lorem ipsum                    | 每一段假文都用真正能读的内容（含「md is the source. Anything else is product.」这种 hook） |
+| 不用 stock photo                    | 整支片不出现任何真实照片（it's about typography, not lifestyle）                           |
+| 不画进度条 + 时间码 + 版权署名条    | 这些是 player chrome，不是 content chrome——会和外部播放器撞                                |
+| 不让 md 字符在每个 scene 都长得一样 | 它要在 12 镜里有 12 种状态，但保持同一个核心字形                                           |
 
 ## 1.6 一句话定位
 
@@ -174,6 +178,7 @@ Terra Deep     #8B2D08    阴影 variant（赤陶橙投影）         < 1%
 ```
 
 **铁律**：
+
 - 任何一镜不出现以上 10 色之外的颜色。**没有「这一镜临时加点冷灰」**。
 - 赤陶橙系（Terracotta + variants）三色合计占画面 < 10%，否则视觉过载。
 - 任何文本只能用 4 色之一：Ink / Cinder / Smoke / Terracotta。
@@ -196,6 +201,7 @@ Caret          (block 3px wide)      —         typing cursor               —
 ```
 
 **字体加载策略**：
+
 - Google Fonts 预连接 `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>`
 - 单一 `<link>` 请求合并所有 weights，减少 round-trip
 - 录制 MP4 前必须 `document.fonts.ready` 完成才开始计时（Stage 已实现）
@@ -213,6 +219,7 @@ Caret          (block 3px wide)      —         typing cursor               —
 **Baseline grid**：8px 基础律。所有 vertical position 必须是 8 的倍数（除非有特殊视觉理由）。
 
 **黄金分割锚点**：
+
 - 上 1/3 线：y = 360
 - 下 1/3 线：y = 720
 - 中线：y = 540（hero md 默认 anchor）
@@ -220,6 +227,7 @@ Caret          (block 3px wide)      —         typing cursor               —
 - 黄金分割下：y = 668
 
 **关键安全区**：
+
 - 顶部 60px 内：chrome 元素区（capability counter, version chip）
 - 底部 60px 内：watermark / metadata 区
 - 中央 800×600 区域：主内容禁区（每一镜的 hero 元素必须落在此区域内）
@@ -252,11 +260,13 @@ scene 之间过渡            300ms 重叠    cross-dissolve + scale
 ```
 
 **Stagger 法则**：
+
 - 多元素同时进场时，相邻元素 delay 30-80ms（不是 0，也不超过 100ms）
 - 6 个 pill 进场：累计 stagger 250ms（每个 50ms）
 - slogan 字符进场：累计 stagger 280ms（每个 ~30ms × 10 字符）
 
 **Scene 之间过渡**：
+
 - 永远是 **cross-dissolve + soft scale**（不切换硬切）
 - 上一镜在末尾 300ms 内：opacity 1 → 0, scale 1 → 0.96
 - 下一镜在开头 300ms 内：opacity 0 → 1, scale 1.04 → 1
@@ -350,7 +360,7 @@ scene 之间过渡            300ms 重叠    cross-dissolve + scale
 - **L5 · String swell**（22-26s）：整组弦乐 swell up 到 climax
 - **L6 · Decay + reverb tail**（26-30s）：所有层级 decay，留下钢琴 + reverb
 
-**风格目标**：Max Richter 的 *On the Nature of Daylight* + Ólafur Arnalds 的 *Re:member* + Jóhann Jóhannsson 的 *Orphée*
+**风格目标**：Max Richter 的 _On the Nature of Daylight_ + Ólafur Arnalds 的 _Re:member_ + Jóhann Jóhannsson 的 _Orphée_
 
 ### SFX 字典
 
@@ -376,6 +386,7 @@ final stamp / sign-off       29.0-29.5   ink stamp           -14dB
 ```
 
 **SFX 频段隔离**（防止互相打架）：
+
 - BGM 占低频 (40Hz-2kHz)
 - SFX whooshes / chimes 占中高频 (2kHz-8kHz)
 - SFX impacts 占低频 sub (40Hz-120Hz) — 与 BGM cello 重叠但 BGM 同时 duck -3dB
@@ -458,6 +469,7 @@ final stamp / sign-off       29.0-29.5   ink stamp           -14dB
 ```
 
 **关键 emotional beats**：
+
 - **02.0s**：第一个 keyboard click → 观众进入
 - **03.0s**：md 字符诞生 → 第一次「awe」
 - **08.0s**：6 个文件 cards 收拢进 md → 「啊，原来 md 是源」第一次 click
@@ -722,6 +734,7 @@ morph 的设计哲学：**从 mono 到 serif，是从「我在打字」到「我
 这是 ACT II 的开门镜。如果观众看完这 3.5 秒没意识到「噢，md 是源」，后面的镜头就白做了。
 
 3.5 秒里有 3 个 micro-narrative beats：
+
 1. hero 让位（md 上移）—— 暗示「我让位给我的产物们」
 2. 6 个产物现身 —— 揭示「我能收的东西」
 3. 全部归位回 md —— 「但他们最终都是 md」
@@ -810,6 +823,7 @@ md 字符与 destination card 之间用一条 terracotta 细线连接，从 md �
 **[WHY]**
 
 这是 ScenePipeline 模式的首次建立。后续 5 个 capability shots 都会按这个结构推进：
+
 1. md 在左、destination 在右
 2. arrow + label 在中间
 3. destination card 内部 staggered 入场（每个 card 都有 6-8 个文字层级）
@@ -851,6 +865,7 @@ cross-dissolve 进入。前一镜的 destination card 在 11.50-11.80s 内缩小
 arrow direction 反向：从右侧 destination card 向左 md 字符方向（短 Terracotta 线 + 箭头 head 指向左）。label 改为「html → md」。
 
 **关键差异点**（和 SHOT 05 形成 visual rhyme）：
+
 - destination 在右、md 在左（同 SHOT 05）
 - 但 arrow direction 反向（visual: 我们在归档/拉回来）
 - card 是深底（视觉对比，强调这是 source）
@@ -935,6 +950,7 @@ destination card 设计：**出版社级 docx 章节首页**（高密度信息�
 ```
 
 **特别细节**：
+
 - 顶部右上角的「page header」（书名 italic 灰色 mono）是真实出版社 docx 的细节签名
 - 「CHAPTER · 01」前缀让观众一眼意识到「这是一本书的一页，不是一篇文章」
 - terracotta full-width rule（不是细线，而是 3px 粗 rule）是出版社章节首页的招牌
@@ -980,6 +996,7 @@ destination card 设计：**出版社级 docx 章节首页**（高密度信息�
 **[WHY]**
 
 CAPABILITY 04 是承上启下的关键一镜：
+
 - 它确认了「md 不只是 web 用」——它能做出版社级别的 docx
 - 它建立了「印刷品」的视觉语境，为 SHOT 08（pdf）和 SHOT 09（epub）做准备
 
@@ -996,6 +1013,7 @@ CAPABILITY 04 是承上启下的关键一镜：
 cross-dissolve 进入。这一镜的视觉强度**显著高于** SHOT 05-07——因为这是「新东西」，需要被记住。
 
 视觉差异点：
+
 1. **NEW 标签**：top-left 在 capability counter 旁边亮起一个 Terracotta 矩形框，内含「★ NEW」字符（JetBrains Mono Bold 13px, Terracotta, letter-spacing 0.22em，4px Terracotta border, 6px×12px padding）
 2. **destination 不是单一卡片，是两张 PDF fan 出来**：A4 在后面（轻微 +5° 旋转），大32开（176×240mm，国内纸质书规格）在前面（轻微 -3° 旋转），形成「两个 page-size 都支持」的视觉
 3. **每张 PDF 上有「印刷裁切标记」（crop marks）**——四角各一个 L 型小线，2px 粗，Smoke 色——这是真正印厂 PDF 的细节
@@ -1082,6 +1100,7 @@ PDF B（大32开，前面）：
 **[WHY]**
 
 这是 ACT II 高潮镜之一。两件事必须同时发生：
+
 1. 观众必须 immediate 意识到「这是新功能」
 2. 必须用视觉细节说明「这不是凑数的 wkhtmltopdf 包装，是真正出版级」
 
@@ -1124,6 +1143,7 @@ destination card 设计：**Apple Books 风的 EPUB reader frame**（强调「�
 ```
 
 **关键视觉差异**：
+
 - 整体 frame 是「macOS app 窗口」感（三个圆点 + 圆角 22px）
 - 中间是「打开的电子书」cover area（Charred 底 + 出版社品位的 typography）
 - 底部是「Apple Books · 1 of 24」reader chrome
@@ -1172,6 +1192,7 @@ destination card 设计：**Apple Books 风的 EPUB reader frame**（强调「�
 **[WHY]**
 
 这一镜是 ACT II 的收尾。两件事必须完成：
+
 1. 6 个 capability 全部展示完毕（counter 6/6 实心）
 2. 情绪开始向 ACT III 的高潮 build-up
 
@@ -1309,6 +1330,7 @@ ONE SOURCE.
 - E: ON
 
 **新增 chrome**：
+
 - md 字符（top-left, 56px, Newsreader 600 + Terracotta dot）正式入驻 corner，成为品牌印章
 
 **[ANTI-SLOP]**
@@ -1360,6 +1382,7 @@ SIX FORMS.
 ```
 
 每个 pill：
+
 - 字体：JetBrains Mono Bold 14px, letter-spacing 0.16em
 - 大小：10px×18px padding, 1.5px border
 - 前 4 个：Ink text + Ink border + transparent background
@@ -1504,6 +1527,7 @@ md 是源代码，万物是产物。
 整部片始于一个空白页面，终于一个 md 印章 + 一抹赤陶橙。
 
 这是首尾呼应（visual rhyme）：
+
 - 0.0s：blank ivory page（空）
 - 30.0s：ivory page + md（满）
 
@@ -1518,9 +1542,12 @@ md 是源代码，万物是产物。
 ## 5.1 字体清单 + 加载方式
 
 ```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;700;900&display=swap"
+  rel="stylesheet"
+/>
 ```
 
 **实测加载时长**：约 800-1500ms 取决于 CDN 状态。`document.fonts.ready` 等待必须等到 returns true 才启动 Stage 计时器（Stage 已实现）。
@@ -1529,16 +1556,16 @@ md 是源代码，万物是产物。
 
 ```css
 :root {
-  --paper:       #FAFAF6;
-  --mist:        #F2EDE4;
-  --mica:        #E6E1D6;
-  --smoke:       #6B6B6B;
-  --cinder:      #3D3530;
-  --ink:         #1A1A1A;
-  --charred:     #2A2620;
-  --terracotta:  #C2410C;
-  --terra-hot:   #E55D21;
-  --terra-deep:  #8B2D08;
+  --paper: #fafaf6;
+  --mist: #f2ede4;
+  --mica: #e6e1d6;
+  --smoke: #6b6b6b;
+  --cinder: #3d3530;
+  --ink: #1a1a1a;
+  --charred: #2a2620;
+  --terracotta: #c2410c;
+  --terra-hot: #e55d21;
+  --terra-deep: #8b2d08;
 }
 ```
 
@@ -1555,6 +1582,7 @@ no vocals, 30 seconds duration, ivory paper mood
 ```
 
 **备选**：搜索免版权库
+
 - artlist.io: "minimal cinematic"
 - bensound.com: "cinematic"
 - musicbed.com: "Jóhann Jóhannsson style"
@@ -1606,6 +1634,7 @@ t=29.9   ← SHOT 13 final hold (检验 md 印章 + accent rule)
 ```
 
 每帧必须满足：
+
 - 没有元素溢出 1920×1080 canvas
 - 字距、行高 visually correct
 - 反 AI slop checklist 通过
@@ -1624,6 +1653,7 @@ node scripts/render-video.js \
 ```
 
 **关键 codec 参数**：
+
 - video codec: libx264
 - pixel format: yuv420p (兼容性)
 - bitrate: 12 Mbps (high quality, 30s 文件约 45MB)
@@ -1661,6 +1691,7 @@ ffprobe -i v5-final.mp4 -show_streams -select_streams a 2>&1 | grep -E "(codec_t
 ```
 
 **期望输出**：
+
 - audio codec: aac
 - sample rate: 44100Hz or 48000Hz
 - channels: 2 (stereo)
@@ -1681,18 +1712,18 @@ v5-shot-list.csv          shot 时间码 + 关键参数对照表（pause 验证�
 
 ## 5.9 全链路时间估算
 
-| 步骤 | 预计耗时 |
-|-----|----------|
-| Director's notes 撰写 | 已完成 |
-| HTML 动画实施 | 4-6 小时 |
-| 关键帧截图 + 视觉校验 | 1 小时 |
-| 录制无声 MP4 | 5-10 分钟（含 Playwright 启动） |
-| BGM 生成 / 选择 | 30 分钟 |
-| SFX 配 cue + 混音 | 2-3 小时 |
-| GIF 派生 | 5 分钟 |
-| 海报截图 + 命名 | 10 分钟 |
-| 最终交付 + git 提交 | 10 分钟 |
-| **合计** | **8-11 小时** |
+| 步骤                  | 预计耗时                        |
+| --------------------- | ------------------------------- |
+| Director's notes 撰写 | 已完成                          |
+| HTML 动画实施         | 4-6 小时                        |
+| 关键帧截图 + 视觉校验 | 1 小时                          |
+| 录制无声 MP4          | 5-10 分钟（含 Playwright 启动） |
+| BGM 生成 / 选择       | 30 分钟                         |
+| SFX 配 cue + 混音     | 2-3 小时                        |
+| GIF 派生              | 5 分钟                          |
+| 海报截图 + 命名       | 10 分钟                         |
+| 最终交付 + git 提交   | 10 分钟                         |
+| **合计**              | **8-11 小时**                   |
 
 ---
 
@@ -1708,6 +1739,6 @@ v5-shot-list.csv          shot 时间码 + 关键参数对照表（pause 验证�
 
 ---
 
-*Director's notes — end of document*
-*Total word count: 约 11500 中文字*
-*Next: 用户 review 通过后，进入 HTML 实施阶段*
+_Director's notes — end of document_
+_Total word count: 约 11500 中文字_
+_Next: 用户 review 通过后，进入 HTML 实施阶段_

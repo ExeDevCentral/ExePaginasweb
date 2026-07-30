@@ -17,16 +17,17 @@
 
 **品牌的本质是「它被认出来」**。认出来靠什么？按识别度排序：
 
-| 资产类型 | 识别度贡献 | 必需性 |
-|---|---|---|
-| **Logo** | 最高 · 任何品牌出现 logo 就一眼识别 | **任何品牌都必须有** |
+| 资产类型              | 识别度贡献                          | 必需性                                 |
+| --------------------- | ----------------------------------- | -------------------------------------- |
+| **Logo**              | 最高 · 任何品牌出现 logo 就一眼识别 | **任何品牌都必须有**                   |
 | **产品图/产品渲染图** | 极高 · 实体产品的"主角"就是产品本身 | **实体产品（硬件/包装/消费品）必须有** |
-| **UI 截图/界面素材** | 极高 · 数字产品的"主角"是它的界面 | **数字产品（App/网站/SaaS）必须有** |
-| **色值** | 中 · 辅助识别，脱离前三项时经常撞衫 | 辅助 |
-| **字体** | 低 · 需配合前述才能建立识别 | 辅助 |
-| **气质关键词** | 低 · agent 自检用 | 辅助 |
+| **UI 截图/界面素材**  | 极高 · 数字产品的"主角"是它的界面   | **数字产品（App/网站/SaaS）必须有**    |
+| **色值**              | 中 · 辅助识别，脱离前三项时经常撞衫 | 辅助                                   |
+| **字体**              | 低 · 需配合前述才能建立识别         | 辅助                                   |
+| **气质关键词**        | 低 · agent 自检用                   | 辅助                                   |
 
 **翻译成执行规则**：
+
 - 只抽色值 + 字体、不找 logo / 产品图 / UI → **违反本协议**
 - 用 CSS 剪影/SVG 手画替代真实产品图 → **违反本协议**（生成的就是「通用科技动画」，任何品牌都长一样）
 - 找不到资产不告诉用户、也不 AI 生成，硬做 → **违反本协议**
@@ -52,15 +53,16 @@
 
 ##### Step 2 · 搜官方渠道（按资产类型）
 
-| 资产 | 搜索路径 |
-|---|---|
-| **Logo** | `<brand>.com/brand` · `<brand>.com/press` · `<brand>.com/press-kit` · `brand.<brand>.com` · 官网 header 的 inline SVG |
-| **产品图/渲染图** | `<brand>.com/<product>` 产品详情页 hero image + gallery · 官方 YouTube launch film 截帧 · 官方新闻稿附图 |
-| **UI 截图** | App Store / Google Play 产品页截图 · 官网 screenshots section · 产品官方演示视频截帧 |
-| **色值** | 官网 inline CSS / Tailwind config / brand guidelines PDF |
-| **字体** | 官网 `<link rel="stylesheet">` 引用 · Google Fonts 追踪 · brand guidelines |
+| 资产              | 搜索路径                                                                                                              |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Logo**          | `<brand>.com/brand` · `<brand>.com/press` · `<brand>.com/press-kit` · `brand.<brand>.com` · 官网 header 的 inline SVG |
+| **产品图/渲染图** | `<brand>.com/<product>` 产品详情页 hero image + gallery · 官方 YouTube launch film 截帧 · 官方新闻稿附图              |
+| **UI 截图**       | App Store / Google Play 产品页截图 · 官网 screenshots section · 产品官方演示视频截帧                                  |
+| **色值**          | 官网 inline CSS / Tailwind config / brand guidelines PDF                                                              |
+| **字体**          | 官网 `<link rel="stylesheet">` 引用 · Google Fonts 追踪 · brand guidelines                                            |
 
 `WebSearch` 兜底关键词：
+
 - Logo 找不到 → `<brand> logo download SVG`、`<brand> press kit`
 - 产品图找不到 → `<brand> <product> official renders`、`<brand> <product> product photography`
 - UI 找不到 → `<brand> app screenshots`、`<brand> dashboard UI`
@@ -71,15 +73,16 @@
 
 > ⚠️ **别只试 `curl <brand>.com/logo.svg` 就放弃**——现在的官网大多是 SPA，直连静态路径基本返回空壳 HTML（2026-06-06 实测 Trae 官网 5 条直连路径全是空壳）。**数字产品 / SaaS / AI 工具优先用图标聚合源**，命中率最高、直出干净 SVG。
 
-按成功率递减：
-0. **图标聚合源（知名数字产品/SaaS/AI 工具首选，命中率最高）**：
-   ```bash
-   unset ALL_PROXY HTTP_PROXY HTTPS_PROXY all_proxy http_proxy https_proxy   # 清代理，否则 TLS 易炸
-   # svgl —— AI/开发者品牌覆盖最全（Claude/Cursor/OpenAI/Copilot/Anthropic/Vercel…），含 light/dark + wordmark
-   curl -s "https://api.svgl.app?search=<brand>"   # 返回 JSON，取 route(.light/.dark) 的 svg URL 再下载
-   # simpleicons —— 单色 glyph，可直接按品牌色上色
-   curl -o logo.svg "https://cdn.simpleicons.org/<slug>/<hexcolor>"
-   ```
+按成功率递减：0. **图标聚合源（知名数字产品/SaaS/AI 工具首选，命中率最高）**：
+
+```bash
+unset ALL_PROXY HTTP_PROXY HTTPS_PROXY all_proxy http_proxy https_proxy   # 清代理，否则 TLS 易炸
+# svgl —— AI/开发者品牌覆盖最全（Claude/Cursor/OpenAI/Copilot/Anthropic/Vercel…），含 light/dark + wordmark
+curl -s "https://api.svgl.app?search=<brand>"   # 返回 JSON，取 route(.light/.dark) 的 svg URL 再下载
+# simpleicons —— 单色 glyph，可直接按品牌色上色
+curl -o logo.svg "https://cdn.simpleicons.org/<slug>/<hexcolor>"
+```
+
 1. 独立 SVG/PNG 文件 / 官方 brand 页（如 `<brand>.com/brand`、`/press`）：
    ```bash
    curl -A "Mozilla/5.0" -L -o assets/<brand>-brand/logo.svg "<official-logo-url>"
@@ -100,6 +103,7 @@
 **3.2 产品图/渲染图（实体产品必需）**
 
 按优先级：
+
 1. **官方产品页 hero image**（最高优先级）：右键查看图片地址 / curl 获取。分辨率通常 2000px+
 2. **官方 press kit**：`<brand>.com/press` 常有高清产品图下载
 3. **官方 launch video 截帧**：用 `yt-dlp` 下载 YouTube 视频，ffmpeg 抽几帧高清图
@@ -125,12 +129,12 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 >
 > 2026-04-20 花叔原话：「我们的原则是搜索 5 轮，找到 10 个素材，选择 2 个好的。每个需要评分 8/10 以上，宁可少一些，也不为了完成任务滥竽充数。」
 
-| 维度 | 标准 | 反模式 |
-|---|---|---|
-| **5 轮搜索** | 多渠道交叉搜（官网 / press kit / 官方社媒 / YouTube 截帧 / Wikimedia / 用户账号截屏），不是一轮抓前 2 个就停 | 第一页结果直接用 |
-| **10 个候选** | 至少凑 10 个备选才开始筛 | 只抓 2 个，没得选 |
-| **选 2 个好的** | 从 10 个里精选 2 个作为最终素材 | 全都用 = 视觉过载 + 品位稀释 |
-| **每个 8/10 分以上** | 不够 8 分**宁可不用**，用诚实 placeholder（灰块+文字标签）或 AI 生成（nano-banana-pro 以官方参考为基底）| 凑数 7 分素材进 brand-spec.md |
+| 维度                 | 标准                                                                                                         | 反模式                        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------- |
+| **5 轮搜索**         | 多渠道交叉搜（官网 / press kit / 官方社媒 / YouTube 截帧 / Wikimedia / 用户账号截屏），不是一轮抓前 2 个就停 | 第一页结果直接用              |
+| **10 个候选**        | 至少凑 10 个备选才开始筛                                                                                     | 只抓 2 个，没得选             |
+| **选 2 个好的**      | 从 10 个里精选 2 个作为最终素材                                                                              | 全都用 = 视觉过载 + 品位稀释  |
+| **每个 8/10 分以上** | 不够 8 分**宁可不用**，用诚实 placeholder（灰块+文字标签）或 AI 生成（nano-banana-pro 以官方参考为基底）     | 凑数 7 分素材进 brand-spec.md |
 
 **8/10 评分维度**（打分时记录在 `brand-spec.md`）：
 
@@ -141,6 +145,7 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 5. **独立叙事能力** · 能单独表达一个叙事角色（不是装饰）
 
 **为什么这个门槛是铁律**：
+
 - 花叔的哲学：**宁缺毋滥**。滥竽充数的素材比没有更糟——污染视觉品味、传递「不专业」信号
 - **「一个细节做到 120%，其他做到 80%」的量化版**：8 分是"其他 80%" 的底线，真正 hero 素材要 9-10 分
 - 消费者看作品时，每一个视觉元素都在**积分或扣分**。7 分素材 = 扣分项，不如留空
@@ -149,12 +154,12 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 
 ##### Step 4 · 验证 + 提取（不只是 grep 色值）
 
-| 资产 | 验证动作 |
-|---|---|
-| **Logo** | 文件存在 + SVG/PNG 可打开 + 至少两个版本（深底/浅底用）+ 透明背景 |
-| **产品图** | 至少一张 2000px+ 分辨率 + 去背或干净背景 + 多个角度（主视角、细节、场景） |
-| **UI 截图** | 分辨率真实（1x / 2x）+ 是最新版本（不是旧版）+ 无用户数据污染 |
-| **色值** | `grep -hoE '#[0-9A-Fa-f]{6}' assets/<brand>-brand/*.{svg,html,css} \| sort \| uniq -c \| sort -rn \| head -20`，过滤黑白灰 |
+| 资产        | 验证动作                                                                                                                   |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **Logo**    | 文件存在 + SVG/PNG 可打开 + 至少两个版本（深底/浅底用）+ 透明背景                                                          |
+| **产品图**  | 至少一张 2000px+ 分辨率 + 去背或干净背景 + 多个角度（主视角、细节、场景）                                                  |
+| **UI 截图** | 分辨率真实（1x / 2x）+ 是最新版本（不是旧版）+ 无用户数据污染                                                              |
+| **色值**    | `grep -hoE '#[0-9A-Fa-f]{6}' assets/<brand>-brand/*.{svg,html,css} \| sort \| uniq -c \| sort -rn \| head -20`，过滤黑白灰 |
 
 **警惕示范品牌污染**：产品截图里常有用户 demo 的品牌色（如某工具截图演示喜茶红），那不是该工具的色。**同时出现两种强色时必须区分**。
 
@@ -164,6 +169,7 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 
 ```markdown
 # <Brand> · Brand Spec
+
 > 采集日期：YYYY-MM-DD
 > 资产来源：<列出下载来源>
 > 资产完整度：<完整 / 部分 / 推断>
@@ -171,18 +177,21 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 ## 🎯 核心资产（一等公民）
 
 ### Logo
+
 - 主版本：`assets/<brand>-brand/logo.svg`
 - 浅底反色版：`assets/<brand>-brand/logo-white.svg`
 - 使用场景：<片头/片尾/角落水印/全局>
 - 禁用变形：<不能拉伸/改色/加描边>
 
 ### 产品图（实体产品必填）
+
 - 主视角：`assets/<brand>-brand/product-hero.png`（2000×1500）
 - 细节图：`assets/<brand>-brand/product-detail-1.png` / `product-detail-2.png`
 - 场景图：`assets/<brand>-brand/product-scene.png`
 - 使用场景：<特写/旋转/对比>
 
 ### UI 截图（数字产品必填）
+
 - 主页：`assets/<brand>-brand/ui-home.png`
 - 核心功能：`assets/<brand>-brand/ui-feature-<name>.png`
 - 使用场景：<产品展示/Dashboard 渐现/对比演示>
@@ -190,28 +199,34 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 ## 🎨 辅助资产
 
 ### 色板
-- Primary: #XXXXXX  <来源标注>
+
+- Primary: #XXXXXX <来源标注>
 - Background: #XXXXXX
 - Ink: #XXXXXX
 - Accent: #XXXXXX
 - 禁用色: <品牌明确不用的色系>
 
 ### 字型
+
 - Display: <font stack>
 - Body: <font stack>
 - Mono（数据 HUD 用）: <font stack>
 
 ### 签名细节
+
 - <哪些细节是「120% 做到」的>
 
 ### 禁区
+
 - <明确不能做的：比如 Lovart 不用蓝色、Stripe 不用低饱和暖色>
 
 ### 气质关键词
+
 - <3-5 个形容词>
 ```
 
 **写完 spec 后的执行纪律（硬要求）**：
+
 - 所有 HTML 必须**引用** `brand-spec.md` 里的资产文件路径，不允许用 CSS 剪影/SVG 手画代替
 - Logo 作为 `<img>` 引用真实文件，不重画
 - 产品图作为 `<img>` 引用真实文件，不用 CSS 剪影代替
@@ -222,12 +237,12 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 
 按资产类型分别处理：
 
-| 缺失 | 处理 |
-|---|---|
-| **Logo 完全找不到** | **停下问用户**，不要硬做（logo 是品牌识别度的根基） |
-| **产品图（实体产品）找不到** | 优先 nano-banana-pro AI 生成（以官方参考图为基底）→ 次选向用户索取 → 最后才是诚实 placeholder（灰块+文字标签，明确标注"产品图待补"） |
-| **UI 截图（数字产品）找不到** | 向用户索取自己账号的截屏 → 官方演示视频截帧。不用 mockup 生成器凑 |
-| **色值完全找不到** | 按「设计方向顾问模式」走，向用户推荐 3 个方向并标注 assumption |
+| 缺失                          | 处理                                                                                                                                 |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Logo 完全找不到**           | **停下问用户**，不要硬做（logo 是品牌识别度的根基）                                                                                  |
+| **产品图（实体产品）找不到**  | 优先 nano-banana-pro AI 生成（以官方参考图为基底）→ 次选向用户索取 → 最后才是诚实 placeholder（灰块+文字标签，明确标注"产品图待补"） |
+| **UI 截图（数字产品）找不到** | 向用户索取自己账号的截屏 → 官方演示视频截帧。不用 mockup 生成器凑                                                                    |
+| **色值完全找不到**            | 按「设计方向顾问模式」走，向用户推荐 3 个方向并标注 assumption                                                                       |
 
 **禁止**：找不到资产就静默用 CSS 剪影/通用渐变硬做——这是协议最大的反 pattern。**宁可停下问，也不要凑**。
 
@@ -241,10 +256,9 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 
 ##### 协议代价 vs 不做代价
 
-| 场景 | 时间 |
-|---|---|
-| 正确走完协议 | 下载 logo 5 min + 下载 3-5 张产品图/UI 10 min + grep 色值 5 min + 写 spec 10 min = **30 分钟** |
-| 不做协议的代价 | 做出没识别度的通用动画 → 用户返工 1-2 小时，甚至重做 |
+| 场景           | 时间                                                                                           |
+| -------------- | ---------------------------------------------------------------------------------------------- |
+| 正确走完协议   | 下载 logo 5 min + 下载 3-5 张产品图/UI 10 min + grep 色值 5 min + 写 spec 10 min = **30 分钟** |
+| 不做协议的代价 | 做出没识别度的通用动画 → 用户返工 1-2 小时，甚至重做                                           |
 
 **这是稳定性最便宜的投资**。尤其对商单/发布会/重要客户项目，30 分钟的资产协议是保命钱。
-

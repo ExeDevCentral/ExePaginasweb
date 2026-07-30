@@ -4,8 +4,8 @@
 
 # Huashu Design
 
-> *"Type. Hit enter. A finished design lands in your lap."*
-> *「打字。回车。一份能交付的设计。」*
+> _"Type. Hit enter. A finished design lands in your lap."_
+> _「打字。回车。一份能交付的设计。」_
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Agent-Agnostic](https://img.shields.io/badge/Agent-Agnostic-blueviolet)](https://skills.sh)
@@ -80,15 +80,15 @@ No buttons, no panels, no Figma plugin. Agent-agnostic — drops into Claude Cod
 
 ## What it does
 
-| Capability | Deliverable | Typical time |
-|---|---|---|
-| Interactive prototype (App / Web) | Single-file HTML · real iPhone bezel · clickable · Playwright-verified | 10–15 min |
-| Slide decks | HTML deck (browser presentation) + editable PPTX (text frames preserved) | 15–25 min |
-| Motion design | MP4 (25fps / 60fps interpolation) + GIF (palette-optimized) + BGM | 8–12 min |
-| Design variations | 3+ side-by-side · Tweaks live params · cross-dimension exploration | 10 min |
-| Infographic / data viz | Print-quality typography · exports to PDF/PNG/SVG | 10 min |
-| Design direction advisor | 5 schools × 20 philosophies · 3 directions recommended · Demos generated in parallel | 5 min |
-| 5-dimension expert critique | Radar chart + Keep/Fix/Quick Wins · actionable punch list | 3 min |
+| Capability                        | Deliverable                                                                          | Typical time |
+| --------------------------------- | ------------------------------------------------------------------------------------ | ------------ |
+| Interactive prototype (App / Web) | Single-file HTML · real iPhone bezel · clickable · Playwright-verified               | 10–15 min    |
+| Slide decks                       | HTML deck (browser presentation) + editable PPTX (text frames preserved)             | 15–25 min    |
+| Motion design                     | MP4 (25fps / 60fps interpolation) + GIF (palette-optimized) + BGM                    | 8–12 min     |
+| Design variations                 | 3+ side-by-side · Tweaks live params · cross-dimension exploration                   | 10 min       |
+| Infographic / data viz            | Print-quality typography · exports to PDF/PNG/SVG                                    | 10 min       |
+| Design direction advisor          | 5 schools × 20 philosophies · 3 directions recommended · Demos generated in parallel | 5 min        |
+| 5-dimension expert critique       | Radar chart + Keep/Fix/Quick Wins · actionable punch list                            | 3 min        |
 
 ---
 
@@ -158,13 +158,13 @@ Mandatory whenever the task involves a specific brand: ask → search → downlo
 
 The hardest rule in the skill. When the task touches a specific brand (Stripe, Linear, Anthropic, DJI, your own company, etc.), five steps are enforced:
 
-| Step | Action | Purpose |
-|---|---|---|
-| 1 · Ask | Checklist of 6 asset types: logo / product shots / UI screenshots / color palette / fonts / brand guidelines | Respect existing resources |
-| 2 · Search official channels | `<brand>.com/brand` · `<brand>.com/press` · `brand.<brand>.com` · product pages · launch films | Find authoritative assets |
-| 3 · Download by asset type | Logo (SVG → inline-SVG in HTML → social avatar) · Product shots (hero → press kit → launch video frames → AI-generated from reference) · UI (App Store screenshots → official video frames) | Three fallback paths per asset type |
-| 4 · Verify + extract | Check logo fidelity · product image resolution · UI freshness · grep color hex from real assets | **Never guess from memory** |
-| 5 · Freeze to spec | Write `brand-spec.md` with logo paths, product image paths, UI screenshot paths, CSS variables for colors/fonts | Un-frozen knowledge evaporates |
+| Step                         | Action                                                                                                                                                                                      | Purpose                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| 1 · Ask                      | Checklist of 6 asset types: logo / product shots / UI screenshots / color palette / fonts / brand guidelines                                                                                | Respect existing resources          |
+| 2 · Search official channels | `<brand>.com/brand` · `<brand>.com/press` · `brand.<brand>.com` · product pages · launch films                                                                                              | Find authoritative assets           |
+| 3 · Download by asset type   | Logo (SVG → inline-SVG in HTML → social avatar) · Product shots (hero → press kit → launch video frames → AI-generated from reference) · UI (App Store screenshots → official video frames) | Three fallback paths per asset type |
+| 4 · Verify + extract         | Check logo fidelity · product image resolution · UI freshness · grep color hex from real assets                                                                                             | **Never guess from memory**         |
+| 5 · Freeze to spec           | Write `brand-spec.md` with logo paths, product image paths, UI screenshot paths, CSS variables for colors/fonts                                                                             | Un-frozen knowledge evaporates      |
 
 **Ranking of asset importance** (from the skill's internal rubric):
 
@@ -212,14 +212,14 @@ I'll be upfront: the Core Asset Protocol's philosophy was lifted from system pro
 
 Positioning differences:
 
-| | Claude Design | huashu-design |
-|---|---|---|
-| Form | Web product (used in browser) | Skill (used in Claude Code) |
-| Quota | Subscription quota | API usage · parallel agents unblocked |
-| Output | Canvas + Figma export | HTML / MP4 / GIF / editable PPTX / PDF |
-| Interaction | GUI (click, drag, edit) | Conversation (tell agent, wait) |
-| Complex animation | Limited | Stage + Sprite timeline · 60fps export |
-| Agent compatibility | Claude.ai only | Claude Code / Cursor / Trae / Hermes / OpenClaw |
+|                     | Claude Design                 | huashu-design                                   |
+| ------------------- | ----------------------------- | ----------------------------------------------- |
+| Form                | Web product (used in browser) | Skill (used in Claude Code)                     |
+| Quota               | Subscription quota            | API usage · parallel agents unblocked           |
+| Output              | Canvas + Figma export         | HTML / MP4 / GIF / editable PPTX / PDF          |
+| Interaction         | GUI (click, drag, edit)       | Conversation (tell agent, wait)                 |
+| Complex animation   | Limited                       | Stage + Sprite timeline · 60fps export          |
+| Agent compatibility | Claude.ai only                | Claude Code / Cursor / Trae / Hermes / OpenClaw |
 
 Claude Design is a **better graphics tool**. Huashu-design makes **the graphics-tool layer disappear**. Two paths, different audiences.
 
@@ -294,16 +294,16 @@ Under the [MIT License](LICENSE) you are free to **use, modify, and distribute**
 
 ## Connect · Huasheng (Huashu)
 
-Huasheng is an AI-native coder, independent developer, and AI content creator. Notable work: Cat Fill Light (App Store Top 1 in Paid category), *A Book on DeepSeek*, Nüwa.skill (GitHub 21k+ stars). Combined 300k+ followers across platforms.
+Huasheng is an AI-native coder, independent developer, and AI content creator. Notable work: Cat Fill Light (App Store Top 1 in Paid category), _A Book on DeepSeek_, Nüwa.skill (GitHub 21k+ stars). Combined 300k+ followers across platforms.
 
-| Platform | Handle | Link |
-|---|---|---|
-| X / Twitter | @AlchainHust | https://x.com/AlchainHust |
-| WeChat Official Account | 花叔 | Search "花叔" in WeChat |
-| Bilibili | 花叔 | https://space.bilibili.com/14097567 |
-| YouTube | 花叔 | https://www.youtube.com/@Alchain |
-| Xiaohongshu | 花叔 | https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf |
-| Official Site | huasheng.ai | https://www.huasheng.ai/ |
-| Developer Hub | bookai.top | https://bookai.top |
+| Platform                | Handle       | Link                                                              |
+| ----------------------- | ------------ | ----------------------------------------------------------------- |
+| X / Twitter             | @AlchainHust | https://x.com/AlchainHust                                         |
+| WeChat Official Account | 花叔         | Search "花叔" in WeChat                                           |
+| Bilibili                | 花叔         | https://space.bilibili.com/14097567                               |
+| YouTube                 | 花叔         | https://www.youtube.com/@Alchain                                  |
+| Xiaohongshu             | 花叔         | https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf |
+| Official Site           | huasheng.ai  | https://www.huasheng.ai/                                          |
+| Developer Hub           | bookai.top   | https://bookai.top                                                |
 
 For collaborations or sponsored content, DM on any of the above.

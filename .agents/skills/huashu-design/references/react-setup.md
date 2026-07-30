@@ -7,9 +7,21 @@
 在HTML的`<head>`里放这三个script tag，用**固定版本+integrity hash**：
 
 ```html
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script
+  src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+  integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+  integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+  integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+  crossorigin="anonymous"
+></script>
 ```
 
 **不要**用`react@18`或`react@latest`这种unpinned版本——会出现版本漂移/缓存问题。
@@ -40,8 +52,8 @@ HTML里加载方式：
 
 <!-- 最后主入口 -->
 <script type="text/babel">
-  const root = ReactDOM.createRoot(document.getElementById('root'));
-  root.render(<App />);
+  const root = ReactDOM.createRoot(document.getElementById('root'))
+  root.render(<App />)
 </script>
 ```
 
@@ -52,6 +64,7 @@ HTML里加载方式：
 ### 规矩1：styles 对象必须用唯一命名
 
 **错误**（多组件时必炸）：
+
 ```jsx
 // components.jsx
 const styles = { button: {...}, card: {...} };
@@ -64,19 +77,20 @@ const styles = { container: {...}, header: {...} };
 
 ```jsx
 // terminal.jsx
-const terminalStyles = { 
-  screen: {...}, 
-  line: {...} 
+const terminalStyles = {
+  screen: {...},
+  line: {...}
 };
 
 // sidebar.jsx
-const sidebarStyles = { 
-  container: {...}, 
-  item: {...} 
+const sidebarStyles = {
+  container: {...},
+  item: {...}
 };
 ```
 
 **或者用inline styles**（小组件推荐）：
+
 ```jsx
 <div style={{ padding: 16, background: '#111' }}>...</div>
 ```
@@ -108,15 +122,16 @@ Object.assign(window, {
 `scrollIntoView`会把整个HTML容器往上推，搞坏web harness的布局。**永远不要用**。
 
 替代方案：
+
 ```js
 // 滚到容器内某个位置
-container.scrollTop = targetElement.offsetTop;
+container.scrollTop = targetElement.offsetTop
 
 // 或者用element.scrollTo
 container.scrollTo({
   top: targetElement.offsetTop - 100,
-  behavior: 'smooth'
-});
+  behavior: 'smooth',
+})
 ```
 
 ## 调 Claude API（HTML内）
@@ -128,13 +143,14 @@ container.scrollTo({
 ### 选项A：不真调，用mock
 
 Demo场景推荐。写一个假helper，返回预设的response：
+
 ```jsx
 window.claude = {
   async complete(prompt) {
-    await new Promise(r => setTimeout(r, 800)); // 模拟延迟
-    return "这是一个mock响应。真部署时请替换为真API。";
-  }
-};
+    await new Promise((r) => setTimeout(r, 800)) // 模拟延迟
+    return '这是一个mock响应。真部署时请替换为真API。'
+  },
+}
 ```
 
 ### 选项B：真调Anthropic API
@@ -144,26 +160,26 @@ window.claude = {
 ```html
 <input id="api-key" placeholder="粘贴你的Anthropic API key" />
 <script>
-window.claude = {
-  async complete(prompt) {
-    const key = document.getElementById('api-key').value;
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5',
-        max_tokens: 1024,
-        messages: [{ role: 'user', content: prompt }]
+  window.claude = {
+    async complete(prompt) {
+      const key = document.getElementById('api-key').value
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5',
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }],
+        }),
       })
-    });
-    const data = await res.json();
-    return data.content[0].text;
+      const data = await res.json()
+      return data.content[0].text
+    },
   }
-};
 </script>
 ```
 
@@ -180,49 +196,71 @@ window.claude = {
 ```html
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Prototype Name</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Prototype Name</title>
 
-  <!-- React + Babel pinned -->
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+    <!-- React + Babel pinned -->
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+      crossorigin="anonymous"
+    ></script>
 
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; width: 100%; }
-    body { 
-      font-family: -apple-system, 'SF Pro Text', sans-serif;
-      background: #FAFAFA;
-      color: #1A1A1A;
-    }
-    #root { min-height: 100vh; }
-  </style>
-</head>
-<body>
-  <div id="root"></div>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+      }
+      body {
+        font-family: -apple-system, 'SF Pro Text', sans-serif;
+        background: #fafafa;
+        color: #1a1a1a;
+      }
+      #root {
+        min-height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
 
-  <!-- 你的组件文件 -->
-  <script type="text/babel" src="components.jsx"></script>
+    <!-- 你的组件文件 -->
+    <script type="text/babel" src="components.jsx"></script>
 
-  <!-- 主入口 -->
-  <script type="text/babel">
-    const { useState, useEffect } = React;
+    <!-- 主入口 -->
+    <script type="text/babel">
+      const { useState, useEffect } = React
 
-    function App() {
-      return (
-        <div style={{padding: 40}}>
-          <h1>Hello</h1>
-        </div>
-      );
-    }
+      function App() {
+        return (
+          <div style={{ padding: 40 }}>
+            <h1>Hello</h1>
+          </div>
+        )
+      }
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
-</body>
+      const root = ReactDOM.createRoot(document.getElementById('root'))
+      root.render(<App />)
+    </script>
+  </body>
 </html>
 ```
 
@@ -263,6 +301,7 @@ window.claude = {
 ```
 
 HTML里按顺序加载：
+
 ```html
 <script type="text/babel" src="src/primitives.jsx"></script>
 <script type="text/babel" src="src/components.jsx"></script>

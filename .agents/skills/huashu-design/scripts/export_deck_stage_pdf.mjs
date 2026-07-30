@@ -28,67 +28,70 @@
  *   - 字体必须能被 Chromium 加载（本地字体或 Google Fonts）
  */
 
-import { chromium } from 'playwright';
-import fs from 'fs/promises';
-import path from 'path';
+import { chromium } from 'playwright'
+import fs from 'fs/promises'
+import path from 'path'
 
 function parseArgs() {
-  const args = { width: 1920, height: 1080 };
-  const a = process.argv.slice(2);
+  const args = { width: 1920, height: 1080 }
+  const a = process.argv.slice(2)
   for (let i = 0; i < a.length; i += 2) {
-    const k = a[i].replace(/^--/, '');
-    args[k] = a[i + 1];
+    const k = a[i].replace(/^--/, '')
+    args[k] = a[i + 1]
   }
   if (!args.html || !args.out) {
-    console.error('用法: node export_deck_stage_pdf.mjs --html <deck.html> --out <file.pdf> [--width 1920] [--height 1080]');
-    process.exit(1);
+    console.error(
+      '用法: node export_deck_stage_pdf.mjs --html <deck.html> --out <file.pdf> [--width 1920] [--height 1080]'
+    )
+    process.exit(1)
   }
-  args.width = parseInt(args.width);
-  args.height = parseInt(args.height);
-  return args;
+  args.width = parseInt(args.width)
+  args.height = parseInt(args.height)
+  return args
 }
 
 async function main() {
-  const { html, out, width, height } = parseArgs();
-  const htmlAbs = path.resolve(html);
-  const outFile = path.resolve(out);
+  const { html, out, width, height } = parseArgs()
+  const htmlAbs = path.resolve(html)
+  const outFile = path.resolve(out)
 
   await fs.access(htmlAbs).catch(() => {
-    console.error(`HTML file not found: ${htmlAbs}`);
-    process.exit(1);
-  });
+    console.error(`HTML file not found: ${htmlAbs}`)
+    process.exit(1)
+  })
 
-  console.log(`Rendering ${path.basename(htmlAbs)} → ${path.basename(outFile)}`);
+  console.log(`Rendering ${path.basename(htmlAbs)} → ${path.basename(outFile)}`)
 
-  const browser = await chromium.launch();
-  const ctx = await browser.newContext({ viewport: { width, height } });
-  const page = await ctx.newPage();
+  const browser = await chromium.launch()
+  const ctx = await browser.newContext({ viewport: { width, height } })
+  const page = await ctx.newPage()
 
-  await page.goto('file://' + htmlAbs, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(2500);  // 等 Google Fonts + deck-stage init
+  await page.goto('file://' + htmlAbs, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(2500) // 等 Google Fonts + deck-stage init
 
   // 核心修复：把 section 从 shadow DOM slot 拔出来摊平
-  const sectionCount = await page.evaluate(({ W, H }) => {
-    const stage = document.querySelector('deck-stage');
-    if (!stage) throw new Error('<deck-stage> not found — 这个脚本只适用于单文件 deck-stage 架构');
-    const sections = Array.from(stage.querySelectorAll(':scope > section'));
-    if (!sections.length) throw new Error('No <section> found inside <deck-stage>');
+  const sectionCount = await page.evaluate(
+    ({ W, H }) => {
+      const stage = document.querySelector('deck-stage')
+      if (!stage) throw new Error('<deck-stage> not found — 这个脚本只适用于单文件 deck-stage 架构')
+      const sections = Array.from(stage.querySelectorAll(':scope > section'))
+      if (!sections.length) throw new Error('No <section> found inside <deck-stage>')
 
-    // 注入打印样式
-    const style = document.createElement('style');
-    style.textContent = `
+      // 注入打印样式
+      const style = document.createElement('style')
+      style.textContent = `
       @page { size: ${W}px ${H}px; margin: 0; }
       html, body { margin: 0 !important; padding: 0 !important; background: #fff; }
       deck-stage { display: none !important; }
-    `;
-    document.head.appendChild(style);
+    `
+      document.head.appendChild(style)
 
-    // 摊平到 body 下
-    const container = document.createElement('div');
-    container.id = 'print-container';
-    sections.forEach(s => {
-      // 内联 style 拿到最高优先级；确保 position:relative 让 absolute 子元素正确约束
-      s.style.cssText = `
+      // 摊平到 body 下
+      const container = document.createElement('div')
+      container.id = 'print-container'
+      sections.forEach((s) => {
+        // 内联 style 拿到最高优先级；确保 position:relative 让 absolute 子元素正确约束
+        s.style.cssText = `
         width: ${W}px !important;
         height: ${H}px !important;
         display: block !important;
@@ -98,18 +101,20 @@ async function main() {
         break-after: page !important;
         margin: 0 !important;
         padding: 0 !important;
-      `;
-      container.appendChild(s);
-    });
-    // 最后一页不分页，避免尾部空白页
-    const last = sections[sections.length - 1];
-    last.style.pageBreakAfter = 'auto';
-    last.style.breakAfter = 'auto';
-    document.body.appendChild(container);
-    return sections.length;
-  }, { W: width, H: height });
+      `
+        container.appendChild(s)
+      })
+      // 最后一页不分页，避免尾部空白页
+      const last = sections[sections.length - 1]
+      last.style.pageBreakAfter = 'auto'
+      last.style.breakAfter = 'auto'
+      document.body.appendChild(container)
+      return sections.length
+    },
+    { W: width, H: height }
+  )
 
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(800)
 
   await page.pdf({
     path: outFile,
@@ -117,14 +122,17 @@ async function main() {
     height: `${height}px`,
     printBackground: true,
     preferCSSPageSize: true,
-  });
+  })
 
-  await browser.close();
+  await browser.close()
 
-  const stat = await fs.stat(outFile);
-  const kb = (stat.size / 1024).toFixed(0);
-  console.log(`\n✓ Wrote ${outFile}  (${kb} KB, ${sectionCount} pages, vector)`);
-  console.log(`  验证页数：mdimport "${outFile}" && pdfinfo "${outFile}" | grep Pages`);
+  const stat = await fs.stat(outFile)
+  const kb = (stat.size / 1024).toFixed(0)
+  console.log(`\n✓ Wrote ${outFile}  (${kb} KB, ${sectionCount} pages, vector)`)
+  console.log(`  验证页数：mdimport "${outFile}" && pdfinfo "${outFile}" | grep Pages`)
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})

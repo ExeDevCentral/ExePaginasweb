@@ -101,15 +101,15 @@ const canvasStyles = {
     zIndex: 10,
     pointerEvents: 'none',
   },
-};
+}
 
 function DesignCanvas({ title, subtitle, columns = 3, children }) {
-  const [expanded, setExpanded] = React.useState(null);
+  const [expanded, setExpanded] = React.useState(null)
 
   const gridStyle = {
     ...canvasStyles.grid,
     gridTemplateColumns: `repeat(${columns}, 1fr)`,
-  };
+  }
 
   return (
     <div style={canvasStyles.container}>
@@ -148,7 +148,7 @@ function DesignCanvas({ title, subtitle, columns = 3, children }) {
           }}
         >
           <div
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             style={{
               background: '#fff',
               borderRadius: 8,
@@ -163,16 +163,32 @@ function DesignCanvas({ title, subtitle, columns = 3, children }) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
-function Variation({ label, description, number, children, _index, _expanded, _onToggle, aspectRatio = '4 / 3' }) {
-  const displayNumber = number || String(_index + 1).padStart(2, '0');
+function Variation({
+  label,
+  description,
+  number,
+  children,
+  _index,
+  _expanded,
+  _onToggle,
+  aspectRatio = '4 / 3',
+}) {
+  const displayNumber = number || String(_index + 1).padStart(2, '0')
 
   return (
     <div style={canvasStyles.cell}>
       <div style={canvasStyles.cellHeader}>
-        <span style={{ ...canvasStyles.label, color: '#999', fontFamily: 'ui-monospace, monospace', fontSize: 12 }}>
+        <span
+          style={{
+            ...canvasStyles.label,
+            color: '#999',
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: 12,
+          }}
+        >
           {displayNumber}
         </span>
         <span style={canvasStyles.label}>{label}</span>
@@ -185,21 +201,19 @@ function Variation({ label, description, number, children, _index, _expanded, _o
           ...canvasStyles.frame,
           aspectRatio,
         }}
-        onMouseEnter={e => {
-          e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)';
+        onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'
         }}
-        onMouseLeave={e => {
-          e.currentTarget.style.boxShadow = 'none';
+        onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = 'none'
         }}
       >
-        <div style={canvasStyles.frameInner}>
-          {children}
-        </div>
+        <div style={canvasStyles.frameInner}>{children}</div>
       </div>
     </div>
-  );
+  )
 }
 
 if (typeof window !== 'undefined') {
-  Object.assign(window, { DesignCanvas, Variation });
+  Object.assign(window, { DesignCanvas, Variation })
 }

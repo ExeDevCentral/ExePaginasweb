@@ -24,6 +24,7 @@
 - 有没有codebase可以读？
 
 **如果用户说"没有"**：
+
 - 帮他找——翻项目目录、看有没有参考品牌
 - 还没有？明确说："我会基于通用直觉做，但这通常做不出符合你品牌的作品。你考虑下是否先提供一些参考？"
 - 实在要做，就按`references/design-context.md`的fallback策略办
@@ -50,18 +51,21 @@
 针对具体任务问4+个细节。例如：
 
 **做landing page**：
+
 - 目标转化动作是什么？
 - 主要受众？
 - 竞品参考？
 - 文案谁提供？
 
 **做iOS App onboarding**：
+
 - 几步？
 - 需要用户做什么？
 - 跳过路径？
 - 目标留存率？
 
 **做动画**：
+
 - 时长？
 - 最终用途（视频素材/官网/社交）？
 - 节奏（快/慢/分段）？
@@ -75,24 +79,18 @@
 开始前想跟你对齐几个问题，一次列齐你批量回答就行：
 
 **Design Context**
+
 1. 有设计系统/UI kit/品牌规范吗？如果有在哪？
 2. 有可以参考的现有产品或竞品截图吗？
 3. 项目里有codebase可以读吗？
 
-**Variations**
-4. 想要几种variations？在哪些维度上变（视觉/交互/色彩/...）？
-5. 希望都是"接近答案"还是从保守到疯狂的一张地图？
+**Variations** 4. 想要几种variations？在哪些维度上变（视觉/交互/色彩/...）？5. 希望都是"接近答案"还是从保守到疯狂的一张地图？
 
-**Fidelity**
-6. 保真度：线框 / 半成品 / 带真数据full hi-fi？
-7. Scope：一屏 / 一整个flow / 整个产品？
+**Fidelity** 6. 保真度：线框 / 半成品 / 带真数据full hi-fi？7. Scope：一屏 / 一整个flow / 整个产品？
 
-**Tweaks**
-8. 希望做完后能实时调哪些参数？
+**Tweaks** 8. 希望做完后能实时调哪些参数？
 
-**具体任务**
-9. [任务专属问题1]
-10. [任务专属问题2]
+**具体任务** 9. [任务专属问题1] 10. [任务专属问题2]
 ...
 ```
 
@@ -132,6 +130,7 @@ HTML文件头部先写你的**assumptions+reasoning comments**，像junior给man
 ### Pass 2：真实组件+Variations（主力工作量）
 
 用户批准方向后，开始填充。这时：
+
 - 写React组件替换placeholder
 - 做variations（用design_canvas或Tweaks）
 - 如果是幻灯片/动画，用starter components起手
@@ -141,6 +140,7 @@ HTML文件头部先写你的**assumptions+reasoning comments**，像junior给man
 ### Pass 3：细节打磨
 
 用户满意整体后，打磨：
+
 - 字号/间距/对比度微调
 - 动画timing
 - 边界case
@@ -169,6 +169,7 @@ HTML文件头部先写你的**assumptions+reasoning comments**，像junior给man
 
 **多选项/交互差异**：
 → 做完整原型，用Tweaks切换。例如做登录页，"布局"是tweak的一个选项：
+
 - 左文案右表单
 - 顶部logo+中央表单
 - 背景全屏图+浮层表单
@@ -202,6 +203,7 @@ HTML文件头部先写你的**assumptions+reasoning comments**，像junior给man
 ✅ 幻灯片已完成（10张），带Tweaks可切换"夜/日模式"。
 
 注意：
+
 - 第4页的数据是假的，等你提供真数据我替换
 - 动画用了CSS transition，不需要JS
 
@@ -209,6 +211,7 @@ HTML文件头部先写你的**assumptions+reasoning comments**，像junior给man
 ```
 
 不要：
+
 - 罗列每一页的内容
 - 重复讲你用了什么技术
 - 夸自己设计多好

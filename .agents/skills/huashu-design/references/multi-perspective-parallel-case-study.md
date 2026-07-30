@@ -21,17 +21,18 @@
 
 最终选择的 6 个视角（含选择理由）：
 
-| 视角 | 流派 | 美学锚点 | 跟其他视角的差异 |
-|------|------|---------|----------------|
-| **v5 基线** | 现代出版社 | Anthropic 赤陶橙 + Penguin Classics 衬线 + Vignelli grid | 安全的「品位」选择 |
-| **v5a Wes Anderson** | 电影章节美学 | The French Dispatch 杂志感 + 1960 Olivetti 工业目录 | 对称构图 + 章节卡片 + 装饰边框 |
-| **v5b Saul Bass** | 60s 影片标题艺术 | cut-paper + Trajan caps + 流动几何 | 剪纸 silhouette + 大字 + 强对角线 |
-| **v5c 王家卫** | 港式新浪潮 | 《花样年华》《2046》 letterboxing + 中文衬线 | 慢拍 + 雾化光晕 + 中文为主 |
-| **v5d Massimo Vignelli** | 1970 现代主义 | Knoll identity manual + NYC Subway map | 严格 grid + 3 色铁律 + 拒绝装饰 |
-| **v5e Kenya Hara** | 极简日式 | MUJI 海报 + 《白》 | 留白哲学 + 无 chrome + ma 间 |
-| **v5f Yayoi Kusama** | 装置艺术 | Infinity Mirror Rooms + Polka Dot Obsession | obsessive 重复 + 单一强色 + 圆点 |
+| 视角                     | 流派             | 美学锚点                                                 | 跟其他视角的差异                  |
+| ------------------------ | ---------------- | -------------------------------------------------------- | --------------------------------- |
+| **v5 基线**              | 现代出版社       | Anthropic 赤陶橙 + Penguin Classics 衬线 + Vignelli grid | 安全的「品位」选择                |
+| **v5a Wes Anderson**     | 电影章节美学     | The French Dispatch 杂志感 + 1960 Olivetti 工业目录      | 对称构图 + 章节卡片 + 装饰边框    |
+| **v5b Saul Bass**        | 60s 影片标题艺术 | cut-paper + Trajan caps + 流动几何                       | 剪纸 silhouette + 大字 + 强对角线 |
+| **v5c 王家卫**           | 港式新浪潮       | 《花样年华》《2046》 letterboxing + 中文衬线             | 慢拍 + 雾化光晕 + 中文为主        |
+| **v5d Massimo Vignelli** | 1970 现代主义    | Knoll identity manual + NYC Subway map                   | 严格 grid + 3 色铁律 + 拒绝装饰   |
+| **v5e Kenya Hara**       | 极简日式         | MUJI 海报 + 《白》                                       | 留白哲学 + 无 chrome + ma 间      |
+| **v5f Yayoi Kusama**     | 装置艺术         | Infinity Mirror Rooms + Polka Dot Obsession              | obsessive 重复 + 单一强色 + 圆点  |
 
 **选择原则**：
+
 1. **3 个不同地理文化**（西方电影 / 日本设计 / 港式中文）
 2. **3 个不同年代**（1960s / 1970s / 2010s+）
 3. **3 个不同载体**（电影 / 平面设计 / 装置艺术）
@@ -154,9 +155,10 @@ use case 分配（按平台和受众）：
 ### 洞察 2 · 「视角」必须具体到「作品 + 年份」
 
 每个 brief 里都列出具体作品对话：
-- Anderson → *The French Dispatch* (2021) + *Moonrise Kingdom* (2012) + Penguin Classics dust jackets + 1960s Olivetti catalogues
-- WKW → *In the Mood for Love* (2000) + *2046* (2004)
-- Vignelli → 1972 NYC Subway map + Knoll identity manual + *The Vignelli Canon*
+
+- Anderson → _The French Dispatch_ (2021) + _Moonrise Kingdom_ (2012) + Penguin Classics dust jackets + 1960s Olivetti catalogues
+- WKW → _In the Mood for Love_ (2000) + _2046_ (2004)
+- Vignelli → 1972 NYC Subway map + Knoll identity manual + _The Vignelli Canon_
 - Hara → MUJI brand 1995-2023 + 《白》 + Junya Ishigami transparency
 - Kusama → Infinity Mirrored Rooms (2013-2023) + Polka Dot Obsession 装置
 
@@ -178,6 +180,7 @@ use case 分配（按平台和受众）：
 ### 洞察 4 · 多视角的真正价值不是「选 winner」
 
 最初设想是 A/B test 选最好的版本。实际审校时发现：**6 个版本各自有清晰 use case**：
+
 - v5 基线 → 产品页 / 微信读书（信息密度高）
 - Anderson → 公众号长文头图（翻杂志感强）
 - WKW → B 站 / 中文文化向（怀旧温度）
@@ -206,15 +209,15 @@ subagent 完成需要 12-15 分钟。这段时间主线程绝不该空闲：
 
 ## 何时启用「多视角并行」
 
-| 场景 | 是否启用 | 原因 |
-|------|---------|------|
-| 用户明确说「想看不同方向」「再多做几个版本」 | ✅ 立刻启用 | 直接需求 |
-| 第一版做出来用户不满意但说不清要啥 | ✅ 启用 | A/B 选优于「我猜你要啥」 |
-| 项目准备多平台分发（X / 公众号 / B 站 / 朋友圈） | ✅ 启用 | 每平台一个版本 |
-| 客户没拍板风格但有预算（time + token） | ✅ 启用 | 反复改 = 5 倍代价 |
-| 用户已经给了明确风格参考且只要 1 个版本 | ❌ 不启用 | 浪费 |
-| 任务是简单 motion graphic / icon 动画 | ❌ 不启用 | 过度工程化 |
-| 时间紧 < 30 分钟 | ❌ 不启用 | subagent 跑不完 |
+| 场景                                             | 是否启用    | 原因                     |
+| ------------------------------------------------ | ----------- | ------------------------ |
+| 用户明确说「想看不同方向」「再多做几个版本」     | ✅ 立刻启用 | 直接需求                 |
+| 第一版做出来用户不满意但说不清要啥               | ✅ 启用     | A/B 选优于「我猜你要啥」 |
+| 项目准备多平台分发（X / 公众号 / B 站 / 朋友圈） | ✅ 启用     | 每平台一个版本           |
+| 客户没拍板风格但有预算（time + token）           | ✅ 启用     | 反复改 = 5 倍代价        |
+| 用户已经给了明确风格参考且只要 1 个版本          | ❌ 不启用   | 浪费                     |
+| 任务是简单 motion graphic / icon 动画            | ❌ 不启用   | 过度工程化               |
+| 时间紧 < 30 分钟                                 | ❌ 不启用   | subagent 跑不完          |
 
 ---
 
@@ -263,5 +266,5 @@ subagent 完成需要 12-15 分钟。这段时间主线程绝不该空闲：
 
 ---
 
-*Last updated: 2026-05-11*
-*Real case study: huashu-md-html v2.0 launch film 6-perspective parallel experiment*
+_Last updated: 2026-05-11_
+_Real case study: huashu-md-html v2.0 launch film 6-perspective parallel experiment_

@@ -5,11 +5,13 @@
 ## 何时导出
 
 **导出时机**：
+
 - 动画完整跑通、视觉验证过（Playwright 截图确认各时间点状态正确）
 - 用户在浏览器里看过至少一次，表示效果 OK
 - **不要**在动画 bug 没修完的阶段导出——导出到视频后改起来更贵
 
 **用户可能说的触发语**：
+
 - 「能导出成视频吗」
 - 「转成 MP4」
 - 「做成 GIF」
@@ -19,11 +21,11 @@
 
 默认一次给三种格式，让用户选：
 
-| 格式 | 规格 | 适合场景 | 典型大小（30s） |
-|---|---|---|---|
-| MP4 25fps | 1920×1080 · H.264 · CRF 18 | 公众号嵌入、视频号、YouTube | 1-2 MB |
-| MP4 60fps | 1920×1080 · minterpolate 插帧 · H.264 · CRF 18 | 高帧率展示、B站、作品集 | 1.5-3 MB |
-| GIF | 960×540 · 15fps · palette 优化 | Twitter/X、README、Slack 预览 | 2-4 MB |
+| 格式      | 规格                                           | 适合场景                      | 典型大小（30s） |
+| --------- | ---------------------------------------------- | ----------------------------- | --------------- |
+| MP4 25fps | 1920×1080 · H.264 · CRF 18                     | 公众号嵌入、视频号、YouTube   | 1-2 MB          |
+| MP4 60fps | 1920×1080 · minterpolate 插帧 · H.264 · CRF 18 | 高帧率展示、B站、作品集       | 1.5-3 MB        |
+| GIF       | 960×540 · 15fps · palette 优化                 | Twitter/X、README、Slack 预览 | 2-4 MB          |
 
 ## 工具链
 
@@ -38,6 +40,7 @@ NODE_PATH=$(npm root -g) node /path/to/claude-design/scripts/render-video.js <ht
 ```
 
 可选参数：
+
 - `--duration=30` 动画时长（秒）
 - `--width=1920 --height=1080` 分辨率
 - `--trim=2.2` 从视频开头裁掉的秒数（去掉 reload + 字体加载时间）
@@ -55,16 +58,17 @@ bash add-music.sh <input.mp4> [--mood=<name>] [--music=<path>] [--out=<path>]
 
 **内置 BGM 库**（在 `assets/bgm-<mood>.mp3`）：
 
-| `--mood=` | 风格 | 适配场景 |
-|-----------|------|---------|
-| `tech`（默认） | Apple Silicon / 苹果发布会，极简合成器+钢琴 | 产品发布、AI工具、Skill 宣传 |
-| `ad` | upbeat 现代电子，有 build + drop | 社交媒体广告、产品预告、促销片 |
-| `educational` | 温暖明亮、轻吉他/电钢琴，inviting | 科普、教程介绍、课程预告 |
-| `educational-alt` | 同类备选，换一首试试 | 同上 |
-| `tutorial` | lo-fi 环境音，几乎无存在感 | 软件演示、编程教程、长演示 |
-| `tutorial-alt` | 同类备选 | 同上 |
+| `--mood=`         | 风格                                        | 适配场景                       |
+| ----------------- | ------------------------------------------- | ------------------------------ |
+| `tech`（默认）    | Apple Silicon / 苹果发布会，极简合成器+钢琴 | 产品发布、AI工具、Skill 宣传   |
+| `ad`              | upbeat 现代电子，有 build + drop            | 社交媒体广告、产品预告、促销片 |
+| `educational`     | 温暖明亮、轻吉他/电钢琴，inviting           | 科普、教程介绍、课程预告       |
+| `educational-alt` | 同类备选，换一首试试                        | 同上                           |
+| `tutorial`        | lo-fi 环境音，几乎无存在感                  | 软件演示、编程教程、长演示     |
+| `tutorial-alt`    | 同类备选                                    | 同上                           |
 
 **行为**：
+
 - 音乐按视频时长裁剪
 - 0.3s 淡入 + 1s 淡出（避免硬切）
 - 视频流 `-c:v copy` 不重编码，音频 AAC 192k
@@ -72,6 +76,7 @@ bash add-music.sh <input.mp4> [--mood=<name>] [--music=<path>] [--out=<path>]
 - 传错 mood 名会列出所有可用选项，不会静默失败
 
 **典型流水线**（动画导出三件套 + 配乐）：
+
 ```bash
 node render-video.js animation.html                        # 录屏
 bash convert-formats.sh animation.mp4                      # 派生 60fps + GIF
@@ -90,19 +95,21 @@ bash /path/to/claude-design/scripts/convert-formats.sh <input.mp4> [gif_width] [
 ```
 
 输出（与输入同目录）：
+
 - `<name>-60fps.mp4` — 默认用 `fps=60` 帧复制（兼容性广）；加 `--minterpolate` 启用高质量插帧
 - `<name>.gif` — palette 优化的 GIF（默认 960 宽，可改）
 
 **60fps 模式选择**：
 
-| 模式 | 命令 | 兼容性 | 使用场景 |
-|---|---|---|---|
-| 帧复制（默认）| `convert-formats.sh in.mp4` | QuickTime/Safari/Chrome/VLC 全通 | 通用交付、上传平台、社交媒体 |
-| minterpolate 插帧 | `convert-formats.sh in.mp4 --minterpolate` | macOS QuickTime/Safari 可能拒打 | B站等需要真插帧的展示场景，**交付前必须本地测**目标播放器 |
+| 模式              | 命令                                       | 兼容性                           | 使用场景                                                  |
+| ----------------- | ------------------------------------------ | -------------------------------- | --------------------------------------------------------- |
+| 帧复制（默认）    | `convert-formats.sh in.mp4`                | QuickTime/Safari/Chrome/VLC 全通 | 通用交付、上传平台、社交媒体                              |
+| minterpolate 插帧 | `convert-formats.sh in.mp4 --minterpolate` | macOS QuickTime/Safari 可能拒打  | B站等需要真插帧的展示场景，**交付前必须本地测**目标播放器 |
 
 为什么默认改成帧复制？minterpolate 输出的 H.264 elementary stream 有 known compat bug——之前默认 minterpolate 时多次踩到「macOS QuickTime 打不开」的问题。详见 `animation-pitfalls.md` §14。
 
 `gif_width` 参数：
+
 - 960（默认）—— 社交平台通用
 - 1280 —— 更清晰但文件更大
 - 600 —— Twitter/X 优先加载
@@ -120,6 +127,7 @@ NODE_PATH=$(npm root -g) node /path/to/claude-design/scripts/render-video-seek.j
 参数：`--duration` · `--fps`（默认 60）· `--width` · `--height` · `--concurrency`（默认 4 个 worker 并行）· `--settle`（seek 后等几个 rAF 再截图，默认 2，重 layout 动画可调高）· `--keep-chrome`。输出与 HTML 同目录、同名 `.mp4`。
 
 正面解决 recordVideo 三死结：
+
 - **真原生任意帧率**：`--fps=60` 出真 60fps（每帧都是真实 seek 画面），不再经 `convert-formats.sh` 的 minterpolate 插帧，绕开 ghosting + macOS 兼容 bug
 - **无开头黑帧**：不录屏，根本没有加载期黑帧，不需要 `--trim` / `--fontwait`
 - **确定性**：seek 到时间戳截图，同输入同输出，不受机器负载/丢帧影响
@@ -182,6 +190,7 @@ ffmpeg -i input.mp4 -r 60 -c:v libx264 ... output.mp4
 GIF 只能 256 色。一次 pass 的 GIF 会把全动画色彩压到 256 色通用 palette，对米色底+橙色这种细腻配色会糊。
 
 两阶段：
+
 1. `palettegen=stats_mode=diff` —— 先扫描全片，生成**针对此动画的 optimal palette**
 2. `paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle` —— 用这个 palette 编码，rectangle diff 只更新变化区域，大幅减小文件
 
@@ -222,11 +231,11 @@ GIF 只能 256 色。一次 pass 的 GIF 会把全动画色彩压到 256 色通�
 
 ## 常见用户追加需求
 
-| 用户说 | 应对 |
-|---|---|
-| 「太大了」 | MP4：提高 CRF 到 23-28；GIF：降分辨率到 600 或 fps 到 10 |
-| 「GIF 太糊」 | 提高 `gif_width` 到 1280；或者建议用 MP4 代替（微信朋友圈也支持） |
-| 「要竖屏 9:16」 | 改 HTML 源的 `--width=1080 --height=1920`，重新录 |
-| 「加水印」 | ffmpeg 加 `-vf "drawtext=..."` 或 `overlay=` 一个 PNG |
-| 「要透明背景」 | MP4 不支持 alpha；用 WebM VP9 + alpha 或 APNG |
-| 「要无损」 | CRF 改 0 + preset veryslow（文件会大 10 倍） |
+| 用户说          | 应对                                                              |
+| --------------- | ----------------------------------------------------------------- |
+| 「太大了」      | MP4：提高 CRF 到 23-28；GIF：降分辨率到 600 或 fps 到 10          |
+| 「GIF 太糊」    | 提高 `gif_width` 到 1280；或者建议用 MP4 代替（微信朋友圈也支持） |
+| 「要竖屏 9:16」 | 改 HTML 源的 `--width=1080 --height=1920`，重新录                 |
+| 「加水印」      | ffmpeg 加 `-vf "drawtext=..."` 或 `overlay=` 一个 PNG             |
+| 「要透明背景」  | MP4 不支持 alpha；用 WebM VP9 + alpha 或 APNG                     |
+| 「要无损」      | CRF 改 0 + preset veryslow（文件会大 10 倍）                      |

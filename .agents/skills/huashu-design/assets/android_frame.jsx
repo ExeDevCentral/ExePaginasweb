@@ -87,7 +87,7 @@ const androidFrameStyles = {
     background: 'rgba(0,0,0,0.3)',
     borderRadius: 999,
   },
-};
+}
 
 function AndroidFrame({
   children,
@@ -98,16 +98,18 @@ function AndroidFrame({
   darkMode = false,
   navStyle = 'gesture',
 }) {
-  const textColor = darkMode ? '#fff' : '#1a1a1a';
+  const textColor = darkMode ? '#fff' : '#1a1a1a'
 
   return (
     <div style={androidFrameStyles.wrapper}>
-      <div style={{
-        ...androidFrameStyles.screen,
-        width,
-        height,
-        background: darkMode ? '#000' : '#fff',
-      }}>
+      <div
+        style={{
+          ...androidFrameStyles.screen,
+          width,
+          height,
+          background: darkMode ? '#000' : '#fff',
+        }}
+      >
         <div style={{ ...androidFrameStyles.statusBar, color: textColor }}>
           <span>{time}</span>
           <div style={androidFrameStyles.statusIcons}>
@@ -120,22 +122,31 @@ function AndroidFrame({
             <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
               <path d="M7 9a1 1 0 100-2 1 1 0 000 2z" fill="currentColor" />
               <path d="M3 6a5 5 0 018 0" stroke="currentColor" strokeWidth="1.2" />
-              <path d="M0.5 3.5a11 11 0 0113 0" stroke="currentColor" strokeWidth="1.2" opacity="0.6" />
+              <path
+                d="M0.5 3.5a11 11 0 0113 0"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                opacity="0.6"
+              />
             </svg>
-            <div style={{
-              width: 22,
-              height: 10,
-              border: '1.5px solid currentColor',
-              borderRadius: 2,
-              padding: 1,
-              position: 'relative',
-            }}>
-              <div style={{
-                width: `${battery}%`,
-                height: '100%',
-                background: 'currentColor',
-                borderRadius: 1,
-              }} />
+            <div
+              style={{
+                width: 22,
+                height: 10,
+                border: '1.5px solid currentColor',
+                borderRadius: 2,
+                padding: 1,
+                position: 'relative',
+              }}
+            >
+              <div
+                style={{
+                  width: `${battery}%`,
+                  height: '100%',
+                  background: 'currentColor',
+                  borderRadius: 1,
+                }}
+              />
             </div>
             <span style={androidFrameStyles.batteryText}>{battery}%</span>
           </div>
@@ -143,18 +154,18 @@ function AndroidFrame({
 
         <div style={androidFrameStyles.punchHole} />
 
-        <div style={androidFrameStyles.content}>
-          {children}
-        </div>
+        <div style={androidFrameStyles.content}>{children}</div>
 
         {navStyle === 'gesture' && (
           <div style={androidFrameStyles.navBar}>
-            <div style={{
-              ...androidFrameStyles.navButton,
-              width: 100,
-              height: 4,
-              background: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)',
-            }} />
+            <div
+              style={{
+                ...androidFrameStyles.navButton,
+                width: 100,
+                height: 4,
+                background: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)',
+              }}
+            />
           </div>
         )}
 
@@ -167,9 +178,9 @@ function AndroidFrame({
         )}
       </div>
     </div>
-  );
+  )
 }
 
 if (typeof window !== 'undefined') {
-  window.AndroidFrame = AndroidFrame;
+  window.AndroidFrame = AndroidFrame
 }

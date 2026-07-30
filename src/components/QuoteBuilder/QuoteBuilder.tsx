@@ -39,44 +39,44 @@ interface PlanData {
   icon: typeof Layout
 }
 
-const PLANS: PlanData[] = [
-  {
-    id: 'plan-landing',
-    name: 'Landing Page',
-    description:
-      'Sitio profesional de una página. Ideal para campañas, portfolio o negocio en lanzamiento.',
-    setup: { ARS: '$350.000', USD: 'u$s 300' },
-    monthly: { ARS: '$10.000', USD: 'u$s 20' },
-    features: [
-      'Diseño responsive premium',
-      'SEO técnico integrado',
-      'Formulario de contacto',
-      'Hosting + dominio .com.ar',
-      'Analytics y performance',
-      'Mantenimiento mensual (opcional)',
-    ],
-    popular: false,
-    icon: Layout,
-  },
-  {
-    id: 'plan-ecommerce',
-    name: 'Tienda Online',
-    description:
-      'E-commerce completo listo para vender. Catálogo, carrito, pagos y panel de gestión.',
-    setup: { ARS: '$600.000', USD: 'u$s 700' },
-    monthly: { ARS: '$25.000', USD: 'u$s 50' },
-    features: [
-      'Catálogo ilimitado de productos',
-      'Carrito + pasarela de pagos',
-      'Panel administrador',
-      'Dashboard de ventas',
-      'SEO + optimización de velocidad',
-      'Soporte prioritario 24/7',
-    ],
-    popular: true,
-    icon: ShoppingCart,
-  },
-]
+function getPlans(t: (key: string) => string): PlanData[] {
+  return [
+    {
+      id: 'plan-landing',
+      name: t('cotizador.plan_landing_name'),
+      description: t('cotizador.plan_landing_desc'),
+      setup: { ARS: '$350.000', USD: 'u$s 300' },
+      monthly: { ARS: '$10.000', USD: 'u$s 20' },
+      features: [
+        t('cotizador.plan_landing_feat_1'),
+        t('cotizador.plan_landing_feat_2'),
+        t('cotizador.plan_landing_feat_3'),
+        t('cotizador.plan_landing_feat_4'),
+        t('cotizador.plan_landing_feat_5'),
+        t('cotizador.plan_landing_feat_6'),
+      ],
+      popular: false,
+      icon: Layout,
+    },
+    {
+      id: 'plan-ecommerce',
+      name: t('cotizador.plan_ecommerce_name'),
+      description: t('cotizador.plan_ecommerce_desc'),
+      setup: { ARS: '$600.000', USD: 'u$s 700' },
+      monthly: { ARS: '$25.000', USD: 'u$s 50' },
+      features: [
+        t('cotizador.plan_ecommerce_feat_1'),
+        t('cotizador.plan_ecommerce_feat_2'),
+        t('cotizador.plan_ecommerce_feat_3'),
+        t('cotizador.plan_ecommerce_feat_4'),
+        t('cotizador.plan_ecommerce_feat_5'),
+        t('cotizador.plan_ecommerce_feat_6'),
+      ],
+      popular: true,
+      icon: ShoppingCart,
+    },
+  ]
+}
 
 interface ProjectType {
   id: string
@@ -141,6 +141,7 @@ interface Feature {
 const FEATURES: Feature[] = [
   { id: 'admin', label: 'Panel Administrador', price: 100000, popular: true },
   { id: 'payments', label: 'Pasarela de Pagos', price: 80000 },
+  { id: 'domain', label: 'Registro de Dominio', price: 15000 },
   { id: 'chatbot', label: 'Chatbot IA', price: 120000 },
   { id: 'database', label: 'Base de Datos', price: 60000 },
   { id: 'api', label: 'API / Integraciones', price: 100000 },
@@ -369,6 +370,7 @@ function PlanCard({
   onSelect: () => void
   index: number
 }) {
+  const { t } = useTranslation()
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   const rotateX = useMotionValue(0)
@@ -426,7 +428,7 @@ function PlanCard({
             transition={{ duration: 2, repeat: Infinity }}
             className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-xs font-bold text-foreground uppercase tracking-wider shadow-lg z-10"
           >
-            Más elegido
+            {t('cotizador.mas_elegido')}
           </motion.div>
         </>
       )}
@@ -449,19 +451,26 @@ function PlanCard({
           <div className="relative z-10">
             <div className="mb-3 pb-3 border-b border-border/50">
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">
-                Desarrollo único
+                {t('cotizador.desarrollo_unico')}
               </p>
               <p className="text-3xl font-montserrat font-black text-foreground">
                 {plan.setup[currency]}
               </p>
             </div>
-            <div className="flex items-end gap-1">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
-                Mantenimiento / mes
-              </p>
-              <p className="text-xl font-montserrat font-bold text-accent-cyan ml-auto">
-                {plan.monthly[currency]}
-              </p>
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+                  {t('cotizador.mantenimiento_mes')}
+                </p>
+                <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  {t('cotizador.monthly_opcional_badge')}
+                </span>
+              </div>
+              <div className="flex items-end justify-between">
+                <p className="text-xl font-montserrat font-bold text-accent-cyan ml-auto">
+                  {plan.monthly[currency]}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -493,7 +502,7 @@ function PlanCard({
               : 'border border-border bg-card/50 text-foreground hover:border-accent-cyan/40 hover:bg-card/80'
           }`}
         >
-          <span className="relative z-10">Elegir Plan</span>
+          <span className="relative z-10">{t('cotizador.elegir_plan')}</span>
           {plan.popular && (
             <motion.div
               className="absolute inset-0 -translate-x-full"
@@ -512,6 +521,7 @@ function PlanCard({
 export default function QuoteBuilder() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const plans = useMemo(() => getPlans(t), [t])
   const [mode, setMode] = useState<'plans' | 'custom'>('plans')
   const [step, setStep] = useState(0)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
@@ -647,7 +657,7 @@ export default function QuoteBuilder() {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-xs font-bold uppercase tracking-wider mb-6">
                   <Sparkles className="w-3.5 h-3.5" />
-                  Planes de Desarrollo
+                  {t('cotizador.planes_tag')}
                 </div>
               </motion.div>
               <motion.h1
@@ -656,10 +666,7 @@ export default function QuoteBuilder() {
                 transition={{ delay: 0.1 }}
                 className="text-4xl md:text-6xl font-montserrat font-black text-foreground tracking-tight mb-6"
               >
-                Modelo{' '}
-                <span className="bg-gradient-to-r from-accent-cyan via-accent-magenta to-accent-cyan bg-clip-text text-transparent bg-[length:200%_200%] animate-gradient-shift">
-                  Híbrido
-                </span>
+                {t('cotizador.modelo_hibrido')}
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -667,8 +674,7 @@ export default function QuoteBuilder() {
                 transition={{ delay: 0.2 }}
                 className="text-muted-foreground max-w-2xl mx-auto text-lg"
               >
-                Pagás el desarrollo una sola vez, y una cuota mínima de mantenimiento para que tu
-                web esté siempre online, segura y rápida.
+                {t('cotizador.modelo_hibrido_desc')}
               </motion.p>
             </div>
 
@@ -704,8 +710,8 @@ export default function QuoteBuilder() {
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
-              {PLANS.map((plan, i) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-10">
+              {plans.map((plan, i) => (
                 <PlanCard
                   key={plan.id}
                   plan={plan}
@@ -714,6 +720,14 @@ export default function QuoteBuilder() {
                   onSelect={() => handlePlanSelect(plan.id)}
                 />
               ))}
+            </div>
+
+            {/* Cartel Aclaratorio de Mantenimiento Opcional */}
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs md:text-sm font-semibold shadow-lg shadow-emerald-500/5">
+                <Check className="w-4 h-4 shrink-0 text-emerald-400" />
+                <span>{t('cotizador.opcional_nota')}</span>
+              </div>
             </div>
 
             <ConfettiBurst trigger={planConfetti} intensity={20} />
@@ -729,7 +743,9 @@ export default function QuoteBuilder() {
                   <div className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="px-4 bg-background text-muted-foreground text-sm">o</span>
+                  <span className="px-4 bg-background text-muted-foreground text-sm">
+                    {t('cotizador.o')}
+                  </span>
                 </div>
               </div>
               <motion.button
@@ -740,7 +756,7 @@ export default function QuoteBuilder() {
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_4s_ease-in-out_infinite]" />
                 <Star className="w-5 h-5 text-accent-cyan relative z-10" />
-                <span className="relative z-10">Armá tu proyecto a medida</span>
+                <span className="relative z-10">{t('cotizador.arma_proyecto_medida')}</span>
                 <ArrowRight className="w-4 h-4 relative z-10" />
               </motion.button>
             </motion.div>
@@ -797,11 +813,9 @@ export default function QuoteBuilder() {
                   <div className="text-center mb-10">
                     <Sparkles className="w-8 h-8 text-accent-cyan mx-auto mb-4" />
                     <h1 className="text-4xl md:text-5xl font-montserrat font-black text-foreground mb-3">
-                      ¿Qué necesitás?
+                      {t('cotizador.que_necesitas')}
                     </h1>
-                    <p className="text-muted-foreground">
-                      Elegí el tipo de proyecto y te doy un presupuesto estimado al instante
-                    </p>
+                    <p className="text-muted-foreground">{t('cotizador.que_necesitas_desc')}</p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {PROJECT_TYPES.map((pt) => {
@@ -844,7 +858,7 @@ export default function QuoteBuilder() {
                       className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold disabled:opacity-30 transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
-                      <span className="relative z-10">Siguiente</span>{' '}
+                      <span className="relative z-10">{t('cotizador.siguiente')}</span>{' '}
                       <ArrowRight className="w-4 h-4 relative z-10" />
                     </button>
                   </div>
@@ -860,11 +874,9 @@ export default function QuoteBuilder() {
                 >
                   <div className="text-center mb-10">
                     <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
-                      Funcionalidades
+                      {t('cotizador.funcionalidades')}
                     </h2>
-                    <p className="text-muted-foreground">
-                      Seleccioná las que necesites (podés cambiar después)
-                    </p>
+                    <p className="text-muted-foreground">{t('cotizador.funcionalidades_desc')}</p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
                     {FEATURES.map((feat) => {
@@ -903,14 +915,14 @@ export default function QuoteBuilder() {
                       onClick={() => changeStep(0)}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
                     >
-                      <ArrowLeft className="w-4 h-4" /> Atrás
+                      <ArrowLeft className="w-4 h-4" /> {t('cotizador.atras')}
                     </button>
                     <button
                       onClick={() => changeStep(2)}
                       className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
-                      <span className="relative z-10">Siguiente</span>{' '}
+                      <span className="relative z-10">{t('cotizador.siguiente')}</span>{' '}
                       <ArrowRight className="w-4 h-4 relative z-10" />
                     </button>
                   </div>
@@ -926,11 +938,9 @@ export default function QuoteBuilder() {
                 >
                   <div className="text-center mb-10">
                     <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
-                      Diseño
+                      {t('cotizador.diseno')}
                     </h2>
-                    <p className="text-muted-foreground">
-                      Elegí el nivel de diseño que quieras para tu proyecto
-                    </p>
+                    <p className="text-muted-foreground">{t('cotizador.diseno_desc')}</p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
                     {DESIGN_TIERS.map((d) => {
@@ -949,7 +959,7 @@ export default function QuoteBuilder() {
                               {t('cotizador.design_' + d.id + '_desc', d.description)}
                             </p>
                             <p className="text-xl font-black font-montserrat text-accent-cyan">
-                              {d.price === 0 ? 'Incluido' : formatPrice(d.price)}
+                              {d.price === 0 ? t('cotizador.incluido') : formatPrice(d.price)}
                             </p>
                           </div>
                         </GlowCard>
@@ -961,14 +971,14 @@ export default function QuoteBuilder() {
                       onClick={() => changeStep(1)}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
                     >
-                      <ArrowLeft className="w-4 h-4" /> Atrás
+                      <ArrowLeft className="w-4 h-4" /> {t('cotizador.atras')}
                     </button>
                     <button
                       onClick={() => changeStep(3)}
                       className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
-                      <span className="relative z-10">Ver Cotización</span>{' '}
+                      <span className="relative z-10">{t('cotizador.ver_cotizacion')}</span>{' '}
                       <ArrowRight className="w-4 h-4 relative z-10" />
                     </button>
                   </div>
@@ -984,20 +994,18 @@ export default function QuoteBuilder() {
                 >
                   <div className="text-center mb-10">
                     <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
-                      Tu Cotización
+                      {t('cotizador.tu_cotizacion')}
                     </h2>
-                    <p className="text-muted-foreground">
-                      Completá tus datos y recibí el presupuesto
-                    </p>
+                    <p className="text-muted-foreground">{t('cotizador.completa_datos')}</p>
                   </div>
 
                   {selectedPlan && (
                     <div className="max-w-lg mx-auto mb-8 p-4 rounded-2xl bg-gradient-to-r from-accent-cyan/10 to-accent-magenta/10 border border-accent-cyan/20 text-center">
                       <p className="text-xs font-bold uppercase tracking-widest text-accent-cyan mb-1">
-                        Plan seleccionado
+                        {t('cotizador.plan_seleccionado')}
                       </p>
                       <p className="text-lg font-black text-foreground">
-                        {PLANS.find((p) => p.id === selectedPlan)?.name}
+                        {plans.find((p) => p.id === selectedPlan)?.name}
                       </p>
                     </div>
                   )}
@@ -1006,24 +1014,30 @@ export default function QuoteBuilder() {
                     <div className="lg:col-span-3 space-y-4">
                       <div className="rounded-2xl border border-border bg-muted/50 p-6">
                         <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
-                          Resumen
+                          {t('cotizador.resumen')}
                         </h3>
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">Proyecto</span>
+                            <span className="text-sm text-muted-foreground">
+                              {t('cotizador.proyecto')}
+                            </span>
                             <span className="text-sm font-bold text-foreground">
-                              {selectedTypeData?.label}
+                              {selectedTypeData ? t('cotizador.tipo_' + selectedTypeData.id) : ''}
                             </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">Diseño</span>
+                            <span className="text-sm text-muted-foreground">
+                              {t('cotizador.diseno_label')}
+                            </span>
                             <span className="text-sm font-bold text-foreground">
-                              {DESIGN_TIERS.find((d) => d.id === designTier)?.label}
+                              {t('cotizador.design_' + designTier)}
                             </span>
                           </div>
                           {FEATURES.filter((f) => selectedFeatures.has(f.id)).map((f) => (
                             <div key={f.id} className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground">{f.label}</span>
+                              <span className="text-sm text-muted-foreground">
+                                {t('cotizador.feat_' + f.id, f.label)}
+                              </span>
                               <span className="text-sm font-bold text-accent-cyan">
                                 + {formatPrice(f.price)}
                               </span>
@@ -1031,22 +1045,27 @@ export default function QuoteBuilder() {
                           ))}
                         </div>
                         <div className="mt-6 pt-4 border-t border-border flex justify-between items-center">
-                          <span className="text-lg font-black text-foreground">Total estimado</span>
+                          <span className="text-lg font-black text-foreground">
+                            {t('cotizador.total_estimado')}
+                          </span>
                           <span className="text-3xl font-black font-montserrat text-foreground">
                             {formatPrice(total)}
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-2">
-                          *Presupuesto estimado. El precio final puede variar según requerimientos
-                          específicos.
+                          {t('cotizador.nota_estimado')}
                         </p>
+                        <div className="mt-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
+                          <Check className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+                          <span>{t('cotizador.opcional_nota')}</span>
+                        </div>
                       </div>
                     </div>
 
                     <div className="lg:col-span-2">
                       <div className="rounded-2xl border border-border bg-muted/50 p-6">
                         <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
-                          Tus datos
+                          {t('cotizador.tus_datos')}
                         </h3>
                         <div className="space-y-4">
                           <div>
@@ -1054,7 +1073,7 @@ export default function QuoteBuilder() {
                               type="text"
                               value={name}
                               onChange={(e) => setName(e.target.value)}
-                              placeholder="Nombre *"
+                              placeholder={t('cotizador.placeholder_nombre')}
                               className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
                             />
                           </div>
@@ -1063,7 +1082,7 @@ export default function QuoteBuilder() {
                               type="email"
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
-                              placeholder="Email *"
+                              placeholder={t('cotizador.placeholder_email')}
                               className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
                             />
                           </div>
@@ -1072,7 +1091,7 @@ export default function QuoteBuilder() {
                               type="text"
                               value={company}
                               onChange={(e) => setCompany(e.target.value)}
-                              placeholder="Empresa (opcional)"
+                              placeholder={t('cotizador.placeholder_empresa')}
                               className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
                             />
                           </div>
@@ -1084,10 +1103,10 @@ export default function QuoteBuilder() {
                           >
                             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
                             {sending ? (
-                              <span className="relative z-10">Enviando...</span>
+                              <span className="relative z-10">{t('cotizador.enviando')}</span>
                             ) : (
                               <span className="relative z-10 flex items-center gap-3">
-                                <Send className="w-4 h-4" /> Enviar Cotización
+                                <Send className="w-4 h-4" /> {t('cotizador.enviar_cotizacion')}
                               </span>
                             )}
                           </button>
@@ -1099,7 +1118,7 @@ export default function QuoteBuilder() {
                             className="flex items-center justify-center gap-3 w-full px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors text-sm"
                           >
                             <MessageCircle className="w-4 h-4 text-green-400" />
-                            Enviar por WhatsApp
+                            {t('cotizador.enviar_whatsapp')}
                           </a>
                         </div>
                       </div>
@@ -1111,7 +1130,7 @@ export default function QuoteBuilder() {
                       onClick={() => changeStep(2)}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
                     >
-                      <ArrowLeft className="w-4 h-4" /> Atrás
+                      <ArrowLeft className="w-4 h-4" /> {t('cotizador.atras')}
                     </button>
                   </div>
                 </motion.div>

@@ -3,6 +3,7 @@
 做幻灯片是设计工作的高频场景。这份文档说明怎么做好HTML幻灯片——从架构选型、单页设计，到 PDF/PPTX 导出的完整路径。
 
 **本 skill 的能力覆盖**：
+
 - **HTML 演示版（基础产物，永远默认必做）** → 每页独立 HTML + `assets/deck_index.html` 聚合，浏览器里键盘翻页、全屏演讲
 - HTML → PDF 导出 → `scripts/export_deck_pdf.mjs` / `scripts/export_deck_stage_pdf.mjs`
 - HTML → 可编辑 PPTX 导出 → `references/editable-pptx.md` + `scripts/html2pptx.js` + `scripts/export_deck_pptx.mjs`（要求 HTML 按 4 条硬约束写）
@@ -10,6 +11,7 @@
 > **⚠️ HTML 是基础，PDF/PPTX 是衍生物。** 不管最终交付什么格式，都**必须**先做 HTML 聚合演示版（`index.html` + `slides/*.html`），它是幻灯片作品的「源」。PDF/PPTX 是从 HTML 一行命令导出的快照。
 >
 > **为什么 HTML 优先**：
+>
 > - 演讲/演示现场最好用（投影仪 / 共享屏幕直接全屏，键盘翻页，不依赖 Keynote/PPT 软件）
 > - 开发过程中每页可单独双击打开验证，不用每次重新跑导出
 > - 是 PDF/PPTX 导出的唯一上游（避免「导出后才发现要改 HTML 又要重出」的死循环）
@@ -45,6 +47,7 @@
 > 不管最后交付是 HTML、PDF 还是 PPTX，我都会先做一个可在浏览器里切换和演讲的 HTML 聚合版（`index.html` 加键盘翻页）——这是永远的默认基础产物。在此之上再问你要不要额外出 PDF / PPTX 的快照。
 >
 > 你需要哪个导出格式？
+>
 > - **只要 HTML**（演讲/存档）→ 视觉完全自由
 > - **还要 PDF** → 同上，加一条导出命令
 > - **还要可编辑 PPTX**（同事会在 PPT 里改文字）→ 我必须从第一行 HTML 就按 4 条硬约束写，会牺牲一些视觉能力（无渐变、无 web component、无复杂 SVG）。
@@ -63,10 +66,10 @@ PPTX 可编辑的前提是 `html2pptx.js` 能把 DOM 逐元素翻译为 PowerPoi
 
 ### 两条真实路径的代价对比（2026-04-20 真实踩坑）
 
-| 路径 | 做法 | 结果 | 代价 |
-|------|------|------|------|
+| 路径                                | 做法                                   | 结果                                                                                                      | 代价                                                                       |
+| ----------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | ❌ **先自由写 HTML，事后补救 PPTX** | 单文件 deck-stage + 大量 SVG/span 装饰 | 要可编辑 PPTX 只剩两条路：<br>A. 手写 pptxgenjs 几百行 hardcode 坐标<br>B. 重写 17 页 HTML 成 Path A 格式 | 2-3 小时返工，且手写版**维护成本永续**（HTML 改一个字，PPTX 要再人肉同步） |
-| ✅ **从第一步按 Path A 约束写** | 每页独立 HTML + 4 条硬约束 + 960×540pt | 一条命令导出 100% 可编辑 PPTX，同时也能浏览器全屏演讲（Path A HTML 就是浏览器可播放的标准 HTML） | 写 HTML 时多花 5 分钟想「文字怎么包进 `<p>`」，零返工 |
+| ✅ **从第一步按 Path A 约束写**     | 每页独立 HTML + 4 条硬约束 + 960×540pt | 一条命令导出 100% 可编辑 PPTX，同时也能浏览器全屏演讲（Path A HTML 就是浏览器可播放的标准 HTML）          | 写 HTML 时多花 5 分钟想「文字怎么包进 `<p>`」，零返工                      |
 
 ### 混合交付怎么办
 
@@ -99,12 +102,12 @@ PPTX 可编辑的前提是 `html2pptx.js` 能把 DOM 逐元素翻译为 PowerPoi
 
 **showcase 页选择原则**：选视觉结构最不一样的两页。这两页过了 = 其他中间态都能过。
 
-| Deck 类型 | 推荐 showcase 页组合 |
-|-----------|---------------------|
+| Deck 类型               | 推荐 showcase 页组合         |
+| ----------------------- | ---------------------------- |
 | B2B brochure / 产品宣发 | 封面 + 内容页（理念/情感页） |
-| 品牌发布 | 封面 + 产品特色页 |
-| 数据报告 | 数据大图页 + 分析结论页 |
-| 教程课件 | 章节封页 + 具体知识点页 |
+| 品牌发布                | 封面 + 产品特色页            |
+| 数据报告                | 数据大图页 + 分析结论页      |
+| 教程课件                | 章节封页 + 具体知识点页      |
 
 ---
 
@@ -147,18 +150,18 @@ PPTX 可编辑的前提是 `html2pptx.js` 能把 DOM 逐元素翻译为 PowerPoi
 
 13 页如果全是「文字 + 一张截图」就太单调。**每页的视觉主角类型轮换**：
 
-| 视觉类型 | 适合的 section |
-|---------|---------------|
-| 封面排版（大字 + masthead + pillar） | 首页 / 篇章封 |
-| 单角色 portrait（超大单只 momo 等） | 介绍单个概念/角色 |
-| 多角色合影 / 头像卡并排 | 团队 / 用户案例 |
-| 时间轴卡片递进 | 展示「长期关系」「演进」 |
-| 知识图谱 / 连接节点图 | 展示「协作」「流动」 |
-| Before/After 对比卡 + 中间箭头 | 展示「改变」「差异」 |
-| 产品 UI 截图 + 描边设备框 | 具体功能展示 |
-| 大引号 big-quote（半页大字） | 情绪页 / 问题页 / 引文页 |
-| 真人头像 + 引言卡（2×2 或 1×4） | 用户见证 / 使用场景 |
-| 大字封底 + URL 椭圆按钮 | CTA / 结尾 |
+| 视觉类型                             | 适合的 section           |
+| ------------------------------------ | ------------------------ |
+| 封面排版（大字 + masthead + pillar） | 首页 / 篇章封            |
+| 单角色 portrait（超大单只 momo 等）  | 介绍单个概念/角色        |
+| 多角色合影 / 头像卡并排              | 团队 / 用户案例          |
+| 时间轴卡片递进                       | 展示「长期关系」「演进」 |
+| 知识图谱 / 连接节点图                | 展示「协作」「流动」     |
+| Before/After 对比卡 + 中间箭头       | 展示「改变」「差异」     |
+| 产品 UI 截图 + 描边设备框            | 具体功能展示             |
+| 大引号 big-quote（半页大字）         | 情绪页 / 问题页 / 引文页 |
+| 真人头像 + 引言卡（2×2 或 1×4）      | 用户见证 / 使用场景      |
+| 大字封底 + URL 椭圆按钮              | CTA / 结尾               |
 
 ---
 
@@ -194,16 +197,16 @@ moxt philosophy 页第一版用 2×2 = 4 段 + 底部 3 信条 = 7 块内容，�
 
 ### 两种架构对比
 
-| 维度 | 单文件 + `deck_stage.js` | **多文件 + `deck_index.html` 拼接器** |
-|------|--------------------------|--------------------------------------|
-| 代码结构 | 一个 HTML，所有 slide 是 `<section>` | 每页独立 HTML，`index.html` 用 iframe 拼接 |
-| CSS 作用域 | ❌ 全局，一页的样式可能影响所有页 | ✅ 天然隔离，iframe 各自一片天 |
-| 验证粒度 | ❌ 要 JS goTo 才能切到某页 | ✅ 单页文件双击就能在浏览器看 |
-| 并行开发 | ❌ 一个文件，多 agent 改会冲突 | ✅ 多 agent 可并行做不同页，零冲突 merge |
-| 调试难度 | ❌ 一处 CSS 出错，全 deck 翻车 | ✅ 一页出错只影响自己 |
-| 内嵌交互 | ✅ 跨页共享状态很简单 | 🟡 iframe 间需 postMessage |
-| 打印 PDF | ✅ 内置 | ✅ 拼接器 beforeprint 遍历 iframe |
-| 键盘导航 | ✅ 内置 | ✅ 拼接器内置 |
+| 维度       | 单文件 + `deck_stage.js`             | **多文件 + `deck_index.html` 拼接器**      |
+| ---------- | ------------------------------------ | ------------------------------------------ |
+| 代码结构   | 一个 HTML，所有 slide 是 `<section>` | 每页独立 HTML，`index.html` 用 iframe 拼接 |
+| CSS 作用域 | ❌ 全局，一页的样式可能影响所有页    | ✅ 天然隔离，iframe 各自一片天             |
+| 验证粒度   | ❌ 要 JS goTo 才能切到某页           | ✅ 单页文件双击就能在浏览器看              |
+| 并行开发   | ❌ 一个文件，多 agent 改会冲突       | ✅ 多 agent 可并行做不同页，零冲突 merge   |
+| 调试难度   | ❌ 一处 CSS 出错，全 deck 翻车       | ✅ 一页出错只影响自己                      |
+| 内嵌交互   | ✅ 跨页共享状态很简单                | 🟡 iframe 间需 postMessage                 |
+| 打印 PDF   | ✅ 内置                              | ✅ 拼接器 beforeprint 遍历 iframe          |
+| 键盘导航   | ✅ 内置                              | ✅ 拼接器内置                              |
 
 ### 选哪个？（决策树）
 
@@ -250,27 +253,28 @@ moxt philosophy 页第一版用 2×2 = 4 段 + 底部 3 信条 = 7 块内容，�
 ```html
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<title>P05 · Chapter Title</title>
-<link href="https://fonts.googleapis.com/css2?family=..." rel="stylesheet">
-<link rel="stylesheet" href="../shared/tokens.css">
-<style>
-  /* 这一页独有的样式。用任何 class 名都不会污染别的页。*/
-  body { padding: 120px; }
-  .my-thing { ... }
-</style>
-</head>
-<body>
-  <!-- 1920×1080 的内容（由 body 的 width/height 在 tokens.css 里锁定）-->
-  <div class="page-header">...</div>
-  <div>...</div>
-  <div class="page-footer">...</div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>P05 · Chapter Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=..." rel="stylesheet" />
+    <link rel="stylesheet" href="../shared/tokens.css" />
+    <style>
+      /* 这一页独有的样式。用任何 class 名都不会污染别的页。*/
+      body { padding: 120px; }
+      .my-thing { ... }
+    </style>
+  </head>
+  <body>
+    <!-- 1920×1080 的内容（由 body 的 width/height 在 tokens.css 里锁定）-->
+    <div class="page-header">...</div>
+    <div>...</div>
+    <div class="page-footer">...</div>
+  </body>
 </html>
 ```
 
 **关键约束**：
+
 - `<body>` 就是画布，直接在上面布局。不要包 `<section>` 或其他 wrapper。
 - `width: 1920px; height: 1080px` 由 `shared/tokens.css` 里的 `body` 规则锁定。
 - 引 `shared/tokens.css` 共享设计 token（色板、字号、page-header/footer 等）。
@@ -282,11 +286,11 @@ moxt philosophy 页第一版用 2×2 = 4 段 + 底部 3 信条 = 7 块内容，�
 
 ```js
 window.DECK_MANIFEST = [
-  { file: "slides/01-cover.html",    label: "封面" },
-  { file: "slides/02-agenda.html",   label: "目录" },
-  { file: "slides/03-problem.html",  label: "问题陈述" },
+  { file: 'slides/01-cover.html', label: '封面' },
+  { file: 'slides/02-agenda.html', label: '目录' },
+  { file: 'slides/03-problem.html', label: '问题陈述' },
   // ...
-];
+]
 ```
 
 拼接器已内置：键盘导航（←/→/Home/End/数字键/P 打印）、scale + letterbox、右下计数器、localStorage 记忆、hash 跳页、打印模式（遍历 iframe 按页输出 PDF）。
@@ -299,15 +303,18 @@ window.DECK_MANIFEST = [
 - **无限画廊 gallery**：所有页**无缝无限平铺 + 缓慢漂移 + 轻微呼吸缩放**，一个 tile 含全部页（洗牌排布，看完所有页才重复）。瓦片多，**必须用 `<img>` 缩略图**扛性能（见下），没 thumb 时回退 iframe。
 
 🛑 **三条来自实战的硬约束（改这个文件前必读，否则会重蹈覆辙）**：
+
 1. **概览墙绝不用 `transform-style: preserve-3d` 做卡片墙**。preserve-3d 的 3D 场景里浏览器对「往后退的卡片」（顶排）命中测试不可靠 → 顶排点不到、中排时好时坏。**正解**：整墙作**单个被 3D 倾斜的平面**（不开 preserve-3d），所有卡片共面，点击反投影到一个平面 → 可靠。hover 用 2D `scale` 不用 `translateZ`。
 2. **任意页数都要自适应**：固定列数 + 给整墙写死强倾斜，页一多就溢出塌角/透视失真。必须按页数+视口算列数、行多则倾斜变平、一屏放不下就滚动。
 3. **缩略图分辨率别太低**：画廊缩略图 < 1000px，hover 放大后发虚。默认 1600px。
 
 **为画廊生成缩略图**：用 `scripts/gen_deck_thumbs.mjs`（playwright 截每页 + sharp 降采样）：
+
 ```bash
 npm install playwright sharp
 node gen_deck_thumbs.mjs --slides slides --out thumbs --width 1600
 ```
+
 然后给 MANIFEST 每项加 `thumb: "thumbs/<同名>.jpg"`。网格模式忽略 thumb（始终 iframe），只有画廊模式用它。
 
 ### 单页验证（这是多文件架构的杀手级优势）
@@ -348,7 +355,6 @@ Playwright 截图也是直接 `goto(file://.../slides/05-personas.html)`，不�
 
 ```html
 <body>
-
   <deck-stage>
     <section>
       <h1>Slide 1</h1>
@@ -360,7 +366,6 @@ Playwright 截图也是直接 `goto(file://.../slides/05-personas.html)`，不�
 
   <!-- ✅ 正确：script 在 deck-stage 之后 -->
   <script src="deck_stage.js"></script>
-
 </body>
 ```
 
@@ -403,7 +408,9 @@ deck-stage > section {
 常见错误姿势 2（section 有特异性更高的 class）：
 
 ```css
-.emotion-slide { display: grid; }   /* 特异性: 10，更糟 */
+.emotion-slide {
+  display: grid;
+} /* 特异性: 10，更糟 */
 ```
 
 两种都会让 **所有 slide 同时叠加渲染**——counter 可能显示 `1 / 10` 假装正常，但视觉上第一页盖着第二页盖着第三页。
@@ -436,8 +443,12 @@ deck-stage > section.active {
 
 /* 打印模式：所有页都要显示，覆盖 :not(.active) */
 @media print {
-  deck-stage > section { display: flex !important; }
-  deck-stage > section:not(.active) { display: flex !important; }
+  deck-stage > section {
+    display: flex !important;
+  }
+  deck-stage > section:not(.active) {
+    display: flex !important;
+  }
 }
 ```
 
@@ -486,11 +497,7 @@ Deck_stage 和 deck_index 都会给每页打标签（计数器显示）。给它
 
 ```html
 <script type="application/json" id="speaker-notes">
-[
-  "第1张的 script...",
-  "第2张的 script...",
-  "..."
-]
+  ["第1张的 script...", "第2张的 script...", "..."]
 </script>
 ```
 
@@ -514,6 +521,7 @@ Deck_stage 和 deck_index 都会给每页打标签（计数器显示）。给它
 
 ```markdown
 Deck系统：
+
 - 背景色：最多2种（90% 白 + 10% 深色 section divider）
 - 字型：display 用 Instrument Serif，body 用 Geist Sans
 - 节奏：section divider 用 full-bleed 彩色 + 白字，普通 slide 白底
@@ -588,6 +596,7 @@ node scripts/export_deck_pdf.mjs --slides <slides-dir> --out deck.pdf
 ```
 
 **特点**：
+
 - 文字**保留矢量**（可复制、可搜索）
 - 视觉 100% 保真（Playwright 内嵌 Chromium 渲染后打印）
 - **不需要改 HTML 任何一个字**
@@ -619,30 +628,39 @@ node scripts/export_deck_stage_pdf.mjs --html deck.html --out deck.pdf
 // 打开 HTML 后，用 page.evaluate 把 section 从 deck-stage slot 中提出来，
 // 直接挂到 body 下一个普通 div 里，并内联 style 确保 position:relative + 固定尺寸
 await page.evaluate(() => {
-  const stage = document.querySelector('deck-stage');
-  const sections = Array.from(stage.querySelectorAll(':scope > section'));
-  document.head.appendChild(Object.assign(document.createElement('style'), {
-    textContent: `
+  const stage = document.querySelector('deck-stage')
+  const sections = Array.from(stage.querySelectorAll(':scope > section'))
+  document.head.appendChild(
+    Object.assign(document.createElement('style'), {
+      textContent: `
       @page { size: 1920px 1080px; margin: 0; }
       html, body { margin: 0 !important; padding: 0 !important; }
       deck-stage { display: none !important; }
     `,
-  }));
-  const container = document.createElement('div');
-  sections.forEach(s => {
-    s.style.cssText = 'width:1920px!important;height:1080px!important;display:block!important;position:relative!important;overflow:hidden!important;page-break-after:always!important;break-after:page!important;background:#F7F4EF;margin:0!important;padding:0!important;';
-    container.appendChild(s);
-  });
+    })
+  )
+  const container = document.createElement('div')
+  sections.forEach((s) => {
+    s.style.cssText =
+      'width:1920px!important;height:1080px!important;display:block!important;position:relative!important;overflow:hidden!important;page-break-after:always!important;break-after:page!important;background:#F7F4EF;margin:0!important;padding:0!important;'
+    container.appendChild(s)
+  })
   // 最后一页禁分页，避免尾部空白页
-  sections[sections.length - 1].style.pageBreakAfter = 'auto';
-  sections[sections.length - 1].style.breakAfter = 'auto';
-  document.body.appendChild(container);
-});
+  sections[sections.length - 1].style.pageBreakAfter = 'auto'
+  sections[sections.length - 1].style.breakAfter = 'auto'
+  document.body.appendChild(container)
+})
 
-await page.pdf({ width: '1920px', height: '1080px', printBackground: true, preferCSSPageSize: true });
+await page.pdf({
+  width: '1920px',
+  height: '1080px',
+  printBackground: true,
+  preferCSSPageSize: true,
+})
 ```
 
 **为什么这能 work**：
+
 - 把 section 从 shadow DOM slot 拔到 light DOM 的普通 div——彻底绕过 `::slotted(section) { display: none }` 规则
 - 内联 `position: relative` 让 absolute 子元素相对 section 定位，不会溢出
 - `page-break-after: always` 让浏览器 print 时每 section 独立一页
@@ -662,6 +680,7 @@ node scripts/export_deck_pptx.mjs --slides <dir> --out deck.pptx
 工作原理：`html2pptx` 逐元素读 computedStyle 把 DOM 翻译成 PowerPoint 对象（text frame / shape / picture）。文字变成真文本框，PPT 里双击即可编辑。
 
 **硬性约束**（HTML 必须满足，否则该页 skip，详细说明见 `references/editable-pptx.md`）：
+
 - 所有文字必须在 `<p>`/`<h1>`-`<h6>`/`<ul>`/`<ol>` 里（禁止裸文本 div）
 - `<p>`/`<h*>` 标签自身不能有 background/border/shadow（放外层 div）
 - 不用 `::before`/`::after` 插入装饰文字（伪元素提不出来）
@@ -672,6 +691,7 @@ node scripts/export_deck_pptx.mjs --slides <dir> --out deck.pptx
 脚本已内置**自动预处理器**——把 "叶子 div 里的裸文本" 自动包成 `<p>`（保留 class）。这解决了最常见的违规（裸文本）。但其他违规（p 上有 border、span 上有 margin 等）仍需 HTML 源头合规。
 
 **字体回落 caveat**：
+
 - Playwright 用 webfont 测量 text-box 尺寸；PowerPoint/Keynote 用本机字体渲染
 - 两者不同时会有**溢出或错位**——每页都要肉眼过
 - 建议目标机器装好 HTML 里用的字体，或 fallback 到 `system-ui`
@@ -700,12 +720,12 @@ node scripts/export_deck_pptx.mjs --slides <dir> --out deck.pptx
 
 ### 何时选哪个
 
-| 场景 | 推荐 |
-|------|------|
-| 给主办方/档案存档 | **PDF**（通用、高保真、文字可搜） |
+| 场景                     | 推荐                              |
+| ------------------------ | --------------------------------- |
+| 给主办方/档案存档        | **PDF**（通用、高保真、文字可搜） |
 | 发给协作者让他们微调文字 | **PPTX editable**（接受字体回落） |
-| 要现场演讲、不改内容 | **PDF**（矢量保真，跨平台） |
-| HTML 是首选呈现媒介 | 直接浏览器播放，导出只是备份 |
+| 要现场演讲、不改内容     | **PDF**（矢量保真，跨平台）       |
+| HTML 是首选呈现媒介      | 直接浏览器播放，导出只是备份      |
 
 ## 导出为可编辑 PPTX 的深度路径（仅长期项目）
 

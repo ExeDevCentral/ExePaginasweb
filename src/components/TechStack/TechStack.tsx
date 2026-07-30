@@ -94,7 +94,8 @@ const TechStack = () => {
             className="inline-flex px-4 py-1.5 rounded-full border border-border bg-muted backdrop-blur-md mb-6"
           >
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
-              {t('techstack.badge_1')} <span className="text-foreground font-black">{t('techstack.badge_2')}</span>
+              {t('techstack.badge_1')}{' '}
+              <span className="text-foreground font-black">{t('techstack.badge_2')}</span>
             </span>
           </motion.div>
           <motion.h2

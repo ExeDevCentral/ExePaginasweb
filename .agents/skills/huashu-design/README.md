@@ -4,8 +4,8 @@
 
 # Huashu Design
 
-> *「打字。回车。一份能交付的设计。」*
-> *"Type. Hit enter. A finished design lands in your lap."*
+> _「打字。回车。一份能交付的设计。」_
+> _"Type. Hit enter. A finished design lands in your lap."_
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Agent-Agnostic](https://img.shields.io/badge/Agent-Agnostic-blueviolet)](https://skills.sh)
@@ -92,15 +92,15 @@ npx skills add alchaincyf/huashu-design
 
 ## 能做什么
 
-| 能力 | 交付物 | 典型耗时 |
-|------|--------|----------|
-| 交互原型（App / Web） | 单文件 HTML · 真 iPhone bezel · 可点击 · Playwright 验证 | 10–15 min |
-| 演讲幻灯片 | HTML deck（浏览器演讲）+ 可编辑 PPTX（文本框保留） | 15–25 min |
-| 时间轴动画 | MP4（25fps / 60fps 插帧）+ GIF（palette 优化）+ BGM | 8–12 min |
-| 设计变体 | 3+ 并排对比 · Tweaks 实时调参 · 跨维度探索 | 10 min |
-| 信息图 / 可视化 | 印刷级排版 · 可导 PDF/PNG/SVG | 10 min |
-| 设计方向顾问 | **三套逻辑并行**（秒数轮盘 + 现实参照获奖站 + 最佳设计师）· 直接出 3 版真实视觉 | 5 min |
-| 5 维度专家评审 | 雷达图 + Keep/Fix/Quick Wins · 可操作修复清单 | 3 min |
+| 能力                  | 交付物                                                                          | 典型耗时  |
+| --------------------- | ------------------------------------------------------------------------------- | --------- |
+| 交互原型（App / Web） | 单文件 HTML · 真 iPhone bezel · 可点击 · Playwright 验证                        | 10–15 min |
+| 演讲幻灯片            | HTML deck（浏览器演讲）+ 可编辑 PPTX（文本框保留）                              | 15–25 min |
+| 时间轴动画            | MP4（25fps / 60fps 插帧）+ GIF（palette 优化）+ BGM                             | 8–12 min  |
+| 设计变体              | 3+ 并排对比 · Tweaks 实时调参 · 跨维度探索                                      | 10 min    |
+| 信息图 / 可视化       | 印刷级排版 · 可导 PDF/PNG/SVG                                                   | 10 min    |
+| 设计方向顾问          | **三套逻辑并行**（秒数轮盘 + 现实参照获奖站 + 最佳设计师）· 直接出 3 版真实视觉 | 5 min     |
+| 5 维度专家评审        | 雷达图 + Keep/Fix/Quick Wins · 可操作修复清单                                   | 3 min     |
 
 ---
 
@@ -186,6 +186,7 @@ HTML deck 浏览器演讲 · `html2pptx.js` 读 DOM 的 computedStyle 逐元素�
 - 真实 AI 素材：用 `huashu-gpt-image` 跑 4×2 grid 大图，`extract_grid.py` 抠出 8 张独立透明 PNG，做 3D orbit 漂浮
 
 **适合参考的页面**：
+
 - `/slides/slide-04b-nuwa-flow.html` · 静态 dashboard + cinematic overlay 双层架构
 - `/slides/slide-06b-darwin-flow.html` · 完全独立视觉语言的对照案例
 - `/slides/slide-03b-deepseek-cover.html` · AI slop vs 真实设计师视角的对比页
@@ -200,13 +201,13 @@ HTML deck 浏览器演讲 · `html2pptx.js` 读 DOM 的 computedStyle 逐元素�
 
 skill 里最硬的一段规则。涉及具体品牌（Stripe、Linear、Anthropic、自家公司等）时强制执行 5 步：
 
-| 步骤 | 动作 | 目的 |
-|------|------|------|
-| 1 · 问 | 用户有 brand guidelines 吗？ | 尊重已有资源 |
-| 2 · 搜官方品牌页 | `<brand>.com/brand` · `brand.<brand>.com` · `<brand>.com/press` | 抓权威色值 |
-| 3 · 下载资产 | SVG 文件 → 官网 HTML 全文 → 产品截图取色 | 三条兜底，前一条失败立刻走下一条 |
-| 4 · grep 提取色值 | 从资产里抓所有 `#xxxxxx`，按频率排序，过滤黑白灰 | **绝不从记忆猜品牌色** |
-| 5 · 固化 spec | 写 `brand-spec.md` + CSS 变量，所有 HTML 引用 `var(--brand-*)` | 不固化就会忘 |
+| 步骤              | 动作                                                            | 目的                             |
+| ----------------- | --------------------------------------------------------------- | -------------------------------- |
+| 1 · 问            | 用户有 brand guidelines 吗？                                    | 尊重已有资源                     |
+| 2 · 搜官方品牌页  | `<brand>.com/brand` · `brand.<brand>.com` · `<brand>.com/press` | 抓权威色值                       |
+| 3 · 下载资产      | SVG 文件 → 官网 HTML 全文 → 产品截图取色                        | 三条兜底，前一条失败立刻走下一条 |
+| 4 · grep 提取色值 | 从资产里抓所有 `#xxxxxx`，按频率排序，过滤黑白灰                | **绝不从记忆猜品牌色**           |
+| 5 · 固化 spec     | 写 `brand-spec.md` + CSS 变量，所有 HTML 引用 `var(--brand-*)`  | 不固化就会忘                     |
 
 A/B 测试（v1 vs v2，各跑 6 agent）：**v2 的稳定性方差比 v1 低 5 倍**。稳定性的稳定性，这是 skill 真正的护城河。
 
@@ -243,14 +244,14 @@ A/B 测试（v1 vs v2，各跑 6 agent）：**v2 的稳定性方差比 v1 低 5 
 
 定位差异：
 
-| | Claude Design | huashu-design |
-|---|---|---|
-| 形态 | 网页产品（浏览器里用） | skill（Claude Code 里用） |
-| 配额 | 订阅 quota | API 消耗 · 并行跑 agent 不受 quota 限 |
-| 交付物 | 画布内 + 可导 Figma | HTML / MP4 / GIF / 可编辑 PPTX / PDF |
-| 操作方式 | GUI（点、拖、改） | 对话（说话、等 agent 做完） |
-| 复杂动画 | 有限 | Stage + Sprite 时间轴 · 60fps 导出 |
-| 跨 agent | 专属 Claude.ai | 任意 skill 兼容 agent |
+|          | Claude Design          | huashu-design                         |
+| -------- | ---------------------- | ------------------------------------- |
+| 形态     | 网页产品（浏览器里用） | skill（Claude Code 里用）             |
+| 配额     | 订阅 quota             | API 消耗 · 并行跑 agent 不受 quota 限 |
+| 交付物   | 画布内 + 可导 Figma    | HTML / MP4 / GIF / 可编辑 PPTX / PDF  |
+| 操作方式 | GUI（点、拖、改）      | 对话（说话、等 agent 做完）           |
+| 复杂动画 | 有限                   | Stage + Sprite 时间轴 · 60fps 导出    |
+| 跨 agent | 专属 Claude.ai         | 任意 skill 兼容 agent                 |
 
 Claude Design 是**更好的图形工具**，huashu-design 是**让图形工具这层消失**。两条路，不同受众。
 
@@ -335,14 +336,14 @@ Anthropic 发布 Claude Design 那天我玩到凌晨四点。几天之后发现�
 
 花生是 AI Native Coder、独立开发者、AI 自媒体博主。代表作：小猫补光灯（AppStore 付费榜 Top 1）、《一本书玩转 DeepSeek》、女娲 .skill（GitHub 12000+ star）。自媒体全平台 30 万+ 粉丝。
 
-| 平台 | 账号 | 链接 |
-|---|---|---|
-| X / Twitter | @AlchainHust | https://x.com/AlchainHust |
-| 公众号 | 花叔 | 微信搜索「花叔」 |
-| B 站 | 花叔 | https://space.bilibili.com/14097567 |
-| YouTube | 花叔 | https://www.youtube.com/@Alchain |
-| 小红书 | 花叔 | https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf |
-| 官网 | huasheng.ai | https://www.huasheng.ai/ |
-| 开发者主页 | bookai.top | https://bookai.top |
+| 平台        | 账号         | 链接                                                              |
+| ----------- | ------------ | ----------------------------------------------------------------- |
+| X / Twitter | @AlchainHust | https://x.com/AlchainHust                                         |
+| 公众号      | 花叔         | 微信搜索「花叔」                                                  |
+| B 站        | 花叔         | https://space.bilibili.com/14097567                               |
+| YouTube     | 花叔         | https://www.youtube.com/@Alchain                                  |
+| 小红书      | 花叔         | https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf |
+| 官网        | huasheng.ai  | https://www.huasheng.ai/                                          |
+| 开发者主页  | bookai.top   | https://bookai.top                                                |
 
 合作咨询、自媒体约稿 → 以上任一平台私信花生即可。

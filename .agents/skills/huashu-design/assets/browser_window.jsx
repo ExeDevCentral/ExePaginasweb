@@ -114,7 +114,7 @@ const browserWindowStyles = {
     overflow: 'auto',
     background: '#fff',
   },
-};
+}
 
 function BrowserWindow({
   title = 'New Tab',
@@ -154,13 +154,11 @@ function BrowserWindow({
         </div>
       </div>
 
-      <div style={{ ...browserWindowStyles.content, width, height }}>
-        {children}
-      </div>
+      <div style={{ ...browserWindowStyles.content, width, height }}>{children}</div>
     </div>
-  );
+  )
 }
 
 if (typeof window !== 'undefined') {
-  window.BrowserWindow = BrowserWindow;
+  window.BrowserWindow = BrowserWindow
 }

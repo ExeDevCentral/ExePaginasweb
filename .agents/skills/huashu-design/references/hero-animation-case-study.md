@@ -24,12 +24,12 @@
 
 对比一下反例：
 
-| 做法 | 观众感知 |
-|------|---------|
-| 48 张卡静态排列（没有 Ripple）| 好看但无叙事，像一张 grid screenshot |
-| 一张一张快切（没有 Gallery context）| 像 slideshow，失去"规模感" |
-| 只有 Ripple 没有 Focus | 震住了但没让人记住任何具体一张 |
-| **Ripple + Focus × 4（本配方）** | **先震撼于量，再凝视于质，最后平静淡出——完整情绪弧线** |
+| 做法                                 | 观众感知                                               |
+| ------------------------------------ | ------------------------------------------------------ |
+| 48 张卡静态排列（没有 Ripple）       | 好看但无叙事，像一张 grid screenshot                   |
+| 一张一张快切（没有 Gallery context） | 像 slideshow，失去"规模感"                             |
+| 只有 Ripple 没有 Focus               | 震住了但没让人记住任何具体一张                         |
+| **Ripple + Focus × 4（本配方）**     | **先震撼于量，再凝视于质，最后平静淡出——完整情绪弧线** |
 
 ---
 
@@ -51,12 +51,12 @@
 
 **缺条件的后备路径**：
 
-| 缺什么 | 退化为什么 |
-|-------|-----------|
-| 素材 < 20 张 | 改用「3-5 张并排静态展示 + 逐个 focus」 |
-| 风格不一致 | 改用「封面 + 3 章节大图」的 keynote-style |
-| 信息稀薄 | 改用「data-driven dashboard」或「金句 + 大字」 |
-| 竖屏场景 | 改用「vertical scroll + sticky cards」 |
+| 缺什么       | 退化为什么                                     |
+| ------------ | ---------------------------------------------- |
+| 素材 < 20 张 | 改用「3-5 张并排静态展示 + 逐个 focus」        |
+| 风格不一致   | 改用「封面 + 3 章节大图」的 keynote-style      |
+| 信息稀薄     | 改用「data-driven dashboard」或「金句 + 大字」 |
+| 竖屏场景     | 改用「vertical scroll + sticky cards」         |
 
 ---
 
@@ -79,16 +79,19 @@ viewport (1920×1080, perspective: 2400px)
 
 ```js
 // 每张卡的入场时间 = 距中心的距离 × 0.8s 延迟
-const col = i % 8, row = Math.floor(i / 8);
-const dc = col - 3.5, dr = row - 2.5;       // 到中心的 offset
-const dist = Math.hypot(dc, dr);
-const maxDist = Math.hypot(3.5, 2.5);
-const delay = (dist / maxDist) * 0.8;       // 0 → 0.8s
-const localT = Math.max(0, (t - rippleStart - delay) / 0.7);
-const opacity = expoOut(Math.min(1, localT));
+const col = i % 8,
+  row = Math.floor(i / 8)
+const dc = col - 3.5,
+  dr = row - 2.5 // 到中心的 offset
+const dist = Math.hypot(dc, dr)
+const maxDist = Math.hypot(3.5, 2.5)
+const delay = (dist / maxDist) * 0.8 // 0 → 0.8s
+const localT = Math.max(0, (t - rippleStart - delay) / 0.7)
+const opacity = expoOut(Math.min(1, localT))
 ```
 
 **核心参数**：
+
 - 总时长 1.7s（`T.s3_ripple: [8.3, 10.0]`）
 - 最大延迟 0.8s（中心最早出，角落最晚）
 - 每张卡入场时长 0.7s
@@ -100,16 +103,17 @@ const opacity = expoOut(Math.min(1, localT));
 
 ```js
 T.focuses = [
-  { start: 11.0, end: 12.7, idx: 2  },  // 1.7s
-  { start: 13.3, end: 15.0, idx: 3  },  // 1.7s
-  { start: 15.6, end: 17.3, idx: 10 },  // 1.7s
-  { start: 17.9, end: 19.6, idx: 16 },  // 1.7s
-];
+  { start: 11.0, end: 12.7, idx: 2 }, // 1.7s
+  { start: 13.3, end: 15.0, idx: 3 }, // 1.7s
+  { start: 15.6, end: 17.3, idx: 10 }, // 1.7s
+  { start: 17.9, end: 19.6, idx: 16 }, // 1.7s
+]
 ```
 
 **节奏规律**：每个 focus 1.7s，间隔 0.6s 喘息。总计 8s（11.0–19.6s）。
 
 **每次 focus 内部**：
+
 - In ramp: 0.4s（`expoOut`）
 - Hold: 中间 0.9s（`focusIntensity = 1`）
 - Out ramp: 0.4s（`easeOut`）
@@ -118,25 +122,26 @@ T.focuses = [
 
 ```js
 if (focusIntensity > 0) {
-  const dimOp = entryOp * (1 - 0.6 * focusIntensity);  // dim to 40%
-  const brt = 1 - 0.32 * focusIntensity;                // brightness 68%
-  const sat = 1 - 0.35 * focusIntensity;                // saturate 65%
-  card.style.filter = `brightness(${brt}) saturate(${sat})`;
+  const dimOp = entryOp * (1 - 0.6 * focusIntensity) // dim to 40%
+  const brt = 1 - 0.32 * focusIntensity // brightness 68%
+  const sat = 1 - 0.35 * focusIntensity // saturate 65%
+  card.style.filter = `brightness(${brt}) saturate(${sat})`
 }
 ```
 
 **不只是 opacity——同时 desaturate + darken**。这让前景 overlay 的色彩"跳出来"，而不是只是"变亮一点"。
 
 **Focus overlay 尺寸动画**：
+
 - 从 400×225（入场）→ 960×540（hold 态）
 - 外围有 3 层 shadow + 3px accent 色 outline ring，呈现"被框住的感觉"
 
 ### Pan（持续感让静止不无聊）
 
 ```js
-const panT = Math.max(0, t - 8.6);
-const panX = Math.sin(panT * 0.12) * 220 - panT * 8;
-const panY = Math.cos(panT * 0.09) * 120 - panT * 5;
+const panT = Math.max(0, t - 8.6)
+const panX = Math.sin(panT * 0.12) * 220 - panT * 8
+const panY = Math.cos(panT * 0.09) * 120 - panT * 5
 ```
 
 - 正弦波 + 线性 drift 双层运动——不是纯循环，每个时刻位置都不同
@@ -154,6 +159,7 @@ const panY = Math.cos(panT * 0.09) * 120 - panT * 5;
 `easeOut = 1 - (1-t)³`（平滑）vs `expoOut = 1 - 2^(-10t)`（爆发后迅速收敛）。
 
 **选择理由**：expoOut 的前 30% 很快达到 90%，更像物理阻尼，符合"重的东西落地"的直觉。特别适合：
+
 - 卡片入场（重量感）
 - Ripple 扩散（冲击波）
 - Brand 浮起（落定感）
@@ -163,10 +169,10 @@ const panY = Math.cos(panT * 0.09) * 120 - panT * 5;
 ### 2. **纸感底色 + 赤陶橙 accent（Anthropic 血统）**
 
 ```css
---bg: #F7F4EE;        /* 暖纸 */
---ink: #1D1D1F;       /* 几乎黑 */
---accent: #D97757;    /* 赤陶橙 */
---hairline: #E4DED2;  /* 暖线条 */
+--bg: #f7f4ee; /* 暖纸 */
+--ink: #1d1d1f; /* 几乎黑 */
+--accent: #d97757; /* 赤陶橙 */
+--hairline: #e4ded2; /* 暖线条 */
 ```
 
 **为什么**：温暖底色在 GIF 压缩后依然有"呼吸感"，不像纯白会显得"屏幕感"。赤陶橙作为唯一 accent 贯穿 terminal prompt、dir-card 选中、cursor、brand hyphen、focus ring——所有视觉锚点都被这一个色串起来。
@@ -176,8 +182,16 @@ const panY = Math.cos(panT * 0.09) * 120 - panT * 5;
 ### 3. **两档 Shadow 模拟深度，不用真 3D**
 
 ```css
-.gallery-card.depth-near { box-shadow: 0 32px 80px -22px rgba(60,40,20,0.22), ... }
-.gallery-card.depth-far  { box-shadow: 0 14px 40px -16px rgba(60,40,20,0.10), ... }
+.gallery-card.depth-near {
+  box-shadow:
+    0 32px 80px -22px rgba(60, 40, 20, 0.22),
+    ...;
+}
+.gallery-card.depth-far {
+  box-shadow:
+    0 14px 40px -16px rgba(60, 40, 20, 0.1),
+    ...;
+}
 ```
 
 用 `sin(i × 1.7) + cos(i × 0.73)` 确定性算法给每张卡分配 near/mid/far 三档 shadow——**视觉上有"三维堆叠"感，但每帧 transform 完全不变，GPU 消耗 0**。
@@ -187,13 +201,14 @@ const panY = Math.cos(panT * 0.09) * 120 - panT * 5;
 ### 4. **字重变化（font-variation-settings）比字号变化更电影感**
 
 ```js
-const wght = 100 + (700 - 100) * morphP;  // 100 → 700 over 0.9s
-wordmark.style.fontVariationSettings = `"wght" ${wght.toFixed(0)}`;
+const wght = 100 + (700 - 100) * morphP // 100 → 700 over 0.9s
+wordmark.style.fontVariationSettings = `"wght" ${wght.toFixed(0)}`
 ```
 
 Brand wordmark 从 Thin → Bold 用 0.9s 渐变，配合 letter-spacing 微调（-0.045 → -0.048em）。
 
 **为什么比放大缩小好**：
+
 - 放大缩小观众看过太多，预期固化
 - 字重变化是"内在的充实感"，像气球被吹满，而不是"被推近"
 - variable fonts 是 2020+ 才普及的特性，观众下意识感觉"现代"
@@ -205,6 +220,7 @@ Brand wordmark 从 Thin → Bold 用 0.9s 渐变，配合 letter-spacing 微调�
 Gallery 阶段左上角有个 `HUASHU · DESIGN` 小标识，16% opacity 色值，12px 字号，宽字距。
 
 **为什么加这个**：
+
 - Ripple 爆发后观众容易"失焦"不记得在看什么，左上角轻标示帮助 anchor
 - 比全屏大 logo 更高级——做品牌的人知道，品牌签名不需要喊
 - 在 GIF 被截屏分享时仍留下归属信号

@@ -13,7 +13,9 @@ const DashboardMock = () => {
           <div className="w-3 h-3 rounded-full bg-red-500" />
           <div className="w-3 h-3 rounded-full bg-yellow-500" />
           <div className="w-3 h-3 rounded-full bg-green-500" />
-          <span className="text-xs text-foreground/40 ml-2 font-mono">{t('dashboard.nombre_archivo')}</span>
+          <span className="text-xs text-foreground/40 ml-2 font-mono">
+            {t('dashboard.nombre_archivo')}
+          </span>
         </div>
         <div className="text-xs text-foreground/60 bg-muted px-3 py-1 rounded-full border border-border">
           {t('dashboard.live_data')}

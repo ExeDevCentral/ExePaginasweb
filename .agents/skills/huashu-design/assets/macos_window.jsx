@@ -61,36 +61,38 @@ const macosWindowStyles = {
   titleDark: {
     color: '#ddd',
   },
-};
+}
 
 function MacosWindow({ title = '', width = 900, height = 600, darkMode = false, children }) {
   return (
     <div style={{ ...macosWindowStyles.window, background: darkMode ? '#1e1e1e' : '#fff' }}>
-      <div style={{
-        ...macosWindowStyles.titleBar,
-        ...(darkMode ? macosWindowStyles.titleBarDark : {}),
-      }}>
+      <div
+        style={{
+          ...macosWindowStyles.titleBar,
+          ...(darkMode ? macosWindowStyles.titleBarDark : {}),
+        }}
+      >
         <div style={macosWindowStyles.trafficLights}>
           <div style={{ ...macosWindowStyles.light, ...macosWindowStyles.close }} />
           <div style={{ ...macosWindowStyles.light, ...macosWindowStyles.minimize }} />
           <div style={{ ...macosWindowStyles.light, ...macosWindowStyles.maximize }} />
         </div>
         {title && (
-          <div style={{
-            ...macosWindowStyles.title,
-            ...(darkMode ? macosWindowStyles.titleDark : {}),
-          }}>
+          <div
+            style={{
+              ...macosWindowStyles.title,
+              ...(darkMode ? macosWindowStyles.titleDark : {}),
+            }}
+          >
             {title}
           </div>
         )}
       </div>
-      <div style={{ ...macosWindowStyles.content, width, height }}>
-        {children}
-      </div>
+      <div style={{ ...macosWindowStyles.content, width, height }}>{children}</div>
     </div>
-  );
+  )
 }
 
 if (typeof window !== 'undefined') {
-  window.MacosWindow = MacosWindow;
+  window.MacosWindow = MacosWindow
 }

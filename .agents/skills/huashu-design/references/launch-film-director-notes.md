@@ -145,6 +145,7 @@ trace 不上的决策就是装饰，删掉。
 **4.5 写完不要立即实施——隔 30 分钟再读一遍**
 
 写作时大脑在「生产模式」，看不见 inconsistency。隔 30 分钟读自己写的 storyboard，会发现：
+
 - 某两镜功能重复（删一个）
 - 某镜叙事跳跃太大（加过渡）
 - emotional climax 位置错（移动）
@@ -172,10 +173,10 @@ trace 不上的决策就是装饰，删掉。
 URL 参数实现（必须在 Stage 组件加）：
 
 ```js
-const urlMatch = window.location.search.match(/[?&]t=([\d.]+)/);
-const frozenTime = urlMatch ? parseFloat(urlMatch[1]) : null;
-const [time, setTime] = useState(frozenTime != null ? frozenTime : 0);
-const [playing, setPlaying] = useState(frozenTime == null);
+const urlMatch = window.location.search.match(/[?&]t=([\d.]+)/)
+const frozenTime = urlMatch ? parseFloat(urlMatch[1]) : null
+const [time, setTime] = useState(frozenTime != null ? frozenTime : 0)
+const [playing, setPlaying] = useState(frozenTime == null)
 ```
 
 → 这样 `file:///path/animation.html?t=14.5` 直接 freeze 在 14.5 秒。
@@ -193,6 +194,7 @@ done
 ```
 
 每张截图必须验证：
+
 - [ ] 元素无溢出 1920×1080 canvas
 - [ ] 字距、行高 visually correct（不挤、不散）
 - [ ] 关键 typography 细节（句点颜色 / em-dash / italic / small caps）可识别
@@ -219,6 +221,7 @@ v5f · 草间彌生 Yayoi Kusama（圆点 + 重复 + 单一强色）
 ```
 
 每个 subagent 接到独立 brief：
+
 - 项目背景（同一份）
 - 必读参考（同一份 v5-director-notes.md 作为方法论模板）
 - **指定的艺术家 DNA**（色板 / 字体 / 视觉语言 / 节奏 / 招牌元素 / 反 slop 强化版本，每条 30-50 字）
@@ -228,6 +231,7 @@ v5f · 草间彌生 Yayoi Kusama（圆点 + 重复 + 单一强色）
 并行启动 + 后台运行，约 30-60 分钟出 6 套完整版本。
 
 完成后审校对比：
+
 1. 各版本核心美学决策表
 2. 关键帧并排对比（每版同时刻一帧）
 3. 投票：哪个最贴合用户的真实需求
@@ -238,16 +242,16 @@ v5f · 草间彌生 Yayoi Kusama（圆点 + 重复 + 单一强色）
 
 ## 8. 触发的几种典型场景
 
-| 用户场景 | 是否触发 | 备注 |
-|---------|---------|------|
-| 「做个 SaaS 升级宣传片」 | ✅ 触发 | 默认走完整流程 |
-| 「Apple 级别 / 超级碗品质感的视频」 | ✅ 触发 + 升级 | 强力推荐多视角并行 |
-| 「30 秒品牌 launch film」 | ✅ 触发 | |
-| 「这个项目 1 万字脚本再做动画」 | ✅ 触发 | 用户明确指明 |
-| 「简单 motion graphic，logo 转一下」 | ❌ 不触发 | 用 animations.md 标准流程 |
-| 「做个 onboarding 动画 demo」 | ❌ 不触发 | 用 animations.md |
-| 「教程视频带配音」 | ❌ 不触发 | 走 voiceover-pipeline.md |
-| 「单个 hero animation」 | ⚠️ 看复杂度 | 如果是高规格 hero，触发；普通 hero 用 hero-animation-case-study.md |
+| 用户场景                             | 是否触发       | 备注                                                               |
+| ------------------------------------ | -------------- | ------------------------------------------------------------------ |
+| 「做个 SaaS 升级宣传片」             | ✅ 触发        | 默认走完整流程                                                     |
+| 「Apple 级别 / 超级碗品质感的视频」  | ✅ 触发 + 升级 | 强力推荐多视角并行                                                 |
+| 「30 秒品牌 launch film」            | ✅ 触发        |                                                                    |
+| 「这个项目 1 万字脚本再做动画」      | ✅ 触发        | 用户明确指明                                                       |
+| 「简单 motion graphic，logo 转一下」 | ❌ 不触发      | 用 animations.md 标准流程                                          |
+| 「做个 onboarding 动画 demo」        | ❌ 不触发      | 用 animations.md                                                   |
+| 「教程视频带配音」                   | ❌ 不触发      | 走 voiceover-pipeline.md                                           |
+| 「单个 hero animation」              | ⚠️ 看复杂度    | 如果是高规格 hero，触发；普通 hero 用 hero-animation-case-study.md |
 
 ---
 
@@ -289,5 +293,5 @@ v5f · 草间彌生 Yayoi Kusama（圆点 + 重复 + 单一强色）
 
 ---
 
-*最后修订：2026-05-11*
-*真实案例：huashu-md-html v2.0 launch film（v5-director-notes.md）*
+_最后修订：2026-05-11_
+_真实案例：huashu-md-html v2.0 launch film（v5-director-notes.md）_

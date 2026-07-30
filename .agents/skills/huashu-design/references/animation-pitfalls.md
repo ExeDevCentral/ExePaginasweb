@@ -9,6 +9,7 @@
 **踩的坑**：一个 sentence-wrap 元素包了 3 个 bracket-layer（`position: absolute`）。没给 sentence-wrap 设 `position: relative`，结果 absolute 的 bracket 以 `.canvas` 为坐标系，飘到屏幕底部 200px 外。
 
 **规则**：
+
 - 任何包含 `position: absolute` 子元素的容器，**必须**显式 `position: relative`
 - 即使视觉上不需要「偏移」，也要写 `position: relative` 作为坐标系锚点
 - 如果你在写 `.parent { ... }`，其子元素里有 `.child { position: absolute }`，下意识给 parent 加 relative
@@ -20,6 +21,7 @@
 **踩的坑**：想用 `␣` (U+2423 OPEN BOX) 可视化「空格 token」。Noto Serif SC / Cormorant Garamond 都没这个字形，渲染为空白/豆腐，观众完全看不到。
 
 **规则**：
+
 - **动画里出现的每个字符，都必须在你选定的字体里存在**
 - 常见稀有字符黑名单：`␣ ␀ ␐ ␋ ␨ ↩ ⏎ ⌘ ⌥ ⌃ ⇧ ␦ ␖ ␛`
 - 要表达「空格 / 回车 / 制表符」这类元字符，用 **CSS 构造的语义盒子**：
@@ -45,32 +47,38 @@
 **踩的坑**：代码里 `const N = 6` 个 tokens，但 CSS 写死 `grid-template-columns: 80px repeat(5, 1fr)`。结果第 6 个 token 没有 column，整个矩阵错位。
 
 **规则**：
+
 - 当 count 从 JS 数组来（`TOKENS.length`），CSS 模板也应该数据驱动
 - 方案 A：用 CSS 变量从 JS 注入
   ```js
-  el.style.setProperty('--cols', N);
+  el.style.setProperty('--cols', N)
   ```
   ```css
-  .grid { grid-template-columns: 80px repeat(var(--cols), 1fr); }
+  .grid {
+    grid-template-columns: 80px repeat(var(--cols), 1fr);
+  }
   ```
 - 方案 B：用 `grid-auto-flow: column` 让浏览器自动扩展
-- **禁用「固定数字 +  JS 常量」的组合**，N 改了 CSS 不会同步更新
+- **禁用「固定数字 + JS 常量」的组合**，N 改了 CSS 不会同步更新
 
 ## 4. 过渡断层 —— 场景切换要连续
 
 **踩的坑**：zoom1 (13-19s) → zoom2 (19.2-23s) 之间，主句子已经 hidden，zoom1 fade out（0.6s）+ zoom2 fade in（0.6s）+ stagger delay（0.2s+）= 约 1 秒纯空白画面。观众以为动画卡住了。
 
 **规则**：
+
 - 连续切换场景时，fade out 和 fade in 要**交叉重叠**，不是前一个完全消失再开始下一个
+
   ```js
   // 差：
-  if (t >= 19) hideZoom('zoom1');      // 19.0s out
-  if (t >= 19.4) showZoom('zoom2');    // 19.4s in → 中间 0.4s 空白
+  if (t >= 19) hideZoom('zoom1') // 19.0s out
+  if (t >= 19.4) showZoom('zoom2') // 19.4s in → 中间 0.4s 空白
 
   // 好：
-  if (t >= 18.6) hideZoom('zoom1');    // 提前 0.4s 开始 fade out
-  if (t >= 18.6) showZoom('zoom2');    // 同时 fade in（cross-fade）
+  if (t >= 18.6) hideZoom('zoom1') // 提前 0.4s 开始 fade out
+  if (t >= 18.6) showZoom('zoom2') // 同时 fade in（cross-fade）
   ```
+
 - 或者用一个「锚点元素」（如主句子）作为场景之间的视觉连接，zoom 切换期间它短暂回显
 - 配 CSS transition 的 duration 算清楚，避免 transition 还没结束就触发下一个
 
@@ -79,16 +87,27 @@
 **踩的坑**：用 `setTimeout` + `fireOnce(key, fn)` 链式触发动画状态。正常播放没问题，但做逐帧录制/seek到任意时间点时，之前的 setTimeout 已经执行过就无法「回到过去」。
 
 **规则**：
+
 - `render(t)` 函数理想上是 **pure function**：给定 t 输出唯一 DOM 状态
 - 如果必须用副作用（如 class 切换），用 `fired` set 配合显式 reset：
   ```js
-  const fired = new Set();
-  function fireOnce(key, fn) { if (!fired.has(key)) { fired.add(key); fn(); } }
-  function reset() { fired.clear(); /* 清所有 .show class */ }
+  const fired = new Set()
+  function fireOnce(key, fn) {
+    if (!fired.has(key)) {
+      fired.add(key)
+      fn()
+    }
+  }
+  function reset() {
+    fired.clear() /* 清所有 .show class */
+  }
   ```
 - 暴露 `window.__seek(t)` 供 Playwright / 调试用：
   ```js
-  window.__seek = (t) => { reset(); render(t); };
+  window.__seek = (t) => {
+    reset()
+    render(t)
+  }
   ```
 - 动画相关的 setTimeout 不要跨越 >1 秒，否则 seek 回跳时会乱套
 
@@ -97,6 +116,7 @@
 **踩的坑**：页面一 DOMContentLoaded 就调用 `charRect(idx)` 测量 bracket 位置，字体还没加载，每个字符宽度是 fallback 字体的宽度，位置全错。等字体一加载（约 500ms 后），bracket 的 `left: Xpx` 还是老值，永久偏移。
 
 **规则**：
+
 - 任何依赖 DOM 测量（`getBoundingClientRect`、`offsetWidth`）的布局代码，**必须**包在 `document.fonts.ready.then()` 里
   ```js
   document.fonts.ready.then(() => {
@@ -114,6 +134,7 @@
 **踩的坑**：Playwright `recordVideo` 默认 25fps，从 context 创建就开始录。页面加载、字体加载的前 2 秒都被录进去。交付时视频前面 2 秒空白/闪白。
 
 **规则**：
+
 - 提供 `render-video.js` 工具处理：warmup navigate → reload 重启动画 → 等 duration → ffmpeg trim head + 转 H.264 MP4
 - 动画的**第 0 帧**要是最终布局已就位的完整初始状态（不是空白或加载中）
 - 想要 60fps？用 ffmpeg `minterpolate` 后处理，不指望浏览器源帧率
@@ -126,9 +147,10 @@
 **踩的坑**：用 `render-video.js` 3 个进程并行录 3 个 HTML。因为 TMP_DIR 只用 `Date.now()` 命名，3 个进程同毫秒启动时共用同一个 tmp 目录。最先完成的进程清理 tmp，另外两个读目录时 `ENOENT`，全部崩溃。
 
 **规则**：
+
 - 任何多进程可能共用的临时目录，命名必须带 **PID 或随机后缀**：
   ```js
-  const TMP_DIR = path.join(DIR, '.video-tmp-' + Date.now() + '-' + process.pid);
+  const TMP_DIR = path.join(DIR, '.video-tmp-' + Date.now() + '-' + process.pid)
   ```
 - 如果确实想多文件并行，用 shell 的 `&` + `wait` 而不是在一个 node 脚本里 fork
 - 批量录多个 HTML 时，保守做法：**串行**运行（2 个以内可并行，3 个以上老实排队）
@@ -138,6 +160,7 @@
 **踩的坑**：动画 HTML 加了 `.progress` 进度条、`.replay` 重播按钮、`.counter` 时间戳，方便人类调试播放。录成 MP4 交付时这些元素出现在视频底部，像把开发者工具截进去了一样。
 
 **规则**：
+
 - HTML 里给人类用的「chrome 元素」（progress bar / replay button / footer / masthead / counter / phase labels）和视频内容本体分开管理
 - **约定 class 名** `.no-record`：任何带这个 class 的元素，录屏脚本自动隐藏
 - 脚本端（`render-video.js`）默认注入 CSS 隐藏常见 chrome class 名：
@@ -152,27 +175,29 @@
 **踩的坑**：`render-video.js` 的旧流程 `goto → wait fonts 1.5s → reload → wait duration`。录制从 context 创建就开始，warmup 阶段动画已经播了一段，reload 后从 0 重启。结果视频前几秒是「动画中段 + 切换 + 动画从 0 开始」，重复感强。
 
 **规则**：
+
 - **Warmup 和 Record 必须用独立的 context**：
   - Warmup context（无 `recordVideo` 选项）：只负责 load url、等字体、然后 close
   - Record context（有 `recordVideo`）：fresh 状态开始，animation 从 t=0 开始录
 - ffmpeg `-ss trim` 只能裁 Playwright 的一点点 startup latency（~0.3s），**不能**用来掩盖 warmup 帧；源头要干净
 - 录制 context 关闭 = webm 文件写入磁盘，这是 Playwright 的约束
 - 相关代码模式：
+
   ```js
   // Phase 1: warmup (throwaway)
-  const warmupCtx = await browser.newContext({ viewport });
-  const warmupPage = await warmupCtx.newPage();
-  await warmupPage.goto(url, { waitUntil: 'networkidle' });
-  await warmupPage.waitForTimeout(1200);
-  await warmupCtx.close();
+  const warmupCtx = await browser.newContext({ viewport })
+  const warmupPage = await warmupCtx.newPage()
+  await warmupPage.goto(url, { waitUntil: 'networkidle' })
+  await warmupPage.waitForTimeout(1200)
+  await warmupCtx.close()
 
   // Phase 2: record (fresh)
-  const recordCtx = await browser.newContext({ viewport, recordVideo });
-  const page = await recordCtx.newPage();
-  await page.goto(url, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(DURATION * 1000);
-  await page.close();
-  await recordCtx.close();
+  const recordCtx = await browser.newContext({ viewport, recordVideo })
+  const page = await recordCtx.newPage()
+  await page.goto(url, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(DURATION * 1000)
+  await page.close()
+  await recordCtx.close()
   ```
 
 ## 11. 画面内别画「伪 chrome」—— 装饰版 player UI 与真 chrome 撞车
@@ -187,10 +212,10 @@
 
 **元素归属测试**（每个画进 canvas 的元素必须能回答）：
 
-| 它属于什么 | 处理 |
-|------------|------|
-| 某一幕的叙事内容 | OK，留着 |
-| 全局 chrome（控制/调试用） | 加 `.no-record` class，导出时隐藏 |
+| 它属于什么                        | 处理                                       |
+| --------------------------------- | ------------------------------------------ |
+| 某一幕的叙事内容                  | OK，留着                                   |
+| 全局 chrome（控制/调试用）        | 加 `.no-record` class，导出时隐藏          |
 | **既不属于任何幕，又不是 chrome** | **删**。这就是无主之物，必然是 filler slop |
 
 **自检（交付前 3 秒）**：截一张静态图，问自己——
@@ -211,76 +236,84 @@
 
 Playwright `recordVideo` 从 `newContext()` 那一刻就开始写 WebM，此时 Babel/React/字体加载共耗时 L 秒（2-6s）。录屏脚本等 `window.__ready = true` 作为「动画从这里开始」的锚点——它和动画 `time = 0` 必须严格 pair。有两种常见错法：
 
-| 错法 | 症状 |
-|------|------|
-| `__ready` 在 `useEffect` 或同步 setup 阶段设（在 tick 第一帧之前） | 录屏脚本以为动画开始了，实际 WebM 还在录空白页 → **前置空白** |
-| tick 的 `lastTick = performance.now()` 在**脚本顶层**初始化 | 字体加载 L 秒被算进首帧 `dt`，`time` 瞬间跳到 L → 录屏全程滞后 L 秒 → **起点偏移** |
+| 错法                                                               | 症状                                                                               |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| `__ready` 在 `useEffect` 或同步 setup 阶段设（在 tick 第一帧之前） | 录屏脚本以为动画开始了，实际 WebM 还在录空白页 → **前置空白**                      |
+| tick 的 `lastTick = performance.now()` 在**脚本顶层**初始化        | 字体加载 L 秒被算进首帧 `dt`，`time` 瞬间跳到 L → 录屏全程滞后 L 秒 → **起点偏移** |
 
 **✅ 正确的完整 starter tick 模板**（手写动画必须用这个骨架）：
 
 ```js
 // ━━━━━━ state ━━━━━━
-let time = 0;
-let playing = false;   // ❗ 默认不播，等字体 ready 再启动
-let lastTick = null;   // ❗ sentinel——tick 首帧时 dt 强制为 0（别用 performance.now()）
-const fired = new Set();
+let time = 0
+let playing = false // ❗ 默认不播，等字体 ready 再启动
+let lastTick = null // ❗ sentinel——tick 首帧时 dt 强制为 0（别用 performance.now()）
+const fired = new Set()
 
 // ━━━━━━ tick ━━━━━━
 function tick(now) {
   if (lastTick === null) {
-    lastTick = now;
-    window.__ready = true;   // ✅ pair：「录屏起点」与「动画 t=0」同一帧
-    render(0);               // 再渲一次确保 DOM 就绪（此时字体已 ready）
-    requestAnimationFrame(tick);
-    return;
+    lastTick = now
+    window.__ready = true // ✅ pair：「录屏起点」与「动画 t=0」同一帧
+    render(0) // 再渲一次确保 DOM 就绪（此时字体已 ready）
+    requestAnimationFrame(tick)
+    return
   }
-  const dt = (now - lastTick) / 1000;   // 首帧之后 dt 才开始推进
-  lastTick = now;
+  const dt = (now - lastTick) / 1000 // 首帧之后 dt 才开始推进
+  lastTick = now
 
   if (playing) {
-    let t = time + dt;
+    let t = time + dt
     if (t >= DURATION) {
-      t = window.__recording ? DURATION - 0.001 : 0;  // 录制时不 loop，留 0.001s 保留末帧
-      if (!window.__recording) fired.clear();
+      t = window.__recording ? DURATION - 0.001 : 0 // 录制时不 loop，留 0.001s 保留末帧
+      if (!window.__recording) fired.clear()
     }
-    time = t;
-    render(time);
+    time = t
+    render(time)
   }
-  requestAnimationFrame(tick);
+  requestAnimationFrame(tick)
 }
 
 // ━━━━━━ boot ━━━━━━
 // 不要在顶层立即 rAF——等字体加载完才启动
 document.fonts.ready.then(() => {
-  render(0);                 // 先把初始画面画出来（字体已就绪）
-  playing = true;
-  requestAnimationFrame(tick);  // 首次 tick 会 pair __ready + t=0
-});
+  render(0) // 先把初始画面画出来（字体已就绪）
+  playing = true
+  requestAnimationFrame(tick) // 首次 tick 会 pair __ready + t=0
+})
 
 // ━━━━━━ seek 接口（供 render-video 防御性矫正用）━━━━━━
-window.__seek = (t) => { fired.clear(); time = t; lastTick = null; render(t); };
+window.__seek = (t) => {
+  fired.clear()
+  time = t
+  lastTick = null
+  render(t)
+}
 ```
 
 **为什么这个模板对**：
 
-| 环节 | 为什么必须这样 |
-|------|-------------|
-| `lastTick = null` + 首帧 `return` | 避免「脚本加载到 tick 首次执行」的 L 秒被算进动画时间 |
-| `playing = false` 默认 | 字体加载期间 `tick` 即使运行也不推进 time，避免渲染错位 |
-| `__ready` 在 tick 首帧设 | 录屏脚本此刻开始计时，对应的画面是动画真正的 t=0 |
-| `document.fonts.ready.then(...)` 里才启动 tick | 规避字体 fallback 宽度测量、避免首帧字体跳变 |
-| `window.__seek` 存在 | 让 `render-video.js` 可以主动矫正——第二道防线 |
+| 环节                                           | 为什么必须这样                                          |
+| ---------------------------------------------- | ------------------------------------------------------- |
+| `lastTick = null` + 首帧 `return`              | 避免「脚本加载到 tick 首次执行」的 L 秒被算进动画时间   |
+| `playing = false` 默认                         | 字体加载期间 `tick` 即使运行也不推进 time，避免渲染错位 |
+| `__ready` 在 tick 首帧设                       | 录屏脚本此刻开始计时，对应的画面是动画真正的 t=0        |
+| `document.fonts.ready.then(...)` 里才启动 tick | 规避字体 fallback 宽度测量、避免首帧字体跳变            |
+| `window.__seek` 存在                           | 让 `render-video.js` 可以主动矫正——第二道防线           |
 
 **录屏脚本端的对应防御**：
+
 1. `addInitScript` 注入 `window.__recording = true`（先于 page goto）
 2. `waitForFunction(() => window.__ready === true)`，记录此刻偏移作为 ffmpeg trim
 3. **额外**：`__ready` 之后主动 `page.evaluate(() => window.__seek && window.__seek(0))`，把 HTML 可能的 time 偏差强制归零——这是第二道防线，对付不严格遵守 starter 模板的 HTML
 
 **验证方法**：导出 MP4 后
+
 ```bash
 ffmpeg -i video.mp4 -ss 0 -vframes 1 frame-0.png
 ffmpeg -i video.mp4 -ss $DURATION-0.1 -vframes 1 frame-end.png
 ```
+
 首帧必须是动画 t=0 的初始状态（不是中段，不是黑），末帧必须是动画终态（不是第二轮 loop 的某个时刻）。
 
 **参考实现**：`assets/animations.jsx` 的 Stage 组件、`scripts/render-video.js` 都已按此协议实现。手写 HTML 必须套 starter tick 模板——每一行都是防过具体 bug。
@@ -294,15 +327,19 @@ ffmpeg -i video.mp4 -ss $DURATION-0.1 -vframes 1 frame-end.png
 **规则**：
 
 1. **录制脚本**：在 `addInitScript` 里注入 `window.__recording = true`（先于 page goto）：
+
    ```js
-   await recordCtx.addInitScript(() => { window.__recording = true; });
+   await recordCtx.addInitScript(() => {
+     window.__recording = true
+   })
    ```
 
 2. **Stage 组件**：识别这个信号，强制 loop=false：
+
    ```js
-   const effectiveLoop = (typeof window !== 'undefined' && window.__recording) ? false : loop;
+   const effectiveLoop = typeof window !== 'undefined' && window.__recording ? false : loop
    // ...
-   if (next >= duration) return effectiveLoop ? 0 : duration - 0.001;
+   if (next >= duration) return effectiveLoop ? 0 : duration - 0.001
    //                                                       ↑ 留 0.001 防止 Sprite end=duration 被关掉
    ```
 
@@ -326,6 +363,7 @@ ffmpeg -i video.mp4 -ss $DURATION-0.1 -vframes 1 frame-end.png
 - 加 `-profile:v high -level 4.0` 提升 H.264 通用兼容性
 
 **`convert-formats.sh` 已默认改成兼容模式**。如果你需要插帧高质量，加 `--minterpolate` flag：
+
 ```bash
 bash convert-formats.sh input.mp4 --minterpolate
 ```

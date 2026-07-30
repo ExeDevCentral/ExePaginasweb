@@ -25,6 +25,7 @@ python ~/.claude/skills/huashu-design/scripts/verify.py path/to/design.html
 ```
 
 这个脚本会：
+
 1. 用headless chromium打开HTML
 2. 截图保存到项目目录
 3. 抓取控制台错误

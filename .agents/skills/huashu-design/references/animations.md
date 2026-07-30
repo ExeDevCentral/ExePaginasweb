@@ -19,27 +19,31 @@
 ```html
 <script type="text/babel" src="animations.jsx"></script>
 <script type="text/babel">
-  const { Stage, Sprite, useTime, useSprite, Easing, interpolate } = window.Animations;
+  const { Stage, Sprite, useTime, useSprite, Easing, interpolate } = window.Animations
 
   function Title() {
-    const { t } = useSprite();  // 本地进度 0→1
-    const opacity = interpolate(t, [0, 1], [0, 1], Easing.easeOut);
-    const y = interpolate(t, [0, 1], [40, 0], Easing.easeOut);
+    const { t } = useSprite() // 本地进度 0→1
+    const opacity = interpolate(t, [0, 1], [0, 1], Easing.easeOut)
+    const y = interpolate(t, [0, 1], [40, 0], Easing.easeOut)
     return (
-      <h1 style={{ 
-        opacity, 
-        transform: `translateY(${y}px)`,
-        fontSize: 120,
-        fontWeight: 900,
-      }}>
+      <h1
+        style={{
+          opacity,
+          transform: `translateY(${y}px)`,
+          fontSize: 120,
+          fontWeight: 900,
+        }}
+      >
         Hello.
       </h1>
-    );
+    )
   }
 
   function Scene() {
     return (
-      <Stage duration={10}>  {/* 10秒动画 */}
+      <Stage duration={10}>
+        {' '}
+        {/* 10秒动画 */}
         <Sprite start={0} end={3}>
           <Title />
         </Sprite>
@@ -48,11 +52,11 @@
         </Sprite>
         {/* ... */}
       </Stage>
-    );
+    )
   }
 
-  const root = ReactDOM.createRoot(document.getElementById('root'));
-  root.render(<Scene />);
+  const root = ReactDOM.createRoot(document.getElementById('root'))
+  root.render(<Scene />)
 </script>
 ```
 
@@ -62,9 +66,9 @@
 
 ```jsx
 function FadeIn({ children }) {
-  const { t } = useSprite();
-  const opacity = interpolate(t, [0, 0.3], [0, 1], Easing.easeOut);
-  return <div style={{ opacity }}>{children}</div>;
+  const { t } = useSprite()
+  const opacity = interpolate(t, [0, 0.3], [0, 1], Easing.easeOut)
+  return <div style={{ opacity }}>{children}</div>
 }
 ```
 
@@ -74,23 +78,25 @@ function FadeIn({ children }) {
 
 ```jsx
 function SlideIn({ children, from = 'left' }) {
-  const { t } = useSprite();
-  const progress = interpolate(t, [0, 0.4], [0, 1], Easing.easeOut);
-  const offset = (1 - progress) * 100;
+  const { t } = useSprite()
+  const progress = interpolate(t, [0, 0.4], [0, 1], Easing.easeOut)
+  const offset = (1 - progress) * 100
   const directions = {
     left: `translateX(-${offset}px)`,
     right: `translateX(${offset}px)`,
     top: `translateY(-${offset}px)`,
     bottom: `translateY(${offset}px)`,
-  };
+  }
   return (
-    <div style={{
-      transform: directions[from],
-      opacity: progress,
-    }}>
+    <div
+      style={{
+        transform: directions[from],
+        opacity: progress,
+      }}
+    >
       {children}
     </div>
-  );
+  )
 }
 ```
 
@@ -98,9 +104,9 @@ function SlideIn({ children, from = 'left' }) {
 
 ```jsx
 function Typewriter({ text }) {
-  const { t } = useSprite();
-  const charCount = Math.floor(text.length * Math.min(t * 2, 1));
-  return <span>{text.slice(0, charCount)}</span>;
+  const { t } = useSprite()
+  const charCount = Math.floor(text.length * Math.min(t * 2, 1))
+  return <span>{text.slice(0, charCount)}</span>
 }
 ```
 
@@ -108,10 +114,10 @@ function Typewriter({ text }) {
 
 ```jsx
 function CountUp({ from = 0, to = 100, duration = 0.6 }) {
-  const { t } = useSprite();
-  const progress = interpolate(t, [0, duration], [0, 1], Easing.easeOut);
-  const value = Math.floor(from + (to - from) * progress);
-  return <span>{value.toLocaleString()}</span>;
+  const { t } = useSprite()
+  const progress = interpolate(t, [0, duration], [0, 1], Easing.easeOut)
+  const value = Math.floor(from + (to - from) * progress)
+  return <span>{value.toLocaleString()}</span>
 }
 ```
 
@@ -141,7 +147,7 @@ function Scene() {
         <Caption />
       </Sprite>
     </Stage>
-  );
+  )
 }
 ```
 
@@ -149,16 +155,16 @@ function Scene() {
 
 预设的easing curves：
 
-| Easing | 特性 | 用在 |
-|--------|------|------|
-| `linear` | 匀速 | 滚动字幕、持续动画 |
-| `easeIn` | 慢→快 | 退场消失 |
-| `easeOut` | 快→慢 | 入场出现 |
-| `easeInOut` | 慢→快→慢 | 位置变化 |
-| **`expoOut`** ⭐ | **指数缓出** | **Anthropic 级主 easing**（物理重量感）|
-| **`overshoot`** ⭐ | **弹性回弹** | **Toggle / 按钮弹出 / 强调交互** |
-| `spring` | 弹簧 | 交互反馈、几何体归位 |
-| `anticipation` | 先反向再正向 | 强调动作 |
+| Easing             | 特性         | 用在                                    |
+| ------------------ | ------------ | --------------------------------------- |
+| `linear`           | 匀速         | 滚动字幕、持续动画                      |
+| `easeIn`           | 慢→快        | 退场消失                                |
+| `easeOut`          | 快→慢        | 入场出现                                |
+| `easeInOut`        | 慢→快→慢     | 位置变化                                |
+| **`expoOut`** ⭐   | **指数缓出** | **Anthropic 级主 easing**（物理重量感） |
+| **`overshoot`** ⭐ | **弹性回弹** | **Toggle / 按钮弹出 / 强调交互**        |
+| `spring`           | 弹簧         | 交互反馈、几何体归位                    |
+| `anticipation`     | 先反向再正向 | 强调动作                                |
 
 **默认主 easing 用 `expoOut`**（不是 `easeOut`）—— 见 `animation-best-practices.md` §2。
 入场用 `expoOut`、出场用 `easeIn`、toggle 用 `overshoot`——Anthropic 级动画的基础规律。
@@ -166,21 +172,25 @@ function Scene() {
 ## 节奏和时长指南
 
 ### 微交互（0.1-0.3秒）
+
 - 按钮hover
 - 卡片expand
 - Tooltip出现
 
 ### UI过渡（0.3-0.8秒）
+
 - 页面切换
 - 模态框出现
 - 列表item加入
 
 ### 叙事动画（2-10秒每段）
+
 - 概念解释的一个phase
 - 数据图表的reveal
 - 场景转换
 
 ### 单段叙事动画最长不超过10秒
+
 人类注意力有限。10秒讲一件事，讲完换下一件。
 
 ## 设计动画的思考顺序
@@ -226,6 +236,7 @@ function Scene() {
 
 **录制成视频**
 → 用 skill 自带工具链（一条命令出三种格式）：见 `video-export.md`
+
 - `scripts/render-video.js` — HTML → 25fps MP4（Playwright + ffmpeg）
 - `scripts/convert-formats.sh` — 25fps MP4 → 60fps MP4 + 优化 GIF
 - 想要更精确的帧渲染？让 render(t) 成为 pure function，见 `animation-pitfalls.md` 第 5 条

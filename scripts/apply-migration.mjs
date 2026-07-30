@@ -25,7 +25,8 @@ if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
 }
 
 // Leer el archivo SQL a ejecutar
-const migrationFile = process.argv[2] || join(root, 'supabase', 'migrations', '011_fix_tickets_and_notifications.sql')
+const migrationFile =
+  process.argv[2] || join(root, 'supabase', 'migrations', '011_fix_tickets_and_notifications.sql')
 const sql = readFileSync(migrationFile, 'utf-8')
 
 // Eliminar comentarios de línea y bloques vacíos para limpiar
@@ -38,8 +39,8 @@ const endpoint = `https://${projectRef}.supabase.co/rest/v1/rpc/exec_sql`
 // Dividir el SQL en statements individuales para ejecutar uno a uno
 const statements = sql
   .split(/;\s*\n/)
-  .map(s => s.trim())
-  .filter(s => s.length > 0 && !s.startsWith('--'))
+  .map((s) => s.trim())
+  .filter((s) => s.length > 0 && !s.startsWith('--'))
 
 console.log(`\n📦 Aplicando migración: ${migrationFile}`)
 console.log(`🔗 Proyecto: ${projectRef}`)
@@ -55,9 +56,9 @@ async function runSQLViaRPC(sqlText) {
   const res = await fetch(`https://${projectRef}.supabase.co/rest/v1/`, {
     method: 'GET',
     headers: {
-      'apikey': SERVICE_ROLE_KEY,
-      'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
-    }
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
+    },
   })
   return res.ok
 }
@@ -85,9 +86,9 @@ async function applySQL() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'apikey': SERVICE_ROLE_KEY,
-      'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
-      'Prefer': 'return=minimal',
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
+      Prefer: 'return=minimal',
     },
     body: JSON.stringify({ query: fullSQL }),
   })
@@ -130,8 +131,8 @@ async function applyViaFetch() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SERVICE_ROLE_KEY,
-          'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
+          apikey: SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
         },
         body: JSON.stringify({ sql: stmt }),
       })
@@ -196,14 +197,18 @@ async function runViaManagementAPI() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
+      Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
     },
     body: JSON.stringify({ query: sql }),
   })
 
   const body = await res.text()
   let parsed
-  try { parsed = JSON.parse(body) } catch { parsed = body }
+  try {
+    parsed = JSON.parse(body)
+  } catch {
+    parsed = body
+  }
 
   if (res.ok) {
     console.log('✅ Management API: migración aplicada exitosamente')

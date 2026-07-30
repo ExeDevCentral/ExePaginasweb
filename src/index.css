@@ -5,25 +5,25 @@
 :root {
   color-scheme: light;
   /* Paleta crema premium por defecto — amigable con la vista */
-  --background: #FDF8F3;
-  --foreground: #2D2B2A;
-  --card: #F6E9D2;
-  --card-foreground: #2D2B2A;
-  --popover: #FFFFFF;
-  --popover-foreground: #2D2B2A;
+  --background: #fdf8f3;
+  --foreground: #2d2b2a;
+  --card: #f6e9d2;
+  --card-foreground: #2d2b2a;
+  --popover: #ffffff;
+  --popover-foreground: #2d2b2a;
   --primary: #0ea5e9;
-  --primary-foreground: #FFFFFF;
-  --secondary: #F6E9D2;
-  --secondary-foreground: #2D2B2A;
-  --muted: #F6E9D2;
-  --muted-foreground: #7F8FA0;
-  --accent: #C4A0B4;
-  --accent-foreground: #FFFFFF;
+  --primary-foreground: #ffffff;
+  --secondary: #f6e9d2;
+  --secondary-foreground: #2d2b2a;
+  --muted: #f6e9d2;
+  --muted-foreground: #7f8fa0;
+  --accent: #c4a0b4;
+  --accent-foreground: #ffffff;
   --destructive: #ef4444;
-  --destructive-foreground: #FFFFFF;
-  --border: #E1B8A1;
-  --input: #E1B8A1;
-  --ring: #C4A0B4;
+  --destructive-foreground: #ffffff;
+  --border: #e1b8a1;
+  --input: #e1b8a1;
+  --ring: #c4a0b4;
   --radius: 0.5rem;
   --font-sans: Inter, sans-serif;
   --font-serif: Playfair Display, serif;
@@ -31,11 +31,11 @@
 
   /* Colores custom del diseño corporativo premium */
   --accent-cyan: #0ea5e9;
-  --accent-magenta: #C4A0B4;
+  --accent-magenta: #c4a0b4;
   --accent-yellow: #d4a017;
-  --primary-bg: #FDF8F3;
-  --primary-text: #2D2B2A;
-  --primary-secondary: #7F8FA0;
+  --primary-bg: #fdf8f3;
+  --primary-text: #2d2b2a;
+  --primary-secondary: #7f8fa0;
 
   /* Shadows */
   --shadow: 0px 5px 10px -2px hsl(0 0% 0% / 0.3), 0px 1px 2px -3px hsl(0 0% 0% / 0.3);
@@ -72,7 +72,6 @@
   --primary-text: #f8fafc;
   --primary-secondary: #8899aa;
 }
-
 
 @layer base {
   * {

@@ -102,9 +102,7 @@ const Products = () => {
             <ProductCard
               key={product.tKey}
               product={product}
-              onOpenDemo={() =>
-                openDemo(product.demoLink.replace('#demo-', '') as typeof demoType)
-              }
+              onOpenDemo={() => openDemo(product.demoLink.replace('#demo-', '') as typeof demoType)}
             />
           ))}
         </motion.div>

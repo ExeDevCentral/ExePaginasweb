@@ -33,36 +33,38 @@
  * 依赖：tts-doubao.mjs、ffmpeg、ffprobe
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { execFileSync, execSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import fs from 'node:fs'
+import path from 'node:path'
+import { execFileSync, execSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const SKILL_ROOT = path.resolve(__dirname, '..');
-const TTS_SCRIPT = path.join(__dirname, 'tts-doubao.mjs');
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const SKILL_ROOT = path.resolve(__dirname, '..')
+const TTS_SCRIPT = path.join(__dirname, 'tts-doubao.mjs')
 
 function parseArgs(argv) {
-  const args = {};
+  const args = {}
   for (let i = 2; i < argv.length; i++) {
-    const a = argv[i];
-    if (a === '--script') args.script = argv[++i];
-    else if (a === '--out-dir') args.outDir = argv[++i];
-    else if (a === '--help' || a === '-h') args.help = true;
+    const a = argv[i]
+    if (a === '--script') args.script = argv[++i]
+    else if (a === '--out-dir') args.outDir = argv[++i]
+    else if (a === '--help' || a === '-h') args.help = true
   }
-  return args;
+  return args
 }
 
 function usage() {
-  console.error(`
+  console.error(
+    `
 narrate-pipeline.mjs · L2 长解说总指挥
 
   --script <path>     解说稿 .md 文件（必填）
   --out-dir <path>    输出目录（必填）
 
 输出：<out-dir>/voiceover.mp3 + <out-dir>/timeline.json
-`.trim());
-  process.exit(1);
+`.trim()
+  )
+  process.exit(1)
 }
 
 /**
@@ -70,26 +72,26 @@ narrate-pipeline.mjs · L2 长解说总指挥
  * Returns { meta, scenes: [{ id, raw }] }
  */
 function parseScript(md) {
-  const meta = {};
-  let body = md;
-  const fmMatch = md.match(/^---\n([\s\S]*?)\n---\n/);
+  const meta = {}
+  let body = md
+  const fmMatch = md.match(/^---\n([\s\S]*?)\n---\n/)
   if (fmMatch) {
     for (const line of fmMatch[1].split('\n')) {
-      const idx = line.indexOf(':');
-      if (idx < 0) continue;
-      const key = line.slice(0, idx).trim();
-      const val = line.slice(idx + 1).trim();
-      meta[key] = val;
+      const idx = line.indexOf(':')
+      if (idx < 0) continue
+      const key = line.slice(0, idx).trim()
+      const val = line.slice(idx + 1).trim()
+      meta[key] = val
     }
-    body = md.slice(fmMatch[0].length);
+    body = md.slice(fmMatch[0].length)
   }
-  const scenes = [];
-  const re = /^##\s+([\w-]+)\s*\n([\s\S]*?)(?=^##\s+[\w-]+\s*\n|$(?![\r\n]))/gm;
-  let m;
+  const scenes = []
+  const re = /^##\s+([\w-]+)\s*\n([\s\S]*?)(?=^##\s+[\w-]+\s*\n|$(?![\r\n]))/gm
+  let m
   while ((m = re.exec(body)) !== null) {
-    scenes.push({ id: m[1], raw: m[2].trim() });
+    scenes.push({ id: m[1], raw: m[2].trim() })
   }
-  return { meta, scenes };
+  return { meta, scenes }
 }
 
 /**
@@ -105,90 +107,95 @@ function parseScript(md) {
  *   ]
  */
 function splitByCues(text) {
-  const chunks = [];
-  const re = /\[\[cue:([\w-]+)\]\]/g;
-  let lastIdx = 0;
-  let m;
+  const chunks = []
+  const re = /\[\[cue:([\w-]+)\]\]/g
+  let lastIdx = 0
+  let m
   while ((m = re.exec(text)) !== null) {
-    const before = text.slice(lastIdx, m.index).trim();
-    chunks.push({ text: before, cueAfter: m[1] });
-    lastIdx = m.index + m[0].length;
+    const before = text.slice(lastIdx, m.index).trim()
+    chunks.push({ text: before, cueAfter: m[1] })
+    lastIdx = m.index + m[0].length
   }
-  const tail = text.slice(lastIdx).trim();
-  chunks.push({ text: tail });
+  const tail = text.slice(lastIdx).trim()
+  chunks.push({ text: tail })
   // 过滤空文本块（cue 紧贴段首/段尾时）
-  return chunks.filter((c) => c.text.length > 0 || c.cueAfter);
+  return chunks.filter((c) => c.text.length > 0 || c.cueAfter)
 }
 
 function getDuration(filePath) {
-  const out = execFileSync('ffprobe', [
-    '-v', 'error',
-    '-show_entries', 'format=duration',
-    '-of', 'default=noprint_wrappers=1:nokey=1',
-    filePath,
-  ], { encoding: 'utf8' });
-  return parseFloat(out.trim());
+  const out = execFileSync(
+    'ffprobe',
+    [
+      '-v',
+      'error',
+      '-show_entries',
+      'format=duration',
+      '-of',
+      'default=noprint_wrappers=1:nokey=1',
+      filePath,
+    ],
+    { encoding: 'utf8' }
+  )
+  return parseFloat(out.trim())
 }
 
 function callTTS(text, outPath, opts) {
-  const args = ['--text', text, '--out', outPath];
-  if (opts.voice) args.push('--voice', opts.voice);
-  if (opts.speed) args.push('--speed', String(opts.speed));
+  const args = ['--text', text, '--out', outPath]
+  if (opts.voice) args.push('--voice', opts.voice)
+  if (opts.speed) args.push('--speed', String(opts.speed))
   const out = execFileSync('node', [TTS_SCRIPT, ...args], {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'inherit'],
-  });
-  return JSON.parse(out.trim());
+  })
+  return JSON.parse(out.trim())
 }
 
 function ffmpegConcat(inputs, output) {
   // 用 concat demuxer 合并相同编码的 mp3
-  const listFile = output + '.list';
-  fs.writeFileSync(
-    listFile,
-    inputs.map((p) => `file '${p.replace(/'/g, "'\\''")}'`).join('\n'),
-  );
-  execSync(
-    `ffmpeg -y -f concat -safe 0 -i "${listFile}" -c copy "${output}"`,
-    { stdio: ['ignore', 'pipe', 'pipe'] },
-  );
-  fs.unlinkSync(listFile);
+  const listFile = output + '.list'
+  fs.writeFileSync(listFile, inputs.map((p) => `file '${p.replace(/'/g, "'\\''")}'`).join('\n'))
+  execSync(`ffmpeg -y -f concat -safe 0 -i "${listFile}" -c copy "${output}"`, {
+    stdio: ['ignore', 'pipe', 'pipe'],
+  })
+  fs.unlinkSync(listFile)
 }
 
 function makeSilence(duration, outPath) {
   execSync(
     `ffmpeg -y -f lavfi -i anullsrc=r=24000:cl=mono -t ${duration} -q:a 9 -acodec libmp3lame "${outPath}"`,
-    { stdio: ['ignore', 'pipe', 'pipe'] },
-  );
+    { stdio: ['ignore', 'pipe', 'pipe'] }
+  )
 }
 
 async function main() {
-  const args = parseArgs(process.argv);
-  if (args.help || !args.script || !args.outDir) usage();
+  const args = parseArgs(process.argv)
+  if (args.help || !args.script || !args.outDir) usage()
 
-  const scriptPath = path.resolve(args.script);
-  const outDir = path.resolve(args.outDir);
-  const audioDir = path.join(outDir, 'audio');
-  const tmpDir = path.join(outDir, '.tmp');
-  fs.mkdirSync(audioDir, { recursive: true });
-  fs.mkdirSync(tmpDir, { recursive: true });
+  const scriptPath = path.resolve(args.script)
+  const outDir = path.resolve(args.outDir)
+  const audioDir = path.join(outDir, 'audio')
+  const tmpDir = path.join(outDir, '.tmp')
+  fs.mkdirSync(audioDir, { recursive: true })
+  fs.mkdirSync(tmpDir, { recursive: true })
 
-  const md = fs.readFileSync(scriptPath, 'utf8');
-  const { meta, scenes } = parseScript(md);
+  const md = fs.readFileSync(scriptPath, 'utf8')
+  const { meta, scenes } = parseScript(md)
   if (scenes.length === 0) {
-    console.error('错：解说稿没有 ## scene 段，至少一段。');
-    process.exit(1);
+    console.error('错：解说稿没有 ## scene 段，至少一段。')
+    process.exit(1)
   }
 
-  const voice = meta.voice || undefined;
-  const speed = meta.speed ? parseFloat(meta.speed) : 1.0;
-  const gap = meta.gap ? parseFloat(meta.gap) : 0.3;
+  const voice = meta.voice || undefined
+  const speed = meta.speed ? parseFloat(meta.speed) : 1.0
+  const gap = meta.gap ? parseFloat(meta.gap) : 0.3
 
-  console.error(`[narrate] script=${path.basename(scriptPath)} scenes=${scenes.length} voice=${voice || '(env)'} speed=${speed} gap=${gap}s`);
+  console.error(
+    `[narrate] script=${path.basename(scriptPath)} scenes=${scenes.length} voice=${voice || '(env)'} speed=${speed} gap=${gap}s`
+  )
 
   // 段间静音文件（共用一个）
-  const gapFile = path.join(tmpDir, 'gap.mp3');
-  if (gap > 0) makeSilence(gap, gapFile);
+  const gapFile = path.join(tmpDir, 'gap.mp3')
+  if (gap > 0) makeSilence(gap, gapFile)
 
   const timeline = {
     title: meta.title || path.basename(scriptPath, '.md'),
@@ -197,68 +204,70 @@ async function main() {
     gap,
     totalDuration: 0,
     scenes: [],
-  };
+  }
 
-  let cursor = 0;
-  const sceneAudioFiles = [];
+  let cursor = 0
+  const sceneAudioFiles = []
 
   for (let i = 0; i < scenes.length; i++) {
-    const scene = scenes[i];
-    console.error(`[narrate] (${i + 1}/${scenes.length}) scene="${scene.id}"`);
+    const scene = scenes[i]
+    console.error(`[narrate] (${i + 1}/${scenes.length}) scene="${scene.id}"`)
 
-    const chunks = splitByCues(scene.raw);
-    const chunkFiles = [];
-    const cueRecords = [];
-    const chunkRecords = []; // 每个 chunk 的实测 start/end 段内时间，用于字幕显示
-    let sceneInternalCursor = 0;
+    const chunks = splitByCues(scene.raw)
+    const chunkFiles = []
+    const cueRecords = []
+    const chunkRecords = [] // 每个 chunk 的实测 start/end 段内时间，用于字幕显示
+    let sceneInternalCursor = 0
 
     for (let j = 0; j < chunks.length; j++) {
-      const chunk = chunks[j];
+      const chunk = chunks[j]
       if (!chunk.text) {
         // 空文本块（cue 紧贴），跳过 TTS 但仍记录 cue 位置
         if (chunk.cueAfter) {
           cueRecords.push({
             id: chunk.cueAfter,
             offset: sceneInternalCursor,
-          });
+          })
         }
-        continue;
+        continue
       }
-      const chunkPath = path.join(tmpDir, `${scene.id}-${j}.mp3`);
-      const result = callTTS(chunk.text, chunkPath, { voice, speed });
-      const chunkStart = sceneInternalCursor;
-      chunkFiles.push(chunkPath);
-      sceneInternalCursor += result.duration;
+      const chunkPath = path.join(tmpDir, `${scene.id}-${j}.mp3`)
+      const result = callTTS(chunk.text, chunkPath, { voice, speed })
+      const chunkStart = sceneInternalCursor
+      chunkFiles.push(chunkPath)
+      sceneInternalCursor += result.duration
       chunkRecords.push({
         text: chunk.text,
         start: chunkStart,
         end: sceneInternalCursor,
         duration: result.duration,
-      });
-      console.error(`  chunk ${j}: ${result.duration.toFixed(2)}s · ${chunk.text.length} 字 · ${chunk.text.slice(0, 30)}${chunk.text.length > 30 ? '…' : ''}`);
+      })
+      console.error(
+        `  chunk ${j}: ${result.duration.toFixed(2)}s · ${chunk.text.length} 字 · ${chunk.text.slice(0, 30)}${chunk.text.length > 30 ? '…' : ''}`
+      )
       if (chunk.cueAfter) {
         cueRecords.push({
           id: chunk.cueAfter,
           offset: sceneInternalCursor,
-        });
+        })
       }
     }
 
     // 合并段内子段
-    const sceneAudio = path.join(audioDir, `${scene.id}.mp3`);
+    const sceneAudio = path.join(audioDir, `${scene.id}.mp3`)
     if (chunkFiles.length === 1) {
-      fs.copyFileSync(chunkFiles[0], sceneAudio);
+      fs.copyFileSync(chunkFiles[0], sceneAudio)
     } else {
-      ffmpegConcat(chunkFiles, sceneAudio);
+      ffmpegConcat(chunkFiles, sceneAudio)
     }
-    const sceneDuration = getDuration(sceneAudio);
+    const sceneDuration = getDuration(sceneAudio)
 
     // 拼接到总轨：先加 gap（除了第一段），再加 scene
     if (i > 0 && gap > 0) {
-      sceneAudioFiles.push(gapFile);
-      cursor += gap;
+      sceneAudioFiles.push(gapFile)
+      cursor += gap
     }
-    sceneAudioFiles.push(sceneAudio);
+    sceneAudioFiles.push(sceneAudio)
 
     timeline.scenes.push({
       id: scene.id,
@@ -280,36 +289,35 @@ async function main() {
         offset: c.offset,
         absoluteTime: cursor + c.offset,
       })),
-    });
+    })
 
-    cursor += sceneDuration;
+    cursor += sceneDuration
   }
 
   // 合并整轨
-  const voiceoverPath = path.join(outDir, 'voiceover.mp3');
-  ffmpegConcat(sceneAudioFiles, voiceoverPath);
-  timeline.totalDuration = getDuration(voiceoverPath);
-  timeline.voiceover = 'voiceover.mp3';
+  const voiceoverPath = path.join(outDir, 'voiceover.mp3')
+  ffmpegConcat(sceneAudioFiles, voiceoverPath)
+  timeline.totalDuration = getDuration(voiceoverPath)
+  timeline.voiceover = 'voiceover.mp3'
 
-  fs.writeFileSync(
-    path.join(outDir, 'timeline.json'),
-    JSON.stringify(timeline, null, 2),
-  );
+  fs.writeFileSync(path.join(outDir, 'timeline.json'), JSON.stringify(timeline, null, 2))
 
   // 清理 tmp
-  fs.rmSync(tmpDir, { recursive: true, force: true });
+  fs.rmSync(tmpDir, { recursive: true, force: true })
 
-  console.error(`\n[narrate] 完成。`);
-  console.error(`  voiceover: ${voiceoverPath}`);
-  console.error(`  timeline:  ${path.join(outDir, 'timeline.json')}`);
-  console.error(`  总时长:    ${timeline.totalDuration.toFixed(2)}s (${(timeline.totalDuration / 60).toFixed(2)} min)`);
-  console.error(`  段数:      ${timeline.scenes.length}`);
-  const totalCues = timeline.scenes.reduce((sum, s) => sum + s.cues.length, 0);
-  console.error(`  cue 数:    ${totalCues}`);
+  console.error(`\n[narrate] 完成。`)
+  console.error(`  voiceover: ${voiceoverPath}`)
+  console.error(`  timeline:  ${path.join(outDir, 'timeline.json')}`)
+  console.error(
+    `  总时长:    ${timeline.totalDuration.toFixed(2)}s (${(timeline.totalDuration / 60).toFixed(2)} min)`
+  )
+  console.error(`  段数:      ${timeline.scenes.length}`)
+  const totalCues = timeline.scenes.reduce((sum, s) => sum + s.cues.length, 0)
+  console.error(`  cue 数:    ${totalCues}`)
 }
 
 main().catch((err) => {
-  console.error(`narrate-pipeline 失败：${err.message}`);
-  console.error(err.stack);
-  process.exit(1);
-});
+  console.error(`narrate-pipeline 失败：${err.message}`)
+  console.error(err.stack)
+  process.exit(1)
+})

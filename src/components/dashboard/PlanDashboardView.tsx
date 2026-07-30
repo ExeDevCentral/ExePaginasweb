@@ -9,6 +9,7 @@ import { PLAN_THEMES } from './planDashboardConfig'
 import type { PlanTier } from './resolvePlanTier'
 import ServicePulseHub from './ServicePulseHub'
 import SupportTicketPanel from './SupportTicketPanel'
+import { useTranslation } from 'react-i18next'
 import {
   LiveBadge,
   MetricGrid,
@@ -50,6 +51,7 @@ export default function PlanDashboardView({
   refreshing,
   onLogout,
 }: PlanDashboardViewProps) {
+  const { t } = useTranslation()
   const theme = PLAN_THEMES[tier]
   const Icon = tier === 'premium' ? Crown : TIER_ICONS[tier]
   const nombre = cliente?.full_name?.split(' ')[0] ?? 'Cliente'
@@ -105,7 +107,7 @@ export default function PlanDashboardView({
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div>
               <div className="flex flex-wrap items-center gap-3 mb-4">
-                <LiveBadge label="Sistema online" />
+                <LiveBadge label={t('features.dashboard_online')} />
                 <span
                   className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-bold ${theme.border} ${theme.accent} bg-muted`}
                 >
@@ -114,7 +116,7 @@ export default function PlanDashboardView({
                 </span>
               </div>
               <p className="text-xs uppercase tracking-[0.35em] text-muted-foreground font-bold">
-                Panel de cliente
+                {t('nav.panel_cliente')}
               </p>
               <h1 className="mt-2 text-3xl sm:text-5xl font-montserrat font-black text-foreground">
                 Hola, {nombre}
@@ -131,14 +133,14 @@ export default function PlanDashboardView({
                 className="inline-flex items-center gap-2 rounded-xl border border-border bg-muted px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
               >
                 <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
-                Actualizar
+                {t('bookingdemo.estado_procesando')}
               </button>
               <button
                 type="button"
                 onClick={onLogout}
                 className="rounded-xl border border-border px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:text-accent-magenta transition-colors"
               >
-                Salir
+                {t('dashboard.salir')}
               </button>
             </div>
           </div>

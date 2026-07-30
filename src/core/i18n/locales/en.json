@@ -156,7 +156,15 @@
     "card_3_titulo": "Secure Infrastructure",
     "card_3_desc": "Cloud deployment (Edge Computing). SSL certificates and attack protection.",
     "card_4_titulo": "Technical SEO",
-    "card_4_desc": "Semantic structure and optimized Core Web Vitals to rank organically on Google."
+    "card_4_desc": "Semantic structure and optimized Core Web Vitals to rank organically on Google.",
+    "card_5_titulo": "Supabase Database & Auth",
+    "card_5_desc": "PostgreSQL 15 with Row Level Security (RLS), multi-tenant user authentication, and payment gateway integration.",
+    "card_6_titulo": "AI & Chatbot Engine",
+    "card_6_desc": "Integration with Groq Cloud API and AI engines for conversational assistants and smart automation.",
+    "card_7_titulo": "3D & Dynamic Animations",
+    "card_7_desc": "Three.js, React Three Fiber, and Framer Motion for immersive visual interfaces and micro-interactions.",
+    "card_8_titulo": "Native Multi-language (i18n)",
+    "card_8_desc": "Full internationalization architecture supporting 7 languages with instant locale switching."
   },
   "dashboard": {
     "reservas_hoy": "Bookings Today",

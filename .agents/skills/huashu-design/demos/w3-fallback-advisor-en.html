@@ -576,7 +576,6 @@
           const breakStart = 4.8
           if (t >= breakStart - 0.1) fgRow.style.opacity = 1
           else fgRow.style.opacity = 0
-
           ;[card1, card2, card3].forEach((card, i) => {
             const stagger = i * 0.18
             const cT = clamp01((t - breakStart - stagger) / 0.85)

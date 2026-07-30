@@ -163,8 +163,16 @@
     "card_2_desc": "Construit avec React et TypeScript. Des interfaces dynamiques et fluides sans rechargement de page.",
     "card_3_titulo": "Infrastructure Sécurisée",
     "card_3_desc": "Déploiement cloud (Edge Computing). Certificats SSL et protection contre les attaques.",
-    "card_4_titulo": "SEO Technique",
-    "card_4_desc": "Structure sémantique et Core Web Vitals optimisés pour un classement organique sur Google."
+    "card_4_titulo": "SEO Technique Intégré",
+    "card_4_desc": "Structure sémantique et Core Web Vitals optimisés pour le référencement naturel Google.",
+    "card_5_titulo": "Base de Données & Auth Supabase",
+    "card_5_desc": "PostgreSQL 15 avec RLS, authentification multi-locataire et passerelles de paiement.",
+    "card_6_titulo": "Intelligence Artificielle & Chatbot",
+    "card_6_desc": "Intégration avec Groq Cloud API pour assistants conversationnels intelligents.",
+    "card_7_titulo": "Expériences 3D & Animations",
+    "card_7_desc": "Three.js, React Three Fiber et Framer Motion pour des interfaces immersives.",
+    "card_8_titulo": "Multi-langue Natif (i18n)",
+    "card_8_desc": "Architecture d'internationalisation en 7 langues avec changement instantané."
   },
   "dashboard": {
     "salir": "Déconnexion",

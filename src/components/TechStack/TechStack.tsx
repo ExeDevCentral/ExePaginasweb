@@ -1,6 +1,6 @@
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { Code2, Zap, Shield, Search } from 'lucide-react'
+import { Code2, Zap, Shield, Search, Database, Bot, Box, Globe } from 'lucide-react'
 
 const STACK = [
   {
@@ -26,6 +26,30 @@ const STACK = [
     tIdx: 4,
     color: 'text-purple-400',
     bgLight: 'rgba(192, 132, 252, 0.15)',
+  },
+  {
+    icon: Database,
+    tIdx: 5,
+    color: 'text-cyan-400',
+    bgLight: 'rgba(34, 211, 238, 0.15)',
+  },
+  {
+    icon: Bot,
+    tIdx: 6,
+    color: 'text-pink-400',
+    bgLight: 'rgba(244, 114, 182, 0.15)',
+  },
+  {
+    icon: Box,
+    tIdx: 7,
+    color: 'text-amber-400',
+    bgLight: 'rgba(251, 191, 36, 0.15)',
+  },
+  {
+    icon: Globe,
+    tIdx: 8,
+    color: 'text-indigo-400',
+    bgLight: 'rgba(129, 140, 248, 0.15)',
   },
 ]
 

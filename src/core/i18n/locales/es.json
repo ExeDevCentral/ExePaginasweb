@@ -156,7 +156,15 @@
     "card_3_titulo": "Infraestructura Segura",
     "card_3_desc": "Despliegue en la nube (Edge Computing). Certificados SSL y protección contra ataques.",
     "card_4_titulo": "SEO Técnico Integrado",
-    "card_4_desc": "Estructura semántica y Core Web Vitals optimizados para rankear orgánicamente en Google."
+    "card_4_desc": "Estructura semántica y Core Web Vitals optimizados para rankear orgánicamente en Google.",
+    "card_5_titulo": "Base de Datos & Auth Supabase",
+    "card_5_desc": "PostgreSQL 15 con RLS (Row Level Security), autenticación de usuarios y pasarelas de pago integradas.",
+    "card_6_titulo": "Inteligencia Artificial & Chatbot IA",
+    "card_6_desc": "Integración con Groq Cloud API y motores de IA para asistentes conversacionales y automatización inteligente.",
+    "card_7_titulo": "Experiencias 3D & Animaciones",
+    "card_7_desc": "Three.js, React Three Fiber y Framer Motion para interfaces visuales inmersivas y micro-interacciones.",
+    "card_8_titulo": "Multi-idioma Nativo (i18n)",
+    "card_8_desc": "Arquitectura de internacionalización en 7 idiomas con cambio instantáneo de región."
   },
   "dashboard": {
     "reservas_hoy": "Reservas Hoy",

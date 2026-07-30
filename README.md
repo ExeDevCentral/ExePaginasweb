@@ -88,30 +88,35 @@
 
 ### Frontend
 
-| Libreria             | Version | Proposito                    |
-| -------------------- | ------- | ---------------------------- |
-| React                | 18.3    | UI declarativa y reactiva    |
-| TypeScript           | 5.7     | Tipado estricto              |
-| Vite                 | 6.2     | Build ultra veloz + HMR      |
-| TailwindCSS          | 3.4     | Sistema de diseño adaptativo |
-| Framer Motion        | 12.x    | Micro-interacciones fluidas  |
-| Three.js             | 0.173   | Escenas 3D y geometria       |
-| @react-three/fiber   | 8.17    | React renderer para Three.js |
-| @react-three/drei    | 9.121   | Helpers y materiales R3F     |
-| TanStack React Query | 5.x     | Cache y estado asincrono     |
-| React Router DOM     | 7.x     | Routing SPA                  |
-| Lucide React         | 0.475   | Iconos                       |
-| Sileo                | latest  | Toasts animados              |
+| Libreria / Herramienta | Version | Proposito                                       |
+| ---------------------- | ------- | ----------------------------------------------- |
+| React                  | 18.3    | UI declarativa y reactiva                       |
+| TypeScript             | 5.7     | Tipado estricto                                 |
+| Vite                   | 6.2     | Build ultra veloz + HMR                         |
+| TailwindCSS            | 3.4     | Sistema de diseño adaptativo y variables CSS    |
+| Framer Motion          | 12.x    | Micro-interacciones y animaciones fluidas       |
+| Three.js               | 0.173   | Escenas 3D, geometrías y shaders interactivos   |
+| @react-three/fiber     | 8.17    | React renderer para Three.js                    |
+| @react-three/drei      | 9.121   | Helpers, cámara y materiales R3F                |
+| TanStack React Query   | 5.x     | Cache y gestión de estado asíncrono             |
+| React Router DOM       | 7.18    | Routing SPA client-side                         |
+| i18next / react-i18n   | 24.x    | Internacionalización (i18n) nativa en 7 idiomas |
+| Zod                    | 3.x     | Validación de esquemas y modelos de datos       |
+| React Hook Form        | 7.x     | Gestor de formularios reactivos                 |
+| Lucide React           | 0.475   | Iconografía SVG vectorial                       |
+| Sonner & Sileo         | latest  | Notificaciones Toast animadas y adaptativas     |
 
-### Backend y Database
+### Backend, Database & Cloud Infrastructure
 
-| Servicio                    | Proposito                                   |
-| --------------------------- | ------------------------------------------- |
-| Supabase (PostgreSQL 15)    | Auth (Google OAuth), DB, RLS, triggers, RPC |
-| Vercel Serverless Functions | Endpoints API (Node.js)                     |
-| PayPal                      | Webhooks + cobros SaaS                      |
-| Groq Cloud API              | Chat IA streaming (demo)                    |
-| Resend                      | Emails transaccionales                      |
+| Servicio / Protocolo        | Proposito                                                       |
+| --------------------------- | --------------------------------------------------------------- |
+| Supabase (PostgreSQL 15)    | Database, Auth (Google OAuth/Email), RLS Multi-Tenant, Triggers |
+| Vercel Serverless Functions | Endpoints API Node.js/Express                                   |
+| Groq Cloud API              | Motor LLM de Inteligencia Artificial (Chatbot streaming IA)     |
+| PayPal API & Webhooks       | Pasarela de cobro y gestión de suscripciones SaaS               |
+| Resend API                  | Notificaciones por email transaccional                          |
+| Svix                        | Verificación de firma y seguridad en Webhooks                   |
+| Sentry                      | Monitoreo de performance y reporte de errores en tiempo real    |
 
 ### SaaS Core
 

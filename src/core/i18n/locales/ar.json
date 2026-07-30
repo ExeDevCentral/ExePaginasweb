@@ -163,8 +163,16 @@
     "card_2_desc": "مبني بـ React و TypeScript. واجهات ديناميكية وسلسة بدون إعادة تحميل الصفحة.",
     "card_3_titulo": "بنية تحتية آمنة",
     "card_3_desc": "نشر سحابي (Edge Computing). شهادات SSL وحماية من الهجمات.",
-    "card_4_titulo": "SEO تقني",
-    "card_4_desc": "هيكل دلالي و Core Web Vitals محسّنة للظهور عضوياً في Google."
+    "card_4_titulo": "تهيئة محركات البحث التقنية",
+    "card_4_desc": "بنية دلالية وتحسين Core Web Vitals للتصدر في نتائج البحث في Google.",
+    "card_5_titulo": "قاعدة بيانات والمصادقة Supabase",
+    "card_5_desc": "PostgreSQL 15 مع أمان RLS ومصادقة المستخدمين متعددة المستأجرين وبوابات الدفع.",
+    "card_6_titulo": "الذكاء الاصطناعي و روبوت الدردشة",
+    "card_6_desc": "التكامل مع Groq Cloud API ومحركات الذكاء الاصطناعي للمساعدين التفاعليين.",
+    "card_7_titulo": "تجارب ثلاثية الأبعاد ورسوم متحركة",
+    "card_7_desc": "Three.js و React Three Fiber و Framer Motion لجهات تفاعلية مبهرة.",
+    "card_8_titulo": "دعم متعدد اللغات (i18n)",
+    "card_8_desc": "هيكلية دولية تتيح التحويل الفوري بين 7 لغات بدون إعادة تحميل."
   },
   "dashboard": {
     "salir": "تسجيل الخروج",

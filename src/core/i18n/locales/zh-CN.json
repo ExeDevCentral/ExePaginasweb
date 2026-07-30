@@ -163,8 +163,16 @@
     "card_2_desc": "使用 React 和 TypeScript 构建。动态流畅的界面，零页面重载。",
     "card_3_titulo": "安全基础设施",
     "card_3_desc": "云端部署（边缘计算）。SSL 证书和攻击防护。",
-    "card_4_titulo": "技术性 SEO",
-    "card_4_desc": "语义化结构和优化的 Core Web Vitals，在 Google 上获得自然排名。"
+    "card_4_titulo": "集成技术 SEO",
+    "card_4_desc": "语义化结构与 Core Web Vitals 优化，助力 Google 搜索引擎自然排名。",
+    "card_5_titulo": "Supabase 数据库与认证",
+    "card_5_desc": "PostgreSQL 15 数据库与 RLS 行级安全，多租户用户认证与支付网关集成。",
+    "card_6_titulo": "人工智能与 AI 聊天机器人",
+    "card_6_desc": "集成 Groq Cloud API 与 AI 引擎，提供智能对话助手与自动化服务。",
+    "card_7_titulo": "3D 视觉与高级动画",
+    "card_7_desc": "Three.js、React Three Fiber 和 Framer Motion 打造沉浸式视觉交互体验。",
+    "card_8_titulo": "原生多语言架构 (i18n)",
+    "card_8_desc": "支持 7 种语言的国际化架构，无需刷新页面即时切换语言。"
   },
   "dashboard": {
     "salir": "退出登录",

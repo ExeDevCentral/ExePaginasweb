@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Sparkles, Lock } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface PaywallModalProps {
   isOpen: boolean
@@ -8,8 +9,9 @@ interface PaywallModalProps {
 }
 
 export default function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
+  const { t } = useTranslation()
   const [displayedText, setDisplayedText] = useState('')
-  const fullText = 'Esto es solo para subscriptores o clientes de'
+  const fullText = t('store.paywall_desc')
 
   useEffect(() => {
     if (isOpen) {

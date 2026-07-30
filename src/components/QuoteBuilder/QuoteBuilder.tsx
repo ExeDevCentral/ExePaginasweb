@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useMotionValue, useMotionTemplate } from 'fram
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowLeft,
   ArrowRight,
@@ -509,6 +510,7 @@ function PlanCard({
 }
 
 export default function QuoteBuilder() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [mode, setMode] = useState<'plans' | 'custom'>('plans')
   const [step, setStep] = useState(0)
@@ -618,7 +620,12 @@ export default function QuoteBuilder() {
     setConfettiTrigger((c) => c + 1)
   }
 
-  const stepLabels = ['Proyecto', 'Funcionalidades', 'Diseño', 'Resumen']
+  const stepLabels = [
+    t('cotizador.paso_1'),
+    t('cotizador.paso_2'),
+    t('cotizador.paso_3'),
+    t('cotizador.paso_4'),
+  ]
 
   return (
     <div className="min-h-screen bg-transparent text-primary-text relative overflow-hidden">
@@ -816,8 +823,12 @@ export default function QuoteBuilder() {
                             >
                               <Icon className="w-6 h-6" />
                             </div>
-                            <h3 className="text-lg font-bold text-foreground mb-1">{pt.label}</h3>
-                            <p className="text-sm text-muted-foreground mb-3">{pt.description}</p>
+                            <h3 className="text-lg font-bold text-foreground mb-1">
+                              {t('cotizador.tipo_' + pt.id, pt.label)}
+                            </h3>
+                            <p className="text-sm text-muted-foreground mb-3">
+                              {t('cotizador.tipo_' + pt.id + '_desc', pt.description)}
+                            </p>
                             <p className="text-xl font-black font-montserrat text-accent-cyan">
                               {formatPrice(pt.basePrice)}
                             </p>
@@ -876,7 +887,7 @@ export default function QuoteBuilder() {
                                 {isSelected && <Check className="w-4 h-4 text-foreground" />}
                               </div>
                               <span className="text-sm font-medium text-foreground">
-                                {feat.label}
+                                {t('cotizador.feat_' + feat.id, feat.label)}
                               </span>
                             </div>
                             <span className="text-sm font-bold text-accent-cyan">
@@ -931,8 +942,12 @@ export default function QuoteBuilder() {
                           popular={isSelected}
                         >
                           <div className={`p-6 ${isSelected ? 'bg-accent-cyan/5' : ''}`}>
-                            <h3 className="text-lg font-bold text-foreground mb-2">{d.label}</h3>
-                            <p className="text-sm text-muted-foreground mb-4">{d.description}</p>
+                            <h3 className="text-lg font-bold text-foreground mb-2">
+                              {t('cotizador.design_' + d.id, d.label)}
+                            </h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              {t('cotizador.design_' + d.id + '_desc', d.description)}
+                            </p>
                             <p className="text-xl font-black font-montserrat text-accent-cyan">
                               {d.price === 0 ? 'Incluido' : formatPrice(d.price)}
                             </p>

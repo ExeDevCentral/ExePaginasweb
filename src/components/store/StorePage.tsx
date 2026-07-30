@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { Sparkles, X } from 'lucide-react'
 import { useEffect, useState, lazy } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 const PremiumBackground = lazy(() => import('../Effects/PremiumBackground'))
 import { PLAN_CATALOG } from '../../core/domain/planCatalog'
 import { Monitor, Building, Building2 } from 'lucide-react'
@@ -78,9 +79,10 @@ const PLANS: PlanData[] = basePlans.map((p) => {
 })
 
 export default function StorePage() {
+  const { t } = useTranslation()
   const [selectedPlan, setSelectedPlan] = useState<PlanData | null>(null)
   const [displayedText, setDisplayedText] = useState('')
-  const fullText = 'Gestión de abonos para clientes activos de'
+  const fullText = t('store.gestion_abonos')
 
   useEffect(() => {
     setDisplayedText('')
@@ -94,12 +96,12 @@ export default function StorePage() {
       }
     }, 30)
     return () => clearInterval(timer)
-  }, [])
+  }, [fullText])
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background py-20 px-4 sm:px-6 lg:px-8">
       <Helmet>
-        <title>Suscripciones y Tienda | ExeSistemasWEB</title>
+        <title>{t('store.title')} | ExeSistemasWEB</title>
       </Helmet>
 
       <PremiumBackground />
@@ -117,17 +119,13 @@ export default function StorePage() {
             transition={{ duration: 0.6 }}
           >
             <p className="text-sm font-bold uppercase tracking-[0.3em] text-indigo-500/80 mb-4">
-              Portal de Clientes
+              {t('store.portal_clientes')}
             </p>
             <h1 className="text-4xl md:text-6xl font-montserrat font-black text-foreground mb-6">
-              Abonos de{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">
-                Mantenimiento
-              </span>
+              {t('store.subtitulo')}
             </h1>
             <p className="text-lg md:text-xl text-primary-secondary max-w-2xl mx-auto mb-16">
-              Suscripciones mensuales para garantizar que tu sistema esté siempre rápido, seguro y
-              actualizado. Elegí tu plan correspondiente.
+              {t('store.descripcion')}
             </p>
           </motion.div>
 

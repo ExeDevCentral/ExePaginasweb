@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { useTenantServices } from '../../hooks/useServices'
 import { useServiceCatalog } from '../../hooks/useServices'
+import { useTranslation } from 'react-i18next'
 import type { TenantServiceWithDetails } from '../../core/domain/entities/TenantService'
 import type { ServiceCatalog } from '../../core/domain/entities/ServiceCatalog'
 
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export default function ServicesPanel({ tenantId }: Props) {
+  const { t } = useTranslation()
   const { data: services = [], isLoading } = useTenantServices(tenantId)
   const { data: catalog = [] } = useServiceCatalog()
 
@@ -51,10 +53,10 @@ export default function ServicesPanel({ tenantId }: Props) {
       <div>
         <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
           <Package className="w-5 h-5 text-accent-cyan" />
-          Mis Servicios
+          {t('services.titulo')}
         </h2>
         <p className="text-sm text-muted-foreground mt-1">
-          {activeServices.length} servicios activos
+          {activeServices.length} {t('services.servidores_online')}
         </p>
       </div>
 

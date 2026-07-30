@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 import { X, Send, LifeBuoy, CheckCircle2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import type { PlanTier } from '../../core/domain/planCatalog'
 import { TICKET_CATEGORIES, SLA_BY_TIER } from '../../core/domain/ticketConfig'
 import type { Ticket } from '../../core/domain/entities/Ticket'
@@ -36,6 +37,7 @@ export default function SupportTicketPanel({
   error,
   onSubmit,
 }: SupportTicketPanelProps) {
+  const { t } = useTranslation()
   const [asunto, setAsunto] = useState('')
   const [mensaje, setMensaje] = useState('')
   const [categoria, setCategoria] = useState('')
@@ -87,7 +89,7 @@ export default function SupportTicketPanel({
                   </div>
                   <div>
                     <h2 id="ticket-panel-title" className="text-lg font-black text-white">
-                      Centro de soporte
+                      {t('tickets.titulo')}
                     </h2>
                     <p className="text-xs text-white/50">{sla}</p>
                   </div>

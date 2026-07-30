@@ -7,6 +7,7 @@ import { useCreateWorkGroup, useDeleteWorkGroup } from '../../hooks/useWorkGroup
 import { useCreateWorkMember, useDeleteWorkMember } from '../../hooks/useWorkMembers'
 import type { WorkGroup, WorkGroupWithMembers } from '../../core/domain/entities/WorkGroup'
 import type { WorkMember, WorkMemberRol } from '../../core/domain/entities/WorkMember'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 const ROL_LABELS: Record<WorkMemberRol, string> = {
@@ -28,6 +29,7 @@ interface Props {
 }
 
 export default function WorkGroupsPanel({ tenantId }: Props) {
+  const { t } = useTranslation()
   const { data: groups = [], isLoading: groupsLoading } = useWorkGroups(tenantId)
   const { data: members = [], isLoading: membersLoading } = useWorkMembers(tenantId)
 
@@ -120,7 +122,7 @@ export default function WorkGroupsPanel({ tenantId }: Props) {
         <div>
           <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
             <Users className="w-5 h-5 text-accent-cyan" />
-            Grupos de Trabajo
+            {t('workgroups.titulo')}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
             {members.length} miembros en {groups.length} grupos

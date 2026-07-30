@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Shield, Clock, AlertTriangle, CheckCircle, XCircle } from 'lucide-react'
 import { useActiveSLA, useSLABreaches } from '../../hooks/useSLA'
+import { useTranslation } from 'react-i18next'
 import type { SLAContract, SLABreach } from '../../core/domain/entities/SLAContract'
 
 const NIVEL_CONFIG: Record<string, { color: string; bg: string }> = {
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export default function SLADashboard({ tenantId }: Props) {
+  const { t } = useTranslation()
   const { data: sla, isLoading: slaLoading } = useActiveSLA(tenantId)
   const { data: breaches = [], isLoading: breachesLoading } = useSLABreaches(tenantId)
 
@@ -40,11 +42,9 @@ export default function SLADashboard({ tenantId }: Props) {
       <div>
         <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
           <Shield className="w-5 h-5 text-accent-cyan" />
-          Acuerdo de Nivel de Servicio
+          {t('sla.titulo')}
         </h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          Compromisos de tiempo de respuesta y resolución
-        </p>
+        <p className="text-sm text-muted-foreground mt-1">{t('sla.garantia')}</p>
       </div>
 
       {/* SLA Contract Card */}

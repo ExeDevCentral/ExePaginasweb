@@ -2,6 +2,7 @@ import React, { useRef, useCallback, useState, useMemo } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { Check, ArrowRight, type LucideIcon } from 'lucide-react'
 import { useIsMobile } from '../../hooks/useIsMobile'
+import { useTranslation } from 'react-i18next'
 
 export interface PlanData {
   id: string
@@ -25,6 +26,7 @@ interface PlanCardProps {
 }
 
 export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
+  const { t } = useTranslation()
   const cardRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
   const [isHovered, setIsHovered] = useState(false)
@@ -172,7 +174,7 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 blur-md opacity-50 rounded-full" />
               <span className="relative bg-gradient-to-r from-cyan-400 to-purple-500 text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-lg border border-white/20">
-                MÁS ELEGIDO
+                {t('store.mas_elegido')}
               </span>
             </div>
           </motion.div>
@@ -242,7 +244,7 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
             />
             <span className="relative z-10 flex items-center gap-2 text-sm md:text-base">
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-              Suscribirme
+              {t('store.suscribirme')}
             </span>
           </motion.button>
         </div>

@@ -149,7 +149,7 @@ const Header = () => {
               href="/cotizador"
               className="relative flex items-center gap-1 px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-emerald-400/80 hover:text-emerald-400 group"
             >
-              <span>Cotizador</span>
+              <span>{t('nav.cotizador')}</span>
               <span className="absolute bottom-1.5 left-3 right-3 h-[1px] bg-emerald-400/40 transition-transform duration-300 origin-left scale-x-0 group-hover:scale-x-100" />
             </motion.a>
 
@@ -299,7 +299,7 @@ const Header = () => {
                   className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-zinc-900/60 text-emerald-400/80 flex items-center gap-1.5"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <span>Cotizador</span>
+                  <span>{t('nav.cotizador')}</span>
                 </motion.a>
 
                 {/* Tienda */}

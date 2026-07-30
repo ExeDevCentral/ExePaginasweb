@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { FileText, CheckCircle, Clock, XCircle, AlertCircle } from 'lucide-react'
 import { useInvoicesByTenant } from '../../hooks/useInvoices'
+import { useTranslation } from 'react-i18next'
 import type { Invoice, InvoiceEstado } from '../../core/domain/entities/Invoice'
 
 const ESTADO_CONFIG: Record<
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export default function InvoicesPanel({ tenantId }: Props) {
+  const { t } = useTranslation()
   const { data: invoices = [], isLoading } = useInvoicesByTenant(tenantId)
 
   if (isLoading) {
@@ -42,9 +44,9 @@ export default function InvoicesPanel({ tenantId }: Props) {
       <div>
         <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
           <FileText className="w-5 h-5 text-accent-cyan" />
-          Facturas
+          {t('invoices.titulo')}
         </h2>
-        <p className="text-sm text-muted-foreground mt-1">{invoices.length} facturas emitidas</p>
+        <p className="text-sm text-muted-foreground mt-1">{invoices.length} facturas</p>
       </div>
 
       {/* Summary */}

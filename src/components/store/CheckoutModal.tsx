@@ -3,6 +3,7 @@ import { X, Globe, Monitor, Palette, ShoppingBag, Calendar } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../core/infra/supabase/client'
+import { useTranslation } from 'react-i18next'
 import TransferInstructions from './TransferInstructions'
 import type { PlanData } from './PlanCard'
 
@@ -33,6 +34,7 @@ interface CheckoutModalProps {
 }
 
 export default function CheckoutModal({ plan, onClose }: CheckoutModalProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [tipoProyecto, setTipoProyecto] = useState('mantenimiento')
   const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'paypal'>('transfer')
@@ -136,7 +138,7 @@ export default function CheckoutModal({ plan, onClose }: CheckoutModalProps) {
           <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-accent-magenta/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-foreground">Confirmar suscripción</h2>
+            <h2 className="text-2xl font-bold text-foreground">{t('store.checkout_titulo')}</h2>
             <button
               onClick={onClose}
               className="p-2 hover:bg-zinc-800/10 dark:hover:bg-white/5 rounded-xl transition-colors"
@@ -147,7 +149,7 @@ export default function CheckoutModal({ plan, onClose }: CheckoutModalProps) {
 
           {/* Plan summary */}
           <div className="relative bg-zinc-800/5 dark:bg-white/5 border border-zinc-200 dark:border-white/5 rounded-2xl p-5 mb-6">
-            <p className="text-sm text-muted-foreground mb-1">Plan seleccionado</p>
+            <p className="text-sm text-muted-foreground mb-1">{t('store.checkout_plan')}</p>
             <p className="text-xl font-bold text-foreground">{plan.title}</p>
             <p className="text-3xl font-black text-foreground mt-2">
               {paymentMethod === 'paypal' ? plan.priceUSD : plan.price}{' '}

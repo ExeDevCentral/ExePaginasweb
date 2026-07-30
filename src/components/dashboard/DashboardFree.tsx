@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Monitor, Building, Building2, Sparkles } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import type { Cliente } from '../../core/domain/entities/Cliente'
 import { useSupportTickets } from '../../hooks/useSupportTickets'
 import { PLAN_THEMES } from './planDashboardConfig'
@@ -20,6 +21,7 @@ type DashboardFreeProps = {
 }
 
 export default function DashboardFree({ cliente, onLogout }: DashboardFreeProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const nombre = cliente?.full_name?.split(' ')[0] ?? 'Cliente'
   const theme = PLAN_THEMES.basico
@@ -48,19 +50,18 @@ export default function DashboardFree({ cliente, onLogout }: DashboardFreeProps)
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-accent-cyan font-bold">
-              Sin abono activo
+              {t('dash.sin_suscripcion')}
             </p>
             <h1 className="text-3xl sm:text-4xl font-black text-foreground mt-1">Hola, {nombre}</h1>
             <p className="mt-2 text-muted-foreground max-w-lg">
-              Elegí un plan para desbloquear tu panel operativo. Cada nivel tiene su propio
-              dashboard con métricas y herramientas adaptadas a tu negocio.
+              {t('dash.activar_suscripcion_desc')}
             </p>
             <button
               type="button"
               onClick={onLogout}
               className="mt-4 text-xs font-bold text-foreground/40 hover:text-accent-magenta"
             >
-              Cerrar sesión
+              {t('dashboard.salir')}
             </button>
           </div>
         </div>
@@ -70,7 +71,7 @@ export default function DashboardFree({ cliente, onLogout }: DashboardFreeProps)
           onClick={() => navigate('/tienda')}
           className="mt-8 w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-[#050508] font-black hover:opacity-90 transition-opacity"
         >
-          Ver planes y activar panel
+          {t('dash.subir_plan')}
         </button>
       </motion.div>
 

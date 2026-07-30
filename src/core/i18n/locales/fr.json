@@ -124,7 +124,9 @@
     "ecommerce_feat_5": "Hébergement ultra-rapide",
     "ecommerce_feat_5_en": "Hébergement ultra-rapide",
     "ecommerce_feat_6": "Support prioritaire",
-    "ecommerce_feat_6_en": "Support prioritaire"
+    "ecommerce_feat_6_en": "Support prioritaire",
+    "monthly_opcional_badge": "100% Optionnel",
+    "opcional_nota": "Le service de maintenance mensuelle est 100 % optionnel. Votre site vous appartient à 100 % sans engagement."
   },
   "process": {
     "seccion_titulo": "Méthodologie",
@@ -247,7 +249,7 @@
     "cat_tiempos": "Délais",
     "cat_servicios": "Services",
     "q_1": "Dois-je payer une maintenance mensuelle ?",
-    "a_1": "Cela dépend du forfait que vous choisissez. Nous proposons des options de paiement unique pour les sites informatifs, et des options d'abonnement pour les systèmes complexes nécessitant des bases de données, des mises à jour et un support technique continu.",
+    "a_1": "Non ! La maintenance mensuelle est 100 % OPTIONNELLE. Une fois le développement réglé, le site vous appartient à 100 % sans abonnement obligatoire.",
     "q_2": "Est-ce que je possède le code et le site web ?",
     "a_2": "Oui. Contrairement aux plateformes fermées comme Shopify ou Wix, nous construisons des solutions sur mesure. Si vous décidez de migrer à l'avenir, le site vous appartient à 100%.",
     "q_3": "Combien de temps prend un projet ?",

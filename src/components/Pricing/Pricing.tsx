@@ -101,9 +101,14 @@ const PricingCard = ({
             </p>
           </div>
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">
-              {t('pricing.monthly_label')}
-            </p>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+                {t('pricing.monthly_label')}
+              </p>
+              <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                {t('pricing.monthly_opcional_badge')}
+              </span>
+            </div>
             <div className="flex items-end gap-1">
               <p className="text-2xl font-outfit font-bold text-accent-cyan">
                 {plan.monthlyFee[currency]}
@@ -222,10 +227,18 @@ const Pricing = () => {
         </div>
 
         {/* Tarjetas de planes */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-10">
           {PRICING_PLANS.map((plan, index) => (
             <PricingCard key={plan.tKey} plan={plan} index={index} currency={currency} />
           ))}
+        </div>
+
+        {/* Aclaración Mantenimiento Opcional */}
+        <div className="text-center max-w-2xl mx-auto mb-20">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs md:text-sm font-semibold shadow-lg shadow-emerald-500/5">
+            <Check className="w-4 h-4 shrink-0 text-emerald-400" />
+            <span>{t('pricing.opcional_nota')}</span>
+          </div>
         </div>
 
         {/* Sección de la Calculadora de ROI */}

@@ -124,7 +124,9 @@
     "ecommerce_feat_5": "Hosting ultra-rápido",
     "ecommerce_feat_5_en": "Ultra-fast hosting",
     "ecommerce_feat_6": "Soporte prioritario",
-    "ecommerce_feat_6_en": "Priority support"
+    "ecommerce_feat_6_en": "Priority support",
+    "monthly_opcional_badge": "100% Opcional",
+    "opcional_nota": "El servicio de mantenimiento mensual es 100% opcional. Tu sitio es 100% tuyo sin ataduras ni permanencias obligatorias."
   },
   "process": {
     "seccion_titulo": "Metodología",
@@ -239,7 +241,7 @@
     "cat_tiempos": "Tiempos",
     "cat_servicios": "Servicios",
     "q_1": "¿Tengo que pagar un mantenimiento mensual?",
-    "a_1": "Depende del plan que elijas. Ofrecemos opciones de pago único para webs informativas, y opciones de suscripción para sistemas complejos que requieren bases de datos, actualizaciones y soporte técnico continuo.",
+    "a_1": "¡No! El mantenimiento mensual es 100% OPCIONAL. Una vez abonado el desarrollo (setup), la página web es 100% tuya sin alquileres ni suscripciones obligatorias. Solo contratás mantenimiento si deseás que nosotros nos encarguemos de las actualizaciones, hosting y soporte continuo.",
     "q_2": "¿El código y la web me pertenecen?",
     "a_2": "Sí. A diferencia de plataformas cerradas como Shopify o Wix, nosotros desarrollamos a medida. Si en el futuro decides migrar, la web te pertenece 100%.",
     "q_3": "¿Cuánto tardan en entregar un proyecto?",

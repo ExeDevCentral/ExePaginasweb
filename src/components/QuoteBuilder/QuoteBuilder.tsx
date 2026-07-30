@@ -52,7 +52,7 @@ const PLANS: PlanData[] = [
       'Formulario de contacto',
       'Hosting + dominio .com.ar',
       'Analytics y performance',
-      'Mantenimiento mensual',
+      'Mantenimiento mensual (opcional)',
     ],
     popular: false,
     icon: Layout,

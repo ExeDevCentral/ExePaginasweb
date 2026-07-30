@@ -124,7 +124,9 @@
     "ecommerce_feat_5": "Ultra-fast hosting",
     "ecommerce_feat_5_en": "Ultra-fast hosting",
     "ecommerce_feat_6": "Priority support",
-    "ecommerce_feat_6_en": "Priority support"
+    "ecommerce_feat_6_en": "Priority support",
+    "monthly_opcional_badge": "100% Optional",
+    "opcional_nota": "Monthly maintenance service is 100% optional. Your website is 100% yours with no mandatory lock-in."
   },
   "process": {
     "seccion_titulo": "Methodology",
@@ -239,7 +241,7 @@
     "cat_tiempos": "Timeline",
     "cat_servicios": "Services",
     "q_1": "Do I have to pay monthly maintenance?",
-    "a_1": "It depends on the plan you choose. We offer one-time payment options for informational sites, and subscription options for complex systems that require databases, updates, and ongoing technical support.",
+    "a_1": "No! Monthly maintenance is 100% OPTIONAL. Once you pay for the development (setup), the website is 100% yours with no mandatory subscriptions. You only pay for maintenance if you want us to handle hosting, updates, and ongoing technical support.",
     "q_2": "Do I own the code and the website?",
     "a_2": "Yes. Unlike closed platforms like Shopify or Wix, we build custom solutions. If you decide to migrate in the future, the website is 100% yours.",
     "q_3": "How long does a project take?",

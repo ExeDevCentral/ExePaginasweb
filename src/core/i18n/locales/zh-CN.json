@@ -91,7 +91,7 @@
     "solicitar_pesos": "索取报价",
     "request_quotation": "索取报价",
     "setup_label": "一次性设置费",
-    "monthly_label": "月度维护",
+    "monthly_label": "每月维护",
     "setup_label_en": "一次性设置费",
     "monthly_label_en": "月度维护",
     "landing_nombre": "落地页",
@@ -124,7 +124,9 @@
     "ecommerce_feat_5": "超快主机",
     "ecommerce_feat_5_en": "超快主机",
     "ecommerce_feat_6": "优先支持",
-    "ecommerce_feat_6_en": "优先支持"
+    "ecommerce_feat_6_en": "优先支持",
+    "monthly_opcional_badge": "100% 可选",
+    "opcional_nota": "每月维护服务100%可选。您的网站100%归您所有，无需强制订阅。"
   },
   "process": {
     "seccion_titulo": "方法论",
@@ -247,7 +249,7 @@
     "cat_tiempos": "时间",
     "cat_servicios": "服务",
     "q_1": "我需要按月支付维护费吗？",
-    "a_1": "这取决于您选择的方案。我们为信息类网站提供一次性付款选项，为需要数据库、更新和持续技术支持的复杂系统提供订阅选项。",
+    "a_1": "不需要！每月维护是100%可选的。支付开发费用后，网站100%归您所有，没有任何强制的月费。",
     "q_2": "我拥有代码和网站的所有权吗？",
     "a_2": "是的。与 Shopify 或 Wix 等封闭平台不同，我们构建定制解决方案。如果您将来决定迁移，网站100%归您所有。",
     "q_3": "一个项目需要多长时间？",

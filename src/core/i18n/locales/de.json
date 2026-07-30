@@ -124,7 +124,9 @@
     "ecommerce_feat_5": "Hochgeschwindigkeits-Hosting",
     "ecommerce_feat_5_en": "Hochgeschwindigkeits-Hosting",
     "ecommerce_feat_6": "Priorisierter Support",
-    "ecommerce_feat_6_en": "Priorisierter Support"
+    "ecommerce_feat_6_en": "Priorisierter Support",
+    "monthly_opcional_badge": "100% Optional",
+    "opcional_nota": "Der monatliche Wartungsservice ist zu 100 % optional. Ihre Website gehört zu 100 % Ihnen."
   },
   "process": {
     "seccion_titulo": "Methodik",
@@ -247,7 +249,7 @@
     "cat_tiempos": "Zeitrahmen",
     "cat_servicios": "Leistungen",
     "q_1": "Muss ich monatliche Wartung zahlen?",
-    "a_1": "Das hängt vom gewählten Tarif ab. Wir bieten einmalige Zahlungsoptionen für Informationsseiten und Abonnement-Optionen für komplexe Systeme, die Datenbanken, Updates und laufenden technischen Support benötigen.",
+    "a_1": "Nein! Die monatliche Wartung ist zu 100 % OPTIONAL. Nach der Entwicklungsgebühr gehört die Website zu 100 % Ihnen ohne Vertragspflicht.",
     "q_2": "Gehören mir der Code und die Website?",
     "a_2": "Ja. Im Gegensatz zu geschlossenen Plattformen wie Shopify oder Wix erstellen wir maßgeschneiderte Lösungen. Wenn Sie sich in Zukunft für einen Umzug entscheiden, gehört die Website zu 100 % Ihnen.",
     "q_3": "Wie lange dauert ein Projekt?",

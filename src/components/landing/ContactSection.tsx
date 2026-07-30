@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { MessageCircle, Globe, ArrowRight, CheckCircle, Mail, Send } from 'lucide-react'
+import { MessageCircle, ArrowRight, CheckCircle, Mail, Send } from 'lucide-react'
 import { supabase } from '../../core/infra/supabase/client'
 import { toast } from 'sonner'
 
@@ -16,31 +16,24 @@ const ContactSection = () => {
   const channels = [
     {
       icon: MessageCircle,
-      label: 'WhatsApp Directo',
+      tag: 'WHATSAPP DIRECTO',
       value: '+54 9 341 6874786',
       href: 'https://wa.me/5493416874786?text=¡Hola%20ExeSistemasWEB!%20Me%20contacto%20desde%20la%20web.',
       color: '#22c55e',
     },
     {
       icon: Mail,
-      label: 'Contacto & Soporte',
+      tag: 'CONTACTO & SOPORTE',
       value: 'Contacto@exepaginasweb.com',
       href: 'mailto:Contacto@exepaginasweb.com',
       color: '#06b6d4',
     },
     {
       icon: Send,
-      label: 'Ventas & Cotizaciones',
+      tag: 'VENTAS & PROYECTOS',
       value: 'Ventas@exepaginasweb.com',
       href: 'mailto:Ventas@exepaginasweb.com',
       color: '#ec4899',
-    },
-    {
-      icon: Globe,
-      label: 'Sitio Web Oficial',
-      value: 'Exepaginasweb.com',
-      href: 'https://Exepaginasweb.com',
-      color: '#a855f7',
     },
   ]
 
@@ -242,7 +235,7 @@ const ContactSection = () => {
               const Icon = ch.icon
               return (
                 <motion.a
-                  key={ch.label}
+                  key={ch.tag}
                   href={ch.href}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -260,10 +253,8 @@ const ContactSection = () => {
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground mb-1">
-                      {ch.label === 'WhatsApp'
-                        ? t('contact.whatsapp_label')
-                        : t('contact.web_label')}
+                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground mb-1">
+                      {ch.tag}
                     </p>
                     <p className="text-sm font-semibold text-foreground leading-snug break-all">
                       {ch.value}

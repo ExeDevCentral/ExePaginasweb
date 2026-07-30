@@ -22,7 +22,7 @@ const PRICING_PLANS: PlanData[] = [
   },
   {
     tKey: 'ecommerce',
-    setupFee: { ARS: '$450.000', USD: 'u$s 700' },
+    setupFee: { ARS: '$600.000', USD: 'u$s 700' },
     monthlyFee: { ARS: '$25.000', USD: 'u$s 50' },
     includedFeatures: [true, true, true, true, true, true],
     popular: true,

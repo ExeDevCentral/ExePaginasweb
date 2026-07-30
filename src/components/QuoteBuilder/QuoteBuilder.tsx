@@ -62,7 +62,7 @@ const PLANS: PlanData[] = [
     name: 'Tienda Online',
     description:
       'E-commerce completo listo para vender. Catálogo, carrito, pagos y panel de gestión.',
-    setup: { ARS: '$450.000', USD: 'u$s 700' },
+    setup: { ARS: '$600.000', USD: 'u$s 700' },
     monthly: { ARS: '$25.000', USD: 'u$s 50' },
     features: [
       'Catálogo ilimitado de productos',

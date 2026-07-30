@@ -15,7 +15,7 @@ interface PlanData {
 const PRICING_PLANS: PlanData[] = [
   {
     tKey: 'landing',
-    setupFee: { ARS: '$200.000', USD: 'u$s 300' },
+    setupFee: { ARS: '$350.000', USD: 'u$s 300' },
     monthlyFee: { ARS: '$10.000', USD: 'u$s 20' },
     includedFeatures: [true, true, true, true, false, false],
     popular: false,

@@ -44,7 +44,7 @@ const PLANS: PlanData[] = [
     name: 'Landing Page',
     description:
       'Sitio profesional de una página. Ideal para campañas, portfolio o negocio en lanzamiento.',
-    setup: { ARS: '$200.000', USD: 'u$s 300' },
+    setup: { ARS: '$350.000', USD: 'u$s 300' },
     monthly: { ARS: '$10.000', USD: 'u$s 20' },
     features: [
       'Diseño responsive premium',
@@ -91,7 +91,7 @@ const PROJECT_TYPES: ProjectType[] = [
     label: 'Landing Page',
     icon: Layout,
     description: 'Sitio de una página, ideal para campañas o presentación',
-    basePrice: 150000,
+    basePrice: 350000,
   },
   {
     id: 'institucional',

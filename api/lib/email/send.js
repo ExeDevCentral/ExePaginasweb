@@ -1,5 +1,7 @@
 const RESEND_API = 'https://api.resend.com/emails'
 
+export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'Exemetal@hotmail.com'
+
 function getConfig() {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {

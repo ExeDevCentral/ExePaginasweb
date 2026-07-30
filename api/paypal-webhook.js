@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { sendEmail } from './lib/email/send.js'
+import { sendEmail, ADMIN_EMAIL } from './lib/email/send.js'
 import { paymentConfirmation, paymentNotification } from './lib/email/templates.js'
 
 let supabase = null
@@ -312,7 +312,7 @@ export default async function handler(req, res) {
         })
 
         await sendEmail({
-          to: ['exemetal@hotmail.com'],
+          to: [ADMIN_EMAIL],
           subject: `Nueva venta! ${payerName || 'Un cliente'} compro ${planNombre}`,
           html: paymentNotification({
             name: payerName,

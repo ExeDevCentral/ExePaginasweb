@@ -1,4 +1,4 @@
-import { sendEmail } from './lib/email/send.js'
+import { sendEmail, ADMIN_EMAIL } from './lib/email/send.js'
 import { contactNotification } from './lib/email/templates.js'
 
 const RATE_LIMIT_WINDOW_MS = 3600_000
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
   try {
     if (process.env.RESEND_API_KEY) {
       await sendEmail({
-        to: ['exemetal@hotmail.com'],
+        to: [ADMIN_EMAIL],
         subject: `Nuevo contacto de ${name} <${email}>`,
         html: contactNotification({ name, email, message }),
         replyTo: email,

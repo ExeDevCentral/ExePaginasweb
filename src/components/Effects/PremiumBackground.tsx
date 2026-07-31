@@ -68,7 +68,7 @@ class Node {
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2)
     ctx.fillStyle = color
-    ctx.shadowBlur = isDark ? 12 : 6
+    ctx.shadowBlur = isDark ? 8 : 4
     ctx.shadowColor = color
     ctx.fill()
     ctx.shadowBlur = 0
@@ -194,12 +194,11 @@ const PremiumBackground = () => {
 
     let animId: number
     const loop = () => {
-      const darkTheme = document.documentElement.classList.contains('dark')
-      // Color de fondo adaptable a Tema Claro / Oscuro
-      ctx.fillStyle = darkTheme ? 'rgba(5, 5, 8, 0.25)' : 'rgba(253, 248, 243, 0.35)'
-      ctx.fillRect(0, 0, w, h)
+      // Limpiar el canvas por completo en cada cuadro para eliminar cualquier marca o estela de sombra
+      ctx.clearRect(0, 0, w, h)
 
       drawLinks()
+      const darkTheme = document.documentElement.classList.contains('dark')
       nodes.forEach((n) => {
         n.update(w, h, mouse)
         n.draw(ctx, darkTheme)

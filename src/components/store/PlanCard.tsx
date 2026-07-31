@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react'
+import { useRef, useCallback, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Check, ArrowRight, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'

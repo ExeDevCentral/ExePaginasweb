@@ -209,6 +209,7 @@ export default function CheckoutModal({
           <div className="relative">
             {paymentMethod === 'transfer' ? (
               <TransferInstructions
+                planSlug={plan.id}
                 planTitle={plan.title}
                 planPrice={plan.price}
                 projectType={tipoProyecto}

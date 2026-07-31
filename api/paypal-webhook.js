@@ -71,9 +71,18 @@ async function getOrCreateCliente(email, fullName) {
 
   if (existentes?.[0]) return existentes[0].id
 
+  let id = null
+  try {
+    const { data: authUser } = await db.auth.admin.listUsers()
+    const match = authUser?.users?.find((u) => u.email?.toLowerCase() === email?.toLowerCase())
+    id = match?.id || null
+  } catch (e) {
+    console.warn('[paypal-webhook] No se pudo buscar en auth.users:', e.message)
+  }
+
   const { data: nuevo } = await db
     .from('clientes')
-    .insert({ email, nombre: fullName || null })
+    .insert(id ? { id, email, nombre: fullName || null } : { email, nombre: fullName || null })
     .select('id')
     .single()
 
@@ -84,17 +93,56 @@ async function getPlanBySlug(slug) {
   const db = getSupabase()
   if (!db) return null
 
-  const { data: planes } = await db.from('planes').select('slug, nombre').eq('slug', slug).limit(1)
+  const { data: planes } = await db
+    .from('planes')
+    .select('id, slug, nombre')
+    .eq('slug', slug)
+    .limit(1)
 
   if (planes?.[0]) return planes[0]
 
   const { data: porNombre } = await db
     .from('planes')
-    .select('slug, nombre')
+    .select('id, slug, nombre')
     .ilike('nombre', `%${slug}%`)
     .limit(1)
 
   return porNombre?.[0] || null
+}
+
+async function getOrCreateTenant(clienteId, email, plan) {
+  const db = getSupabase()
+  if (!db) return null
+
+  const { data: existentes } = await db
+    .from('tenants')
+    .select('id')
+    .eq('dueno_id', clienteId)
+    .limit(1)
+
+  if (existentes?.[0]) return existentes[0].id
+
+  const baseSlug = (email || 'cliente')
+    .split('@')[0]
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+  const slug = `${baseSlug}-${clienteId.slice(0, 8)}`
+
+  const { data: tenant, error: tenantError } = await db
+    .from('tenants')
+    .insert({
+      slug,
+      nombre: baseSlug || 'Mi Empresa',
+      dueno_id: clienteId,
+      estado: 'activo',
+      plan_id: plan?.id || null,
+      settings: { source: 'paypal-webhook' },
+    })
+    .select('id')
+    .single()
+
+  if (tenantError) console.error('[paypal-webhook] Error creating tenant:', tenantError)
+  return tenant?.id || null
 }
 
 async function capturePayPalOrder(orderId, token) {
@@ -236,7 +284,9 @@ export default async function handler(req, res) {
 
     const purchaseUnit = captured.purchase_units?.[0]
     const customId = purchaseUnit?.custom_id || ''
-    const [planSlug, email, tipoProyecto] = customId.split('|')
+    const [planSlug] = customId.split('|')
+    const email = captured.payer?.email_address || customId.split('|')[1] || ''
+    const tipoProyecto = customId.split('|')[2] || 'mantenimiento'
     const amount = purchaseUnit?.amount?.value
     const payerName = captured.payer?.name?.given_name || ''
     const paypalOrderId = captured.id
@@ -257,19 +307,25 @@ export default async function handler(req, res) {
 
     const db = getSupabase()
     if (db) {
-      const { error: pagoError } = await db.from('pagos').insert({
-        cliente_id: clienteId,
-        monto: parseFloat(amount),
-        moneda: 'USD',
-        estado: 'aprobado',
-        plan_nombre: planNombre,
-        plan_slug: plan?.slug || planSlug || null,
-        tipo_proyecto: tipoProyecto || 'mantenimiento',
-        provider: 'paypal',
-        paypal_order_id: paypalOrderId,
-      })
+      const { data: pagoInsertado, error: pagoError } = await db
+        .from('pagos')
+        .insert({
+          cliente_id: clienteId,
+          monto: parseFloat(amount),
+          moneda: 'USD',
+          estado: 'aprobado',
+          plan_nombre: planNombre,
+          plan_slug: plan?.slug || planSlug || null,
+          tipo_proyecto: tipoProyecto || 'mantenimiento',
+          provider: 'paypal',
+          paypal_order_id: paypalOrderId,
+          fecha_aprobacion: new Date().toISOString(),
+        })
+        .select('id')
+        .single()
 
       if (pagoError) console.error('[paypal-webhook] Error inserting pago:', pagoError)
+      const pagoId = pagoInsertado?.id || null
 
       const { error: subError } = await db.from('suscripciones').insert({
         cliente_id: clienteId,
@@ -280,17 +336,23 @@ export default async function handler(req, res) {
 
       if (subError) console.error('[paypal-webhook] Error inserting suscripcion:', subError)
 
-      try {
-        const { data: invoiceResult } = await db.rpc('create_invoice_from_payment', {
-          p_cliente_id: clienteId,
-          p_pago_id: null,
-          p_monto: parseFloat(amount),
-          p_moneda: 'USD',
-          p_concepto: `Suscripcion ${planNombre}`,
+      const tenantId = await getOrCreateTenant(clienteId, email, plan)
+      if (tenantId && pagoId) {
+        try {
+          const { data: invoiceResult, error: invoiceError } = await db.rpc(
+            'create_invoice_from_payment',
+            { p_pago_id: pagoId, p_tenant_id: tenantId }
+          )
+          if (invoiceError) console.error('[paypal-webhook] RPC error:', invoiceError)
+          if (invoiceResult) console.log('[paypal-webhook] Invoice created:', invoiceResult)
+        } catch (invoiceErr) {
+          console.error('[paypal-webhook] Error creating invoice via RPC:', invoiceErr)
+        }
+      } else {
+        console.warn('[paypal-webhook] Skipped invoice: tenant or pago missing', {
+          tenantId,
+          pagoId,
         })
-        if (invoiceResult) console.log('[paypal-webhook] Invoice created:', invoiceResult)
-      } catch (invoiceErr) {
-        console.error('[paypal-webhook] Error creating invoice via RPC:', invoiceErr)
       }
     }
 

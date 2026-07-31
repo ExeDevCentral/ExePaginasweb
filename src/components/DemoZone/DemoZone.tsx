@@ -641,7 +641,7 @@ const DemoZone = () => {
                       />
                     </AnimatePresence>
                     {/* Dark overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[color-mix(in_oklch,var(--background)_90%,transparent)] via-[color-mix(in_oklch,var(--background)_30%,transparent)] to-transparent" />
                     {/* Tag badge */}
                     <motion.span
                       key={`tag-${auraFeatured.id}`}

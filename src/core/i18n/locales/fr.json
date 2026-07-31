@@ -23,7 +23,21 @@
     "sub_respuesta": "Avec nous, rien.",
     "descripcion": "La plupart des \"sites web\" sont de la location déguisée en achat : tu arrêtes de payer et tu perds tout. Nous construisons la maison et te remettons les clés : ton propre code, sans dépendre d'aucune plateforme.",
     "cta_demo": "VOIR LA DÉMO",
-    "cta_proyecto": "JE VEUX MON SITE"
+    "cta_proyecto": "JE VEUX MON SITE",
+    "compare_titulo": "Ce que vous louez vs. ce que nous construisons",
+    "compare_hint": "glissez pour comparer",
+    "compare_tag_antes": "LOUÉ",
+    "compare_tag_despues": "PROPRIÉTAIRE",
+    "compare_before_badge": "MONTEMPLATE.COM",
+    "compare_before_titulo": "Mon Entreprise",
+    "compare_before_desc": "Modèle #4521 — utilisé par 8 400 autres sites",
+    "compare_after_badge": "VOTRE PROPRE DOMAINE",
+    "compare_after_titulo": "Votre Entreprise",
+    "compare_after_desc": "Code unique, fait sur mesure pour vous",
+    "compare_stat_carga": "chargement",
+    "compare_stat_tuyo": "à vous",
+    "compare_stat_duracion": "durée",
+    "compare_fast": "en ligne maintenant"
   },
   "features": {
     "seccion_titulo": "Pourquoi ExeSistemasWEB ?",

@@ -23,7 +23,21 @@
     "sub_respuesta": "معنا، لا شيء.",
     "descripcion": "معظم \"المواقع\" هي إيجار متنكر كشراء — تتوقف عن الدفع وتفقد كل شيء. نبني لك المنزل ونعطيك المفاتيح: كودك الخاص، بدون قيود أي منصة.",
     "cta_demo": "عرض تجريبي مباشر",
-    "cta_proyecto": "أريد موقعي"
+    "cta_proyecto": "أريد موقعي",
+    "compare_titulo": "ما تستأجره مقابل ما نبني",
+    "compare_hint": "اسحب للمقارنة",
+    "compare_tag_antes": "مستأجر",
+    "compare_tag_despues": "ملكك",
+    "compare_before_badge": "MYTEMPLATE.COM",
+    "compare_before_titulo": "مشروعي",
+    "compare_before_desc": "قالب #4521 — مستخدم في 8,400 موقع آخر",
+    "compare_after_badge": "نطاقك الخاص",
+    "compare_after_titulo": "مشروعك",
+    "compare_after_desc": "كود فريد، مبني حسب مقاسك",
+    "compare_stat_carga": "تحميل",
+    "compare_stat_tuyo": "ملكك",
+    "compare_stat_duracion": "مدة",
+    "compare_fast": "متصل الآن"
   },
   "features": {
     "seccion_titulo": "لماذا ExeSistemasWEB؟",

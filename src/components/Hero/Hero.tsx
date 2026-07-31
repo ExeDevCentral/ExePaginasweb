@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { SalonBloomButton } from '../shared/SalonBloomButton'
 import { useIsMobile } from '../../hooks/useIsMobile'
-import Hero3DImage from './Hero3DImage'
+import HeroCompare from './HeroCompare'
 import { HERO_TYPEWRITER_LINES } from './constants'
 
 function useSequentialTypewriter(lines: string[], charSpeed = 30, linePause = 600) {
@@ -271,7 +271,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 4.2 }}
           className="w-full"
         >
-          <Hero3DImage />
+          <HeroCompare />
         </motion.div>
       </div>
     </section>

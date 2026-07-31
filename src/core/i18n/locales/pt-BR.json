@@ -23,7 +23,21 @@
     "sub_respuesta": "Com a gente, nada.",
     "descripcion": "A maioria dos \"sites\" é aluguel disfarçado de compra — você para de pagar e perde tudo. Nós construímos a casa e entregamos as chaves: código próprio, sem amarras a nenhuma plataforma.",
     "cta_demo": "VER DEMO AO VIVO",
-    "cta_proyecto": "QUERO MEU SITE"
+    "cta_proyecto": "QUERO MEU SITE",
+    "compare_titulo": "O que você aluga vs. o que nós construímos",
+    "compare_hint": "arraste para comparar",
+    "compare_tag_antes": "ALUGADO",
+    "compare_tag_despues": "PRÓPRIO",
+    "compare_before_badge": "MEUTEMPLATE.COM",
+    "compare_before_titulo": "Meu Negócio",
+    "compare_before_desc": "Template #4521 — usado por mais 8.400 sites",
+    "compare_after_badge": "SEU PRÓPRIO DOMÍNIO",
+    "compare_after_titulo": "Seu Negócio",
+    "compare_after_desc": "Código único, feito sob medida para você",
+    "compare_stat_carga": "carga",
+    "compare_stat_tuyo": "seu",
+    "compare_stat_duracion": "duração",
+    "compare_fast": "online agora mesmo"
   },
   "features": {
     "seccion_titulo": "Por que ExeSistemasWEB?",

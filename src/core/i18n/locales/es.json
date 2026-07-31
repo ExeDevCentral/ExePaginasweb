@@ -23,7 +23,21 @@
     "sub_respuesta": "Con nosotros, nada.",
     "descripcion": "La mayoría de las \"páginas web\" son alquiler disfrazado de compra: dejás de pagar y perdés todo. Nosotros te construimos la casa y te damos las llaves — código propio, sin ataduras a ninguna plataforma.",
     "cta_demo": "VER DEMO EN VIVO",
-    "cta_proyecto": "QUIERO MI PÁGINA"
+    "cta_proyecto": "QUIERO MI PÁGINA",
+    "compare_titulo": "Lo que alquilás vs. lo que construimos",
+    "compare_hint": "deslizá para comparar",
+    "compare_tag_antes": "ALQUILADO",
+    "compare_tag_despues": "PROPIO",
+    "compare_before_badge": "MITEMPLATE.COM",
+    "compare_before_titulo": "Mi Negocio",
+    "compare_before_desc": "Plantilla #4521 — usada por 8,400 sitios más",
+    "compare_after_badge": "TU DOMINIO PROPIO",
+    "compare_after_titulo": "Tu Negocio",
+    "compare_after_desc": "Código único, hecho a medida para vos",
+    "compare_stat_carga": "carga",
+    "compare_stat_tuyo": "tuyo",
+    "compare_stat_duracion": "duración",
+    "compare_fast": "online ahora mismo"
   },
   "features": {
     "seccion_titulo": "Por qué ExeSistemasWEB?",

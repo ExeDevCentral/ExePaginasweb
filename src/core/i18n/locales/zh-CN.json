@@ -23,7 +23,21 @@
     "sub_respuesta": "在我们这里，什么都不会发生。",
     "descripcion": "大多数\"网站\"是伪装成购买的租赁——停止付款，你就失去一切。我们为你建房并把钥匙交给你：你自己的代码，不依赖任何平台。",
     "cta_demo": "查看在线演示",
-    "cta_proyecto": "我想要我的网站"
+    "cta_proyecto": "我想要我的网站",
+    "compare_titulo": "你租用的 vs. 我们构建的",
+    "compare_hint": "拖动以比较",
+    "compare_tag_antes": "租用",
+    "compare_tag_despues": "自有",
+    "compare_before_badge": "MYTEMPLATE.COM",
+    "compare_before_titulo": "我的企业",
+    "compare_before_desc": "模板 #4521 —— 另有 8,400 个网站在使用",
+    "compare_after_badge": "你自己的域名",
+    "compare_after_titulo": "你的企业",
+    "compare_after_desc": "为你的需求量身定制的专属代码",
+    "compare_stat_carga": "加载",
+    "compare_stat_tuyo": "你的",
+    "compare_stat_duracion": "时长",
+    "compare_fast": "即刻在线"
   },
   "features": {
     "seccion_titulo": "为什么选择 ExeSistemasWEB？",

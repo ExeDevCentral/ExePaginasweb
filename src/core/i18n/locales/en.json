@@ -23,7 +23,21 @@
     "sub_respuesta": "With us, nothing.",
     "descripcion": "Most \"websites\" are rent disguised as buying — stop paying and you lose everything. We build the house and hand you the keys: your own code, tied to no platform.",
     "cta_demo": "VIEW LIVE DEMO",
-    "cta_proyecto": "I WANT MY SITE"
+    "cta_proyecto": "I WANT MY SITE",
+    "compare_titulo": "What you rent vs. what we build",
+    "compare_hint": "drag to compare",
+    "compare_tag_antes": "RENTED",
+    "compare_tag_despues": "OWN",
+    "compare_before_badge": "MYTEMPLATE.COM",
+    "compare_before_titulo": "My Business",
+    "compare_before_desc": "Template #4521 — used by 8,400 more sites",
+    "compare_after_badge": "YOUR OWN DOMAIN",
+    "compare_after_titulo": "Your Business",
+    "compare_after_desc": "Unique code, built to measure for you",
+    "compare_stat_carga": "load",
+    "compare_stat_tuyo": "yours",
+    "compare_stat_duracion": "duration",
+    "compare_fast": "online right now"
   },
   "features": {
     "seccion_titulo": "Why ExeSistemasWEB?",

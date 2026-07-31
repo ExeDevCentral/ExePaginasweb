@@ -23,7 +23,21 @@
     "sub_respuesta": "Bei uns: nichts.",
     "descripcion": "Die meisten \"Websites\" sind Miete als Kauf getarnt — hörst du zu zahlen auf, verlierst du alles. Wir bauen dir das Haus und geben dir die Schlüssel: eigener Code, an keine Plattform gebunden.",
     "cta_demo": "LIVE-DEMO ANSEHEN",
-    "cta_proyecto": "ICH WILL MEINE SEITE"
+    "cta_proyecto": "ICH WILL MEINE SEITE",
+    "compare_titulo": "Was du mietest vs. was wir bauen",
+    "compare_hint": "ziehen zum Vergleichen",
+    "compare_tag_antes": "GEMIETET",
+    "compare_tag_despues": "EIGEN",
+    "compare_before_badge": "MEINETEMPLATE.COM",
+    "compare_before_titulo": "Mein Unternehmen",
+    "compare_before_desc": "Vorlage #4521 — von 8.400 weiteren Seiten genutzt",
+    "compare_after_badge": "DEINE EIGENE DOMAIN",
+    "compare_after_titulo": "Dein Unternehmen",
+    "compare_after_desc": "Einzigartiger Code, maßgeschneidert für dich",
+    "compare_stat_carga": "Ladezeit",
+    "compare_stat_tuyo": "deins",
+    "compare_stat_duracion": "Dauer",
+    "compare_fast": "jetzt online"
   },
   "features": {
     "seccion_titulo": "Warum ExeSistemasWEB?",

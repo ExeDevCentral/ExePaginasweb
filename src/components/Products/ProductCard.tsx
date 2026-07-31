@@ -154,7 +154,7 @@ export default function ProductCard({
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <Icon className="h-full w-full text-foreground group-hover:text-white transition-colors duration-300" />
+              <Icon className="h-full w-full text-white transition-colors duration-300" />
             </motion.div>
             <div className="absolute -bottom-1 left-5 w-10 h-0.5 rounded-full bg-gradient-to-r from-accent-cyan/0 via-accent-cyan/40 to-accent-cyan/0 blur-sm" />
           </div>

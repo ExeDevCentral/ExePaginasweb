@@ -1,7 +1,6 @@
-import React, { useRef, useCallback, useState, useMemo } from 'react'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import React, { useRef, useCallback, useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { Check, ArrowRight, type LucideIcon } from 'lucide-react'
-import { useIsMobile } from '../../hooks/useIsMobile'
 import { useTranslation } from 'react-i18next'
 
 export interface PlanData {
@@ -28,67 +27,65 @@ interface PlanCardProps {
 export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
   const { t } = useTranslation()
   const cardRef = useRef<HTMLDivElement>(null)
-  const isMobile = useIsMobile()
+  const shadowRef = useRef<HTMLDivElement>(null)
+  const glareRef = useRef<HTMLDivElement>(null)
+  const edgeRef = useRef<HTMLDivElement>(null)
+
   const [isHovered, setIsHovered] = useState(false)
 
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
+  const stateRef = useRef({
+    targetRX: 0,
+    targetRY: 0,
+    curRX: 0,
+    curRY: 0,
+  })
 
-  const springConfig = { stiffness: 150, damping: 20, mass: 0.5 }
-  const smoothX = useSpring(mouseX, springConfig)
-  const smoothY = useSpring(mouseY, springConfig)
+  useEffect(() => {
+    let animId: number
+    const damping = 0.12
 
-  const rotateX = useTransform(smoothY, [0, 1], [6, -6])
-  const rotateY = useTransform(smoothX, [0, 1], [-6, 6])
+    const renderLoop = () => {
+      const s = stateRef.current
+      s.curRX += (s.targetRX - s.curRX) * damping
+      s.curRY += (s.targetRY - s.curRY) * damping
 
-  const glareX = useTransform(smoothX, [0, 1], [0, 100])
-  const glareY = useTransform(smoothY, [0, 1], [0, 100])
+      if (cardRef.current) {
+        cardRef.current.style.transform = `rotateX(${s.curRX.toFixed(2)}deg) rotateY(${s.curRY.toFixed(2)}deg) scale3d(${isHovered ? 1.03 : 1}, ${isHovered ? 1.03 : 1}, 1)`
+      }
 
-  const glareBg = useTransform(
-    [glareX, glareY],
-    ([x, y]) =>
-      `radial-gradient(circle at ${x as number}% ${y as number}%, rgba(255,255,255,0.06), transparent 60%)`
-  )
+      if (shadowRef.current) {
+        shadowRef.current.style.transform = `translateZ(-80px) translateX(${(s.curRY * 2.5).toFixed(2)}px) translateY(${(-s.curRX * 2.5).toFixed(2)}px)`
+      }
 
-  const glowBg = useTransform(
-    [smoothX, smoothY],
-    ([x, y]) =>
-      `radial-gradient(600px circle at ${x as number}% ${y as number}%, ${
-        plan.popular ? 'rgba(236,72,153,0.12)' : 'rgba(14,165,233,0.06)'
-      }, transparent 80%)`
-  )
+      if (edgeRef.current) {
+        edgeRef.current.style.setProperty('--angle', `${s.curRY * 6 + 45}deg`)
+      }
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (!cardRef.current) return
-      const rect = cardRef.current.getBoundingClientRect()
-      const x = (e.clientX - rect.left) / rect.width
-      const y = (e.clientY - rect.top) / rect.height
-      mouseX.set(Math.max(0, Math.min(1, x)))
-      mouseY.set(Math.max(0, Math.min(1, y)))
-    },
-    [mouseX, mouseY]
-  )
+      animId = requestAnimationFrame(renderLoop)
+    }
 
-  const handleMouseEnter = useCallback(() => setIsHovered(true), [])
-  const handleMouseLeave = useCallback(() => {
-    setIsHovered(false)
-    mouseX.set(0.5)
-    mouseY.set(0.5)
-  }, [mouseX, mouseY])
+    renderLoop()
+    return () => cancelAnimationFrame(animId)
+  }, [isHovered])
 
-  const particles = useMemo(
-    () =>
-      Array.from({ length: isMobile ? 0 : plan.popular ? 18 : 10 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 2 + 1,
-        duration: Math.random() * 4 + 3,
-        delay: Math.random() * 3,
-      })),
-    [isMobile, plan.popular]
-  )
+  const handlePointerMove = useCallback((clientX: number, clientY: number) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = clientX - rect.left
+    const y = clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+
+    stateRef.current.targetRX = -((y - centerY) / centerY) * 14
+    stateRef.current.targetRY = ((x - centerX) / centerX) * 14
+
+    if (glareRef.current) {
+      const posX = (x / rect.width) * 100
+      const posY = (y / rect.height) * 100
+      glareRef.current.style.background = `radial-gradient(circle at ${posX}% ${posY}%, rgba(255,255,255,0.4) 0%, transparent 55%)`
+      glareRef.current.style.opacity = '1'
+    }
+  }, [])
 
   return (
     <motion.div
@@ -96,159 +93,167 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ delay: index * 0.15, type: 'spring', damping: 25 }}
-      className="relative"
+      className="relative w-full group pt-4"
+      style={{ perspective: 1200 }}
     >
-      {/* Mouse-following glow layer */}
-      <motion.div
-        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 -z-10"
-        style={{ background: glowBg }}
-      />
-
-      <motion.div
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          rotateX: isHovered ? rotateX : 0,
-          rotateY: isHovered ? rotateY : 0,
-          perspective: 1000,
-          transformStyle: 'preserve-3d',
+      <div
+        className="relative"
+        style={{ transformStyle: 'preserve-3d' }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => {
+          setIsHovered(false)
+          stateRef.current.targetRX = 0
+          stateRef.current.targetRY = 0
+          if (glareRef.current) glareRef.current.style.opacity = '0'
         }}
-        className={`group relative rounded-3xl bg-gradient-to-br from-zinc-100/40 to-zinc-50/10 dark:from-white/[0.05] dark:to-white/[0.02] backdrop-blur-xl border overflow-hidden transition-all duration-300 hover:bg-zinc-200/40 dark:hover:bg-white/[0.08] p-8 flex flex-col text-left ${
-          plan.border
-        } ${plan.popular ? 'md:-translate-y-4 shadow-2xl ' + plan.shadow : ''}`}
+        onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
+        onTouchMove={(e) => {
+          if (e.touches.length > 0) {
+            handlePointerMove(e.touches[0].clientX, e.touches[0].clientY)
+          }
+        }}
       >
-        {/* Glare overlay */}
-        <motion.div
-          className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{ background: glareBg }}
+        {/* Sombra 3D Dinámica Separada */}
+        <div
+          ref={shadowRef}
+          className={`absolute -inset-4 rounded-[32px] blur-[30px] -z-10 pointer-events-none transition-opacity duration-300 ${
+            plan.popular
+              ? 'bg-accent-magenta/30 opacity-80'
+              : 'bg-black/40 dark:bg-black/70 opacity-50 group-hover:opacity-90'
+          }`}
+          style={{ transform: 'translateZ(-80px)' }}
         />
 
-        {/* Top gradient line for popular */}
+        {/* Badge de "Más Elegido" (posicionado fuera de overflow-hidden para no recortarse) */}
         {plan.popular && (
-          <div className="absolute top-0 inset-x-0 h-px">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-magenta to-transparent" />
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-              animate={{ x: ['-100%', '100%'] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'linear', repeatDelay: 2 }}
-            />
-          </div>
-        )}
-
-        {/* Floating particles */}
-        {particles.map((p) => (
-          <motion.div
-            key={p.id}
-            className="absolute rounded-full pointer-events-none"
-            style={{
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-              width: p.size,
-              height: p.size,
-              background: plan.popular ? 'rgba(236,72,153,0.4)' : 'rgba(14,165,233,0.3)',
-            }}
-            animate={{
-              y: [0, -25 - Math.random() * 25, 0],
-              x: [0, Math.random() * 16 - 8, 0],
-              scale: [0, 1.2, 0],
-              opacity: [0, 0.7, 0],
-            }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              delay: p.delay,
-              ease: 'easeInOut',
-            }}
-          />
-        ))}
-
-        {/* Popular badge */}
-        {plan.popular && (
-          <motion.div
-            className="absolute -top-4 left-0 right-0 flex justify-center z-20"
-            animate={{ y: [0, -3, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          <div
+            className="absolute -top-4 left-0 right-0 flex justify-center z-30 pointer-events-none"
+            style={{ transform: 'translateZ(90px)' }}
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 blur-md opacity-50 rounded-full" />
-              <span className="relative bg-gradient-to-r from-cyan-400 to-purple-500 text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-lg border border-white/20">
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 blur-md opacity-80 rounded-full" />
+              <span className="relative bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 text-white text-[11px] font-black px-5 py-1.5 rounded-full shadow-xl border border-white/40 tracking-wider uppercase text-shadow">
                 {t('store.mas_elegido')}
               </span>
             </div>
-          </motion.div>
+          </div>
         )}
 
-        {/* Icon — depth layer 1 */}
+        {/* Tarjeta 3D Principal */}
         <div
-          className="relative z-[4] w-14 h-14 rounded-2xl bg-gradient-to-br p-0.5 mb-6"
-          style={{ transform: 'translateZ(4px)' }}
+          ref={cardRef}
+          className={`relative rounded-3xl bg-card/90 dark:bg-card/70 backdrop-blur-xl border p-8 flex flex-col text-left overflow-hidden transition-all duration-300 shadow-2xl ${
+            plan.border
+          } ${plan.popular ? 'md:-translate-y-2' : ''}`}
+          style={{ transformStyle: 'preserve-3d' }}
         >
-          <div className="w-full h-full bg-primary-bg/80 dark:bg-[#050508]/80 backdrop-blur-sm rounded-[14px] flex items-center justify-center">
-            <plan.icon className="w-7 h-7 text-zinc-800 dark:text-white" />
+          {/* Filo holográfico que recorre el borde */}
+          <div
+            ref={edgeRef}
+            className="absolute inset-0 rounded-3xl p-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            style={{
+              background: `conic-gradient(from var(--angle, 0deg), transparent, rgba(56,189,248,0.9), rgba(236,72,153,0.9), transparent 35%)`,
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'xor',
+              maskComposite: 'exclude',
+            }}
+          />
+
+          {/* Marco flotante intermedio */}
+          <div
+            className="absolute inset-0 rounded-3xl border border-white/20 dark:border-white/10 pointer-events-none"
+            style={{ transform: 'translateZ(20px)' }}
+          />
+
+          {/* Brillo especular dinámico */}
+          <div
+            ref={glareRef}
+            className="absolute inset-0 opacity-0 pointer-events-none mix-blend-overlay transition-opacity duration-300"
+            style={{ transform: 'translateZ(70px)' }}
+          />
+
+          {/* Línea superior radiante para el plan popular */}
+          {plan.popular && (
+            <div className="absolute top-0 inset-x-0 h-1">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-magenta to-transparent" />
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent"
+                animate={{ x: ['-100%', '100%'] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'linear', repeatDelay: 2 }}
+              />
+            </div>
+          )}
+
+          {/* Icono (Capa Z=40px) */}
+          <div
+            className="relative z-10 w-14 h-14 rounded-2xl bg-gradient-to-br p-0.5 mb-6 shadow-md mt-2"
+            style={{ transform: 'translateZ(40px)' }}
+          >
+            <div
+              className={`w-full h-full bg-gradient-to-br ${plan.color} rounded-[14px] flex items-center justify-center`}
+            >
+              <plan.icon className="w-7 h-7 text-white" />
+            </div>
+          </div>
+
+          {/* Contenido Texto y Precio (Capa Z=60px) */}
+          <div
+            className="relative z-10 flex-1 flex flex-col"
+            style={{ transform: 'translateZ(60px)' }}
+          >
+            <h3 className="text-2xl font-black text-foreground mb-2">{plan.title}</h3>
+            <p className="text-muted-foreground text-sm mb-6 h-10 leading-relaxed font-medium">
+              {plan.description}
+            </p>
+
+            <div className="mb-6">
+              <span className="text-4xl font-extrabold text-foreground">{plan.price}</span>
+              <span className="text-muted-foreground font-semibold text-xs"> ARS{plan.period}</span>
+            </div>
+
+            {/* Lista de características */}
+            <ul className="space-y-3.5 mb-8 flex-1">
+              {plan.features.map((feature, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <div
+                    className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-gradient-to-br ${plan.color} flex items-center justify-center shadow-sm`}
+                  >
+                    <Check className="w-3 h-3 text-white" />
+                  </div>
+                  <span className="text-sm text-foreground/90 font-medium">{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Botón de Suscribirme Estético 3D (Capa Z=85px) */}
+            <div className="mt-auto pt-4" style={{ transform: 'translateZ(85px)' }}>
+              <motion.button
+                onClick={() => onSelect(plan)}
+                className="relative w-full py-4 rounded-xl font-extrabold text-white flex items-center justify-center gap-2 overflow-hidden group/btn cursor-pointer shadow-lg"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+              >
+                <div className={`absolute inset-0 bg-gradient-to-r ${plan.color}`} />
+                <motion.div
+                  className="absolute -inset-full top-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg]"
+                  animate={{ left: ['-100%', '200%'] }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    repeatDelay: 1.5,
+                  }}
+                />
+                <span className="relative z-10 flex items-center gap-2 text-sm md:text-base tracking-wide">
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  {t('store.suscribirme')}
+                </span>
+              </motion.button>
+            </div>
           </div>
         </div>
-
-        {/* Text — depth layer 2 */}
-        <div className="relative z-[6]" style={{ transform: 'translateZ(8px)' }}>
-          <h3 className="text-2xl font-bold text-foreground mb-2">{plan.title}</h3>
-          <p className="text-primary-secondary text-sm mb-6 h-10">{plan.description}</p>
-        </div>
-
-        {/* Price — depth layer 2 */}
-        <div className="relative z-[6] mb-8" style={{ transform: 'translateZ(8px)' }}>
-          <span className="text-4xl font-black text-foreground">{plan.price}</span>
-          <span className="text-primary-secondary font-medium"> ARS{plan.period}</span>
-        </div>
-
-        {/* Features — depth layer 2 */}
-        <ul
-          className="relative z-[6] space-y-4 mb-8 flex-1"
-          style={{ transform: 'translateZ(8px)' }}
-        >
-          {plan.features.map((feature, i) => (
-            <li key={i} className="flex items-start gap-3">
-              <div
-                className={`mt-1 flex-shrink-0 w-4 h-4 rounded-full bg-gradient-to-br ${plan.color} flex items-center justify-center`}
-              >
-                <Check className="w-3 h-3 text-white" />
-              </div>
-              <span className="text-sm text-primary-secondary/90">{feature}</span>
-            </li>
-          ))}
-        </ul>
-
-        {/* CTA button — depth layer 3 */}
-        <div
-          className="relative z-[8] mt-auto pt-4 min-h-[60px]"
-          style={{ transform: 'translateZ(12px)' }}
-        >
-          <motion.button
-            onClick={() => onSelect(plan)}
-            className="relative w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 overflow-hidden group/btn cursor-pointer"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-          >
-            <motion.div
-              className={`absolute inset-0 bg-gradient-to-r ${plan.color}`}
-              animate={{ opacity: [0.85, 1, 0.85] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            {/* Shimmer sweep */}
-            <motion.div
-              className="absolute -inset-full top-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/25 to-transparent skew-x-[-20deg]"
-              animate={{ left: ['-100%', '200%'] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', repeatDelay: 1.5 }}
-            />
-            <span className="relative z-10 flex items-center gap-2 text-sm md:text-base">
-              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-              {t('store.suscribirme')}
-            </span>
-          </motion.button>
-        </div>
-      </motion.div>
+      </div>
     </motion.div>
   )
 }

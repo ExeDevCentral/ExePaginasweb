@@ -106,7 +106,7 @@ const TechCard = ({ item, index }: { item: (typeof STACK)[0]; index: number }) =
 const TechStack = () => {
   const { t } = useTranslation()
   return (
-    <section className="py-32 px-4 bg-background relative overflow-hidden border-y border-border">
+    <section className="py-32 px-4 bg-transparent relative overflow-hidden border-y border-border">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-accent-cyan/5 via-background to-background pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">

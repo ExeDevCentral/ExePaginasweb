@@ -107,7 +107,7 @@ export default function AutomationAudit() {
   return (
     <section
       id="automation-audit"
-      className="py-32 px-4 relative overflow-hidden bg-background border-t border-border z-10"
+      className="py-32 px-4 relative overflow-hidden bg-transparent border-t border-border z-10"
     >
       {/* Mesh gradient background — two overlapping radial gradients for depth */}
       <div className="absolute inset-0 pointer-events-none">

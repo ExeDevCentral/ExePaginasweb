@@ -30,14 +30,19 @@ const HOSTED_BUTTONS: Record<string, string> = {
 
 interface CheckoutModalProps {
   plan: PlanData
+  initialMethod?: 'transfer' | 'paypal'
   onClose: () => void
 }
 
-export default function CheckoutModal({ plan, onClose }: CheckoutModalProps) {
+export default function CheckoutModal({
+  plan,
+  initialMethod = 'transfer',
+  onClose,
+}: CheckoutModalProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [tipoProyecto, setTipoProyecto] = useState('mantenimiento')
-  const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'paypal'>('transfer')
+  const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'paypal'>(initialMethod)
   const [paypalStatus, setPaypalStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
 
   useEffect(() => {

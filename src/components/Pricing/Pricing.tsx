@@ -162,7 +162,7 @@ const Pricing = () => {
   return (
     <section
       id="pricing"
-      className="py-32 px-4 relative overflow-hidden bg-background z-10 border-y border-border"
+      className="py-32 px-4 relative overflow-hidden bg-transparent z-10 border-y border-border"
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent-cyan/5 via-background to-background pointer-events-none" />
 

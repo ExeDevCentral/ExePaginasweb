@@ -100,7 +100,7 @@ export default function BookingDemo() {
   }
 
   return (
-    <section id="booking-demo" className="py-32 px-4 relative overflow-hidden bg-background z-10">
+    <section id="booking-demo" className="py-32 px-4 relative overflow-hidden bg-transparent z-10">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,_var(--tw-gradient-stops))] from-accent-magenta/5 via-background to-background pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">

@@ -1,8 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Globe, Monitor, Palette, ShoppingBag, Calendar } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../../core/infra/supabase/client'
 import { useTranslation } from 'react-i18next'
 import TransferInstructions from './TransferInstructions'
 import type { PlanData } from './PlanCard'
@@ -40,23 +38,9 @@ export default function CheckoutModal({
   onClose,
 }: CheckoutModalProps) {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const [tipoProyecto, setTipoProyecto] = useState('mantenimiento')
   const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'paypal'>(initialMethod)
   const [paypalStatus, setPaypalStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user?.email) {
-        navigate('/login')
-        return
-      }
-    }
-    checkAuth()
-  }, [navigate])
 
   useEffect(() => {
     if (paymentMethod !== 'paypal' || !plan) {

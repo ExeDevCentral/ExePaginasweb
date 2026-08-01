@@ -234,35 +234,47 @@ const TiltCard = ({
 }) => {
   const { t } = useTranslation()
   const cardRef = useRef<HTMLDivElement>(null)
+  const isMobile = useIsMobile()
   const [tilt, setTilt] = useState({ rx: 0, ry: 0, tx: 0, ty: 0 })
   const [active, setActive] = useState(false)
   const [glowPos, setGlowPos] = useState({ x: 50, y: 50 })
   const IconComponent = project.icon
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isMobile) return
+    const el = cardRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const px = (e.clientX - rect.left) / rect.width
+    const py = (e.clientY - rect.top) / rect.height
+    const ry = (px - 0.5) * 14
+    const rx = -(py - 0.5) * 10
+    const tx = (px - 0.5) * 10
+    const ty = (py - 0.5) * 8
+    setTilt({ rx, ry, tx, ty })
+    setGlowPos({ x: px * 100, y: py * 100 })
+  }
+
+  const handlePointerEnter = () => {
+    if (isMobile) return
+    setActive(true)
+  }
+
+  const handlePointerLeave = () => {
+    if (isMobile) return
+    setActive(false)
+    setTilt({ rx: 0, ry: 0, tx: 0, ty: 0 })
+    setGlowPos({ x: 50, y: 50 })
+  }
 
   return (
     <motion.article
       ref={cardRef}
       className={`group relative rounded-2xl border ${project.cardBorder} ${project.cardHoverBorder} bg-white/90 dark:bg-slate-900/70 p-6 backdrop-blur-md overflow-hidden transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col justify-between`}
       style={{ perspective: 900 }}
-      onPointerMove={(e) => {
-        const el = cardRef.current
-        if (!el) return
-        const rect = el.getBoundingClientRect()
-        const px = (e.clientX - rect.left) / rect.width
-        const py = (e.clientY - rect.top) / rect.height
-        const ry = (px - 0.5) * 14
-        const rx = -(py - 0.5) * 10
-        const tx = (px - 0.5) * 10
-        const ty = (py - 0.5) * 8
-        setTilt({ rx, ry, tx, ty })
-        setGlowPos({ x: px * 100, y: py * 100 })
-      }}
-      onPointerEnter={() => setActive(true)}
-      onPointerLeave={() => {
-        setActive(false)
-        setTilt({ rx: 0, ry: 0, tx: 0, ty: 0 })
-        setGlowPos({ x: 50, y: 50 })
-      }}
+      onPointerMove={handlePointerMove}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
       animate={{
         rotateX: tilt.rx,
         rotateY: tilt.ry,
@@ -359,7 +371,7 @@ const DemoZone = () => {
   // Configuración estable de partículas de vapor (Pixel Coffee)
   const steamParticles = useMemo(
     () =>
-      Array.from({ length: isMobile ? 6 : 12 }).map((_, i) => ({
+      Array.from({ length: isMobile ? 3 : 12 }).map((_, i) => ({
         id: i,
         width: 100 + Math.random() * 150,
         height: 150 + Math.random() * 150,
@@ -374,7 +386,7 @@ const DemoZone = () => {
   // Configuración estable de partículas de datos (Portal Genérico)
   const digitalParticles = useMemo(
     () =>
-      Array.from({ length: isMobile ? 12 : 25 }).map((_, i) => ({
+      Array.from({ length: isMobile ? 6 : 25 }).map((_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
         duration: 5 + Math.random() * 7,

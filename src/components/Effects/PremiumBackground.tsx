@@ -4,6 +4,7 @@ const DARK_COLORS = ['#60a5fa', '#c084fc', '#34d399']
 const LIGHT_COLORS = ['#0284c7', '#7c3aed', '#059669']
 
 const NODE_COUNT = 90
+const MOBILE_NODE_COUNT = 22
 const LINK_DIST = 140
 const MOUSE_RADIUS = 170
 
@@ -15,8 +16,9 @@ class Node {
   r: number
   colorIdx: number
   baseR: number
+  isMobile: boolean
 
-  constructor(w: number, h: number) {
+  constructor(w: number, h: number, isMobile = false) {
     this.x = Math.random() * w
     this.y = Math.random() * h
     this.vx = (Math.random() - 0.5) * 0.45
@@ -24,6 +26,7 @@ class Node {
     this.r = Math.random() * 2 + 1.2
     this.colorIdx = Math.floor(Math.random() * DARK_COLORS.length)
     this.baseR = this.r
+    this.isMobile = isMobile
   }
 
   update(w: number, h: number, mouse: { x: number; y: number; active: boolean }) {
@@ -68,8 +71,11 @@ class Node {
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2)
     ctx.fillStyle = color
-    ctx.shadowBlur = isDark ? 8 : 4
-    ctx.shadowColor = color
+    // Sin shadowBlur en móvil: es la operación más cara del canvas
+    if (!this.isMobile) {
+      ctx.shadowBlur = isDark ? 8 : 4
+      ctx.shadowColor = color
+    }
     ctx.fill()
     ctx.shadowBlur = 0
   }
@@ -105,6 +111,8 @@ const PremiumBackground = () => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    const isMobile = window.innerWidth < 768
+
     let w = (canvas.width = window.innerWidth)
     let h = (canvas.height = window.innerHeight)
 
@@ -116,7 +124,8 @@ const PremiumBackground = () => {
     window.addEventListener('resize', handleResize)
 
     const mouse = { x: -9999, y: -9999, active: false }
-    const nodes = Array.from({ length: NODE_COUNT }, () => new Node(w, h))
+    const nodeCount = isMobile ? MOBILE_NODE_COUNT : NODE_COUNT
+    const nodes = Array.from({ length: nodeCount }, () => new Node(w, h, isMobile))
 
     const burst = () => {
       nodes.forEach((n) => {
@@ -197,7 +206,8 @@ const PremiumBackground = () => {
       // Limpiar el canvas por completo en cada cuadro para eliminar cualquier marca o estela de sombra
       ctx.clearRect(0, 0, w, h)
 
-      drawLinks()
+      // En móvil saltamos las líneas (complejidad O(n²)) para aliviar la GPU
+      if (!isMobile) drawLinks()
       const darkTheme = document.documentElement.classList.contains('dark')
       nodes.forEach((n) => {
         n.update(w, h, mouse)

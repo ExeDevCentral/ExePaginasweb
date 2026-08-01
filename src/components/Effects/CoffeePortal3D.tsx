@@ -96,7 +96,11 @@ export const CoffeePortal3D = ({
   isVisible: boolean
   onDismiss?: () => void
 }) => {
-  const beans = useMemo(() => Array.from({ length: 30 }).map((_, i) => i), [])
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const beans = useMemo(
+    () => Array.from({ length: isMobile ? 14 : 30 }).map((_, i) => i),
+    [isMobile]
+  )
   const [beanPhase, setBeanPhase] = useState<'orbit' | 'explode'>('orbit')
   const [showSkip, setShowSkip] = useState(false)
 
@@ -125,7 +129,11 @@ export const CoffeePortal3D = ({
           className="fixed inset-0 z-[60] bg-amber-950/30 backdrop-blur-sm cursor-pointer"
           onClick={onDismiss}
         >
-          <Canvas shadows dpr={[1, 2]} gl={{ antialias: true }}>
+          <Canvas
+            shadows={!isMobile}
+            dpr={isMobile ? [1, 1.25] : [1, 2]}
+            gl={{ antialias: !isMobile }}
+          >
             <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
             <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} intensity={2} color="#fbbf24" />
@@ -134,7 +142,7 @@ export const CoffeePortal3D = ({
               angle={0.15}
               penumbra={1}
               intensity={1}
-              castShadow
+              castShadow={!isMobile}
             />
 
             <Environment preset="city" />
@@ -146,7 +154,9 @@ export const CoffeePortal3D = ({
               ))}
             </group>
 
-            <ContactShadows position={[0, -4, 0]} opacity={0.4} scale={20} blur={2.5} far={4.5} />
+            {!isMobile && (
+              <ContactShadows position={[0, -4, 0]} opacity={0.4} scale={20} blur={2.5} far={4.5} />
+            )}
           </Canvas>
 
           {showSkip && (

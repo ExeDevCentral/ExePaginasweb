@@ -37,7 +37,6 @@ async function getOrCreateCliente(email, fullName) {
   if (!db) return null
 
   const { data: existentes } = await db.from('clientes').select('id').eq('email', email).limit(1)
-
   if (existentes?.[0]) return existentes[0].id
 
   let id = null
@@ -49,13 +48,15 @@ async function getOrCreateCliente(email, fullName) {
     console.warn('[register-transfer] No se pudo buscar en auth.users:', e.message)
   }
 
+  if (!id) return null
+
   const { data: nuevo } = await db
     .from('clientes')
-    .insert(id ? { id, email, nombre: fullName || null } : { email, nombre: fullName || null })
+    .insert({ id, email, full_name: fullName || null })
     .select('id')
     .single()
 
-  return nuevo?.id
+  return nuevo?.id || id
 }
 
 export default async function handler(req, res) {
@@ -77,7 +78,9 @@ export default async function handler(req, res) {
   try {
     const clienteId = await getOrCreateCliente(email, fullName || null)
     if (!clienteId) {
-      return res.status(500).json({ error: 'No se pudo identificar al cliente.' })
+      return res
+        .status(400)
+        .json({ error: 'No existe una cuenta registrada con ese email. Creá una cuenta primero.' })
     }
 
     const monto = PLAN_MONTOS_ARS[planSlug]
@@ -95,7 +98,6 @@ export default async function handler(req, res) {
         plan_nombre: planNombre || null,
         plan_slug: planSlug,
         tipo_proyecto: tipoProyecto || 'mantenimiento',
-        metodo_pago: 'transferencia',
         provider: 'transferencia',
       })
       .select('id, monto, moneda, estado, created_at')

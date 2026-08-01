@@ -80,13 +80,15 @@ async function getOrCreateCliente(email, fullName) {
     console.warn('[paypal-webhook] No se pudo buscar en auth.users:', e.message)
   }
 
+  if (!id) return null
+
   const { data: nuevo } = await db
     .from('clientes')
-    .insert(id ? { id, email, nombre: fullName || null } : { email, nombre: fullName || null })
+    .insert({ id, email, full_name: fullName || null })
     .select('id')
     .single()
 
-  return nuevo?.id
+  return nuevo?.id || id
 }
 
 async function getPlanBySlug(slug) {
@@ -319,7 +321,6 @@ export default async function handler(req, res) {
           tipo_proyecto: tipoProyecto || 'mantenimiento',
           provider: 'paypal',
           paypal_order_id: paypalOrderId,
-          fecha_aprobacion: new Date().toISOString(),
         })
         .select('id')
         .single()

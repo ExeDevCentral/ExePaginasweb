@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Code2, Github, Instagram, Linkedin, Mail, Zap, Shield, Search, Send } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+import Logo from './Logo'
+
 const TECH_ITEMS = [
   { icon: Zap, labelKey: 'card_1_titulo', color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
   { icon: Code2, labelKey: 'card_2_titulo', color: 'text-blue-400', bg: 'bg-blue-400/10' },
@@ -24,10 +26,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center gap-2 mb-6">
-              <Code2 className="w-8 h-8 text-accent-cyan" />
+            <div className="flex items-center gap-3 mb-6">
+              <Logo size={48} className="h-12 w-auto" />
               <span className="font-montserrat font-black text-2xl tracking-tight text-foreground">
-                ExeSistemas<span className="text-accent-cyan">WEB</span>
+                ExePaginas<span className="text-yellow-400">WEB.com</span>
               </span>
             </div>
             <p className="text-primary-secondary mb-6 max-w-sm leading-relaxed text-sm">

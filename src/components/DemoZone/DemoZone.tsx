@@ -789,12 +789,12 @@ const DemoZone = () => {
                 <AnimatePresence>
                   {whatsappProp !== null && (
                     <motion.div
-                      className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 bg-green-500 text-black font-bold px-6 py-3 rounded-full text-sm shadow-[0_0_30px_rgba(34,197,94,0.5)] flex items-center gap-2"
+                      className="absolute bottom-7 left-1/2 -translate-x-1/2 z-30 bg-green-500 text-black font-bold px-5 py-3 rounded-full text-sm shadow-[0_0_30px_rgba(34,197,94,0.5)] flex items-center gap-2"
                       initial={{ opacity: 0, y: 20, scale: 0.8 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10 }}
                     >
-                      💬 {t('demozone.casa_aura_connecting')}
+                      <span className="text-base">💬</span> {t('demozone.casa_aura_connecting')}
                     </motion.div>
                   )}
                 </AnimatePresence>

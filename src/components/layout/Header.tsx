@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthRole } from '../../core/auth/userAuth'
 import ThemeToggle from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
+import Logo from './Logo'
 import { toast } from 'sonner'
 
 const navLabelKeys: Record<string, string> = {
@@ -92,22 +93,10 @@ const Header = () => {
             whileTap={{ scale: 0.98 }}
             onClick={(e) => scrollToSection(e, 'home')}
           >
-            <div className="relative w-8 h-8 overflow-hidden shrink-0 border border-zinc-800 group-hover:border-[#00f2fe] transition-colors duration-300">
-              <div className="absolute inset-0 bg-[#00f2fe]/0 group-hover:bg-[#00f2fe]/10 transition-colors duration-300" />
-              <img
-                src="/logo-40.webp"
-                srcSet="/logo-40.webp 1x, /logo.webp 2x"
-                alt="Logo"
-                loading="eager"
-                fetchPriority="high"
-                width="32"
-                height="32"
-                className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 relative z-10"
-              />
-            </div>
+            <Logo size={42} className="h-10 w-auto" />
             <span className="text-foreground text-xs font-bold tracking-widest uppercase flex items-center gap-1">
-              EXE<span className="text-accent-cyan font-light">//</span>SISTEMAS
-              <span className="text-muted-foreground font-light">.WEB</span>
+              EXE<span className="text-yellow-400 font-light">//</span>PAGINASWEB
+              <span className="text-muted-foreground font-light">.COM</span>
             </span>
           </motion.a>
 

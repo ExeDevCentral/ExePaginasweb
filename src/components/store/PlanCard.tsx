@@ -142,7 +142,7 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
         {/* Tarjeta 3D Principal */}
         <div
           ref={cardRef}
-          className={`relative rounded-3xl bg-card/90 dark:bg-card/70 backdrop-blur-xl border p-8 flex flex-col text-left overflow-hidden transition-all duration-300 shadow-2xl ${
+          className={`relative rounded-3xl bg-card/90 dark:bg-card/70 backdrop-blur-xl border p-8 flex flex-col text-left transition-all duration-300 shadow-2xl ${
             plan.border
           } ${plan.popular ? 'md:-translate-y-2' : ''}`}
           style={{ transformStyle: 'preserve-3d' }}
@@ -198,7 +198,7 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
 
           {/* Contenido Texto y Precio (Capa Z=60px) */}
           <div
-            className="relative z-10 flex-1 flex flex-col"
+            className="relative z-20 flex-1 flex flex-col"
             style={{ transform: 'translateZ(60px)' }}
           >
             <h3 className="text-2xl font-black text-foreground mb-2">{plan.title}</h3>
@@ -226,7 +226,7 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
             </ul>
 
             {/* Botón de Suscribirme Estético 3D (Capa Z=85px) */}
-            <div className="mt-auto pt-4" style={{ transform: 'translateZ(85px)' }}>
+            <div className="mt-auto pt-4 relative z-30" style={{ transform: 'translateZ(85px)' }}>
               <motion.button
                 onClick={() => onSelect(plan)}
                 className="relative w-full py-4 rounded-xl font-extrabold text-white flex items-center justify-center gap-2 overflow-hidden group/btn cursor-pointer shadow-lg"

@@ -113,7 +113,7 @@ export default function ProductCard({
         {/* Cuerpo Principal de la Tarjeta 3D */}
         <div
           ref={cardRef}
-          className="h-full p-8 bg-card/90 dark:bg-card/70 backdrop-blur-xl border border-border rounded-2xl transition-all duration-300 overflow-hidden relative shadow-xl"
+          className="h-full p-8 bg-card/90 dark:bg-card/70 backdrop-blur-xl border border-border rounded-2xl transition-all duration-300 relative shadow-xl"
           style={{ transformStyle: 'preserve-3d' }}
         >
           {/* Filo holográfico que recorre el borde */}

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useMemo, useRef, Suspense } from 'react'
+import { useState, useMemo, useRef, Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   X,
@@ -460,6 +460,18 @@ const DemoZone = () => {
     [propFilter]
   )
 
+  // Cerrar modal con la tecla Escape
+  useEffect(() => {
+    if (!selectedProject) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedProject(null)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedProject])
+
   return (
     <section
       id="demo"
@@ -558,8 +570,16 @@ const DemoZone = () => {
           >
             {/* Backdrop */}
             <div
+              role="button"
+              tabIndex={0}
+              aria-label={t('demozone.close')}
               className="absolute inset-0 bg-primary-bg/80 backdrop-blur-md md:backdrop-blur-xl cursor-pointer"
               onClick={() => setSelectedProject(null)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setSelectedProject(null)
+                }
+              }}
             />
 
             {/* ─── CASA AURA MODAL — Split-screen moderno ─── */}

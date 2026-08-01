@@ -98,7 +98,7 @@ const Hero: React.FC = () => {
 
   const [showTerminal, setShowTerminal] = useState(false)
   useEffect(() => {
-    const timer = setTimeout(() => setShowTerminal(true), 3500)
+    const timer = setTimeout(() => setShowTerminal(true), 1000)
     return () => clearTimeout(timer)
   }, [])
 

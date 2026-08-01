@@ -136,6 +136,36 @@ function App() {
         <meta name="twitter:image" content="/logo.webp" />
 
         <link rel="canonical" href="https://exepaginasweb.com" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'LocalBusiness',
+            '@id': 'https://exepaginasweb.com/#organization',
+            name: 'ExePaginasWeb',
+            url: 'https://exepaginasweb.com',
+            logo: 'https://exepaginasweb.com/logo.png',
+            image: 'https://exepaginasweb.com/logo.png',
+            email: 'Contacto@exepaginasweb.com',
+            description:
+              'Agencia de desarrollo web full-stack en Rosario, Argentina. Sitios y aplicaciones a medida con React, TypeScript y Supabase — código propio, sin dependencia de plataformas.',
+            areaServed: {
+              '@type': 'City',
+              name: 'Rosario',
+              containedInPlace: {
+                '@type': 'Country',
+                name: 'Argentina',
+              },
+            },
+            address: {
+              '@type': 'PostalAddress',
+              addressLocality: 'Rosario',
+              addressRegion: 'Santa Fe',
+              addressCountry: 'AR',
+            },
+            priceRange: '$$',
+            sameAs: [],
+          })}
+        </script>
       </Helmet>
       <div className="min-h-screen bg-transparent text-primary-text relative">
         <Suspense fallback={null}>

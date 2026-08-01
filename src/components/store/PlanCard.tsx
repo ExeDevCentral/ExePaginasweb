@@ -1,4 +1,3 @@
-import { useRef, useCallback, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Check, ArrowRight, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -26,66 +25,6 @@ interface PlanCardProps {
 
 export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
   const { t } = useTranslation()
-  const cardRef = useRef<HTMLDivElement>(null)
-  const shadowRef = useRef<HTMLDivElement>(null)
-  const glareRef = useRef<HTMLDivElement>(null)
-  const edgeRef = useRef<HTMLDivElement>(null)
-
-  const [isHovered, setIsHovered] = useState(false)
-
-  const stateRef = useRef({
-    targetRX: 0,
-    targetRY: 0,
-    curRX: 0,
-    curRY: 0,
-  })
-
-  useEffect(() => {
-    let animId: number
-    const damping = 0.12
-
-    const renderLoop = () => {
-      const s = stateRef.current
-      s.curRX += (s.targetRX - s.curRX) * damping
-      s.curRY += (s.targetRY - s.curRY) * damping
-
-      if (cardRef.current) {
-        cardRef.current.style.transform = `rotateX(${s.curRX.toFixed(2)}deg) rotateY(${s.curRY.toFixed(2)}deg) scale3d(${isHovered ? 1.03 : 1}, ${isHovered ? 1.03 : 1}, 1)`
-      }
-
-      if (shadowRef.current) {
-        shadowRef.current.style.transform = `translateZ(-80px) translateX(${(s.curRY * 2.5).toFixed(2)}px) translateY(${(-s.curRX * 2.5).toFixed(2)}px)`
-      }
-
-      if (edgeRef.current) {
-        edgeRef.current.style.setProperty('--angle', `${s.curRY * 6 + 45}deg`)
-      }
-
-      animId = requestAnimationFrame(renderLoop)
-    }
-
-    renderLoop()
-    return () => cancelAnimationFrame(animId)
-  }, [isHovered])
-
-  const handlePointerMove = useCallback((clientX: number, clientY: number) => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    const x = clientX - rect.left
-    const y = clientY - rect.top
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-
-    stateRef.current.targetRX = -((y - centerY) / centerY) * 14
-    stateRef.current.targetRY = ((x - centerX) / centerX) * 14
-
-    if (glareRef.current) {
-      const posX = (x / rect.width) * 100
-      const posY = (y / rect.height) * 100
-      glareRef.current.style.background = `radial-gradient(circle at ${posX}% ${posY}%, rgba(255,255,255,0.4) 0%, transparent 55%)`
-      glareRef.current.style.opacity = '1'
-    }
-  }, [])
 
   return (
     <motion.div
@@ -94,42 +33,20 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
       viewport={{ once: true, margin: '-50px' }}
       transition={{ delay: index * 0.15, type: 'spring', damping: 25 }}
       className="relative w-full group pt-4"
-      style={{ perspective: 1200 }}
     >
-      <div
-        className="relative"
-        style={{ transformStyle: 'preserve-3d' }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => {
-          setIsHovered(false)
-          stateRef.current.targetRX = 0
-          stateRef.current.targetRY = 0
-          if (glareRef.current) glareRef.current.style.opacity = '0'
-        }}
-        onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
-        onTouchMove={(e) => {
-          if (e.touches.length > 0) {
-            handlePointerMove(e.touches[0].clientX, e.touches[0].clientY)
-          }
-        }}
-      >
-        {/* Sombra 3D Dinámica Separada */}
+      <div className="relative">
+        {/* Sombra */}
         <div
-          ref={shadowRef}
           className={`absolute -inset-4 rounded-[32px] blur-[30px] -z-10 pointer-events-none transition-opacity duration-300 ${
             plan.popular
               ? 'bg-accent-magenta/30 opacity-80'
               : 'bg-black/40 dark:bg-black/70 opacity-50 group-hover:opacity-90'
           }`}
-          style={{ transform: 'translateZ(-80px)' }}
         />
 
-        {/* Badge de "Más Elegido" (posicionado fuera de overflow-hidden para no recortarse) */}
+        {/* Badge de "Más Elegido" */}
         {plan.popular && (
-          <div
-            className="absolute -top-4 left-0 right-0 flex justify-center z-30 pointer-events-none"
-            style={{ transform: 'translateZ(90px)' }}
-          >
+          <div className="absolute -top-4 left-0 right-0 flex justify-center z-30 pointer-events-none">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 blur-md opacity-80 rounded-full" />
               <span className="relative bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 text-white text-[11px] font-black px-5 py-1.5 rounded-full shadow-xl border border-white/40 tracking-wider uppercase text-shadow">
@@ -139,20 +56,18 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
           </div>
         )}
 
-        {/* Tarjeta 3D Principal */}
+        {/* Tarjeta Principal */}
         <div
-          ref={cardRef}
           className={`relative rounded-3xl bg-card/90 dark:bg-card/70 backdrop-blur-xl border p-8 flex flex-col text-left transition-all duration-300 shadow-2xl ${
             plan.border
           } ${plan.popular ? 'md:-translate-y-2' : ''}`}
-          style={{ transformStyle: 'preserve-3d' }}
         >
           {/* Filo holográfico que recorre el borde */}
           <div
-            ref={edgeRef}
             className="absolute inset-0 rounded-3xl p-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
             style={{
-              background: `conic-gradient(from var(--angle, 0deg), transparent, rgba(56,189,248,0.9), rgba(236,72,153,0.9), transparent 35%)`,
+              background:
+                'conic-gradient(from 45deg, transparent, rgba(56,189,248,0.9), rgba(236,72,153,0.9), transparent 35%)',
               WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
               WebkitMaskComposite: 'xor',
               maskComposite: 'exclude',
@@ -160,17 +75,10 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
           />
 
           {/* Marco flotante intermedio */}
-          <div
-            className="absolute inset-0 rounded-3xl border border-white/20 dark:border-white/10 pointer-events-none"
-            style={{ transform: 'translateZ(20px)' }}
-          />
+          <div className="absolute inset-0 rounded-3xl border border-white/20 dark:border-white/10 pointer-events-none" />
 
           {/* Brillo especular dinámico */}
-          <div
-            ref={glareRef}
-            className="absolute inset-0 opacity-0 pointer-events-none mix-blend-overlay transition-opacity duration-300"
-            style={{ transform: 'translateZ(70px)' }}
-          />
+          <div className="absolute inset-0 opacity-0 pointer-events-none mix-blend-overlay transition-opacity duration-300 group-hover:opacity-100" />
 
           {/* Línea superior radiante para el plan popular */}
           {plan.popular && (
@@ -184,11 +92,8 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
             </div>
           )}
 
-          {/* Icono (Capa Z=40px) */}
-          <div
-            className="relative z-10 w-14 h-14 rounded-2xl bg-gradient-to-br p-0.5 mb-6 shadow-md mt-2"
-            style={{ transform: 'translateZ(40px)' }}
-          >
+          {/* Icono */}
+          <div className="relative z-10 w-14 h-14 rounded-2xl bg-gradient-to-br p-0.5 mb-6 shadow-md mt-2">
             <div
               className={`w-full h-full bg-gradient-to-br ${plan.color} rounded-[14px] flex items-center justify-center`}
             >
@@ -196,11 +101,8 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
             </div>
           </div>
 
-          {/* Contenido Texto y Precio (Capa Z=60px) */}
-          <div
-            className="relative z-20 flex-1 flex flex-col"
-            style={{ transform: 'translateZ(60px)' }}
-          >
+          {/* Contenido Texto y Precio */}
+          <div className="relative z-20 flex-1 flex flex-col">
             <h3 className="text-2xl font-black text-foreground mb-2">{plan.title}</h3>
             <p className="text-muted-foreground text-sm mb-6 h-10 leading-relaxed font-medium">
               {plan.description}
@@ -225,8 +127,8 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
               ))}
             </ul>
 
-            {/* Botón de Suscribirme Estético 3D (Capa Z=85px) */}
-            <div className="mt-auto pt-4 relative z-30" style={{ transform: 'translateZ(85px)' }}>
+            {/* Botón de Suscribirme */}
+            <div className="mt-auto pt-4 relative z-30">
               <motion.button
                 onClick={() => onSelect(plan)}
                 className="relative w-full py-4 rounded-xl font-extrabold text-white flex items-center justify-center gap-2 overflow-hidden group/btn cursor-pointer shadow-lg"

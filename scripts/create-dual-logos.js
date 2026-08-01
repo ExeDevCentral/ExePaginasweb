@@ -19,7 +19,7 @@ const possibleBrowserPaths = [
   process.env.LOCALAPPDATA + '\\Microsoft\\Edge\\Application\\msedge.exe',
 ]
 
-let executablePath = possibleBrowserPaths.find((p) => p && fs.existsSync(p))
+const executablePath = possibleBrowserPaths.find((p) => p && fs.existsSync(p))
 
 if (!executablePath) {
   console.error('No browser executable found!')

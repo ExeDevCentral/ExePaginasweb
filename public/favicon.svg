@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <style>
+      .brand-mark { fill: #0f172a; }
+      .brand-accent { fill: #facc15; }
+      @media (prefers-color-scheme: dark) {
+        .brand-mark { fill: #ffffff; }
+      }
+    </style>
+  </defs>
+
+  <!-- EXE Main Emblem Structure -->
+  <g class="brand-mark">
+    <!-- Top-left loop -->
+    <path d="M 210 90 L 260 90 L 150 200 L 120 170 Z" />
+    <path d="M 120 170 L 210 90 L 180 60 L 90 140 Z" />
+    
+    <!-- Main Center Thick Diagonal Bar -->
+    <path d="M 260 90 L 420 250 L 280 430 L 120 270 Z" />
+    
+    <!-- Bottom Leg Extension -->
+    <path d="M 240 380 L 310 450 L 270 470 L 200 400 Z" />
+  </g>
+
+  <!-- Bright Yellow Parallel Accent Bar -->
+  <polygon class="brand-accent" points="285,315 425,175 445,195 305,335" />
+</svg>

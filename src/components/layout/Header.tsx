@@ -89,7 +89,7 @@ const Header = () => {
           {/* Logo & Nombre */}
           <motion.a
             href="#home"
-            className="flex items-center gap-3 cursor-pointer select-none group"
+            className="flex items-center gap-3 cursor-pointer select-none group shrink-0 mr-4"
             whileTap={{ scale: 0.98 }}
             onClick={(e) => scrollToSection(e, 'home')}
           >
@@ -101,7 +101,7 @@ const Header = () => {
           </motion.a>
 
           {/* Links Desktop */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1 shrink-0">
             {NAV_ITEMS.map((item) => {
               const isActive = activeId === item.id
               return (
@@ -109,7 +109,7 @@ const Header = () => {
                   key={item.label}
                   href={item.href}
                   onClick={(e) => scrollToSection(e, item.id)}
-                  className="relative px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 group"
+                  className="relative px-2.5 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 group shrink-0"
                   style={{
                     color: isActive ? 'var(--accent-cyan)' : 'var(--muted-foreground)',
                   }}
@@ -136,20 +136,20 @@ const Header = () => {
             {/* Cotizador */}
             <motion.a
               href="/cotizador"
-              className="relative flex items-center gap-1 px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-emerald-400/80 hover:text-emerald-400 group"
+              className="relative flex items-center gap-1 px-2.5 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-emerald-400/80 hover:text-emerald-400 group shrink-0"
             >
               <span>{t('nav.cotizador')}</span>
               <span className="absolute bottom-1.5 left-3 right-3 h-[1px] bg-emerald-400/40 transition-transform duration-300 origin-left scale-x-0 group-hover:scale-x-100" />
             </motion.a>
 
-            <span className="w-px h-3 mx-2 shrink-0 bg-zinc-800" />
+            <span className="w-px h-3 mx-1.5 shrink-0 bg-zinc-800" />
 
             {/* Tienda Online */}
             <motion.a
               href="/tienda"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative flex items-center gap-1 px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-[#00f2fe]/80 hover:text-[#00f2fe] group"
+              className="relative flex items-center gap-1 px-2.5 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-[#00f2fe]/80 hover:text-[#00f2fe] group shrink-0"
             >
               <span>{t('nav.tienda_online')}</span>
               <ExternalLink
@@ -161,7 +161,7 @@ const Header = () => {
           </nav>
 
           {/* Botones Derecha */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2.5 shrink-0">
             {/* Idioma + Modo Oscuro */}
             <div className="flex items-center gap-1.5 mr-1 border-r border-zinc-800 pr-3">
               <div className="text-zinc-400 hover:text-white transition-colors duration-200">
@@ -194,11 +194,11 @@ const Header = () => {
               </div>
             )}
 
-            {/* CTA principal - Borde neón sutil, sin glow, rectangular */}
+            {/* CTA principal */}
             <motion.button
               type="button"
               onClick={goToClientArea}
-              className="px-4 py-2 text-[11px] font-bold tracking-wider uppercase border border-[#00f2fe] text-[#00f2fe] bg-transparent hover:bg-[#00f2fe] hover:text-black transition-all duration-300 rounded-sm"
+              className="px-3.5 py-1.5 text-[11px] font-bold tracking-wider uppercase border border-[#00f2fe] text-[#00f2fe] bg-transparent hover:bg-[#00f2fe] hover:text-black transition-all duration-300 rounded-sm"
               whileTap={{ scale: 0.98 }}
             >
               <span>{t('nav.area_cliente')}</span>
@@ -207,7 +207,7 @@ const Header = () => {
 
           {/* Mobile hamburger */}
           <motion.button
-            className="md:hidden w-10 h-10 flex items-center justify-center border border-zinc-800 text-zinc-400 hover:text-white hover:border-[#00f2fe] transition-all duration-200 rounded-sm"
+            className="lg:hidden w-10 h-10 flex items-center justify-center border border-zinc-800 text-zinc-400 hover:text-white hover:border-[#00f2fe] transition-all duration-200 rounded-sm"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             whileTap={{ scale: 0.95 }}
             aria-label="Menú principal"

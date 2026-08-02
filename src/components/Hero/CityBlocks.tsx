@@ -105,7 +105,7 @@ export const CityBlocks: React.FC<CityBlocksProps> = ({
 
       dummy.position.set(x, y, z)
       dummy.rotation.set(rotX, rotY, rotZ)
-      dummy.scale.set(1.15, currentScaleY, 1.15)
+      dummy.scale.set(0.85, currentScaleY * 0.85, 0.85)
       dummy.updateMatrix()
 
       meshRef.current.setMatrixAt(i, dummy.matrix)

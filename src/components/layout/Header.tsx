@@ -85,23 +85,23 @@ const Header = () => {
         />
       )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 lg:h-[70px]">
+        <div className="flex justify-between items-center h-16 lg:h-[70px] gap-2">
           {/* Logo & Nombre */}
           <motion.a
             href="#home"
-            className="flex items-center gap-3 cursor-pointer select-none group"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer select-none group shrink-0 whitespace-nowrap"
             whileTap={{ scale: 0.98 }}
             onClick={(e) => scrollToSection(e, 'home')}
           >
-            <Logo size={42} className="h-10 w-auto" />
-            <span className="text-foreground text-xs font-bold tracking-widest uppercase flex items-center gap-1">
+            <Logo size={36} className="h-9 w-auto shrink-0" />
+            <span className="text-foreground text-xs font-bold tracking-widest uppercase flex items-center gap-1 shrink-0 whitespace-nowrap">
               EXE<span className="text-yellow-400 font-light">//</span>PAGINASWEB
               <span className="text-muted-foreground font-light">.COM</span>
             </span>
           </motion.a>
 
-          {/* Links Desktop */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Links Desktop (visibles en pantallas xl: 1280px+) */}
+          <nav className="hidden xl:flex items-center gap-1 shrink-0">
             {NAV_ITEMS.map((item) => {
               const isActive = activeId === item.id
               return (
@@ -109,26 +109,27 @@ const Header = () => {
                   key={item.label}
                   href={item.href}
                   onClick={(e) => scrollToSection(e, item.id)}
-                  className="relative px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 group"
+                  className="relative px-2.5 py-1.5 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 group shrink-0 whitespace-nowrap"
                   style={{
                     color: isActive ? 'var(--accent-cyan)' : 'var(--muted-foreground)',
                   }}
                   whileHover={{ color: 'var(--accent-cyan)' }}
                 >
-                  <span className="relative z-10">{t(navLabelKeys[item.id] || item.label)}</span>
+                  <span className="relative z-10 whitespace-nowrap">
+                    {t(navLabelKeys[item.id] || item.label)}
+                  </span>
 
                   {/* Glow on hover */}
                   <span className="absolute inset-0 rounded-sm bg-[#00f2fe]/0 group-hover:bg-[#00f2fe]/5 transition-colors duration-300" />
 
                   {/* Underline animado */}
                   <span
-                    className="absolute bottom-1.5 left-3 right-3 h-[1px] bg-[#00f2fe] transition-transform duration-300 origin-left"
+                    className="absolute bottom-1 left-2.5 right-2.5 h-[1px] bg-[#00f2fe] transition-transform duration-300 origin-left"
                     style={{
                       transform: isActive ? 'scaleX(1)' : 'scaleX(0)',
                     }}
                   />
-                  {/* Underline hover effect */}
-                  <span className="absolute bottom-1.5 left-3 right-3 h-[1px] bg-[#00f2fe] transition-transform duration-300 origin-left scale-x-0 group-hover:scale-x-100" />
+                  <span className="absolute bottom-1 left-2.5 right-2.5 h-[1px] bg-[#00f2fe] transition-transform duration-300 origin-left scale-x-0 group-hover:scale-x-100" />
                 </motion.a>
               )
             })}
@@ -136,34 +137,34 @@ const Header = () => {
             {/* Cotizador */}
             <motion.a
               href="/cotizador"
-              className="relative flex items-center gap-1 px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-emerald-400/80 hover:text-emerald-400 group"
+              className="relative flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-emerald-400/80 hover:text-emerald-400 group shrink-0 whitespace-nowrap"
             >
-              <span>{t('nav.cotizador')}</span>
-              <span className="absolute bottom-1.5 left-3 right-3 h-[1px] bg-emerald-400/40 transition-transform duration-300 origin-left scale-x-0 group-hover:scale-x-100" />
+              <span className="whitespace-nowrap">{t('nav.cotizador')}</span>
+              <span className="absolute bottom-1 left-2.5 right-2.5 h-[1px] bg-emerald-400/40 transition-transform duration-300 origin-left scale-x-0 group-hover:scale-x-100" />
             </motion.a>
 
-            <span className="w-px h-3 mx-2 shrink-0 bg-zinc-800" />
+            <span className="w-px h-3 mx-1 shrink-0 bg-zinc-800" />
 
             {/* Tienda Online */}
             <motion.a
               href="/tienda"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative flex items-center gap-1 px-3 py-2 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-[#00f2fe]/80 hover:text-[#00f2fe] group"
+              className="relative flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-[#00f2fe]/80 hover:text-[#00f2fe] group shrink-0 whitespace-nowrap"
             >
-              <span>{t('nav.tienda_online')}</span>
+              <span className="whitespace-nowrap">{t('nav.tienda_online')}</span>
               <ExternalLink
                 size={10}
-                className="opacity-70 group-hover:rotate-45 transition-transform duration-300"
+                className="opacity-70 group-hover:rotate-45 transition-transform duration-300 shrink-0"
               />
-              <span className="absolute bottom-1.5 left-3 right-5 h-[1px] bg-[#00f2fe]/40 transition-transform duration-300 origin-left scale-x-0 group-hover:scale-x-100" />
+              <span className="absolute bottom-1 left-2.5 right-2.5 h-[1px] bg-[#00f2fe]/40 transition-transform duration-300 origin-left scale-x-0 group-hover:scale-x-100" />
             </motion.a>
           </nav>
 
           {/* Botones Derecha */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden xl:flex items-center gap-2 shrink-0">
             {/* Idioma + Modo Oscuro */}
-            <div className="flex items-center gap-1.5 mr-1 border-r border-zinc-800 pr-3">
+            <div className="flex items-center gap-1 mr-1 border-r border-zinc-800 pr-2 shrink-0">
               <div className="text-zinc-400 hover:text-white transition-colors duration-200">
                 <LanguageSwitcher />
               </div>
@@ -173,41 +174,41 @@ const Header = () => {
             </div>
 
             {isLoggedIn && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 shrink-0">
                 <motion.button
                   onClick={() => navigate('/dashboard')}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase border border-zinc-800 text-zinc-300 hover:border-[#00f2fe] hover:text-[#00f2fe] transition-all duration-300 rounded-sm"
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-bold tracking-wider uppercase border border-zinc-800 text-zinc-300 hover:border-[#00f2fe] hover:text-[#00f2fe] transition-all duration-300 rounded-sm shrink-0 whitespace-nowrap"
                   whileTap={{ scale: 0.98 }}
                 >
-                  <LayoutDashboard size={12} />
-                  {t('nav.panel_cliente')}
+                  <LayoutDashboard size={12} className="shrink-0" />
+                  <span className="whitespace-nowrap">{t('nav.panel_cliente')}</span>
                 </motion.button>
 
                 <motion.button
                   onClick={handleLogout}
-                  className="flex items-center gap-1 px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase text-zinc-500 hover:text-red-400 transition-colors duration-200"
+                  className="flex items-center gap-1 px-2 py-1.5 text-[10px] font-bold tracking-wider uppercase text-zinc-500 hover:text-red-400 transition-colors duration-200 shrink-0 whitespace-nowrap"
                   whileTap={{ scale: 0.98 }}
                 >
-                  <LogOut size={12} />
-                  {t('nav.cerrar_sesion')}
+                  <LogOut size={12} className="shrink-0" />
+                  <span className="whitespace-nowrap">{t('nav.cerrar_sesion')}</span>
                 </motion.button>
               </div>
             )}
 
-            {/* CTA principal - Borde neón sutil, sin glow, rectangular */}
+            {/* CTA principal */}
             <motion.button
               type="button"
               onClick={goToClientArea}
-              className="px-4 py-2 text-[11px] font-bold tracking-wider uppercase border border-[#00f2fe] text-[#00f2fe] bg-transparent hover:bg-[#00f2fe] hover:text-black transition-all duration-300 rounded-sm"
+              className="px-3 py-1.5 text-[11px] font-bold tracking-wider uppercase border border-[#00f2fe] text-[#00f2fe] bg-transparent hover:bg-[#00f2fe] hover:text-black transition-all duration-300 rounded-sm shrink-0 whitespace-nowrap"
               whileTap={{ scale: 0.98 }}
             >
-              <span>{t('nav.area_cliente')}</span>
+              <span className="whitespace-nowrap">{t('nav.area_cliente')}</span>
             </motion.button>
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile / Tablet hamburger button (visible en pantallas menores a xl: < 1280px) */}
           <motion.button
-            className="md:hidden w-10 h-10 flex items-center justify-center border border-zinc-800 text-zinc-400 hover:text-white hover:border-[#00f2fe] transition-all duration-200 rounded-sm"
+            className="xl:hidden w-10 h-10 flex items-center justify-center border border-zinc-800 text-zinc-400 hover:text-white hover:border-[#00f2fe] transition-all duration-200 rounded-sm shrink-0"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             whileTap={{ scale: 0.95 }}
             aria-label="Menú principal"
@@ -228,14 +229,14 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Menu Mobile */}
+      {/* Menu Mobile / Drawer */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
             {/* Backdrop */}
             <motion.div
               key="mob-backdrop"
-              className="md:hidden fixed inset-0 z-40 bg-black/80 backdrop-blur-md"
+              className="xl:hidden fixed inset-0 z-40 bg-black/80 backdrop-blur-md"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -246,7 +247,7 @@ const Header = () => {
             {/* Drawer */}
             <motion.div
               key="mob-drawer"
-              className="md:hidden fixed top-16 left-0 w-full z-50 flex flex-col bg-background border-t border-border"
+              className="xl:hidden fixed top-16 left-0 w-full z-50 flex flex-col bg-background border-t border-border"
               style={{
                 height: 'calc(100dvh - 64px)',
               }}

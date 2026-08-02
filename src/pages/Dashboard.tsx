@@ -12,7 +12,6 @@ import {
   FileText,
   LayoutDashboard,
   Settings,
-  LogOut,
 } from 'lucide-react'
 
 const PremiumBackground = lazy(() => import('../components/Effects/PremiumBackground'))
@@ -23,9 +22,13 @@ import { useTenant } from '../hooks/useTenant'
 import ClientDashboard from '../components/dashboard/ClientDashboard'
 import AdminDashboardView from '../components/dashboard/AdminDashboardView'
 import OnboardingWizard from '../components/dashboard/OnboardingWizard'
+import DashboardHeader from '../components/dashboard/DashboardHeader'
+import PanelErrorBoundary from '../components/dashboard/PanelErrorBoundary'
 import { useAdminDashboard } from '../hooks/useAdminDashboard'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { useReducedMotion } from '../hooks/useReducedMotion'
+import { PREMIUM_TOKENS } from '../styles/premium-tokens'
 
 // Lazy loaded panels
 const WorkGroupsPanel = lazy(() => import('../components/workgroups/WorkGroupsPanel'))
@@ -34,13 +37,13 @@ const SLADashboard = lazy(() => import('../components/sla/SLADashboard'))
 const InvoicesPanel = lazy(() => import('../components/invoices/InvoicesPanel'))
 
 const SkeletonBlock = ({ className = '' }: { className?: string }) => (
-  <div className={`relative overflow-hidden bg-muted/30 ${className}`}>
-    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_infinite] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+  <div className={`relative overflow-hidden bg-slate-800/40 ${className}`}>
+    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_infinite] bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
   </div>
 )
 
 const PanelSkeleton = () => (
-  <div className="rounded-3xl border border-border bg-primary-bg/50 p-8 backdrop-blur-xl space-y-6">
+  <div className="rounded-3xl border border-white/15 bg-[#090a12]/80 p-8 backdrop-blur-2xl space-y-6 shadow-2xl">
     <div className="flex items-center justify-between">
       <div className="space-y-2">
         <SkeletonBlock className="h-6 w-48 rounded-lg" />
@@ -76,6 +79,7 @@ export default function Dashboard() {
   const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
+  const prefersReducedMotion = useReducedMotion()
   const { ready, session } = useAuthSession()
   const { loading, error, cliente, suscripciones, pagos, planTier, refresh } = useDashboard(
     ready && !!session
@@ -84,6 +88,10 @@ export default function Dashboard() {
   const isAdmin = role === 'admin'
   const [viewMode, setViewMode] = useState<'admin' | 'client'>('admin')
   const [activeView, setActiveView] = useState<DashboardView>('overview')
+
+  // Feature Flag / Rollback Support (?ui=legacy or VITE_DASHBOARD_UI=legacy)
+  const isLegacyUI =
+    searchParams.get('ui') === 'legacy' || import.meta.env.VITE_DASHBOARD_UI === 'legacy'
 
   const { data: tenants = [] } = useTenant(cliente?.id ?? null, ready && !!session && !!cliente?.id)
 
@@ -103,13 +111,20 @@ export default function Dashboard() {
     const payment = searchParams.get('payment')
     const pago = searchParams.get('pago')
     if (pago === 'ok' || payment === 'mp_ok' || payment === 'paypal_ok') {
-      setSearchParams({}, { replace: true })
+      setSearchParams(
+        (params) => {
+          params.delete('payment')
+          params.delete('pago')
+          return params
+        },
+        { replace: true }
+      )
       refresh()
       toast.success('Pago aprobado', {
         description:
           payment === 'paypal_ok'
             ? 'Pago con PayPal confirmado'
-            : 'Suscripcion activada correctamente',
+            : 'Suscripción activada correctamente',
       })
     }
   }, [searchParams, setSearchParams, refresh])
@@ -129,24 +144,24 @@ export default function Dashboard() {
 
   if (isGlobalLoading) {
     return (
-      <div className="min-h-screen relative flex items-center justify-center">
+      <div className={PREMIUM_TOKENS.bgMain + ' flex items-center justify-center'}>
         <Suspense fallback={null}>
           <PremiumBackground />
         </Suspense>
-        <div className="relative z-10 text-center">
+        <div className="relative z-10 text-center px-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
-            className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-card/50 border border-border backdrop-blur-xl flex items-center justify-center"
+            className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-[#090a12]/90 border border-white/15 backdrop-blur-2xl flex items-center justify-center shadow-[0_0_40px_rgba(14,165,233,0.25)]"
           >
-            <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-3 border-cyan-400 border-t-transparent rounded-full animate-spin" />
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-foreground font-medium"
+            className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300"
           >
             {t('dashboard.sincronizando')}
           </motion.p>
@@ -154,9 +169,9 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="mt-2 text-xs text-muted-foreground font-mono"
+            className="mt-2 text-xs text-slate-400 font-mono tracking-widest uppercase"
           >
-            dashboard.exe · loading
+            // DASHBOARD OPERATIVO · SYNCING
           </motion.p>
         </div>
       </div>
@@ -165,23 +180,23 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="min-h-screen relative flex items-center justify-center px-4">
+      <div className={PREMIUM_TOKENS.bgMain + ' flex items-center justify-center px-4'}>
         <Suspense fallback={null}>
           <PremiumBackground />
         </Suspense>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 max-w-xl w-full rounded-3xl border border-accent-magenta/30 bg-card/50 p-8 backdrop-blur-xl"
+          className="relative z-10 max-w-xl w-full rounded-3xl border border-rose-500/40 bg-[#090a12]/90 p-8 backdrop-blur-2xl shadow-2xl"
         >
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-2xl font-extrabold text-white">
             {t('dashboard.error_conexion_titulo')}
           </h1>
-          <p className="mt-3 text-accent-magenta text-sm font-bold">{error}</p>
+          <p className="mt-3 text-rose-400 text-sm font-semibold">{error}</p>
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="mt-6 w-full rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta py-4 font-bold text-foreground"
+            className={PREMIUM_TOKENS.ctaButton + ' mt-6'}
           >
             {t('dashboard.volver_login')}
           </button>
@@ -191,119 +206,100 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen relative">
+    <div className={PREMIUM_TOKENS.bgMain}>
       <Suspense fallback={null}>
         <PremiumBackground />
       </Suspense>
-      <div className="relative z-10 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Top Bar */}
-          <div className="mb-8 flex items-center justify-between">
-            <motion.a
-              href="/"
-              onClick={(e) => {
-                e.preventDefault()
-                navigate('/')
-              }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border text-foreground/80 hover:text-foreground hover:bg-muted hover:border-border transition-all text-sm font-medium"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 12H5" />
-                <path d="M12 19l-7-7 7-7" />
-              </svg>
-              {t('dashboard.volver_exepaginasweb')}
-            </motion.a>
 
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:bg-muted text-sm transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              {t('dashboard.salir')}
-            </button>
+      <div className="relative z-10 pt-4 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        {/* Extracted Header Component with ThemeToggle (Sun/Moon) & SSL Security Badge */}
+        <DashboardHeader userEmail={session?.user?.email} onLogout={handleLogout} />
+
+        {/* Legacy UI Banner if active via feature flag */}
+        {isLegacyUI && (
+          <div className="mb-4 text-xs font-mono p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-300 text-center">
+            ⚠️ Modo Legacy UI activo via URL/Flag (?ui=legacy)
           </div>
+        )}
 
-          {/* Admin Toggle */}
-          {isAdmin && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-8 rounded-3xl border border-yellow-500/30 bg-gradient-to-r from-yellow-500/10 to-transparent p-6 backdrop-blur-xl"
-            >
-              <div className="flex flex-wrap items-center gap-4 justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center">
-                    <Crown className="w-6 h-6 text-yellow-400" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.3em] text-yellow-400 font-bold">
-                      {t('dashboard.super_admin')}
-                    </p>
-                    <p className="text-muted-foreground text-xs mt-1">
-                      {viewMode === 'admin'
-                        ? t('dashboard.consola_central_operativa')
-                        : t('dashboard.vista_cliente_activa')}
-                    </p>
-                  </div>
+        {/* Super Admin Control Bar */}
+        {isAdmin && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={PREMIUM_TOKENS.adminGoldAura}
+          >
+            <div className="bg-[#090a12]/95 border border-white/10 backdrop-blur-2xl p-5 sm:p-6 rounded-[23px] flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+                  <Crown className="w-6 h-6 text-amber-400" />
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="flex bg-muted p-1 rounded-2xl border border-border">
-                    <button
-                      onClick={() => setViewMode('admin')}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                        viewMode === 'admin'
-                          ? 'bg-yellow-400 text-foreground shadow-lg shadow-yellow-400/20'
-                          : 'text-muted-foreground hover:text-foreground'
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-amber-400 font-extrabold font-mono">
+                      {t('dashboard.super_admin')}
+                    </span>
+                    <span
+                      className={`w-2 h-2 rounded-full bg-amber-400 ${
+                        prefersReducedMotion ? '' : 'animate-ping'
                       }`}
-                    >
-                      {t('dashboard.consola_admin')}
-                    </button>
-                    <button
-                      onClick={() => setViewMode('client')}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                        viewMode === 'client'
-                          ? 'bg-yellow-400 text-foreground shadow-lg shadow-yellow-400/20'
-                          : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      {t('dashboard.simular_cliente')}
-                    </button>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => (viewMode === 'admin' ? refreshAdmin() : refresh())}
-                    disabled={loading || adminLoading}
-                    className="p-3 rounded-xl border border-border hover:bg-muted"
-                  >
-                    <RefreshCw
-                      size={18}
-                      className={
-                        loading || adminLoading
-                          ? 'animate-spin text-yellow-400'
-                          : 'text-muted-foreground'
-                      }
                     />
-                  </button>
+                  </div>
+                  <p className="text-slate-300 text-xs mt-0.5 font-medium">
+                    {viewMode === 'admin'
+                      ? t('dashboard.consola_central_operativa')
+                      : t('dashboard.vista_cliente_activa')}
+                  </p>
                 </div>
               </div>
-            </motion.div>
-          )}
 
-          {/* Admin View */}
-          {isAdmin && viewMode === 'admin' ? (
+              <div className="flex items-center gap-3">
+                <div className="flex bg-slate-950/80 p-1.5 rounded-2xl border border-white/15">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('admin')}
+                    className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${
+                      viewMode === 'admin'
+                        ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {t('dashboard.consola_admin')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('client')}
+                    className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${
+                      viewMode === 'client'
+                        ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {t('dashboard.simular_cliente')}
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => (viewMode === 'admin' ? refreshAdmin() : refresh())}
+                  disabled={loading || adminLoading}
+                  className="p-3 rounded-2xl border border-white/15 bg-slate-900/80 hover:bg-slate-800 transition-all text-slate-300 hover:text-white shadow-md"
+                >
+                  <RefreshCw
+                    size={18}
+                    className={
+                      loading || adminLoading ? 'animate-spin text-amber-400' : 'text-slate-300'
+                    }
+                  />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Main Dashboard Views */}
+        {isAdmin && viewMode === 'admin' ? (
+          <PanelErrorBoundary panelName="Admin Dashboard">
             <AdminDashboardView
               clientes={adminClientes}
               suscripciones={adminSuscripciones}
@@ -313,7 +309,9 @@ export default function Dashboard() {
               onRefresh={refreshAdmin}
               refreshing={adminLoading}
             />
-          ) : !currentTenant && cliente ? (
+          </PanelErrorBoundary>
+        ) : !currentTenant && cliente ? (
+          <PanelErrorBoundary panelName="Onboarding">
             <OnboardingWizard
               cliente={cliente}
               planTier={planTier}
@@ -322,40 +320,41 @@ export default function Dashboard() {
                 await refresh()
               }}
             />
-          ) : (
-            <>
-              {/* SaaS Navigation Tabs */}
-              <div className="mb-6 flex items-center gap-1 p-1 bg-muted/50 rounded-2xl border border-border overflow-x-auto">
-                {VIEW_TABS.map((tab) => {
-                  const Icon = tab.icon
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveView(tab.id)}
-                      className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
-                        activeView === tab.id
-                          ? 'bg-accent-cyan text-foreground shadow-lg shadow-accent-cyan/20'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      {t(tab.labelKey)}
-                    </button>
-                  )
-                })}
-              </div>
+          </PanelErrorBoundary>
+        ) : (
+          <>
+            {/* SaaS Segmented Tabs Bar (Scroll-snap horizontal on mobile) */}
+            <div className={PREMIUM_TOKENS.tabsBar + ' snap-x'}>
+              {VIEW_TABS.map((tab) => {
+                const Icon = tab.icon
+                const isActive = activeView === tab.id
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveView(tab.id)}
+                    className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all whitespace-nowrap snap-start ${
+                      isActive ? PREMIUM_TOKENS.activeTabGradient : PREMIUM_TOKENS.inactiveTab
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                    <span>{t(tab.labelKey)}</span>
+                  </button>
+                )
+              })}
+            </div>
 
-              {/* Content */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeView}
-                  initial={{ opacity: 0, y: 12, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -12, scale: 0.98 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                >
-                  <Suspense fallback={<PanelSkeleton />}>
-                    {activeView === 'overview' && (
+            {/* Content View Panels with Individual Panel Error Boundaries */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeView}
+                initial={prefersReducedMotion ? undefined : { opacity: 0, y: 12, scale: 0.98 }}
+                animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+                exit={prefersReducedMotion ? undefined : { opacity: 0, y: -12, scale: 0.98 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              >
+                <Suspense fallback={<PanelSkeleton />}>
+                  {activeView === 'overview' && (
+                    <PanelErrorBoundary panelName="Resumen Cliente">
                       <ClientDashboard
                         planTier={planTier}
                         cliente={cliente}
@@ -365,36 +364,44 @@ export default function Dashboard() {
                         refreshing={loading}
                         onLogout={handleLogout}
                       />
-                    )}
-                    {activeView === 'services' && currentTenant && (
+                    </PanelErrorBoundary>
+                  )}
+                  {activeView === 'services' && currentTenant && (
+                    <PanelErrorBoundary panelName="Servicios">
                       <ServicesPanel tenantId={currentTenant.id} />
-                    )}
-                    {activeView === 'workgroups' && currentTenant && (
+                    </PanelErrorBoundary>
+                  )}
+                  {activeView === 'workgroups' && currentTenant && (
+                    <PanelErrorBoundary panelName="Equipo">
                       <WorkGroupsPanel tenantId={currentTenant.id} />
-                    )}
-                    {activeView === 'sla' && currentTenant && (
+                    </PanelErrorBoundary>
+                  )}
+                  {activeView === 'sla' && currentTenant && (
+                    <PanelErrorBoundary panelName="SLA">
                       <SLADashboard tenantId={currentTenant.id} />
-                    )}
-                    {activeView === 'invoices' && currentTenant && (
+                    </PanelErrorBoundary>
+                  )}
+                  {activeView === 'invoices' && currentTenant && (
+                    <PanelErrorBoundary panelName="Facturas">
                       <InvoicesPanel tenantId={currentTenant.id} />
-                    )}
-                    {activeView !== 'overview' && !currentTenant && (
-                      <div className="text-center py-16">
-                        <Settings className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-                        <h3 className="text-lg font-bold text-foreground">
-                          {t('dashboard.configura_espacio')}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
-                          {t('dashboard.compra_plan_hint')}
-                        </p>
-                      </div>
-                    )}
-                  </Suspense>
-                </motion.div>
-              </AnimatePresence>
-            </>
-          )}
-        </div>
+                    </PanelErrorBoundary>
+                  )}
+                  {activeView !== 'overview' && !currentTenant && (
+                    <div className="text-center py-16 rounded-3xl border border-white/15 bg-[#090a12]/80 backdrop-blur-2xl shadow-2xl">
+                      <Settings className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+                      <h3 className="text-lg font-bold text-white">
+                        {t('dashboard.configura_espacio')}
+                      </h3>
+                      <p className="text-sm text-slate-300 mt-2 max-w-md mx-auto font-medium">
+                        {t('dashboard.compra_plan_hint')}
+                      </p>
+                    </div>
+                  )}
+                </Suspense>
+              </motion.div>
+            </AnimatePresence>
+          </>
+        )}
       </div>
     </div>
   )

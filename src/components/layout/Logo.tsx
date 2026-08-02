@@ -82,11 +82,16 @@ export const Logo: React.FC<LogoProps> = ({
   if (!showText) return logoImg
 
   return (
-    <div className="inline-flex items-center gap-2.5">
+    <div className="inline-flex items-center gap-2.5 select-none">
       {logoImg}
-      <span className={textClassName}>
-        EXE<span className="text-yellow-400 font-light">//</span>PAGINASWEB
-        <span className="text-slate-400 font-light text-xs">.COM</span>
+      <span
+        className={
+          textClassName ||
+          'text-slate-900 dark:text-white text-base font-black tracking-widest uppercase font-mono'
+        }
+      >
+        EXE<span className="text-yellow-500 dark:text-yellow-400 font-light">//</span>PAGINASWEB
+        <span className="text-slate-600 dark:text-slate-400 font-light text-xs">.COM</span>
       </span>
     </div>
   )

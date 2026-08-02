@@ -31,7 +31,7 @@ export const ThreeHeroScene: React.FC<ThreeHeroSceneProps> = ({ progressRef }) =
   return (
     <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
       <Canvas
-        camera={{ position: [8, 9, 12], fov: 35 }}
+        camera={{ position: [7, 7, 10], fov: 40 }}
         gl={{
           antialias: !isLowTier,
           powerPreference: isLowTier ? 'low-power' : 'high-performance',
@@ -49,7 +49,7 @@ export const ThreeHeroScene: React.FC<ThreeHeroSceneProps> = ({ progressRef }) =
 
         {tier === 'high' && !reducedMotion && (
           <EffectComposer>
-            <Bloom intensity={0.4} luminanceThreshold={0.2} />
+            <Bloom intensity={0.8} luminanceThreshold={0.15} luminanceSmoothing={0.9} />
           </EffectComposer>
         )}
 

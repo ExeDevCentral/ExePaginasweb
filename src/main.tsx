@@ -47,13 +47,23 @@ import NotFound from './pages/NotFound'
 import AuthCallback from './pages/AuthCallback'
 import ThemedToaster from './components/shared/ThemedToaster'
 import { AuthGuard } from './core/auth/AuthGuard'
+import { useEffect } from 'react'
+import { resetScrollToTop } from './components/shared/ScrollProvider'
 import './index.css'
 
 const pageTransition = {
-  initial: { opacity: 0, y: 10 },
+  initial: { opacity: 0.7, y: 4 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -10 },
-  transition: { duration: 0.35, ease: 'easeOut' as const },
+  exit: { opacity: 0.7, y: -4 },
+  transition: { duration: 0.15, ease: 'easeOut' as const },
+}
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    resetScrollToTop()
+  }, [pathname])
+  return null
 }
 
 function AnimatedPage({ children }: { children: React.ReactNode }) {
@@ -63,84 +73,87 @@ function AnimatedPage({ children }: { children: React.ReactNode }) {
 function AnimatedRoutes() {
   const location = useLocation()
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
-          element={
-            <AnimatedPage>
-              <App />
-            </AnimatedPage>
-          }
-        />
-        <Route
-          path="/tienda"
-          element={
-            <AnimatedPage>
-              <StorePage />
-            </AnimatedPage>
-          }
-        />
-        <Route
-          path="/cotizador"
-          element={
-            <AnimatedPage>
-              <QuoteBuilder />
-            </AnimatedPage>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <AnimatedPage>
-              <Login />
-            </AnimatedPage>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <AnimatedPage>
-              <AuthGuard>
-                <Dashboard />
-              </AuthGuard>
-            </AnimatedPage>
-          }
-        />
-        <Route
-          path="/auth/callback"
-          element={
-            <AnimatedPage>
-              <AuthCallback />
-            </AnimatedPage>
-          }
-        />
-        <Route
-          path="/privacidad"
-          element={
-            <AnimatedPage>
-              <PrivacyPolicy />
-            </AnimatedPage>
-          }
-        />
-        <Route
-          path="/terminos"
-          element={
-            <AnimatedPage>
-              <TermsOfService />
-            </AnimatedPage>
-          }
-        />
-        <Route
-          path="*"
-          element={
-            <AnimatedPage>
-              <NotFound />
-            </AnimatedPage>
-          }
-        />
-      </Routes>
-    </AnimatePresence>
+    <>
+      <ScrollToTop />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route
+            path="/"
+            element={
+              <AnimatedPage>
+                <App />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/tienda"
+            element={
+              <AnimatedPage>
+                <StorePage />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/cotizador"
+            element={
+              <AnimatedPage>
+                <QuoteBuilder />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <AnimatedPage>
+                <Login />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <AnimatedPage>
+                <AuthGuard>
+                  <Dashboard />
+                </AuthGuard>
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/auth/callback"
+            element={
+              <AnimatedPage>
+                <AuthCallback />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/privacidad"
+            element={
+              <AnimatedPage>
+                <PrivacyPolicy />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="/terminos"
+            element={
+              <AnimatedPage>
+                <TermsOfService />
+              </AnimatedPage>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <AnimatedPage>
+                <NotFound />
+              </AnimatedPage>
+            }
+          />
+        </Routes>
+      </AnimatePresence>
+    </>
   )
 }
 

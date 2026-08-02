@@ -5,6 +5,15 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+let globalLenis: Lenis | null = null
+
+export function resetScrollToTop() {
+  window.scrollTo(0, 0)
+  if (globalLenis) {
+    globalLenis.scrollTo(0, { immediate: true })
+  }
+}
+
 export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     const lenis = new Lenis({
@@ -12,6 +21,8 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     })
+
+    globalLenis = lenis
 
     lenis.on('scroll', ScrollTrigger.update)
 
@@ -25,6 +36,9 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return () => {
       gsap.ticker.remove(updateRaf)
       lenis.destroy()
+      if (globalLenis === lenis) {
+        globalLenis = null
+      }
     }
   }, [])
 

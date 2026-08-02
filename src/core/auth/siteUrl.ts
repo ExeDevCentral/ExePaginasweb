@@ -1,21 +1,21 @@
 /**
- * URL canónica del sitio. En Vercel conviene definir VITE_SITE_URL
- * (ej. https://exepaginasweb.com) para que OAuth use siempre el dominio de producción.
+ * URL canónica del sitio. En localhost o desarrollo local usa siempre window.location.origin.
+ * En producción (Vercel) usa VITE_SITE_URL o window.location.origin para la callback de OAuth.
  */
 export function getSiteUrl(): string {
-  const configured = import.meta.env.VITE_SITE_URL?.trim()
+  if (typeof window !== 'undefined') {
+    // En desarrollo local (localhost / 127.0.0.1) usar siempre el origin local real
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return window.location.origin
+    }
+  }
 
-  // Si Vercel no provee VITE_SITE_URL (o llega vacío), caemos a la URL real.
+  const configured = import.meta.env.VITE_SITE_URL?.trim()
   if (configured) return configured.replace(/\/$/, '')
 
-  // Hardcode temporal (fallback) para OAuth/callbacks.
-  const hardcoded = 'https://exepaginasweb.com'
-
-  // En navegador siempre podemos derivar el origin real.
   if (typeof window !== 'undefined') return window.location.origin
 
-  // Fallback en SSR / entorno no navegador.
-  return hardcoded
+  return 'https://exepaginasweb.com'
 }
 
 export function getAuthRedirectUrl(path = '/dashboard'): string {

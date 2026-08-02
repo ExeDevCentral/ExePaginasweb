@@ -67,76 +67,17 @@ export default function Login() {
       setError(null)
       setLoading(true)
 
-      const { data } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          skipBrowserRedirect: true,
           redirectTo: getAuthRedirectUrl('/auth/callback'),
         },
       })
 
-      if (!data?.url) throw new Error('No se pudo obtener la URL de autenticación')
-
-      const url = new URL(import.meta.env.VITE_SUPABASE_URL)
-      const storageKey = `sb-${url.hostname.split('.')[0]}-auth-token-code-verifier`
-      const verifierRaw = localStorage.getItem(storageKey)
-      if (verifierRaw) {
-        try {
-          window.name = JSON.parse(verifierRaw)
-        } catch {
-          /* ignore */
-        }
-      }
-
-      const popup = window.open(data.url, 'google-login', 'width=600,height=700')
-      if (!popup || popup.closed) {
-        window.location.href = data.url
-        return
-      }
-
-      const handleMessage = (event: MessageEvent) => {
-        if (event.origin !== window.location.origin) return
-        if (event.data.type === 'PKCE_CODE') {
-          window.removeEventListener('message', handleMessage)
-          clearTimeout(timeoutId)
-          completeGoogleAuth(event.data.code)
-        }
-        if (event.data.type === 'PKCE_ERROR') {
-          window.removeEventListener('message', handleMessage)
-          clearTimeout(timeoutId)
-          if (!popup.closed) popup.close()
-          setError(event.data.error)
-          setLoading(false)
-        }
-      }
-      window.addEventListener('message', handleMessage)
-
-      const timeoutId = setTimeout(() => {
-        window.removeEventListener('message', handleMessage)
-        if (!popup.closed) popup.close()
-        setLoading(false)
-        setError('La autenticación tardó demasiado. Intenta de nuevo.')
-      }, 300000)
+      if (error) throw error
     } catch (e) {
       const message = e instanceof Error ? e.message : t('login.err_iniciar_sesion')
       setError(message)
-      setLoading(false)
-    }
-  }
-
-  const completeGoogleAuth = async (code: string) => {
-    try {
-      const { data, error } = await supabase.auth.exchangeCodeForSession(code)
-      if (error) throw error
-      if (data.session) {
-        toast.success('Bienvenido', { description: 'Inicio de sesión exitoso' })
-        navigate('/dashboard', { replace: true })
-      } else {
-        setError('No se pudo establecer la sesión')
-      }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error al completar la autenticación')
-    } finally {
       setLoading(false)
     }
   }

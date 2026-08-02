@@ -13,7 +13,7 @@ export default function AuthCallback() {
     if (handled.current) return
     handled.current = true
 
-    const run = async () => {
+    const handleCallback = async () => {
       const params = new URLSearchParams(window.location.search)
       const code = params.get('code')
       const err = params.get('error')
@@ -21,61 +21,35 @@ export default function AuthCallback() {
 
       if (err) {
         const msg = errDesc || err
-        if (window.opener) {
-          window.opener.postMessage({ type: 'PKCE_ERROR', error: msg }, window.location.origin)
-          window.close()
-        } else {
+        navigate('/login?error=' + encodeURIComponent(msg), { replace: true })
+        return
+      }
+
+      if (code) {
+        try {
+          const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+          if (error) throw error
+          if (data?.session) {
+            navigate('/dashboard', { replace: true })
+            return
+          }
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : 'Error al intercambiar código'
           navigate('/login?error=' + encodeURIComponent(msg), { replace: true })
+          return
         }
-        return
       }
 
-      if (!code) {
-        if (window.opener) {
-          window.opener.postMessage(
-            { type: 'PKCE_ERROR', error: 'No code in URL' },
-            window.location.origin
-          )
-          window.close()
-        } else {
-          navigate('/login?error=no_code', { replace: true })
-        }
-        return
-      }
-
-      // Popup mode: send code to opener and close
-      if (window.opener) {
-        window.opener.postMessage({ type: 'PKCE_CODE', code }, window.location.origin)
-        window.close()
-        return
-      }
-
-      // Redirect mode (popup blocked / mobile): try window.name fallback
-      const verifier = window.name
-      window.name = ''
-      if (verifier) {
-        const url = new URL(import.meta.env.VITE_SUPABASE_URL)
-        const storageKey = `sb-${url.hostname.split('.')[0]}-auth-token-code-verifier`
-        localStorage.setItem(storageKey, JSON.stringify(verifier))
-      }
-
-      try {
-        const { data, error } = await supabase.auth.exchangeCodeForSession(code)
-        if (data?.session) {
-          navigate('/dashboard', { replace: true })
-        } else {
-          navigate('/login?error=' + encodeURIComponent(error?.message || 'no_session'), {
-            replace: true,
-          })
-        }
-      } catch (e) {
-        navigate('/login?error=' + encodeURIComponent(e instanceof Error ? e.message : 'error'), {
-          replace: true,
-        })
+      // Fallback check existing session if code was already exchanged
+      const { data: sessionData } = await supabase.auth.getSession()
+      if (sessionData?.session) {
+        navigate('/dashboard', { replace: true })
+      } else {
+        navigate('/login?error=no_session', { replace: true })
       }
     }
 
-    run()
+    handleCallback()
   }, [navigate])
 
   return (
@@ -89,7 +63,6 @@ export default function AuthCallback() {
         transition={{ duration: 0.5 }}
         className="relative z-10 text-center"
       >
-        {/* Logo animated */}
         <motion.div
           animate={{ rotate: [0, 5, -5, 0] }}
           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
@@ -104,7 +77,7 @@ export default function AuthCallback() {
         </motion.div>
 
         <div className="w-10 h-10 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-muted-foreground text-sm font-medium">Autenticando...</p>
+        <p className="text-muted-foreground text-sm font-medium">Autenticando con Google...</p>
         <p className="text-xs text-muted-foreground/50 mt-2 font-mono">auth.exe · handshake</p>
       </motion.div>
     </div>

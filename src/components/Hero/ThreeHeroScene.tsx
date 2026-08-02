@@ -1,37 +1,27 @@
 import React, { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Stats } from '@react-three/drei'
-import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { useDeviceCapabilities } from '../../hooks/useDeviceCapabilities'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-import CityBlocks from './CityBlocks'
+import ChaosToSystemParticles from './ChaosToSystemParticles'
 
-const StaticHeroFallback: React.FC = () => (
+const FallbackCSSBackground: React.FC = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-accent-cyan/10 via-transparent to-accent-magenta/15" />
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-accent-cyan/15 blur-[140px]" />
-    <div className="absolute bottom-10 right-10 w-[400px] h-[400px] rounded-full bg-accent-magenta/10 blur-[100px]" />
+    <div className="absolute inset-0 bg-gradient-to-br from-accent-cyan/5 via-transparent to-accent-magenta/10" />
+    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-accent-cyan/10 blur-[120px] animate-pulse" />
   </div>
 )
 
-interface ThreeHeroSceneProps {
-  progressRef: React.MutableRefObject<number>
-}
+export const ThreeHeroScene: React.FC = () => {
+  const { hasWebGL, isLowTier, prefersReducedMotion } = useDeviceCapabilities()
 
-export const ThreeHeroScene: React.FC<ThreeHeroSceneProps> = ({ progressRef }) => {
-  const { tier } = useDeviceCapabilities()
-  const reducedMotion = useReducedMotion()
-
-  if (tier === 'no-webgl') {
-    return <StaticHeroFallback />
+  if (!hasWebGL) {
+    return <FallbackCSSBackground />
   }
 
-  const isLowTier = tier === 'low'
-
   return (
-    <div className="absolute top-0 left-0 w-full h-[100vh] pointer-events-none z-0 overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
       <Canvas
-        camera={{ position: [13, 14, 16], fov: 26 }}
+        camera={{ position: [0, 0, 7], fov: 60 }}
         gl={{
           antialias: !isLowTier,
           powerPreference: isLowTier ? 'low-power' : 'high-performance',
@@ -39,19 +29,16 @@ export const ThreeHeroScene: React.FC<ThreeHeroSceneProps> = ({ progressRef }) =
         }}
         dpr={isLowTier ? [1, 1] : [1, 1.5]}
       >
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[10, 10, 5]} intensity={1} />
+        <pointLight position={[-10, -10, -5]} color="#00f0ff" intensity={1.5} />
+
         <Suspense fallback={null}>
-          <CityBlocks
-            progressRef={progressRef}
+          <ChaosToSystemParticles
             isLowTier={isLowTier}
-            reducedMotion={reducedMotion}
+            prefersReducedMotion={prefersReducedMotion}
           />
         </Suspense>
-
-        {tier === 'high' && !reducedMotion && (
-          <EffectComposer>
-            <Bloom intensity={0.6} luminanceThreshold={0.2} luminanceSmoothing={0.9} />
-          </EffectComposer>
-        )}
 
         {import.meta.env.DEV && <Stats className="!left-auto !right-4 !top-4" />}
       </Canvas>

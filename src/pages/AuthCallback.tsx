@@ -19,9 +19,19 @@ export default function AuthCallback() {
       const err = params.get('error')
       const errDesc = params.get('error_description')
 
+      const isPopup = window.opener && !window.opener.closed
+
       if (err) {
         const msg = errDesc || err
-        navigate('/login?error=' + encodeURIComponent(msg), { replace: true })
+        if (isPopup) {
+          window.opener.postMessage(
+            { type: 'GOOGLE_AUTH_ERROR', error: msg },
+            window.location.origin
+          )
+          window.close()
+        } else {
+          navigate('/login?error=' + encodeURIComponent(msg), { replace: true })
+        }
         return
       }
 
@@ -30,22 +40,50 @@ export default function AuthCallback() {
           const { data, error } = await supabase.auth.exchangeCodeForSession(code)
           if (error) throw error
           if (data?.session) {
-            navigate('/dashboard', { replace: true })
-            return
+            if (isPopup) {
+              window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS' }, window.location.origin)
+              window.close()
+              return
+            } else {
+              navigate('/dashboard', { replace: true })
+              return
+            }
           }
         } catch (e) {
           const msg = e instanceof Error ? e.message : 'Error al intercambiar código'
-          navigate('/login?error=' + encodeURIComponent(msg), { replace: true })
-          return
+          if (isPopup) {
+            window.opener.postMessage(
+              { type: 'GOOGLE_AUTH_ERROR', error: msg },
+              window.location.origin
+            )
+            window.close()
+            return
+          } else {
+            navigate('/login?error=' + encodeURIComponent(msg), { replace: true })
+            return
+          }
         }
       }
 
-      // Fallback check existing session if code was already exchanged
+      // Fallback check existing session
       const { data: sessionData } = await supabase.auth.getSession()
       if (sessionData?.session) {
-        navigate('/dashboard', { replace: true })
+        if (isPopup) {
+          window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS' }, window.location.origin)
+          window.close()
+        } else {
+          navigate('/dashboard', { replace: true })
+        }
       } else {
-        navigate('/login?error=no_session', { replace: true })
+        if (isPopup) {
+          window.opener.postMessage(
+            { type: 'GOOGLE_AUTH_ERROR', error: 'no_session' },
+            window.location.origin
+          )
+          window.close()
+        } else {
+          navigate('/login?error=no_session', { replace: true })
+        }
       }
     }
 

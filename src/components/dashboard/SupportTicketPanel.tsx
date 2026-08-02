@@ -75,10 +75,10 @@ export default function SupportTicketPanel({
             initial={{ opacity: 0, y: 40, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.98 }}
-            className={`relative w-full sm:max-w-lg max-h-[92dvh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border ${theme.border} bg-card shadow-2xl`}
+            className={`relative w-full sm:max-w-lg max-h-[92dvh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-white/15 bg-[#0c0d14] text-white shadow-2xl`}
           >
             <div
-              className={`sticky top-0 z-10 border-b ${theme.border} bg-card/95 backdrop-blur-xl px-6 py-5`}
+              className={`sticky top-0 z-10 border-b border-white/15 bg-[#0c0d14]/95 backdrop-blur-xl px-6 py-5`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
@@ -91,20 +91,20 @@ export default function SupportTicketPanel({
                     <h2 id="ticket-panel-title" className="text-lg font-black text-white">
                       {t('tickets.titulo')}
                     </h2>
-                    <p className="text-xs text-white/50">{sla}</p>
+                    <p className="text-xs text-white/75 font-medium">{sla}</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-xl border border-white/10 p-2 text-white/60 hover:text-white"
+                  className="rounded-xl border border-white/15 bg-white/5 p-2 text-white/70 hover:text-white hover:bg-white/10 transition-colors"
                   aria-label="Cerrar"
                 >
                   <X size={20} />
                 </button>
               </div>
               {openCount > 0 && (
-                <p className="mt-3 text-xs font-bold text-amber-400">
+                <p className="mt-3 text-xs font-bold text-amber-300">
                   Tenés {openCount} ticket{openCount > 1 ? 's' : ''} abierto
                   {openCount > 1 ? 's' : ''}
                 </p>
@@ -132,7 +132,7 @@ export default function SupportTicketPanel({
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label
-                    className="text-xs font-bold uppercase tracking-wider text-white/45"
+                    className="text-xs font-bold uppercase tracking-wider text-white/75"
                     htmlFor="ticket-cat"
                   >
                     Tipo de consulta
@@ -142,13 +142,13 @@ export default function SupportTicketPanel({
                     value={categoria}
                     onChange={(e) => setCategoria(e.target.value)}
                     required
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white text-sm focus:border-accent-cyan/50 focus:outline-none"
+                    className="mt-2 w-full rounded-xl border border-white/20 bg-white/[0.07] px-4 py-3 text-white text-sm focus:border-accent-cyan/60 focus:outline-none"
                   >
-                    <option value="" className="bg-[#0a0a0c]">
+                    <option value="" className="bg-[#0c0d14] text-white">
                       Elegí una categoría
                     </option>
                     {categories.map((c) => (
-                      <option key={c.id} value={c.id} className="bg-[#0a0a0c]">
+                      <option key={c.id} value={c.id} className="bg-[#0c0d14] text-white">
                         {c.label}
                       </option>
                     ))}
@@ -157,7 +157,7 @@ export default function SupportTicketPanel({
 
                 <div>
                   <label
-                    className="text-xs font-bold uppercase tracking-wider text-white/45"
+                    className="text-xs font-bold uppercase tracking-wider text-white/75"
                     htmlFor="ticket-asunto"
                   >
                     Asunto
@@ -169,13 +169,13 @@ export default function SupportTicketPanel({
                     required
                     maxLength={120}
                     placeholder="Ej: El formulario no envía emails"
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white text-sm placeholder:text-white/30 focus:border-accent-cyan/50 focus:outline-none"
+                    className="mt-2 w-full rounded-xl border border-white/20 bg-white/[0.07] px-4 py-3 text-white text-sm placeholder:text-white/40 focus:border-accent-cyan/60 focus:outline-none"
                   />
                 </div>
 
                 <div>
                   <label
-                    className="text-xs font-bold uppercase tracking-wider text-white/45"
+                    className="text-xs font-bold uppercase tracking-wider text-white/75"
                     htmlFor="ticket-msg"
                   >
                     Detalle
@@ -188,17 +188,17 @@ export default function SupportTicketPanel({
                     rows={4}
                     maxLength={2000}
                     placeholder="Contanos qué necesitás o qué falló..."
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white text-sm placeholder:text-white/30 focus:border-accent-cyan/50 focus:outline-none resize-none"
+                    className="mt-2 w-full rounded-xl border border-white/20 bg-white/[0.07] px-4 py-3 text-white text-sm placeholder:text-white/40 focus:border-accent-cyan/60 focus:outline-none resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={submitting}
-                  className={`w-full flex items-center justify-center gap-2 rounded-xl py-4 font-bold text-[#050508] bg-gradient-to-r from-accent-cyan to-accent-magenta disabled:opacity-50`}
+                  className={`w-full flex items-center justify-center gap-2 rounded-xl py-4 font-bold text-slate-950 bg-gradient-to-r from-accent-cyan to-accent-magenta hover:opacity-95 transition-opacity disabled:opacity-50`}
                 >
                   {submitting ? (
-                    <span className="w-5 h-5 border-2 border-[#050508]/30 border-t-[#050508] rounded-full animate-spin" />
+                    <span className="w-5 h-5 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin" />
                   ) : (
                     <>
                       <Send size={18} />
@@ -210,22 +210,22 @@ export default function SupportTicketPanel({
 
               {tickets.length > 0 && (
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-white/40 mb-3">
+                  <p className="text-xs font-bold uppercase tracking-widest text-white/60 mb-3">
                     Tus tickets
                   </p>
                   <ul className="space-y-2 max-h-48 overflow-y-auto">
                     {tickets.map((t) => (
                       <li
                         key={t.id}
-                        className="rounded-xl border border-white/8 bg-white/[0.03] px-4 py-3"
+                        className="rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3"
                       >
                         <div className="flex justify-between gap-2">
                           <p className="text-sm font-semibold text-white truncate">{t.asunto}</p>
-                          <span className="shrink-0 text-[10px] font-bold uppercase text-white/40">
+                          <span className="shrink-0 text-[10px] font-bold uppercase text-white/70">
                             {ESTADO_LABEL[t.estado] ?? t.estado}
                           </span>
                         </div>
-                        <p className="text-[10px] text-white/35 mt-1 font-mono">
+                        <p className="text-[10px] text-white/50 mt-1 font-mono">
                           {new Date(t.created_at).toLocaleString('es-AR')}
                         </p>
                       </li>

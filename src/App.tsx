@@ -4,6 +4,7 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import Header from './components/layout/Header'
 import Hero from './components/Hero/Hero'
 import ErrorBoundary from './components/layout/ErrorBoundary'
+import ScrollProvider from './components/shared/ScrollProvider'
 const Products = lazy(() => import('./components/Products/Products'))
 const Features = lazy(() => import('./components/Features/Features'))
 const SocialProof = lazy(() => import('./components/SocialProof/SocialProof'))
@@ -106,131 +107,135 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <Helmet>
-        <title>ExeSistemasWEB | Código Propio, No Alquiler — Tu página es tuya</title>
-        <meta
-          name="description"
-          content="La mayoría de las páginas web son alquiler disfrazado de compra. Nosotros te damos código 100% tuyo, sin ataduras a ninguna plataforma. Diseño premium, propiedad real."
-        />
-        <meta
-          name="keywords"
-          content="páginas web, código propio, diseño web, desarrollo web, landing page, tienda online, ExeSistemasWEB, sin alquiler, página web dueño"
-        />
+      <ScrollProvider>
+        <Helmet>
+          <title>ExeSistemasWEB | Código Propio, No Alquiler — Tu página es tuya</title>
+          <meta
+            name="description"
+            content="La mayoría de las páginas web son alquiler disfrazado de compra. Nosotros te damos código 100% tuyo, sin ataduras a ninguna plataforma. Diseño premium, propiedad real."
+          />
+          <meta
+            name="keywords"
+            content="páginas web, código propio, diseño web, desarrollo web, landing page, tienda online, ExeSistemasWEB, sin alquiler, página web dueño"
+          />
 
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="ExeSistemasWEB | Código Propio, No Alquiler" />
-        <meta
-          property="og:description"
-          content="Tu página web 100% tuya. Código propio, diseño premium, sin suscripciones eternas ni plataformas que te tengan de rehén."
-        />
-        <meta property="og:image" content="/logo.webp" />
+          {/* Open Graph / Facebook */}
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content="ExeSistemasWEB | Código Propio, No Alquiler" />
+          <meta
+            property="og:description"
+            content="Tu página web 100% tuya. Código propio, diseño premium, sin suscripciones eternas ni plataformas que te tengan de rehén."
+          />
+          <meta property="og:image" content="/logo.webp" />
 
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="ExeSistemasWEB | Código Propio, No Alquiler" />
-        <meta
-          name="twitter:description"
-          content="Tu página web 100% tuya. Código propio, diseño premium, sin suscripciones eternas."
-        />
-        <meta name="twitter:image" content="/logo.webp" />
+          {/* Twitter */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="ExeSistemasWEB | Código Propio, No Alquiler" />
+          <meta
+            name="twitter:description"
+            content="Tu página web 100% tuya. Código propio, diseño premium, sin suscripciones eternas."
+          />
+          <meta name="twitter:image" content="/logo.webp" />
 
-        <link rel="canonical" href="https://exepaginasweb.com" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'LocalBusiness',
-            '@id': 'https://exepaginasweb.com/#organization',
-            name: 'ExePaginasWeb',
-            url: 'https://exepaginasweb.com',
-            logo: 'https://exepaginasweb.com/logo.png',
-            image: 'https://exepaginasweb.com/logo.png',
-            email: 'Contacto@exepaginasweb.com',
-            description:
-              'Agencia de desarrollo web full-stack en Rosario, Argentina. Sitios y aplicaciones a medida con React, TypeScript y Supabase — código propio, sin dependencia de plataformas.',
-            areaServed: {
-              '@type': 'City',
-              name: 'Rosario',
-              containedInPlace: {
-                '@type': 'Country',
-                name: 'Argentina',
+          <link rel="canonical" href="https://exepaginasweb.com" />
+          <script type="application/ld+json">
+            {JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'LocalBusiness',
+              '@id': 'https://exepaginasweb.com/#organization',
+              name: 'ExePaginasWeb',
+              url: 'https://exepaginasweb.com',
+              logo: 'https://exepaginasweb.com/logo.png',
+              image: 'https://exepaginasweb.com/logo.png',
+              email: 'Contacto@exepaginasweb.com',
+              description:
+                'Agencia de desarrollo web full-stack en Rosario, Argentina. Sitios y aplicaciones a medida con React, TypeScript y Supabase — código propio, sin dependencia de plataformas.',
+              areaServed: {
+                '@type': 'City',
+                name: 'Rosario',
+                containedInPlace: {
+                  '@type': 'Country',
+                  name: 'Argentina',
+                },
               },
-            },
-            address: {
-              '@type': 'PostalAddress',
-              addressLocality: 'Rosario',
-              addressRegion: 'Santa Fe',
-              addressCountry: 'AR',
-            },
-            priceRange: '$$',
-            sameAs: [],
-          })}
-        </script>
-      </Helmet>
-      <div className="min-h-screen bg-transparent text-primary-text relative">
-        <Suspense fallback={null}>
-          <PremiumBackground />
-        </Suspense>
+              address: {
+                '@type': 'PostalAddress',
+                addressLocality: 'Rosario',
+                addressRegion: 'Santa Fe',
+                addressCountry: 'AR',
+              },
+              priceRange: '$$',
+              sameAs: [],
+            })}
+          </script>
+        </Helmet>
+        <div className="min-h-screen bg-transparent text-primary-text relative">
+          <Suspense fallback={null}>
+            <PremiumBackground />
+          </Suspense>
 
-        {/* Barra de progreso de lectura */}
-        <motion.div
-          className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-cyan to-accent-magenta origin-left z-[100]"
-          style={{ scaleX }}
-        />
+          {/* Barra de progreso de lectura */}
+          <motion.div
+            className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-cyan to-accent-magenta origin-left z-[100]"
+            style={{ scaleX }}
+          />
 
-        <Header />
-        <motion.main
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Hero />
-          <WaveDivider />
-          <Suspense fallback={<SectionSkeleton />}>
-            <SocialProof />
-            <CaseStudies />
-            <Products />
-            <Features />
-            <AutomationAudit />
-            <Process />
-          </Suspense>
-          <WaveDivider flip />
-          <Suspense
-            fallback={
-              <div className="py-20 text-center text-primary-secondary">
-                <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                Cargando demo...
-              </div>
-            }
+          <Header />
+          <motion.main
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
           >
-            <DemoZone />
+            <Hero />
+            <WaveDivider />
+            <Suspense fallback={<SectionSkeleton />}>
+              <SocialProof />
+              <CaseStudies />
+              <Products />
+              <Features />
+              <AutomationAudit />
+              <Process />
+            </Suspense>
+            <WaveDivider flip />
+            <Suspense
+              fallback={
+                <div className="py-20 text-center text-primary-secondary">
+                  <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                  Cargando demo...
+                </div>
+              }
+            >
+              <DemoZone />
+            </Suspense>
+            <WaveDivider />
+            <Suspense fallback={<SectionSkeleton />}>
+              <BookingDemo />
+            </Suspense>
+            <WaveDivider flip />
+            <Suspense fallback={<SectionSkeleton />}>
+              <Pricing />
+            </Suspense>
+            <WaveDivider />
+            <Suspense
+              fallback={
+                <div className="py-20 text-center text-primary-secondary">
+                  <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                  Cargando contacto...
+                </div>
+              }
+            >
+              <ContactSection />
+            </Suspense>
+            <Suspense fallback={<SectionSkeleton />}>
+              <FAQ />
+            </Suspense>
+          </motion.main>
+          <Suspense fallback={<div className="h-20" />}>
+            {loadHeavyComponents && <Footer />}
           </Suspense>
-          <WaveDivider />
-          <Suspense fallback={<SectionSkeleton />}>
-            <BookingDemo />
-          </Suspense>
-          <WaveDivider flip />
-          <Suspense fallback={<SectionSkeleton />}>
-            <Pricing />
-          </Suspense>
-          <WaveDivider />
-          <Suspense
-            fallback={
-              <div className="py-20 text-center text-primary-secondary">
-                <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                Cargando contacto...
-              </div>
-            }
-          >
-            <ContactSection />
-          </Suspense>
-          <Suspense fallback={<SectionSkeleton />}>
-            <FAQ />
-          </Suspense>
-        </motion.main>
-        <Suspense fallback={<div className="h-20" />}>{loadHeavyComponents && <Footer />}</Suspense>
-        <Suspense fallback={null}>{loadHeavyComponents && <ChatbaseWidget />}</Suspense>
-      </div>
+          <Suspense fallback={null}>{loadHeavyComponents && <ChatbaseWidget />}</Suspense>
+        </div>
+      </ScrollProvider>
     </ErrorBoundary>
   )
 }

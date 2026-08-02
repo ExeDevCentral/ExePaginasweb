@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { SalonBloomButton } from '../shared/SalonBloomButton'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import HeroCompare from './HeroCompare'
+import ThreeHeroScene from './ThreeHeroScene'
 import { HERO_TYPEWRITER_LINES } from './constants'
 
 function useSequentialTypewriter(lines: string[], charSpeed = 30, linePause = 600) {
@@ -123,6 +124,7 @@ const Hero: React.FC = () => {
       id="home"
       className="relative min-h-screen w-full overflow-hidden bg-transparent flex items-center justify-center pt-28 pb-16 md:pt-36 md:pb-24"
     >
+      <ThreeHeroScene />
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-magenta/10 pointer-events-none" />
 
       <div className="absolute top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 rounded-full bg-accent-cyan/10 blur-[100px] pointer-events-none z-0" />

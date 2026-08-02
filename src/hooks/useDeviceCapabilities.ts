@@ -1,49 +1,43 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-export interface DeviceCapabilities {
-  isLowTier: boolean
-  prefersReducedMotion: boolean
-  hasWebGL: boolean
-}
+export type DeviceTier = 'high' | 'medium' | 'low' | 'no-webgl'
 
-export function useDeviceCapabilities(): DeviceCapabilities {
-  const [caps, setCaps] = useState<DeviceCapabilities>(() => {
-    return {
-      isLowTier: false,
-      prefersReducedMotion: false,
-      hasWebGL: true,
-    }
-  })
+export function useDeviceCapabilities() {
+  const [tier, setTier] = useState<DeviceTier>('high')
+  const [isTouch, setIsTouch] = useState(false)
 
   useEffect(() => {
-    let webglSupported = false
+    const touch = window.matchMedia('(pointer: coarse)').matches
+    setIsTouch(touch)
+
+    let gl: WebGLRenderingContext | WebGL2RenderingContext | null = null
     try {
       const canvas = document.createElement('canvas')
-      webglSupported = !!(
-        window.WebGLRenderingContext &&
-        (canvas.getContext('webgl2') ||
-          canvas.getContext('webgl') ||
-          canvas.getContext('experimental-webgl'))
-      )
+      gl = (canvas.getContext('webgl2') ||
+        canvas.getContext('webgl') ||
+        canvas.getContext('experimental-webgl')) as WebGLRenderingContext | null
     } catch {
-      webglSupported = false
+      gl = null
     }
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const isMobileTouch = window.matchMedia('(pointer: coarse)').matches
-    const concurrency = navigator.hardwareConcurrency || 4
-    const isLowConcurrency = concurrency <= 4
+    if (!gl) {
+      setTier('no-webgl')
+      return
+    }
 
-    const lowTier = isMobileTouch || isLowConcurrency
+    const cores = navigator.hardwareConcurrency || 4
+    const mem = (navigator as unknown as { deviceMemory?: number }).deviceMemory || 4
 
-    setCaps({
-      isLowTier: lowTier,
-      prefersReducedMotion: reducedMotion,
-      hasWebGL: webglSupported,
-    })
+    if (touch && (cores <= 4 || mem <= 4)) {
+      setTier('low')
+    } else if (touch) {
+      setTier('medium')
+    } else {
+      setTier('high')
+    }
   }, [])
 
-  return caps
+  return { tier, isTouch }
 }
 
 export default useDeviceCapabilities

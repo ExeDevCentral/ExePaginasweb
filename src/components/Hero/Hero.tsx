@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { SalonBloomButton } from '../shared/SalonBloomButton'
-import { useIsMobile } from '../../hooks/useIsMobile'
 import HeroCompare from './HeroCompare'
-import ThreeHeroScene from './ThreeHeroScene'
 import { HERO_TYPEWRITER_LINES } from './constants'
 
 function useSequentialTypewriter(lines: string[], charSpeed = 30, linePause = 600) {
@@ -94,7 +92,6 @@ const TitleLine: React.FC<{ text: string; delay: number; dir: 'left' | 'right' }
 
 const Hero: React.FC = () => {
   const { t } = useTranslation()
-  const isMobile = useIsMobile()
   const { visibleLines, activeLine, done } = useSequentialTypewriter(HERO_TYPEWRITER_LINES, 28, 500)
 
   const [showTerminal, setShowTerminal] = useState(false)
@@ -103,20 +100,6 @@ const Hero: React.FC = () => {
     return () => clearTimeout(timer)
   }, [])
 
-  const particles = useMemo(
-    () =>
-      Array.from({ length: isMobile ? 8 : 40 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        scale: Math.random() * 0.8 + 0.2,
-        duration: Math.random() * 5 + 3,
-        color: i % 2 === 0 ? 'bg-accent-cyan' : 'bg-accent-magenta',
-        xMove: Math.random() * 30 - 15,
-      })),
-    [isMobile]
-  )
-
   const titleParts = t('hero.titulo_1').split('. ')
 
   return (
@@ -124,38 +107,10 @@ const Hero: React.FC = () => {
       id="home"
       className="relative min-h-screen w-full overflow-hidden bg-transparent flex items-center justify-center pt-28 pb-16 md:pt-36 md:pb-24"
     >
-      <ThreeHeroScene />
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-magenta/10 pointer-events-none" />
 
       <div className="absolute top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 rounded-full bg-accent-cyan/10 blur-[100px] pointer-events-none z-0" />
       <div className="absolute bottom-1/4 right-1/4 w-72 h-72 md:w-96 md:h-96 rounded-full bg-accent-magenta/10 blur-[100px] pointer-events-none z-0" />
-
-      {!isMobile && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          {particles.map((particle) => (
-            <motion.div
-              key={particle.id}
-              className={`absolute w-1.5 h-1.5 ${particle.color} rounded-full blur-[1px]`}
-              style={{
-                left: `${particle.x}%`,
-                top: `${particle.y}%`,
-                willChange: 'transform, opacity',
-              }}
-              animate={{
-                y: [0, -50, 0],
-                x: [0, particle.xMove, 0],
-                scale: [particle.scale, particle.scale * 1.5, particle.scale],
-                opacity: [0.1, 0.8, 0.1],
-              }}
-              transition={{
-                duration: particle.duration,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
-        </div>
-      )}
 
       <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto w-full">
         <Badge text={t('hero.badge')} />

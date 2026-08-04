@@ -1,9 +1,7 @@
-import { useEffect, useRef, lazy, Suspense } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { supabase } from '../core/infra/supabase/client'
-
-const PremiumBackground = lazy(() => import('../components/Effects/PremiumBackground'))
 
 export default function AuthCallback() {
   const navigate = useNavigate()
@@ -92,9 +90,6 @@ export default function AuthCallback() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
-      <Suspense fallback={null}>
-        <PremiumBackground />
-      </Suspense>
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}

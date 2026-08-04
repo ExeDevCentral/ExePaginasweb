@@ -210,10 +210,12 @@ const Header = () => {
 
           {/* Mobile / Tablet hamburger button (visible en pantallas menores a xl: < 1280px) */}
           <motion.button
-            className="xl:hidden w-10 h-10 flex items-center justify-center border border-zinc-800 text-zinc-400 hover:text-white hover:border-[#00f2fe] transition-all duration-200 rounded-sm shrink-0"
+            className="xl:hidden w-10 h-10 flex items-center justify-center border border-zinc-800 text-zinc-400 hover:text-white hover:border-[#00f2fe] transition-all duration-200 rounded-sm shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f2fe]"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             whileTap={{ scale: 0.95 }}
-            aria-label="Menú principal"
+            aria-label={isMenuOpen ? 'Cerrar menú principal' : 'Abrir menú principal'}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu-drawer"
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
@@ -248,6 +250,7 @@ const Header = () => {
 
             {/* Drawer */}
             <motion.div
+              id="mobile-menu-drawer"
               key="mob-drawer"
               className="xl:hidden fixed top-16 left-0 w-full z-50 flex flex-col bg-background border-t border-border"
               style={{

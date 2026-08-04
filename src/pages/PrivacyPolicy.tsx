@@ -1,19 +1,13 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { lazy, Suspense } from 'react'
 import { ArrowLeft, Shield } from 'lucide-react'
 import Header from '../components/layout/Header'
-
-const PremiumBackground = lazy(() => import('../components/Effects/PremiumBackground'))
 
 const PrivacyPolicy: React.FC = () => {
   const { t } = useTranslation()
   return (
     <div className="min-h-screen bg-background text-foreground relative">
-      <Suspense fallback={null}>
-        <PremiumBackground />
-      </Suspense>
       <Header />
       <div className="relative z-10 pt-32 pb-20 px-6">
         <motion.div

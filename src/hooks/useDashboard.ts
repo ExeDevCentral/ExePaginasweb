@@ -5,6 +5,7 @@ import { SupabaseSubscriptionRepository } from '../core/infra/repositories/Supab
 import { Cliente } from '../core/domain/entities/Cliente'
 import { Suscripcion } from '../core/domain/entities/Suscripcion'
 import { resolvePlanTier, type PlanTier } from '../components/dashboard/resolvePlanTier'
+import { getErrorMessage, formatSupabaseErrorDetails } from '../core/utils/errorUtils'
 
 export interface Pago {
   id: string
@@ -44,12 +45,7 @@ export function useDashboard(enabled = true) {
       } = await supabase.auth.getUser()
 
       if (authError) {
-        console.error('[useDashboard] auth.getUser error:', {
-          message: authError.message,
-          code: (authError as any).code,
-          details: (authError as any).details,
-          hint: (authError as any).hint,
-        })
+        console.error('[useDashboard] auth.getUser error:', formatSupabaseErrorDetails(authError))
         throw authError
       }
 
@@ -119,15 +115,7 @@ export function useDashboard(enabled = true) {
     } catch (e: unknown) {
       console.error('[useDashboard] loadData fatal error:', e)
       if (active) {
-        if (e instanceof Error) {
-          setError(e.message)
-        } else {
-          const anyErr = e as any
-          setError(
-            anyErr?.message ||
-              `Error cargando dashboard: ${JSON.stringify({ code: anyErr?.code, details: anyErr?.details, hint: anyErr?.hint })}`
-          )
-        }
+        setError(getErrorMessage(e, 'Error al cargar los datos del panel'))
       }
     } finally {
       if (active) setLoading(false)

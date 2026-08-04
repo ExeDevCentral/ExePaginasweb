@@ -14,7 +14,6 @@ import {
   Settings,
 } from 'lucide-react'
 
-const PremiumBackground = lazy(() => import('../components/Effects/PremiumBackground'))
 import { useDashboard } from '../hooks/useDashboard'
 import { useAuthRole } from '../core/auth/userAuth'
 import { useAuthSession } from '../core/auth/AuthSessionProvider'
@@ -145,9 +144,6 @@ export default function Dashboard() {
   if (isGlobalLoading) {
     return (
       <div className={PREMIUM_TOKENS.bgMain + ' flex items-center justify-center'}>
-        <Suspense fallback={null}>
-          <PremiumBackground />
-        </Suspense>
         <div className="relative z-10 text-center px-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -181,9 +177,6 @@ export default function Dashboard() {
   if (error) {
     return (
       <div className={PREMIUM_TOKENS.bgMain + ' flex items-center justify-center px-4'}>
-        <Suspense fallback={null}>
-          <PremiumBackground />
-        </Suspense>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -207,10 +200,6 @@ export default function Dashboard() {
 
   return (
     <div className={PREMIUM_TOKENS.bgMain}>
-      <Suspense fallback={null}>
-        <PremiumBackground />
-      </Suspense>
-
       <div className="relative z-10 pt-4 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Extracted Header Component with ThemeToggle (Sun/Moon) & SSL Security Badge */}
         <DashboardHeader userEmail={session?.user?.email} onLogout={handleLogout} />

@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import LoginBackground from '../components/Effects/LoginBackground'
 import Logo from '../components/layout/Logo'
+import { getErrorMessage } from '../core/utils/errorUtils'
 
 type Mode = 'login' | 'register' | 'forgot'
 
@@ -117,7 +118,7 @@ export default function Login() {
         setLoading(false)
       }, 180000)
     } catch (e) {
-      const message = e instanceof Error ? e.message : t('login.err_iniciar_sesion')
+      const message = getErrorMessage(e, t('login.err_iniciar_sesion'))
       setError(message)
       setLoading(false)
     }
@@ -199,7 +200,7 @@ export default function Login() {
         navigate('/dashboard', { replace: true })
       }
     } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Error'
+      const msg = getErrorMessage(e, 'Error inesperado')
       if (msg.includes('rate_limit') || msg.toLowerCase().includes('too many requests')) {
         setError('Demasiados intentos. Esperá un momento y volvé a intentar.')
       } else if (msg.includes('Email not confirmed')) {
@@ -309,11 +310,17 @@ export default function Login() {
 
             {/* Segmented Mode Switcher Tabs */}
             {mode !== 'forgot' && (
-              <div className="grid grid-cols-2 p-1.5 bg-slate-950/80 border border-white/15 rounded-2xl mb-6 relative">
+              <div
+                role="tablist"
+                aria-label="Modalidad de autenticación"
+                className="grid grid-cols-2 p-1.5 bg-slate-950/80 border border-white/15 rounded-2xl mb-6 relative"
+              >
                 <button
                   type="button"
+                  role="tab"
+                  aria-selected={mode === 'login'}
                   onClick={() => switchMode('login')}
-                  className={`py-2.5 text-xs font-extrabold rounded-xl transition-all relative z-10 ${
+                  className={`py-2.5 text-xs font-extrabold rounded-xl transition-all relative z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                     mode === 'login'
                       ? 'text-white bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 shadow-[0_4px_20px_rgba(168,85,247,0.35)]'
                       : 'text-slate-400 hover:text-white'
@@ -323,8 +330,10 @@ export default function Login() {
                 </button>
                 <button
                   type="button"
+                  role="tab"
+                  aria-selected={mode === 'register'}
                   onClick={() => switchMode('register')}
-                  className={`py-2.5 text-xs font-extrabold rounded-xl transition-all relative z-10 ${
+                  className={`py-2.5 text-xs font-extrabold rounded-xl transition-all relative z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                     mode === 'register'
                       ? 'text-white bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 shadow-[0_4px_20px_rgba(168,85,247,0.35)]'
                       : 'text-slate-400 hover:text-white'

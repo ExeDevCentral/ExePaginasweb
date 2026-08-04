@@ -2,10 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-import { lazy, Suspense } from 'react'
 import { Home } from 'lucide-react'
-
-const PremiumBackground = lazy(() => import('../components/Effects/PremiumBackground'))
 
 const floatingShapes = [
   {
@@ -66,9 +63,6 @@ export default function NotFound() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
-      <Suspense fallback={null}>
-        <PremiumBackground />
-      </Suspense>
       <Helmet>
         <title>{t('notfound.meta_title')}</title>
       </Helmet>

@@ -11,7 +11,6 @@ const SocialProof = lazy(() => import('./components/SocialProof/SocialProof'))
 const Process = lazy(() => import('./components/Process/Process'))
 const FAQ = lazy(() => import('./components/FAQ/FAQ'))
 const Footer = lazy(() => import('./components/layout/Footer'))
-const PremiumBackground = lazy(() => import('./components/Effects/PremiumBackground'))
 const ChatbaseWidget = lazy(() => import('./components/chat/ChatbaseWidget'))
 const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
 const ContactSection = lazy(() => import('./components/landing/ContactSection'))
@@ -170,10 +169,6 @@ function App() {
           </script>
         </Helmet>
         <div className="min-h-screen bg-transparent text-primary-text relative">
-          <Suspense fallback={null}>
-            <PremiumBackground />
-          </Suspense>
-
           {/* Barra de progreso de lectura */}
           <motion.div
             className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-cyan to-accent-magenta origin-left z-[100]"
@@ -181,11 +176,7 @@ function App() {
           />
 
           <Header />
-          <motion.main
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
+          <main>
             <Hero />
             <WaveDivider />
             <Suspense fallback={<SectionSkeleton />}>
@@ -229,7 +220,7 @@ function App() {
             <Suspense fallback={<SectionSkeleton />}>
               <FAQ />
             </Suspense>
-          </motion.main>
+          </main>
           <Suspense fallback={<div className="h-20" />}>
             {loadHeavyComponents && <Footer />}
           </Suspense>

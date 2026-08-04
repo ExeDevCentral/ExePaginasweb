@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect, lazy } from 'react'
+import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useMotionValue, useMotionTemplate } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -23,7 +23,6 @@ import {
 } from 'lucide-react'
 import Header from '../layout/Header'
 
-const PremiumBackground = lazy(() => import('../Effects/PremiumBackground'))
 import { Canvas, useFrame } from '@react-three/fiber'
 import { PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
@@ -647,7 +646,6 @@ export default function QuoteBuilder() {
         />
       </Helmet>
       <Quote3DCanvas />
-      <PremiumBackground />
       <Header />
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 pt-36 pb-24">

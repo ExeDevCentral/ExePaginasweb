@@ -148,8 +148,10 @@ const Header = () => {
             {/* Tienda Online */}
             <motion.a
               href="/tienda"
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={(e) => {
+                e.preventDefault()
+                navigate('/tienda')
+              }}
               className="relative flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 text-[#00f2fe]/80 hover:text-[#00f2fe] group shrink-0 whitespace-nowrap"
             >
               <span className="whitespace-nowrap">{t('nav.tienda_online')}</span>
@@ -298,10 +300,12 @@ const Header = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 4 * 0.05 }}
                   href="/tienda"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-zinc-900/60 text-[#00f2fe]/80 flex items-center gap-1.5"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setIsMenuOpen(false)
+                    navigate('/tienda')
+                  }}
                 >
                   <span>{t('nav.tienda_online')}</span>
                   <ExternalLink size={11} className="opacity-70" />

@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion'
 import { Sparkles, X } from 'lucide-react'
-import { useEffect, useState, lazy } from 'react'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-const PremiumBackground = lazy(() => import('../Effects/PremiumBackground'))
+import { useNavigate } from 'react-router-dom'
+import { useTypewriter } from '../../hooks/useTypewriter'
 import { PLAN_CATALOG } from '../../core/domain/planCatalog'
 import { Monitor, Building, Building2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -80,31 +81,16 @@ const PLANS: PlanData[] = basePlans.map((p) => {
 
 export default function StorePage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [selectedPlan, setSelectedPlan] = useState<PlanData | null>(null)
-  const [displayedText, setDisplayedText] = useState('')
   const fullText = t('store.gestion_abonos')
-
-  useEffect(() => {
-    setDisplayedText('')
-    let index = 0
-    const timer = setInterval(() => {
-      if (index <= fullText.length) {
-        setDisplayedText(fullText.slice(0, index))
-        index++
-      } else {
-        clearInterval(timer)
-      }
-    }, 30)
-    return () => clearInterval(timer)
-  }, [fullText])
+  const { typedText: displayedText } = useTypewriter(fullText, { typingSpeed: 30 })
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-background py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen relative overflow-hidden bg-transparent py-20 px-4 sm:px-6 lg:px-8">
       <Helmet>
         <title>{t('store.title')} | ExeSistemasWEB</title>
       </Helmet>
-
-      <PremiumBackground />
 
       {/* Ambient orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -194,10 +180,10 @@ export default function StorePage() {
             </div>
 
             <motion.a
-              href="/"
+              href="/#contact"
               onClick={(e) => {
                 e.preventDefault()
-                window.location.href = '/#contact'
+                navigate('/#contact')
               }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

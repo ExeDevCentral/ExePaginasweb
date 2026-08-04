@@ -49,6 +49,7 @@ import ThemedToaster from './components/shared/ThemedToaster'
 import { AuthGuard } from './core/auth/AuthGuard'
 import { useEffect } from 'react'
 import { resetScrollToTop } from './components/shared/ScrollProvider'
+import PremiumBackground from './components/Effects/PremiumBackground'
 import './index.css'
 
 const pageTransition = {
@@ -59,10 +60,20 @@ const pageTransition = {
 }
 
 function ScrollToTop() {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   useEffect(() => {
+    if (hash) {
+      const el = document.getElementById(hash.slice(1))
+      if (el) {
+        // Espera a que el contenido se monte (transición SPA)
+        requestAnimationFrame(() => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        })
+        return
+      }
+    }
     resetScrollToTop()
-  }, [pathname])
+  }, [pathname, hash])
   return null
 }
 
@@ -163,6 +174,7 @@ const AppRoot = (
       <QueryClientProvider client={queryClient}>
         <AuthSessionProvider>
           <ThemeProvider>
+            <PremiumBackground />
             <BrowserRouter>
               <div style={{ position: 'relative', zIndex: 9999 }}>
                 <ThemedToaster />

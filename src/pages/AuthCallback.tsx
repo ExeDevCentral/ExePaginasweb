@@ -17,6 +17,10 @@ export default function AuthCallback() {
       const err = params.get('error')
       const errDesc = params.get('error_description')
 
+      const type = params.get('type')
+      const hashParams = new URLSearchParams(window.location.hash.slice(1))
+      const isRecovery = type === 'recovery' || hashParams.get('type') === 'recovery'
+
       const isPopup = window.opener && !window.opener.closed
 
       if (err) {
@@ -43,7 +47,8 @@ export default function AuthCallback() {
               window.close()
               return
             } else {
-              navigate('/dashboard', { replace: true })
+              const target = isRecovery ? '/login?mode=update-password' : '/dashboard'
+              navigate(target, { replace: true })
               return
             }
           }
@@ -70,7 +75,8 @@ export default function AuthCallback() {
           window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS' }, window.location.origin)
           window.close()
         } else {
-          navigate('/dashboard', { replace: true })
+          const target = isRecovery ? '/login?mode=update-password' : '/dashboard'
+          navigate(target, { replace: true })
         }
       } else {
         if (isPopup) {

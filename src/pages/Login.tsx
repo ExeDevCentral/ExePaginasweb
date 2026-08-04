@@ -26,7 +26,7 @@ import LoginBackground from '../components/Effects/LoginBackground'
 import Logo from '../components/layout/Logo'
 import { getErrorMessage } from '../core/utils/errorUtils'
 
-type Mode = 'login' | 'register' | 'forgot'
+type Mode = 'login' | 'register' | 'forgot' | 'update-password'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -34,20 +34,40 @@ export default function Login() {
   const { ready, session } = useAuthSession()
   const { t } = useTranslation()
   const [error, setError] = useState<string | null>(searchParams.get('error'))
-  const [mode, setMode] = useState<Mode>('login')
+  const [mode, setMode] = useState<Mode>(
+    searchParams.get('mode') === 'update-password' ? 'update-password' : 'login'
+  )
   const [loading, setLoading] = useState(false)
   const [sentVerification, setSentVerification] = useState(false)
   const [sentReset, setSentReset] = useState(false)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [name, setName] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [focusedInput, setFocusedInput] = useState<string | null>(null)
 
   useEffect(() => {
-    if (ready && session) navigate('/dashboard', { replace: true })
-  }, [ready, session, navigate])
+    if (searchParams.get('mode') === 'update-password') {
+      setMode('update-password')
+    }
+  }, [searchParams])
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setMode('update-password')
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    if (ready && session && mode !== 'update-password') navigate('/dashboard', { replace: true })
+  }, [ready, session, navigate, mode])
 
   const passwordRules = [
     { label: '8+ caracteres', test: (p: string) => p.length >= 8 },
@@ -147,11 +167,41 @@ export default function Login() {
     }
   }
 
+  const handleUpdatePassword = async () => {
+    setError(null)
+    if (password.length < 8) {
+      setError('La contraseña debe tener al menos 8 caracteres')
+      return
+    }
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden')
+      return
+    }
+    setLoading(true)
+    try {
+      const { error: updateErr } = await supabase.auth.updateUser({ password })
+      if (updateErr) throw updateErr
+      toast.success('Contraseña actualizada', {
+        description: 'Tu nueva contraseña ha sido guardada correctamente',
+      })
+      navigate('/dashboard', { replace: true })
+    } catch (e) {
+      setError(getErrorMessage(e, 'Error al actualizar la contraseña'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const validateAndSubmit = async () => {
     setError(null)
 
     if (mode === 'forgot') {
       await handleResetPassword()
+      return
+    }
+
+    if (mode === 'update-password') {
+      await handleUpdatePassword()
       return
     }
 
@@ -297,19 +347,23 @@ export default function Login() {
                   ? 'Bienvenido de nuevo'
                   : mode === 'register'
                     ? 'Crear tu cuenta'
-                    : 'Recuperar contraseña'}
+                    : mode === 'forgot'
+                      ? 'Recuperar contraseña'
+                      : 'Establecer nueva contraseña'}
               </h1>
               <p className="text-xs sm:text-sm text-slate-300 mt-1.5 font-medium">
                 {mode === 'login'
                   ? 'Ingresá al panel de control corporativo'
                   : mode === 'register'
                     ? 'Registrate para comenzar a construir tu sistema'
-                    : 'Ingresá tu mail para enviarte instrucciones'}
+                    : mode === 'forgot'
+                      ? 'Ingresá tu mail para enviarte instrucciones'
+                      : 'Ingresá tu nueva contraseña para actualizar tu acceso'}
               </p>
             </div>
 
             {/* Segmented Mode Switcher Tabs */}
-            {mode !== 'forgot' && (
+            {mode !== 'forgot' && mode !== 'update-password' && (
               <div
                 role="tablist"
                 aria-label="Modalidad de autenticación"
@@ -345,7 +399,7 @@ export default function Login() {
             )}
 
             {/* Official Google OAuth Button */}
-            {mode !== 'forgot' && (
+            {mode !== 'forgot' && mode !== 'update-password' && (
               <>
                 <motion.button
                   whileHover={{ scale: 1.01 }}
@@ -495,42 +549,47 @@ export default function Login() {
                     </div>
                   )}
 
-                  {/* Email Input */}
-                  <div className="space-y-1.5">
-                    <label htmlFor="login-email" className="text-xs font-bold text-slate-200 ml-1">
-                      Correo electrónico
-                    </label>
-                    <div
-                      className={`relative rounded-2xl border transition-all duration-200 ${
-                        focusedInput === 'email'
-                          ? 'bg-slate-950 border-cyan-400 shadow-[0_0_20px_rgba(14,165,233,0.25)]'
-                          : 'bg-slate-950/80 border-white/15 hover:border-white/25'
-                      }`}
-                    >
-                      <Mail
-                        className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${focusedInput === 'email' ? 'text-cyan-400' : 'text-slate-400'}`}
-                      />
-                      <input
-                        id="login-email"
-                        type="email"
-                        value={email}
-                        onFocus={() => setFocusedInput('email')}
-                        onBlur={() => setFocusedInput(null)}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="nombre@empresa.com"
-                        autoComplete="email"
-                        className="w-full rounded-2xl pl-10 pr-4 py-3 text-xs sm:text-sm bg-transparent text-white placeholder:text-slate-500 focus:outline-none"
-                        onKeyDown={handleKeyDown}
-                      />
+                  {/* Email Input (hidden in update-password) */}
+                  {mode !== 'update-password' && (
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="login-email"
+                        className="text-xs font-bold text-slate-200 ml-1"
+                      >
+                        Correo electrónico
+                      </label>
+                      <div
+                        className={`relative rounded-2xl border transition-all duration-200 ${
+                          focusedInput === 'email'
+                            ? 'bg-slate-950 border-cyan-400 shadow-[0_0_20px_rgba(14,165,233,0.25)]'
+                            : 'bg-slate-950/80 border-white/15 hover:border-white/25'
+                        }`}
+                      >
+                        <Mail
+                          className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${focusedInput === 'email' ? 'text-cyan-400' : 'text-slate-400'}`}
+                        />
+                        <input
+                          id="login-email"
+                          type="email"
+                          value={email}
+                          onFocus={() => setFocusedInput('email')}
+                          onBlur={() => setFocusedInput(null)}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="nombre@empresa.com"
+                          autoComplete="email"
+                          className="w-full rounded-2xl pl-10 pr-4 py-3 text-xs sm:text-sm bg-transparent text-white placeholder:text-slate-500 focus:outline-none"
+                          onKeyDown={handleKeyDown}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Password Input */}
                   {mode !== 'forgot' && (
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between ml-1">
                         <label htmlFor="login-pass" className="text-xs font-bold text-slate-200">
-                          {t('login.contrasena')}
+                          {mode === 'update-password' ? 'Nueva contraseña' : t('login.contrasena')}
                         </label>
                         {mode === 'login' && (
                           <button
@@ -560,7 +619,11 @@ export default function Login() {
                           onBlur={() => setFocusedInput(null)}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="••••••••"
-                          autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
+                          autoComplete={
+                            mode === 'register' || mode === 'update-password'
+                              ? 'new-password'
+                              : 'current-password'
+                          }
                           className="w-full rounded-2xl pl-10 pr-10 py-3 text-xs sm:text-sm bg-transparent text-white placeholder:text-slate-500 focus:outline-none"
                           onKeyDown={handleKeyDown}
                         />
@@ -576,8 +639,43 @@ export default function Login() {
                     </div>
                   )}
 
+                  {/* Confirm Password Input for update-password */}
+                  {mode === 'update-password' && (
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="confirm-pass"
+                        className="text-xs font-bold text-slate-200 ml-1"
+                      >
+                        Confirmar nueva contraseña
+                      </label>
+                      <div
+                        className={`relative rounded-2xl border transition-all duration-200 ${
+                          focusedInput === 'confirmPassword'
+                            ? 'bg-slate-950 border-cyan-400 shadow-[0_0_20px_rgba(14,165,233,0.25)]'
+                            : 'bg-slate-950/80 border-white/15 hover:border-white/25'
+                        }`}
+                      >
+                        <Lock
+                          className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${focusedInput === 'confirmPassword' ? 'text-cyan-400' : 'text-slate-400'}`}
+                        />
+                        <input
+                          id="confirm-pass"
+                          type={showPassword ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onFocus={() => setFocusedInput('confirmPassword')}
+                          onBlur={() => setFocusedInput(null)}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder="••••••••"
+                          autoComplete="new-password"
+                          className="w-full rounded-2xl pl-10 pr-4 py-3 text-xs sm:text-sm bg-transparent text-white placeholder:text-slate-500 focus:outline-none"
+                          onKeyDown={handleKeyDown}
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   {/* Password Rules */}
-                  {mode === 'register' && (
+                  {(mode === 'register' || mode === 'update-password') && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
@@ -642,7 +740,9 @@ export default function Login() {
                               ? t('login.iniciar_sesion')
                               : mode === 'register'
                                 ? 'Crear cuenta'
-                                : 'Enviar instrucciones'}
+                                : mode === 'forgot'
+                                  ? 'Enviar instrucciones'
+                                  : 'Guardar nueva contraseña'}
                           </span>
                           <ArrowRight size={16} />
                         </>
@@ -651,7 +751,7 @@ export default function Login() {
                   </div>
 
                   {/* Toggle Back */}
-                  {mode === 'forgot' && (
+                  {(mode === 'forgot' || mode === 'update-password') && (
                     <div className="text-center pt-2">
                       <button
                         type="button"

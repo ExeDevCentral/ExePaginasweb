@@ -6,7 +6,8 @@ import { supabase } from '../../core/infra/supabase/client'
 import { toast } from 'sonner'
 
 const ContactSection = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
@@ -37,10 +38,13 @@ const ContactSection = () => {
     },
   ]
 
+  const [ticketId, setTicketId] = useState('')
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setStatus('sending')
     setFeedback('')
+    setTicketId('')
 
     const apiUrl = import.meta.env.DEV ? 'http://localhost:3000/api/contact' : '/api/contact'
 
@@ -48,8 +52,10 @@ const ContactSection = () => {
       const res = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify({ name, email, message, lang: i18n.language }),
       })
+
+      const data = await res.json()
 
       if (res.ok) {
         supabase
@@ -62,14 +68,22 @@ const ContactSection = () => {
           })
           .then(() => {})
 
+        if (data.ticketId) {
+          setTicketId(data.ticketId)
+        }
+
         setStatus('success')
-        setFeedback(t('contact.form_exito'))
-        toast.success(t('contact.success_titulo'), { description: t('contact.form_exito') })
+        const successMsg = data.message || t('contact.form_exito')
+        setFeedback(successMsg)
+        toast.success(t('contact.success_titulo'), {
+          description: data.ticketId
+            ? `Ticket generado: ${data.ticketId}. Revisa tu casilla de correo.`
+            : successMsg,
+        })
         setName('')
         setEmail('')
         setMessage('')
       } else {
-        const data = await res.json()
         throw new Error(data.error || 'Error al enviar el mensaje')
       }
     } catch (err) {
@@ -118,22 +132,50 @@ const ContactSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-2 rounded-3xl border border-border bg-muted p-8 backdrop-blur-sm"
+            className="lg:col-span-2 rounded-3xl border border-border bg-muted p-8 backdrop-blur-sm shadow-2xl relative overflow-hidden"
           >
             {status === 'success' ? (
-              <div className="flex h-full flex-col items-center justify-center gap-5 py-12 text-center">
+              <div className="flex h-full flex-col items-center justify-center gap-5 py-8 text-center">
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                  className="rounded-full bg-accent-cyan/15 p-4 border border-accent-cyan/30"
                 >
                   <CheckCircle className="h-16 w-16 text-accent-cyan" />
                 </motion.div>
-                <h3 className="text-2xl font-bold">{t('contact.success_titulo')}</h3>
-                <p className="text-primary-secondary">{feedback}</p>
+
+                {ticketId && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="inline-flex items-center gap-2 rounded-full border border-accent-cyan/40 bg-accent-cyan/10 px-4 py-1.5 font-mono text-xs font-bold text-accent-cyan tracking-wider"
+                  >
+                    <span>TICKET DE ATENCIÓN:</span>
+                    <span className="underline">{ticketId}</span>
+                  </motion.div>
+                )}
+
+                <h3 className="text-3xl font-black text-foreground">
+                  {t('contact.success_titulo')}
+                </h3>
+                <p className="max-w-md text-sm text-muted-foreground leading-relaxed">{feedback}</p>
+
+                <div className="w-full max-w-sm rounded-2xl border border-border/80 bg-background/50 p-4 text-left backdrop-blur-md">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                    <span>Estado del mensaje:</span>
+                    <span className="font-semibold text-emerald-400">✅ Confirmado & Enviado</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Respuesta estimada:</span>
+                    <span className="font-semibold text-accent-cyan">⚡ &lt; 2 Horas</span>
+                  </div>
+                </div>
+
                 <button
                   onClick={() => setStatus('idle')}
-                  className="mt-2 rounded-full border border-border px-6 py-2.5 text-sm font-medium hover:bg-muted transition-colors"
+                  className="mt-4 rounded-full border border-border px-8 py-3 text-sm font-semibold hover:border-accent-cyan hover:bg-accent-cyan/10 transition-all shadow-lg"
                 >
                   {t('contact.success_otro')}
                 </button>

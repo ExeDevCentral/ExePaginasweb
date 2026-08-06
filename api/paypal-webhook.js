@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
-import { sendEmail, ADMIN_EMAIL } from './lib/email/send.js'
-import { paymentConfirmation, paymentNotification } from './lib/email/templates.js'
+import { sendEmail, ADMIN_EMAIL } from '../lib/email/send.js'
+import { paymentConfirmation, paymentNotification } from '../lib/email/templates.js'
 
 let supabase = null
 function getSupabase() {

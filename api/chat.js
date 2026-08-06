@@ -1,4 +1,13 @@
 import { z } from 'zod'
+import { createClient } from '@supabase/supabase-js'
+import { sendEmail, ADMIN_EMAIL } from '../lib/email/send.js'
+import { contactNotification, contactAutoReply } from '../lib/email/templates.js'
+
+import { detectLanguage } from './contact.js'
+
+const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || ''
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || ''
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
 
 const RATE_LIMIT_WINDOW_MS = 60_000
 const RATE_LIMIT_MAX_REQUESTS = 10
@@ -19,19 +28,29 @@ const ChatRequestSchema = z.object({
 
 const DEV_FALLBACK_RESPONSES = [
   {
-    keywords: ['hola', 'buenas', 'hey', 'saludos'],
+    keywords: ['hola', 'buenas', 'hey', 'saludos', 'hello', 'hi'],
     response:
-      '¡Hola! Soy el asistente de ExeSistemasWEB. Te ayudo a automatizar las operaciones de tu negocio con sistemas web a medida.',
+      '¡Hola! / Hello! Soy el asistente de ExeSistemasWEB. Te ayudo a automatizar las operaciones de tu negocio con software y sistemas web a medida.',
   },
   {
-    keywords: ['precio', 'costo', 'cuanto', 'valor', 'presupuesto'],
+    keywords: [
+      'precio',
+      'costo',
+      'cuanto',
+      'valor',
+      'presupuesto',
+      'pricing',
+      'price',
+      'quote',
+      'cost',
+    ],
     response:
-      'Desarrollamos sistemas web y software a medida (reservas, dashboards, automatizacion). El costo depende del alcance. Queres solicitar una cotizacion?',
+      'Desarrollamos sistemas web a medida (reservas, turnos, dashboards, saas). Tu consulta genera un ticket de atención prioritaria [EXE-CHT-INFO]. ¿Querés solicitar una cotización personalizada?',
   },
   {
-    keywords: ['contacto', 'whatsapp', 'hablar'],
+    keywords: ['contacto', 'whatsapp', 'hablar', 'contact', 'support'],
     response:
-      'Usa el formulario de contacto o el chat en esta pagina para comunicarte con nosotros.',
+      'Podés hablar directamente por WhatsApp al +54 9 341 6874786 o dejarnos tu email aquí en el chat para recibir una propuesta en menos de 2 horas.',
   },
 ]
 
@@ -40,7 +59,7 @@ function getDevFallbackResponse(message) {
   for (const item of DEV_FALLBACK_RESPONSES) {
     if (item.keywords.some((kw) => lowerMsg.includes(kw))) return item.response
   }
-  return `Entiendo que preguntaste sobre: "${message}". Contactanos por WhatsApp al +54 9 341 6874786 para una respuesta inmediata.`
+  return `Entiendo que preguntaste sobre: "${message}". Te asignamos atención rápida vía WhatsApp al +54 9 341 6874786 o por email.`
 }
 
 function getClientIp(req) {
@@ -73,8 +92,15 @@ function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 }
 
-const SYSTEM_PROMPT =
-  'Eres el asistente oficial de ExeSistemasWEB. Te especializas en sistemas web para automatizar operaciones de negocios locales (reservas, turnos, dashboards, gestion). No vendemos simples paginas web, hacemos software que optimiza procesos. Responde en espanol de Argentina/Latinoamerica, de forma profesional pero cercana. Responde en texto plano Markdown.'
+const SYSTEM_PROMPT = `
+Eres el asistente inteligente oficial de ExeSistemasWEB (estudio premium de desarrollo de software y sistemas a medida).
+
+REGLAS DE ATENCIÓN Y COMUNICACIÓN:
+1. DETECCION BILINGÜE: Analiza el idioma del usuario. Si el usuario escribe en inglés, responde totalmente en INGLÉS elegante y profesional. Si escribe en español, responde en ESPAÑOL.
+2. ENFOQUE CORPORATIVO: No vendemos simples plantillas web. Desarrollamos software a medida (sistemas de turnos, dashboards de gestión, plataformas SaaS, automatización de procesos).
+3. TICKETS Y RESPUESTA RÁPIDA: Cuando pregunten por presupuestos, cotizaciones, o dejen sus datos, asígnales un Ticket de Seguimiento en formato [EXE-CHT-XXXXX], garantiza respuesta de un especialista en menos de 2 horas y ofrece el link directo a WhatsApp (https://wa.me/5493416874786).
+4. CAPTURA DE CORREO: Si el usuario escribe un correo electrónico, confírmale que recibirá una notificación oficial instantánea en su bandeja de entrada.
+`
 
 export default async function handler(req, res) {
   setCorsHeaders(res)
@@ -89,14 +115,62 @@ export default async function handler(req, res) {
 
   const validation = ChatRequestSchema.safeParse(req.body)
   if (!validation.success) {
-    console.error('[chat] Error de validacion:', validation.error.format())
+    console.error('[chat] Error de validación:', validation.error.format())
     return res
       .status(400)
-      .json({ error: 'Datos de mensaje invalidos.', details: validation.error.format() })
+      .json({ error: 'Datos de mensaje inválidos.', details: validation.error.format() })
   }
 
   const { message: userMessage, history: rawHistory } = validation.data
   const history = rawHistory || []
+
+  // Capturar si el usuario escribió un email en el mensaje del chat
+  const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/
+  const emailMatch = userMessage.match(emailRegex)
+  if (emailMatch && emailMatch[0]) {
+    const capturedEmail = emailMatch[0]
+    const detectedLang = detectLanguage(userMessage, '')
+    const ticketId = `EXE-CHT-${Date.now().toString(36).toUpperCase().slice(-5)}`
+    console.log(
+      `[chat] 📧 Email capturado en chat: ${capturedEmail} (Ticket: ${ticketId}, Lang: ${detectedLang})`
+    )
+
+    if (process.env.RESEND_API_KEY) {
+      Promise.allSettled([
+        sendEmail({
+          to: [ADMIN_EMAIL],
+          subject: `[${ticketId}] Consulta desde Chat WEB (${capturedEmail})`,
+          html: contactNotification({
+            name: 'Visitante Chat',
+            email: capturedEmail,
+            message: userMessage,
+            ticketId,
+          }),
+          replyTo: capturedEmail,
+        }),
+        sendEmail({
+          to: [capturedEmail],
+          subject:
+            detectedLang === 'en'
+              ? `✨ We received your inquiry [Ticket: ${ticketId}] - ExeSistemasWEB`
+              : `✨ Recibimos tu consulta del Chat [Ticket: ${ticketId}] - ExeSistemasWEB`,
+          html: contactAutoReply({
+            name: capturedEmail.split('@')[0],
+            message: userMessage,
+            ticketId,
+            lang: detectedLang,
+          }),
+        }),
+      ]).catch((err) => console.error('[chat] Error enviando emails automáticos desde chat:', err))
+    }
+
+    if (supabase) {
+      supabase
+        .from('leads')
+        .insert({ email: capturedEmail, lead_type: 'chat', message: userMessage })
+        .then(() => {})
+    }
+  }
 
   const groqKey = process.env.GROQ_API_KEY
   if (!groqKey) {
@@ -112,7 +186,9 @@ export default async function handler(req, res) {
   ]
 
   const abortController = new AbortController()
-  res.on('close', () => abortController.abort())
+  if (typeof res.on === 'function') {
+    res.on('close', () => abortController.abort())
+  }
 
   try {
     const groqResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {

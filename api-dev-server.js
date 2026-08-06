@@ -11,12 +11,20 @@ console.log(`  - DEBUG: ${process.env.DEBUG ? 'Activo' : 'Inactivo'}`)
 
 const app = express()
 app.use(cors()) // Express maneja CORS, eliminaremos los manuales para evitar duplicados
-app.use(express.json({ limit: '10mb' }))
+app.use(
+  express.json({
+    limit: '10mb',
+    verify: (req, _res, buf) => {
+      req.rawBody = buf
+    },
+  })
+)
 
 // Import API handlers
 import chatHandler from './api/chat.js'
 import contactHandler from './api/contact.js'
 import paypalWebhookHandler from './api/paypal-webhook.js'
+import resendWebhookHandler from './api/webhooks/resend.js'
 
 // Manejador de errores global para evitar que el server muera
 process.on('uncaughtException', (err) => {
@@ -76,14 +84,12 @@ app.all('/api/paypal-webhook', async (req, res) => {
   }
 })
 
-// Test endpoint for PayPal sandbox connection
-import testPaypalHandler from './api/test-paypal.js'
-app.get('/api/test-paypal', async (req, res) => {
+app.all('/api/webhooks/resend', async (req, res) => {
   try {
-    await testPaypalHandler(req, res)
+    await resendWebhookHandler(req, res)
   } catch (error) {
-    console.error('[Dev Server] PayPal Test Error:', error)
-    res.status(500).json({ error: error.message })
+    console.error('[Dev Server] Resend Webhook Error:', error)
+    if (!res.headersSent) res.status(500).json({ error: error.message })
   }
 })
 
@@ -94,7 +100,9 @@ app.use((req, res) => {
 const PORT = process.env.API_PORT || 3000
 app.listen(PORT, () => {
   console.log(`🚀 API dev server running at http://localhost:${PORT}`)
-  console.log('   Endpoints: /api/chat, /api/contact')
+  console.log(
+    '   Endpoints: /api/chat, /api/contact, /api/paypal-webhook, /api/webhooks/resend, /api/test-resend'
+  )
 
   if (process.env.RESEND_API_KEY) {
     console.log(

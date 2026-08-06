@@ -1,5 +1,5 @@
-import { sendEmail } from './lib/email/send.js'
-import { emailVerification } from './lib/email/templates.js'
+import { sendEmail } from '../lib/email/send.js'
+import { emailVerification } from '../lib/email/templates.js'
 
 function setCorsHeaders(res, req) {
   const allowedOrigins = [

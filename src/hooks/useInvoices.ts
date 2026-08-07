@@ -1,11 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { SupabaseInvoiceRepository } from '../core/infra/repositories/SupabaseInvoiceRepository'
+import { queryKeys } from '../core/infra/query/queryKeys'
 
 const repo = new SupabaseInvoiceRepository()
 
 export function useInvoicesByTenant(tenantId: string | null, enabled = true) {
   return useQuery({
-    queryKey: ['invoices', 'tenant', tenantId],
+    queryKey: queryKeys.invoices.byTenant(tenantId),
     queryFn: () => repo.listByTenantId(tenantId!),
     enabled: enabled && !!tenantId,
     staleTime: 2 * 60 * 1000,
@@ -34,7 +35,7 @@ export function useMarkInvoicePaid() {
   return useMutation({
     mutationFn: ({ id, pagoId }: { id: string; pagoId: string }) => repo.markAsPaid(id, pagoId),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['invoices'] })
+      qc.invalidateQueries({ queryKey: queryKeys.invoices.all })
     },
   })
 }

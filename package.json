@@ -29,6 +29,7 @@
     "@supabase/server": "^1.4.1",
     "@supabase/supabase-js": "^2.110.8",
     "@tanstack/react-query": "^5.100.14",
+    "@tanstack/react-table": "^8.21.3",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "ai": "^6.0.185",
@@ -53,6 +54,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@tanstack/react-query-devtools": "^5.101.4",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/three": "^0.185.3",

@@ -8,8 +8,8 @@ const ChatbaseWidget = () => {
     const win = window as any
 
     const init = () => {
+      // Configuración única de Chatbase para evitar duplicación de botones
       win.chatbaseConfig = { chatbotId: CHATBOT_ID }
-      win.embeddedChatbotConfig = { chatbotId: CHATBOT_ID }
 
       if (!win.chatbase || win.chatbase('getState') !== 'initialized') {
         win.chatbase = (...args: any[]) => {
@@ -24,11 +24,13 @@ const ChatbaseWidget = () => {
         })
       }
 
-      const script = document.createElement('script')
-      script.src = 'https://www.chatbase.co/embed.min.js'
-      script.id = CHATBOT_ID
-      script.async = true
-      document.body.appendChild(script)
+      if (!document.getElementById(CHATBOT_ID)) {
+        const script = document.createElement('script')
+        script.src = 'https://www.chatbase.co/embed.min.js'
+        script.id = CHATBOT_ID
+        script.async = true
+        document.body.appendChild(script)
+      }
     }
 
     if (document.readyState === 'complete') {

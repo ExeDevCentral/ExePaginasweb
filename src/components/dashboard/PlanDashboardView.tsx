@@ -12,6 +12,8 @@ import SupportTicketPanel from './SupportTicketPanel'
 import { useTranslation } from 'react-i18next'
 import {
   LiveBadge,
+  LiveHealthCard,
+  QuickActionsHub,
   MetricGrid,
   WeeklyChart,
   ActivityTimeline,
@@ -145,8 +147,13 @@ export default function PlanDashboardView({
             </div>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 space-y-6">
             <MetricGrid metrics={metrics} theme={theme} />
+            <LiveHealthCard theme={theme} />
+            <QuickActionsHub
+              onOpenTicket={() => setTicketPanelOpen(true)}
+              userEmail={cliente?.email}
+            />
           </div>
         </div>
       </motion.div>

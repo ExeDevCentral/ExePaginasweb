@@ -1,8 +1,10 @@
-import { motion } from 'framer-motion'
+import { useMemo } from 'react'
 import { FileText, CheckCircle, Clock, XCircle, AlertCircle } from 'lucide-react'
 import { useInvoicesByTenant } from '../../hooks/useInvoices'
 import { useTranslation } from 'react-i18next'
 import type { Invoice, InvoiceEstado } from '../../core/domain/entities/Invoice'
+import { DataTable } from '../shared/DataTable'
+import type { ColumnDef } from '@tanstack/react-table'
 
 const ESTADO_CONFIG: Record<
   InvoiceEstado,
@@ -22,6 +24,66 @@ interface Props {
 export default function InvoicesPanel({ tenantId }: Props) {
   const { t } = useTranslation()
   const { data: invoices = [], isLoading } = useInvoicesByTenant(tenantId)
+
+  const columns = useMemo<ColumnDef<Invoice, any>[]>(
+    () => [
+      {
+        accessorKey: 'numero',
+        header: 'Número',
+        cell: ({ row }) => (
+          <div>
+            <span className="font-mono font-bold text-foreground">{row.original.numero}</span>
+            <span className="ml-2 text-[10px] text-muted-foreground uppercase bg-muted/40 px-1.5 py-0.5 rounded">
+              {row.original.tipo}
+            </span>
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'concepto',
+        header: 'Concepto',
+        cell: ({ row }) => <span className="text-foreground">{row.original.concepto}</span>,
+      },
+      {
+        accessorKey: 'total',
+        header: 'Total',
+        cell: ({ row }) => (
+          <div className="font-bold text-foreground">
+            ${row.original.total.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+            <span className="ml-1 text-xs text-muted-foreground font-normal">
+              {row.original.moneda}
+            </span>
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'estado',
+        header: 'Estado',
+        cell: ({ row }) => {
+          const config = ESTADO_CONFIG[row.original.estado] || ESTADO_CONFIG.borrador
+          const Icon = config.icon
+          return (
+            <span className={`inline-flex items-center gap-1 text-xs font-bold ${config.color}`}>
+              <Icon className="w-3.5 h-3.5" />
+              {config.label}
+            </span>
+          )
+        },
+      },
+      {
+        accessorKey: 'fecha_emision',
+        header: 'Fecha',
+        cell: ({ row }) => (
+          <span className="text-xs text-muted-foreground">
+            {row.original.fecha_emision
+              ? new Date(row.original.fecha_emision).toLocaleDateString('es-AR')
+              : '—'}
+          </span>
+        ),
+      },
+    ],
+    []
+  )
 
   if (isLoading) {
     return (
@@ -46,7 +108,7 @@ export default function InvoicesPanel({ tenantId }: Props) {
           <FileText className="w-5 h-5 text-accent-cyan" />
           {t('invoices.titulo')}
         </h2>
-        <p className="text-sm text-muted-foreground mt-1">{invoices.length} facturas</p>
+        <p className="text-sm text-muted-foreground mt-1">{invoices.length} facturas registradas</p>
       </div>
 
       {/* Summary */}
@@ -65,36 +127,15 @@ export default function InvoicesPanel({ tenantId }: Props) {
         </div>
       </div>
 
-      {/* Invoice List */}
+      {/* Invoice Table with React Table */}
       {invoices.length > 0 ? (
-        <div className="rounded-2xl border border-border overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-border bg-muted/30">
-                <th className="text-left px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                  Número
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                  Concepto
-                </th>
-                <th className="text-right px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                  Total
-                </th>
-                <th className="text-center px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                  Estado
-                </th>
-                <th className="text-right px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                  Fecha
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoices.map((invoice: Invoice, i: number) => (
-                <InvoiceRow key={invoice.id} invoice={invoice} index={i} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columns={columns}
+          data={invoices}
+          searchPlaceholder="Buscar factura por número o concepto..."
+          pageSize={5}
+          emptyMessage="No se encontraron facturas coincidentes."
+        />
       ) : (
         <div className="text-center py-12">
           <FileText className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
@@ -105,46 +146,5 @@ export default function InvoicesPanel({ tenantId }: Props) {
         </div>
       )}
     </div>
-  )
-}
-
-function InvoiceRow({ invoice, index }: { invoice: Invoice; index: number }) {
-  const config = ESTADO_CONFIG[invoice.estado] || ESTADO_CONFIG.borrador
-  const Icon = config.icon
-
-  return (
-    <motion.tr
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: index * 0.03 }}
-      className="border-b border-border/50 hover:bg-muted/20 transition-colors"
-    >
-      <td className="px-4 py-3">
-        <span className="text-sm font-mono font-bold text-foreground">{invoice.numero}</span>
-        <span className="ml-2 text-[10px] text-muted-foreground uppercase">{invoice.tipo}</span>
-      </td>
-      <td className="px-4 py-3">
-        <span className="text-sm text-foreground">{invoice.concepto}</span>
-      </td>
-      <td className="px-4 py-3 text-right">
-        <span className="text-sm font-bold text-foreground">
-          ${invoice.total.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-        </span>
-        <span className="ml-1 text-xs text-muted-foreground">{invoice.moneda}</span>
-      </td>
-      <td className="px-4 py-3 text-center">
-        <span className={`inline-flex items-center gap-1 text-xs font-bold ${config.color}`}>
-          <Icon className="w-3 h-3" />
-          {config.label}
-        </span>
-      </td>
-      <td className="px-4 py-3 text-right">
-        <span className="text-xs text-muted-foreground">
-          {invoice.fecha_emision
-            ? new Date(invoice.fecha_emision).toLocaleDateString('es-AR')
-            : '—'}
-        </span>
-      </td>
-    </motion.tr>
   )
 }

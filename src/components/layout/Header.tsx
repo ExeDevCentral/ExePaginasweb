@@ -179,19 +179,19 @@ const Header = () => {
               <div className="flex items-center gap-1.5 shrink-0">
                 <motion.button
                   onClick={() => navigate('/dashboard')}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-bold tracking-wider uppercase border border-zinc-800 text-zinc-300 hover:border-[#00f2fe] hover:text-[#00f2fe] transition-all duration-300 rounded-sm shrink-0 whitespace-nowrap"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold tracking-wider uppercase border border-slate-300 dark:border-zinc-800 text-slate-800 dark:text-slate-200 hover:border-accent-cyan hover:text-accent-cyan transition-all duration-300 rounded-md shrink-0 whitespace-nowrap bg-white/80 dark:bg-black/40 shadow-sm"
                   whileTap={{ scale: 0.98 }}
                 >
-                  <LayoutDashboard size={12} className="shrink-0" />
+                  <LayoutDashboard size={13} className="shrink-0 text-accent-cyan" />
                   <span className="whitespace-nowrap">{t('nav.panel_cliente')}</span>
                 </motion.button>
 
                 <motion.button
                   onClick={handleLogout}
-                  className="flex items-center gap-1 px-2 py-1.5 text-[10px] font-bold tracking-wider uppercase text-zinc-500 hover:text-red-400 transition-colors duration-200 shrink-0 whitespace-nowrap"
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold tracking-wider uppercase text-slate-600 dark:text-slate-400 hover:text-red-500 transition-colors duration-200 shrink-0 whitespace-nowrap"
                   whileTap={{ scale: 0.98 }}
                 >
-                  <LogOut size={12} className="shrink-0" />
+                  <LogOut size={13} className="shrink-0" />
                   <span className="whitespace-nowrap">{t('nav.cerrar_sesion')}</span>
                 </motion.button>
               </div>
@@ -201,7 +201,7 @@ const Header = () => {
             <motion.button
               type="button"
               onClick={goToClientArea}
-              className="px-3 py-1.5 text-[11px] font-bold tracking-wider uppercase border border-[#00f2fe] text-[#00f2fe] bg-transparent hover:bg-[#00f2fe] hover:text-black transition-all duration-300 rounded-sm shrink-0 whitespace-nowrap"
+              className="px-3.5 py-1.5 text-xs font-extrabold tracking-wider uppercase border border-accent-cyan text-cyan-600 dark:text-accent-cyan bg-accent-cyan/10 hover:bg-accent-cyan hover:text-white transition-all duration-300 rounded-md shrink-0 whitespace-nowrap shadow-sm"
               whileTap={{ scale: 0.98 }}
             >
               <span className="whitespace-nowrap">{t('nav.area_cliente')}</span>

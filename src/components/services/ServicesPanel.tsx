@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import {
   Package,
@@ -8,11 +9,12 @@ import {
   CreditCard,
   ExternalLink,
 } from 'lucide-react'
-import { useTenantServices } from '../../hooks/useServices'
-import { useServiceCatalog } from '../../hooks/useServices'
+import { useTenantServices, useServiceCatalog } from '../../hooks/useServices'
 import { useTranslation } from 'react-i18next'
 import type { TenantServiceWithDetails } from '../../core/domain/entities/TenantService'
 import type { ServiceCatalog } from '../../core/domain/entities/ServiceCatalog'
+import { DataTable } from '../shared/DataTable'
+import type { ColumnDef } from '@tanstack/react-table'
 
 const ESTADO_CONFIG: Record<string, { icon: typeof CheckCircle; color: string; label: string }> = {
   activo: { icon: CheckCircle, color: 'text-emerald-400', label: 'Activo' },
@@ -37,6 +39,73 @@ export default function ServicesPanel({ tenantId }: Props) {
   const { data: services = [], isLoading } = useTenantServices(tenantId)
   const { data: catalog = [] } = useServiceCatalog()
 
+  const columns = useMemo<ColumnDef<TenantServiceWithDetails, any>[]>(
+    () => [
+      {
+        accessorKey: 'service.nombre',
+        header: 'Servicio',
+        cell: ({ row }) => (
+          <div>
+            <span className="font-bold text-foreground">
+              {row.original.service?.nombre || 'Servicio General'}
+            </span>
+            {row.original.service?.descripcion && (
+              <p className="text-xs text-muted-foreground truncate max-w-xs">
+                {row.original.service.descripcion}
+              </p>
+            )}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'service.tipo',
+        header: 'Tipo',
+        cell: ({ row }) => (
+          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan uppercase">
+            {TIPO_LABELS[row.original.service?.tipo || ''] || row.original.service?.tipo || '—'}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'precio_actual',
+        header: 'Precio',
+        cell: ({ row }) => (
+          <div className="font-bold text-foreground">
+            ${row.original.precio_actual.toLocaleString('es-AR')}
+            <span className="ml-1 text-xs text-muted-foreground font-normal">
+              {row.original.moneda}
+            </span>
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'estado',
+        header: 'Estado',
+        cell: ({ row }) => {
+          const config = ESTADO_CONFIG[row.original.estado] || ESTADO_CONFIG.activo
+          const Icon = config.icon
+          return (
+            <span className={`inline-flex items-center gap-1 text-xs font-bold ${config.color}`}>
+              <Icon className="w-3.5 h-3.5" />
+              {config.label}
+            </span>
+          )
+        },
+      },
+      {
+        accessorKey: 'started_at',
+        header: 'Inicio',
+        cell: ({ row }) => (
+          <span className="text-xs text-muted-foreground flex items-center gap-1">
+            <Calendar className="w-3 h-3 text-muted-foreground" />
+            {new Date(row.original.started_at).toLocaleDateString('es-AR')}
+          </span>
+        ),
+      },
+    ],
+    []
+  )
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -46,7 +115,6 @@ export default function ServicesPanel({ tenantId }: Props) {
   }
 
   const activeServices = services.filter((s: TenantServiceWithDetails) => s.estado === 'activo')
-  const inactiveServices = services.filter((s: TenantServiceWithDetails) => s.estado !== 'activo')
 
   return (
     <div className="space-y-6">
@@ -60,12 +128,29 @@ export default function ServicesPanel({ tenantId }: Props) {
         </p>
       </div>
 
-      {/* Active Services */}
-      {activeServices.length > 0 && (
-        <div className="space-y-3">
-          {activeServices.map((service: TenantServiceWithDetails, i: number) => (
-            <ServiceCard key={service.id} service={service} index={i} />
-          ))}
+      {/* Services Table */}
+      {services.length > 0 ? (
+        <DataTable
+          columns={columns}
+          data={services}
+          searchPlaceholder="Buscar servicio por nombre..."
+          pageSize={5}
+          emptyMessage="No se encontraron servicios contratados."
+        />
+      ) : (
+        <div className="text-center py-12 border border-dashed border-border rounded-2xl p-6">
+          <Package className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-foreground">Sin servicios activos</h3>
+          <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
+            Elegí un plan o servicio para empezar a usar la plataforma.
+          </p>
+          <a
+            href="/tienda"
+            className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl bg-accent-cyan text-foreground text-sm font-bold hover:opacity-90 transition-opacity"
+          >
+            <CreditCard className="w-4 h-4" />
+            Ver planes
+          </a>
         </div>
       )}
 
@@ -121,106 +206,6 @@ export default function ServicesPanel({ tenantId }: Props) {
             ))}
         </div>
       </div>
-
-      {/* Inactive Services */}
-      {inactiveServices.length > 0 && (
-        <div>
-          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
-            Servicios inactivos
-          </h3>
-          <div className="space-y-2">
-            {inactiveServices.map((service: TenantServiceWithDetails) => (
-              <div
-                key={service.id}
-                className="flex items-center justify-between px-4 py-3 rounded-xl bg-muted/30 opacity-60"
-              >
-                <div>
-                  <p className="text-sm font-medium text-foreground">
-                    {service.service?.nombre || 'Servicio'}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {service.service?.descripcion || ''}
-                  </p>
-                </div>
-                <span className="text-xs text-red-400 font-bold uppercase">
-                  {ESTADO_CONFIG[service.estado]?.label || service.estado}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {services.length === 0 && (
-        <div className="text-center py-12">
-          <Package className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-foreground">Sin servicios activos</h3>
-          <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
-            Elegí un plan o servicio para empezar a usar la plataforma.
-          </p>
-          <a
-            href="/tienda"
-            className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl bg-accent-cyan text-foreground text-sm font-bold hover:opacity-90 transition-opacity"
-          >
-            <CreditCard className="w-4 h-4" />
-            Ver planes
-          </a>
-        </div>
-      )}
     </div>
-  )
-}
-
-function ServiceCard({ service, index }: { service: TenantServiceWithDetails; index: number }) {
-  const config = ESTADO_CONFIG[service.estado] || ESTADO_CONFIG.activo
-  const Icon = config.icon
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      className="rounded-2xl border border-border bg-card/50 p-4"
-    >
-      <div className="flex items-start justify-between">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-accent-cyan/10 border border-accent-cyan/20 flex items-center justify-center">
-            <Package className="w-5 h-5 text-accent-cyan" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-foreground">
-                {service.service?.nombre || 'Servicio'}
-              </h3>
-              <span className={`flex items-center gap-1 text-xs font-bold ${config.color}`}>
-                <Icon className="w-3 h-3" />
-                {config.label}
-              </span>
-            </div>
-            {service.service?.descripcion && (
-              <p className="text-xs text-muted-foreground mt-0.5">{service.service.descripcion}</p>
-            )}
-            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3" />
-                Desde {new Date(service.started_at).toLocaleDateString('es-AR')}
-              </span>
-              {service.ends_at && (
-                <span>Hasta {new Date(service.ends_at).toLocaleDateString('es-AR')}</span>
-              )}
-              {service.auto_renew && (
-                <span className="text-emerald-400">Renovación automática</span>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="text-right">
-          <p className="text-lg font-bold text-foreground">
-            ${service.precio_actual.toLocaleString('es-AR')}
-          </p>
-          <p className="text-[10px] text-muted-foreground uppercase">{service.moneda}</p>
-        </div>
-      </div>
-    </motion.div>
   )
 }

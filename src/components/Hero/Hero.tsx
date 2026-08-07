@@ -115,7 +115,7 @@ const Hero: React.FC = () => {
       <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto w-full">
         <Badge text={t('hero.badge')} />
 
-        <motion.h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-foreground tracking-tight leading-[1.1] md:leading-[1.05] mb-4 max-w-4xl">
+        <motion.h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-montserrat font-extrabold text-slate-800 dark:text-slate-100 tracking-tight leading-[1.1] md:leading-[1.05] mb-4 max-w-4xl">
           {titleParts.map((part, i) => (
             <TitleLine
               key={i}

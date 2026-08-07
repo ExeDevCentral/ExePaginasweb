@@ -27,6 +27,9 @@ import { useAdminDashboard } from '../hooks/useAdminDashboard'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { queryKeys } from '../core/infra/query/queryKeys'
+import { SupabaseTenantServiceRepository } from '../core/infra/repositories/SupabaseTenantServiceRepository'
+import { SupabaseInvoiceRepository } from '../core/infra/repositories/SupabaseInvoiceRepository'
 import { PREMIUM_TOKENS } from '../styles/premium-tokens'
 
 // Lazy loaded panels
@@ -321,6 +324,22 @@ export default function Dashboard() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveView(tab.id)}
+                    onMouseEnter={() => {
+                      if (!currentTenant?.id) return
+                      if (tab.id === 'services') {
+                        queryClient.prefetchQuery({
+                          queryKey: queryKeys.tenantServices.byTenant(currentTenant.id),
+                          queryFn: () =>
+                            new SupabaseTenantServiceRepository().listByTenantId(currentTenant.id),
+                        })
+                      } else if (tab.id === 'invoices') {
+                        queryClient.prefetchQuery({
+                          queryKey: queryKeys.invoices.byTenant(currentTenant.id),
+                          queryFn: () =>
+                            new SupabaseInvoiceRepository().listByTenantId(currentTenant.id),
+                        })
+                      }
+                    }}
                     className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all whitespace-nowrap snap-start ${
                       isActive ? PREMIUM_TOKENS.activeTabGradient : PREMIUM_TOKENS.inactiveTab
                     }`}

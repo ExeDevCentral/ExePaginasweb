@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Calendar, ShoppingCart, PawPrint, Users, ArrowRight } from 'lucide-react'
+import { Scissors, Coffee, ShoppingBag, Calendar, ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ProductDemo from './ProductDemo'
@@ -8,44 +8,47 @@ import ProductCard from './ProductCard'
 const Products = () => {
   const { t } = useTranslation()
   const [demoOpen, setDemoOpen] = useState(false)
-  const [demoType, setDemoType] = useState<'padel' | 'kiosco' | 'veterinaria' | 'crm'>('padel')
+  const [demoType, setDemoType] = useState<'peluqueria' | 'panaderia' | 'ropa' | 'padel'>(
+    'peluqueria'
+  )
 
-  const openDemo = (type: 'padel' | 'kiosco' | 'veterinaria' | 'crm') => {
+  const openDemo = (type: 'peluqueria' | 'panaderia' | 'ropa' | 'padel') => {
     setDemoType(type)
     setDemoOpen(true)
   }
+
   const products = [
+    {
+      icon: Scissors,
+      features: ['', '', '', '', ''],
+      price: '$250-450 USD',
+      color: 'from-pink-500 via-rose-500 to-purple-600',
+      demoLink: '#demo-peluqueria',
+      tKey: 'peluqueria',
+    },
+    {
+      icon: Coffee,
+      features: ['', '', '', '', ''],
+      price: '$200-400 USD',
+      color: 'from-amber-500 via-orange-500 to-yellow-600',
+      demoLink: '#demo-panaderia',
+      tKey: 'panaderia',
+    },
+    {
+      icon: ShoppingBag,
+      features: ['', '', '', '', ''],
+      price: '$300-500 USD',
+      color: 'from-emerald-400 via-teal-500 to-cyan-600',
+      demoLink: '#demo-ropa',
+      tKey: 'ropa',
+    },
     {
       icon: Calendar,
       features: ['', '', '', '', ''],
-      price: '$300-500 USD',
-      color: 'from-accent-cyan to-blue-600',
+      price: '$350-550 USD',
+      color: 'from-cyan-400 via-blue-500 to-indigo-600',
       demoLink: '#demo-padel',
       tKey: 'padel',
-    },
-    {
-      icon: ShoppingCart,
-      features: ['', '', '', '', ''],
-      price: '$200-400 USD',
-      color: 'from-accent-magenta to-indigo-600',
-      demoLink: '#demo-kiosco',
-      tKey: 'kiosco',
-    },
-    {
-      icon: PawPrint,
-      features: ['', '', '', '', ''],
-      price: '$400-600 USD',
-      color: 'from-amber-500 to-amber-700',
-      demoLink: '#demo-veterinaria',
-      tKey: 'veterinaria',
-    },
-    {
-      icon: Users,
-      features: ['', '', '', '', ''],
-      price: '$250-400 USD',
-      color: 'from-emerald-500 to-teal-700',
-      demoLink: '#demo-crm',
-      tKey: 'crm',
     },
   ]
 
@@ -65,8 +68,8 @@ const Products = () => {
       {/* Background */}
       <div className="absolute inset-0 bg-transparent">
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent-cyan rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent-magenta rounded-full blur-3xl"></div>
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent-cyan rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent-magenta rounded-full blur-3xl" />
         </div>
       </div>
 
@@ -102,7 +105,7 @@ const Products = () => {
             <ProductCard
               key={product.tKey}
               product={product}
-              onOpenDemo={() => openDemo(product.demoLink.replace('#demo-', '') as typeof demoType)}
+              onOpenDemo={() => openDemo(product.tKey as typeof demoType)}
             />
           ))}
         </motion.div>

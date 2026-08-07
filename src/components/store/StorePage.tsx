@@ -1,16 +1,18 @@
 import { motion } from 'framer-motion'
-import { Sparkles, X } from 'lucide-react'
+import { Sparkles, X, Sun, Moon, ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useTypewriter } from '../../hooks/useTypewriter'
 import { PLAN_CATALOG } from '../../core/domain/planCatalog'
+import { useTheme } from '../../core/theme/ThemeContext'
 import { Monitor, Building, Building2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type { PlanData } from './PlanCard'
 import PlanGrid from './PlanGrid'
 import CheckoutModal from './CheckoutModal'
+import { toast } from 'sonner'
 
 const basePlans: Omit<PlanData, 'price' | 'priceUSD' | 'period'>[] = [
   {
@@ -82,35 +84,72 @@ const PLANS: PlanData[] = basePlans.map((p) => {
 export default function StorePage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { theme, setTheme } = useTheme()
   const [selectedPlan, setSelectedPlan] = useState<PlanData | null>(null)
+
   const fullText = t('store.gestion_abonos')
   const { typedText: displayedText } = useTypewriter(fullText, { typingSpeed: 30 })
 
+  const isDark = theme === 'dark'
+
+  const handleToggleTheme = () => {
+    const nextTheme = isDark ? 'light' : 'dark'
+    setTheme(nextTheme)
+    toast.success(nextTheme === 'light' ? '☀️ Tema Claro' : '🌙 Tema Oscuro')
+  }
+
   return (
-    <div className="min-h-screen relative overflow-hidden bg-transparent py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen relative overflow-hidden bg-background py-10 px-4 sm:px-6 lg:px-8">
       <Helmet>
         <title>{t('store.title')} | ExeSistemasWEB</title>
       </Helmet>
 
       {/* Ambient orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto z-10 space-y-24">
+      <div className="relative max-w-7xl mx-auto z-10 space-y-12">
+        {/* NAVEGACIÓN TOP ELEGANTE Y LIMPIA */}
+        <div className="flex items-center justify-between max-w-6xl mx-auto pt-4">
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border text-foreground font-bold text-xs hover:border-accent-cyan transition-all hover:scale-105 shadow-sm cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4 text-accent-cyan" />
+            <span>Volver al Inicio</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleToggleTheme}
+            title={isDark ? 'Cambiar a Tema Claro (Sol)' : 'Cambiar a Tema Oscuro (Luna)'}
+            aria-label="Cambiar tema de la aplicación"
+            className="p-2.5 rounded-xl bg-card border border-border text-foreground hover:border-accent-cyan transition-all shadow-sm cursor-pointer flex items-center gap-2"
+          >
+            {isDark ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Moon className="w-4 h-4 text-indigo-400" />
+            )}
+            <span className="text-xs font-bold font-mono">{isDark ? '☀️ Claro' : '🌙 Oscuro'}</span>
+          </button>
+        </div>
+
         {/* Hero headline with typewriter */}
-        <section className="text-center pt-10">
+        <section className="text-center pt-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-sm font-bold uppercase tracking-[0.3em] text-indigo-500/80 mb-4">
+            <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.3em] text-accent-cyan mb-4">
               {t('store.portal_clientes')}
             </p>
-            <h1 className="text-4xl md:text-6xl font-montserrat font-black text-foreground mb-6">
+            <h1 className="text-4xl md:text-6xl font-montserrat font-black text-slate-900 dark:text-white mb-6 tracking-tight">
               {t('store.subtitulo')}
             </h1>
-            <p className="text-lg md:text-xl text-primary-secondary max-w-2xl mx-auto mb-16">
+            <p className="text-base md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
               {t('store.descripcion')}
             </p>
           </motion.div>
@@ -120,7 +159,7 @@ export default function StorePage() {
         </section>
 
         {/* Gradient separator */}
-        <div className="w-full max-w-4xl mx-auto h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="w-full max-w-4xl mx-auto h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         {/* Portal CTA */}
         <section className="flex justify-center pb-20">
@@ -129,11 +168,12 @@ export default function StorePage() {
             whileInView={{ scale: 1, opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative bg-gradient-to-br from-zinc-100/50 to-zinc-50/20 dark:from-white/10 dark:to-white/5 backdrop-blur-xl border border-zinc-200 dark:border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl max-w-lg w-full"
+            className="relative bg-card backdrop-blur-xl border border-border rounded-3xl p-8 md:p-12 shadow-2xl max-w-lg w-full"
           >
             <button
+              type="button"
               onClick={() => window.history.back()}
-              className="absolute top-4 right-4 p-2 hover:bg-zinc-800/10 dark:hover:bg-white/10 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors"
               title="Volver"
             >
               <X className="w-5 h-5 text-foreground" />
@@ -196,12 +236,6 @@ export default function StorePage() {
               Portal de Clientes
             </motion.a>
           </motion.div>
-
-          <motion.div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] max-w-2xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-full blur-3xl -z-10 pointer-events-none"
-            animate={{ opacity: [0.5, 0.8, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          />
         </section>
       </div>
 

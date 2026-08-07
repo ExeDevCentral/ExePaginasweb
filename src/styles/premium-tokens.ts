@@ -6,7 +6,7 @@
 export const PREMIUM_TOKENS = {
   // Page Background Container (Adapts: #f8fafc in Light, #030308 in Dark)
   bgMain:
-    'min-h-screen relative bg-slate-50 dark:bg-[#030308] text-slate-900 dark:text-slate-100 selection:bg-cyan-500 selection:text-white transition-colors duration-300',
+    'min-h-screen relative bg-slate-100/70 dark:bg-[#030308] text-slate-800 dark:text-slate-100 selection:bg-cyan-500 selection:text-white transition-colors duration-300',
 
   // Glassmorphic Primary Card / Panel Container
   cardGlass:

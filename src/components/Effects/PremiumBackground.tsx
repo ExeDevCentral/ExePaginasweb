@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 const DARK_COLORS = ['#60a5fa', '#c084fc', '#34d399']
 const LIGHT_COLORS = ['#0284c7', '#7c3aed', '#059669']
@@ -83,27 +83,6 @@ class Node {
 
 const PremiumBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    if (typeof document !== 'undefined') {
-      return document.documentElement.classList.contains('dark')
-    }
-    return true
-  })
-
-  // Detectar cambios dinámicos de tema (Claro / Oscuro)
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const darkActive = document.documentElement.classList.contains('dark')
-      setIsDark(darkActive)
-    })
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    })
-
-    return () => observer.disconnect()
-  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -231,11 +210,7 @@ const PremiumBackground = () => {
   }, [])
 
   return (
-    <div
-      className={`fixed inset-0 z-0 overflow-hidden pointer-events-none transition-colors duration-500 ${
-        isDark ? 'bg-[#050508]' : 'bg-[#fdf8f3]'
-      }`}
-    >
+    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none transition-colors duration-500 bg-background">
       <canvas ref={canvasRef} className="block w-full h-full" />
     </div>
   )

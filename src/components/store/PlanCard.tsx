@@ -35,7 +35,7 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
       className="relative w-full group pt-4"
     >
       <div className="relative">
-        {/* Sombra */}
+        {/* Sombra Glow */}
         <div
           className={`absolute -inset-4 rounded-[32px] blur-[30px] -z-10 pointer-events-none transition-opacity duration-300 ${
             plan.popular
@@ -56,11 +56,13 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
           </div>
         )}
 
-        {/* Tarjeta Principal */}
+        {/* Tarjeta Principal Adaptativa con Alto Contraste */}
         <div
-          className={`relative rounded-3xl bg-card/90 dark:bg-card/70 backdrop-blur-xl border p-8 flex flex-col text-left transition-all duration-300 shadow-2xl ${
-            plan.border
-          } ${plan.popular ? 'md:-translate-y-2' : ''}`}
+          className={`relative rounded-3xl bg-white dark:bg-[#0d0e19] border border-slate-200 dark:border-white/15 backdrop-blur-2xl p-8 flex flex-col text-left transition-all duration-300 shadow-2xl ${
+            plan.popular
+              ? 'md:-translate-y-2 border-accent-magenta/60 dark:border-accent-magenta/60'
+              : ''
+          }`}
         >
           {/* Filo holográfico que recorre el borde */}
           <div
@@ -75,10 +77,7 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
           />
 
           {/* Marco flotante intermedio */}
-          <div className="absolute inset-0 rounded-3xl border border-white/20 dark:border-white/10 pointer-events-none" />
-
-          {/* Brillo especular dinámico */}
-          <div className="absolute inset-0 opacity-0 pointer-events-none mix-blend-overlay transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="absolute inset-0 rounded-3xl border border-slate-100 dark:border-white/10 pointer-events-none" />
 
           {/* Línea superior radiante para el plan popular */}
           {plan.popular && (
@@ -101,19 +100,25 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
             </div>
           </div>
 
-          {/* Contenido Texto y Precio */}
+          {/* Contenido Texto y Precio con Máximo Contraste */}
           <div className="relative z-20 flex-1 flex flex-col">
-            <h3 className="text-2xl font-black text-foreground mb-2">{plan.title}</h3>
-            <p className="text-muted-foreground text-sm mb-6 h-10 leading-relaxed font-medium">
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
+              {plan.title}
+            </h3>
+            <p className="text-slate-600 dark:text-slate-300 text-sm mb-6 h-10 leading-relaxed font-medium">
               {plan.description}
             </p>
 
-            <div className="mb-6">
-              <span className="text-4xl font-extrabold text-foreground">{plan.price}</span>
-              <span className="text-muted-foreground font-semibold text-xs"> ARS{plan.period}</span>
+            <div className="mb-6 p-4 rounded-2xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10">
+              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">
+                {plan.price}
+              </span>
+              <span className="text-cyan-600 dark:text-cyan-400 font-bold text-xs ml-1.5">
+                ARS{plan.period}
+              </span>
             </div>
 
-            {/* Lista de características */}
+            {/* Lista de características con alto contraste */}
             <ul className="space-y-3.5 mb-8 flex-1">
               {plan.features.map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
@@ -122,7 +127,9 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
                   >
                     <Check className="w-3 h-3 text-white" />
                   </div>
-                  <span className="text-sm text-foreground/90 font-medium">{feature}</span>
+                  <span className="text-sm text-slate-800 dark:text-slate-200 font-semibold">
+                    {feature}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -130,6 +137,7 @@ export default function PlanCard({ plan, index, onSelect }: PlanCardProps) {
             {/* Botón de Suscribirme */}
             <div className="mt-auto pt-4 relative z-30">
               <motion.button
+                type="button"
                 onClick={() => onSelect(plan)}
                 className="relative w-full py-4 rounded-xl font-extrabold text-white flex items-center justify-center gap-2 overflow-hidden group/btn cursor-pointer shadow-lg"
                 whileHover={{ scale: 1.04 }}

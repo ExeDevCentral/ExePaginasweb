@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foto 3D Artesanal — Ultra AAA Pro</title>
+  <style>
+    :root {
+      --card-w: 340px;
+      --card-h: 480px;
+      --bg-dark: #070913;
+      --accent-neon: #38bdf8;
+      --holo-speed: 2s;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at 50% 30%, #1e1b4b 0%, var(--bg-dark) 70%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    /* Partículas de fondo */
+    #particlesCanvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Escenario con perspectiva 3D profunda */
+    .viewport-3d {
+      position: relative;
+      z-index: 2;
+      perspective: 1200px;
+      transform-style: preserve-3d;
+    }
+
+    /* Wrapper de inclinación */
+    .card-wrapper {
+      position: relative;
+      width: var(--card-w);
+      height: var(--card-h);
+      transform-style: preserve-3d;
+      will-change: transform;
+      cursor: pointer;
+    }
+
+    /* 1. SOMBRA 3D DINÁMICA ULTRA REALISTA */
+    .card-shadow-3d {
+      position: absolute;
+      inset: 10px;
+      border-radius: 36px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, rgba(0, 0, 0, 0.8) 70%);
+      filter: blur(35px);
+      z-index: -1;
+      transform: translateZ(-90px) scale(0.9);
+      opacity: 0.6;
+      transition: opacity 0.3s ease;
+      will-change: transform, opacity;
+    }
+
+    /* 2. TARJETA BASE Y CONTENEDOR DE CAPAS */
+    .card-body {
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: #0f172a;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05);
+    }
+
+    /* CAPA 1: IMAGEN DE FONDO (Profundidad Z: -20px) */
+    .layer-bg {
+      position: absolute;
+      inset: -15%;
+      width: 130%;
+      height: 130%;
+      object-fit: cover;
+      transform: translateZ(-20px) scale(1.05);
+      filter: contrast(1.05) brightness(0.95);
+      will-change: transform;
+      transition: filter 0.3s ease;
+    }
+
+    /* CAPA 2: EFECTO HOLOGRÁFICO IRIDISCENTE (Profundidad Z: 10px) */
+    .layer-hologram {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        var(--holo-angle, 135deg),
+        rgba(255, 0, 128, 0.25) 0%,
+        rgba(0, 255, 200, 0.25) 25%,
+        rgba(255, 230, 0, 0.25) 50%,
+        rgba(150, 0, 255, 0.25) 75%,
+        rgba(255, 0, 128, 0.25) 100%
+      );
+      mix-blend-mode: color-dodge;
+      opacity: 0.35;
+      transform: translateZ(10px);
+      pointer-events: none;
+      will-change: background, opacity;
+      transition: opacity 0.3s ease;
+    }
+
+    /* CAPA 3: MARCO FLOTANTE DE VIDRIO (Profundidad Z: 30px) */
+    .layer-glass-frame {
+      position: absolute;
+      inset: 12px;
+      border-radius: 16px;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
+      transform: translateZ(30px);
+      pointer-events: none;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    /* CAPA 4: SUJETO O ELEMENTO CORTE / RECORTE (Profundidad Z: 55px) */
+    .layer-subject {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform: translateZ(55px);
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .subject-badge-3d {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.9) 0%, rgba(99, 102, 241, 0.8) 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 15px 35px rgba(56, 189, 248, 0.5), inset 0 2px 10px rgba(255, 255, 255, 0.6);
+      transform: translateY(-30px);
+      backdrop-filter: blur(4px);
+    }
+
+    .subject-badge-3d svg {
+      width: 70px;
+      height: 70px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+    }
+
+    /* CAPA 5: TEXTO Y CONTENIDO (Profundidad Z: 85px) */
+    .layer-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 28px 24px;
+      background: linear-gradient(to top, rgba(7, 9, 19, 0.95) 0%, rgba(7, 9, 19, 0.6) 60%, transparent 100%);
+      transform: translateZ(85px);
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    .tag-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: #38bdf8;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      margin: 0 0 8px 0;
+      font-size: 1.65rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .card-desc {
+      margin: 0;
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+
+    /* CAPA 6: INSIGNIA FLOTANTE DE ESQUINA (Profundidad Z: 110px) */
+    .layer-floating-chip {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      transform: translateZ(110px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+      animation: pulseDot 1.8s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.6; }
+    }
+
+    /* CAPA 7: LUZ ESPECULAR / DESSTELLO DINÁMICO (Profundidad Z: 120px) */
+    .layer-glare {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.05) 40%, transparent 70%);
+      opacity: 0;
+      transform: translateZ(120px);
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      will-change: opacity, background;
+      transition: opacity 0.3s ease;
+    }
+
+    /* CAPA 8: BORDE LUMINOSO HOLOGRÁFICO (Borde Conic) */
+    .layer-border-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      padding: 2px;
+      background: conic-gradient(from var(--border-angle, 0deg), transparent 0%, #38bdf8 25%, #ec4899 50%, #8b5cf6 75%, transparent 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateZ(1px);
+      transition: opacity 0.3s ease;
+    }
+
+    .card-wrapper:hover .layer-border-glow {
+      opacity: 1;
+    }
+
+    .card-wrapper:hover .card-shadow-3d {
+      opacity: 0.85;
+    }
+
+    /* Indicador Mobile / Ayuda */
+    .controls-hint {
+      margin-top: 28px;
+      font-size: 0.85rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .controls-hint span {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Partículas 3D flotando en el canvas -->
+  <canvas id="particlesCanvas"></canvas>
+
+  <div class="viewport-3d">
+    <!-- Contenedor interactivo 3D -->
+    <div class="card-wrapper" id="cardWrapper">
+      <!-- Sombra 3D Reactiva -->
+      <div class="card-shadow-3d" id="cardShadow"></div>
+
+      <!-- Cuerpo principal de la tarjeta con capas Z -->
+      <div class="card-body">
+        <!-- 1. Fondo con parallax -->
+        <img 
+          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80" 
+          alt="Abstract 3D Artwork" 
+          class="layer-bg" 
+          id="layerBg"
+        />
+
+        <!-- 2. Lámina Holográfica -->
+        <div class="layer-hologram" id="layerHolo"></div>
+
+        <!-- 3. Marco de vidrio flotante -->
+        <div class="layer-glass-frame"></div>
+
+        <!-- 4. Objeto / Sujeto 3D recortado flotando en Z=55px -->
+        <div class="layer-subject" id="layerSubject">
+          <div class="subject-badge-3d">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 5. Contenido de texto flotando en Z=85px -->
+        <div class="layer-content" id="layerContent">
+          <span class="tag-pill">Edición Artesanal Pro</span>
+          <h1 class="card-title">Foto 3D Ultra AAA</h1>
+          <p class="card-desc">Física de resortes, lámina holográfica iridiscente y múltiples capas de profundidad Z.</p>
+        </div>
+
+        <!-- 6. Chip flotante en Z=110px -->
+        <div class="layer-floating-chip" id="layerChip">
+          <div class="chip-dot"></div>
+          <span>3D LIVE</span>
+        </div>
+
+        <!-- 7. Brillo especular dinámico -->
+        <div class="layer-glare" id="layerGlare"></div>
+
+        <!-- 8. Borde Neón Holográfico -->
+        <div class="layer-border-glow" id="layerBorderGlow"></div>
+      </div>
+    </div>
+
+    <!-- Pistas de interacción -->
+    <div class="controls-hint" id="controlsHint">
+      <span>🖱️ Mueve el cursor</span>
+      <span>📱 O inclina tu dispositivo</span>
+    </div>
+  </div>
+
+  <script>
+    // --- ELEMENTOS ---
+    const wrapper = document.getElementById('cardWrapper');
+    const shadow = document.getElementById('cardShadow');
+    const bg = document.getElementById('layerBg');
+    const holo = document.getElementById('layerHolo');
+    const subject = document.getElementById('layerSubject');
+    const content = document.getElementById('layerContent');
+    const chip = document.getElementById('layerChip');
+    const glare = document.getElementById('layerGlare');
+    const borderGlow = document.getElementById('layerBorderGlow');
+
+    // --- VARIABLES DE FÍSICA Y MOTOR DE MOVIMIENTO ---
+    let targetRX = 0, targetRY = 0, targetTZ = 0;
+    let currentRX = 0, currentRY = 0, currentTZ = 0;
+    let isPressed = false;
+    let isHovered = false;
+
+    // Constante de amortiguación (Spring Physics)
+    const damping = 0.08; 
+
+    // --- BUCLE PRINCIPAL CON REQUESTANIMATIONFRAME (60 FPS SUAVE) ---
+    function renderLoop() {
+      // Interpolación suave (LERP / Spring)
+      currentRX += (targetRX - currentRX) * damping;
+      currentRY += (targetRY - currentRY) * damping;
+      currentTZ += (targetTZ - currentTZ) * damping;
+
+      // 1. Transformación principal de la tarjeta
+      wrapper.style.transform = `
+        rotateX(${currentRX.toFixed(2)}deg) 
+        rotateY(${currentRY.toFixed(2)}deg) 
+        translateZ(${currentTZ.toFixed(2)}px)
+      `;
+
+      // 2. Parallax independiente por capas
+      bg.style.transform = `scale(1.12) translateX(${(currentRY * -1.5).toFixed(2)}px) translateY(${(currentRX * 1.5).toFixed(2)}px) translateZ(-20px)`;
+      subject.style.transform = `translateX(${(currentRY * 1.2).toFixed(2)}px) translateY(${(currentRX * -1.2).toFixed(2)}px) translateZ(55px)`;
+      content.style.transform = `translateX(${(currentRY * 0.6).toFixed(2)}px) translateY(${(currentRX * -0.6).toFixed(2)}px) translateZ(85px)`;
+      chip.style.transform = `translateX(${(currentRY * 1.8).toFixed(2)}px) translateY(${(currentRX * -1.8).toFixed(2)}px) translateZ(110px)`;
+
+      // 3. Sombra dinámica 3D
+      shadow.style.transform = `
+        translateZ(-90px) 
+        translateX(${(currentRY * 3.5).toFixed(2)}px) 
+        translateY(${(-currentRX * 3.5).toFixed(2)}px) 
+        scale(${1 + Math.abs(currentRX + currentRY) * 0.005})
+      `;
+
+      // 4. Ángulo holográfico dinámico
+      const holoAngle = (currentRY * 8 + currentRX * 8 + 135);
+      holo.style.setProperty('--holo-angle', `${holoAngle}deg`);
+      borderGlow.style.setProperty('--border-angle', `${holoAngle * 2}deg`);
+
+      requestAnimationFrame(renderLoop);
+    }
+    renderLoop();
+
+    // --- EVENTOS DEL CURSOR Y TOUCH ---
+    function handlePointerMove(clientX, clientY) {
+      const rect = wrapper.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      // Límites de inclinación (-22deg a +22deg)
+      targetRX = -((y - centerY) / centerY) * 22;
+      targetRY = ((x - centerX) / centerX) * 22;
+
+      // Posición del brillo especular
+      const posX = (x / rect.width) * 100;
+      const posY = (y / rect.height) * 100;
+      glare.style.background = `radial-gradient(circle at ${posX}% ${posY}%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 35%, transparent 70%)`;
+      glare.style.opacity = '1';
+      holo.style.opacity = '0.65';
+    }
+
+    wrapper.addEventListener('mousemove', (e) => {
+      isHovered = true;
+      if (!isPressed) targetTZ = 20;
+      handlePointerMove(e.clientX, e.clientY);
+    });
+
+    wrapper.addEventListener('mouseleave', () => {
+      isHovered = false;
+      targetRX = 0;
+      targetRY = 0;
+      targetTZ = 0;
+      glare.style.opacity = '0';
+      holo.style.opacity = '0.35';
+    });
+
+    // EFECTO AL PRESIONAR (Click / Touch Down) -> Compresión 3D
+    wrapper.addEventListener('mousedown', () => {
+      isPressed = true;
+      targetTZ = -25;
+    });
+
+    window.addEventListener('mouseup', () => {
+      isPressed = false;
+      targetTZ = isHovered ? 20 : 0;
+    });
+
+    // --- SOPORTE MOBILE: GIROSCÓPIO & TOUCH ---
+    window.addEventListener('deviceorientation', (e) => {
+      if (e.gamma !== null && e.beta !== null) {
+        // Mapeo suave de inclinación del teléfono
+        targetRY = Math.max(-25, Math.min(25, e.gamma * 0.7));
+        targetRX = Math.max(-25, Math.min(25, (e.beta - 45) * -0.7));
+        glare.style.opacity = '0.5';
+        holo.style.opacity = '0.5';
+      }
+    });
+
+    wrapper.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        handlePointerMove(touch.clientX, touch.clientY);
+      }
+    }, { passive: true });
+
+    wrapper.addEventListener('touchend', () => {
+      targetRX = 0;
+      targetRY = 0;
+      targetTZ = 0;
+      glare.style.opacity = '0';
+    });
+
+    // --- PARTÍCULAS 3D FLOTANTES DE FONDO (CANVAS) ---
+    const canvas = document.getElementById('particlesCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.z = Math.random() * 2 + 0.5;
+        this.size = Math.random() * 2.5 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = -Math.random() * 0.6 - 0.2;
+        this.opacity = Math.random() * 0.5 + 0.2;
+      }
+      update() {
+        this.x += this.speedX + (currentRY * 0.05);
+        this.y += this.speedY + (currentRX * -0.05);
+        if (this.y < 0 || this.x < 0 || this.x > canvas.width) {
+          this.reset();
+          this.y = canvas.height;
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size * this.z, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56, 189, 248, ${this.opacity * (this.z / 2.5)})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#38bdf8';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 55; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+  </script>
+</body>
+</html>

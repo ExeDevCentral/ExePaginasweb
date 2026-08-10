@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 535 200" fill="none">
+  <!-- Left E -->
+  <path
+    d="M 20 0 L 157.5 0 L 126 42 L 62 42 L 62 79 L 115 79 L 115 121 L 62 121 L 62 158 L 126 158 L 157.5 200 L 20 200 Z"
+    fill="currentColor"
+  />
+  <!-- Middle X -->
+  <path
+    d="M 170 0 L 212 0 L 250 64.4 L 288 0 L 330 0 L 271 100 L 330 200 L 288 200 L 250 135.6 L 212 200 L 170 200 L 229 100 Z"
+    fill="currentColor"
+  />
+  <!-- Right E (Mirrored) -->
+  <path
+    d="M 480 0 L 342.5 0 L 374 42 L 438 42 L 438 79 L 385 79 L 385 121 L 438 121 L 438 158 L 374 158 L 342.5 200 L 480 200 Z"
+    fill="currentColor"
+  />
+  <!-- Red Square Dot -->
+  <rect
+    x="493"
+    y="165"
+    width="35"
+    height="35"
+    fill="#EF4444"
+    rx="2"
+  />
+</svg>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #0a0a0f;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    "
+  >
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      style="background-color: #0a0a0f; padding: 40px 20px"
+    >
+      <tr>
+        <td align="center">
+          <table width="560" cellpadding="0" cellspacing="0" style="max-width: 560px; width: 100%">
+            <!-- Logo -->
+            <tr>
+              <td align="center" style="padding-bottom: 32px">
+                <img
+                  src="https://exepaginasweb.com/logo.webp"
+                  alt="ExePaginasWeb"
+                  width="56"
+                  height="56"
+                  style="border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08)"
+                />
+              </td>
+            </tr>
+            <!-- Card -->
+            <tr>
+              <td
+                style="
+                  background: linear-gradient(135deg, #12121a, #1a1a2e);
+                  border-radius: 24px;
+                  border: 1px solid rgba(255, 255, 255, 0.06);
+                  padding: 48px 40px;
+                  text-align: center;
+                "
+              >
+                <!-- Icon -->
+                <table cellpadding="0" cellspacing="0" style="margin: 0 auto 24px">
+                  <tr>
+                    <td
+                      style="
+                        width: 64px;
+                        height: 64px;
+                        border-radius: 50%;
+                        background: linear-gradient(135deg, #0ea5e9, #6366f1);
+                        text-align: center;
+                        vertical-align: middle;
+                        font-size: 28px;
+                        line-height: 64px;
+                      "
+                    >
+                      ✉️
+                    </td>
+                  </tr>
+                </table>
+                <!-- Title -->
+                <h1
+                  style="
+                    color: #ffffff;
+                    font-size: 24px;
+                    font-weight: 700;
+                    margin: 0 0 8px;
+                    letter-spacing: -0.3px;
+                  "
+                >
+                  Confirmá tu email
+                </h1>
+                <p
+                  style="
+                    color: rgba(255, 255, 255, 0.6);
+                    font-size: 15px;
+                    line-height: 22px;
+                    margin: 0 0 32px;
+                  "
+                >
+                  Hacé clic en el botón para verificar tu dirección de correo y activar tu cuenta en
+                  <strong style="color: #0ea5e9">ExePaginasWeb</strong>.
+                </p>
+                <!-- Button -->
+                <table cellpadding="0" cellspacing="0" style="margin: 0 auto 32px">
+                  <tr>
+                    <td
+                      style="
+                        border-radius: 16px;
+                        background: linear-gradient(135deg, #0ea5e9, #6366f1);
+                        padding: 1px;
+                      "
+                    >
+                      <a
+                        href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup"
+                        target="_blank"
+                        style="
+                          display: inline-block;
+                          padding: 16px 40px;
+                          border-radius: 15px;
+                          background: #0a0a0f;
+                          color: #ffffff;
+                          font-size: 15px;
+                          font-weight: 700;
+                          text-decoration: none;
+                          letter-spacing: 0.2px;
+                        "
+                      >
+                        Confirmar email
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                <!-- Fallback link -->
+                <p
+                  style="
+                    color: rgba(255, 255, 255, 0.35);
+                    font-size: 13px;
+                    line-height: 18px;
+                    margin: 0 0 4px;
+                    word-break: break-all;
+                  "
+                >
+                  Si el botón no funciona, copiá este enlace en tu navegador:
+                </p>
+                <p
+                  style="
+                    color: rgba(14, 165, 233, 0.5);
+                    font-size: 12px;
+                    line-height: 16px;
+                    margin: 0;
+                    word-break: break-all;
+                    font-family: monospace;
+                  "
+                >
+                  {{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup
+                </p>
+              </td>
+            </tr>
+            <!-- Footer -->
+            <tr>
+              <td style="padding-top: 24px; text-align: center">
+                <p
+                  style="
+                    color: rgba(255, 255, 255, 0.25);
+                    font-size: 12px;
+                    line-height: 18px;
+                    margin: 0;
+                  "
+                >
+                  Estás recibiendo este correo porque te registraste en ExePaginasWeb.<br />
+                  Si no creaste esta cuenta, podés ignorar este mensaje.
+                </p>
+                <p style="color: rgba(255, 255, 255, 0.2); font-size: 11px; margin: 16px 0 0">
+                  ExePaginasWeb &mdash; Soluciones Web Profesionales
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

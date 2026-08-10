@@ -1,0 +1,43 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "dsznajder.es7-react-js-snippets",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.auto-close-tag",
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "vitest.explorer",
+    "yoavbls.pretty-ts-errors",
+    "usernamehw.error-lens",
+
+    "snyk-security.snyk-vulnerability-scanner",
+    "sonarsource.sonarlint-vscode",
+    "gitguardian.gitguardian",
+    "redhat.vscode-yaml",
+    "aquasecurity.trivy-vulnerability-scanner",
+    "postman.postman-for-vscode",
+    "supabase.supabase-vscode",
+    "mikestead.dotenv",
+    "streetsidesoftware.code-spell-checker",
+
+    "wix.vscode-import-cost",
+    "lokalise.i18n-ally",
+    "csstools.postcss",
+    "mechatroner.rainbow-csv",
+    "pflannery.vscode-versionlens",
+    "antfu.iconify",
+    "eamodio.find-related",
+    "tamasfe.even-better-toml",
+
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "codezombiai.gitignore",
+    "vivxi.vscode-conventional-commits",
+    "github.vscode-pull-request-github",
+    "donjayamanne.githistory",
+    "stef-prazeres.git-rebase-buttons",
+    "arturojp.git-stash"
+  ]
+}

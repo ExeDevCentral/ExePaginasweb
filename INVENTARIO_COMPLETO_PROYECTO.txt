@@ -1,0 +1,465 @@
+================================================================================
+         EXESISTEMASWEB — INVENTARIO COMPLETO DEL PROYECTO
+         Generado: 2026-07-21
+         Stack: React 18 + TypeScript + Vite 6 + Tailwind 3 + Supabase + Vercel
+         Arquitectura: Clean Architecture (Domain / Infrastructure / Presentation)
+================================================================================
+
+
+================================================================================
+ 1. DOMAIN ENTITIES (14 archivos)
+================================================================================
+
+src/core/domain/entities/
+  Cliente.ts          → Cliente básico: id, full_name, email
+  User.ts             → Usuario autenticado: id, email, fullName, role (admin/staff/customer), createdAt
+  Plan.ts             → Definición de plan: id, slug, nombre, precio, caracteristicas
+  Suscripcion.ts      → Suscripción de cliente: id, cliente_id, plan_slug, estado, fecha_inicio, plan (join)
+  Ticket.ts           → Ticket de soporte: id, cliente_id, asunto, mensaje, categoria, prioridad, estado + Notificacion entity
+  Tenant.ts           → Multi-tenant workspace: id, slug, nombre, plan_id, dueno_id, estado, trial_ends_at, settings
+  TenantService.ts    → Servicio asignado a tenant: id, tenant_id, service_id, estado, precio_actual, auto_renew
+  WorkGroup.ts        → Grupo de trabajo: id, tenant_id, nombre, descripcion, color, icono
+  WorkMember.ts       → Miembro del equipo: id, tenant_id, work_group_id, user_id, email, nombre, rol (owner/admin/member/viewer)
+  ServiceCatalog.ts   → Catálogo de servicios: id, slug, nombre, tipo (plan/addon/professional/one_time), precio_base, intervalo
+  SLAContract.ts      → Contrato SLA: id, tenant_id, nivel, tiempo_respuesta_minutos, tiempo_resolucion_minutos, horas_por_mes
+  Invoice.ts          → Factura: id, tenant_id, numero, tipo (A/B/C/ticket/proforma), subtotal, iva, total, afip_cae
+  AuditLog.ts         → Log de auditoría: id, tenant_id, user_id, action, entity, entity_id, old_data, new_data
+  RenewalSchedule.ts  → Renovación programada: id, tenant_id, fecha_renovacion, monto_esperado, estado, intentos
+
+
+================================================================================
+ 2. REPOSITORY INTERFACES (9 archivos)
+================================================================================
+
+src/core/domain/repositories/
+  IUserRepository.ts         → getAll(), getById(), createProfile(), delete()
+  ITenantRepository.ts       → getById(), getBySlug(), getByOwnerId(), create(), update(), getTenantStats()
+  IWorkGroupRepository.ts    → listByTenantId(), getById(), create(), update(), delete()
+  IWorkMemberRepository.ts   → listByTenantId(), getById(), getByUserId(), create(), update(), delete(), countByTenantId()
+  IServiceCatalogRepository.ts → listActive(), listAll(), getBySlug(), getById(), create(), update(), delete()
+  ITenantServiceRepository.ts  → listByTenantId(), getById(), create(), update(), cancel(), getActiveCount()
+  ISLAContractRepository.ts    → listByTenantId(), getActiveByTenantId(), create(), update(), checkBreaches()
+  IInvoiceRepository.ts        → listByTenantId(), listByClienteId(), getById(), create(), markAsPaid(), countByTenantId(), sumTotalByTenantId()
+  IAuditLogRepository.ts       → log(), listByTenantId(), listByEntity()
+
+
+================================================================================
+ 3. REPOSITORY IMPLEMENTATIONS (12 archivos Supabase)
+================================================================================
+
+src/core/infra/repositories/
+  SupabaseTenantRepository.ts          → Consultas tenants + plan JOIN + get_tenant_stats RPC
+  SupabaseWorkGroupRepository.ts       → CRUD work_groups + sub-queries de miembros
+  SupabaseWorkMemberRepository.ts      → CRUD work_members + group JOIN
+  SupabaseServiceCatalogRepository.ts  → CRUD service_catalog
+  SupabaseTenantServiceRepository.ts   → CRUD tenant_services + service_catalog JOIN
+  SupabaseSLAContractRepository.ts     → Consultas sla_contracts + check_sla_breaches RPC
+  SupabaseInvoiceRepository.ts         → CRUD invoices con paginación
+  SupabaseAuditLogRepository.ts        → Insert/query audit_log
+  SupabaseTicketRepository.ts          → CRUD tickets + notificaciones (sin interface)
+  SupabaseSubscriptionRepository.ts    → Lectura suscripciones + JOIN planes (sin interface)
+  SupabaseClienteRepository.ts         → Lectura clientes por auth ID (sin interface)
+  SupabaseUserRepository.ts            → CRUD sobre profiles (sin interface)
+
+
+================================================================================
+ 4. REACT HOOKS (14 archivos)
+================================================================================
+
+src/hooks/
+  useTenant.ts           → useTenant, useTenantById, useTenantStats, useCreateTenant, useUpdateTenant
+  useWorkGroups.ts       → useWorkGroups, useWorkGroup, useCreateWorkGroup, useUpdateWorkGroup, useDeleteWorkGroup
+  useWorkMembers.ts      → useWorkMembers, useWorkMember, useCreateWorkMember, useUpdateWorkMember, useDeleteWorkMember
+  useServices.ts         → useServiceCatalog, useAllServices, useTenantServices, useCreateTenantService, useCancelTenantService
+  useSLA.ts              → useSLAContracts, useActiveSLA, useSLABreaches
+  useInvoices.ts         → useInvoicesByTenant, useInvoicesByCliente, useInvoice, useMarkInvoicePaid
+  useAuditLog.ts         → useAuditLog, useAuditLogByEntity
+  useDashboard.ts        → Datos del cliente: auth user, cliente profile, suscripciones, pagos, planTier
+  useAdminDashboard.ts   → Datos admin: todos los clientes, suscripciones, pagos, tickets, stats
+  useSupportTickets.ts   → Ciclo de vida de tickets: listar, crear, notificaciones, markRead
+  useTypewriter.ts       → Efecto de texto typewriter
+  useScrollSpy.ts        → Detección de sección visible en scroll
+  useIsMobile.ts         → Detección de breakpoint responsive
+  useFocusTrap.ts        → Trampa de teclado para modales (accesibilidad)
+
+
+================================================================================
+ 5. COMPONENTES (48 archivos, 18 directorios)
+================================================================================
+
+components/layout/
+  Header.tsx             → Barra de navegación superior
+  Footer.tsx             → Pie de página
+  ErrorBoundary.tsx      → Error boundary de React
+  ThemeToggle.tsx        → Botón toggle dark/light
+  LanguageSwitcher.tsx   → Selector de idioma
+
+components/Hero/
+  Hero.tsx               → Sección hero principal
+  constants.ts           → Constantes del hero
+
+components/Products/
+  Products.tsx           → Sección de productos
+  ProductCard.tsx        → Tarjeta de producto
+  ProductDemo.tsx        → Demo interactiva de producto
+
+components/Features/
+  Features.tsx           → Sección de features
+  EnhancedFeatureCard.tsx → Tarjeta de feature animada
+  constants.ts           → Datos de features
+
+components/Pricing/
+  Pricing.tsx            → Sección de precios
+  ROICalculator.tsx      → Calculadora ROI interactiva
+
+components/Process/
+  Process.tsx            → Sección de proceso/workflow
+
+components/SocialProof/
+  SocialProof.tsx        → Prueba social / testimonios
+
+components/FAQ/
+  FAQ.tsx                → Preguntas frecuentes (accordion)
+
+components/CaseStudies/
+  CaseStudies.tsx        → Estudios de caso
+  DashboardMock.tsx      → Mock visual de dashboard
+
+components/TechStack/
+  TechStack.tsx          → Showcase de stack tecnológico
+
+components/BookingDemo/
+  BookingDemo.tsx        → Demo de reserva/turnos
+
+components/Audit/
+  AutomationAudit.tsx    → Auditoría de automatización
+
+components/Effects/
+  PremiumBackground.tsx  → Fondo animado
+  CoffeePortal3D.tsx     → Portal 3D (Three.js)
+
+components/DemoZone/
+  DemoZone.tsx           → Sección de demos interactivas
+  AuthModal.tsx          → Modal de auth para demo
+  UserManagement.tsx     → Panel de gestión de usuarios (demo)
+  authService.ts         → Servicio de auth para demo
+
+components/chat/
+  ChatbaseWidget.tsx     → Widget de chatbot Chatbase
+
+components/store/
+  StorePage.tsx          → Página /tienda con PayPal
+  PaywallModal.tsx       → Modal de paywall
+
+components/shared/
+  SalonBloomButton.tsx   → Botón reutilizable
+
+components/landing/
+  ContactSection.tsx     → Formulario de contacto (Resend API)
+  constants.ts           → Constantes de contacto
+
+components/dashboard/
+  ClientDashboard.tsx     → Dashboard del cliente
+  AdminDashboardView.tsx  → Panel de administración (728 líneas)
+  PlanDashboardView.tsx   → Dashboard por tier de plan
+  DashboardFree.tsx       → Dashboard para tier free
+  ServicePulseHub.tsx     → Monitoreo de estado de servicios
+  SupportTicketPanel.tsx  → Panel de tickets de soporte
+  resolvePlanTier.ts      → Resolución de tier desde suscripciones
+  planDashboardConfig.ts  → Configuración de features por tier
+
+components/dashboard/shared/
+  DashboardPrimitives.tsx → Bloques de UI compartidos
+
+components/workgroups/
+  WorkGroupsPanel.tsx     → Panel de gestión de grupos y miembros del equipo
+
+components/services/
+  ServicesPanel.tsx       → Panel de servicios activos + catálogo de addons
+
+components/sla/
+  SLADashboard.tsx        → Dashboard de SLA con breach tracking
+
+components/invoices/
+  InvoicesPanel.tsx       → Lista de facturas con estados y resumen
+
+
+================================================================================
+ 6. MIGRACIONES SQL (21 migraciones)
+================================================================================
+
+supabase/migrations/
+  000_clientes.sql                    → Tabla clientes + handle_new_user trigger
+  001_pagos.sql                       → Tabla pagos
+  002_clientes_rls.sql                → RLS para clientes
+  003_planes_subscriptions.sql        → Tablas planes + suscripciones
+  004_tickets.sql                     → Tablas tickets + notificaciones
+  005_infra_booking.sql               → Tablas businesses, employees, services, schedules, reservations
+  006_rpc_subscription.sql            → Funciones RPC de suscripciones
+  007_fix_auth_trigger.sql            → Fix del trigger de auth
+  008_payment_integration.sql         → Columnas de integración de pagos
+  009_orders_api.sql                  → API de órdenes
+  010_admin_policies.sql              → Políticas RLS de admin
+  011_fix_tickets_and_notifications.sql → Fix tickets + notificaciones
+  012_add_missing_ticket_columns.sql  → Columnas faltantes en tickets
+  013_leads.sql                       → Tabla leads
+  014_admin_roles.sql                 → user_roles + is_admin() function
+  015_fix_tickets_policy.sql          → Fix política de tickets
+  016_webhook_events.sql              → Tabla webhook_events
+  017_lead_rate_limit.sql             → Rate limiting para leads
+  018_saas_core.sql                   → NUEVO: tenants, work_groups, work_members, service_catalog,
+                                        tenant_services, sla_contracts, invoices, invoice_sequences,
+                                        audit_log, renewal_schedule + migración de datos existentes
+  019_saas_rls.sql                    → NUEVO: Políticas RLS completas para todas las tablas SaaS
+  020_saas_functions.sql              → NUEVO: log_audit, generate_invoice_number,
+                                        create_invoice_from_payment, check_sla_breaches,
+                                        auto_assign_ticket, process_pending_renewals,
+                                        get_tenant_stats, update user_roles constraint
+
+
+================================================================================
+ 7. API ENDPOINTS (6 endpoints + 2 librerías)
+================================================================================
+
+api/
+  chat.js                → POST /api/chat — Chatbot IA (Groq Llama 3.3 70B) con streaming SSE
+  contact.js             → POST /api/contact — Formulario de contacto → Resend API (rate limited)
+  check-admin.js         → GET /api/check-admin — Verificación de rol admin via Bearer token
+  paypal-webhook.js      → POST /api/paypal-webhook — Webhook PayPal: verificación, captura, DB, emails
+  test-paypal.js         → GET /api/test-paypal — Test de conexión PayPal sandbox
+  webhooks/resend.js     → POST /api/webhooks/resend — Webhook receiver de Resend (Svix verified)
+
+  lib/email/
+    send.js              → Utilidad de envío de email envolviendo Resend API
+    templates.js         → Templates HTML de email: confirmación de pago, notificación admin,
+                           contacto, bienvenida (tema oscuro ExeSistemasWEB)
+
+
+================================================================================
+ 8. AUTENTICACIÓN (5 archivos)
+================================================================================
+
+src/core/auth/
+  AuthSessionProvider.tsx → React context: { ready, session } via onAuthStateChange
+  AuthGuard.tsx           → Route guard: redirige a /login si no hay sesión; AdminGuard
+  userAuth.ts             → useAuthRole(): resuelve rol via is_admin() RPC con caché
+  siteUrl.ts              → getSiteUrl(), getAuthRedirectUrl(), hasAuthCallbackInUrl()
+  roleConfig.ts           → ADMIN_EMAILS (array vacío, resolución via DB)
+
+
+================================================================================
+ 9. PÁGINAS (6 rutas)
+================================================================================
+
+src/pages/
+  Login.tsx           → /login — Google OAuth PKCE + email/password sign-in/sign-up
+  Dashboard.tsx       → /dashboard — Panel principal con tabs (Resumen/Servicios/Equipo/SLA/Facturas)
+  AuthCallback.tsx    → /auth/callback — Handler de OAuth callback PKCE
+  PrivacyPolicy.tsx   → /privacidad — Política de privacidad (i18n, animada)
+  TermsOfService.tsx  → /terminos — Términos de servicio (i18n, animada)
+  NotFound.tsx        → /* — Página 404
+
+
+================================================================================
+ 10. CONFIGURACIÓN (11 archivos)
+================================================================================
+
+  package.json         → Config del proyecto: 19 deps, 15 devDeps, scripts
+  tsconfig.json        → Config TS raíz
+  tsconfig.app.json    → Config TS app: ES2020, React-JSX, strict
+  tsconfig.node.json   → Config TS node para vite.config.ts
+  vite.config.ts       → Vite: React, bundle visualizer, sitemap, manual chunks
+  tailwind.config.js   → Tailwind: dark mode, CSS vars, animaciones custom
+  postcss.config.js    → PostCSS: tailwindcss + autoprefixer
+  eslint.config.js     → ESLint flat config: TS + React hooks + JSX a11y
+  vercel.json          → Deploy: SPA rewrites, security headers, cache
+  .prettierrc          → Prettier config
+  opencode.json        → OpenCode AI config
+
+
+================================================================================
+ 11. DOCUMENTACIÓN (23 archivos)
+================================================================================
+
+docs/agents/
+  domain.md            → Contexto de dominio
+  issue-tracker.md     → Convenciones de issue tracking
+  triage-labels.md     → 5 labels canónicos de triage
+
+docs/adr/
+  0001-stack-tecnico-base.md    → ADR: Stack técnico base
+  0002-adopcion-supabase-baas.md → ADR: Adopción de Supabase
+  0003-patron-repositorio.md    → ADR: Patrón repositorio
+
+docs/
+  flujo-suscripciones.md        → Documentación de flujo de suscripciones
+  vercel-env-setup.md           → Guía de variables de entorno Vercel
+  supabase-env.local.md         → Config local de Supabase
+  paypal-env.md                 → Config de PayPal
+  paypal-env.local.md           → Config local de PayPal
+  context/domain-model.md       → Modelo de dominio
+  infra/schema.sql              → Schema SQL de infra
+
+docs/archive/ (8 archivos archivados)
+
+
+================================================================================
+ 12. i18n (7 idiomas)
+================================================================================
+
+src/core/i18n/locales/
+  es.json      → Español (default)
+  en.json      → Inglés
+  de.json      → Alemán
+  fr.json      → Francés
+  ar.json      → Árabe (RTL)
+  pt-BR.json   → Portugués BR
+  zh-CN.json   → Chino simplificado
+
+
+================================================================================
+ 13. TESTS (4 archivos)
+================================================================================
+
+src/core/domain/
+  availability/availabilityEngine.test.ts    → Tests del motor de disponibilidad
+  reservations/conflictDetector.test.ts      → Tests de detección de conflictos
+  reservations/reservationService.test.ts    → Tests del servicio de reservas
+  slots/slotGenerator.test.ts                → Tests de generación de slots
+
+
+================================================================================
+ 14. DOMAIN LOGIC ADICIONAL
+================================================================================
+
+src/core/domain/
+  planCatalog.ts           → PlanTier, PLAN_CATALOG (3 tiers), tierFromStorePlanId(), tierFromPlanLabel()
+  ticketConfig.ts          → TICKET_CATEGORIES por tier, priorityForTier(), SLA_BY_TIER
+  availability/types.ts    → DayOfWeek, WorkShift, WeeklySchedule, ScheduleException
+  availability/availabilityEngine.ts → getEffectiveShifts(), isEmployeeWorkingAt()
+  reservations/types.ts    → TimeBlock, ExistingReservation, BookingRequest
+  reservations/conflictDetector.ts → hasConflict() — detección de overlap
+  reservations/reservationService.ts → ReservationService — orquestación con conflict check
+  reservations/reservationRepository.interface.ts → IReservationRepository
+  slots/slotGenerator.ts   → generateAvailableSlots()
+
+
+================================================================================
+ 15. UTILIDADES / SCRIPTS
+================================================================================
+
+  api-dev-server.js              → Express dev server (port 3000)
+  test-api.js                    → Suite de tests de integración API
+  start-servers.cmd              → Inicia backend + frontend en paralelo
+  stop-servers.cmd               → Mata procesos en puertos 3000 y 5173
+  restart-api.cmd                → Reinicia solo el API server
+  scripts/apply-migration.mjs    → Runner de migraciones SQL
+
+
+================================================================================
+ 16. WEB-AUTOMATION-CLI (herramienta standalone)
+================================================================================
+
+web-automation-cli/
+  src/index.ts              → Entry point del CLI
+  src/commands/analyze.ts   → Comando analyze
+  src/commands/add-component.ts → Comando add-component
+  src/commands/create-project.ts → Comando create-project
+  src/commands/deploy.ts    → Comando deploy
+  src/commands/help.ts      → Comando help
+  src/commands/setup.ts     → Comando setup
+
+
+================================================================================
+ 17. ASSETS PÚBLICOS (13 archivos)
+================================================================================
+
+public/
+  logo.webp, logo.png, logo-optimized.webp, logo-40.webp  → Logos de marca
+  icon-192.png, icon-512.png  → Iconos PWA
+  manifest.json               → PWA manifest
+  robots.txt                  → Archivo robots
+  assets/hero-spline.png      → Background del hero
+  assets/hero-device.png      → Mockup de dispositivo
+  assets/casa-aura/*.jpg      → Imágenes de showcase
+
+
+================================================================================
+ RESUMEN ESTADÍSTICO
+================================================================================
+
+  Categoría                     Cantidad
+  ─────────────────────────────────────
+  Domain Entities               14 archivos (16 interfaces, 10+ tipos)
+  Repository Interfaces         9 archivos (~55 métodos)
+  Infrastructure Repositories   12 archivos (implementaciones Supabase)
+  React Hooks                   14 archivos (TanStack Query + custom)
+  Componentes                   48 archivos en 18 directorios
+  Páginas                       6 rutas
+  API Endpoints                 6 endpoints + 2 librerías
+  Auth Files                    5 archivos
+  Migraciones SQL               21 migraciones
+  Documentación                 23 archivos
+  Archivos de configuración     11
+  Idiomas i18n                  7
+  Tests                         4 archivos
+  Assets públicos               13 archivos
+  Scripts                       6 scripts
+  Web-Automation CLI            10 archivos
+  ─────────────────────────────────────
+  TOTAL ARCHIVOS ÚNICOS        ~180+
+
+================================================================================
+ TABLAS EN BASE DE DATOS (después de todas las migraciones)
+================================================================================
+
+  Tabla                    Propósito
+  ─────────────────────────────────────────────────────────────
+  clientes                 Catálogo de clientes
+  pagos                    Registro de pagos
+  planes                   Catálogo de planes
+  suscripciones            Suscripciones de clientes
+  tickets                  Tickets de soporte
+  notificaciones           Notificaciones in-app
+  businesses               Negocios (legacy)
+  employees                Empleados (legacy)
+  services                 Servicios de negocio (legacy)
+  schedules                Horarios de trabajo (legacy)
+  reservations             Reservas/turnos (legacy)
+  leads                    Leads capturados
+  user_roles               Roles de usuario (admin/client/staff)
+  webhook_events           Eventos de webhook logueados
+  tenants                  ESPACIOS DE TRABAJO MULTI-TENANT
+  work_groups              GRUPOS DE TRABAJO POR TENANT
+  work_members             MIEMBROS DEL EQUIPO POR TENANT
+  service_catalog          CATÁLOGO DE SERVICIOS VENDIBLES
+  tenant_services          SERVICIOS ACTIVOS POR TENANT
+  sla_contracts            CONTRATOS DE NIVEL DE SERVICIO
+  invoices                 FACTURAS ELECTRÓNICAS
+  invoice_sequences        SECUENCIAS DE NUMERACIÓN
+  audit_log                LOG DE AUDITORÍA
+  renewal_schedule         PROGRAMACIÓN DE RENOVACIONES
+
+  TOTAL: 25 tablas
+
+
+================================================================================
+ FUNCIONES RPC EN BASE DE DATOS
+================================================================================
+
+  handle_updated_at()              → Actualiza updated_at automáticamente
+  handle_new_user()                → Crea perfil al registrar usuario
+  handle_subscription_update()     → Maneja cambios de suscripción
+  is_admin()                       → Verifica si el usuario es admin
+  handle_ticket_created()          → Crea notificación al crear ticket
+  handle_ticket_resolved()         → Crea notificación al resolver ticket
+  check_lead_rate_limit()          → Limita leads por email/hora
+  log_audit()                      → Registra acciones en audit_log
+  generate_invoice_number()        → Genera número de factura autoincremental
+  create_invoice_from_payment()    → Crea factura desde un pago
+  check_sla_breaches()             → Detecta incumplimientos de SLA
+  auto_assign_ticket()             → Asigna ticket al miembro menos ocupado
+  process_pending_renewals()       → Procesa renovaciones pendientes
+  get_tenant_stats()               → Estadísticas del dashboard del tenant
+
+  TOTAL: 14 funciones RPC

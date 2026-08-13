@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
@@ -32,11 +32,13 @@ import { SupabaseTenantServiceRepository } from '../core/infra/repositories/Supa
 import { SupabaseInvoiceRepository } from '../core/infra/repositories/SupabaseInvoiceRepository'
 import { PREMIUM_TOKENS } from '../styles/premium-tokens'
 
-// Lazy loaded panels
-const WorkGroupsPanel = lazy(() => import('../components/workgroups/WorkGroupsPanel'))
-const ServicesPanel = lazy(() => import('../components/services/ServicesPanel'))
-const SLADashboard = lazy(() => import('../components/sla/SLADashboard'))
-const InvoicesPanel = lazy(() => import('../components/invoices/InvoicesPanel'))
+import { lazyWithRetry } from '../utils/lazyWithRetry'
+
+// Lazy loaded panels con reintento automático ante nuevos despliegues
+const WorkGroupsPanel = lazyWithRetry(() => import('../components/workgroups/WorkGroupsPanel'))
+const ServicesPanel = lazyWithRetry(() => import('../components/services/ServicesPanel'))
+const SLADashboard = lazyWithRetry(() => import('../components/sla/SLADashboard'))
+const InvoicesPanel = lazyWithRetry(() => import('../components/invoices/InvoicesPanel'))
 
 const SkeletonBlock = ({ className = '' }: { className?: string }) => (
   <div className={`relative overflow-hidden bg-slate-800/40 ${className}`}>

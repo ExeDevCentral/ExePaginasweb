@@ -146,7 +146,7 @@ export default function ServicesPanel({ tenantId }: Props) {
           </p>
           <a
             href="/tienda"
-            className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl bg-accent-cyan text-foreground text-sm font-bold hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl bg-accent-cyan text-slate-950 font-black hover:opacity-90 transition-opacity shadow-sm"
           >
             <CreditCard className="w-4 h-4" />
             Ver planes

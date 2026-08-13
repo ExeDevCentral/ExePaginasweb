@@ -29,49 +29,49 @@ export function LiveHealthCard({ theme }: { theme: PlanDashboardTheme }) {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-3xl border ${theme.border} bg-zinc-900/40 dark:bg-slate-950/60 p-5 backdrop-blur-xl space-y-4`}
+      className={`rounded-3xl border ${theme.border} bg-white/80 dark:bg-slate-950/60 p-5 backdrop-blur-xl space-y-4 shadow-sm`}
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400">
-          <ShieldCheck className="w-4 h-4 text-emerald-400 animate-pulse" />
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+          <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 animate-pulse" />
           <span>Salud y Seguridad en Tiempo Real</span>
         </div>
-        <span className="text-[10px] font-mono text-muted-foreground bg-muted/40 px-2 py-0.5 rounded-full">
+        <span className="text-[10px] font-mono text-slate-700 dark:text-slate-300 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-bold">
           Uptime 99.99%
         </span>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-        <div className="p-3 rounded-2xl bg-card/40 border border-border/50">
-          <p className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
-            <Activity className="w-3 h-3 text-emerald-400" /> Latencia
+        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-card/40 border border-slate-200/80 dark:border-border/50">
+          <p className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+            <Activity className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> Latencia
           </p>
           <p className="text-base font-extrabold font-mono text-foreground mt-1">14 ms</p>
-          <p className="text-[10px] text-emerald-400">Excelente</p>
+          <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Excelente</p>
         </div>
 
-        <div className="p-3 rounded-2xl bg-card/40 border border-border/50">
-          <p className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
+        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-card/40 border border-slate-200/80 dark:border-border/50">
+          <p className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
             <Lock className="w-3 h-3 text-accent-cyan" /> SSL / TLS
           </p>
           <p className="text-base font-extrabold font-mono text-foreground mt-1">TLS 1.3</p>
-          <p className="text-[10px] text-accent-cyan">Válido & Seguro</p>
+          <p className="text-[10px] text-accent-cyan font-bold">Válido & Seguro</p>
         </div>
 
-        <div className="p-3 rounded-2xl bg-card/40 border border-border/50">
-          <p className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
+        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-card/40 border border-slate-200/80 dark:border-border/50">
+          <p className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
             <Database className="w-3 h-3 text-accent-magenta" /> Respaldo BD
           </p>
           <p className="text-base font-extrabold font-mono text-foreground mt-1">Hoy 03:00</p>
-          <p className="text-[10px] text-accent-magenta">Auto Backup OK</p>
+          <p className="text-[10px] text-accent-magenta font-bold">Auto Backup OK</p>
         </div>
 
-        <div className="p-3 rounded-2xl bg-card/40 border border-border/50">
-          <p className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
-            <Zap className="w-3 h-3 text-amber-400" /> WAF Firewall
+        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-card/40 border border-slate-200/80 dark:border-border/50">
+          <p className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+            <Zap className="w-3 h-3 text-amber-600 dark:text-amber-400" /> WAF Firewall
           </p>
           <p className="text-base font-extrabold font-mono text-foreground mt-1">Protegido</p>
-          <p className="text-[10px] text-amber-400">0 Amenazas</p>
+          <p className="text-[10px] text-amber-600 dark:text-amber-400 font-bold">0 Amenazas</p>
         </div>
       </div>
     </motion.div>
@@ -90,48 +90,56 @@ export function QuickActionsHub({
   )
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-slate-950/40 p-5 backdrop-blur-xl space-y-3">
-      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+    <div className="rounded-3xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-slate-950/40 p-5 backdrop-blur-xl space-y-3 shadow-sm">
+      <p className="text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
         Acciones Rápidas (1-Clic)
       </p>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         <button
           type="button"
           onClick={onOpenTicket}
-          className="p-3 rounded-2xl border border-accent-cyan/30 bg-accent-cyan/10 hover:bg-accent-cyan/20 text-left transition-all group"
+          className="p-3 rounded-2xl border border-accent-cyan/40 bg-accent-cyan/10 hover:bg-accent-cyan/20 text-left transition-all group"
         >
           <Zap className="w-4 h-4 text-accent-cyan mb-1.5 group-hover:scale-110 transition-transform" />
           <p className="text-xs font-bold text-foreground">Solicitar Mejora</p>
-          <p className="text-[10px] text-muted-foreground">Abrir ticket prioritario</p>
+          <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">
+            Abrir ticket prioritario
+          </p>
         </button>
 
         <a
           href={`https://wa.me/5491112345678?text=${waMsg}`}
           target="_blank"
           rel="noreferrer"
-          className="p-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-left transition-all group"
+          className="p-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-left transition-all group"
         >
-          <MessageSquare className="w-4 h-4 text-emerald-400 mb-1.5 group-hover:scale-110 transition-transform" />
+          <MessageSquare className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mb-1.5 group-hover:scale-110 transition-transform" />
           <p className="text-xs font-bold text-foreground">Soporte VIP WhatsApp</p>
-          <p className="text-[10px] text-muted-foreground">Chat directo 24/7</p>
+          <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">
+            Chat directo 24/7
+          </p>
         </a>
 
         <a
           href="/dashboard?tab=invoices"
-          className="p-3 rounded-2xl border border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-left transition-all group"
+          className="p-3 rounded-2xl border border-purple-500/40 bg-purple-500/10 hover:bg-purple-500/20 text-left transition-all group"
         >
-          <FileText className="w-4 h-4 text-purple-400 mb-1.5 group-hover:scale-110 transition-transform" />
+          <FileText className="w-4 h-4 text-purple-600 dark:text-purple-400 mb-1.5 group-hover:scale-110 transition-transform" />
           <p className="text-xs font-bold text-foreground">Descargar Factura</p>
-          <p className="text-[10px] text-muted-foreground">PDFs e historial</p>
+          <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">
+            PDFs e historial
+          </p>
         </a>
 
         <a
           href="/cotizador"
-          className="p-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-left transition-all group"
+          className="p-3 rounded-2xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-left transition-all group"
         >
-          <ArrowUpRight className="w-4 h-4 text-amber-400 mb-1.5 group-hover:scale-110 transition-transform" />
+          <ArrowUpRight className="w-4 h-4 text-amber-600 dark:text-amber-400 mb-1.5 group-hover:scale-110 transition-transform" />
           <p className="text-xs font-bold text-foreground">Upgrade de Plan</p>
-          <p className="text-[10px] text-muted-foreground">Escalar recursos</p>
+          <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">
+            Escalar recursos
+          </p>
         </a>
       </div>
     </div>

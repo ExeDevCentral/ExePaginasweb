@@ -22,10 +22,10 @@ const ROL_LABELS: Record<WorkMemberRol, string> = {
 }
 
 const ROL_COLORS: Record<WorkMemberRol, string> = {
-  owner: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-  admin: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-  member: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
-  viewer: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
+  owner: 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30 font-bold',
+  admin: 'bg-purple-500/15 text-purple-700 dark:text-purple-400 border-purple-500/30 font-bold',
+  member: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/30 font-bold',
+  viewer: 'bg-slate-500/15 text-slate-700 dark:text-slate-400 border-slate-500/30 font-bold',
 }
 
 interface Props {

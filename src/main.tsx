@@ -27,6 +27,19 @@ if (SENTRY_DSN) {
   })
 }
 
+// Manejador global para recargar la página si falla la precarga de chunks dinámicos (ej. nuevo despliegue)
+window.addEventListener('vite:preloadError', (event) => {
+  console.warn('[Vite] Error de precarga de módulo detectado, recargando página:', event)
+  const reloaded = sessionStorage.getItem('vite_preload_reloaded')
+  if (!reloaded) {
+    sessionStorage.setItem('vite_preload_reloaded', 'true')
+    window.location.reload()
+  }
+})
+
+// Limpiar flag al cargar correctamente la aplicación
+sessionStorage.removeItem('vite_preload_reloaded')
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

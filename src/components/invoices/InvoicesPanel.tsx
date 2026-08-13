@@ -10,11 +10,11 @@ const ESTADO_CONFIG: Record<
   InvoiceEstado,
   { icon: typeof CheckCircle; color: string; label: string }
 > = {
-  borrador: { icon: Clock, color: 'text-gray-400', label: 'Borrador' },
-  emitida: { icon: AlertCircle, color: 'text-yellow-400', label: 'Emitida' },
-  pagada: { icon: CheckCircle, color: 'text-emerald-400', label: 'Pagada' },
-  vencida: { icon: XCircle, color: 'text-red-400', label: 'Vencida' },
-  cancelada: { icon: XCircle, color: 'text-gray-400', label: 'Cancelada' },
+  borrador: { icon: Clock, color: 'text-slate-600 dark:text-gray-400', label: 'Borrador' },
+  emitida: { icon: AlertCircle, color: 'text-amber-600 dark:text-yellow-400', label: 'Emitida' },
+  pagada: { icon: CheckCircle, color: 'text-emerald-600 dark:text-emerald-400', label: 'Pagada' },
+  vencida: { icon: XCircle, color: 'text-rose-600 dark:text-red-400', label: 'Vencida' },
+  cancelada: { icon: XCircle, color: 'text-slate-600 dark:text-gray-400', label: 'Cancelada' },
 }
 
 interface Props {

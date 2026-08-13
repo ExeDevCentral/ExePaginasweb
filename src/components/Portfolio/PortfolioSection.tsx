@@ -150,7 +150,7 @@ export const PortfolioSection: React.FC = () => {
             transition={{ delay: 0.1 }}
             className="text-3xl sm:text-5xl font-black font-montserrat tracking-tight text-foreground mb-4"
           >
-            Portafolio Profesional de Sistemas
+            Portafolio Profesional
           </motion.h2>
 
           <motion.p

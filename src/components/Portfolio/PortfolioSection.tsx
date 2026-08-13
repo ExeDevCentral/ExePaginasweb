@@ -12,6 +12,7 @@ import {
   ArrowUpRight,
   PlusCircle,
   Zap,
+  FileText,
 } from 'lucide-react'
 
 export interface Project {
@@ -128,17 +129,17 @@ export const PortfolioSection: React.FC = () => {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-r from-accent-cyan/10 to-accent-magenta/10 rounded-full blur-[130px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Encabezado */}
+        {/* Encabezado Profesional */}
         <div className="text-center mb-12">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-md mb-4"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">
-              PROYECTOS EN PRODUCCIÓN
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-cyan-400">
+              PORTAFOLIO PROFESIONAL EN PRODUCCIÓN
             </span>
           </motion.div>
 
@@ -149,7 +150,7 @@ export const PortfolioSection: React.FC = () => {
             transition={{ delay: 0.1 }}
             className="text-3xl sm:text-5xl font-black font-montserrat tracking-tight text-foreground mb-4"
           >
-            Portafolio de Sistemas Clickeables
+            Portafolio Profesional de Sistemas
           </motion.h2>
 
           <motion.p
@@ -159,9 +160,30 @@ export const PortfolioSection: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto"
           >
-            Desarrollos reales despegados en la nube con código propio. Hacé click en cualquier
-            proyecto para probar la versión web en producción.
+            Desarrollos reales desplegados en la nube con código propio y arquitectura enterprise.
+            Hacé click en cualquier proyecto para interactuar directamente con la versión web en
+            producción.
           </motion.p>
+
+          {/* Acceso a CV Profesional */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="mt-6 flex flex-wrap items-center justify-center gap-3"
+          >
+            <a
+              href="https://cv-xi-swart.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 text-white font-extrabold text-xs sm:text-sm hover:scale-105 transition-all shadow-xl shadow-purple-500/25 border border-white/25 cursor-pointer"
+            >
+              <FileText className="w-4 h-4 text-cyan-200 group-hover:rotate-12 transition-transform" />
+              <span>📄 Ver Mi CV Profesional Completo</span>
+              <ExternalLink className="w-3.5 h-3.5 opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </a>
+          </motion.div>
         </div>
 
         {/* Botones de Categorías */}

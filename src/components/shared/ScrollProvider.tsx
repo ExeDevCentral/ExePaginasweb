@@ -14,12 +14,29 @@ export function resetScrollToTop() {
   }
 }
 
+export function scrollToElement(
+  target: string | HTMLElement,
+  options?: Parameters<Lenis['scrollTo']>[1]
+) {
+  if (globalLenis) {
+    globalLenis.scrollTo(target, { duration: 1.0, ...options })
+  } else {
+    const el = typeof target === 'string' ? document.querySelector(target) : target
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+}
+
 export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.0,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5,
+      infinite: false,
     })
 
     globalLenis = lenis
@@ -31,7 +48,7 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     gsap.ticker.add(updateRaf)
-    gsap.ticker.lagSmoothing(500, 33)
+    gsap.ticker.lagSmoothing(0)
 
     return () => {
       gsap.ticker.remove(updateRaf)

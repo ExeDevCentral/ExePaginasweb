@@ -79,17 +79,41 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     -webkit-overflow-scrolling: touch;
+  }
+
+  /* Lenis Smooth Scroll Core Rules (prevents JS vs CSS smooth scroll conflict) */
+  html.lenis,
+  html.lenis.lenis-stopped {
+    scroll-behavior: auto !important;
+  }
+
+  html.lenis {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased transition-colors duration-300;
-    overscroll-behavior: none;
+    overscroll-behavior-y: auto;
     -webkit-overflow-scrolling: touch;
-    touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
   }
 
   h1,

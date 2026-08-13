@@ -69,6 +69,7 @@ const Header = () => {
       style={{
         background: scrolled ? 'var(--background)' : 'transparent',
         backdropFilter: scrolled ? 'blur(16px) saturate(1.4)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(16px) saturate(1.4)' : 'none',
         borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
         boxShadow: scrolled ? 'var(--shadow-md)' : 'none',
       }}

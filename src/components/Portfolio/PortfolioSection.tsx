@@ -60,23 +60,22 @@ const INITIAL_PROJECTS: Project[] = [
   },
   {
     id: 'noema-studio',
-    title: 'Noema Studio - E-Commerce & Tienda Digital',
-    category: 'ecommerce',
-    categoryLabel: 'E-Commerce / Showcase',
-    client: 'Noema Studio',
+    title: 'Transformamos datos complejos en decisiones de alto impacto.',
+    category: 'web',
+    categoryLabel: 'Investigación & Estrategia',
+    client: 'NOEMA CONSULTORA',
     description:
-      'Plataforma e-commerce moderna con catálogo dinámico, estética minimalista y experiencia de compra optimizada.',
-    image:
-      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200&auto=format&fit=crop',
-    tags: ['React', 'Vite', 'Tailwind CSS', 'Vercel'],
+      'En Noema combinamos rigor estadístico cuantitativo y análisis cualitativo profundo para guiar el crecimiento de marcas en Paraguay y la región MERCOSUR.',
+    image: '/assets/noema-consultora.jpg',
+    tags: ['React', 'TypeScript', 'Tailwind CSS', 'Vercel'],
     metrics: [
-      { label: 'Lighthouse Score', value: '99/100' },
-      { label: 'Comisiones', value: '$0' },
+      { label: 'Alcance Regional', value: 'MERCOSUR' },
+      { label: 'Metodología', value: 'Cuanti + Cuali' },
     ],
     highlights: [
-      'Diseño ultra-limpio y navegación intuitiva',
-      'Catálogo de productos interactivo',
-      'Despliegue de alta disponibilidad en Vercel',
+      'Investigación cualitativa, cuantitativa y análisis de mercado',
+      'Inteligencia estratégica en Paraguay y región MERCOSUR',
+      'Diseño web corporativo de alto nivel con arquitectura enterprise',
     ],
     link: 'https://noema-ivory.vercel.app/',
     status: 'live',
@@ -84,14 +83,13 @@ const INITIAL_PROJECTS: Project[] = [
   },
   {
     id: 'restauracion-maquinas',
-    title: 'Artesanías & Restauración de Antigüedades',
+    title: 'Tres oficios, un legado',
     category: 'web',
     categoryLabel: 'Artesanías & Antigüedades',
-    client: 'Taller de Restauración',
+    client: 'ARTESANÍAS · ANTIGÜEDADES · MÁQUINAS DE ESCRIBIR',
     description:
-      'Landing page corporativa orientada a la preservación de tres oficios tradicionales: joyería fina, antigüedades con historia y restauración profesional de máquinas de escribir.',
-    image:
-      'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1200&auto=format&fit=crop',
+      'Artesanía en joyería fina, antigüedades con historia y restauración profesional de máquinas de escribir. Un taller donde el pasado cobra vida.',
+    image: '/assets/taller-restauracion.jpg',
     tags: ['React', 'TypeScript', 'Tailwind CSS', 'Vercel'],
     metrics: [
       { label: 'Diagnóstico Online', value: 'Con Fotos' },

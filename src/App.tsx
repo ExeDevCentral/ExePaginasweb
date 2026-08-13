@@ -14,6 +14,7 @@ const ContactSection = lazy(() => import('./components/landing/ContactSection'))
 const Pricing = lazy(() => import('./components/Pricing/Pricing'))
 const OwnershipVsSubscription = lazy(() => import('./components/shared/OwnershipVsSubscription'))
 const PortfolioSection = lazy(() => import('./components/Portfolio/PortfolioSection'))
+const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
 
 const SkeletonBlock = ({ className = '' }: { className?: string }) => (
   <div className={`relative overflow-hidden ${className}`}>
@@ -184,6 +185,7 @@ function App() {
               <OwnershipVsSubscription />
               <SocialProof />
               <PortfolioSection />
+              <DemoZone />
               <Process />
             </Suspense>
             <WaveDivider flip />

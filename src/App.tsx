@@ -5,19 +5,13 @@ import Header from './components/layout/Header'
 import Hero from './components/Hero/Hero'
 import ErrorBoundary from './components/layout/ErrorBoundary'
 import ScrollProvider from './components/shared/ScrollProvider'
-const Products = lazy(() => import('./components/Products/Products'))
-const Features = lazy(() => import('./components/Features/Features'))
 const SocialProof = lazy(() => import('./components/SocialProof/SocialProof'))
 const Process = lazy(() => import('./components/Process/Process'))
 const FAQ = lazy(() => import('./components/FAQ/FAQ'))
 const Footer = lazy(() => import('./components/layout/Footer'))
 const ChatbaseWidget = lazy(() => import('./components/chat/ChatbaseWidget'))
-const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
 const ContactSection = lazy(() => import('./components/landing/ContactSection'))
-const CaseStudies = lazy(() => import('./components/CaseStudies/CaseStudies'))
 const Pricing = lazy(() => import('./components/Pricing/Pricing'))
-const BookingDemo = lazy(() => import('./components/BookingDemo/BookingDemo'))
-const AutomationAudit = lazy(() => import('./components/Audit/AutomationAudit'))
 const OwnershipVsSubscription = lazy(() => import('./components/shared/OwnershipVsSubscription'))
 const PortfolioSection = lazy(() => import('./components/Portfolio/PortfolioSection'))
 
@@ -189,27 +183,8 @@ function App() {
             <Suspense fallback={<SectionSkeleton />}>
               <OwnershipVsSubscription />
               <SocialProof />
-              <CaseStudies />
               <PortfolioSection />
-              <Products />
-              <Features />
-              <AutomationAudit />
               <Process />
-            </Suspense>
-            <WaveDivider flip />
-            <Suspense
-              fallback={
-                <div className="py-20 text-center text-primary-secondary">
-                  <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                  Cargando demo...
-                </div>
-              }
-            >
-              <DemoZone />
-            </Suspense>
-            <WaveDivider />
-            <Suspense fallback={<SectionSkeleton />}>
-              <BookingDemo />
             </Suspense>
             <WaveDivider flip />
             <Suspense fallback={<SectionSkeleton />}>

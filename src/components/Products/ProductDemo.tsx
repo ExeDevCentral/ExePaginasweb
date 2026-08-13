@@ -228,9 +228,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 <p className="text-xs font-bold text-pink-300">
                   Barbería & Salón Beauty - Modo En Vivo
                 </p>
-                <p className="text-[11px] text-muted-foreground">
-                  Estilista activo: {selectedStylist}
-                </p>
+                <p className="text-[11px] text-slate-300">Estilista activo: {selectedStylist}</p>
               </div>
               <button
                 type="button"
@@ -245,15 +243,15 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               {appointmentsList.map((app, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-card/40"
+                  className="flex items-center justify-between p-3.5 rounded-xl border border-white/15 bg-slate-900/60"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-pink-500/20 border border-pink-500/40 flex items-center justify-center">
                       <Scissors className="w-4 h-4 text-pink-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-foreground">{app.name}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm font-bold text-white">{app.name}</p>
+                      <p className="text-xs text-slate-300">
                         {app.service} · Profesional: {app.stylist}
                       </p>
                     </div>
@@ -281,11 +279,11 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
             ].map((s, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl border border-border bg-card/40 flex items-center justify-between"
+                className="p-4 rounded-xl border border-white/15 bg-slate-900/60 flex items-center justify-between"
               >
                 <div>
-                  <p className="text-sm font-bold text-foreground">{s.name}</p>
-                  <p className="text-xs text-muted-foreground">Duración estimada: {s.duration}</p>
+                  <p className="text-sm font-bold text-white">{s.name}</p>
+                  <p className="text-xs text-slate-300">Duración estimada: {s.duration}</p>
                 </div>
                 <span className="text-sm font-bold font-mono text-pink-400">{s.price}</span>
               </div>
@@ -293,20 +291,20 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
           </div>
         ),
         comisiones: (
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-4 rounded-2xl bg-pink-500/10 border border-pink-500/30">
-              <p className="text-xs text-muted-foreground uppercase font-bold">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="p-4.5 rounded-2xl bg-pink-950/60 border border-pink-500/40 shadow-lg">
+              <p className="text-xs text-pink-200 uppercase font-extrabold tracking-wider">
                 Recaudado Hoy Salón
               </p>
-              <p className="text-2xl font-bold text-pink-400 mt-1">
+              <p className="text-2xl sm:text-3xl font-black text-pink-400 mt-1.5 font-mono drop-shadow">
                 $<AnimatedCounter value={124800} /> ARS
               </p>
             </div>
-            <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/30">
-              <p className="text-xs text-muted-foreground uppercase font-bold">
+            <div className="p-4.5 rounded-2xl bg-purple-950/60 border border-purple-500/40 shadow-lg">
+              <p className="text-xs text-purple-200 uppercase font-extrabold tracking-wider">
                 Comisiones Profesionales
               </p>
-              <p className="text-2xl font-bold text-purple-400 mt-1">
+              <p className="text-2xl sm:text-3xl font-black text-purple-300 mt-1.5 font-mono drop-shadow">
                 $<AnimatedCounter value={49920} /> ARS
               </p>
             </div>
@@ -324,7 +322,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
         pos: (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2 space-y-3">
-              <p className="text-xs font-bold text-muted-foreground uppercase">
+              <p className="text-xs font-bold text-slate-300 uppercase tracking-wider">
                 Productos de Panadería & Confitería:
               </p>
               <div className="grid grid-cols-3 gap-2">
@@ -346,9 +344,9 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                       ])
                       toast.success(`Agregado a ticket: ${item.name}`)
                     }}
-                    className="p-3 rounded-xl border border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/20 text-left transition-all group"
+                    className="p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/25 text-left transition-all group"
                   >
-                    <p className="text-xs font-bold text-foreground group-hover:text-amber-400">
+                    <p className="text-xs font-bold text-slate-100 group-hover:text-amber-300">
                       {item.name}
                     </p>
                     <p className="text-xs font-mono font-bold text-amber-400 mt-1">
@@ -359,15 +357,15 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 flex flex-col justify-between space-y-3">
+            <div className="rounded-2xl border border-amber-500/40 bg-amber-950/60 p-4 flex flex-col justify-between space-y-3 shadow-lg">
               <div>
                 <h4 className="text-xs font-extrabold uppercase text-amber-400 flex items-center gap-1.5">
                   <ShoppingCart className="w-4 h-4" /> Mostrador de Venta
                 </h4>
-                <div className="divide-y divide-border/40 mt-3 space-y-2 max-h-36 overflow-y-auto">
+                <div className="divide-y divide-white/10 mt-3 space-y-2 max-h-36 overflow-y-auto">
                   {bakeryCart.map((i, idx) => (
                     <div key={idx} className="pt-2 flex justify-between text-xs font-medium">
-                      <span>{i.name}</span>
+                      <span className="text-slate-200">{i.name}</span>
                       <span className="font-mono font-bold text-amber-400">
                         ${i.price.toLocaleString('es-AR')}
                       </span>
@@ -376,19 +374,19 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-border/50">
+              <div className="pt-3 border-t border-white/10">
                 <div className="flex justify-between items-center mb-3">
-                  <span className="text-xs text-muted-foreground uppercase font-bold">
+                  <span className="text-xs text-amber-200 uppercase font-extrabold">
                     Total Mostrador
                   </span>
-                  <span className="text-xl font-bold font-mono text-amber-400">
+                  <span className="text-xl font-black font-mono text-amber-400">
                     ${bakeryTotal.toLocaleString('es-AR')} ARS
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={handleBakeryCheckout}
-                  className="w-full py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition-colors flex items-center justify-center gap-1.5"
+                  className="w-full py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition-colors flex items-center justify-center gap-1.5 shadow-md"
                 >
                   <Printer className="w-4 h-4" /> Imprimir Comprobante
                 </button>
@@ -420,11 +418,11 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
             ].map((b, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-card/40"
+                className="flex items-center justify-between p-3.5 rounded-xl border border-white/15 bg-slate-900/60"
               >
                 <div>
-                  <p className="text-sm font-bold text-foreground">{b.batch}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm font-bold text-white">{b.batch}</p>
+                  <p className="text-xs text-slate-300">
                     Volumen: {b.qty} · Encargado: {b.chef}
                   </p>
                 </div>
@@ -436,20 +434,20 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
           </div>
         ),
         caja: (
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30">
-              <p className="text-xs text-muted-foreground uppercase font-bold">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="p-4.5 rounded-2xl bg-amber-950/60 border border-amber-500/40 shadow-lg">
+              <p className="text-xs text-amber-200 uppercase font-extrabold tracking-wider">
                 Ventas Totales Hoy
               </p>
-              <p className="text-2xl font-bold text-amber-400 mt-1">
+              <p className="text-2xl sm:text-3xl font-black text-amber-400 mt-1.5 font-mono drop-shadow">
                 $<AnimatedCounter value={214500} /> ARS
               </p>
             </div>
-            <div className="p-4 rounded-2xl bg-orange-500/10 border border-orange-500/30">
-              <p className="text-xs text-muted-foreground uppercase font-bold">
+            <div className="p-4.5 rounded-2xl bg-orange-950/60 border border-orange-500/40 shadow-lg">
+              <p className="text-xs text-orange-200 uppercase font-extrabold tracking-wider">
                 Encargos de Catering
               </p>
-              <p className="text-2xl font-bold text-orange-400 mt-1">
+              <p className="text-2xl sm:text-3xl font-black text-orange-400 mt-1.5 font-mono drop-shadow">
                 $<AnimatedCounter value={68000} /> ARS
               </p>
             </div>
@@ -466,8 +464,8 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
       content: {
         stock: (
           <div className="space-y-4">
-            <div className="flex justify-between items-center bg-card/40 p-3 rounded-xl border border-border">
-              <span className="text-xs font-bold text-foreground">
+            <div className="flex justify-between items-center bg-slate-900/60 p-3 rounded-xl border border-white/15">
+              <span className="text-xs font-bold text-white">
                 Matriz de Inventario en Tiempo Real
               </span>
               <button
@@ -483,23 +481,23 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               {clothingItems.map((item) => (
                 <div
                   key={item.code}
-                  className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-card/40"
+                  className="flex items-center justify-between p-3.5 rounded-xl border border-white/15 bg-slate-900/60"
                 >
                   <div>
                     <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase">
                       {item.code}
                     </span>
-                    <p className="text-sm font-bold text-foreground">{item.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Talle: <strong className="text-foreground">{item.size}</strong> · Color:{' '}
-                      <strong className="text-foreground">{item.color}</strong>
+                    <p className="text-sm font-bold text-white">{item.name}</p>
+                    <p className="text-xs text-slate-300">
+                      Talle: <strong className="text-emerald-300">{item.size}</strong> · Color:{' '}
+                      <strong className="text-emerald-300">{item.color}</strong>
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold font-mono text-emerald-400">
                       ${item.price.toLocaleString('es-AR')}
                     </p>
-                    <p className="text-xs font-bold text-foreground">Stock: {item.stock} un.</p>
+                    <p className="text-xs font-bold text-white">Stock: {item.stock} un.</p>
                   </div>
                 </div>
               ))}
@@ -507,7 +505,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
           </div>
         ),
         catalogo: (
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { title: 'Colección Otoño-Invierno', items: '48 Prendas' },
               { title: 'Línea Denim & Jeans', items: '32 Modelos' },
@@ -515,28 +513,30 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
             ].map((cat, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 text-center"
+                className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-center"
               >
                 <ShoppingBag className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
-                <p className="text-xs font-bold text-foreground">{cat.title}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">{cat.items}</p>
+                <p className="text-xs font-bold text-white">{cat.title}</p>
+                <p className="text-[10px] text-slate-300 mt-0.5">{cat.items}</p>
               </div>
             ))}
           </div>
         ),
         ventas: (
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
-              <p className="text-xs text-muted-foreground uppercase font-bold">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="p-4.5 rounded-2xl bg-emerald-950/60 border border-emerald-500/40 shadow-lg">
+              <p className="text-xs text-emerald-200 uppercase font-extrabold tracking-wider">
                 Ventas de Indumentaria Hoy
               </p>
-              <p className="text-2xl font-bold text-emerald-400 mt-1">
+              <p className="text-2xl sm:text-3xl font-black text-emerald-400 mt-1.5 font-mono drop-shadow">
                 $<AnimatedCounter value={418900} /> ARS
               </p>
             </div>
-            <div className="p-4 rounded-2xl bg-teal-500/10 border border-teal-500/30">
-              <p className="text-xs text-muted-foreground uppercase font-bold">Prendas Vendidas</p>
-              <p className="text-2xl font-bold text-teal-400 mt-1">
+            <div className="p-4.5 rounded-2xl bg-teal-950/60 border border-teal-500/40 shadow-lg">
+              <p className="text-xs text-teal-200 uppercase font-extrabold tracking-wider">
+                Prendas Vendidas
+              </p>
+              <p className="text-2xl sm:text-3xl font-black text-teal-300 mt-1.5 font-mono drop-shadow">
                 <AnimatedCounter value={27} /> unidades
               </p>
             </div>
@@ -557,7 +557,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               {['Cancha 1 (Sintético Blindex)', 'Cancha 2 (Sintético Panoramic)'].map((court) => (
                 <div
                   key={court}
-                  className="p-4 rounded-2xl border border-cyan-500/30 bg-cyan-500/5 space-y-3"
+                  className="p-4 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 space-y-3"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-cyan-400">{court}</span>
@@ -577,7 +577,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                           className={`py-2 px-2 rounded-xl text-xs font-bold transition-all border ${
                             isSelected
                               ? 'bg-emerald-500 text-slate-950 border-emerald-400'
-                              : 'bg-muted/40 border-border text-foreground hover:border-cyan-400'
+                              : 'bg-slate-900/60 border-white/15 text-slate-200 hover:border-cyan-400'
                           }`}
                         >
                           {slot} {isSelected ? '✅' : ''}
@@ -608,11 +608,11 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
             ].map((r, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-card/40"
+                className="flex items-center justify-between p-3.5 rounded-xl border border-white/15 bg-slate-900/60"
               >
                 <div>
-                  <p className="text-sm font-bold text-foreground">{r.player}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm font-bold text-white">{r.player}</p>
+                  <p className="text-xs text-slate-300">
                     {r.court} · Horario: {r.time}
                   </p>
                 </div>
@@ -628,7 +628,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
             <h4 className="text-xs font-bold text-cyan-400 uppercase">
               Módulo de Encendido Automático de Luces
             </h4>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-slate-300">
               Las luces de cada cancha se encienden automáticamente 10 minutos antes del turno y se
               apagan al finalizar el horario contratado.
             </p>
@@ -665,14 +665,16 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
           >
             {/* SPECTACULAR RUBRO-SPECIFIC MINI-APP BROWSER FRAME */}
             <div
-              className={`relative w-full max-w-5xl max-h-[92vh] bg-[#0c0d16] border ${config.borderClass} rounded-3xl shadow-[0_0_80px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col`}
+              className={`dark relative w-full max-w-5xl max-h-[92vh] bg-[#0c0d16] text-slate-100 border ${config.borderClass} rounded-3xl shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col`}
             >
               {/* Browser Window Header */}
               <div className="flex items-center justify-between px-4 py-3 bg-[#131522] border-b border-white/10 select-none">
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1.5">
-                    <span
-                      className="w-3 h-3 rounded-full bg-rose-500 inline-block cursor-pointer"
+                    <button
+                      type="button"
+                      aria-label="Cerrar modal"
+                      className="w-3 h-3 rounded-full bg-rose-500 hover:opacity-80 transition-opacity cursor-pointer border-0 p-0"
                       onClick={onClose}
                     />
                     <span className="w-3 h-3 rounded-full bg-amber-500 inline-block" />
@@ -687,7 +689,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 </div>
 
                 {/* Simulated URL Bar */}
-                <div className="hidden sm:flex items-center gap-2 px-4 py-1 rounded-xl bg-slate-950/80 border border-white/10 text-xs font-mono text-slate-300 max-w-md w-full justify-center">
+                <div className="hidden sm:flex items-center gap-2 px-4 py-1 rounded-xl bg-slate-950/80 border border-white/10 text-xs font-mono text-slate-200 max-w-md w-full justify-center">
                   <Lock className={`w-3 h-3 ${config.accentColor}`} />
                   <span className="truncate">{config.url}</span>
                 </div>
@@ -695,7 +697,8 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white transition-colors"
+                  aria-label="Cerrar demostración"
+                  className="p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -703,21 +706,21 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
 
               {/* Demo App Header with Custom Rubro Gradient */}
               <div
-                className={`p-5 border-b border-white/10 bg-gradient-to-r ${config.themeGradient} flex items-center justify-between`}
+                className={`p-5 border-b border-white/10 bg-gradient-to-r ${config.themeGradient} flex items-center justify-between bg-slate-900/40`}
               >
                 <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+                  <h2 className="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2 drop-shadow">
                     <Sparkles className={`w-5 h-5 ${config.accentColor}`} />
                     {config.title}
                   </h2>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-xs text-slate-300 font-medium mt-0.5">
                     Demostración interactiva en vivo creada para este rubro específico.
                   </p>
                 </div>
               </div>
 
               {/* Demo Tabs Navigation */}
-              <div className="flex border-b border-white/10 bg-slate-950/50 px-4 overflow-x-auto">
+              <div className="flex border-b border-white/10 bg-slate-950/80 px-4 overflow-x-auto">
                 {currentDemo.tabs.map((tab) => {
                   const Icon = tab.icon
                   const isActive = activeTab === tab.id
@@ -726,10 +729,10 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                       key={tab.id}
                       type="button"
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-2 px-5 py-3.5 text-xs font-bold transition-all whitespace-nowrap relative ${
+                      className={`flex items-center gap-2 px-5 py-3.5 text-xs font-bold transition-all whitespace-nowrap relative cursor-pointer ${
                         isActive
-                          ? config.activeTabClass
-                          : 'text-muted-foreground hover:text-foreground'
+                          ? `${config.activeTabClass} font-extrabold`
+                          : 'text-slate-400 hover:text-white'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -746,7 +749,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               </div>
 
               {/* Interactive Sandbox Body */}
-              <div className="p-6 overflow-y-auto flex-1 bg-slate-950/30">
+              <div className="p-6 overflow-y-auto flex-1 bg-slate-950/50">
                 <motion.div
                   key={activeTab}
                   initial={{ opacity: 0, y: 8 }}
@@ -759,14 +762,14 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
 
               {/* Demo Footer CTA */}
               <div className="p-4 sm:p-5 border-t border-white/10 bg-[#131522] flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2 text-xs text-slate-300 font-medium">
                   <ShieldCheck className={`w-4 h-4 ${config.accentColor}`} />
                   <span>¿Querés este sistema personalizado con tu marca y dominio propio?</span>
                 </div>
                 <a
                   href="#contact"
                   onClick={onClose}
-                  className={`px-6 py-2.5 rounded-xl bg-gradient-to-r ${config.themeGradient} text-foreground text-xs font-bold hover:shadow-lg transition-all border border-white/20 flex items-center gap-2`}
+                  className={`px-6 py-2.5 rounded-xl bg-gradient-to-r ${config.themeGradient} text-white font-black text-xs hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] transition-all border border-white/30 flex items-center gap-2 cursor-pointer`}
                 >
                   Solicitar sistema para este rubro <ArrowRight className="w-4 h-4" />
                 </a>

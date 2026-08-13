@@ -14,6 +14,41 @@ import {
 
 export const OwnershipVsSubscription: React.FC = () => {
   const { t } = useTranslation()
+  const cardRef = React.useRef<HTMLDivElement>(null)
+  const [tilt, setTilt] = React.useState({ rx: 0, ry: 0 })
+  const [glowPos, setGlowPos] = React.useState({ x: 50, y: 50 })
+  const [isHovered, setIsHovered] = React.useState(false)
+  const [copied, setCopied] = React.useState(false)
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const px = x / rect.width
+    const py = y / rect.height
+    setGlowPos({ x: Math.round(px * 100), y: Math.round(py * 100) })
+    setTilt({
+      rx: parseFloat(((0.5 - py) * 10).toFixed(2)),
+      ry: parseFloat(((px - 0.5) * 10).toFixed(2)),
+    })
+  }
+
+  const handlePointerEnter = () => setIsHovered(true)
+  const handlePointerLeave = () => {
+    setIsHovered(false)
+    setTilt({ rx: 0, ry: 0 })
+  }
+
+  const handleCopyQuote = () => {
+    const quoteText = t(
+      'versus.cita_destacada',
+      '¿Por qué pagar indefinidamente por una plantilla que se parece a miles de otras tiendas, si podés tener una plataforma hecha específicamente para tu negocio y además recibir el código?'
+    )
+    navigator.clipboard.writeText(`"${quoteText}" — ExePaginasweb`)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2500)
+  }
 
   const ownershipSteps = [
     {
@@ -99,21 +134,83 @@ export const OwnershipVsSubscription: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Highlight Banner Quote */}
+        {/* Highlight Banner Quote (Interactive 3D Tilt & Spotlight Glow) */}
         <motion.div
+          ref={cardRef}
           initial={{ opacity: 0, scale: 0.96 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="mb-16 p-8 md:p-12 rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/90 backdrop-blur-2xl relative overflow-hidden shadow-[0_20px_60px_rgba(6,182,212,0.15)] text-center group"
+          onPointerMove={handlePointerMove}
+          onPointerEnter={handlePointerEnter}
+          onPointerLeave={handlePointerLeave}
+          animate={{
+            rotateX: tilt.rx,
+            rotateY: tilt.ry,
+          }}
+          style={{ perspective: 1000 }}
+          className="mb-16 p-8 md:p-12 rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/90 backdrop-blur-2xl relative overflow-hidden shadow-[0_20px_60px_rgba(6,182,212,0.15)] text-center group cursor-pointer transition-shadow duration-500 hover:shadow-[0_25px_70px_rgba(6,182,212,0.3)]"
         >
-          {/* Subtle Ambient Glowing Orbs */}
-          <div className="absolute -top-24 -left-24 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/30 transition-all duration-700" />
-          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-fuchsia-500/20 rounded-full blur-3xl pointer-events-none group-hover:bg-fuchsia-500/30 transition-all duration-700" />
+          {/* Dynamic Spotlight Effect following Mouse */}
+          <div
+            className="pointer-events-none absolute -inset-1 transition-opacity duration-300"
+            style={{
+              opacity: isHovered ? 1 : 0.4,
+              background: `radial-gradient(550px circle at ${glowPos.x}% ${glowPos.y}%, rgba(6, 182, 212, 0.22), transparent 75%)`,
+            }}
+          />
+
+          {/* Ambient Glowing Orbs */}
+          <div className="absolute -top-24 -left-24 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/35 transition-all duration-700" />
+          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-fuchsia-500/20 rounded-full blur-3xl pointer-events-none group-hover:bg-fuchsia-500/35 transition-all duration-700" />
           <div className="absolute inset-0 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:24px_24px] opacity-15 pointer-events-none" />
 
+          {/* Continuous Light Sheen Sweep Ray */}
+          <motion.div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent"
+            style={{ transform: 'translateX(-100%) skewX(-20deg)' }}
+            animate={{ x: ['-100%', '200%'] }}
+            transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut', repeatDelay: 3 }}
+          />
+
+          {/* Floating Interactive Tech Particles */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <motion.span
+              className="absolute text-cyan-400/30 text-xs font-mono font-bold"
+              style={{ left: '10%', top: '20%' }}
+              animate={{ y: [0, -15, 0], opacity: [0.3, 0.7, 0.3] }}
+              transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+            >
+              &lt;/&gt;
+            </motion.span>
+            <motion.span
+              className="absolute text-purple-400/30 text-xs font-mono font-bold"
+              style={{ right: '12%', top: '25%' }}
+              animate={{ y: [0, -20, 0], opacity: [0.3, 0.8, 0.3] }}
+              transition={{ repeat: Infinity, duration: 5, delay: 1, ease: 'easeInOut' }}
+            >
+              &#123; &#125;
+            </motion.span>
+            <motion.span
+              className="absolute text-emerald-400/30 text-[10px] font-mono font-bold tracking-widest uppercase"
+              style={{ left: '15%', bottom: '22%' }}
+              animate={{ y: [0, -12, 0], opacity: [0.2, 0.6, 0.2] }}
+              transition={{ repeat: Infinity, duration: 6, delay: 2, ease: 'easeInOut' }}
+            >
+              git push origin main
+            </motion.span>
+            <motion.span
+              className="absolute text-cyan-400/40 text-xs font-mono font-black"
+              style={{ right: '18%', bottom: '20%' }}
+              animate={{ y: [0, -15, 0], opacity: [0.3, 0.7, 0.3] }}
+              transition={{ repeat: Infinity, duration: 4.5, delay: 0.5, ease: 'easeInOut' }}
+            >
+              100% CÓDIGO
+            </motion.span>
+          </div>
+
           {/* Watermark Code Icon */}
-          <div className="absolute right-4 bottom-2 opacity-15 pointer-events-none text-cyan-400">
+          <div className="absolute right-4 bottom-2 opacity-15 pointer-events-none text-cyan-400 transition-transform duration-500 group-hover:scale-110 group-hover:opacity-25">
             <Code2 className="w-48 h-48 sm:w-64 sm:h-64" />
           </div>
 
@@ -132,10 +229,33 @@ export const OwnershipVsSubscription: React.FC = () => {
               ”
             </blockquote>
 
-            <div className="mt-6 flex items-center justify-center gap-2 text-xs font-semibold text-cyan-400/80 uppercase tracking-widest flex-wrap">
-              <span className="w-8 h-[1px] bg-gradient-to-r from-transparent to-cyan-400/60 hidden sm:inline-block" />
-              <span>Código Propio • Libertad Absoluta • Sin Mensualidades Ocultas</span>
-              <span className="w-8 h-[1px] bg-gradient-to-l from-transparent to-cyan-400/60 hidden sm:inline-block" />
+            <div className="mt-6 flex items-center justify-center gap-4 flex-wrap">
+              <div className="flex items-center gap-2 text-xs font-semibold text-cyan-400/80 uppercase tracking-widest">
+                <span className="w-8 h-[1px] bg-gradient-to-r from-transparent to-cyan-400/60 hidden sm:inline-block" />
+                <span>Código Propio • Libertad Absoluta • Sin Mensualidades Ocultas</span>
+                <span className="w-8 h-[1px] bg-gradient-to-l from-transparent to-cyan-400/60 hidden sm:inline-block" />
+              </div>
+
+              {/* Interactive Copy Quote Pill */}
+              <motion.button
+                type="button"
+                onClick={handleCopyQuote}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-400/30 bg-slate-900/80 text-cyan-300 text-xs font-bold transition-all duration-300 hover:bg-cyan-500 hover:text-slate-950 hover:border-cyan-300 shadow-md"
+              >
+                {copied ? (
+                  <>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-emerald-300 font-extrabold">¡Copiado!</span>
+                  </>
+                ) : (
+                  <>
+                    <Code2 className="w-3.5 h-3.5" />
+                    <span>Copiar Frase Clave</span>
+                  </>
+                )}
+              </motion.button>
             </div>
           </div>
         </motion.div>

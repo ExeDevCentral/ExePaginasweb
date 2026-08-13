@@ -105,19 +105,39 @@ export const OwnershipVsSubscription: React.FC = () => {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="mb-16 p-8 md:p-10 rounded-3xl border border-accent-cyan/30 bg-gradient-to-r from-accent-cyan/10 via-background/80 to-accent-magenta/10 backdrop-blur-xl relative overflow-hidden shadow-2xl text-center"
+          className="mb-16 p-8 md:p-12 rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/90 backdrop-blur-2xl relative overflow-hidden shadow-[0_20px_60px_rgba(6,182,212,0.15)] text-center group"
         >
-          <div className="absolute -right-8 -bottom-8 opacity-10 pointer-events-none">
-            <Code2 className="w-64 h-64 text-accent-cyan" />
+          {/* Subtle Ambient Glowing Orbs */}
+          <div className="absolute -top-24 -left-24 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/30 transition-all duration-700" />
+          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-fuchsia-500/20 rounded-full blur-3xl pointer-events-none group-hover:bg-fuchsia-500/30 transition-all duration-700" />
+          <div className="absolute inset-0 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:24px_24px] opacity-15 pointer-events-none" />
+
+          {/* Watermark Code Icon */}
+          <div className="absolute right-4 bottom-2 opacity-15 pointer-events-none text-cyan-400">
+            <Code2 className="w-48 h-48 sm:w-64 sm:h-64" />
           </div>
-          <p className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground leading-snug max-w-4xl mx-auto font-montserrat">
-            “
-            {t(
-              'versus.cita_destacada',
-              '¿Por qué pagar indefinidamente por una plantilla que se parece a miles de otras tiendas, si podés tener una plataforma hecha específicamente para tu negocio y además recibir el código?'
-            )}
-            ”
-          </p>
+
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+              <span>Diferencial Estratégico</span>
+            </div>
+
+            <blockquote className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-relaxed max-w-4xl mx-auto font-montserrat tracking-tight drop-shadow-md">
+              “
+              {t(
+                'versus.cita_destacada',
+                '¿Por qué pagar indefinidamente por una plantilla que se parece a miles de otras tiendas, si podés tener una plataforma hecha específicamente para tu negocio y además recibir el código?'
+              )}
+              ”
+            </blockquote>
+
+            <div className="mt-6 flex items-center justify-center gap-2 text-xs font-semibold text-cyan-400/80 uppercase tracking-widest flex-wrap">
+              <span className="w-8 h-[1px] bg-gradient-to-r from-transparent to-cyan-400/60 hidden sm:inline-block" />
+              <span>Código Propio • Libertad Absoluta • Sin Mensualidades Ocultas</span>
+              <span className="w-8 h-[1px] bg-gradient-to-l from-transparent to-cyan-400/60 hidden sm:inline-block" />
+            </div>
+          </div>
         </motion.div>
 
         {/* Side by Side Comparison Grid */}

@@ -14,6 +14,7 @@ import {
   Zap,
   FileText,
 } from 'lucide-react'
+import { scrollToElement } from '../shared/ScrollProvider'
 
 export interface Project {
   id: string
@@ -347,8 +348,12 @@ export const PortfolioSection: React.FC = () => {
               </div>
 
               <a
-                href="#contacto"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-cyan text-background font-bold text-xs uppercase tracking-wider hover:bg-accent-cyan/90 transition-all shadow-md"
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToElement('#contact')
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-cyan text-background font-bold text-xs uppercase tracking-wider hover:bg-accent-cyan/90 transition-all shadow-md cursor-pointer"
               >
                 <Zap className="w-3.5 h-3.5" />
                 Pedir Presupuesto

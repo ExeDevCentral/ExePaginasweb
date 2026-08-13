@@ -1,3 +1,4 @@
+import CanvasPreview from './__canvas_preview__' // @hyperide-managed
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
@@ -163,6 +164,7 @@ function AnimatedRoutes() {
               }
             />
 
+            <Route path="/test-preview" element={<CanvasPreview />} />
             <Route
               path="*"
               element={

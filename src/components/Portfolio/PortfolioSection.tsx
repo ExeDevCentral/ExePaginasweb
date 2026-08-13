@@ -84,23 +84,23 @@ const INITIAL_PROJECTS: Project[] = [
   },
   {
     id: 'restauracion-maquinas',
-    title: 'Restauración de Máquinas - Landing Industrial',
+    title: 'Artesanías & Restauración de Antigüedades',
     category: 'web',
-    categoryLabel: 'Sitio Web Industrial',
-    client: 'Servicios Industriales',
+    categoryLabel: 'Artesanías & Antigüedades',
+    client: 'Taller de Restauración',
     description:
-      'Landing page corporativa orientada a la conversión de leads para servicios especializados de restauración de maquinaria industrial.',
+      'Landing page corporativa orientada a la preservación de tres oficios tradicionales: joyería fina, antigüedades con historia y restauración profesional de máquinas de escribir.',
     image:
       'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1200&auto=format&fit=crop',
     tags: ['React', 'TypeScript', 'Tailwind CSS', 'Vercel'],
     metrics: [
-      { label: 'Optimización SEO', value: 'High' },
-      { label: 'Captación Leads', value: 'Directa' },
+      { label: 'Diagnóstico Online', value: 'Con Fotos' },
+      { label: 'Oficios Artesanales', value: '3 en 1' },
     ],
     highlights: [
-      'Presentación clara de servicios y catálogo técnico',
-      'Botones de contacto rápido y cotizaciones directas',
-      'Código propio sin dependencia de gestores de contenido',
+      'Preservación de tres oficios: artesanía, antigüedades y máquinas de escribir',
+      'Diagnóstico preliminar online con carga de fotografías',
+      'Diseño elegante y minimalista orientado a la conversión y nostalgia',
     ],
     link: 'https://landingpagepararestauracindemquinas.vercel.app/',
     status: 'live',

@@ -91,6 +91,11 @@ export default function Dashboard() {
   const [viewMode, setViewMode] = useState<'admin' | 'client'>('admin')
   const [activeView, setActiveView] = useState<DashboardView>('overview')
 
+  // Reset scroll to top on tab view change
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [activeView])
+
   // Feature Flag / Rollback Support (?ui=legacy or VITE_DASHBOARD_UI=legacy)
   const isLegacyUI =
     searchParams.get('ui') === 'legacy' || import.meta.env.VITE_DASHBOARD_UI === 'legacy'

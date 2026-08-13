@@ -18,7 +18,7 @@ export const PREMIUM_TOKENS = {
 
   // SaaS Navigation Tabs Bar
   tabsBar:
-    'mb-8 p-1.5 bg-[#f4e6ec]/90 dark:bg-[#090a12]/90 border border-[#eee0d0] dark:border-white/15 rounded-2xl backdrop-blur-2xl flex items-center gap-1.5 overflow-x-auto shadow-md dark:shadow-lg scrollbar-none transition-colors duration-300',
+    'mb-8 p-1.5 bg-[#f4e6ec]/90 dark:bg-[#090a12]/90 border border-[#eee0d0] dark:border-white/15 rounded-2xl backdrop-blur-2xl flex items-center gap-1.5 overflow-x-auto touch-pan-x shadow-md dark:shadow-lg scrollbar-none transition-colors duration-300',
 
   // Active Tab Pill Highlight
   activeTabGradient:

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   ShieldCheck,
@@ -120,8 +121,8 @@ export function QuickActionsHub({
           </p>
         </a>
 
-        <a
-          href="/dashboard?tab=invoices"
+        <Link
+          to="/dashboard?tab=invoices"
           className="p-3 rounded-2xl border border-purple-500/40 bg-purple-500/10 hover:bg-purple-500/20 text-left transition-all group"
         >
           <FileText className="w-4 h-4 text-purple-600 dark:text-purple-400 mb-1.5 group-hover:scale-110 transition-transform" />
@@ -129,10 +130,10 @@ export function QuickActionsHub({
           <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">
             PDFs e historial
           </p>
-        </a>
+        </Link>
 
-        <a
-          href="/cotizador"
+        <Link
+          to="/cotizador"
           className="p-3 rounded-2xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-left transition-all group"
         >
           <ArrowUpRight className="w-4 h-4 text-amber-600 dark:text-amber-400 mb-1.5 group-hover:scale-110 transition-transform" />
@@ -140,7 +141,7 @@ export function QuickActionsHub({
           <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">
             Escalar recursos
           </p>
-        </a>
+        </Link>
       </div>
     </div>
   )

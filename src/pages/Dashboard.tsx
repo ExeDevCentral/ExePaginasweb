@@ -91,7 +91,20 @@ export default function Dashboard() {
   const { role } = useAuthRole()
   const isAdmin = role === 'admin'
   const [viewMode, setViewMode] = useState<'admin' | 'client'>('admin')
-  const [activeView, setActiveView] = useState<DashboardView>('overview')
+  const tabParam = searchParams.get('tab') as DashboardView | null
+  const [activeView, setActiveView] = useState<DashboardView>(
+    tabParam && ['overview', 'services', 'workgroups', 'sla', 'invoices'].includes(tabParam)
+      ? tabParam
+      : 'overview'
+  )
+
+  // Sync activeView with searchParams tab
+  useEffect(() => {
+    const tab = searchParams.get('tab') as DashboardView | null
+    if (tab && ['overview', 'services', 'workgroups', 'sla', 'invoices'].includes(tab)) {
+      setActiveView(tab)
+    }
+  }, [searchParams])
 
   // Reset scroll to top on tab view change
   useEffect(() => {
@@ -330,7 +343,17 @@ export default function Dashboard() {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveView(tab.id)}
+                    type="button"
+                    onClick={() => {
+                      setActiveView(tab.id)
+                      setSearchParams(
+                        (params) => {
+                          params.set('tab', tab.id)
+                          return params
+                        },
+                        { replace: true }
+                      )
+                    }}
                     onMouseEnter={() => {
                       if (!currentTenant?.id) return
                       if (tab.id === 'services') {

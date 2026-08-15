@@ -101,6 +101,7 @@ const CaseStudies = () => {
   const { t } = useTranslation()
   return (
     <section id="cases" className="py-32 px-4 bg-transparent relative overflow-hidden z-10">
+      <span id="features" className="absolute -top-24" />
       {/* Luces de fondo estilo Vercel */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent-cyan/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-accent-magenta/10 rounded-full blur-[140px] pointer-events-none" />

@@ -15,6 +15,8 @@ const Pricing = lazy(() => import('./components/Pricing/Pricing'))
 const OwnershipVsSubscription = lazy(() => import('./components/shared/OwnershipVsSubscription'))
 const PortfolioSection = lazy(() => import('./components/Portfolio/PortfolioSection'))
 const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
+const Products = lazy(() => import('./components/Products/Products'))
+const CaseStudies = lazy(() => import('./components/CaseStudies/CaseStudies'))
 
 const SkeletonBlock = ({ className = '' }: { className?: string }) => (
   <div className={`relative overflow-hidden ${className}`}>
@@ -184,6 +186,8 @@ function App() {
             <Suspense fallback={<SectionSkeleton />}>
               <OwnershipVsSubscription />
               <SocialProof />
+              <Products />
+              <CaseStudies />
               <PortfolioSection />
               <DemoZone />
               <Process />

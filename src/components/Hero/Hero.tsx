@@ -25,16 +25,23 @@ const TitleLine: React.FC<{ text: string; delay: number; index: number }> = ({
   text,
   delay,
   index,
-}) => (
-  <motion.span
-    initial={{ opacity: 0, x: index % 2 === 0 ? -80 : 80 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
-    className="block"
-  >
-    {text}
-  </motion.span>
-)
+}) => {
+  const isLeft = index % 2 === 0
+  return (
+    <motion.span
+      initial={{ opacity: 0, x: isLeft ? -240 : 240, filter: 'blur(10px)', scale: 0.9 }}
+      animate={{ opacity: 1, x: 0, filter: 'blur(0px)', scale: 1 }}
+      transition={{
+        duration: 1.1,
+        ease: [0.16, 1, 0.3, 1],
+        delay,
+      }}
+      className="block will-change-transform"
+    >
+      {text}
+    </motion.span>
+  )
+}
 
 const Hero: React.FC = () => {
   const { t } = useTranslation()
@@ -60,7 +67,7 @@ const Hero: React.FC = () => {
               key={i}
               index={i}
               text={`${part}${i < titleParts.length - 1 ? '.' : ''}`}
-              delay={0.1 + i * 0.15}
+              delay={0.12 + i * 0.25}
             />
           ))}
         </motion.h1>

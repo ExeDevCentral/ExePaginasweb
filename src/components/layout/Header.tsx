@@ -66,6 +66,16 @@ const Header = () => {
     navigate(isLoggedIn ? '/dashboard' : '/login')
   }
 
+  const handleWhatsAppClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const msg = '¡Hola ExePaginasWeb! Me contacto desde la web.'
+    window.open(
+      `https://api.whatsapp.com/send?phone=5493416874786&text=${encodeURIComponent(msg)}`,
+      '_blank',
+      'noopener,noreferrer'
+    )
+  }
+
   return (
     <motion.header
       style={{
@@ -177,12 +187,13 @@ const Header = () => {
                 <ThemeToggle />
               </div>
               <a
-                href="https://wa.me/5493416874786?text=¡Hola%20ExePaginasWeb!%20Me%20contacto%20desde%20la%20web."
+                href="https://api.whatsapp.com/send?phone=5493416874786&text=¡Hola%20ExePaginasWeb!%20Me%20contacto%20desde%20la%20web."
+                onClick={handleWhatsAppClick}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Contacto directo por WhatsApp"
                 title="WhatsApp Directo"
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-all duration-300 text-xs font-bold shadow-sm group shrink-0"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-all duration-300 text-xs font-extrabold shadow-sm group shrink-0 cursor-pointer"
               >
                 <MessageCircle
                   size={15}
@@ -228,14 +239,15 @@ const Header = () => {
           {/* Mobile / Tablet controls (visible en pantallas menores a xl: < 1280px) */}
           <div className="xl:hidden flex items-center gap-2 shrink-0">
             <a
-              href="https://wa.me/5493416874786?text=¡Hola%20ExePaginasWeb!%20Me%20contacto%20desde%20la%20web."
+              href="https://api.whatsapp.com/send?phone=5493416874786&text=¡Hola%20ExePaginasWeb!%20Me%20contacto%20desde%20la%20web."
+              onClick={handleWhatsAppClick}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Contacto por WhatsApp"
-              className="w-10 h-10 flex items-center justify-center border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-all duration-200 rounded-md shrink-0"
+              className="w-10 h-10 flex items-center justify-center border border-emerald-500/40 bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-all duration-200 rounded-md shrink-0 cursor-pointer"
               title="WhatsApp Directo"
             >
-              <MessageCircle size={18} className="fill-emerald-500/20 stroke-current" />
+              <MessageCircle size={18} className="fill-emerald-500/30 stroke-current" />
             </a>
 
             <motion.button
@@ -364,7 +376,21 @@ const Header = () => {
                 )}
 
                 {/* Controls and CTA at the bottom */}
-                <div className="mt-auto pt-6 border-t border-zinc-900 flex flex-col gap-5">
+                <div className="mt-auto pt-6 border-t border-zinc-900 flex flex-col gap-4">
+                  <a
+                    href="https://api.whatsapp.com/send?phone=5493416874786&text=¡Hola%20ExePaginasWeb!%20Me%20contacto%20desde%20la%20web."
+                    onClick={(e) => {
+                      setIsMenuOpen(false)
+                      handleWhatsAppClick(e)
+                    }}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3.5 rounded-xl bg-emerald-500 text-slate-950 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer"
+                  >
+                    <MessageCircle size={16} className="fill-slate-950 stroke-emerald-500" />
+                    <span>WhatsApp Directo ⚡</span>
+                  </a>
+
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] text-zinc-500 tracking-wider uppercase">
                       System Config

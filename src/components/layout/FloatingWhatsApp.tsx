@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
 import { MessageCircle } from 'lucide-react'
-
-const OFFICIAL_WHATSAPP_LINK =
-  'https://wa.me/5493416874786?text=¡Hola%20ExePaginasWeb!%20Quiero%20hacer%20una%20consulta.'
+import { getWhatsAppUrl } from '../../core/utils/whatsappUtils'
 
 export default function FloatingWhatsApp() {
+  const whatsappLink = getWhatsAppUrl('¡Hola ExePaginasWeb! Quiero hacer una consulta.')
+
   return (
     <motion.div
       initial={{ scale: 0, opacity: 0, y: 20 }}
@@ -19,7 +19,7 @@ export default function FloatingWhatsApp() {
 
       {/* Button Link */}
       <a
-        href={OFFICIAL_WHATSAPP_LINK}
+        href={whatsappLink}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Contactar por WhatsApp"

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { MessageCircle, ArrowRight, CheckCircle, Mail, Send } from 'lucide-react'
 import { supabase } from '../../core/infra/supabase/client'
 import { toast } from 'sonner'
+import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
 
 const ContactSection = () => {
   const { t, i18n } = useTranslation()
@@ -18,8 +19,10 @@ const ContactSection = () => {
     {
       icon: MessageCircle,
       tag: 'WHATSAPP DIRECTO',
-      value: '+54 9 341 6874786',
-      href: 'https://wa.me/5493416874786?text=¡Hola%20ExeSistemasWEB!%20Me%20contacto%20desde%20la%20web.',
+      value: DISPLAY_WHATSAPP_NUMBER,
+      href: getWhatsAppUrl(
+        '¡Hola ExeSistemasWEB! Me contacto desde la sección de contacto de la web.'
+      ),
       color: '#22c55e',
     },
     {
@@ -174,9 +177,22 @@ const ContactSection = () => {
                   </div>
                 </div>
 
+                <a
+                  href={getWhatsAppUrl(
+                    `¡Hola ExePaginasWeb! Envié mi consulta desde la web. Ticket: ${ticketId || 'EXE-CNT'}. Nombre: ${name}`
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center justify-center gap-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3.5 text-sm shadow-xl shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <MessageCircle className="w-5 h-5 fill-slate-950 stroke-emerald-500" />
+                  <span>Abrir Chat Directo en WhatsApp ({DISPLAY_WHATSAPP_NUMBER})</span>
+                </a>
+
                 <button
+                  type="button"
                   onClick={() => setStatus('idle')}
-                  className="mt-4 rounded-full border border-border px-8 py-3 text-sm font-semibold hover:border-accent-cyan hover:bg-accent-cyan/10 transition-all shadow-lg"
+                  className="mt-2 rounded-full border border-border px-8 py-3 text-sm font-semibold hover:border-accent-cyan hover:bg-accent-cyan/10 transition-all shadow-lg"
                 >
                   {t('contact.success_otro')}
                 </button>

@@ -9,7 +9,7 @@ const SocialProof = lazy(() => import('./components/SocialProof/SocialProof'))
 const Process = lazy(() => import('./components/Process/Process'))
 const FAQ = lazy(() => import('./components/FAQ/FAQ'))
 const Footer = lazy(() => import('./components/layout/Footer'))
-const ChatbaseWidget = lazy(() => import('./components/chat/ChatbaseWidget'))
+const AIChatWidget = lazy(() => import('./components/chat/AIChatWidget'))
 const ContactSection = lazy(() => import('./components/landing/ContactSection'))
 const Pricing = lazy(() => import('./components/Pricing/Pricing'))
 const OwnershipVsSubscription = lazy(() => import('./components/shared/OwnershipVsSubscription'))
@@ -217,7 +217,7 @@ function App() {
           <Suspense fallback={<div className="h-20" />}>
             {loadHeavyComponents && <Footer />}
           </Suspense>
-          <Suspense fallback={null}>{loadHeavyComponents && <ChatbaseWidget />}</Suspense>
+          <Suspense fallback={null}>{loadHeavyComponents && <AIChatWidget />}</Suspense>
         </div>
       </ScrollProvider>
     </ErrorBoundary>

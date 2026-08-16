@@ -27,6 +27,7 @@
   --radius: 0.75rem;
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
   --font-serif: 'Space Grotesk', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
@@ -123,7 +124,8 @@
   h4,
   h5,
   h6 {
-    @apply font-display text-foreground;
+    font-family: var(--font-display);
+    @apply text-foreground;
   }
 
   ::selection {

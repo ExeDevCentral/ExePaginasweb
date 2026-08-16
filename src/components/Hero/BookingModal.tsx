@@ -76,7 +76,12 @@ export default function BookingModal({ isOpen, onClose, service }: BookingModalP
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               className="relative w-full max-w-lg"
             >
-              <div className="relative bg-gradient-to-br from-[#0a0a1a] to-[#12122a] border border-white/10 rounded-3xl overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.8)]">
+              <div
+                role="dialog"
+                aria-modal="true"
+                data-lenis-prevent
+                className="relative bg-gradient-to-br from-[#0a0a1a] to-[#12122a] border border-white/10 rounded-3xl overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.8)]"
+              >
                 {/* Header */}
                 <div className="relative px-6 pt-6 pb-4 border-b border-white/5">
                   <div className="flex items-center justify-between">

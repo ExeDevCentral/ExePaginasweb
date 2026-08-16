@@ -665,6 +665,9 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
           >
             {/* SPECTACULAR RUBRO-SPECIFIC MINI-APP BROWSER FRAME */}
             <div
+              role="dialog"
+              aria-modal="true"
+              data-lenis-prevent
               className={`dark relative w-full max-w-5xl max-h-[92vh] bg-[#0c0d16] text-slate-100 border ${config.borderClass} rounded-3xl shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col`}
             >
               {/* Browser Window Header */}
@@ -749,7 +752,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               </div>
 
               {/* Interactive Sandbox Body */}
-              <div className="p-6 overflow-y-auto flex-1 bg-slate-950/50">
+              <div data-lenis-prevent className="p-6 overflow-y-auto flex-1 bg-slate-950/50">
                 <motion.div
                   key={activeTab}
                   initial={{ opacity: 0, y: 8 }}

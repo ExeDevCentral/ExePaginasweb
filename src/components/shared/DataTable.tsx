@@ -74,7 +74,7 @@ export function DataTable<TData, TValue>({
 
       {/* Table Container */}
       <div className="overflow-hidden rounded-2xl border border-border bg-card/40 backdrop-blur-xl shadow-xl">
-        <div className="overflow-x-auto">
+        <div data-lenis-prevent className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (

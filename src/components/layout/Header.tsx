@@ -292,7 +292,10 @@ const Header = () => {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <nav className="flex flex-col px-6 py-8 gap-4 flex-1 overflow-y-auto">
+              <nav
+                data-lenis-prevent
+                className="flex flex-col px-6 py-8 gap-4 flex-1 overflow-y-auto"
+              >
                 {NAV_ITEMS.filter((i) => i.id !== 'contact').map((item, index) => {
                   const isActive = activeId === item.id
                   return (

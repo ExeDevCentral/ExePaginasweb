@@ -55,7 +55,7 @@ const Footer = () => {
                 href="https://github.com/ExeDevCentral"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-2xl bg-card border border-border text-foreground/70 hover:text-accent-cyan hover:border-accent-cyan/50 hover:bg-accent-cyan/5 transition-all duration-300 shadow-sm"
+                className="p-2.5 rounded-2xl bg-card border border-border text-muted-foreground hover:text-accent-cyan transition-colors duration-300 shadow-sm"
                 aria-label="GitHub"
               >
                 <Github size={18} />
@@ -64,7 +64,7 @@ const Footer = () => {
                 href="https://www.instagram.com/exequiel.echevarria/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-2xl bg-card border border-border text-foreground/70 hover:text-accent-magenta hover:border-accent-magenta/50 hover:bg-accent-magenta/5 transition-all duration-300 shadow-sm"
+                className="p-2.5 rounded-2xl bg-card border border-border text-muted-foreground hover:text-accent-magenta transition-colors duration-300 shadow-sm"
                 aria-label="Instagram"
               >
                 <Instagram size={18} />
@@ -73,7 +73,7 @@ const Footer = () => {
                 href="https://www.linkedin.com/in/exequiel.echevarria/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-2xl bg-card border border-border text-foreground/70 hover:text-sky-500 hover:border-sky-500/50 hover:bg-sky-500/5 transition-all duration-300 shadow-sm"
+                className="p-2.5 rounded-2xl bg-card border border-border text-muted-foreground hover:text-sky-400 transition-colors duration-300 shadow-sm"
                 aria-label="LinkedIn"
               >
                 <Linkedin size={18} />

@@ -74,6 +74,8 @@ export const AIChatWidget: React.FC = () => {
   const [currentTicket, setCurrentTicket] = useState<string | null>(null)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const lastMessageRef = useRef<{ text: string; time: number } | null>(null)
+  const responseCacheRef = useRef<Map<string, string>>(new Map())
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -110,7 +112,31 @@ export const AIChatWidget: React.FC = () => {
     const text = (textToSend || input).trim()
     if (!text || isLoading) return
 
-    const userMsgId = `usr-${Date.now()}`
+    const now = Date.now()
+    const lowerText = text.toLowerCase()
+
+    // 1. Protection against repeated spam messages from impatient users
+    if (
+      lastMessageRef.current &&
+      lastMessageRef.current.text === lowerText &&
+      now - lastMessageRef.current.time < 8000
+    ) {
+      const fastReplyMsg: Message = {
+        id: `ast-fast-${now}`,
+        role: 'assistant',
+        content:
+          '⚡ ¡Estoy aquí con vos! Ya tengo registrado tu mensaje anterior. Para atención prioritaria inmediata, podés hacer clic abajo en "Continuar por WhatsApp".',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      }
+      setMessages((prev) => [...prev, fastReplyMsg])
+      if (!textToSend) setInput('')
+      if (soundEnabled) playChimeSound()
+      return
+    }
+
+    lastMessageRef.current = { text: lowerText, time: now }
+
+    const userMsgId = `usr-${now}`
     const newMsg: Message = {
       id: userMsgId,
       role: 'user',
@@ -120,6 +146,21 @@ export const AIChatWidget: React.FC = () => {
 
     setMessages((prev) => [...prev, newMsg])
     if (!textToSend) setInput('')
+
+    // 2. Instant 0ms cache lookup for repeated queries
+    const cachedResponse = responseCacheRef.current.get(lowerText)
+    if (cachedResponse) {
+      const assistantMsg: Message = {
+        id: `ast-cache-${now}`,
+        role: 'assistant',
+        content: cachedResponse,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      }
+      setMessages((prev) => [...prev, assistantMsg])
+      if (soundEnabled) playChimeSound()
+      return
+    }
+
     setIsLoading(true)
 
     // Build chat history for API
@@ -151,6 +192,7 @@ export const AIChatWidget: React.FC = () => {
 
       const data = await response.json()
       const replyText = data.reply || '¡Recibido! ¿En qué más podemos ayudarte?'
+      responseCacheRef.current.set(lowerText, replyText)
 
       // Check if ticket ID was returned or extracted
       const ticketMatch = replyText.match(/\[(EXE-CHT-[A-Z0-9]+)\]/)

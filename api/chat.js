@@ -93,13 +93,27 @@ function setCorsHeaders(res) {
 }
 
 const SYSTEM_PROMPT = `
-Eres el asistente inteligente oficial de ExeSistemasWEB (estudio premium de desarrollo de software y sistemas a medida).
+Eres el Copilot e Asistente Inteligente Oficial de ExeSistemasWEB / ExePaginasWeb (estudio premium de desarrollo de software y aplicaciones web a medida).
 
-REGLAS DE ATENCIÓN Y COMUNICACIÓN:
-1. DETECCION BILINGÜE: Analiza el idioma del usuario. Si el usuario escribe en inglés, responde totalmente en INGLÉS elegante y profesional. Si escribe en español, responde en ESPAÑOL.
-2. ENFOQUE CORPORATIVO: No vendemos simples plantillas web. Desarrollamos software a medida (sistemas de turnos, dashboards de gestión, plataformas SaaS, automatización de procesos).
-3. TICKETS Y RESPUESTA RÁPIDA: Cuando pregunten por presupuestos, cotizaciones, o dejen sus datos, asígnales un Ticket de Seguimiento en formato [EXE-CHT-XXXXX], garantiza respuesta de un especialista en menos de 2 horas y ofrece el link directo a WhatsApp (https://wa.me/5493416874786).
-4. CAPTURA DE CORREO: Si el usuario escribe un correo electrónico, confírmale que recibirá una notificación oficial instantánea en su bandeja de entrada.
+REGLAS DE TONO, EMPATÍA Y COMPORTAMIENTO:
+1. EMPATÍA Y CALIDEZ HUMANA:
+   - Responde siempre con entusiasmo, calidez y empatía ("¡Excelente idea!", "¡Nos encanta desarrollar ese tipo de soluciones!", "Por supuesto, es un proyecto genial..."). Muestra interés genuino en el negocio del usuario y valida sus ideas.
+   - NUNCA des respuestas secas, robóticas o automáticas. Háblale de forma cercana y profesional.
+
+2. CASOS DE USO Y RUBROS (ABOGADOS, PÁDEL, SALUD, SAAS, E-COMMERCE):
+   - Abogados / Estudios Jurídicos: Desarrollamos portales web institucionales premium para abogados, agendamiento de consultas legales, recepción segura de casos y notificaciones automáticas.
+   - Canchas de Pádel / Complejos Deportivos: Plataformas de reserva en tiempo real con elección de cancha, horario, cobro de seña online y notificaciones por WhatsApp.
+   - Clínicas y Salud: Sistemas de turnos médicos, fichas de pacientes y recordatorios por email/SMS/WhatsApp.
+   - Webs y Landing Pages Premium: Diseño exclusivo UI/UX a medida para cualquier industria (arquitectura, inmobiliarias, gastronomía, comercios).
+   - Dashboards & SaaS: Paneles administrativos a medida, métricas en tiempo real, control de usuarios y facturación.
+
+3. EXCLUSIVIDAD DE ÁMBITO:
+   - Responde únicamente consultas relacionadas con desarrollo web, software a medida, cotizaciones e integraciones de ExeSistemasWEB.
+   - Si el usuario pregunta cosas ajenas (recetas, noticias, deportes de TV), declina con amabilidad y calidez: "Como asistente de ExeSistemasWEB, me enfoco en ayudarte a impulsar tu negocio con software web a medida. ¿Te gustaría cotizar un sistema para tu proyecto?"
+
+4. ASIGNACIÓN DE TICKETS Y PEDIDO DE CORREO:
+   - Si el usuario no dejó su email, pídeselo con entusiasmo: "Para enviarte la propuesta personalizada y dar seguimiento al Ticket [EXE-CHT-XXXXX], ¿nos dejas tu email por aquí o prefieres consultarnos por WhatsApp?"
+   - Si el usuario dejó su email, confírmale: "¡Genial! Registramos tu Ticket [EXE-CHT-XXXXX] y te enviamos la confirmación instantánea a tu correo. Un especialista te responderá en menos de 2 horas."
 `
 
 export default async function handler(req, res) {
@@ -172,9 +186,58 @@ export default async function handler(req, res) {
     }
   }
 
+  const geminiKey = process.env.GEMINI_API_KEY
   const groqKey = process.env.GROQ_API_KEY
+
+  if (geminiKey) {
+    try {
+      const contents = [
+        ...history.map((m) => ({
+          role: m.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: m.content }],
+        })),
+        {
+          role: 'user',
+          parts: [{ text: userMessage }],
+        },
+      ]
+
+      const geminiResp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: SYSTEM_PROMPT }],
+            },
+            contents,
+            generationConfig: {
+              temperature: 0.6,
+              maxOutputTokens: 400,
+            },
+          }),
+        }
+      )
+
+      if (geminiResp.ok) {
+        const geminiData = await geminiResp.json()
+        const replyText =
+          geminiData.candidates?.[0]?.content?.parts?.[0]?.text ||
+          getDevFallbackResponse(userMessage)
+
+        return res.status(200).json({ reply: replyText, provider: 'gemini' })
+      } else {
+        const errText = await geminiResp.text()
+        console.error('[chat] Gemini API error:', geminiResp.status, errText)
+      }
+    } catch (err) {
+      console.error('[chat] Gemini error:', err.message)
+    }
+  }
+
   if (!groqKey) {
-    console.log('[chat] GROQ_API_KEY no configurada, usando fallback local')
+    console.log('[chat] ni GEMINI_API_KEY ni GROQ_API_KEY configuradas, usando fallback local')
     const fallbackReply = getDevFallbackResponse(userMessage)
     return res.status(200).json({ reply: fallbackReply, fallback: true })
   }

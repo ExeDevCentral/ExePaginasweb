@@ -16,6 +16,8 @@ const OwnershipVsSubscription = lazy(() => import('./components/shared/Ownership
 const PortfolioSection = lazy(() => import('./components/Portfolio/PortfolioSection'))
 const DemoZone = lazy(() => import('./components/DemoZone/DemoZone'))
 const Products = lazy(() => import('./components/Products/Products'))
+import MouseSpotlight from './components/shared/MouseSpotlight'
+
 const CaseStudies = lazy(() => import('./components/CaseStudies/CaseStudies'))
 
 const SkeletonBlock = ({ className = '' }: { className?: string }) => (
@@ -173,6 +175,7 @@ function App() {
           </script>
         </Helmet>
         <div className="min-h-screen bg-transparent text-primary-text relative">
+          <MouseSpotlight />
           {/* Barra de progreso de lectura */}
           <motion.div
             className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-cyan to-accent-magenta origin-left z-[100]"

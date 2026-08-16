@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { SalonBloomButton } from '../shared/SalonBloomButton'
 import HeroCompare from './HeroCompare'
 
+import MagneticButton from '../shared/MagneticButton'
+
 const Badge: React.FC<{ text: string }> = ({ text }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.8 }}
@@ -111,14 +113,11 @@ const Hero: React.FC = () => {
               if (el) el.scrollIntoView({ behavior: 'smooth' })
             }}
           />
-          <motion.a
-            href="#contact"
-            className="w-full sm:w-auto text-center px-8 py-4 rounded-2xl border border-border text-foreground font-semibold bg-background/40 backdrop-blur-md hover:bg-muted hover:border-accent-cyan/40 transition-all text-sm tracking-wide"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {t('hero.cta_proyecto')}
-          </motion.a>
+          <MagneticButton href="#contact">
+            <span className="w-full sm:w-auto text-center px-8 py-4 rounded-2xl border border-border text-foreground font-semibold bg-background/60 backdrop-blur-md hover:bg-muted hover:border-accent-cyan/40 transition-all text-sm tracking-wide block">
+              {t('hero.cta_proyecto')}
+            </span>
+          </MagneticButton>
         </motion.div>
 
         <motion.div

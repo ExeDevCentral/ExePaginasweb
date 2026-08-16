@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
-import { X, Send, LifeBuoy, CheckCircle2 } from 'lucide-react'
+import { X, LifeBuoy, CheckCircle2 } from 'lucide-react'
+import { MorphIcon } from 'morphicons/react'
+import { Send as SendData, CheckCircle2 as CheckCircle2Data } from 'lucide'
 import { useTranslation } from 'react-i18next'
 import type { PlanTier } from '../../core/domain/planCatalog'
 import { TICKET_CATEGORIES, SLA_BY_TIER } from '../../core/domain/ticketConfig'
@@ -201,8 +203,12 @@ export default function SupportTicketPanel({
                     <span className="w-5 h-5 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin" />
                   ) : (
                     <>
-                      <Send size={18} />
-                      Enviar ticket
+                      <MorphIcon
+                        icon={success ? CheckCircle2Data : SendData}
+                        size={18}
+                        spring="snappy"
+                      />
+                      {success ? '¡Ticket enviado!' : 'Enviar ticket'}
                     </>
                   )}
                 </button>

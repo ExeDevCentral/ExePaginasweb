@@ -1,20 +1,33 @@
 import { useMemo } from 'react'
-import { FileText, CheckCircle, Clock, XCircle, AlertCircle } from 'lucide-react'
+import { FileText } from 'lucide-react'
+import { MorphIcon } from 'morphicons/react'
+import {
+  Clock as ClockData,
+  AlertCircle as AlertCircleData,
+  CheckCircle as CheckCircleData,
+  XCircle as XCircleData,
+  type IconNode,
+} from 'lucide'
 import { useInvoicesByTenant } from '../../hooks/useInvoices'
 import { useTranslation } from 'react-i18next'
 import type { Invoice, InvoiceEstado } from '../../core/domain/entities/Invoice'
 import { DataTable } from '../shared/DataTable'
 import type { ColumnDef } from '@tanstack/react-table'
 
-const ESTADO_CONFIG: Record<
-  InvoiceEstado,
-  { icon: typeof CheckCircle; color: string; label: string }
-> = {
-  borrador: { icon: Clock, color: 'text-slate-600 dark:text-gray-400', label: 'Borrador' },
-  emitida: { icon: AlertCircle, color: 'text-amber-600 dark:text-yellow-400', label: 'Emitida' },
-  pagada: { icon: CheckCircle, color: 'text-emerald-600 dark:text-emerald-400', label: 'Pagada' },
-  vencida: { icon: XCircle, color: 'text-rose-600 dark:text-red-400', label: 'Vencida' },
-  cancelada: { icon: XCircle, color: 'text-slate-600 dark:text-gray-400', label: 'Cancelada' },
+const ESTADO_CONFIG: Record<InvoiceEstado, { icon: IconNode; color: string; label: string }> = {
+  borrador: { icon: ClockData, color: 'text-slate-600 dark:text-gray-400', label: 'Borrador' },
+  emitida: {
+    icon: AlertCircleData,
+    color: 'text-amber-600 dark:text-yellow-400',
+    label: 'Emitida',
+  },
+  pagada: {
+    icon: CheckCircleData,
+    color: 'text-emerald-600 dark:text-emerald-400',
+    label: 'Pagada',
+  },
+  vencida: { icon: XCircleData, color: 'text-rose-600 dark:text-red-400', label: 'Vencida' },
+  cancelada: { icon: XCircleData, color: 'text-slate-600 dark:text-gray-400', label: 'Cancelada' },
 }
 
 interface Props {
@@ -61,10 +74,9 @@ export default function InvoicesPanel({ tenantId }: Props) {
         header: 'Estado',
         cell: ({ row }) => {
           const config = ESTADO_CONFIG[row.original.estado] || ESTADO_CONFIG.borrador
-          const Icon = config.icon
           return (
-            <span className={`inline-flex items-center gap-1 text-xs font-bold ${config.color}`}>
-              <Icon className="w-3.5 h-3.5" />
+            <span className={`inline-flex items-center gap-1.5 text-xs font-bold ${config.color}`}>
+              <MorphIcon icon={config.icon} size={14} spring="snappy" />
               {config.label}
             </span>
           )

@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Crown, Monitor, Building, Building2, RefreshCw } from 'lucide-react'
+import { Crown, Monitor, Building, Building2 } from 'lucide-react'
+import { MorphIcon } from 'morphicons/react'
+import { RefreshCw as RefreshCwData, Check as CheckData } from 'lucide'
 import type { Cliente } from '../../core/domain/entities/Cliente'
 import type { Suscripcion } from '../../core/domain/entities/Suscripcion'
 import type { Pago } from '../../hooks/useDashboard'
@@ -134,7 +136,12 @@ export default function PlanDashboardView({
                 disabled={refreshing}
                 className="inline-flex items-center gap-2 rounded-xl border border-border bg-muted px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
               >
-                <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
+                <MorphIcon
+                  icon={refreshing ? RefreshCwData : CheckData}
+                  size={16}
+                  spring="snappy"
+                  className={refreshing ? 'animate-spin' : ''}
+                />
                 {t('bookingdemo.estado_procesando')}
               </button>
               <button

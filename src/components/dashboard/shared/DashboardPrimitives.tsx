@@ -109,12 +109,12 @@ export function QuickActionsHub({
         </button>
 
         <a
-          href={`https://wa.me/5491112345678?text=${waMsg}`}
+          href={`https://wa.me/5493416874786?text=${waMsg}`}
           target="_blank"
           rel="noreferrer"
           className="p-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-left transition-all group"
         >
-          <MessageSquare className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mb-1.5 group-hover:scale-110 transition-transform" />
+          <MessageSquare className="w-4 h-4 text-emerald-500 mb-1.5 group-hover:scale-110 transition-transform" />
           <p className="text-xs font-bold text-foreground">Soporte VIP WhatsApp</p>
           <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">
             Chat directo 24/7

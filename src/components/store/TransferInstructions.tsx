@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Copy, Check, Wallet, Mail, Loader2 } from 'lucide-react'
+import { Wallet, Mail, Loader2 } from 'lucide-react'
+import { MorphIcon } from 'morphicons/react'
+import { Copy as CopyData, Check as CheckData } from 'lucide'
 import { useAuthSession } from '../../core/auth/AuthSessionProvider'
 
 interface TransferInstructionsProps {
@@ -103,11 +105,12 @@ export default function TransferInstructions({
               className="p-2 bg-zinc-800/10 hover:bg-zinc-800/20 dark:bg-white/5 dark:hover:bg-white/10 rounded-lg border border-zinc-200 dark:border-white/10 text-foreground hover:text-accent-cyan transition-all"
               title="Copiar Alias"
             >
-              {copied ? (
-                <Check className="w-4 h-4 text-green-400 animate-pulse" />
-              ) : (
-                <Copy className="w-4 h-4" />
-              )}
+              <MorphIcon
+                icon={copied ? CheckData : CopyData}
+                size={16}
+                color={copied ? '#4ade80' : 'currentColor'}
+                spring="snappy"
+              />
             </button>
           </div>
         </div>

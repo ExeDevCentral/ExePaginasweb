@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { Bell, LifeBuoy, Zap, Shield, ArrowRight } from 'lucide-react'
+import { MorphIcon } from 'morphicons/react'
+import { Bell as BellData, Check as CheckData } from 'lucide'
 import type { PlanTier } from '../../core/domain/planCatalog'
 import { SLA_BY_TIER } from '../../core/domain/ticketConfig'
 import type { Notificacion } from '../../core/domain/entities/Ticket'
@@ -65,12 +67,21 @@ export default function ServicePulseHub({
           icon={LifeBuoy}
           accent={theme.accent}
         />
-        <PulseStat
-          label="Alertas"
-          value={String(unreadNotifications)}
-          icon={Bell}
-          accent={unreadNotifications > 0 ? 'text-amber-400' : 'text-muted-foreground'}
-        />
+        <div className="rounded-xl border border-border bg-muted/50 px-3 py-2.5">
+          <div
+            className={`mb-1 ${unreadNotifications > 0 ? 'text-amber-400' : 'text-emerald-400'}`}
+          >
+            <MorphIcon
+              icon={unreadNotifications > 0 ? BellData : CheckData}
+              size={14}
+              spring="snappy"
+            />
+          </div>
+          <p className="text-lg font-black text-foreground leading-none">{unreadNotifications}</p>
+          <p className="text-[9px] uppercase tracking-wider text-muted-foreground mt-1 font-bold">
+            Alertas
+          </p>
+        </div>
         <PulseStat label="Infra" value="Vercel" icon={Shield} accent="text-emerald-400" />
         <PulseStat label="Estado" value="Online" icon={Zap} accent="text-emerald-400" />
       </div>

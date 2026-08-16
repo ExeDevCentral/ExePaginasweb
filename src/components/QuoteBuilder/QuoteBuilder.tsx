@@ -1116,9 +1116,9 @@ export default function QuoteBuilder() {
                             href={`https://wa.me/${WHAATSAPP_NUMBER}?text=${buildWhatsAppMessage()}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-3 w-full px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors text-sm"
+                            className="flex items-center justify-center gap-3 w-full px-6 py-3.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 font-bold transition-all text-sm shadow-md"
                           >
-                            <MessageCircle className="w-4 h-4 text-green-400" />
+                            <MessageCircle className="w-4 h-4 fill-emerald-500/20 text-emerald-400" />
                             {t('cotizador.enviar_whatsapp')}
                           </a>
                         </div>

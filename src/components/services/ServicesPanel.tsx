@@ -167,43 +167,53 @@ export default function ServicesPanel({ tenantId }: Props) {
                 !services.some((s: TenantServiceWithDetails) => s.service_id === c.id)
             )
             .slice(0, 4)
-            .map((item: ServiceCatalog) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-xl border border-dashed border-border p-4 hover:border-accent-cyan/50 transition-colors cursor-pointer group"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-xs font-bold text-accent-cyan uppercase tracking-wider">
-                      {TIPO_LABELS[item.tipo] || item.tipo}
-                    </p>
-                    <p className="text-sm font-bold text-foreground mt-1">{item.nombre}</p>
-                    {item.descripcion && (
-                      <p className="text-xs text-muted-foreground mt-1">{item.descripcion}</p>
-                    )}
+            .map((item: ServiceCatalog) => {
+              const waAddonMsg = encodeURIComponent(
+                `¡Hola ExePaginasWeb! Quisiera solicitar contratar el complemento/servicio: "${item.nombre}" ($${item.precio_base.toLocaleString('es-AR')} ${item.moneda}).`
+              )
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-xl border border-dashed border-border p-4 hover:border-accent-cyan/50 transition-colors group flex flex-col justify-between"
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-xs font-bold text-accent-cyan uppercase tracking-wider">
+                        {TIPO_LABELS[item.tipo] || item.tipo}
+                      </p>
+                      <p className="text-sm font-bold text-foreground mt-1">{item.nombre}</p>
+                      {item.descripcion && (
+                        <p className="text-xs text-muted-foreground mt-1">{item.descripcion}</p>
+                      )}
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-foreground">
+                        ${item.precio_base.toLocaleString('es-AR')}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground uppercase">
+                        {item.moneda} /{' '}
+                        {item.intervalo === 'monthly'
+                          ? 'mes'
+                          : item.intervalo === 'annual'
+                            ? 'año'
+                            : 'único'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-foreground">
-                      ${item.precio_base.toLocaleString('es-AR')}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground uppercase">
-                      {item.moneda} /{' '}
-                      {item.intervalo === 'monthly'
-                        ? 'mes'
-                        : item.intervalo === 'annual'
-                          ? 'año'
-                          : 'único'}
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-3 flex items-center gap-1 text-xs text-accent-cyan opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ExternalLink className="w-3 h-3" />
-                  <span>Solicitar</span>
-                </div>
-              </motion.div>
-            ))}
+                  <a
+                    href={`https://wa.me/5493416874786?text=${waAddonMsg}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-accent-cyan hover:text-accent-cyan/80 transition-colors w-fit cursor-pointer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Solicitar</span>
+                  </a>
+                </motion.div>
+              )
+            })}
         </div>
       </div>
     </div>

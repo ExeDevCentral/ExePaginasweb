@@ -8,6 +8,7 @@ import {
   Plus,
   ArrowRight,
   Coffee,
+  MessageCircle,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -342,13 +343,14 @@ export default function ProductCard({
                     </label>
                   </div>
                   <a
-                    href={`https://wa.me/5491112345678?text=${encodeURIComponent(
+                    href={`https://wa.me/5493416874786?text=${encodeURIComponent(
                       `Hola ExePaginasWeb! Quiero consultar para mi rubro por ${t(`products.${product.tKey}_titulo`)} para ${sucursales} sucursal(es). Presupuesto estimado: $${estimatedTotal} USD.`
                     )}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-center gap-2 w-full py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-extrabold text-xs hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-500/20"
                   >
+                    <MessageCircle className="w-4 h-4 fill-slate-950 stroke-emerald-500" />
                     Enviar Consulta Directa por WhatsApp <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </motion.div>

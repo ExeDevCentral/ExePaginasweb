@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useMemo } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../core/infra/supabase/client'
 import { SupabaseClienteRepository } from '../core/infra/repositories/SupabaseClienteRepository'
 import { SupabaseSubscriptionRepository } from '../core/infra/repositories/SupabaseSubscriptionRepository'
@@ -21,24 +22,13 @@ const clienteRepo = new SupabaseClienteRepository()
 const subscriptionRepo = new SupabaseSubscriptionRepository()
 
 export function useDashboard(enabled = true) {
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [cliente, setCliente] = useState<Cliente | null>(null)
-  const [suscripciones, setSuscripciones] = useState<Suscripcion[]>([])
-  const [pagos, setPagos] = useState<Pago[]>([])
+  const queryClient = useQueryClient()
 
-  const isPremium = useMemo(() => suscripciones.length > 0, [suscripciones.length])
-
-  const planTier = useMemo<PlanTier>(
-    () => resolvePlanTier(suscripciones, pagos[0]?.plan_nombre, pagos[0]?.plan_slug),
-    [suscripciones, pagos]
-  )
-
-  const loadData = useCallback(async (active: boolean) => {
-    try {
-      setLoading(true)
-      setError(null)
-
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['client-dashboard'],
+    enabled,
+    staleTime: 1000 * 60 * 3, // 3 minutos de caché fresco
+    queryFn: async () => {
       const {
         data: { user },
         error: authError,
@@ -50,8 +40,7 @@ export function useDashboard(enabled = true) {
       }
 
       if (!user || !user.email) {
-        if (active) setLoading(false)
-        return
+        return { cliente: null, suscripciones: [], pagos: [] }
       }
 
       let clienteData: Cliente | null = null
@@ -62,8 +51,6 @@ export function useDashboard(enabled = true) {
         console.error('[useDashboard] clienteRepo.getByAuthId error:', e)
         clienteData = null
       }
-
-      if (!active) return
 
       if (!clienteData) {
         try {
@@ -90,58 +77,61 @@ export function useDashboard(enabled = true) {
         }
       }
 
-      setCliente(clienteData)
+      let suscripcionesData: Suscripcion[] = []
+      let pagosDataList: Pago[] = []
 
       if (clienteData) {
         try {
-          const subsData = await subscriptionRepo.getByClienteId(clienteData.id)
-          if (active) setSuscripciones(subsData)
+          suscripcionesData = await subscriptionRepo.getByClienteId(clienteData.id)
         } catch {
-          if (active) setSuscripciones([])
+          suscripcionesData = []
         }
 
         try {
-          const { data: pagosData } = await supabase
+          const { data: rawPagos } = await supabase
             .from('pagos')
             .select('id, monto, moneda, estado, plan_nombre, plan_slug, created_at')
             .eq('cliente_id', clienteData.id)
             .order('created_at', { ascending: false })
             .limit(10)
-          if (active) setPagos((pagosData as Pago[]) || [])
+          pagosDataList = (rawPagos as Pago[]) || []
         } catch {
-          if (active) setPagos([])
+          pagosDataList = []
         }
       }
-    } catch (e: unknown) {
-      console.error('[useDashboard] loadData fatal error:', e)
-      if (active) {
-        setError(getErrorMessage(e, 'Error al cargar los datos del panel'))
-      }
-    } finally {
-      if (active) setLoading(false)
-    }
-  }, [])
 
-  useEffect(() => {
-    if (!enabled) {
-      setLoading(true)
-      return
-    }
-    let active = true
-    loadData(active)
-    return () => {
-      active = false
-    }
-  }, [enabled, loadData])
+      return {
+        cliente: clienteData,
+        suscripciones: suscripcionesData,
+        pagos: pagosDataList,
+      }
+    },
+  })
+
+  const cliente = data?.cliente ?? null
+  const suscripciones = useMemo(() => data?.suscripciones ?? [], [data?.suscripciones])
+  const pagos = useMemo(() => data?.pagos ?? [], [data?.pagos])
+
+  const isPremium = useMemo(() => suscripciones.length > 0, [suscripciones.length])
+
+  const planTier = useMemo<PlanTier>(
+    () => resolvePlanTier(suscripciones, pagos[0]?.plan_nombre, pagos[0]?.plan_slug),
+    [suscripciones, pagos]
+  )
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ['client-dashboard'] })
+    refetch()
+  }
 
   return {
-    loading,
-    error,
+    loading: isLoading,
+    error: error ? getErrorMessage(error, 'Error al cargar los datos del panel') : null,
     cliente,
     suscripciones,
     pagos,
     isPremium,
     planTier,
-    refresh: () => loadData(true),
+    refresh: handleRefresh,
   }
 }

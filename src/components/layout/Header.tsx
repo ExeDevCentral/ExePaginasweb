@@ -1,5 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, LogOut, LayoutDashboard, ExternalLink } from 'lucide-react'
+import { LogOut, LayoutDashboard, ExternalLink, MessageCircle } from 'lucide-react'
+import { MorphIcon } from 'morphicons/react'
+import { Menu as MenuData, X as XData } from 'lucide'
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useScrollSpy } from '../../hooks/useScrollSpy'
@@ -166,14 +168,28 @@ const Header = () => {
 
           {/* Botones Derecha */}
           <div className="hidden xl:flex items-center gap-2 shrink-0">
-            {/* Idioma + Modo Oscuro */}
-            <div className="flex items-center gap-1 mr-1 border-r border-zinc-800 pr-2 shrink-0">
+            {/* Idioma + Modo Oscuro + WhatsApp */}
+            <div className="flex items-center gap-1.5 mr-1 border-r border-zinc-800 pr-2 shrink-0">
               <div className="text-zinc-400 hover:text-white transition-colors duration-200">
                 <LanguageSwitcher />
               </div>
               <div className="text-zinc-400 hover:text-white transition-colors duration-200">
                 <ThemeToggle />
               </div>
+              <a
+                href="https://wa.me/5493416874786?text=¡Hola%20ExePaginasWeb!%20Me%20contacto%20desde%20la%20web."
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Contacto directo por WhatsApp"
+                title="WhatsApp Directo"
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-all duration-300 text-xs font-bold shadow-sm group shrink-0"
+              >
+                <MessageCircle
+                  size={15}
+                  className="fill-emerald-500/30 stroke-current group-hover:rotate-12 transition-transform duration-300"
+                />
+                <span>WhatsApp</span>
+              </a>
             </div>
 
             {isLoggedIn && (
@@ -209,28 +225,30 @@ const Header = () => {
             </motion.button>
           </div>
 
-          {/* Mobile / Tablet hamburger button (visible en pantallas menores a xl: < 1280px) */}
-          <motion.button
-            className="xl:hidden w-10 h-10 flex items-center justify-center border border-zinc-800 text-zinc-400 hover:text-white hover:border-[#00f2fe] transition-all duration-200 rounded-sm shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f2fe]"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            whileTap={{ scale: 0.95 }}
-            aria-label={isMenuOpen ? 'Cerrar menú principal' : 'Abrir menú principal'}
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-menu-drawer"
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={isMenuOpen ? 'close' : 'open'}
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-                transition={{ duration: 0.15 }}
-                className="flex items-center justify-center"
-              >
-                {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-              </motion.span>
-            </AnimatePresence>
-          </motion.button>
+          {/* Mobile / Tablet controls (visible en pantallas menores a xl: < 1280px) */}
+          <div className="xl:hidden flex items-center gap-2 shrink-0">
+            <a
+              href="https://wa.me/5493416874786?text=¡Hola%20ExePaginasWeb!%20Me%20contacto%20desde%20la%20web."
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Contacto por WhatsApp"
+              className="w-10 h-10 flex items-center justify-center border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-all duration-200 rounded-md shrink-0"
+              title="WhatsApp Directo"
+            >
+              <MessageCircle size={18} className="fill-emerald-500/20 stroke-current" />
+            </a>
+
+            <motion.button
+              className="w-10 h-10 flex items-center justify-center border border-zinc-800 text-zinc-400 hover:text-white hover:border-[#00f2fe] transition-all duration-200 rounded-sm shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f2fe]"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              whileTap={{ scale: 0.95 }}
+              aria-label={isMenuOpen ? 'Cerrar menú principal' : 'Abrir menú principal'}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu-drawer"
+            >
+              <MorphIcon icon={isMenuOpen ? XData : MenuData} size={20} spring="snappy" />
+            </motion.button>
+          </div>
         </div>
       </div>
 

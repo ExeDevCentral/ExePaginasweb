@@ -25,9 +25,10 @@
   --input: #eee0d0;
   --ring: #e11d48;
   --radius: 0.75rem;
-  --font-sans: Inter, sans-serif;
-  --font-serif: Playfair Display, serif;
-  --font-mono: Source Code Pro, monospace;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-serif: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
   /* Colores custom del diseño corporativo premium pastel */
   --accent-cyan: #e11d48;
@@ -119,8 +120,10 @@
   h1,
   h2,
   h3,
-  h4 {
-    @apply font-serif text-foreground;
+  h4,
+  h5,
+  h6 {
+    @apply font-display text-foreground;
   }
 
   ::selection {

@@ -68,10 +68,12 @@ export default {
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'Inter', 'sans-serif'],
-        serif: ['var(--font-serif)', 'Playfair Display', 'serif'],
-        mono: ['var(--font-mono)', 'Source Code Pro', 'monospace'],
-        montserrat: ['Inter', 'sans-serif'], // Keep class name to prevent breaking existing components, but use Inter
-        outfit: ['Inter', 'sans-serif'],
+        display: ['var(--font-display)', 'Space Grotesk', 'sans-serif'],
+        heading: ['var(--font-heading)', 'Space Grotesk', 'sans-serif'],
+        serif: ['var(--font-heading)', 'Space Grotesk', 'sans-serif'],
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'monospace'],
+        montserrat: ['Space Grotesk', 'sans-serif'],
+        outfit: ['Space Grotesk', 'sans-serif'],
         inter: ['Inter', 'sans-serif'],
       },
       letterSpacing: {

@@ -220,7 +220,7 @@ export const OwnershipVsSubscription: React.FC = () => {
               <span>Diferencial Estratégico</span>
             </div>
 
-            <blockquote className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-relaxed max-w-4xl mx-auto font-montserrat tracking-tight drop-shadow-md">
+            <blockquote className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-relaxed max-w-4xl mx-auto font-display tracking-tight drop-shadow-md">
               “
               {t(
                 'versus.cita_destacada',
@@ -295,7 +295,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                   key={idx}
                   className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-colors relative"
                 >
-                  <div className="mt-0.5 shrink-0 flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xs">
+                  <div className="mt-0.5 shrink-0 flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500/20 text-emerald-400 font-bold font-mono text-xs">
                     {idx + 1}
                   </div>
                   <div className="flex-1">
@@ -362,7 +362,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                   key={idx}
                   className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-500/5 border border-rose-500/10 hover:bg-rose-500/10 transition-colors relative"
                 >
-                  <div className="mt-0.5 shrink-0 flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xs">
+                  <div className="mt-0.5 shrink-0 flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-rose-500/20 text-rose-400 font-bold font-mono text-xs">
                     {idx + 1}
                   </div>
                   <div className="flex-1">

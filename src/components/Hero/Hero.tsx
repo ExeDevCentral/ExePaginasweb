@@ -21,11 +21,15 @@ const Badge: React.FC<{ text: string }> = ({ text }) => (
   </motion.div>
 )
 
-const TitleLine: React.FC<{ text: string; delay: number }> = ({ text, delay }) => (
+const TitleLine: React.FC<{ text: string; delay: number; index: number }> = ({
+  text,
+  delay,
+  index,
+}) => (
   <motion.span
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay }}
+    initial={{ opacity: 0, x: index % 2 === 0 ? -80 : 80 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
     className="block"
   >
     {text}
@@ -54,8 +58,9 @@ const Hero: React.FC = () => {
           {titleParts.map((part, i) => (
             <TitleLine
               key={i}
+              index={i}
               text={`${part}${i < titleParts.length - 1 ? '.' : ''}`}
-              delay={0.05 + i * 0.1}
+              delay={0.1 + i * 0.15}
             />
           ))}
         </motion.h1>

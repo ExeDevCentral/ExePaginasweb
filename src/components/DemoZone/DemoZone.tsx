@@ -10,15 +10,18 @@ import {
   Coffee,
   ArrowRight,
   LucideIcon,
+  CheckCircle2,
+  Zap,
 } from 'lucide-react'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 import { useIsMobile } from '../../hooks/useIsMobile'
+import DemoCard3DScene from './DemoCard3DScene'
 
 // CoffeePortal3D se importa dinámicamente SOLO cuando el usuario hace clic en Pixel Coffee
 // Esto evita que three.js (288KB) se cargue en la página principal
 
 interface ProjectConfig {
-  id: string
+  id: 'salon' | 'neofit' | 'aura' | 'coffee'
   title: string
   category: string
   summary: string
@@ -34,6 +37,10 @@ interface ProjectConfig {
   iconBg: string
   iconColor: string
   buttonClasses: string
+  glowGradient: string
+  features: string[]
+  statsBadge: string
+  tagNumber: string
 }
 
 // --- CONSTANTES ESTÁTICAS (Optimizadas fuera del componente) ---
@@ -48,15 +55,19 @@ const PROJECTS: ProjectConfig[] = [
     icon: Sparkles,
     featured: true,
     badgeLabel: 'MÁS POPULAR',
-    accentColor: 'rgba(236, 72, 153, 0.25)',
+    tagNumber: '01',
+    statsBadge: '⭐ 5.0 · Turnos Online',
+    features: ['Reserva en 3 clics', 'Testimonios reales', 'Catálogo de servicios'],
+    accentColor: 'rgba(244, 63, 94, 0.35)',
+    glowGradient: 'from-pink-500/20 via-rose-500/10 to-transparent',
     badgeClasses:
-      'bg-pink-100 dark:bg-pink-950/70 text-pink-800 dark:text-pink-300 border-pink-300 dark:border-pink-500/40',
+      'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300 border-pink-300 dark:border-pink-500/40',
     cardBorder: 'border-pink-500/30 dark:border-pink-500/40',
-    cardHoverBorder: 'hover:border-pink-500/80',
+    cardHoverBorder: 'hover:border-pink-500/80 hover:shadow-[0_0_35px_rgba(244,63,94,0.25)]',
     iconBg: 'bg-pink-100 dark:bg-pink-500/20 border-pink-300 dark:border-pink-500/40',
-    iconColor: 'text-pink-700 dark:text-pink-400',
+    iconColor: 'text-pink-600 dark:text-pink-400',
     buttonClasses:
-      'bg-pink-50 dark:bg-pink-500/15 text-pink-800 dark:text-pink-300 border-pink-300 dark:border-pink-500/40 hover:bg-pink-600 hover:text-white dark:hover:bg-pink-500 dark:hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(236,72,153,0.4)]',
+      'bg-gradient-to-r from-pink-500 to-rose-600 text-white font-black shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 hover:scale-[1.02]',
   },
   {
     id: 'neofit',
@@ -66,15 +77,19 @@ const PROJECTS: ProjectConfig[] = [
     categoryKey: 'demozone.project_category_neofit',
     summaryKey: 'demozone.project_summary_neofit',
     icon: Dumbbell,
-    accentColor: 'rgba(16, 185, 129, 0.25)',
+    tagNumber: '02',
+    statsBadge: '⚡ Planes & Clases Fit',
+    features: ['Membresías QR', 'Agenda semanal', 'Alta conversión'],
+    accentColor: 'rgba(16, 185, 129, 0.35)',
+    glowGradient: 'from-emerald-500/20 via-teal-500/10 to-transparent',
     badgeClasses:
-      'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/40',
+      'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/40',
     cardBorder: 'border-emerald-500/30 dark:border-emerald-500/40',
-    cardHoverBorder: 'hover:border-emerald-500/80',
+    cardHoverBorder: 'hover:border-emerald-500/80 hover:shadow-[0_0_35px_rgba(16,185,129,0.25)]',
     iconBg: 'bg-emerald-100 dark:bg-emerald-500/20 border-emerald-300 dark:border-emerald-500/40',
-    iconColor: 'text-emerald-700 dark:text-emerald-400',
+    iconColor: 'text-emerald-600 dark:text-emerald-400',
     buttonClasses:
-      'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/40 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-500 dark:hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]',
+      'bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02]',
   },
   {
     id: 'aura',
@@ -84,15 +99,19 @@ const PROJECTS: ProjectConfig[] = [
     categoryKey: 'demozone.project_category_aura',
     summaryKey: 'demozone.project_summary_aura',
     icon: Building2,
-    accentColor: 'rgba(56, 189, 248, 0.25)',
+    tagNumber: '03',
+    statsBadge: '🏢 Real Estate & Leads',
+    features: ['Filtros en vivo', 'Lead a WhatsApp', 'Galería HD'],
+    accentColor: 'rgba(56, 189, 248, 0.35)',
+    glowGradient: 'from-sky-500/20 via-blue-500/10 to-transparent',
     badgeClasses:
-      'bg-sky-100 dark:bg-sky-950/70 text-sky-800 dark:text-sky-300 border-sky-300 dark:border-sky-500/40',
+      'bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 border-sky-300 dark:border-sky-500/40',
     cardBorder: 'border-sky-500/30 dark:border-sky-500/40',
-    cardHoverBorder: 'hover:border-sky-500/80',
+    cardHoverBorder: 'hover:border-sky-500/80 hover:shadow-[0_0_35px_rgba(56,189,248,0.25)]',
     iconBg: 'bg-sky-100 dark:bg-sky-500/20 border-sky-300 dark:border-sky-500/40',
-    iconColor: 'text-sky-700 dark:text-sky-400',
+    iconColor: 'text-sky-600 dark:text-sky-400',
     buttonClasses:
-      'bg-sky-50 dark:bg-sky-500/15 text-sky-800 dark:text-sky-300 border-sky-300 dark:border-sky-500/40 hover:bg-sky-600 hover:text-white dark:hover:bg-sky-500 dark:hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(56,189,248,0.4)]',
+      'bg-gradient-to-r from-sky-500 to-blue-600 text-white font-black shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02]',
   },
   {
     id: 'coffee',
@@ -102,15 +121,19 @@ const PROJECTS: ProjectConfig[] = [
     categoryKey: 'demozone.project_category_coffee',
     summaryKey: 'demozone.project_summary_coffee',
     icon: Coffee,
-    accentColor: 'rgba(245, 158, 11, 0.25)',
+    tagNumber: '04',
+    statsBadge: '☕ Carrito & Checkout',
+    features: ['Carrito express', 'Sin comisiones', 'Portal 3D interactivo'],
+    accentColor: 'rgba(245, 158, 11, 0.35)',
+    glowGradient: 'from-amber-500/20 via-orange-500/10 to-transparent',
     badgeClasses:
-      'bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-500/40',
+      'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-500/40',
     cardBorder: 'border-amber-500/30 dark:border-amber-500/40',
-    cardHoverBorder: 'hover:border-amber-500/80',
+    cardHoverBorder: 'hover:border-amber-500/80 hover:shadow-[0_0_35px_rgba(245,158,11,0.25)]',
     iconBg: 'bg-amber-100 dark:bg-amber-500/20 border-amber-300 dark:border-amber-500/40',
-    iconColor: 'text-amber-700 dark:text-amber-400',
+    iconColor: 'text-amber-600 dark:text-amber-400',
     buttonClasses:
-      'bg-amber-50 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-500/40 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-500 dark:hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]',
+      'bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-[1.02]',
   },
 ]
 
@@ -247,9 +270,9 @@ const TiltCard = ({
     const rect = el.getBoundingClientRect()
     const px = (e.clientX - rect.left) / rect.width
     const py = (e.clientY - rect.top) / rect.height
-    const ry = (px - 0.5) * 14
-    const rx = -(py - 0.5) * 10
-    const tx = (px - 0.5) * 10
+    const ry = (px - 0.5) * 16
+    const rx = -(py - 0.5) * 14
+    const tx = (px - 0.5) * 8
     const ty = (py - 0.5) * 8
     setTilt({ rx, ry, tx, ty })
     setGlowPos({ x: px * 100, y: py * 100 })
@@ -270,79 +293,118 @@ const TiltCard = ({
   return (
     <motion.article
       ref={cardRef}
-      className={`group relative rounded-2xl border ${project.cardBorder} ${project.cardHoverBorder} bg-white/90 dark:bg-slate-900/70 p-6 backdrop-blur-md overflow-hidden transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col justify-between`}
-      style={{ perspective: 900 }}
+      className={`group relative rounded-3xl border ${project.cardBorder} ${project.cardHoverBorder} bg-card/90 dark:bg-slate-900/80 p-6 sm:p-7 backdrop-blur-2xl overflow-hidden transition-all duration-500 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.5)] flex flex-col justify-between cursor-pointer`}
+      style={{ perspective: 1000, transformStyle: 'preserve-3d' }}
       onPointerMove={handlePointerMove}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
+      onClick={onOpen}
       animate={{
         rotateX: tilt.rx,
         rotateY: tilt.ry,
         x: tilt.tx,
         y: tilt.ty,
       }}
-      transition={{ type: 'spring', stiffness: 220, damping: 22 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 24 }}
     >
-      {/* Sheen */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 dark:via-white/10 to-transparent"
-        style={{ transform: 'translateX(-60%) skewX(-20deg)' }}
-        animate={active ? { x: '160%' } : { x: '-60%' }}
-        transition={{ duration: 0.65, ease: 'easeOut' }}
-      />
-
-      {/* Glow — follows cursor with category accent color */}
+      {/* Dynamic Cursor Reactive Glow */}
       <div
-        className="pointer-events-none absolute -inset-1 transition-opacity duration-300"
+        className="pointer-events-none absolute -inset-1 transition-opacity duration-300 -z-10"
         style={{
-          opacity: active ? 1 : 0,
-          background: `radial-gradient(500px circle at ${glowPos.x}% ${glowPos.y}%, ${project.accentColor}, transparent 65%)`,
+          opacity: active ? 1 : 0.35,
+          background: `radial-gradient(450px circle at ${glowPos.x}% ${glowPos.y}%, ${project.accentColor}, transparent 70%)`,
         }}
       />
 
-      <div>
-        {/* Header with Icon + Category Pill Badge + Featured Tag */}
-        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
-          <div className="flex items-center gap-3">
+      {/* Holographic Sheen */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 dark:via-white/10 to-transparent"
+        style={{ transform: 'translateX(-100%) skewX(-25deg)' }}
+        animate={active ? { x: '200%' } : { x: '-100%' }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      />
+
+      {/* Card Content Top & 3D Scene */}
+      <div className="space-y-4 relative z-10">
+        {/* Header with Icon, Category Pill, Live Tag & Number */}
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center gap-2.5">
             <div
-              className={`p-2.5 rounded-xl border ${project.iconBg} shadow-inner transition-transform duration-300 group-hover:scale-110`}
+              className={`p-2.5 rounded-2xl border ${project.iconBg} shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
             >
-              <IconComponent className={`w-6 h-6 ${project.iconColor}`} />
+              <IconComponent className={`w-5 h-5 ${project.iconColor}`} />
             </div>
             <span
-              className={`text-xs uppercase tracking-wider font-bold px-3 py-1 rounded-full border transition-all duration-300 ${project.badgeClasses}`}
+              className={`text-[11px] uppercase tracking-wider font-extrabold px-3 py-1 rounded-full border transition-all duration-300 ${project.badgeClasses}`}
             >
               {category}
             </span>
           </div>
 
-          {project.featured && project.badgeLabel && (
-            <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-sm">
-              {project.badgeLabel}
+          <div className="flex items-center gap-2">
+            {project.badgeLabel && (
+              <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta text-slate-950 shadow-sm">
+                {project.badgeLabel}
+              </span>
+            )}
+            <span className="text-xs font-mono font-bold text-muted-foreground/60">
+              #{project.tagNumber}
             </span>
-          )}
+          </div>
+        </div>
+
+        {/* Dynamic 3D Three.js Canvas Viewport */}
+        <div className="relative my-2 rounded-2xl bg-gradient-to-b from-background/40 to-background/90 border border-border/60 overflow-hidden shadow-inner group-hover:border-accent-cyan/40 transition-colors duration-500">
+          <DemoCard3DScene type={project.id} isHovered={active} />
+
+          {/* Micro-badge flotante 3D */}
+          <div className="absolute bottom-2.5 left-3 px-2.5 py-1 rounded-lg bg-background/85 backdrop-blur-md border border-border/70 text-[10px] font-bold text-foreground flex items-center gap-1.5 shadow-md">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>{project.statsBadge}</span>
+          </div>
         </div>
 
         {/* Title & Description */}
-        <h3 className="text-2xl font-bold font-montserrat tracking-tight text-slate-900 dark:text-white transition-colors duration-200">
-          {title}
-        </h3>
-        <p className="mt-2.5 text-slate-600 dark:text-slate-300 text-sm leading-relaxed font-medium">
-          {summary}
-        </p>
+        <div>
+          <h3 className="text-2xl font-black font-montserrat tracking-tight text-foreground group-hover:text-accent-cyan transition-colors duration-300">
+            {title}
+          </h3>
+          <p className="mt-2 text-muted-foreground text-xs sm:text-sm leading-relaxed">{summary}</p>
+        </div>
+
+        {/* Micro-Features Pills */}
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {project.features.map((feat) => (
+            <span
+              key={feat}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-muted/60 border border-border/60 text-[10px] font-semibold text-foreground/80 group-hover:border-accent-cyan/30 transition-colors"
+            >
+              <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+              <span>{feat}</span>
+            </span>
+          ))}
+        </div>
       </div>
 
-      {/* Redesigned Button Pill */}
-      <motion.button
-        type="button"
-        className={`mt-6 w-full rounded-full border px-5 py-2.5 text-sm font-bold transition-all duration-300 flex items-center justify-between group/btn ${project.buttonClasses}`}
-        onClick={onOpen}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.97 }}
-      >
-        <span>{t('demozone.ver_subpagina')}</span>
-        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-      </motion.button>
+      {/* Action Button */}
+      <div className="pt-5 mt-4 border-t border-border/50 relative z-10">
+        <motion.button
+          type="button"
+          className={`w-full rounded-2xl px-5 py-3 text-xs sm:text-sm font-black transition-all duration-300 flex items-center justify-between group/btn cursor-pointer ${project.buttonClasses}`}
+          onClick={(e) => {
+            e.stopPropagation()
+            onOpen()
+          }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <span className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            <span>{t('demozone.ver_subpagina')}</span>
+          </span>
+          <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1.5" />
+        </motion.button>
+      </div>
     </motion.article>
   )
 }

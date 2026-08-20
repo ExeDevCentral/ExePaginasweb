@@ -33,78 +33,7 @@ export interface Project {
 }
 
 // Proyectos reales desplegados en producción Vercel
-const INITIAL_PROJECTS: Project[] = [
-  {
-    id: 'pelu-brian',
-    title: 'Peluquería Brian - Turnero & SaaS Barbería',
-    category: 'turnos',
-    categoryLabel: 'SaaS / Turnos',
-    client: 'Brian Barber Studio',
-    description:
-      'Sistema de agendamiento de turnos online en tiempo real, optimizado para móviles sin fricción ni registro obligatorio.',
-    image:
-      'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop',
-    tags: ['React', 'TypeScript', 'Tailwind CSS', 'Vercel'],
-    metrics: [
-      { label: 'Carga ultrarrápida', value: '0.3s' },
-      { label: 'Reservas activas', value: '100% Online' },
-    ],
-    highlights: [
-      'Reserva rápida de turnos en 3 clics',
-      'Confirmaciones instantáneas para el cliente',
-      'Panel responsivo adaptado para teléfonos',
-    ],
-    link: 'https://pelu-brian.vercel.app/',
-    status: 'live',
-    statusLabel: 'EN PRODUCCIÓN',
-  },
-  {
-    id: 'noema-studio',
-    title: 'Transformamos datos complejos en decisiones de alto impacto.',
-    category: 'web',
-    categoryLabel: 'Investigación & Estrategia',
-    client: 'NOEMA CONSULTORA',
-    description:
-      'En Noema combinamos rigor estadístico cuantitativo y análisis cualitativo profundo para guiar el crecimiento de marcas en Paraguay y la región MERCOSUR.',
-    image: '/assets/noema-consultora.jpg',
-    tags: ['React', 'TypeScript', 'Tailwind CSS', 'Vercel'],
-    metrics: [
-      { label: 'Alcance Regional', value: 'MERCOSUR' },
-      { label: 'Metodología', value: 'Cuanti + Cuali' },
-    ],
-    highlights: [
-      'Investigación cualitativa, cuantitativa y análisis de mercado',
-      'Inteligencia estratégica en Paraguay y región MERCOSUR',
-      'Diseño web corporativo de alto nivel con arquitectura enterprise',
-    ],
-    link: 'https://noema-ivory.vercel.app/',
-    status: 'live',
-    statusLabel: 'EN PRODUCCIÓN',
-  },
-  {
-    id: 'restauracion-maquinas',
-    title: 'Tres oficios, un legado',
-    category: 'web',
-    categoryLabel: 'Artesanías & Antigüedades',
-    client: 'ARTESANÍAS · ANTIGÜEDADES · MÁQUINAS DE ESCRIBIR',
-    description:
-      'Artesanía en joyería fina, antigüedades con historia y restauración profesional de máquinas de escribir. Un taller donde el pasado cobra vida.',
-    image: '/assets/taller-restauracion.jpg',
-    tags: ['React', 'TypeScript', 'Tailwind CSS', 'Vercel'],
-    metrics: [
-      { label: 'Diagnóstico Online', value: 'Con Fotos' },
-      { label: 'Oficios Artesanales', value: '3 en 1' },
-    ],
-    highlights: [
-      'Preservación de tres oficios: artesanía, antigüedades y máquinas de escribir',
-      'Diagnóstico preliminar online con carga de fotografías',
-      'Diseño elegante y minimalista orientado a la conversión y nostalgia',
-    ],
-    link: 'https://landingpagepararestauracindemquinas.vercel.app/',
-    status: 'live',
-    statusLabel: 'EN PRODUCCIÓN',
-  },
-]
+const INITIAL_PROJECTS: Project[] = []
 
 const CATEGORIES = [
   { id: 'all', label: 'Todos los Proyectos', icon: Layers },
@@ -117,6 +46,7 @@ export const PortfolioSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
+  const hasProjects = INITIAL_PROJECTS.length > 0
   const filteredProjects =
     activeCategory === 'all'
       ? INITIAL_PROJECTS
@@ -138,7 +68,7 @@ export const PortfolioSection: React.FC = () => {
           >
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
             <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-cyan-400">
-              PORTAFOLIO PROFESIONAL EN PRODUCCIÓN
+              PORTAFOLIO & EXPERIENCIA PROFESIONAL
             </span>
           </motion.div>
 
@@ -159,9 +89,9 @@ export const PortfolioSection: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto"
           >
-            Desarrollos reales desplegados en la nube con código propio y arquitectura enterprise.
-            Hacé click en cualquier proyecto para interactuar directamente con la versión web en
-            producción.
+            Desarrollos reales con arquitectura moderna, código propio y despliegue en la nube.
+            Podés consultar mi trayectoria técnica completa en mi CV online o solicitar una
+            propuesta personalizada para tu proyecto.
           </motion.p>
 
           {/* Acceso a CV Profesional */}
@@ -185,180 +115,270 @@ export const PortfolioSection: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Botones de Categorías */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
-          {CATEGORIES.map((cat) => {
-            const Icon = cat.icon
-            const isActive = activeCategory === cat.id
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
-                  isActive
-                    ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-white shadow-lg shadow-accent-cyan/20 scale-105'
-                    : 'bg-card/70 hover:bg-card border border-border text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{cat.label}</span>
-              </button>
-            )
-          })}
-        </div>
+        {/* Si hay proyectos cargados, renderiza filtros y grid */}
+        {hasProjects ? (
+          <>
+            {/* Botones de Categorías */}
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
+              {CATEGORIES.map((cat) => {
+                const Icon = cat.icon
+                const isActive = activeCategory === cat.id
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-white shadow-lg shadow-accent-cyan/20 scale-105'
+                        : 'bg-card/70 hover:bg-card border border-border text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{cat.label}</span>
+                  </button>
+                )
+              })}
+            </div>
 
-        {/* Grid interactivo de proyectos */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, idx) => (
-              <motion.div
-                key={project.id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.35, delay: idx * 0.08 }}
-                className="group rounded-3xl border border-border bg-card/80 backdrop-blur-xl overflow-hidden shadow-xl hover:shadow-2xl hover:border-accent-cyan/40 transition-all duration-500 flex flex-col justify-between"
-              >
-                {/* Imagen del proyecto + Overlay interactivo */}
-                <div className="relative h-56 sm:h-64 overflow-hidden bg-muted">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
+            {/* Grid interactivo de proyectos */}
+            <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <AnimatePresence mode="popLayout">
+                {filteredProjects.map((project, idx) => (
+                  <motion.div
+                    key={project.id}
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.35, delay: idx * 0.08 }}
+                    className="group rounded-3xl border border-border bg-card/80 backdrop-blur-xl overflow-hidden shadow-xl hover:shadow-2xl hover:border-accent-cyan/40 transition-all duration-500 flex flex-col justify-between"
+                  >
+                    {/* Imagen del proyecto + Overlay interactivo */}
+                    <div className="relative h-56 sm:h-64 overflow-hidden bg-muted">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
 
-                  {/* Estado / Badge de proyecto */}
-                  <div className="absolute top-4 left-4 flex flex-col gap-1.5 items-start">
-                    <span className="px-3 py-1 rounded-full bg-emerald-950/80 backdrop-blur-md border border-emerald-500/40 text-[11px] font-black text-emerald-400 flex items-center gap-1.5 shadow-md">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      {project.statusLabel || 'EN PRODUCCIÓN'}
-                    </span>
-                    <span className="px-2.5 py-0.5 rounded-full bg-background/80 backdrop-blur-md border border-border text-[10px] font-bold text-accent-cyan">
-                      {project.categoryLabel}
-                    </span>
-                  </div>
-
-                  {/* Acceso rápido a link */}
-                  {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="absolute top-4 right-4 p-2.5 rounded-full bg-background/90 backdrop-blur-md border border-accent-cyan/40 text-accent-cyan hover:bg-accent-cyan hover:text-background transition-all duration-300 shadow-lg flex items-center justify-center"
-                      title="Abrir enlace directo en producción"
-                    >
-                      <ArrowUpRight className="w-4 h-4" />
-                    </a>
-                  )}
-
-                  {/* Título en tarjeta */}
-                  <div className="absolute bottom-3 left-4 right-4">
-                    <span className="text-[11px] font-semibold text-accent-cyan uppercase tracking-wider block mb-0.5">
-                      {project.client}
-                    </span>
-                    <h3 className="text-lg sm:text-xl font-bold text-foreground font-montserrat leading-tight group-hover:text-accent-cyan transition-colors">
-                      {project.title}
-                    </h3>
-                  </div>
-                </div>
-
-                {/* Contenido & Detalles */}
-                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                    {project.description}
-                  </p>
-
-                  {/* Métricas destacadas */}
-                  <div className="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-muted/40 border border-border/60 text-center">
-                    {project.metrics.map((m) => (
-                      <div key={m.label}>
-                        <div className="text-sm sm:text-base font-black text-foreground font-montserrat">
-                          {m.value}
-                        </div>
-                        <div className="text-[10px] text-muted-foreground font-medium">
-                          {m.label}
-                        </div>
+                      {/* Estado / Badge de proyecto */}
+                      <div className="absolute top-4 left-4 flex flex-col gap-1.5 items-start">
+                        <span className="px-3 py-1 rounded-full bg-emerald-950/80 backdrop-blur-md border border-emerald-500/40 text-[11px] font-black text-emerald-400 flex items-center gap-1.5 shadow-md">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                          {project.statusLabel || 'EN PRODUCCIÓN'}
+                        </span>
+                        <span className="px-2.5 py-0.5 rounded-full bg-background/80 backdrop-blur-md border border-border text-[10px] font-bold text-accent-cyan">
+                          {project.categoryLabel}
+                        </span>
                       </div>
-                    ))}
+
+                      {/* Acceso rápido a link */}
+                      {project.link && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="absolute top-4 right-4 p-2.5 rounded-full bg-background/90 backdrop-blur-md border border-accent-cyan/40 text-accent-cyan hover:bg-accent-cyan hover:text-background transition-all duration-300 shadow-lg flex items-center justify-center"
+                          title="Abrir enlace directo en producción"
+                        >
+                          <ArrowUpRight className="w-4 h-4" />
+                        </a>
+                      )}
+
+                      {/* Título en tarjeta */}
+                      <div className="absolute bottom-3 left-4 right-4">
+                        <span className="text-[11px] font-semibold text-accent-cyan uppercase tracking-wider block mb-0.5">
+                          {project.client}
+                        </span>
+                        <h3 className="text-lg sm:text-xl font-bold text-foreground font-montserrat leading-tight group-hover:text-accent-cyan transition-colors">
+                          {project.title}
+                        </h3>
+                      </div>
+                    </div>
+
+                    {/* Contenido & Detalles */}
+                    <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {project.description}
+                      </p>
+
+                      {/* Métricas destacadas */}
+                      <div className="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-muted/40 border border-border/60 text-center">
+                        {project.metrics.map((m) => (
+                          <div key={m.label}>
+                            <div className="text-sm sm:text-base font-black text-foreground font-montserrat">
+                              {m.value}
+                            </div>
+                            <div className="text-[10px] text-muted-foreground font-medium">
+                              {m.label}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Tags tecnológicos */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {project.tags.map((t) => (
+                          <span
+                            key={t}
+                            className="px-2 py-0.5 rounded-md bg-accent-cyan/10 border border-accent-cyan/20 text-[10px] font-semibold text-accent-cyan"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Acciones principales */}
+                      <div className="pt-3 border-t border-border/50 flex items-center justify-between gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedProject(project)}
+                          className="text-[11px] font-bold text-foreground hover:text-accent-cyan flex items-center gap-1 transition-colors"
+                        >
+                          <Maximize2 className="w-3 h-3" />
+                          Detalles
+                        </button>
+
+                        {project.link && (
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:scale-105 transition-all"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            Ver en Vivo
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+
+                {/* Tarjeta dinámica de "+ Tu Proyecto Custom" */}
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: 0.3 }}
+                  className="rounded-3xl border-2 border-dashed border-accent-cyan/40 bg-card/40 backdrop-blur-xl p-6 flex flex-col items-center justify-center text-center space-y-4 hover:border-accent-cyan hover:bg-card/70 transition-all duration-300 group"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center text-accent-cyan group-hover:scale-110 transition-transform">
+                    <PlusCircle className="w-6 h-6" />
                   </div>
 
-                  {/* Tags tecnolójicos */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="px-2 py-0.5 rounded-md bg-accent-cyan/10 border border-accent-cyan/20 text-[10px] font-semibold text-accent-cyan"
-                      >
-                        {t}
-                      </span>
-                    ))}
+                  <div>
+                    <h3 className="text-lg font-bold font-montserrat text-foreground mb-1">
+                      ¿Querés tu sitio o sistema en producción?
+                    </h3>
+                    <p className="text-xs text-muted-foreground max-w-xs mx-auto">
+                      Creamos desarrollos a medida con código propio y despliegue rápido.
+                    </p>
                   </div>
 
-                  {/* Acciones principales */}
-                  <div className="pt-3 border-t border-border/50 flex items-center justify-between gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedProject(project)}
-                      className="text-[11px] font-bold text-foreground hover:text-accent-cyan flex items-center gap-1 transition-colors"
-                    >
-                      <Maximize2 className="w-3 h-3" />
-                      Detalles
-                    </button>
-
-                    {project.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:scale-105 transition-all"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        Ver en Vivo
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-
-            {/* Tarjeta dinámica de "+ Tu Proyecto Custom" */}
-            <motion.div
-              layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.3 }}
-              className="rounded-3xl border-2 border-dashed border-accent-cyan/40 bg-card/40 backdrop-blur-xl p-6 flex flex-col items-center justify-center text-center space-y-4 hover:border-accent-cyan hover:bg-card/70 transition-all duration-300 group"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center text-accent-cyan group-hover:scale-110 transition-transform">
-                <PlusCircle className="w-6 h-6" />
-              </div>
-
-              <div>
-                <h3 className="text-lg font-bold font-montserrat text-foreground mb-1">
-                  ¿Querés tu sitio o sistema en producción?
-                </h3>
-                <p className="text-xs text-muted-foreground max-w-xs mx-auto">
-                  Creamos desarrollos a medida con código propio y despliegue rápido.
-                </p>
-              </div>
-
-              <a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault()
-                  scrollToElement('#contact')
-                }}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-cyan text-background font-bold text-xs uppercase tracking-wider hover:bg-accent-cyan/90 transition-all shadow-md cursor-pointer"
-              >
-                <Zap className="w-3.5 h-3.5" />
-                Pedir Presupuesto
-              </a>
+                  <a
+                    href="#contact"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      scrollToElement('#contact')
+                    }}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-cyan text-background font-bold text-xs uppercase tracking-wider hover:bg-accent-cyan/90 transition-all shadow-md cursor-pointer"
+                  >
+                    <Zap className="w-3.5 h-3.5" />
+                    Pedir Presupuesto
+                  </a>
+                </motion.div>
+              </AnimatePresence>
             </motion.div>
-          </AnimatePresence>
-        </motion.div>
+          </>
+        ) : (
+          /* Vista destacada cuando no hay proyectos individuales en lista */
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto rounded-3xl border border-accent-cyan/30 bg-card/70 backdrop-blur-2xl p-8 sm:p-12 shadow-2xl relative overflow-hidden text-center"
+          >
+            <div className="absolute top-0 right-0 w-80 h-80 bg-accent-cyan/10 rounded-full blur-[90px] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-accent-magenta/10 rounded-full blur-[90px] pointer-events-none" />
+
+            <div className="relative z-10 space-y-6">
+              <div className="inline-flex p-3 rounded-2xl bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan mb-2">
+                <Zap className="w-8 h-8" />
+              </div>
+
+              <h3 className="text-2xl sm:text-4xl font-black font-montserrat text-foreground tracking-tight">
+                ¿Tenés un proyecto o sistema para llevar a producción?
+              </h3>
+
+              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Desarrollamos soluciones web a medida de punta a punta: desde plataformas SaaS y
+                sistemas de agendamiento de turnos, hasta tiendas e-commerce de alto impacto y
+                landings corporativas ultra-rápidas.
+              </p>
+
+              {/* Grid de capacidades */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 text-left">
+                <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
+                  <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <span>SaaS & Cloud</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Paneles administrativos, gestión de datos y arquitecturas escalables.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
+                  <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <span>E-Commerce</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Tiendas online con pasarelas de pago y conversión optimizada.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
+                  <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <span>Turnos Online</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Agendamiento en tiempo real sin registro obligatorio ni fricción.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
+                  <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <span>Webs & Landings</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Carga ultrarrápida, SEO técnico de primer nivel y diseño moderno.
+                  </p>
+                </div>
+              </div>
+
+              {/* Botón CTA */}
+              <div className="pt-6 flex flex-wrap items-center justify-center gap-4">
+                <a
+                  href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToElement('#contact')
+                  }}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-accent-cyan/20 hover:scale-105 transition-all cursor-pointer"
+                >
+                  <Zap className="w-4 h-4 text-slate-950" />
+                  <span>Cotizar Mi Proyecto a Medida</span>
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Modal de Detalle Completo del Proyecto */}

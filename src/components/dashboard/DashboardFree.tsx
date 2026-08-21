@@ -1,6 +1,8 @@
+'use client'
+
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from 'next/navigation'
 import { Monitor, Building, Building2, Sparkles } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { Cliente } from '../../core/domain/entities/Cliente'
@@ -22,7 +24,8 @@ type DashboardFreeProps = {
 
 export default function DashboardFree({ cliente, onLogout }: DashboardFreeProps) {
   const { t } = useTranslation()
-  const navigate = useNavigate()
+  const router = useRouter()
+  const navigate = (path: string) => router.push(path)
   const nombre = cliente?.full_name?.split(' ')[0] ?? 'Cliente'
   const theme = PLAN_THEMES.basico
   const [ticketPanelOpen, setTicketPanelOpen] = useState(false)

@@ -1,6 +1,8 @@
+'use client'
+
 import { useTranslation } from 'react-i18next'
 import { Code2, Github, Instagram, Linkedin, Mail, Zap, Shield, Search, Send } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 
 import Logo from './Logo'
 
@@ -148,7 +150,7 @@ const Footer = () => {
               </li>
               <li className="pt-2">
                 <Link
-                  to="/terminos"
+                  href="/terminos"
                   className="text-primary-secondary hover:text-foreground transition-all inline-block"
                 >
                   {t('footer.terminos')}
@@ -156,7 +158,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/privacidad"
+                  href="/privacidad"
                   className="text-primary-secondary hover:text-foreground transition-all inline-block"
                 >
                   {t('footer.privacidad')}

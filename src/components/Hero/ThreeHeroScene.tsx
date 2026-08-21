@@ -1,3 +1,5 @@
+'use client'
+
 import React, { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Stats } from '@react-three/drei'
@@ -40,7 +42,7 @@ export const ThreeHeroScene: React.FC = () => {
           />
         </Suspense>
 
-        {import.meta.env.DEV && <Stats className="!left-auto !right-4 !top-4" />}
+        {process.env.NODE_ENV === 'development' && <Stats className="!left-auto !right-4 !top-4" />}
       </Canvas>
     </div>
   )

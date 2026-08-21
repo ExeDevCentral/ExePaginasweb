@@ -1,5 +1,7 @@
+'use client'
+
 import { useState, useEffect, useCallback } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Lock,
@@ -29,8 +31,18 @@ import { getErrorMessage } from '../core/utils/errorUtils'
 type Mode = 'login' | 'register' | 'forgot' | 'update-password'
 
 export default function Login() {
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const router = useRouter()
+  const navigate = useCallback(
+    (path: string, options?: { replace?: boolean }) => {
+      if (options?.replace) {
+        router.replace(path)
+      } else {
+        router.push(path)
+      }
+    },
+    [router]
+  )
+  const searchParams = useSearchParams()
   const { ready, session } = useAuthSession()
   const { t } = useTranslation()
   const [error, setError] = useState<string | null>(searchParams.get('error'))

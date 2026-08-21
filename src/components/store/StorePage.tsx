@@ -1,9 +1,10 @@
+'use client'
+
 import { motion } from 'framer-motion'
 import { Sparkles, X, Sun, Moon, ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from 'next/navigation'
 import { useTypewriter } from '../../hooks/useTypewriter'
 import { PLAN_CATALOG } from '../../core/domain/planCatalog'
 import { useTheme } from '../../core/theme/ThemeContext'
@@ -83,7 +84,8 @@ const PLANS: PlanData[] = basePlans.map((p) => {
 
 export default function StorePage() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
+  const router = useRouter()
+  const navigate = (path: string) => router.push(path)
   const { theme, setTheme } = useTheme()
   const [selectedPlan, setSelectedPlan] = useState<PlanData | null>(null)
 
@@ -100,10 +102,6 @@ export default function StorePage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background py-10 px-4 sm:px-6 lg:px-8">
-      <Helmet>
-        <title>{t('store.title')} | ExeSistemasWEB</title>
-      </Helmet>
-
       {/* Ambient orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />

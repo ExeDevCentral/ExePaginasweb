@@ -13,16 +13,26 @@ Nuestra mision no es simplemente hacer paginas web, sino construir **sistemas de
 
 El objetivo final es permitir que el cliente escale sus ingresos sin sumar horas de gestion manual.
 
-## 2. Tech Stack Core
+## 2. Tech Stack Core & Ecosistema
 
-- **Framework de UI:** React 18+
+- **Framework:** Next.js 15+ (App Router, Server & Client Components)
 - **Lenguaje:** TypeScript (Tipado estricto para asegurar la escalabilidad)
-- **Tooling:** Vite (Builds extremadamente rapidos)
+- **Backend & Database:** Supabase (PostgreSQL 15, Auth SSR `@supabase/ssr`, RLS, RPC functions, triggers)
+- **API & Backend Routes:** Next.js Route Handlers (`app/api/**/route.ts`)
 - **Estilos:** Tailwind CSS + Variables CSS personalizadas (Estetica Enterprise, Glassmorphism, Dark Mode)
-- **Animaciones:** Framer Motion (Micro-interacciones fluidas, efectos Spotlight)
-- **Toasts:** Sileo (notificaciones animadas sincronizadas con el tema)
-- **Despliegue e Infraestructura:** Vercel (Edge network para tiempos de carga en milisegundos)
-- **Backend:** Supabase (PostgreSQL 15, Auth, RLS, RPC functions, triggers)
+- **Animaciones:** Framer Motion / Motion, GSAP, Lenis (Micro-interacciones fluidas, efectos Spotlight)
+- **3D & Gráficos:** React Three Fiber (`@react-three/fiber`), Drei, Three.js (Carga diferida `next/dynamic`)
+- **Toasts & UI:** Sileo + Sonner (notificaciones animadas sincronizadas con el tema)
+- **Despliegue e Infraestructura:** Vercel (Edge network, SSR, ISR y Serverless Route Handlers)
+- **Ecosistema Avanzado (Roadmap Modular):**
+  - `nuqs` (URL state/filtros/paginación)
+  - `cmdk` (Command palette Ctrl+K)
+  - `dnd-kit` (Kanban de tickets y organización visual)
+  - `React Flow` (Diagramas y visualizador de workflows de automatización)
+  - `PGlite` / `Dexie` (PostgreSQL en Wasm / IndexedDB para offline-first)
+  - `Orama` / `Fuse.js` (Búsqueda difusa y texto completo)
+  - `Trigger.dev` / `Inngest` (Orquestación de tareas de fondo y revisiones SLA)
+  - `UploadThing` / `Sharp` (Manejo y optimización de medios)
 
 ## 3. Arquitectura SaaS Multi-Tenant
 

@@ -1,6 +1,10 @@
+'use client'
+
 import { useEffect, useRef, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import { useIsMobile } from '../../hooks/useIsMobile'
-import LoginScene from './LoginScene'
+
+const LoginScene = dynamic(() => import('./LoginScene'), { ssr: false })
 
 class Particle {
   x: number

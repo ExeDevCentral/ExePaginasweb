@@ -1,5 +1,7 @@
+'use client'
+
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { ArrowLeft, Shield } from 'lucide-react'
 import Header from '../components/layout/Header'
@@ -17,7 +19,7 @@ const PrivacyPolicy: React.FC = () => {
           className="max-w-4xl mx-auto"
         >
           <Link
-            to="/"
+            href="/"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-accent-cyan transition-colors mb-8 group"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
@@ -60,24 +62,10 @@ const PrivacyPolicy: React.FC = () => {
               className="rounded-2xl bg-card/50 border border-border p-6 backdrop-blur-sm"
             >
               <h2 className="text-lg font-bold text-foreground mb-3 flex items-center gap-3">
-                <span className="w-1 h-5 bg-accent-magenta rounded-full" />
+                <span className="w-1 h-5 bg-accent-cyan rounded-full" />
                 {t('privacypolicy.sec2_titulo')}
               </h2>
-              <p className="text-muted-foreground mb-4">{t('privacypolicy.sec2_texto')}</p>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3 text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan mt-2 shrink-0" />
-                  {t('privacypolicy.sec2_li1')}
-                </li>
-                <li className="flex items-start gap-3 text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent-magenta mt-2 shrink-0" />
-                  {t('privacypolicy.sec2_li2')}
-                </li>
-                <li className="flex items-start gap-3 text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan mt-2 shrink-0" />
-                  {t('privacypolicy.sec2_li3')}
-                </li>
-              </ul>
+              <p className="text-muted-foreground">{t('privacypolicy.sec2_texto')}</p>
             </motion.section>
 
             <motion.section
@@ -100,20 +88,24 @@ const PrivacyPolicy: React.FC = () => {
               className="rounded-2xl bg-card/50 border border-border p-6 backdrop-blur-sm"
             >
               <h2 className="text-lg font-bold text-foreground mb-3 flex items-center gap-3">
-                <span className="w-1 h-5 bg-accent-magenta rounded-full" />
+                <span className="w-1 h-5 bg-accent-cyan rounded-full" />
                 {t('privacypolicy.sec4_titulo')}
               </h2>
               <p className="text-muted-foreground">{t('privacypolicy.sec4_texto')}</p>
             </motion.section>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+            <motion.section
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="p-6 rounded-2xl bg-gradient-to-r from-accent-cyan/5 to-accent-magenta/5 border border-border mt-12"
+              className="rounded-2xl bg-card/50 border border-border p-6 backdrop-blur-sm"
             >
-              <p className="text-sm text-muted-foreground">{t('privacypolicy.footer_alerta')}</p>
-            </motion.div>
+              <h2 className="text-lg font-bold text-foreground mb-3 flex items-center gap-3">
+                <span className="w-1 h-5 bg-accent-cyan rounded-full" />
+                {t('privacypolicy.sec5_titulo')}
+              </h2>
+              <p className="text-muted-foreground">{t('privacypolicy.sec5_texto')}</p>
+            </motion.section>
           </div>
         </motion.div>
       </div>

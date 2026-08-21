@@ -1,6 +1,8 @@
+'use client'
+
 import { motion } from 'framer-motion'
 import { ArrowLeft, ShieldCheck, LogOut } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import Logo from '../layout/Logo'
 import ThemeToggle from '../layout/ThemeToggle'
@@ -12,7 +14,8 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ userEmail, onLogout }: DashboardHeaderProps) {
-  const navigate = useNavigate()
+  const router = useRouter()
+  const navigate = (path: string) => router.push(path)
   const { t } = useTranslation()
   const prefersReducedMotion = useReducedMotion()
 

@@ -1,5 +1,7 @@
+'use client'
+
 import { useEffect, useState, Suspense } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../core/infra/supabase/client'
@@ -79,9 +81,16 @@ const VIEW_TABS: { id: DashboardView; labelKey: string; icon: typeof LayoutDashb
 ]
 
 export default function Dashboard() {
-  const navigate = useNavigate()
+  const router = useRouter()
+  const navigate = (path: string, options?: { replace?: boolean }) => {
+    if (options?.replace) {
+      router.replace(path)
+    } else {
+      router.push(path)
+    }
+  }
   const { t } = useTranslation()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const searchParams = useSearchParams()
   const queryClient = useQueryClient()
   const prefersReducedMotion = useReducedMotion()
   const { ready, session } = useAuthSession()
@@ -113,7 +122,9 @@ export default function Dashboard() {
 
   // Feature Flag / Rollback Support (?ui=legacy or VITE_DASHBOARD_UI=legacy)
   const isLegacyUI =
-    searchParams.get('ui') === 'legacy' || import.meta.env.VITE_DASHBOARD_UI === 'legacy'
+    searchParams.get('ui') === 'legacy' ||
+    process.env.NEXT_PUBLIC_DASHBOARD_UI === 'legacy' ||
+    (typeof window !== 'undefined' && (window as any).__DASHBOARD_UI__ === 'legacy')
 
   const { data: tenants = [] } = useTenant(cliente?.id ?? null, ready && !!session && !!cliente?.id)
 
@@ -133,14 +144,12 @@ export default function Dashboard() {
     const payment = searchParams.get('payment')
     const pago = searchParams.get('pago')
     if (pago === 'ok' || payment === 'mp_ok' || payment === 'paypal_ok') {
-      setSearchParams(
-        (params) => {
-          params.delete('payment')
-          params.delete('pago')
-          return params
-        },
-        { replace: true }
-      )
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        url.searchParams.delete('payment')
+        url.searchParams.delete('pago')
+        window.history.replaceState(null, '', url.pathname + (url.search ? url.search : ''))
+      }
       refresh()
       toast.success('Pago aprobado', {
         description:
@@ -149,12 +158,12 @@ export default function Dashboard() {
             : 'Suscripción activada correctamente',
       })
     }
-  }, [searchParams, setSearchParams, refresh])
+  }, [searchParams, refresh])
 
   useEffect(() => {
     if (!ready) return
     if (!session) navigate('/login', { replace: true })
-  }, [ready, session, navigate])
+  }, [ready, session])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -346,13 +355,11 @@ export default function Dashboard() {
                     type="button"
                     onClick={() => {
                       setActiveView(tab.id)
-                      setSearchParams(
-                        (params) => {
-                          params.set('tab', tab.id)
-                          return params
-                        },
-                        { replace: true }
-                      )
+                      if (typeof window !== 'undefined') {
+                        const url = new URL(window.location.href)
+                        url.searchParams.set('tab', tab.id)
+                        window.history.replaceState(null, '', url.pathname + url.search)
+                      }
                     }}
                     onMouseEnter={() => {
                       if (!currentTenant?.id) return

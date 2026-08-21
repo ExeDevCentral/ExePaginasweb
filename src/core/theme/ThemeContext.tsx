@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 
 type Theme = 'dark' | 'light'
@@ -15,24 +17,29 @@ const ThemeContext = createContext<ThemeContextValue>({
 })
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setTheme] = useState<Theme>('dark')
+
+  useEffect(() => {
     const saved = localStorage.getItem('theme')
-    if (saved === 'light' || saved === 'dark') return saved
-    // Respetar preferencia del SO, con fallback a oscuro
-    if (window.matchMedia?.('(prefers-color-scheme: light)').matches) return 'light'
-    return 'dark'
-  })
+    if (saved === 'light' || saved === 'dark') {
+      setTheme(saved)
+      document.documentElement.classList.toggle('dark', saved === 'dark')
+    } else if (window.matchMedia?.('(prefers-color-scheme: light)').matches) {
+      setTheme('light')
+      document.documentElement.classList.toggle('dark', false)
+    } else {
+      setTheme('dark')
+      document.documentElement.classList.toggle('dark', true)
+    }
+  }, [])
 
   const applyTheme = (t: Theme) => {
     setTheme(t)
-    document.documentElement.classList.toggle('dark', t === 'dark')
-    localStorage.setItem('theme', t)
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.toggle('dark', t === 'dark')
+      localStorage.setItem('theme', t)
+    }
   }
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-    localStorage.setItem('theme', theme)
-  }, [theme])
 
   const toggleTheme = () => applyTheme(theme === 'dark' ? 'light' : 'dark')
 

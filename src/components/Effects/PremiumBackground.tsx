@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useRef } from 'react'
 
 const DARK_COLORS = ['#60a5fa', '#c084fc', '#34d399']
@@ -71,7 +73,6 @@ class Node {
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2)
     ctx.fillStyle = color
-    // Sin shadowBlur en móvil: es la operación más cara del canvas
     if (!this.isMobile) {
       ctx.shadowBlur = isDark ? 8 : 4
       ctx.shadowColor = color
@@ -182,10 +183,7 @@ const PremiumBackground = () => {
 
     let animId: number
     const loop = () => {
-      // Limpiar el canvas por completo en cada cuadro para eliminar cualquier marca o estela de sombra
       ctx.clearRect(0, 0, w, h)
-
-      // En móvil saltamos las líneas (complejidad O(n²)) para aliviar la GPU
       if (!isMobile) drawLinks()
       const darkTheme = document.documentElement.classList.contains('dark')
       nodes.forEach((n) => {

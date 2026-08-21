@@ -2,9 +2,19 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
 import sitemap from 'vite-plugin-sitemap'
+import path from 'node:path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '@/lib': path.resolve(__dirname, './lib'),
+      '@/components': path.resolve(__dirname, './src/components'),
+      '@/views': path.resolve(__dirname, './src/views'),
+      '@/core': path.resolve(__dirname, './src/core'),
+    },
+  },
   plugins: [
     react(),
     visualizer({

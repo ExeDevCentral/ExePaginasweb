@@ -1,3 +1,5 @@
+'use client'
+
 import { motion, AnimatePresence } from 'framer-motion'
 import { LogOut, LayoutDashboard, ExternalLink, MessageCircle } from 'lucide-react'
 import { MorphIcon } from 'morphicons/react'
@@ -6,7 +8,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useScrollSpy } from '../../hooks/useScrollSpy'
 import { NAV_ITEMS, SCROLL_OFFSET } from '../landing/constants'
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from 'next/navigation'
 import { useAuthRole } from '../../core/auth/userAuth'
 import ThemeToggle from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
@@ -24,7 +26,8 @@ const Header = () => {
   const { t } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const navigate = useNavigate()
+  const router = useRouter()
+  const navigate = (path: string) => router.push(path)
   const { user, signOut } = useAuthRole()
   const isLoggedIn = user !== null
 

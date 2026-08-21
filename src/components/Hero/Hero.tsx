@@ -28,17 +28,18 @@ const TitleLine: React.FC<{
   delay: number
   duration?: number
   index: number
-}> = ({ text, delay }) => {
+}> = ({ text, delay, duration = 1.2, index }) => {
+  const fromLeft = index % 2 === 0
   return (
     <motion.span
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: fromLeft ? -140 : 140 }}
+      animate={{ opacity: 1, x: 0 }}
       transition={{
-        duration: 0.7,
+        duration,
         ease: [0.16, 1, 0.3, 1],
         delay,
       }}
-      className="block text-slate-950 dark:text-white font-black"
+      className="block text-slate-950 dark:text-white font-black will-change-transform"
     >
       {text}
     </motion.span>
@@ -63,13 +64,14 @@ const Hero: React.FC = () => {
       <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto w-full">
         <Badge text={t('hero.badge')} />
 
-        <motion.h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-slate-950 dark:text-white tracking-tight leading-[1.1] md:leading-[1.05] mb-4 max-w-4xl">
+        <motion.h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-slate-950 dark:text-white tracking-tight leading-[1.1] md:leading-[1.05] mb-4 max-w-4xl overflow-hidden">
           {titleParts.map((part, i) => (
             <TitleLine
               key={i}
               index={i}
               text={`${part}${i < titleParts.length - 1 ? '.' : ''}`}
-              delay={i === 0 ? 0.1 : 0.25}
+              delay={i === 0 ? 0.3 : 3.0}
+              duration={1.2}
             />
           ))}
         </motion.h1>
@@ -77,8 +79,8 @@ const Hero: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-          className="inline-flex flex-col items-center gap-1 px-6 py-4 rounded-2xl bg-white/80 dark:bg-muted/60 border border-slate-200 dark:border-border backdrop-blur-md mb-6 max-w-2xl shadow-sm"
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 3.6 }}
+          className="inline-flex flex-col items-center gap-1 px-6 py-4 rounded-2xl bg-white/95 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 backdrop-blur-md mb-6 max-w-2xl shadow-lg"
         >
           <p className="text-base md:text-lg text-slate-800 dark:text-slate-200 font-bold">
             {t('hero.titulo_2')}
@@ -91,7 +93,7 @@ const Hero: React.FC = () => {
         <motion.p
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 3.8 }}
           className="text-base sm:text-lg md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed max-w-3xl mx-auto mb-6 font-semibold"
         >
           {t('hero.descripcion')}
@@ -100,7 +102,7 @@ const Hero: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 4.0 }}
           className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full sm:w-auto px-4"
         >
           <SalonBloomButton
@@ -112,7 +114,7 @@ const Hero: React.FC = () => {
             }}
           />
           <MagneticButton href="#contact">
-            <span className="w-full sm:w-auto text-center px-8 py-4 rounded-2xl border border-border text-foreground font-semibold bg-background/60 backdrop-blur-md hover:bg-muted hover:border-accent-cyan/40 transition-all text-sm tracking-wide block">
+            <span className="w-full sm:w-auto text-center px-8 py-4 rounded-2xl border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-extrabold bg-white dark:bg-slate-900/90 backdrop-blur-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-xs sm:text-sm tracking-wider uppercase block shadow-md">
               {t('hero.cta_proyecto')}
             </span>
           </MagneticButton>

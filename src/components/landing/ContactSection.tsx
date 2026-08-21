@@ -262,13 +262,13 @@ const ContactSection = () => {
                 <motion.button
                   type="submit"
                   disabled={status === 'sending'}
-                  className="group flex w-full items-center justify-center gap-3 rounded-xl border border-black/40 bg-muted px-6 py-4 font-semibold text-foreground transition-all hover:border-black hover:bg-accent-cyan/10 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-600 hover:opacity-95 px-6 py-4 font-extrabold text-white text-sm uppercase tracking-wider transition-all shadow-xl shadow-purple-500/25 border border-white/20 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
                   {status === 'sending' ? (
                     <>
-                      <div className="h-4 w-4 rounded-full border-2 border-border/30 border-t-foreground animate-spin" />
+                      <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
                       {t('contact.form_enviando')}
                     </>
                   ) : (

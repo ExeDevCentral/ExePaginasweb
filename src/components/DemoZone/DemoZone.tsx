@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useMemo, useRef, Suspense, useEffect } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useTranslation } from 'react-i18next'
 import {
@@ -422,11 +422,6 @@ const DemoZone = () => {
     summary: string
   } | null>(null)
   const [glitchActive, setGlitchActive] = useState(false)
-  const [isCoffeeTransitioning, setIsCoffeeTransitioning] = useState(false)
-  const [CoffeePortalComponent, setCoffeePortalComponent] = useState<React.ComponentType<{
-    isVisible: boolean
-    onDismiss?: () => void
-  }> | null>(null)
   const [cartItems, setCartItems] = useState<{ id: number; name: string; price: number }[]>([])
   const [flyingItem, setFlyingItem] = useState<number | null>(null)
   const [cartBounce, setCartBounce] = useState(false)
@@ -489,9 +484,6 @@ const DemoZone = () => {
 
   const [propFilter, setPropFilter] = useState<'todos' | 'casa' | 'depto'>('todos')
   const [whatsappProp, setWhatsappProp] = useState<number | null>(null)
-  const dismissCoffee = () => {
-    setIsCoffeeTransitioning(false)
-  }
 
   const openProject = (project: { title: string; category: string; summary: string }) => {
     if (project.title === 'NeoFit Studio') {
@@ -499,18 +491,7 @@ const DemoZone = () => {
       setTimeout(() => {
         setGlitchActive(false)
         setSelectedProject(project)
-      }, 600)
-    } else if (project.title === 'Pixel Coffee') {
-      if (!CoffeePortalComponent) {
-        import('../Effects/CoffeePortal3D').then((module) => {
-          setCoffeePortalComponent(() => module.CoffeePortal3D)
-        })
-      }
-      setIsCoffeeTransitioning(true)
-      setTimeout(() => {
-        setSelectedProject(project)
-        setTimeout(() => setIsCoffeeTransitioning(false), 800)
-      }, 1200)
+      }, 500)
     } else {
       setSelectedProject(project)
     }
@@ -615,13 +596,6 @@ const DemoZone = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Efecto Alucinante 3D para Café — solo se monta si el componente fue cargado */}
-      {CoffeePortalComponent && (
-        <Suspense fallback={null}>
-          <CoffeePortalComponent isVisible={isCoffeeTransitioning} onDismiss={dismissCoffee} />
-        </Suspense>
-      )}
 
       {/* Portal de Cristal (Modal Exagerado) */}
       <AnimatePresence>
@@ -1023,8 +997,9 @@ const DemoZone = () => {
                         </AnimatePresence>
 
                         <motion.button
+                          type="button"
                           onClick={() => addToCart(product)}
-                          className="mt-auto w-full py-2.5 rounded-xl bg-amber-500/20 border border-amber-600/40 text-amber-400 text-sm font-semibold hover:bg-amber-500/40 hover:text-amber-200 transition-colors"
+                          className="mt-auto w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider transition-all shadow-md cursor-pointer disabled:opacity-50"
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.96 }}
                           disabled={flyingItem === product.id}
@@ -1038,12 +1013,12 @@ const DemoZone = () => {
                   {/* Mini checkout */}
                   {cartItems.length > 0 && (
                     <motion.div
-                      className="mt-6 bg-card/80 border border-amber-700/30 rounded-2xl p-6 flex items-center justify-between"
+                      className="mt-6 bg-card/90 border border-amber-500/40 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4 shadow-xl"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                     >
                       <div>
-                        <p className="text-amber-500 text-sm">
+                        <p className="text-amber-500 text-sm font-bold">
                           {cartItems.length} {t('demozone.coffee_products_in_order')}
                         </p>
                         <p className="text-foreground text-2xl font-black mt-1">
@@ -1052,7 +1027,8 @@ const DemoZone = () => {
                         </p>
                       </div>
                       <motion.button
-                        className="px-8 py-4 bg-amber-400 text-black font-black text-lg rounded-full hover:bg-amber-300 transition-colors"
+                        type="button"
+                        className="px-8 py-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-sm uppercase tracking-wider rounded-2xl hover:opacity-95 transition-all shadow-xl shadow-amber-500/30 cursor-pointer"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         animate={{

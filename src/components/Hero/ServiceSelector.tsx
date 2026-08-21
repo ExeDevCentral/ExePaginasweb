@@ -143,7 +143,7 @@ function ServiceCard({
       }}
       className="relative cursor-pointer group"
     >
-      <div className="relative bg-white/[0.03] backdrop-blur-sm border border-white/[0.06] rounded-2xl p-5 h-full overflow-hidden transition-[border-color] duration-300 group-hover:border-white/20">
+      <div className="relative bg-white/90 dark:bg-white/[0.03] backdrop-blur-sm border border-slate-200 dark:border-white/[0.06] rounded-2xl p-5 h-full overflow-hidden transition-[border-color] duration-300 group-hover:border-accent-cyan/40 shadow-sm dark:shadow-none">
         {/* Glare */}
         <motion.div
           className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -165,22 +165,24 @@ function ServiceCard({
         </div>
 
         {/* Content */}
-        <h3 className="text-white font-bold text-sm mb-1.5 group-hover:text-accent-cyan transition-colors">
+        <h3 className="text-slate-900 dark:text-white font-bold text-sm mb-1.5 group-hover:text-accent-cyan transition-colors">
           {service.nombre}
         </h3>
-        <p className="text-white/35 text-xs leading-relaxed mb-4 line-clamp-2">
+        <p className="text-slate-600 dark:text-white/50 text-xs leading-relaxed mb-4 line-clamp-2 font-medium">
           {service.descripcion}
         </p>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-white/5">
+        <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-white/5">
           <div>
-            <span className="text-white font-black text-lg">
+            <span className="text-slate-900 dark:text-white font-black text-lg">
               ${service.precio.toLocaleString('es-AR')}
             </span>
-            <span className="text-white/30 text-xs ml-1">{service.moneda}</span>
+            <span className="text-slate-500 dark:text-white/30 text-xs ml-1 font-semibold">
+              {service.moneda}
+            </span>
           </div>
-          <div className="flex items-center gap-1.5 text-white/30 text-xs">
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-white/40 text-xs font-semibold">
             <Clock size={12} />
             <span>{service.duracion}</span>
           </div>
@@ -188,7 +190,7 @@ function ServiceCard({
 
         {/* CTA arrow */}
         <motion.div
-          className="absolute bottom-5 right-5 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/20 group-hover:bg-accent-cyan/20 group-hover:text-accent-cyan transition-all duration-300"
+          className="absolute bottom-5 right-5 w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-600 dark:text-white/30 group-hover:bg-accent-cyan/20 group-hover:text-accent-cyan transition-all duration-300 shadow-sm"
           whileHover={{ scale: 1.1 }}
         >
           <ArrowRight size={14} />
@@ -221,10 +223,12 @@ export default function ServiceSelector() {
         transition={{ delay: 0.6 }}
         className="text-center mb-8"
       >
-        <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-accent-cyan/60 mb-2">
+        <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-accent-cyan/80 mb-2">
           Elegí tu servicio
         </p>
-        <p className="text-white/20 text-xs">Hacé click en cualquiera para reservar</p>
+        <p className="text-slate-500 dark:text-white/40 text-xs font-medium">
+          Hacé click en cualquiera para reservar
+        </p>
       </motion.div>
 
       {/* Services grid */}

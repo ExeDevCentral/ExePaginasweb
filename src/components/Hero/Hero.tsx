@@ -28,18 +28,17 @@ const TitleLine: React.FC<{
   delay: number
   duration?: number
   index: number
-}> = ({ text, delay, duration = 1.1, index }) => {
-  const isLeft = index % 2 === 0
+}> = ({ text, delay }) => {
   return (
     <motion.span
-      initial={{ opacity: 0, x: isLeft ? -240 : 240, filter: 'blur(10px)', scale: 0.9 }}
-      animate={{ opacity: 1, x: 0, filter: 'blur(0px)', scale: 1 }}
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration,
+        duration: 0.7,
         ease: [0.16, 1, 0.3, 1],
         delay,
       }}
-      className="block will-change-transform"
+      className="block text-slate-950 dark:text-white font-black"
     >
       {text}
     </motion.span>
@@ -64,14 +63,13 @@ const Hero: React.FC = () => {
       <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto w-full">
         <Badge text={t('hero.badge')} />
 
-        <motion.h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-montserrat font-extrabold text-slate-800 dark:text-slate-100 tracking-tight leading-[1.1] md:leading-[1.05] mb-4 max-w-4xl">
+        <motion.h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-slate-950 dark:text-white tracking-tight leading-[1.1] md:leading-[1.05] mb-4 max-w-4xl">
           {titleParts.map((part, i) => (
             <TitleLine
               key={i}
               index={i}
               text={`${part}${i < titleParts.length - 1 ? '.' : ''}`}
-              delay={i === 0 ? 0.1 : 0.3}
-              duration={i === 0 ? 1.1 : 2.7}
+              delay={i === 0 ? 0.1 : 0.25}
             />
           ))}
         </motion.h1>
@@ -80,12 +78,12 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-          className="inline-flex flex-col items-center gap-1 px-6 py-4 rounded-2xl bg-muted/60 border border-border backdrop-blur-md mb-6 max-w-2xl"
+          className="inline-flex flex-col items-center gap-1 px-6 py-4 rounded-2xl bg-white/80 dark:bg-muted/60 border border-slate-200 dark:border-border backdrop-blur-md mb-6 max-w-2xl shadow-sm"
         >
-          <p className="text-base md:text-lg text-primary-secondary font-medium">
+          <p className="text-base md:text-lg text-slate-800 dark:text-slate-200 font-bold">
             {t('hero.titulo_2')}
           </p>
-          <p className="text-xl md:text-2xl font-bold text-gradient-spectacular">
+          <p className="text-xl md:text-2xl font-black text-gradient-spectacular">
             {t('hero.sub_respuesta')}
           </p>
         </motion.div>
@@ -94,7 +92,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-          className="text-base sm:text-lg md:text-xl text-primary-secondary leading-relaxed max-w-3xl mx-auto mb-6 font-medium"
+          className="text-base sm:text-lg md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed max-w-3xl mx-auto mb-6 font-semibold"
         >
           {t('hero.descripcion')}
         </motion.p>

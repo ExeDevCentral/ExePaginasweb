@@ -38,7 +38,7 @@ export default function MouseSpotlight() {
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-30 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
     >
       <motion.div
         className="absolute w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 dark:opacity-30 blur-[120px] will-change-transform bg-gradient-to-r from-accent-cyan via-accent-magenta to-accent-cyan"

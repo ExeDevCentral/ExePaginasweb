@@ -254,7 +254,7 @@ const Header = () => {
             </a>
 
             <motion.button
-              className="w-10 h-10 flex items-center justify-center border border-zinc-800 text-zinc-400 hover:text-white hover:border-[#00f2fe] transition-all duration-200 rounded-sm shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f2fe]"
+              className="w-10 h-10 flex items-center justify-center border border-slate-300 dark:border-zinc-800 text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white hover:border-accent-cyan bg-white/80 dark:bg-slate-900/80 transition-all duration-200 rounded-xl shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan shadow-sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               whileTap={{ scale: 0.95 }}
               aria-label={isMenuOpen ? 'Cerrar menú principal' : 'Abrir menú principal'}
@@ -274,7 +274,7 @@ const Header = () => {
             {/* Backdrop */}
             <motion.div
               key="mob-backdrop"
-              className="xl:hidden fixed inset-0 z-40 bg-black/80 backdrop-blur-md"
+              className="xl:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-md"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -286,7 +286,7 @@ const Header = () => {
             <motion.div
               id="mobile-menu-drawer"
               key="mob-drawer"
-              className="xl:hidden fixed top-16 left-0 w-full z-50 flex flex-col bg-background border-t border-border"
+              className="xl:hidden fixed top-16 left-0 w-full z-50 flex flex-col bg-card border-t border-border shadow-2xl"
               style={{
                 height: 'calc(100dvh - 64px)',
               }}
@@ -295,9 +295,23 @@ const Header = () => {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
+              {/* Header inside drawer with close button */}
+              <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-muted/40">
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  Navegación
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-1 text-xs font-bold text-foreground hover:text-accent-cyan px-2.5 py-1 rounded-lg border border-border bg-background"
+                >
+                  <span>✕ Cerrar</span>
+                </button>
+              </div>
+
               <nav
                 data-lenis-prevent
-                className="flex flex-col px-6 py-8 gap-4 flex-1 overflow-y-auto"
+                className="flex flex-col px-6 py-6 gap-3 flex-1 overflow-y-auto"
               >
                 {NAV_ITEMS.filter((i) => i.id !== 'contact').map((item, index) => {
                   const isActive = activeId === item.id
@@ -308,10 +322,11 @@ const Header = () => {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-border/40"
-                      style={{
-                        color: isActive ? 'var(--accent-cyan)' : 'var(--muted-foreground)',
-                      }}
+                      className={`py-3 text-sm font-bold tracking-widest uppercase border-b border-border/60 ${
+                        isActive
+                          ? 'text-cyan-600 dark:text-accent-cyan font-black'
+                          : 'text-slate-800 dark:text-slate-200 hover:text-foreground'
+                      }`}
                       onClick={(e) => {
                         setIsMenuOpen(false)
                         scrollToSection(e, item.id)
@@ -328,7 +343,7 @@ const Header = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 3 * 0.05 }}
                   href="/cotizador"
-                  className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-zinc-900/60 text-emerald-400/80 flex items-center gap-1.5"
+                  className="py-3 text-sm font-bold tracking-widest uppercase border-b border-border/60 text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <span>{t('nav.cotizador')}</span>
@@ -340,7 +355,7 @@ const Header = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 4 * 0.05 }}
                   href="/tienda"
-                  className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-zinc-900/60 text-[#00f2fe]/80 flex items-center gap-1.5"
+                  className="py-3 text-sm font-bold tracking-widest uppercase border-b border-border/60 text-cyan-600 dark:text-[#00f2fe] flex items-center gap-1.5"
                   onClick={(e) => {
                     e.preventDefault()
                     setIsMenuOpen(false)
@@ -348,7 +363,7 @@ const Header = () => {
                   }}
                 >
                   <span>{t('nav.tienda_online')}</span>
-                  <ExternalLink size={11} className="opacity-70" />
+                  <ExternalLink size={13} className="opacity-70" />
                 </motion.a>
 
                 {/* Auth dashboard if logged in */}
@@ -362,9 +377,9 @@ const Header = () => {
                         navigate('/dashboard')
                         setIsMenuOpen(false)
                       }}
-                      className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-zinc-900/60 text-zinc-300 text-left flex items-center gap-2"
+                      className="py-3 text-sm font-bold tracking-widest uppercase border-b border-border/60 text-slate-800 dark:text-slate-200 text-left flex items-center gap-2"
                     >
-                      <LayoutDashboard size={14} />
+                      <LayoutDashboard size={16} className="text-accent-cyan" />
                       <span>{t('nav.panel_cliente')}</span>
                     </motion.button>
 
@@ -373,16 +388,16 @@ const Header = () => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 6 * 0.05 }}
                       onClick={handleLogout}
-                      className="py-2.5 text-xs font-bold tracking-widest uppercase border-b border-zinc-900/60 text-zinc-500 text-left flex items-center gap-2"
+                      className="py-3 text-sm font-bold tracking-widest uppercase border-b border-border/60 text-rose-600 dark:text-rose-400 text-left flex items-center gap-2"
                     >
-                      <LogOut size={14} />
+                      <LogOut size={16} />
                       <span>{t('nav.cerrar_sesion')}</span>
                     </motion.button>
                   </>
                 )}
 
                 {/* Controls and CTA at the bottom */}
-                <div className="mt-auto pt-6 border-t border-zinc-900 flex flex-col gap-4">
+                <div className="mt-auto pt-6 border-t border-border flex flex-col gap-4">
                   <a
                     href="https://api.whatsapp.com/send?phone=5493416874786&text=¡Hola%20ExePaginasWeb!%20Me%20contacto%20desde%20la%20web."
                     onClick={(e) => {
@@ -391,15 +406,15 @@ const Header = () => {
                     }}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-3.5 rounded-xl bg-emerald-500 text-slate-950 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer"
+                    className="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer transition-all"
                   >
                     <MessageCircle size={16} className="fill-slate-950 stroke-emerald-500" />
                     <span>WhatsApp Directo ⚡</span>
                   </a>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-zinc-500 tracking-wider uppercase">
-                      System Config
+                  <div className="flex items-center justify-between py-1">
+                    <span className="text-[11px] font-bold text-muted-foreground tracking-wider uppercase">
+                      Configuración
                     </span>
                     <div className="flex items-center gap-3">
                       <LanguageSwitcher />
@@ -410,7 +425,7 @@ const Header = () => {
                   <button
                     type="button"
                     onClick={goToClientArea}
-                    className="w-full py-3 text-xs font-bold tracking-widest uppercase border border-[#00f2fe] text-[#00f2fe] bg-transparent active:bg-[#00f2fe] active:text-black transition-colors duration-200 rounded-sm"
+                    className="w-full py-3.5 text-xs font-extrabold tracking-widest uppercase border border-accent-cyan text-cyan-700 dark:text-accent-cyan bg-accent-cyan/10 active:bg-accent-cyan active:text-white transition-colors duration-200 rounded-xl"
                   >
                     {t('nav.area_cliente')}
                   </button>

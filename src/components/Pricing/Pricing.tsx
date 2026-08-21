@@ -77,7 +77,7 @@ const PricingCard = ({
       {plan.popular && (
         <>
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-magenta to-transparent" />
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-xs font-bold text-foreground uppercase tracking-wider shadow-lg">
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-xs font-black text-white uppercase tracking-wider shadow-lg">
             {t('pricing.popular')}
           </div>
         </>

@@ -317,7 +317,7 @@ export const AIChatWidget: React.FC = () => {
         initial={{ scale: 0, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="fixed bottom-6 right-24 z-50 group select-none"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-24 z-40 group select-none"
       >
         {/* Ambient Pulsing Glow Aura */}
         <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-accent-cyan via-purple-500 to-accent-magenta opacity-75 blur-lg group-hover:opacity-100 group-hover:blur-xl transition-all duration-500 animate-pulse" />
@@ -328,7 +328,7 @@ export const AIChatWidget: React.FC = () => {
           whileHover={{ scale: 1.06, y: -2 }}
           whileTap={{ scale: 0.94 }}
           aria-label="Abrir AI Copilot"
-          className="relative flex items-center gap-3 px-5 py-3 rounded-full bg-slate-950/90 text-white font-extrabold text-xs border border-accent-cyan/50 shadow-[0_10px_35px_rgba(6,182,212,0.45)] backdrop-blur-2xl overflow-hidden cursor-pointer transition-all duration-300"
+          className="relative flex items-center justify-center p-3 sm:px-5 sm:py-3 rounded-full bg-slate-950/95 text-white font-extrabold text-xs border border-accent-cyan/50 shadow-[0_10px_35px_rgba(6,182,212,0.45)] backdrop-blur-2xl overflow-hidden cursor-pointer transition-all duration-300"
         >
           {/* Holographic Sweep Beam */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
@@ -344,8 +344,8 @@ export const AIChatWidget: React.FC = () => {
             </div>
           </div>
 
-          {/* Label & Status Pill */}
-          <div className="flex flex-col text-left pr-0.5">
+          {/* Label & Status Pill (Desktop only to prevent obstructing mobile controls) */}
+          <div className="hidden sm:flex flex-col text-left pr-0.5">
             <div className="flex items-center gap-1.5">
               <span className="font-extrabold font-mono tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-300 text-xs">
                 AI COPILOT
@@ -361,7 +361,7 @@ export const AIChatWidget: React.FC = () => {
           </div>
 
           {/* Interactive Badge Indicator */}
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399] animate-pulse" />
+          <div className="hidden sm:block w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399] animate-pulse" />
         </motion.button>
       </motion.div>
 

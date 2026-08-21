@@ -17,20 +17,20 @@
 
 ## API Endpoints
 
-- **CORS:** Solo permite origenes whitelisted (`exepaginasweb.com`, `www.exepaginasweb.com`, `VITE_SITE_URL`)
+- **CORS:** Solo permite origenes whitelisted (`exepaginasweb.com`, `www.exepaginasweb.com`, `NEXT_PUBLIC_SITE_URL`)
 - **Rate Limiting:** 5 requests por hora por IP en `/api/contact`
-- **Validacion de entrada:** Campos requeridos validados en cada endpoint
-- **Metodos:** Solo POST para contact y webhooks, GET rechazado con 405
+- **Validacion de entrada:** Campos requeridos validados en cada endpoint con Zod / esquemas
+- **Metodos:** Solo POST para contact y webhooks
 
 ## Proteccion XSS
 
 - **Escape HTML:** Todas las entradas de usuario pasan por `escapeHtml()` antes de insertar en templates de email
-- **Sanitizacion:** Nombres, emails y mensajes sanitizados en `api/contact.js` y `api/paypal-webhook.js`
+- **Sanitizacion:** Nombres, emails y mensajes sanitizados en `app/api/contact/route.ts` y `app/api/paypal-webhook/route.ts`
 
 ## Webhooks
 
-- **PayPal:** Validacion de `PAYPAL_WEBHOOK_ID` — si no esta configurado, el webhook retorna `false` en vez de procesar
-- **Resend:** Verificacion de firma svix en `api/webhooks/resend.js`
+- **PayPal:** Validacion de `PAYPAL_WEBHOOK_ID` con verificación de firma criptográfica
+- **Resend:** Verificacion de firma svix en `app/api/webhooks/resend/route.ts`
 
 ## Headers de Seguridad (vercel.json)
 
@@ -46,9 +46,9 @@
 
 ## Variables de Entorno
 
-- **Cliente (VITE\_):** Solo `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SITE_URL` — expuestas al browser intencionalmente
-- **Servidor:** `SUPABASE_SERVICE_ROLE_KEY`, `PAYPAL_CLIENT_SECRET`, `RESEND_API_KEY`, `GROQ_API_KEY` — solo en serverless functions
-- **Validacion:** `client.ts` verifica que las variables VITE esten presentes; si estan vacias, usa fallback con placeholder y emite warning por consola
+- **Cliente (NEXT_PUBLIC\_):** Solo `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID` — expuestas al browser intencionalmente por Next.js
+- **Servidor:** `SUPABASE_SERVICE_ROLE_KEY`, `PAYPAL_CLIENT_SECRET`, `RESEND_API_KEY`, `GROQ_API_KEY`, `GEMINI_API_KEY` — solo en Route Handlers / backend
+- **Validacion:** `lib/supabase/client.ts` y `admin.ts` verifican variables requeridas con tipado seguro y fallbacks controlados
 
 ## Reportar Vulnerabilidades
 

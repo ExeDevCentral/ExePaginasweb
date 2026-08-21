@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import handler from '../../api/paypal-webhook.js'
+import { NextRequest } from 'next/server'
+import { POST as handler } from '../../app/api/paypal-webhook/route'
 import {
   paymentConfirmation,
   paymentNotification,
@@ -18,21 +19,34 @@ import {
 } from '../../src/core/domain/financial/financialEngine'
 
 // Mock de dependencias externas (Supabase y Resend Email)
-const mockSupabaseInstance = {
-  from: vi.fn(),
-  auth: {
-    admin: {
-      listUsers: vi.fn(),
+const { mockSupabaseInstance } = vi.hoisted(() => {
+  return {
+    mockSupabaseInstance: {
+      from: vi.fn(),
+      auth: {
+        admin: {
+          listUsers: vi.fn(),
+        },
+      },
+      rpc: vi.fn(),
     },
-  },
-  rpc: vi.fn(),
-}
+  }
+})
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: vi.fn(() => mockSupabaseInstance),
 }))
 
+vi.mock('@/lib/supabase/admin', () => ({
+  supabaseAdmin: mockSupabaseInstance,
+}))
+
 vi.mock('../../lib/email/send.js', () => ({
+  sendEmail: vi.fn().mockResolvedValue({ id: 'msg_test_123' }),
+  ADMIN_EMAIL: 'admin@exepaginasweb.com',
+}))
+
+vi.mock('@/lib/email/send.js', () => ({
   sendEmail: vi.fn().mockResolvedValue({ id: 'msg_test_123' }),
   ADMIN_EMAIL: 'admin@exepaginasweb.com',
 }))
@@ -78,13 +92,33 @@ function setupSupabaseMock() {
   })
 }
 
+async function callPayPalWebhook(payload, headers = {}) {
+  const bodyString = typeof payload === 'string' ? payload : JSON.stringify(payload)
+  const req = new NextRequest('http://localhost:3000/api/paypal-webhook', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'paypal-auth-algo': 'SHA256withRSA',
+      'paypal-cert-url': 'https://api.paypal.com/v1/notifications/certs/cert.pem',
+      'paypal-transmission-id': 'trans_123',
+      'paypal-transmission-sig': 'sig_123',
+      'paypal-transmission-time': '2026-08-10T15:00:00Z',
+      ...headers,
+    },
+    body: bodyString,
+  })
+  const res = await handler(req)
+  const json = await res.json()
+  return { status: res.status, json }
+}
+
 describe('🛡️ SUITE DE PRUEBAS RIGUROSA: Clientes, Tokens, Lista de Pagos, Mensualidades y Recordatorios', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     process.env.PAYPAL_WEBHOOK_ID = 'wh_mock_id_12345'
     process.env.PAYPAL_CLIENT_ID = 'paypal_client_mock'
     process.env.PAYPAL_CLIENT_SECRET = 'paypal_secret_mock'
-    process.env.VITE_SUPABASE_URL = 'https://mock.supabase.co'
+    process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://mock.supabase.co'
     process.env.SUPABASE_SERVICE_ROLE_KEY = 'mock_key'
     setupSupabaseMock()
   })
@@ -132,32 +166,10 @@ describe('🛡️ SUITE DE PRUEBAS RIGUROSA: Clientes, Tokens, Lista de Pagos, M
         resource: { id: 'PAYPAL_ORDER_999' },
       })
 
-      const req = {
-        method: 'POST',
-        headers: {
-          'paypal-auth-algo': 'SHA256withRSA',
-          'paypal-cert-url': 'https://api.paypal.com/v1/notifications/certs/cert.pem',
-          'paypal-transmission-id': 'trans_123',
-          'paypal-transmission-sig': 'sig_123',
-          'paypal-transmission-time': '2026-08-10T15:00:00Z',
-        },
-        on: (event, cb) => {
-          if (event === 'data') cb(Buffer.from(payload))
-          if (event === 'end') cb()
-        },
-      }
+      const { status, json } = await callPayPalWebhook(payload)
 
-      const res = {
-        setHeader: vi.fn(),
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn().mockReturnThis(),
-        end: vi.fn(),
-      }
-
-      await handler(req, res)
-
-      expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith({ ok: true })
+      expect(status).toBe(200)
+      expect(json).toEqual({ ok: true })
       expect(mockSupabaseInstance.from).toHaveBeenCalledWith('clientes')
       expect(mockSupabaseInstance.from).toHaveBeenCalledWith('tenants')
     })
@@ -400,32 +412,10 @@ describe('🛡️ SUITE DE PRUEBAS RIGUROSA: Clientes, Tokens, Lista de Pagos, M
         resource: { id: 'PAYPAL_ORDER_REFUND_99', amount: { value: '49.00' } },
       })
 
-      const req = {
-        method: 'POST',
-        headers: {
-          'paypal-auth-algo': 'SHA256withRSA',
-          'paypal-cert-url': 'https://api.paypal.com/v1/notifications/certs/cert.pem',
-          'paypal-transmission-id': 'trans_123',
-          'paypal-transmission-sig': 'sig_123',
-          'paypal-transmission-time': '2026-08-10T15:00:00Z',
-        },
-        on: (event, cb) => {
-          if (event === 'data') cb(Buffer.from(payload))
-          if (event === 'end') cb()
-        },
-      }
+      const { status, json } = await callPayPalWebhook(payload)
 
-      const res = {
-        setHeader: vi.fn(),
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn().mockReturnThis(),
-        end: vi.fn(),
-      }
-
-      await handler(req, res)
-
-      expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith({ ok: true })
+      expect(status).toBe(200)
+      expect(json).toEqual({ ok: true })
       expect(mockSupabaseInstance.from).toHaveBeenCalledWith('pagos')
       expect(mockSupabaseInstance.from).toHaveBeenCalledWith('suscripciones')
     })

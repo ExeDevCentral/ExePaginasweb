@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # setup.sh - Script de automatización de Infraestructura como Código (IaC)
-# Para React + Vite + Supabase Local Dev Environment con Google OAuth
+# Para Next.js + Supabase Local Dev Environment con Google OAuth
 
 # Configuración de colores para salida premium en terminal
 GREEN='\033[0;32m'
@@ -19,7 +19,7 @@ echo -e "${BLUE}${BOLD}  / _ \___ ___ _____/ / /_  ___ ____ _ / /__ ___  ___/ /_
 echo -e "${BLUE}${BOLD} / , _/ -_) _ \/ __/ _  / |/ / // _ \`/  '_/(_-< / _  / __/ _ \/ _  /   ${NC}"
 echo -e "${BLUE}${BOLD}/_/|_|\__/\_,_/\__/_//_/|___/\_,_/\_,_/_/\_\/___/ \_,_/\__/_//_/\_,_/    ${NC}"
 echo -e "${BLUE}${BOLD}                                                                      ${NC}"
-echo -e "${BLUE}${BOLD}       STUDIO PREMIUM IAAS - SUPABASE & VERCEL SETUP SCRIPT           ${NC}"
+echo -e "${BLUE}${BOLD}       STUDIO PREMIUM IAAS - SUPABASE & NEXT.JS SETUP SCRIPT          ${NC}"
 echo -e "${BLUE}${BOLD}======================================================================${NC}"
 echo ""
 
@@ -61,8 +61,9 @@ if [ ! -f .env.local ] && [ ! -f .env ]; then
     echo -e "Creando un archivo .env.local básico..."
     cat <<EOT > .env.local
 # Entorno de Desarrollo Local
-VITE_SUPABASE_URL=http://127.0.0.1:54321
-VITE_SUPABASE_ANON_KEY=tu_anon_key_aqui
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key_aqui
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=tu_google_client_id_aca
 SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET=tu_google_client_secret_aca
 EOT
@@ -132,11 +133,12 @@ echo -e "1. Asegúrate de configurar ${BOLD}SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT
 echo -e "2. Puedes añadirlas en tu archivo local o en el panel de control de Supabase Studio."
 echo ""
 
-# Preguntar si se desea iniciar el servidor de desarrollo Vite inmediatamente
-read -p "¿Deseas iniciar el servidor de desarrollo de React Vite ahora mismo? (s/n): " confirm
+# Preguntar si se desea iniciar el servidor de desarrollo Next.js inmediatamente
+read -p "¿Deseas iniciar el servidor de desarrollo de Next.js ahora mismo? (s/n): " confirm
 if [[ $confirm == [sS] || $confirm == [sS][iI] ]]; then
   echo -e "${BLUE}Iniciando 'npm run dev' en el frontend...${NC}"
   npm run dev
 else
   echo -e "${GREEN}Configuración completa. Para iniciar la app más tarde ejecuta: ${BOLD}npm run dev${NC}"
 fi
+

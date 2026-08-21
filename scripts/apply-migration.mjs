@@ -16,11 +16,13 @@ const root = resolve(__dirname, '..')
 config({ path: join(root, '.env') })
 config({ path: join(root, '.env.local'), override: true })
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL
+const SUPABASE_URL =
+  process.env.NEXT_PUBLIC_SUPABASE_URL ||
+  process.env.SUPABASE_URL
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-  console.error('❌ Faltan variables de entorno: VITE_SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY')
+  console.error('❌ Faltan variables de entorno: NEXT_PUBLIC_SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY')
   process.exit(1)
 }
 

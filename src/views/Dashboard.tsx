@@ -120,7 +120,7 @@ export default function Dashboard() {
     window.scrollTo(0, 0)
   }, [activeView])
 
-  // Feature Flag / Rollback Support (?ui=legacy or VITE_DASHBOARD_UI=legacy)
+  // Feature Flag / Rollback Support (?ui=legacy or NEXT_PUBLIC_DASHBOARD_UI=legacy)
   const isLegacyUI =
     searchParams.get('ui') === 'legacy' ||
     process.env.NEXT_PUBLIC_DASHBOARD_UI === 'legacy' ||

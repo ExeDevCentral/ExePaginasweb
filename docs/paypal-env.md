@@ -2,13 +2,13 @@
 
 Agregar en Vercel (Environment Variables):
 
-| Key                     | Value                                                                            |
-| ----------------------- | -------------------------------------------------------------------------------- |
-| `PAYPAL_CLIENT_ID`      | Client ID de PayPal Developer Dashboard                                          |
-| `PAYPAL_CLIENT_SECRET`  | Secret de PayPal Developer Dashboard                                             |
-| `PAYPAL_WEBHOOK_ID`     | Webhook ID de PayPal Developer Dashboard                                         |
-| `VITE_PAYPAL_CLIENT_ID` | Mismo valor que `PAYPAL_CLIENT_ID`                                               |
-| `PAYPAL_API_BASE`       | `https://api-m.sandbox.paypal.com` (sandbox) o `https://api-m.paypal.com` (live) |
+| Key                            | Value                                                                            |
+| ------------------------------ | -------------------------------------------------------------------------------- |
+| `PAYPAL_CLIENT_ID`             | Client ID de PayPal Developer Dashboard                                          |
+| `PAYPAL_CLIENT_SECRET`         | Secret de PayPal Developer Dashboard                                             |
+| `PAYPAL_WEBHOOK_ID`            | Webhook ID de PayPal Developer Dashboard                                         |
+| `NEXT_PUBLIC_PAYPAL_CLIENT_ID` | Mismo valor que `PAYPAL_CLIENT_ID` (para botones PayPal en el navegador)         |
+| `PAYPAL_API_BASE`              | `https://api-m.sandbox.paypal.com` (sandbox) o `https://api-m.paypal.com` (live) |
 
 Webhook URL: `https://exepaginasweb.com/api/paypal-webhook`
 

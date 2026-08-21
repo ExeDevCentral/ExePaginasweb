@@ -146,16 +146,17 @@
 
 ```env
 # Supabase (requerido para que la app funcione)
-VITE_SUPABASE_URL=https://tu_proyecto.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=tu_anon_key
-VITE_SITE_URL=https://exepaginasweb.com
+NEXT_PUBLIC_SUPABASE_URL=https://bksonxnxshxinqffswqc.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
+NEXT_PUBLIC_SITE_URL=https://exepaginasweb.com
 SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 
-# IA (Groq) - solo para chat demo
+# IA (Gemini & Groq)
+GEMINI_API_KEY=tu_gemini_api_key
 GROQ_API_KEY=tu_groq_api_key
 
 # PayPal
-VITE_PAYPAL_CLIENT_ID=tu_client_id_frontend
+NEXT_PUBLIC_PAYPAL_CLIENT_ID=tu_client_id_frontend
 PAYPAL_CLIENT_ID=tu_client_id_backend
 PAYPAL_CLIENT_SECRET=tu_client_secret
 PAYPAL_WEBHOOK_ID=tu_webhook_id
@@ -163,7 +164,8 @@ PAYPAL_API_BASE=https://api-m.sandbox.paypal.com
 
 # Resend (Emails)
 RESEND_API_KEY=re_xxxx
-RESEND_FROM_EMAIL=contacto@exepaginasweb.com
+RESEND_FROM_EMAIL=Contacto@exepaginasweb.com
+RESEND_WEBHOOK_SIGNING_SECRET=whsec_xxxx
 ```
 
 ---
@@ -180,7 +182,7 @@ npm install
 
 ### 2. Variables de Entorno
 
-Crear archivo `.env` en la raiz con las variables de arriba. Sin `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` la app no conecta a Supabase.
+Crear archivo `.env.local` en la raíz con las variables de arriba (o copiar `.env.example`). Sin `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` la app no conecta a Supabase.
 
 ### 3. Aplicar Migraciones
 

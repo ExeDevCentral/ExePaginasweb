@@ -1,56 +1,56 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Webhook } from 'svix'
-import handler from '../../../api/webhooks/resend.js'
+import { NextRequest } from 'next/server'
+import { POST as handler } from '../../../app/api/webhooks/resend/route'
 
 // Mock Supabase y sendEmail
-vi.mock('@supabase/supabase-js', () => ({
-  createClient: () => ({
-    from: () => ({
+const { mockSupabaseInstance } = vi.hoisted(() => ({
+  mockSupabaseInstance: {
+    from: vi.fn(() => ({
       insert: vi.fn().mockResolvedValue({ data: null, error: null }),
-    }),
-  }),
+    })),
+  },
+}))
+
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: () => mockSupabaseInstance,
+}))
+
+vi.mock('@/lib/supabase/admin', () => ({
+  supabaseAdmin: mockSupabaseInstance,
 }))
 
 vi.mock('../../../lib/email/send.js', () => ({
   sendEmail: vi.fn().mockResolvedValue({ id: 'mock_send_123' }),
+  ADMIN_EMAIL: 'admin@exepaginasweb.com',
 }))
 
-function createMockReqRes({ method = 'POST', headers = {}, body = '' }) {
-  const req = {
-    method,
-    headers,
-    body,
-    rawBody: typeof body === 'string' ? body : JSON.stringify(body),
-    on: vi.fn((event, callback) => {
-      if (event === 'data') {
-        callback(Buffer.from(typeof body === 'string' ? body : JSON.stringify(body)))
-      }
-      if (event === 'end') {
-        callback()
-      }
-    }),
-  }
+vi.mock('@/lib/email/send', () => ({
+  sendEmail: vi.fn().mockResolvedValue({ id: 'mock_send_123' }),
+  ADMIN_EMAIL: 'admin@exepaginasweb.com',
+}))
 
-  const res = {
-    statusCode: 200,
-    headers: {},
-    setHeader: vi.fn((key, value) => {
-      res.headers[key] = value
-    }),
-    status: vi.fn((code) => {
-      res.statusCode = code
-      return res
-    }),
-    json: vi.fn((data) => {
-      res.jsonData = data
-      return res
-    }),
+async function callResendWebhook(payload, headers = {}) {
+  const bodyString = typeof payload === 'string' ? payload : JSON.stringify(payload)
+  const req = new NextRequest('http://localhost:3000/api/webhooks/resend', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      ...headers,
+    },
+    body: bodyString,
+  })
+  const res = await handler(req)
+  let json = {}
+  try {
+    json = await res.json()
+  } catch {
+    // ignore non-json
   }
-
-  return { req, res }
+  return { status: res.status, json }
 }
 
-describe('Resend Webhook Handler (api/webhooks/resend.js)', () => {
+describe('Resend Webhook Handler (app/api/webhooks/resend/route.ts)', () => {
   const TEST_SECRET = 'whsec_MfValidSecretForTesting123='
 
   beforeEach(() => {
@@ -59,39 +59,22 @@ describe('Resend Webhook Handler (api/webhooks/resend.js)', () => {
     vi.clearAllMocks()
   })
 
-  it('debe rechazar métodos que no sean POST con status 405', async () => {
-    const { req, res } = createMockReqRes({ method: 'GET' })
-    await handler(req, res)
-
-    expect(res.status).toHaveBeenCalledWith(405)
-    expect(res.jsonData).toEqual({ error: 'Method Not Allowed' })
-  })
-
   it('debe rechazar peticiones sin cabeceras Svix con status 400', async () => {
-    const { req, res } = createMockReqRes({
-      method: 'POST',
-      body: JSON.stringify({ type: 'email.sent' }),
-    })
-    await handler(req, res)
+    const { status, json } = await callResendWebhook(JSON.stringify({ type: 'email.sent' }), {})
 
-    expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.jsonData).toEqual({ error: 'Missing Svix signature headers' })
+    expect(status).toBe(400)
+    expect(json).toEqual({ error: 'Missing Svix signature headers' })
   })
 
   it('debe rechazar firmas Svix inválidas con status 400', async () => {
-    const { req, res } = createMockReqRes({
-      method: 'POST',
-      headers: {
-        'svix-id': 'msg_123',
-        'svix-timestamp': `${Math.floor(Date.now() / 1000)}`,
-        'svix-signature': 'v1,invalid_signature_hash',
-      },
-      body: JSON.stringify({ type: 'email.sent' }),
+    const { status, json } = await callResendWebhook(JSON.stringify({ type: 'email.sent' }), {
+      'svix-id': 'msg_123',
+      'svix-timestamp': `${Math.floor(Date.now() / 1000)}`,
+      'svix-signature': 'v1,invalid_signature_hash',
     })
-    await handler(req, res)
 
-    expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.jsonData.error).toContain('Webhook signature verification failed')
+    expect(status).toBe(400)
+    expect(json.error).toContain('Webhook signature verification failed')
   })
 
   const resendEventTypes = [
@@ -122,21 +105,15 @@ describe('Resend Webhook Handler (api/webhooks/resend.js)', () => {
       const timestamp = new Date()
       const signature = wh.sign(svixId, timestamp, payloadString)
 
-      const { req, res } = createMockReqRes({
-        method: 'POST',
-        headers: {
-          'svix-id': svixId,
-          'svix-timestamp': `${Math.floor(timestamp.getTime() / 1000)}`,
-          'svix-signature': signature,
-        },
-        body: payloadString,
+      const { status, json } = await callResendWebhook(payloadString, {
+        'svix-id': svixId,
+        'svix-timestamp': `${Math.floor(timestamp.getTime() / 1000)}`,
+        'svix-signature': signature,
       })
 
-      await handler(req, res)
-
-      expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.jsonData.received).toBe(true)
-      expect(res.jsonData.type).toBe(type)
+      expect(status).toBe(200)
+      expect(json.received).toBe(true)
+      expect(json.type).toBe(type)
     })
   })
 
@@ -166,7 +143,7 @@ describe('Resend Webhook Handler (api/webhooks/resend.js)', () => {
   })
 
   it('debe detectar correctamente el idioma (Español vs Inglés) y generar la plantilla en Inglés', async () => {
-    const { detectLanguage } = await import('../../../api/contact.js')
+    const { detectLanguage } = await import('../../../app/api/contact/route')
     const { contactAutoReply } = await import('../../../lib/email/templates.js')
 
     expect(detectLanguage('Hello, I need a website for my business', '')).toBe('en')

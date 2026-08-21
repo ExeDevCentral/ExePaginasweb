@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Dashboard from '@/views/Dashboard'
+import { AuthGuard } from '@/core/auth/AuthGuard'
 
 export const metadata: Metadata = {
   title: 'Panel de Control | ExeSistemasWEB',
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 }
 
 export default function DashboardPage() {
-  return <Dashboard />
+  return (
+    <AuthGuard>
+      <Dashboard />
+    </AuthGuard>
+  )
 }

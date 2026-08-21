@@ -1,93 +1,8 @@
-import { Canvas, useFrame } from '@react-three/fiber'
-import { Float, PerspectiveCamera, Environment, ContactShadows } from '@react-three/drei'
-import { useRef, useMemo, useState, useEffect } from 'react'
+'use client'
+
+import React, { useRef, useState, useEffect } from 'react'
 import * as THREE from 'three'
 import { motion, AnimatePresence } from 'framer-motion'
-
-const Bean = ({ phase }: { phase: 'orbit' | 'explode' }) => {
-  const ref = useRef<THREE.Mesh>(null)
-
-  const orbitAngle = useMemo(() => Math.random() * Math.PI * 2, [])
-  const orbitRadius = useMemo(() => 1.5 + Math.random() * 2.5, [])
-  const yOffset = useMemo(() => (Math.random() - 0.5) * 2, [])
-  const speed = useMemo(() => 0.2 + Math.random() * 0.3, [])
-  const rotSpeed = useMemo(() => (Math.random() - 0.5) * 0.015, [])
-  const phaseVal = useMemo(() => Math.random() * Math.PI * 2, [])
-  const hue = useMemo(() => 0.07 + Math.random() * 0.04, [])
-  const lightness = useMemo(() => 0.12 + Math.random() * 0.1, [])
-
-  const explodeDir = useMemo(() => {
-    const theta = Math.random() * Math.PI * 2
-    const phi = Math.random() * Math.PI
-    return new THREE.Vector3(
-      Math.sin(phi) * Math.cos(theta),
-      Math.sin(phi) * Math.sin(theta),
-      Math.cos(phi)
-    ).normalize()
-  }, [])
-  const explodeSpeed = useMemo(() => 3 + Math.random() * 5, [])
-  const explodeStartTime = useRef<number | null>(null)
-
-  useFrame((state) => {
-    if (!ref.current) return
-    const t = state.clock.elapsedTime * speed + phaseVal
-
-    if (phase === 'explode') {
-      if (explodeStartTime.current === null) explodeStartTime.current = state.clock.elapsedTime
-      const elapsed = state.clock.elapsedTime - explodeStartTime.current
-      const ease = 1 - Math.exp(-elapsed * 3)
-      const dist = ease * explodeSpeed
-      ref.current.position.x = explodeDir.x * dist
-      ref.current.position.y = explodeDir.y * dist
-      ref.current.position.z = explodeDir.z * dist
-      ref.current.rotation.x += rotSpeed * 4
-      ref.current.rotation.y += rotSpeed * 6
-      ref.current.rotation.z += rotSpeed * 2
-    } else {
-      explodeStartTime.current = null
-      const angle = orbitAngle + t
-      const bob = Math.sin(t * 0.8) * 0.3
-      ref.current.position.x = Math.cos(angle) * orbitRadius
-      ref.current.position.z = Math.sin(angle) * orbitRadius
-      ref.current.position.y = yOffset + bob
-      ref.current.rotation.x += rotSpeed
-      ref.current.rotation.y += rotSpeed * 1.5
-      ref.current.rotation.z += rotSpeed * 0.5
-    }
-  })
-
-  return (
-    <mesh ref={ref} position={[orbitRadius, yOffset, 0]}>
-      <sphereGeometry args={[0.25, 12, 8]} />
-      <meshStandardMaterial
-        color={new THREE.Color().setHSL(hue, 0.5, lightness)}
-        roughness={0.6}
-        metalness={0.1}
-      />
-    </mesh>
-  )
-}
-
-const StylizedCup = () => {
-  return (
-    <Float speed={5} rotationIntensity={2} floatIntensity={2}>
-      <group position={[0, 0, 0]} rotation={[0.5, 0, 0]}>
-        <mesh>
-          <cylinderGeometry args={[1.5, 1.2, 2, 32]} />
-          <meshPhysicalMaterial color="#ffffff" roughness={0} transmission={0.1} thickness={0.5} />
-        </mesh>
-        <mesh position={[1.5, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <torusGeometry args={[0.5, 0.15, 16, 32, Math.PI]} />
-          <meshStandardMaterial color="#ffffff" />
-        </mesh>
-        <mesh position={[0, 0.8, 0]}>
-          <cylinderGeometry args={[1.35, 1.35, 0.1, 32]} />
-          <meshStandardMaterial color="#2a1508" emissive="#1a0f0a" emissiveIntensity={0.5} />
-        </mesh>
-      </group>
-    </Float>
-  )
-}
 
 export const CoffeePortal3D = ({
   isVisible,
@@ -96,13 +11,11 @@ export const CoffeePortal3D = ({
   isVisible: boolean
   onDismiss?: () => void
 }) => {
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
-  const beans = useMemo(
-    () => Array.from({ length: isMobile ? 14 : 30 }).map((_, i) => i),
-    [isMobile]
-  )
-  const [beanPhase, setBeanPhase] = useState<'orbit' | 'explode'>('orbit')
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const [showSkip, setShowSkip] = useState(false)
+  const [beanPhase, setBeanPhase] = useState<'orbit' | 'explode'>('orbit')
+  const phaseRef = useRef<'orbit' | 'explode'>('orbit')
+  phaseRef.current = beanPhase
 
   useEffect(() => {
     if (!isVisible) {
@@ -118,6 +31,189 @@ export const CoffeePortal3D = ({
     }
   }, [isVisible])
 
+  useEffect(() => {
+    if (!isVisible) return
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    let width = window.innerWidth
+    let height = window.innerHeight
+
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100)
+    camera.position.set(0, 0, 10)
+
+    let renderer: THREE.WebGLRenderer | null = null
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance',
+      })
+      renderer.setSize(width, height, false)
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5))
+    } catch {
+      return
+    }
+
+    const disposables: { dispose: () => void }[] = []
+
+    // Lights
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6)
+    scene.add(ambient)
+    const pointLight = new THREE.PointLight(0xfbbf24, 2, 25)
+    pointLight.position.set(10, 10, 10)
+    scene.add(pointLight)
+
+    // Cup Group
+    const cupGroup = new THREE.Group()
+    cupGroup.rotation.x = 0.5
+    scene.add(cupGroup)
+
+    const cupGeo = new THREE.CylinderGeometry(1.5, 1.2, 2, 32)
+    const cupMat = new THREE.MeshPhysicalMaterial({
+      color: '#ffffff',
+      roughness: 0.1,
+      transmission: 0.1,
+      thickness: 0.5,
+    })
+    const cupMesh = new THREE.Mesh(cupGeo, cupMat)
+    cupGroup.add(cupMesh)
+
+    const handleGeo = new THREE.TorusGeometry(0.5, 0.15, 16, 32, Math.PI)
+    const handleMat = new THREE.MeshStandardMaterial({ color: '#ffffff' })
+    const handleMesh = new THREE.Mesh(handleGeo, handleMat)
+    handleMesh.position.set(1.5, 0, 0)
+    handleMesh.rotation.z = Math.PI / 2
+    cupGroup.add(handleMesh)
+
+    const liquidGeo = new THREE.CylinderGeometry(1.35, 1.35, 0.1, 32)
+    const liquidMat = new THREE.MeshStandardMaterial({
+      color: '#2a1508',
+      emissive: '#1a0f0a',
+      emissiveIntensity: 0.5,
+    })
+    const liquidMesh = new THREE.Mesh(liquidGeo, liquidMat)
+    liquidMesh.position.set(0, 0.8, 0)
+    cupGroup.add(liquidMesh)
+
+    disposables.push(cupGeo, cupMat, handleGeo, handleMat, liquidGeo, liquidMat)
+
+    // Beans
+    const beanCount = 20
+    const beanMeshes: THREE.Mesh[] = []
+    const beanData: {
+      orbitAngle: number
+      orbitRadius: number
+      yOffset: number
+      speed: number
+      rotSpeed: number
+      explodeDir: THREE.Vector3
+      explodeSpeed: number
+    }[] = []
+
+    const beanGeo = new THREE.SphereGeometry(0.25, 12, 8)
+    disposables.push(beanGeo)
+
+    for (let i = 0; i < beanCount; i++) {
+      const hue = 0.07 + Math.random() * 0.04
+      const lightness = 0.12 + Math.random() * 0.1
+      const mat = new THREE.MeshStandardMaterial({
+        color: new THREE.Color().setHSL(hue, 0.5, lightness),
+        roughness: 0.6,
+        metalness: 0.1,
+      })
+      disposables.push(mat)
+
+      const mesh = new THREE.Mesh(beanGeo, mat)
+      scene.add(mesh)
+      beanMeshes.push(mesh)
+
+      const theta = Math.random() * Math.PI * 2
+      const phi = Math.random() * Math.PI
+      const explodeDir = new THREE.Vector3(
+        Math.sin(phi) * Math.cos(theta),
+        Math.sin(phi) * Math.sin(theta),
+        Math.cos(phi)
+      ).normalize()
+
+      beanData.push({
+        orbitAngle: Math.random() * Math.PI * 2,
+        orbitRadius: 1.5 + Math.random() * 2.5,
+        yOffset: (Math.random() - 0.5) * 2,
+        speed: 0.2 + Math.random() * 0.3,
+        rotSpeed: (Math.random() - 0.5) * 0.015,
+        explodeDir,
+        explodeSpeed: 3 + Math.random() * 5,
+      })
+    }
+
+    const handleResize = () => {
+      width = window.innerWidth
+      height = window.innerHeight
+      camera.aspect = width / height
+      camera.updateProjectionMatrix()
+      renderer?.setSize(width, height, false)
+    }
+    window.addEventListener('resize', handleResize)
+
+    let animId: number
+    const clock = new THREE.Clock()
+    let explodeStartTime: number | null = null
+
+    const animate = () => {
+      animId = requestAnimationFrame(animate)
+      const t = clock.getElapsedTime()
+
+      cupGroup.rotation.y = t * 0.4
+      cupGroup.position.y = Math.sin(t * 2) * 0.2
+
+      const phase = phaseRef.current
+
+      if (phase === 'explode') {
+        if (explodeStartTime === null) explodeStartTime = t
+        const elapsed = t - explodeStartTime
+        const ease = 1 - Math.exp(-elapsed * 3)
+
+        for (let i = 0; i < beanCount; i++) {
+          const m = beanMeshes[i]
+          const d = beanData[i]
+          const dist = ease * d.explodeSpeed
+          m.position.copy(d.explodeDir).multiplyScalar(dist)
+          m.rotation.x += d.rotSpeed * 4
+          m.rotation.y += d.rotSpeed * 6
+        }
+      } else {
+        explodeStartTime = null
+        for (let i = 0; i < beanCount; i++) {
+          const m = beanMeshes[i]
+          const d = beanData[i]
+          const angle = d.orbitAngle + t * d.speed
+          const bob = Math.sin(t * 0.8) * 0.3
+          m.position.set(
+            Math.cos(angle) * d.orbitRadius,
+            d.yOffset + bob,
+            Math.sin(angle) * d.orbitRadius
+          )
+          m.rotation.x += d.rotSpeed
+          m.rotation.y += d.rotSpeed * 1.5
+        }
+      }
+
+      renderer?.render(scene, camera)
+    }
+
+    animate()
+
+    return () => {
+      cancelAnimationFrame(animId)
+      window.removeEventListener('resize', handleResize)
+      disposables.forEach((d) => d.dispose())
+      renderer?.dispose()
+    }
+  }, [isVisible])
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -129,35 +225,7 @@ export const CoffeePortal3D = ({
           className="fixed inset-0 z-[60] bg-amber-950/30 backdrop-blur-sm cursor-pointer"
           onClick={onDismiss}
         >
-          <Canvas
-            shadows={!isMobile}
-            dpr={isMobile ? [1, 1.25] : [1, 2]}
-            gl={{ antialias: !isMobile }}
-          >
-            <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} intensity={2} color="#fbbf24" />
-            <spotLight
-              position={[-10, 10, 10]}
-              angle={0.15}
-              penumbra={1}
-              intensity={1}
-              castShadow={!isMobile}
-            />
-
-            <Environment preset="city" />
-
-            <group>
-              <StylizedCup />
-              {beans.map((id) => (
-                <Bean key={id} phase={beanPhase} />
-              ))}
-            </group>
-
-            {!isMobile && (
-              <ContactShadows position={[0, -4, 0]} opacity={0.4} scale={20} blur={2.5} far={4.5} />
-            )}
-          </Canvas>
+          <canvas ref={canvasRef} className="w-full h-full block" />
 
           {showSkip && (
             <motion.div
@@ -175,3 +243,5 @@ export const CoffeePortal3D = ({
     </AnimatePresence>
   )
 }
+
+export default CoffeePortal3D

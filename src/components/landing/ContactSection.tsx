@@ -49,7 +49,7 @@ const ContactSection = () => {
     setFeedback('')
     setTicketId('')
 
-    const apiUrl = import.meta.env.DEV ? 'http://localhost:3000/api/contact' : '/api/contact'
+    const apiUrl = '/api/contact'
 
     try {
       const res = await fetch(apiUrl, {

@@ -1,6 +1,6 @@
 /**
  * URL canónica del sitio. En localhost o desarrollo local usa siempre window.location.origin.
- * En producción (Vercel) usa VITE_SITE_URL o window.location.origin para la callback de OAuth.
+ * En producción (Vercel) usa NEXT_PUBLIC_SITE_URL o window.location.origin para la callback de OAuth.
  */
 export function getSiteUrl(): string {
   if (typeof window !== 'undefined') {
@@ -10,7 +10,7 @@ export function getSiteUrl(): string {
     }
   }
 
-  const configured = import.meta.env.VITE_SITE_URL?.trim()
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim()
   if (configured) return configured.replace(/\/$/, '')
 
   if (typeof window !== 'undefined') return window.location.origin

@@ -1,257 +1,198 @@
-import { useRef, useMemo, memo, useEffect } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Float, MeshDistortMaterial } from '@react-three/drei'
+'use client'
+
+import React, { useRef, useEffect, memo } from 'react'
 import * as THREE from 'three'
 
-function MouseLight() {
-  const lightRef = useRef<THREE.PointLight>(null)
-  const viewport = useThree((s) => s.viewport)
-
-  useFrame(({ pointer }) => {
-    if (lightRef.current) {
-      lightRef.current.position.x = (pointer.x * viewport.width) / 2
-      lightRef.current.position.y = (pointer.y * viewport.height) / 2
-    }
-  })
-
-  return <pointLight ref={lightRef} color="#818cf8" intensity={2} distance={12} decay={2} />
-}
-
-function CrystalBall() {
-  const ref = useRef<THREE.Mesh>(null)
-
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      ref.current.rotation.y = clock.getElapsedTime() * 0.15
-      ref.current.rotation.x = Math.sin(clock.getElapsedTime() * 0.1) * 0.1
-    }
-  })
-
-  return (
-    <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.8}>
-      <mesh ref={ref} position={[0, 0.2, 0]} scale={1.8}>
-        <icosahedronGeometry args={[1, 4]} />
-        <MeshDistortMaterial
-          color="#6366f1"
-          emissive="#4f46e5"
-          emissiveIntensity={0.15}
-          roughness={0.1}
-          metalness={0.8}
-          distort={0.2}
-          speed={1.5}
-          transparent
-          opacity={0.35}
-        />
-      </mesh>
-    </Float>
-  )
-}
-
-function FloatingTorus() {
-  const ref = useRef<THREE.Mesh>(null)
-
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      ref.current.rotation.x = clock.getElapsedTime() * 0.3
-      ref.current.rotation.z = clock.getElapsedTime() * 0.2
-    }
-  })
-
-  return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={1.2}>
-      <mesh ref={ref} position={[-3.5, 1.5, -2]} scale={0.6}>
-        <torusKnotGeometry args={[1, 0.3, 128, 16]} />
-        <MeshDistortMaterial
-          color="#a855f7"
-          emissive="#9333ea"
-          emissiveIntensity={0.2}
-          roughness={0.15}
-          metalness={0.7}
-          distort={0.15}
-          speed={2}
-          transparent
-          opacity={0.3}
-        />
-      </mesh>
-    </Float>
-  )
-}
-
-function FloatingOctahedron() {
-  const ref = useRef<THREE.Mesh>(null)
-
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      ref.current.rotation.y = clock.getElapsedTime() * 0.4
-      ref.current.rotation.x = clock.getElapsedTime() * 0.25
-    }
-  })
-
-  return (
-    <Float speed={1.8} rotationIntensity={0.6} floatIntensity={1}>
-      <mesh ref={ref} position={[3.8, -1, -1.5]} scale={0.5}>
-        <octahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial
-          color="#c084fc"
-          emissive="#a855f7"
-          emissiveIntensity={0.3}
-          roughness={0.05}
-          metalness={0.9}
-          transparent
-          opacity={0.4}
-        />
-      </mesh>
-    </Float>
-  )
-}
-
-function FloatingIcosahedron() {
-  const ref = useRef<THREE.Mesh>(null)
-
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      ref.current.rotation.y = -clock.getElapsedTime() * 0.2
-      ref.current.rotation.z = clock.getElapsedTime() * 0.15
-    }
-  })
-
-  return (
-    <Float speed={1.2} rotationIntensity={0.4} floatIntensity={0.6}>
-      <mesh ref={ref} position={[-3, -2, -3]} scale={0.35}>
-        <icosahedronGeometry args={[1, 1]} />
-        <meshStandardMaterial
-          color="#818cf8"
-          emissive="#6366f1"
-          emissiveIntensity={0.4}
-          roughness={0.2}
-          metalness={0.6}
-          wireframe
-          transparent
-          opacity={0.5}
-        />
-      </mesh>
-    </Float>
-  )
-}
-
-function FloatingDodecahedron() {
-  const ref = useRef<THREE.Mesh>(null)
-
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      ref.current.rotation.x = clock.getElapsedTime() * 0.35
-      ref.current.rotation.y = -clock.getElapsedTime() * 0.2
-    }
-  })
-
-  return (
-    <Float speed={0.8} rotationIntensity={0.3} floatIntensity={0.5}>
-      <mesh ref={ref} position={[2.5, 2.5, -4]} scale={0.25}>
-        <dodecahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial
-          color="#e879f9"
-          emissive="#d946ef"
-          emissiveIntensity={0.3}
-          roughness={0.1}
-          metalness={0.8}
-          transparent
-          opacity={0.35}
-        />
-      </mesh>
-    </Float>
-  )
-}
-
-function Particles({ count = 200 }: { count?: number }) {
-  const mesh = useRef<THREE.InstancedMesh>(null)
-
-  const { positions, scales, colors } = useMemo(() => {
-    const pos = new Float32Array(count * 3)
-    const sc = new Float32Array(count)
-    const col = new Float32Array(count * 3)
-    const palette = [
-      [0.39, 0.4, 0.95],
-      [0.55, 0.36, 0.97],
-      [0.5, 0.55, 0.97],
-      [0.75, 0.53, 0.99],
-      [0.06, 0.65, 0.92],
-    ]
-
-    for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 20
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 14
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 12 - 2
-      sc[i] = Math.random() * 0.03 + 0.01
-      const c = palette[Math.floor(Math.random() * palette.length)]
-      col[i * 3] = c[0]
-      col[i * 3 + 1] = c[1]
-      col[i * 3 + 2] = c[2]
-    }
-    return { positions: pos, scales: sc, colors: col }
-  }, [count])
-
-  const dummy = useMemo(() => new THREE.Object3D(), [])
-
-  useFrame(({ clock }) => {
-    if (!mesh.current) return
-    const t = clock.getElapsedTime() * 0.1
-    for (let i = 0; i < count; i++) {
-      const x = positions[i * 3] + Math.sin(t + i * 0.5) * 0.3
-      const y = positions[i * 3 + 1] + Math.cos(t + i * 0.3) * 0.2
-      const z = positions[i * 3 + 2] + Math.sin(t + i * 0.7) * 0.15
-      dummy.position.set(x, y, z)
-      dummy.scale.setScalar(scales[i] + Math.sin(t * 2 + i) * 0.005)
-      dummy.updateMatrix()
-      mesh.current.setMatrixAt(i, dummy.matrix)
-    }
-    mesh.current.instanceMatrix.needsUpdate = true
-  })
-
-  return (
-    <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
-      <sphereGeometry args={[1, 6, 6]}>
-        <instancedBufferAttribute attach="attributes-instanceColor" args={[colors, 3]} />
-      </sphereGeometry>
-      <meshBasicMaterial transparent opacity={0.6} />
-    </instancedMesh>
-  )
-}
-
-function Scene() {
-  const camera = useThree((s) => s.camera)
+export const LoginScene = memo(function LoginScene() {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    let width = window.innerWidth
+    let height = window.innerHeight
+
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100)
     camera.position.set(0, 0, 6)
-  }, [camera])
+
+    let renderer: THREE.WebGLRenderer | null = null
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance',
+      })
+      renderer.setSize(width, height, false)
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5))
+    } catch {
+      return
+    }
+
+    const disposables: { dispose: () => void }[] = []
+
+    // Lights
+    const ambient = new THREE.AmbientLight(0xc7d2fe, 0.4)
+    scene.add(ambient)
+    const p1 = new THREE.PointLight(0x6366f1, 1.5, 15)
+    p1.position.set(5, 5, 5)
+    scene.add(p1)
+    const p2 = new THREE.PointLight(0xa855f7, 1.0, 15)
+    p2.position.set(-5, -3, 3)
+    scene.add(p2)
+    const mouseLight = new THREE.PointLight(0x818cf8, 2, 12)
+    mouseLight.position.set(0, 0, 2)
+    scene.add(mouseLight)
+
+    // Center Icosahedron Ball
+    const centerGeo = new THREE.IcosahedronGeometry(1, 2)
+    const centerMat = new THREE.MeshPhysicalMaterial({
+      color: '#6366f1',
+      emissive: '#4f46e5',
+      emissiveIntensity: 0.25,
+      roughness: 0.1,
+      metalness: 0.8,
+      transparent: true,
+      opacity: 0.4,
+    })
+    const centerMesh = new THREE.Mesh(centerGeo, centerMat)
+    centerMesh.position.set(0, 0.2, 0)
+    centerMesh.scale.setScalar(1.5)
+    scene.add(centerMesh)
+    disposables.push(centerGeo, centerMat)
+
+    // Floating Torus Knot
+    const knotGeo = new THREE.TorusKnotGeometry(1, 0.3, 64, 16)
+    const knotMat = new THREE.MeshStandardMaterial({
+      color: '#a855f7',
+      emissive: '#9333ea',
+      emissiveIntensity: 0.3,
+      roughness: 0.15,
+      metalness: 0.7,
+      transparent: true,
+      opacity: 0.35,
+    })
+    const knotMesh = new THREE.Mesh(knotGeo, knotMat)
+    knotMesh.position.set(-3.5, 1.5, -2)
+    knotMesh.scale.setScalar(0.6)
+    scene.add(knotMesh)
+    disposables.push(knotGeo, knotMat)
+
+    // Floating Octahedron
+    const octGeo = new THREE.OctahedronGeometry(1, 0)
+    const octMat = new THREE.MeshStandardMaterial({
+      color: '#c084fc',
+      emissive: '#a855f7',
+      emissiveIntensity: 0.3,
+      roughness: 0.05,
+      metalness: 0.9,
+      transparent: true,
+      opacity: 0.4,
+    })
+    const octMesh = new THREE.Mesh(octGeo, octMat)
+    octMesh.position.set(3.8, -1, -1.5)
+    octMesh.scale.setScalar(0.5)
+    scene.add(octMesh)
+    disposables.push(octGeo, octMat)
+
+    // Floating Icosahedron
+    const icoGeo = new THREE.IcosahedronGeometry(1, 1)
+    const icoMat = new THREE.MeshStandardMaterial({
+      color: '#818cf8',
+      emissive: '#6366f1',
+      emissiveIntensity: 0.4,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.5,
+    })
+    const icoMesh = new THREE.Mesh(icoGeo, icoMat)
+    icoMesh.position.set(-3, -2, -3)
+    icoMesh.scale.setScalar(0.35)
+    scene.add(icoMesh)
+    disposables.push(icoGeo, icoMat)
+
+    // Particles
+    const pCount = 150
+    const pPos = new Float32Array(pCount * 3)
+    for (let i = 0; i < pCount; i++) {
+      pPos[i * 3] = (Math.random() - 0.5) * 20
+      pPos[i * 3 + 1] = (Math.random() - 0.5) * 14
+      pPos[i * 3 + 2] = (Math.random() - 0.5) * 12 - 2
+    }
+    const pGeo = new THREE.BufferGeometry()
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3))
+    const pMat = new THREE.PointsMaterial({
+      size: 0.06,
+      color: '#818cf8',
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending,
+    })
+    const pMesh = new THREE.Points(pGeo, pMat)
+    scene.add(pMesh)
+    disposables.push(pGeo, pMat)
+
+    // Mouse movement
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth) * 2 - 1
+      const y = -(e.clientY / window.innerHeight) * 2 + 1
+      mouseLight.position.x = x * 4
+      mouseLight.position.y = y * 3
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+
+    const handleResize = () => {
+      width = window.innerWidth
+      height = window.innerHeight
+      camera.aspect = width / height
+      camera.updateProjectionMatrix()
+      renderer?.setSize(width, height, false)
+    }
+    window.addEventListener('resize', handleResize)
+
+    let animId: number
+    const clock = new THREE.Clock()
+
+    const animate = () => {
+      animId = requestAnimationFrame(animate)
+      const t = clock.getElapsedTime()
+
+      centerMesh.rotation.y = t * 0.15
+      centerMesh.rotation.x = Math.sin(t * 0.1) * 0.1
+      centerMesh.position.y = 0.2 + Math.sin(t * 1.5) * 0.1
+
+      knotMesh.rotation.x = t * 0.3
+      knotMesh.rotation.z = t * 0.2
+      knotMesh.position.y = 1.5 + Math.sin(t * 2) * 0.15
+
+      octMesh.rotation.y = t * 0.4
+      octMesh.rotation.x = t * 0.25
+      octMesh.position.y = -1 + Math.sin(t * 1.8) * 0.12
+
+      icoMesh.rotation.y = -t * 0.2
+      icoMesh.rotation.z = t * 0.15
+
+      pMesh.rotation.y = t * 0.03
+
+      renderer?.render(scene, camera)
+    }
+
+    animate()
+
+    return () => {
+      cancelAnimationFrame(animId)
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('resize', handleResize)
+      disposables.forEach((d) => d.dispose())
+      renderer?.dispose()
+    }
+  }, [])
 
   return (
-    <>
-      <ambientLight intensity={0.15} color="#c7d2fe" />
-      <pointLight position={[5, 5, 5]} intensity={0.8} color="#6366f1" />
-      <pointLight position={[-5, -3, 3]} intensity={0.5} color="#a855f7" />
-      <pointLight position={[0, 3, -3]} intensity={0.3} color="#e879f9" />
-      <MouseLight />
-      <CrystalBall />
-      <FloatingTorus />
-      <FloatingOctahedron />
-      <FloatingIcosahedron />
-      <FloatingDodecahedron />
-      <Particles count={200} />
-    </>
-  )
-}
-
-const LoginScene = memo(function LoginScene() {
-  return (
-    <div className="absolute inset-0 z-[2] pointer-events-none">
-      <Canvas
-        dpr={[1, 1.5]}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: 'transparent' }}
-        camera={{ position: [0, 0, 6], fov: 50 }}
-      >
-        <Scene />
-      </Canvas>
+    <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+      <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   )
 })

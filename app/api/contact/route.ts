@@ -49,14 +49,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Demasiados mensajes. Intenta más tarde.' }, { status: 429 })
   }
 
-  let body: any
+  let body: Record<string, unknown> | null = null
   try {
     body = await req.json()
   } catch {
     return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
   }
 
-  const { name, email, message, lang, locale, isDiagnostic, projectType, total } = body || {}
+  const { name, email, message, lang, locale, isDiagnostic, projectType, total } =
+    (body as Record<string, any>) || {}
   if (!name || !email || !message) {
     return NextResponse.json({ error: 'Faltan campos requeridos.' }, { status: 400 })
   }

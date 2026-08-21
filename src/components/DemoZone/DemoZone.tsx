@@ -1,5 +1,8 @@
+'use client'
+
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useMemo, useRef, Suspense, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { useTranslation } from 'react-i18next'
 import {
   X,
@@ -15,7 +18,8 @@ import {
 } from 'lucide-react'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 import { useIsMobile } from '../../hooks/useIsMobile'
-import DemoCard3DScene from './DemoCard3DScene'
+
+const DemoCard3DScene = dynamic(() => import('./DemoCard3DScene'), { ssr: false })
 
 // CoffeePortal3D se importa dinámicamente SOLO cuando el usuario hace clic en Pixel Coffee
 // Esto evita que three.js (288KB) se cargue en la página principal

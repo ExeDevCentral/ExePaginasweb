@@ -8,25 +8,36 @@ import ar from './locales/ar.json'
 import ptBR from './locales/pt-BR.json'
 import zhCN from './locales/zh-CN.json'
 
-i18n.use(initReactI18next).init({
-  resources: {
-    es: { translation: es },
-    en: { translation: en },
-    de: { translation: de },
-    fr: { translation: fr },
-    ar: { translation: ar },
-    'pt-BR': { translation: ptBR },
-    'zh-CN': { translation: zhCN },
-  },
-  lng: localStorage.getItem('lang') || 'es',
-  fallbackLng: 'es',
-  interpolation: { escapeValue: false },
-})
+const getInitialLang = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('lang') || 'es'
+  }
+  return 'es'
+}
 
-const RTL_LANGS = ['ar']
-i18n.on('languageChanged', (lng) => {
-  document.documentElement.dir = RTL_LANGS.includes(lng) ? 'rtl' : 'ltr'
-})
-document.documentElement.dir = RTL_LANGS.includes(i18n.language) ? 'rtl' : 'ltr'
+if (!i18n.isInitialized) {
+  i18n.use(initReactI18next).init({
+    resources: {
+      es: { translation: es },
+      en: { translation: en },
+      de: { translation: de },
+      fr: { translation: fr },
+      ar: { translation: ar },
+      'pt-BR': { translation: ptBR },
+      'zh-CN': { translation: zhCN },
+    },
+    lng: getInitialLang(),
+    fallbackLng: 'es',
+    interpolation: { escapeValue: false },
+  })
+
+  const RTL_LANGS = ['ar']
+  if (typeof window !== 'undefined') {
+    i18n.on('languageChanged', (lng) => {
+      document.documentElement.dir = RTL_LANGS.includes(lng) ? 'rtl' : 'ltr'
+    })
+    document.documentElement.dir = RTL_LANGS.includes(i18n.language) ? 'rtl' : 'ltr'
+  }
+}
 
 export default i18n

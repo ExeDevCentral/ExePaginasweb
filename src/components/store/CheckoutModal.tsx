@@ -74,7 +74,7 @@ export default function CheckoutModal({
       if (!document.getElementById(scriptId)) {
         const script = document.createElement('script')
         script.id = scriptId
-        script.src = `https://www.paypal.com/sdk/js?client-id=${import.meta.env.VITE_PAYPAL_CLIENT_ID || ''}&components=hosted-buttons&disable-funding=venmo&currency=USD`
+        script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || ''}&components=hosted-buttons&disable-funding=venmo&currency=USD`
         script.crossOrigin = 'anonymous'
         script.onload = () => {
           if (window.paypal?.HostedButtons) renderButton()

@@ -20,13 +20,15 @@ docs/supabase-env.local.md
 !.vscode/extensions.json
 .idea
 .DS_Store
+.gemini
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-# Vercel
+# Next.js & Vercel
+.next
 .vercel
 
 # Environment variables

@@ -4,14 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "api": "node api-dev-server.js",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
-    "build": "tsc --noEmit -p tsconfig.app.json && vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 50",
     "format": "prettier --write .",
-    "preview": "vite preview",
+    "preview": "next start",
     "supabase:login": "supabase login",
     "supabase:link": "supabase link --project-ref bksonxnxshxinqffswqc",
     "supabase:push": "supabase db push",
@@ -21,15 +21,13 @@
     "deploy": "vercel --prod",
     "prepare": "husky",
     "audit:sec": "npm audit --audit-level=high",
-    "check:deps": "npx npm-check-updates",
-    "bundle:analyze": "vite build --mode analyze"
+    "check:deps": "npx npm-check-updates"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
-    "@react-three/drei": "^9.122.0",
-    "@react-three/fiber": "^8.18.0",
     "@sentry/react": "^10.68.0",
     "@supabase/server": "^1.4.1",
+    "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.110.8",
     "@tanstack/react-query": "^5.100.14",
     "@tanstack/react-table": "^8.21.3",
@@ -44,13 +42,12 @@
     "lucide": "^1.31.0",
     "lucide-react": "^0.475.0",
     "morphicons": "^1.7.0",
+    "next": "^16.3.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.76.1",
     "react-i18next": "^17.0.8",
     "react-markdown": "^9.0.3",
-    "react-router-dom": "^7.18.2",
     "sileo": "^0.1.5",
     "sonner": "^2.0.7",
     "svix": "^1.96.1",
@@ -60,6 +57,7 @@
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@tanstack/react-query-devtools": "^5.101.4",
+    "@types/node": "^26.2.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/three": "^0.185.3",
@@ -78,12 +76,10 @@
     "postcss": "^8.5.3",
     "prettier": "^3.2.5",
     "puppeteer-core": "^25.4.0",
-    "rollup-plugin-visualizer": "^5.14.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.24.0",
     "vite": "^6.2.0",
-    "vite-plugin-sitemap": "^0.7.1",
     "vitest": "^4.1.6"
   },
   "lint-staged": {
@@ -91,9 +87,12 @@
       "eslint --fix --max-warnings 50",
       "prettier --write"
     ],
-    "*.{js,jsx,json,css,md}": [
+    "*.js": [
       "prettier --write"
     ]
+  },
+  "allowScripts": {
+    "esbuild": true
   },
   "overrides": {
     "brace-expansion": "^2.1.3",

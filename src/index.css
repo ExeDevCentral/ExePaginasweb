@@ -4,26 +4,26 @@
 
 :root {
   color-scheme: light;
-  /* Paleta Pastel Crema y Rosa Suave — Cálida, descansada y sofisticada */
-  --background: #faf6f0;
-  --foreground: #2d212e;
-  --card: #fffaf5;
-  --card-foreground: #2d212e;
-  --popover: #fffaf5;
-  --popover-foreground: #2d212e;
-  --primary: #e11d48;
+  /* Paleta Light Mode Empresarial — Nítida, moderna y de alto contraste */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #0284c7;
   --primary-foreground: #ffffff;
-  --secondary: #f5ebe0;
-  --secondary-foreground: #2d212e;
-  --muted: #f4e6ec;
-  --muted-foreground: #7a5f78;
-  --accent: #e11d48;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #6366f1;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #eee0d0;
-  --input: #eee0d0;
-  --ring: #e11d48;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #0284c7;
   --radius: 0.75rem;
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
@@ -31,18 +31,18 @@
   --font-serif: 'Space Grotesk', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Colores custom del diseño corporativo premium pastel */
-  --accent-cyan: #e11d48;
-  --accent-magenta: #db2777;
+  /* Colores corporativos consistentes */
+  --accent-cyan: #0284c7;
+  --accent-magenta: #6366f1;
   --accent-yellow: #d97706;
-  --primary-bg: #faf6f0;
-  --primary-text: #2d212e;
-  --primary-secondary: #7a5f78;
+  --primary-bg: #ffffff;
+  --primary-text: #0f172a;
+  --primary-secondary: #64748b;
 
-  /* Shadows cálidas matizadas */
-  --shadow: 0px 4px 6px -1px rgba(225, 29, 72, 0.04), 0px 2px 4px -2px rgba(45, 33, 46, 0.03);
-  --shadow-md: 0px 8px 12px -3px rgba(225, 29, 72, 0.06), 0px 3px 6px -3px rgba(45, 33, 46, 0.04);
-  --shadow-lg: 0px 16px 20px -4px rgba(225, 29, 72, 0.08), 0px 6px 8px -4px rgba(45, 33, 46, 0.04);
+  /* Shadows balanceadas */
+  --shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.05), 0px 2px 4px -2px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0px 8px 12px -3px rgba(0, 0, 0, 0.08), 0px 3px 6px -3px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0px 16px 20px -4px rgba(0, 0, 0, 0.1), 0px 6px 8px -4px rgba(0, 0, 0, 0.04);
 }
 
 .dark {

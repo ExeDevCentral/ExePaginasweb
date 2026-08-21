@@ -72,7 +72,7 @@ export default function DashboardFree({ cliente, onLogout }: DashboardFreeProps)
         <button
           type="button"
           onClick={() => navigate('/tienda')}
-          className="mt-8 w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-[#050508] font-black hover:opacity-90 transition-opacity"
+          className="mt-8 w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-white font-black hover:opacity-90 transition-opacity shadow-lg"
         >
           {t('dash.subir_plan')}
         </button>

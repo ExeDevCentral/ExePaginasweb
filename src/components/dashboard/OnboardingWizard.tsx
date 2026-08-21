@@ -469,7 +469,7 @@ export default function OnboardingWizard({ cliente, planTier, onComplete }: Prop
                 type="button"
                 onClick={handleFinish}
                 disabled={submitting}
-                className="flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-[#050508] font-black hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-white font-black hover:opacity-90 transition-opacity disabled:opacity-50 shadow-lg"
               >
                 {submitting ? (
                   <>

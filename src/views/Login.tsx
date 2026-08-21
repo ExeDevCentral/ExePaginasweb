@@ -78,8 +78,11 @@ export default function Login() {
   }, [])
 
   useEffect(() => {
-    if (ready && session && mode !== 'update-password') navigate('/dashboard', { replace: true })
-  }, [ready, session, navigate, mode])
+    if (ready && session && mode !== 'update-password') {
+      const target = searchParams.get('redirectTo') || '/dashboard'
+      navigate(target, { replace: true })
+    }
+  }, [ready, session, navigate, mode, searchParams])
 
   const passwordRules = [
     { label: '8+ caracteres', test: (p: string) => p.length >= 8 },

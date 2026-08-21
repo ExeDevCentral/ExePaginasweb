@@ -43,13 +43,13 @@ const SLADashboard = lazyWithRetry(() => import('../components/sla/SLADashboard'
 const InvoicesPanel = lazyWithRetry(() => import('../components/invoices/InvoicesPanel'))
 
 const SkeletonBlock = ({ className = '' }: { className?: string }) => (
-  <div className={`relative overflow-hidden bg-slate-800/40 ${className}`}>
-    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_infinite] bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
+  <div className={`relative overflow-hidden bg-slate-200/70 dark:bg-slate-800/40 ${className}`}>
+    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_infinite] bg-gradient-to-r from-transparent via-slate-300/40 dark:via-white/[0.08] to-transparent" />
   </div>
 )
 
 const PanelSkeleton = () => (
-  <div className="rounded-3xl border border-white/15 bg-[#090a12]/80 p-8 backdrop-blur-2xl space-y-6 shadow-2xl">
+  <div className="rounded-3xl border border-slate-200 dark:border-white/15 bg-white/90 dark:bg-[#090a12]/80 p-8 backdrop-blur-2xl space-y-6 shadow-xl dark:shadow-2xl">
     <div className="flex items-center justify-between">
       <div className="space-y-2">
         <SkeletonBlock className="h-6 w-48 rounded-lg" />
@@ -181,15 +181,15 @@ export default function Dashboard() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
-            className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-[#090a12]/90 border border-white/15 backdrop-blur-2xl flex items-center justify-center shadow-[0_0_40px_rgba(14,165,233,0.25)]"
+            className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-white/90 dark:bg-[#090a12]/90 border border-slate-200 dark:border-white/15 backdrop-blur-2xl flex items-center justify-center shadow-lg dark:shadow-[0_0_40px_rgba(14,165,233,0.25)]"
           >
-            <div className="w-10 h-10 border-3 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-3 border-cyan-500 dark:border-cyan-400 border-t-transparent rounded-full animate-spin" />
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300"
+            className="text-lg font-bold text-slate-900 dark:text-white"
           >
             {t('dashboard.sincronizando')}
           </motion.p>
@@ -197,7 +197,7 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="mt-2 text-xs text-slate-400 font-mono tracking-widest uppercase"
+            className="mt-2 text-xs text-slate-500 dark:text-slate-400 font-mono tracking-widest uppercase"
           >
             // DASHBOARD OPERATIVO · SYNCING
           </motion.p>
@@ -212,12 +212,12 @@ export default function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 max-w-xl w-full rounded-3xl border border-rose-500/40 bg-[#090a12]/90 p-8 backdrop-blur-2xl shadow-2xl"
+          className="relative z-10 max-w-xl w-full rounded-3xl border border-rose-500/40 bg-white/95 dark:bg-[#090a12]/90 p-8 backdrop-blur-2xl shadow-2xl"
         >
-          <h1 className="text-2xl font-extrabold text-white">
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
             {t('dashboard.error_conexion_titulo')}
           </h1>
-          <p className="mt-3 text-rose-400 text-sm font-semibold">{error}</p>
+          <p className="mt-3 text-rose-600 dark:text-rose-400 text-sm font-semibold">{error}</p>
           <button
             type="button"
             onClick={() => navigate('/login')}
@@ -250,23 +250,23 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             className={PREMIUM_TOKENS.adminGoldAura}
           >
-            <div className="bg-[#090a12]/95 border border-white/10 backdrop-blur-2xl p-5 sm:p-6 rounded-[23px] flex flex-wrap items-center justify-between gap-4">
+            <div className="bg-white/95 dark:bg-[#090a12]/95 border border-slate-200 dark:border-white/10 backdrop-blur-2xl p-5 sm:p-6 rounded-[23px] flex flex-wrap items-center justify-between gap-4 shadow-lg dark:shadow-2xl">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-                  <Crown className="w-6 h-6 text-amber-400" />
+                  <Crown className="w-6 h-6 text-amber-500 dark:text-amber-400" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase tracking-[0.3em] text-amber-400 font-extrabold font-mono">
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400 font-extrabold font-mono">
                       {t('dashboard.super_admin')}
                     </span>
                     <span
-                      className={`w-2 h-2 rounded-full bg-amber-400 ${
+                      className={`w-2 h-2 rounded-full bg-amber-500 ${
                         prefersReducedMotion ? '' : 'animate-ping'
                       }`}
                     />
                   </div>
-                  <p className="text-slate-300 text-xs mt-0.5 font-medium">
+                  <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5 font-medium">
                     {viewMode === 'admin'
                       ? t('dashboard.consola_central_operativa')
                       : t('dashboard.vista_cliente_activa')}
@@ -275,14 +275,14 @@ export default function Dashboard() {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex bg-slate-950/80 p-1.5 rounded-2xl border border-white/15">
+                <div className="flex bg-slate-100 dark:bg-slate-950/80 p-1.5 rounded-2xl border border-slate-200 dark:border-white/15">
                   <button
                     type="button"
                     onClick={() => setViewMode('admin')}
                     className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${
                       viewMode === 'admin'
                         ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md'
-                        : 'text-slate-400 hover:text-white'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
                     {t('dashboard.consola_admin')}
@@ -293,7 +293,7 @@ export default function Dashboard() {
                     className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${
                       viewMode === 'client'
                         ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md'
-                        : 'text-slate-400 hover:text-white'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
                     {t('dashboard.simular_cliente')}
@@ -304,12 +304,14 @@ export default function Dashboard() {
                   type="button"
                   onClick={() => (viewMode === 'admin' ? refreshAdmin() : refresh())}
                   disabled={loading || adminLoading}
-                  className="p-3 rounded-2xl border border-white/15 bg-slate-900/80 hover:bg-slate-800 transition-all text-slate-300 hover:text-white shadow-md"
+                  className="p-3 rounded-2xl border border-slate-200 dark:border-white/15 bg-white dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white shadow-md"
                 >
                   <RefreshCw
                     size={18}
                     className={
-                      loading || adminLoading ? 'animate-spin text-amber-400' : 'text-slate-300'
+                      loading || adminLoading
+                        ? 'animate-spin text-amber-500'
+                        : 'text-slate-600 dark:text-slate-300'
                     }
                   />
                 </button>
@@ -432,12 +434,12 @@ export default function Dashboard() {
                     </PanelErrorBoundary>
                   )}
                   {activeView !== 'overview' && !currentTenant && (
-                    <div className="text-center py-16 rounded-3xl border border-white/15 bg-[#090a12]/80 backdrop-blur-2xl shadow-2xl">
-                      <Settings className="w-12 h-12 text-slate-500 mx-auto mb-4" />
-                      <h3 className="text-lg font-bold text-white">
+                    <div className="text-center py-16 rounded-3xl border border-slate-200 dark:border-white/15 bg-white/90 dark:bg-[#090a12]/80 backdrop-blur-2xl shadow-xl dark:shadow-2xl">
+                      <Settings className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                         {t('dashboard.configura_espacio')}
                       </h3>
-                      <p className="text-sm text-slate-300 mt-2 max-w-md mx-auto font-medium">
+                      <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-md mx-auto font-medium">
                         {t('dashboard.compra_plan_hint')}
                       </p>
                     </div>

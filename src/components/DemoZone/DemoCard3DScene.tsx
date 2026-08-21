@@ -1,4 +1,6 @@
-import React, { useRef, useMemo, memo } from 'react'
+'use client'
+
+import React, { useRef, useMemo, memo, useState, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Float } from '@react-three/drei'
 import * as THREE from 'three'
@@ -308,6 +310,9 @@ function CardParticles({ color, count = 35 }: { color: string; count?: number })
 }
 
 export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isHovered }) => {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
   const config = useMemo(() => {
     switch (type) {
       case 'salon':
@@ -336,6 +341,8 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
         }
     }
   }, [type, isHovered])
+
+  if (!mounted) return <div className="w-full h-44 rounded-2xl" />
 
   return (
     <div className="w-full h-44 relative overflow-hidden pointer-events-none select-none rounded-2xl">

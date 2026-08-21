@@ -1,6 +1,28 @@
 'use client'
 
 import React, { useState } from 'react'
+
+// Polyfill React internals for Three.js / React Three Fiber in Next.js Turbopack
+if (typeof window !== 'undefined') {
+  const R = React as any
+  if (!R.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
+    R.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED =
+      R.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE || {}
+  }
+  const secret = R.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
+  const client = R.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE
+  if (secret) {
+    if (!secret.ReactCurrentOwner) {
+      secret.ReactCurrentOwner = client?.A || { current: null }
+    }
+    if (!secret.ReactCurrentBatchConfig) {
+      secret.ReactCurrentBatchConfig = client?.T || { transition: null }
+    }
+    if (!secret.ReactCurrentDispatcher) {
+      secret.ReactCurrentDispatcher = client?.H || { current: null }
+    }
+  }
+}
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'

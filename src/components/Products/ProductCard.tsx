@@ -71,7 +71,8 @@ export default function ProductCard({
     color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
   }
 
-  const basePriceNum = parseInt(product.price.replace(/[^0-9]/g, '')) || 300
+  const match = /(\d+)/.exec(product.price)
+  const basePriceNum = match ? Number.parseInt(match[1], 10) : 300
   const estimatedTotal = basePriceNum * sucursales + (includeWhatsAppBot ? 80 : 0)
 
   return (

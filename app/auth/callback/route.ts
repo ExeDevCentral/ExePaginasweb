@@ -8,34 +8,14 @@ export async function GET(request: Request) {
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
   const errorParam = searchParams.get('error_description') || searchParams.get('error')
-  const next = searchParams.get('next') ?? '/dashboard'
+  const rawNext = searchParams.get('next') ?? '/dashboard'
+  const next = rawNext.startsWith('/') ? rawNext : `/${rawNext}`
   const isRecovery = type === 'recovery'
 
   const targetUrl = isRecovery ? `${origin}/login?mode=update-password` : `${origin}${next}`
 
   if (errorParam) {
-    const errorHtml = `<!DOCTYPE html>
-<html>
-<head><title>Autenticación</title></head>
-<body>
-<script>
-  if (window.opener && !window.opener.closed) {
-    try {
-      window.opener.postMessage({ type: 'GOOGLE_AUTH_ERROR', error: ${JSON.stringify(errorParam)} }, window.location.origin);
-      window.close();
-    } catch(e) {
-      window.location.href = ${JSON.stringify(`${origin}/login?error=${encodeURIComponent(errorParam)}`)};
-    }
-  } else {
-    window.location.href = ${JSON.stringify(`${origin}/login?error=${encodeURIComponent(errorParam)}`)};
-  }
-</script>
-</body>
-</html>`
-    return new NextResponse(errorHtml, {
-      status: 200,
-      headers: { 'Content-Type': 'text/html; charset=utf-8' },
-    })
+    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(errorParam)}`)
   }
 
   const supabase = await createClient()
@@ -43,29 +23,7 @@ export async function GET(request: Request) {
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      const successHtml = `<!DOCTYPE html>
-<html>
-<head><title>Autenticación Exitosa</title></head>
-<body>
-<script>
-  if (window.opener && !window.opener.closed) {
-    try {
-      window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS' }, window.location.origin);
-      window.close();
-    } catch(e) {
-      window.location.href = ${JSON.stringify(targetUrl)};
-    }
-  } else {
-    window.location.href = ${JSON.stringify(targetUrl)};
-  }
-</script>
-<p style="font-family:sans-serif;text-align:center;margin-top:40px;color:#64748b;">Iniciando sesión y redirigiendo a tu panel...</p>
-</body>
-</html>`
-      return new NextResponse(successHtml, {
-        status: 200,
-        headers: { 'Content-Type': 'text/html; charset=utf-8' },
-      })
+      return NextResponse.redirect(targetUrl)
     } else {
       const errMsg = error.message || 'Error al autenticar código'
       return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(errMsg)}`)

@@ -103,55 +103,24 @@ export default function Login() {
       setError(null)
       setLoading(true)
 
-      // Abrir el popup síncronamente con el clic del usuario para evitar bloqueos del navegador
-      const popup = window.open('about:blank', 'google-login', 'width=600,height=700,status=1')
+      const target = searchParams.get('redirectTo') || searchParams.get('next') || '/dashboard'
+      const redirectPath =
+        target && target !== '/dashboard'
+          ? `/auth/callback?next=${encodeURIComponent(target)}`
+          : '/auth/callback'
 
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          skipBrowserRedirect: true,
-          redirectTo: getAuthRedirectUrl('/auth/callback'),
+          redirectTo: getAuthRedirectUrl(redirectPath),
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       })
 
-      if (error || !data?.url) {
-        if (popup && !popup.closed) popup.close()
-        throw error || new Error('No se pudo obtener la URL de autenticación')
-      }
-
-      if (popup) {
-        popup.location.href = data.url
-      } else {
-        window.location.href = data.url
-        return
-      }
-
-      const handleMessage = (event: MessageEvent) => {
-        if (event.origin !== window.location.origin) return
-
-        if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
-          window.removeEventListener('message', handleMessage)
-          clearTimeout(timeoutId)
-          setLoading(false)
-          toast.success('Bienvenido', { description: 'Inicio de sesión exitoso' })
-          navigate('/dashboard', { replace: true })
-        }
-
-        if (event.data.type === 'GOOGLE_AUTH_ERROR') {
-          window.removeEventListener('message', handleMessage)
-          clearTimeout(timeoutId)
-          setError(event.data.error || 'Error al iniciar sesión')
-          setLoading(false)
-        }
-      }
-
-      window.addEventListener('message', handleMessage)
-
-      const timeoutId = setTimeout(() => {
-        window.removeEventListener('message', handleMessage)
-        if (popup && !popup.closed) popup.close()
-        setLoading(false)
-      }, 180000)
+      if (error) throw error
     } catch (e) {
       const message = getErrorMessage(e, t('login.err_iniciar_sesion'))
       setError(message)

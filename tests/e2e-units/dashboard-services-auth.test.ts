@@ -22,6 +22,9 @@ describe('🔬 SUITE DE TEST INTEGRAL: Autenticación Google, Dashboard, Factura
     it('debe admitir parámetros para modo recuperación o destino post-login', () => {
       const customRedirect = getAuthRedirectUrl('/auth/callback?type=recovery')
       expect(customRedirect).toContain('type=recovery')
+
+      const nextRedirect = getAuthRedirectUrl('/auth/callback?next=%2Fdashboard')
+      expect(nextRedirect).toContain('next=%2Fdashboard')
     })
   })
 

@@ -91,6 +91,8 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
     // 4. PIXEL COFFEE
     let coffeeGroup: THREE.Group | null = null
     let steamRing: THREE.Mesh | null = null
+    const miniBeans: THREE.Mesh[] = []
+    const miniBeanData: { angle: number; radius: number; y: number; speed: number }[] = []
 
     if (type === 'salon') {
       const ringGeo = new THREE.TorusGeometry(1.5, 0.03, 16, 64)
@@ -260,6 +262,29 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
       steamRing.position.set(0, 0.7, 0)
       coffeeGroup.add(steamRing)
 
+      // Orbiting Mini Coffee Beans
+      const miniBeanGeo = new THREE.SphereGeometry(0.09, 8, 6)
+      disposables.push(miniBeanGeo)
+
+      for (let i = 0; i < 6; i++) {
+        const beanMat = new THREE.MeshStandardMaterial({
+          color: i % 2 === 0 ? '#451a03' : '#78350f',
+          roughness: 0.4,
+          metalness: 0.2,
+        })
+        disposables.push(beanMat)
+        const bean = new THREE.Mesh(miniBeanGeo, beanMat)
+        bean.scale.set(0.85, 1.3, 0.7)
+        coffeeGroup.add(bean)
+        miniBeans.push(bean)
+        miniBeanData.push({
+          angle: (i / 6) * Math.PI * 2,
+          radius: 1.15 + (i % 2) * 0.25,
+          y: ((i % 3) - 1) * 0.25,
+          speed: 1.2 + (i % 2) * 0.5,
+        })
+      }
+
       disposables.push(
         cupGeo,
         cupMat,
@@ -356,6 +381,22 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
           steamRing.position.y = 0.7 + Math.sin(t * 2.5) * 0.15
           const s = 0.8 + Math.sin(t * 2) * 0.2
           steamRing.scale.set(s, s, s)
+        }
+        if (miniBeans.length > 0) {
+          const mult = isHov ? 2.2 : 1.0
+          const radExpand = isHov ? 1.25 : 1.0
+          for (let i = 0; i < miniBeans.length; i++) {
+            const b = miniBeans[i]
+            const d = miniBeanData[i]
+            const a = d.angle + t * d.speed * mult
+            b.position.set(
+              Math.cos(a) * d.radius * radExpand,
+              d.y + Math.sin(t * 2 + i) * 0.1,
+              Math.sin(a) * d.radius * radExpand
+            )
+            b.rotation.x += 0.03 * mult
+            b.rotation.y += 0.04 * mult
+          }
         }
       }
 

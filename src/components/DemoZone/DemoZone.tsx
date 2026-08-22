@@ -20,9 +20,7 @@ import { useFocusTrap } from '../../hooks/useFocusTrap'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
 const DemoCard3DScene = dynamic(() => import('./DemoCard3DScene'), { ssr: false })
-
-// CoffeePortal3D se importa dinámicamente SOLO cuando el usuario hace clic en Pixel Coffee
-// Esto evita que three.js (288KB) se cargue en la página principal
+const CoffeePortal3D = dynamic(() => import('../Effects/CoffeePortal3D'), { ssr: false })
 
 interface ProjectConfig {
   id: 'salon' | 'neofit' | 'aura' | 'coffee'
@@ -421,6 +419,7 @@ const DemoZone = () => {
     category: string
     summary: string
   } | null>(null)
+  const [showCoffeePortal, setShowCoffeePortal] = useState(false)
   const [glitchActive, setGlitchActive] = useState(false)
   const [cartItems, setCartItems] = useState<{ id: number; name: string; price: number }[]>([])
   const [flyingItem, setFlyingItem] = useState<number | null>(null)
@@ -486,7 +485,9 @@ const DemoZone = () => {
   const [whatsappProp, setWhatsappProp] = useState<number | null>(null)
 
   const openProject = (project: { title: string; category: string; summary: string }) => {
-    if (project.title === 'NeoFit Studio') {
+    if (project.title === 'Pixel Coffee') {
+      setShowCoffeePortal(true)
+    } else if (project.title === 'NeoFit Studio') {
       setGlitchActive(true)
       setTimeout(() => {
         setGlitchActive(false)
@@ -912,14 +913,26 @@ const DemoZone = () => {
                     </h2>
                   </div>
 
-                  {/* Cart icon with counter */}
-                  <div className="flex items-center gap-4">
+                  {/* Cart icon with counter & 3D Burst Trigger */}
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <motion.button
+                      type="button"
+                      onClick={() => setShowCoffeePortal(true)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-black uppercase tracking-wider transition-all shadow-sm cursor-pointer"
+                      title="Disparar estallido 3D de granos de café"
+                    >
+                      <Sparkles size={15} className="text-amber-400 animate-spin" />
+                      <span className="hidden sm:inline">Estallido 3D</span>
+                    </motion.button>
+
                     <motion.div
-                      className="relative p-4 bg-amber-900/40 border border-amber-700/40 rounded-2xl cursor-default"
+                      className="relative p-3.5 sm:p-4 bg-amber-900/40 border border-amber-700/40 rounded-2xl cursor-default"
                       animate={cartBounce ? { scale: [1, 1.3, 0.9, 1.1, 1] } : {}}
                       transition={{ duration: 0.4 }}
                     >
-                      <ShoppingCart size={24} className="text-amber-400" />
+                      <ShoppingCart size={22} className="text-amber-400" />
                       {cartItems.length > 0 && (
                         <motion.span
                           className="absolute -top-2 -right-2 bg-amber-400 text-black text-xs font-black w-6 h-6 rounded-full flex items-center justify-center"
@@ -1440,6 +1453,21 @@ const DemoZone = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      {/* 3D Coffee Bean Explosion Portal */}
+      <CoffeePortal3D
+        isVisible={showCoffeePortal}
+        onDismiss={() => {
+          setShowCoffeePortal(false)
+          const coffeeProj = PROJECTS.find((p) => p.id === 'coffee')
+          if (coffeeProj) {
+            setSelectedProject({
+              title: coffeeProj.title,
+              category: t(coffeeProj.categoryKey, coffeeProj.category),
+              summary: t(coffeeProj.summaryKey, coffeeProj.summary),
+            })
+          }
+        }}
+      />
     </section>
   )
 }

@@ -317,7 +317,7 @@ export const AIChatWidget: React.FC = () => {
         initial={{ scale: 0, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-24 z-40 group select-none"
+        className="fixed bottom-24 right-5 sm:bottom-6 sm:right-24 z-40 group select-none"
       >
         {/* Ambient Pulsing Glow Aura */}
         <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-accent-cyan via-purple-500 to-accent-magenta opacity-75 blur-lg group-hover:opacity-100 group-hover:blur-xl transition-all duration-500 animate-pulse" />

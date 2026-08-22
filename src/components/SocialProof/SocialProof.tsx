@@ -37,7 +37,7 @@ const SocialProof = () => {
   const marqueeItems = [...CLIENTS, ...CLIENTS]
 
   return (
-    <section className="py-10 relative overflow-hidden z-10 border-y border-border/40 bg-gradient-to-b from-background via-card/20 to-background">
+    <section className="py-10 relative overflow-hidden z-10 border-y border-border/30 bg-transparent">
       {/* Background Glow Beams */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -46,8 +46,8 @@ const SocialProof = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
 
       {/* Fades laterales para transición suave */}
-      <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-r from-background via-background/80 to-transparent z-20 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-l from-background via-background/80 to-transparent z-20 pointer-events-none" />
+      <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-background/60 to-transparent z-20 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-background/60 to-transparent z-20 pointer-events-none" />
 
       <div className="relative z-10">
         {/* Section Header Badge */}

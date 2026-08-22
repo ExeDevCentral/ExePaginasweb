@@ -76,33 +76,11 @@ const SectionSkeleton = () => (
   </div>
 )
 
-const WaveDivider = ({
-  flip = false,
-  color = 'var(--background)',
-}: {
-  flip?: boolean
-  color?: string
-}) => (
+const WaveDivider = ({ flip = false }: { flip?: boolean; color?: string }) => (
   <div
-    className={`relative w-full h-16 sm:h-24 -my-1 z-10 pointer-events-none ${flip ? 'rotate-180' : ''}`}
+    className={`relative w-full h-8 sm:h-12 -my-1 z-10 pointer-events-none flex items-center justify-center overflow-hidden ${flip ? 'rotate-180' : ''}`}
   >
-    <svg
-      viewBox="0 0 1440 96"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="absolute inset-0 w-full h-full"
-      preserveAspectRatio="none"
-    >
-      <path
-        d="M0 64L48 58.7C96 53.3 192 42.7 288 37.3C384 32 480 32 576 37.3C672 42.7 768 53.3 864 58.7C960 64 1056 64 1152 58.7C1248 53.3 1344 42.7 1392 37.3L1440 32V96H1392C1344 96 1248 96 1152 96C1056 96 960 96 864 96C768 96 672 96 576 96C480 96 384 96 288 96C192 96 96 96 48 96H0V64Z"
-        fill={color}
-        fillOpacity="0.5"
-      />
-      <path
-        d="M0 80L48 74.7C96 69.3 192 58.7 288 53.3C384 48 480 48 576 53.3C672 58.7 768 69.3 864 74.7C960 80 1056 80 1152 74.7C1248 69.3 1344 58.7 1392 53.3L1440 48V96H1392C1344 96 1248 96 1152 96C1056 96 960 96 864 96C768 96 672 96 576 96C480 96 384 96 288 96C192 96 96 96 48 96H0V80Z"
-        fill={color}
-      />
-    </svg>
+    <div className="w-full max-w-7xl h-px bg-gradient-to-r from-transparent via-accent-cyan/25 to-transparent" />
   </div>
 )
 

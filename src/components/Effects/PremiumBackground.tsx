@@ -159,13 +159,14 @@ const PremiumBackground = () => {
 
     const drawLinks = () => {
       const darkTheme = document.documentElement.classList.contains('dark')
+      const maxDist = isMobile ? 100 : LINK_DIST
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const a = nodes[i]
           const b = nodes[j]
           const dist = Math.hypot(a.x - b.x, a.y - b.y)
-          if (dist < LINK_DIST) {
-            const factor = 1 - dist / LINK_DIST
+          if (dist < maxDist) {
+            const factor = 1 - dist / maxDist
             const opacity = darkTheme ? factor * 0.45 : factor * 0.35
             const lineColor = darkTheme
               ? `rgba(148, 163, 184, ${opacity})`
@@ -184,7 +185,7 @@ const PremiumBackground = () => {
     let animId: number
     const loop = () => {
       ctx.clearRect(0, 0, w, h)
-      if (!isMobile) drawLinks()
+      drawLinks()
       const darkTheme = document.documentElement.classList.contains('dark')
       nodes.forEach((n) => {
         n.update(w, h, mouse)

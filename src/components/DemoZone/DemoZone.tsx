@@ -523,7 +523,7 @@ const DemoZone = () => {
   return (
     <section
       id="demo"
-      className="py-24 px-4 sm:px-6 lg:px-8 relative z-10 overflow-hidden bg-gradient-to-b from-primary-bg via-primary-bg/90 to-primary-bg"
+      className="py-24 px-4 sm:px-6 lg:px-8 relative z-10 overflow-hidden bg-transparent"
     >
       {/* Background ambient pattern & lighting */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent-cyan/10 via-transparent to-transparent opacity-60" />

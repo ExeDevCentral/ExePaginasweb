@@ -82,7 +82,7 @@ export default function ProductCard({
         <div className="absolute -inset-4 rounded-[28px] bg-black/40 dark:bg-black/70 blur-[25px] -z-10 pointer-events-none transition-opacity duration-300 group-hover:opacity-100 opacity-60" />
 
         {/* Cuerpo Principal de la Tarjeta */}
-        <div className="h-full p-6 sm:p-8 bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-[#171729] dark:via-[#111122] dark:to-[#0c0c15] backdrop-blur-xl border border-border rounded-2xl transition-all duration-300 relative shadow-xl overflow-hidden dark:border-white/10 dark:shadow-[0_0_60px_rgba(14,165,233,0.07)]">
+        <div className="h-full p-4.5 sm:p-7 md:p-8 bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-[#171729] dark:via-[#111122] dark:to-[#0c0c15] backdrop-blur-xl border border-border rounded-2xl transition-all duration-300 relative shadow-xl overflow-hidden dark:border-white/10 dark:shadow-[0_0_60px_rgba(14,165,233,0.07)]">
           {/* Línea de acento superior */}
           <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${product.color}`} />
 
@@ -102,13 +102,13 @@ export default function ProductCard({
           />
 
           {/* Top Bar with Icon & ROI Badge */}
-          <div className="flex items-start justify-between mb-6">
+          <div className="flex items-start justify-between mb-5 sm:mb-6">
             <div className="relative">
               <div
                 className={`absolute -inset-3 bg-gradient-to-br ${product.color} opacity-30 blur-xl rounded-full group-hover:opacity-60 transition-opacity duration-300`}
               />
               <motion.div
-                className={`relative inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${product.color} p-3 shadow-lg group-hover:scale-105 transition-all duration-300 ring-1 ring-white/20`}
+                className={`relative inline-flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${product.color} p-2.5 sm:p-3 shadow-lg group-hover:scale-105 transition-all duration-300 ring-1 ring-white/20`}
                 animate={{ y: [0, -4, 0] }}
                 transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
               >
@@ -118,7 +118,7 @@ export default function ProductCard({
 
             {/* ROI Badge */}
             <span
-              className={`text-[11px] font-bold px-3 py-1 rounded-full border backdrop-blur-md shadow-sm ${roi.color}`}
+              className={`text-[10px] sm:text-[11px] font-bold px-2.5 sm:px-3 py-1 rounded-full border backdrop-blur-md shadow-sm ${roi.color}`}
             >
               {roi.label}
             </span>
@@ -126,15 +126,15 @@ export default function ProductCard({
 
           {/* Título y Descripción */}
           <div>
-            <h3 className="text-2xl font-bold mb-2 font-montserrat text-foreground group-hover:text-accent-cyan transition-colors duration-300">
+            <h3 className="text-xl sm:text-2xl font-bold mb-2 font-montserrat text-foreground group-hover:text-accent-cyan transition-colors duration-300">
               {t(`products.${product.tKey}_titulo`)}
             </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-5 sm:mb-6 leading-relaxed">
               {t(`products.${product.tKey}_desc`)}
             </p>
 
             {/* INTERACTIVE MICRO-WIDGET ADAPTED PER RUBRO */}
-            <div className="mb-6 p-4 rounded-xl border border-white/10 bg-card/60 backdrop-blur-md shadow-inner">
+            <div className="mb-5 sm:mb-6 p-3.5 sm:p-4 rounded-xl border border-white/10 bg-card/60 backdrop-blur-md shadow-inner">
               <p className="text-[10px] font-extrabold uppercase tracking-wider text-accent-cyan mb-2 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
                 Simulador del Rubro en Vivo

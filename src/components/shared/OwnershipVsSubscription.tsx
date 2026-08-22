@@ -21,7 +21,11 @@ export const OwnershipVsSubscription: React.FC = () => {
   const [copied, setCopied] = React.useState(false)
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return
+    if (
+      !cardRef.current ||
+      (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches)
+    )
+      return
     const rect = cardRef.current.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
@@ -29,12 +33,15 @@ export const OwnershipVsSubscription: React.FC = () => {
     const py = y / rect.height
     setGlowPos({ x: Math.round(px * 100), y: Math.round(py * 100) })
     setTilt({
-      rx: parseFloat(((0.5 - py) * 10).toFixed(2)),
-      ry: parseFloat(((px - 0.5) * 10).toFixed(2)),
+      rx: Number.parseFloat(((0.5 - py) * 10).toFixed(2)),
+      ry: Number.parseFloat(((px - 0.5) * 10).toFixed(2)),
     })
   }
 
-  const handlePointerEnter = () => setIsHovered(true)
+  const handlePointerEnter = () => {
+    if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) return
+    setIsHovered(true)
+  }
   const handlePointerLeave = () => {
     setIsHovered(false)
     setTilt({ rx: 0, ry: 0 })
@@ -149,7 +156,7 @@ export const OwnershipVsSubscription: React.FC = () => {
             rotateY: tilt.ry,
           }}
           style={{ perspective: 1000 }}
-          className="mb-16 p-8 md:p-12 rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/90 backdrop-blur-2xl relative overflow-hidden shadow-[0_20px_60px_rgba(6,182,212,0.15)] text-center group cursor-pointer transition-shadow duration-500 hover:shadow-[0_25px_70px_rgba(6,182,212,0.3)]"
+          className="mb-12 sm:mb-16 p-5 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/90 backdrop-blur-2xl relative overflow-hidden shadow-[0_20px_60px_rgba(6,182,212,0.15)] text-center group cursor-pointer transition-shadow duration-500 hover:shadow-[0_25px_70px_rgba(6,182,212,0.3)]"
         >
           {/* Dynamic Spotlight Effect following Mouse */}
           <div
@@ -161,8 +168,8 @@ export const OwnershipVsSubscription: React.FC = () => {
           />
 
           {/* Ambient Glowing Orbs */}
-          <div className="absolute -top-24 -left-24 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/35 transition-all duration-700" />
-          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-fuchsia-500/20 rounded-full blur-3xl pointer-events-none group-hover:bg-fuchsia-500/35 transition-all duration-700" />
+          <div className="absolute -top-24 -left-24 w-48 h-48 sm:w-64 sm:h-64 bg-cyan-500/20 rounded-full blur-2xl sm:blur-3xl pointer-events-none group-hover:bg-cyan-500/35 transition-all duration-700" />
+          <div className="absolute -bottom-24 -right-24 w-48 h-48 sm:w-64 sm:h-64 bg-fuchsia-500/20 rounded-full blur-2xl sm:blur-3xl pointer-events-none group-hover:bg-fuchsia-500/35 transition-all duration-700" />
           <div className="absolute inset-0 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:24px_24px] opacity-15 pointer-events-none" />
 
           {/* Continuous Light Sheen Sweep Ray */}
@@ -215,12 +222,12 @@ export const OwnershipVsSubscription: React.FC = () => {
           </div>
 
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-4 sm:mb-6 backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
               <span>Diferencial Estratégico</span>
             </div>
 
-            <blockquote className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-relaxed max-w-4xl mx-auto font-display tracking-tight drop-shadow-md">
+            <blockquote className="text-base sm:text-2xl md:text-3xl font-extrabold text-white leading-relaxed max-w-4xl mx-auto font-display tracking-tight drop-shadow-md px-1">
               “
               {t(
                 'versus.cita_destacada',

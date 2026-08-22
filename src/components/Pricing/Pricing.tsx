@@ -55,14 +55,14 @@ const PricingCard = ({
       viewport={{ once: true }}
       transition={{ delay: index * 0.2 }}
       onMouseMove={handleMouseMove}
-      className={`group relative rounded-[2.5rem] bg-card backdrop-blur-xl border overflow-hidden transition-all duration-500 hover:-translate-y-2 p-10 flex flex-col ${
+      className={`group relative rounded-2xl sm:rounded-[2.5rem] bg-card backdrop-blur-xl border overflow-hidden transition-all duration-500 hover:-translate-y-2 p-5 sm:p-8 md:p-10 flex flex-col ${
         plan.popular
           ? 'border-accent-magenta/50 shadow-2xl shadow-accent-magenta/10 hover:shadow-accent-magenta/20'
           : 'border-border hover:border-border'
       }`}
     >
       <motion.div
-        className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute -inset-px rounded-2xl sm:rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
           background: useMotionTemplate`
             radial-gradient(
@@ -77,26 +77,26 @@ const PricingCard = ({
       {plan.popular && (
         <>
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-magenta to-transparent" />
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-xs font-black text-white uppercase tracking-wider shadow-lg">
+          <div className="absolute -top-3.5 sm:-top-4 left-1/2 -translate-x-1/2 px-3.5 sm:px-4 py-0.5 sm:py-1 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-[10px] sm:text-xs font-black text-white uppercase tracking-wider shadow-lg">
             {t('pricing.popular')}
           </div>
         </>
       )}
 
       <div className="relative z-10 flex-1 flex flex-col">
-        <h3 className="text-3xl font-outfit font-black text-foreground mb-3">
+        <h3 className="text-2xl sm:text-3xl font-outfit font-black text-foreground mb-2 sm:mb-3">
           {t(`pricing.${plan.tKey}_nombre`)}
         </h3>
-        <p className="text-sm text-muted-foreground mb-8 min-h-[40px]">
+        <p className="text-xs sm:text-sm text-muted-foreground mb-5 sm:mb-8 min-h-0 sm:min-h-[40px]">
           {t(`pricing.${plan.tKey}_desc`)}
         </p>
 
-        <div className="mb-8 p-6 rounded-2xl bg-muted border border-border">
-          <div className="mb-4 pb-4 border-b border-border">
+        <div className="mb-6 sm:mb-8 p-4 sm:p-6 rounded-2xl bg-muted border border-border">
+          <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-border">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">
               {t('pricing.setup_label')}
             </p>
-            <p className="text-4xl font-outfit font-black text-foreground">
+            <p className="text-3xl sm:text-4xl font-outfit font-black text-foreground">
               {plan.setupFee[currency]}
             </p>
           </div>

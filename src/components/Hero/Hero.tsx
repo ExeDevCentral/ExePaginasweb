@@ -97,17 +97,17 @@ const Hero: React.FC = () => {
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full overflow-hidden bg-transparent flex items-center justify-center pt-28 pb-16 md:pt-36 md:pb-24"
+      className="relative min-h-screen w-full overflow-hidden bg-transparent flex items-center justify-center pt-20 pb-12 sm:pt-28 sm:pb-16 md:pt-36 md:pb-24"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-magenta/10 pointer-events-none" />
 
-      <div className="absolute top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 rounded-full bg-accent-cyan/15 blur-[120px] pointer-events-none z-0" />
-      <div className="absolute bottom-1/4 right-1/4 w-72 h-72 md:w-96 md:h-96 rounded-full bg-accent-magenta/15 blur-[120px] pointer-events-none z-0" />
+      <div className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full bg-accent-cyan/15 blur-[60px] sm:blur-[100px] md:blur-[120px] pointer-events-none z-0" />
+      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full bg-accent-magenta/15 blur-[60px] sm:blur-[100px] md:blur-[120px] pointer-events-none z-0" />
 
-      <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto w-full">
+      <div className="relative z-10 flex flex-col items-center justify-center px-3 sm:px-4 text-center max-w-5xl mx-auto w-full">
         <Badge text={t('hero.badge')} />
 
-        <motion.h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-[5.25rem] font-montserrat font-black tracking-tight leading-[1.12] md:leading-[1.08] mb-6 max-w-5xl overflow-visible">
+        <motion.h1 className="text-[1.65rem] xs:text-3xl sm:text-5xl md:text-7xl lg:text-[5.25rem] font-montserrat font-black tracking-tight leading-[1.2] sm:leading-[1.12] md:leading-[1.08] mb-5 sm:mb-6 max-w-5xl overflow-visible">
           {titleParts.map((part, i) => {
             const hasPunctuation =
               part.endsWith('.') || part.endsWith('。') || i === titleParts.length - 1
@@ -128,15 +128,15 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 1.7 }}
-          className="inline-flex flex-col items-center gap-1.5 px-7 py-4 rounded-2xl bg-white/95 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl mb-6 max-w-2xl shadow-xl hover:border-accent-cyan/40 transition-colors"
+          className="inline-flex flex-col items-center gap-1.5 px-4 py-3 sm:px-7 sm:py-4 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl mb-5 sm:mb-6 max-w-2xl shadow-xl hover:border-accent-cyan/40 transition-colors w-full sm:w-auto"
         >
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-accent-cyan shrink-0" />
-            <p className="text-sm md:text-base text-slate-800 dark:text-slate-200 font-bold">
+            <p className="text-xs sm:text-sm md:text-base text-slate-800 dark:text-slate-200 font-bold">
               {t('hero.titulo_2')}
             </p>
           </div>
-          <p className="text-xl md:text-2xl font-black text-gradient-spectacular">
+          <p className="text-lg sm:text-xl md:text-2xl font-black text-gradient-spectacular">
             {t('hero.sub_respuesta')}
           </p>
         </motion.div>
@@ -145,7 +145,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 1.9 }}
-          className="text-base sm:text-lg md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed max-w-3xl mx-auto mb-7 font-semibold"
+          className="text-sm sm:text-lg md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed max-w-3xl mx-auto mb-6 sm:mb-7 font-semibold px-2"
         >
           {t('hero.descripcion')}
         </motion.p>
@@ -154,7 +154,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 2.1 }}
-          className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full sm:w-auto px-4 mb-6"
+          className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center w-full sm:w-auto px-2 sm:px-4 mb-6"
         >
           <SalonBloomButton
             href="#demo"
@@ -165,7 +165,7 @@ const Hero: React.FC = () => {
             }}
           />
           <MagneticButton href="#contact">
-            <span className="w-full sm:w-auto text-center px-8 py-4 rounded-2xl border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-extrabold bg-white dark:bg-slate-900/90 backdrop-blur-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-xs sm:text-sm tracking-wider uppercase block shadow-md hover:shadow-lg">
+            <span className="w-full sm:w-auto text-center px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-extrabold bg-white dark:bg-slate-900/90 backdrop-blur-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-xs sm:text-sm tracking-wider uppercase block shadow-md hover:shadow-lg">
               {t('hero.cta_proyecto')}
             </span>
           </MagneticButton>

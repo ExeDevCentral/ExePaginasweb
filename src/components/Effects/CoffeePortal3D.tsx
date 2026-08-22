@@ -52,16 +52,20 @@ export const CoffeePortal3D = ({
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100)
     camera.position.set(0, 0, 9)
 
+    const isMobile =
+      typeof window !== 'undefined' &&
+      (window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches)
+
     let renderer: THREE.WebGLRenderer | null = null
     try {
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance',
+        antialias: !isMobile,
+        powerPreference: isMobile ? 'low-power' : 'high-performance',
       })
       renderer.setSize(width, height, false)
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+      renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5))
     } catch {
       return
     }
@@ -134,7 +138,7 @@ export const CoffeePortal3D = ({
     disposables.push(cupGeo, cupMat, handleGeo, handleMat, liquidGeo, liquidMat, steamGeo, steamMat)
 
     // Realistic Roasted Coffee Beans
-    const beanCount = 42
+    const beanCount = isMobile ? 26 : 42
     const beanMeshes: THREE.Mesh[] = []
     const beanData: {
       orbitAngle: number
@@ -190,7 +194,7 @@ export const CoffeePortal3D = ({
     }
 
     // Sparkle & Aroma Dust Particles
-    const sparkCount = 80
+    const sparkCount = isMobile ? 36 : 80
     const sparkPositions = new Float32Array(sparkCount * 3)
     for (let i = 0; i < sparkCount; i++) {
       sparkPositions[i * 3] = (Math.random() - 0.5) * 4

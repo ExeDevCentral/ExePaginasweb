@@ -376,7 +376,7 @@ export const AIChatWidget: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-96 max-h-[580px] h-[82vh] rounded-3xl bg-card/95 border border-border shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-2xl flex flex-col overflow-hidden"
+            className="fixed bottom-3 sm:bottom-24 left-2.5 right-2.5 sm:left-auto sm:right-6 z-50 sm:w-96 max-h-[calc(100dvh-1.5rem)] sm:max-h-[580px] h-[82dvh] sm:h-[540px] rounded-2xl sm:rounded-3xl bg-card/95 border border-border shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-2xl flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="px-5 py-3.5 bg-muted/80 border-b border-border flex items-center justify-between select-none">

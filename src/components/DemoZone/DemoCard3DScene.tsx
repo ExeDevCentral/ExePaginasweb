@@ -17,6 +17,10 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
     const canvas = canvasRef.current
     if (!canvas) return
 
+    const isMobile =
+      typeof window !== 'undefined' &&
+      (window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches)
+
     const width = canvas.clientWidth || 320
     const height = canvas.clientHeight || 176
 
@@ -29,13 +33,28 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance',
+        antialias: !isMobile,
+        powerPreference: isMobile ? 'low-power' : 'high-performance',
       })
       renderer.setSize(width, height, false)
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5))
+      renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5))
     } catch {
       return
+    }
+
+    let isVisible = true
+    const observer =
+      typeof IntersectionObserver !== 'undefined'
+        ? new IntersectionObserver(
+            ([entry]) => {
+              isVisible = entry.isIntersecting
+            },
+            { rootMargin: '100px' }
+          )
+        : null
+
+    if (observer) {
+      observer.observe(canvas)
     }
 
     // Lights
@@ -324,6 +343,8 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
 
     const animate = () => {
       animId = requestAnimationFrame(animate)
+      if (!isVisible) return
+
       const t = clock.getElapsedTime()
       const isHov = hoverRef.current
       const targetScale = isHov ? 1.15 : 1.0
@@ -410,6 +431,7 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
 
     return () => {
       cancelAnimationFrame(animId)
+      observer?.disconnect()
       disposables.forEach((d) => d.dispose())
       renderer?.dispose()
     }

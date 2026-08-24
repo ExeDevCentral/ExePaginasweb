@@ -10,6 +10,8 @@ import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import ScrollProvider from '@/components/shared/ScrollProvider'
 import MouseSpotlight from '@/components/shared/MouseSpotlight'
 
+import BrandLoader from '@/components/layout/BrandLoader'
+
 // Dynamic components for high performance and SSR safety
 const SocialProof = dynamic(() => import('@/components/SocialProof/SocialProof'), {
   loading: () => <SectionSkeleton />,
@@ -28,9 +30,8 @@ const AIChatWidget = dynamic(() => import('@/components/chat/AIChatWidget'), {
 })
 const ContactSection = dynamic(() => import('@/components/landing/ContactSection'), {
   loading: () => (
-    <div className="py-20 text-center text-primary-secondary">
-      <div className="w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-      Cargando contacto...
+    <div className="py-24 text-center flex justify-center items-center">
+      <BrandLoader size="sm" text="EXESISTEMASWEB" subtext="Cargando contacto..." />
     </div>
   ),
 })
@@ -62,15 +63,11 @@ const SkeletonBlock = ({ className = '' }: { className?: string }) => (
 )
 
 const SectionSkeleton = () => (
-  <div className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-    <div className="flex flex-col items-center gap-4 mb-16">
-      <SkeletonBlock className="h-3 w-32 rounded-full" />
-      <SkeletonBlock className="h-10 w-80 rounded-2xl max-w-full" />
-      <SkeletonBlock className="h-4 w-64 rounded-lg max-w-full" />
-    </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center justify-center">
+    <BrandLoader size="sm" />
+    <div className="w-full max-w-4xl mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 opacity-40">
       {[1, 2, 3].map((i) => (
-        <SkeletonBlock key={i} className="h-56 rounded-2xl" />
+        <SkeletonBlock key={i} className="h-44 rounded-2xl" />
       ))}
     </div>
   </div>

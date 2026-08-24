@@ -33,6 +33,7 @@ import { queryKeys } from '../core/infra/query/queryKeys'
 import { SupabaseTenantServiceRepository } from '../core/infra/repositories/SupabaseTenantServiceRepository'
 import { SupabaseInvoiceRepository } from '../core/infra/repositories/SupabaseInvoiceRepository'
 import { PREMIUM_TOKENS } from '../styles/premium-tokens'
+import BrandLoader from '../components/layout/BrandLoader'
 
 import { lazyWithRetry } from '../utils/lazyWithRetry'
 
@@ -175,33 +176,12 @@ export default function Dashboard() {
 
   if (isGlobalLoading) {
     return (
-      <div className={PREMIUM_TOKENS.bgMain + ' flex items-center justify-center'}>
-        <div className="relative z-10 text-center px-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-            className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-white/90 dark:bg-[#090a12]/90 border border-slate-200 dark:border-white/15 backdrop-blur-2xl flex items-center justify-center shadow-lg dark:shadow-[0_0_40px_rgba(14,165,233,0.25)]"
-          >
-            <div className="w-10 h-10 border-3 border-cyan-500 dark:border-cyan-400 border-t-transparent rounded-full animate-spin" />
-          </motion.div>
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-lg font-bold text-slate-900 dark:text-white"
-          >
-            {t('dashboard.sincronizando')}
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="mt-2 text-xs text-slate-500 dark:text-slate-400 font-mono tracking-widest uppercase"
-          >
-            // DASHBOARD OPERATIVO · SYNCING
-          </motion.p>
-        </div>
+      <div className={PREMIUM_TOKENS.bgMain + ' flex items-center justify-center min-h-screen'}>
+        <BrandLoader
+          size="lg"
+          text="EXESISTEMASWEB"
+          subtext={t('dashboard.sincronizando') || 'Sincronizando panel...'}
+        />
       </div>
     )
   }

@@ -120,7 +120,7 @@ export default function ProductCard({
             <span
               className={`text-[10px] sm:text-[11px] font-bold px-2.5 sm:px-3 py-1 rounded-full border backdrop-blur-md shadow-sm ${roi.color}`}
             >
-              {roi.label}
+              {t(`products.${product.tKey}_roi`, roi.label)}
             </span>
           </div>
 
@@ -137,7 +137,7 @@ export default function ProductCard({
             <div className="mb-5 sm:mb-6 p-3.5 sm:p-4 rounded-xl border border-white/10 bg-card/60 backdrop-blur-md shadow-inner">
               <p className="text-[10px] font-extrabold uppercase tracking-wider text-accent-cyan mb-2 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
-                Simulador del Rubro en Vivo
+                {t('products.simulador_en_vivo', 'Simulador del Rubro en Vivo')}
               </p>
 
               {/* Peluquería / Beauty Widget */}

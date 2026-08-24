@@ -21,6 +21,8 @@ import {
   Sparkles,
   Coins,
   Star,
+  Info,
+  ShieldCheck,
 } from 'lucide-react'
 import Header from '../layout/Header'
 import dynamic from 'next/dynamic'
@@ -135,20 +137,89 @@ interface Feature {
   label: string
   price: number
   popular?: boolean
+  hasAsterisk?: boolean
+  description: string
 }
 
 const FEATURES: Feature[] = [
-  { id: 'admin', label: 'Panel Administrador', price: 100000, popular: true },
-  { id: 'payments', label: 'Pasarela de Pagos', price: 80000 },
-  { id: 'domain', label: 'Registro de Dominio', price: 15000 },
-  { id: 'chatbot', label: 'Chatbot IA', price: 120000 },
-  { id: 'database', label: 'Base de Datos', price: 60000 },
-  { id: 'api', label: 'API / Integraciones', price: 100000 },
-  { id: 'dashboard', label: 'Dashboard con Gráficos', price: 80000 },
-  { id: 'multicurrency', label: 'Multimoneda', price: 50000 },
-  { id: 'i18n', label: 'Multi-idioma', price: 50000 },
-  { id: 'notifications', label: 'Notificaciones Email', price: 40000 },
-  { id: 'roles', label: 'Usuarios y Roles', price: 80000 },
+  {
+    id: 'admin',
+    label: 'Panel Administrador',
+    price: 100000,
+    popular: true,
+    description: 'Gestión total de contenidos, publicaciones y clientes a medida.',
+  },
+  {
+    id: 'payments',
+    label: 'Pasarela de Pagos',
+    price: 80000,
+    hasAsterisk: true,
+    description:
+      'Integración técnica de cobros (Mercado Pago, Stripe). Comisiones y alta comercial a cargo de la pasarela.*',
+  },
+  {
+    id: 'domain',
+    label: 'Registro / Gestión de Dominio',
+    price: 50000,
+    hasAsterisk: true,
+    description:
+      'Gestión y alta anual (.com / .com.ar). Sujeto a disponibilidad en registrador oficial.*',
+  },
+  {
+    id: 'chatbot',
+    label: 'Chatbot con IA',
+    price: 120000,
+    hasAsterisk: true,
+    description:
+      'Entrenamiento del bot y prompt a medida. Consumo de API / Tokens mediante cuenta propia del cliente.*',
+  },
+  {
+    id: 'database',
+    label: 'Base de Datos Cloud',
+    price: 60000,
+    description: 'Almacenamiento seguro, copias de seguridad y esquemas relacionales optimizados.',
+  },
+  {
+    id: 'api',
+    label: 'API / Integraciones Externas',
+    price: 100000,
+    hasAsterisk: true,
+    description:
+      'Conexión con ERP, CRM o APIs externas. API Keys/licencias de terceros a cargo del cliente o evaluadas según complejidad.*',
+  },
+  {
+    id: 'dashboard',
+    label: 'Dashboard con Gráficos',
+    price: 80000,
+    description: 'Métricas clave, reportes visuales y analítica interactiva.',
+  },
+  {
+    id: 'multicurrency',
+    label: 'Multimoneda',
+    price: 50000,
+    description: 'Cotizaciones automáticas y conversión de divisas en tiempo real.',
+  },
+  {
+    id: 'i18n',
+    label: 'Multi-idioma',
+    price: 50000,
+    description: 'Internacionalización completa (ES, EN, PT, etc.) con selector integrado.',
+  },
+  {
+    id: 'notifications',
+    label: 'Notificaciones Email & Mail Corp.',
+    price: 40000,
+    hasAsterisk: true,
+    description:
+      'Emails transaccionales y casillas de empresa (Google Workspace, Zoho, Resend). Costos de suscripción según proveedor.*',
+  },
+  {
+    id: 'roles',
+    label: 'Usuarios y Roles',
+    price: 80000,
+    description:
+      'Permisos granulares, autenticación y niveles de acceso (Admin, Operador, Cliente).',
+  },
 ]
 
 const DESIGN_TIERS = [
@@ -278,21 +349,24 @@ function GlowCard({
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
       style={{ rotateX, rotateY, transformStyle: 'preserve-3d' as const, perspective: 1000 }}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      className={`group relative rounded-2xl border overflow-hidden transition-shadow duration-500 ${
+      whileHover={{ scale: 1.015 }}
+      whileTap={{ scale: 0.985 }}
+      className={`group relative rounded-2xl border overflow-hidden transition-all duration-300 backdrop-blur-xl ${
         popular
-          ? 'border-accent-magenta/50 shadow-lg shadow-accent-magenta/10'
-          : 'border-border hover:border-accent-cyan/30 hover:shadow-lg hover:shadow-accent-cyan/5'
+          ? 'border-accent-cyan/80 bg-accent-cyan/[0.05] shadow-[0_0_30px_rgba(34,211,238,0.18)] ring-1 ring-accent-cyan/30'
+          : 'border-border/80 bg-card/60 hover:border-accent-cyan/40 hover:bg-card/80 hover:shadow-xl hover:shadow-accent-cyan/5'
       } ${className}`}
     >
+      {popular && (
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-cyan to-transparent pointer-events-none" />
+      )}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
-          background: useMotionTemplate`radial-gradient(500px circle at ${mouseX}px ${mouseY}px, ${popular ? 'rgba(236,72,153, 0.15)' : 'rgba(34,211,238, 0.1)'}, transparent 80%)`,
+          background: useMotionTemplate`radial-gradient(450px circle at ${mouseX}px ${mouseY}px, ${popular ? 'rgba(34,211,238, 0.18)' : 'rgba(34,211,238, 0.08)'}, transparent 80%)`,
         }}
       />
-      <div style={{ transform: 'translateZ(24px)' }}>{children}</div>
+      <div style={{ transform: 'translateZ(18px)' }}>{children}</div>
     </motion.div>
   )
 }
@@ -499,7 +573,9 @@ export default function QuoteBuilder() {
 
   const buildWhatsAppMessage = () => {
     const typeName = selectedTypeData?.label ?? ''
-    const featureNames = FEATURES.filter((f) => selectedFeatures.has(f.id)).map((f) => f.label)
+    const featureNames = FEATURES.filter((f) => selectedFeatures.has(f.id)).map(
+      (f) => f.label + (f.hasAsterisk ? ' (*)' : '')
+    )
     const designName = DESIGN_TIERS.find((d) => d.id === designTier)?.label ?? ''
     let msg = `¡Hola ExeSistemasWEB! Quiero solicitar una cotización:%0A%0A`
     msg += `*Proyecto:* ${typeName}%0A`
@@ -509,6 +585,7 @@ export default function QuoteBuilder() {
     if (name) msg += `%0A*Nombre:* ${name}%0A`
     if (email) msg += `*Email:* ${email}%0A`
     if (company) msg += `*Empresa:* ${company}%0A`
+    msg += `%0A_(Presupuesto base orientativo sujeto a diagnóstico técnico previo)_`
     return msg
   }
 
@@ -527,8 +604,10 @@ export default function QuoteBuilder() {
           message: `Cotización / Diagnóstico IA:\nProyecto: ${selectedTypeData?.label ?? ''}\nDiseño: ${DESIGN_TIERS.find((d) => d.id === designTier)?.label ?? ''}\nFuncionalidades: ${FEATURES.filter(
             (f) => selectedFeatures.has(f.id)
           )
-            .map((f) => f.label)
-            .join(', ')}\nPresupuesto: ${formatPrice(total)}\nEmpresa: ${company || '-'}`,
+            .map((f) => f.label + (f.hasAsterisk ? ' (*)' : ''))
+            .join(
+              ', '
+            )}\nPresupuesto: ${formatPrice(total)}\nEmpresa: ${company || '-'}\nNota: Presupuesto orientativo sujeto a diagnóstico técnico previo.`,
         }),
       })
       toast.success('Cotización enviada con éxito', {
@@ -812,7 +891,7 @@ export default function QuoteBuilder() {
                     </h2>
                     <p className="text-muted-foreground">{t('cotizador.funcionalidades_desc')}</p>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-8">
                     {FEATURES.map((feat) => {
                       const isSelected = selectedFeatures.has(feat.id)
                       return (
@@ -822,28 +901,71 @@ export default function QuoteBuilder() {
                           popular={isSelected}
                         >
                           <div
-                            className={`flex items-center justify-between p-4 ${isSelected ? 'bg-accent-cyan/5' : ''}`}
+                            className={`flex flex-col justify-between p-4 h-full transition-colors ${
+                              isSelected ? 'bg-accent-cyan/5' : ''
+                            }`}
                           >
-                            <div className="flex items-center gap-3">
-                              <div
-                                className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
-                                  isSelected ? 'border-accent-cyan bg-accent-cyan' : 'border-border'
-                                }`}
-                              >
-                                {isSelected && <Check className="w-4 h-4 text-foreground" />}
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-start gap-3 min-w-0">
+                                <div
+                                  className={`w-5 h-5 rounded-md border-2 shrink-0 mt-0.5 flex items-center justify-center transition-all ${
+                                    isSelected
+                                      ? 'border-accent-cyan bg-accent-cyan'
+                                      : 'border-border'
+                                  }`}
+                                >
+                                  {isSelected && <Check className="w-3.5 h-3.5 text-slate-900" />}
+                                </div>
+                                <div className="min-w-0">
+                                  <span className="text-sm font-semibold text-foreground flex items-center gap-1.5 flex-wrap">
+                                    {t('cotizador.feat_' + feat.id, feat.label)}
+                                    {feat.hasAsterisk && (
+                                      <span
+                                        className="text-accent-magenta font-bold text-sm leading-none"
+                                        title="Requiere evaluación o servicios de terceros"
+                                      >
+                                        *
+                                      </span>
+                                    )}
+                                  </span>
+                                  <p className="text-[11px] text-muted-foreground mt-1 leading-snug">
+                                    {t('cotizador.feat_' + feat.id + '_desc', feat.description)}
+                                  </p>
+                                </div>
                               </div>
-                              <span className="text-sm font-medium text-foreground">
-                                {t('cotizador.feat_' + feat.id, feat.label)}
+                              <span className="text-sm font-bold text-accent-cyan shrink-0 whitespace-nowrap ml-2">
+                                + {formatPrice(feat.price)}
                               </span>
                             </div>
-                            <span className="text-sm font-bold text-accent-cyan">
-                              + {formatPrice(feat.price)}
-                            </span>
                           </div>
                         </GlowCard>
                       )
                     })}
                   </div>
+
+                  {/* Banner de Transparencia y Respaldo Mutuo */}
+                  <div className="mb-10 p-4 rounded-2xl bg-muted/40 border border-border/80 flex items-start gap-3.5 shadow-sm">
+                    <div className="w-8 h-8 rounded-xl bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center shrink-0 mt-0.5">
+                      <ShieldCheck className="w-4 h-4 text-accent-cyan" />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-accent-cyan flex items-center gap-2">
+                        <span>
+                          {t('cotizador.clarificacion_titulo', 'Transparencia & Alcance Técnico')}
+                        </span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan font-semibold lowercase">
+                          acuerdo previo
+                        </span>
+                      </h4>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {t(
+                          'cotizador.clarificacion_desc',
+                          'Los ítems marcados con asterisco (*) involucran plataformas o consumos de terceros (como API Keys de Inteligencia Artificial, licencias de correo corporativo, pasarelas de pago o registros de dominio). Nuestro valor cotizado cubre la arquitectura, diseño, desarrollo e integración completa. El alcance exacto y las cuentas de proveedores se validan en una breve reunión técnica inicial para total transparencia y seguridad de ambas partes.'
+                        )}
+                      </p>
+                    </div>
+                  </div>
+
                   <div className="flex justify-between">
                     <button
                       onClick={() => changeStep(0)}
@@ -969,8 +1091,11 @@ export default function QuoteBuilder() {
                           </div>
                           {FEATURES.filter((f) => selectedFeatures.has(f.id)).map((f) => (
                             <div key={f.id} className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground">
+                              <span className="text-sm text-muted-foreground flex items-center gap-1">
                                 {t('cotizador.feat_' + f.id, f.label)}
+                                {f.hasAsterisk && (
+                                  <span className="text-accent-magenta font-bold text-xs">*</span>
+                                )}
                               </span>
                               <span className="text-sm font-bold text-accent-cyan">
                                 + {formatPrice(f.price)}
@@ -989,7 +1114,18 @@ export default function QuoteBuilder() {
                         <p className="text-xs text-muted-foreground mt-2">
                           {t('cotizador.nota_estimado')}
                         </p>
-                        <div className="mt-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
+
+                        <div className="mt-4 p-3.5 rounded-xl bg-accent-magenta/5 border border-accent-magenta/20 text-xs text-muted-foreground flex items-start gap-2.5">
+                          <Info className="w-4 h-4 shrink-0 text-accent-magenta mt-0.5" />
+                          <span className="leading-relaxed">
+                            {t(
+                              'cotizador.resumen_aviso_legal',
+                              '* Presupuesto base orientativo. Los ítems con (*) corresponden a desarrollos con integración a servicios externos (APIs, plataformas de cobro, casillas corporativas o dominios). El alcance técnico final y las credenciales se coordinan en una charla previa sin sorpresas.'
+                            )}
+                          </span>
+                        </div>
+
+                        <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
                           <Check className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
                           <span>{t('cotizador.opcional_nota')}</span>
                         </div>

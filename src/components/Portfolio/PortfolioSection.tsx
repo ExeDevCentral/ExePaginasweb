@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import {
   ExternalLink,
   Calendar,
@@ -35,16 +36,17 @@ export interface Project {
 // Proyectos reales desplegados en producción Vercel
 const INITIAL_PROJECTS: Project[] = []
 
-const CATEGORIES = [
-  { id: 'all', label: 'Todos los Proyectos', icon: Layers },
-  { id: 'turnos', label: 'Turnos & Reservas', icon: Calendar },
-  { id: 'ecommerce', label: 'E-Commerce', icon: ShoppingBag },
-  { id: 'web', label: 'Landings & Web', icon: Globe },
-]
-
 export const PortfolioSection: React.FC = () => {
+  const { t } = useTranslation()
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+
+  const CATEGORIES = [
+    { id: 'all', label: t('portfolio.cat_todos', 'Todos los Proyectos'), icon: Layers },
+    { id: 'turnos', label: t('portfolio.cat_turnos', 'Turnos & Reservas'), icon: Calendar },
+    { id: 'ecommerce', label: t('portfolio.cat_ecommerce', 'E-Commerce'), icon: ShoppingBag },
+    { id: 'web', label: t('portfolio.cat_web', 'Landings & Web'), icon: Globe },
+  ]
 
   const hasProjects = INITIAL_PROJECTS.length > 0
   const filteredProjects =
@@ -79,7 +81,7 @@ export const PortfolioSection: React.FC = () => {
             transition={{ delay: 0.1 }}
             className="text-3xl sm:text-5xl font-black font-montserrat tracking-tight text-foreground mb-4"
           >
-            Portafolio Profesional
+            {t('portfolio.titulo', 'Portafolio Profesional')}
           </motion.h2>
 
           <motion.p
@@ -89,9 +91,10 @@ export const PortfolioSection: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto"
           >
-            Desarrollos reales con arquitectura moderna, código propio y despliegue en la nube.
-            Podés consultar mi trayectoria técnica completa en mi CV online o solicitar una
-            propuesta personalizada para tu proyecto.
+            {t(
+              'portfolio.subtitulo',
+              'Desarrollos reales con arquitectura moderna, código propio y despliegue en la nube. Podés consultar mi trayectoria técnica completa en mi CV online o solicitar una propuesta personalizada para tu proyecto.'
+            )}
           </motion.p>
 
           {/* Acceso a CV Profesional */}
@@ -109,7 +112,7 @@ export const PortfolioSection: React.FC = () => {
               className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 text-white font-extrabold text-xs sm:text-sm hover:scale-105 transition-all shadow-xl shadow-purple-500/25 border border-white/25 cursor-pointer"
             >
               <FileText className="w-4 h-4 text-cyan-200 group-hover:rotate-12 transition-transform" />
-              <span>📄 Ver Mi CV Profesional Completo</span>
+              <span>📄 {t('portfolio.ver_cv', 'Ver Mi CV Profesional Completo')}</span>
               <ExternalLink className="w-3.5 h-3.5 opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </a>
           </motion.div>
@@ -167,7 +170,7 @@ export const PortfolioSection: React.FC = () => {
                       <div className="absolute top-4 left-4 flex flex-col gap-1.5 items-start">
                         <span className="px-3 py-1 rounded-full bg-emerald-950/80 backdrop-blur-md border border-emerald-500/40 text-[11px] font-black text-emerald-400 flex items-center gap-1.5 shadow-md">
                           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                          {project.statusLabel || 'EN PRODUCCIÓN'}
+                          {project.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')}
                         </span>
                         <span className="px-2.5 py-0.5 rounded-full bg-background/80 backdrop-blur-md border border-border text-[10px] font-bold text-accent-cyan">
                           {project.categoryLabel}
@@ -220,12 +223,12 @@ export const PortfolioSection: React.FC = () => {
 
                       {/* Tags tecnológicos */}
                       <div className="flex flex-wrap gap-1.5">
-                        {project.tags.map((t) => (
+                        {project.tags.map((tTag) => (
                           <span
-                            key={t}
+                            key={tTag}
                             className="px-2 py-0.5 rounded-md bg-accent-cyan/10 border border-accent-cyan/20 text-[10px] font-semibold text-accent-cyan"
                           >
-                            {t}
+                            {tTag}
                           </span>
                         ))}
                       </div>
@@ -238,7 +241,7 @@ export const PortfolioSection: React.FC = () => {
                           className="text-[11px] font-bold text-foreground hover:text-accent-cyan flex items-center gap-1 transition-colors"
                         >
                           <Maximize2 className="w-3 h-3" />
-                          Detalles
+                          {t('portfolio.detalles', 'Detalles')}
                         </button>
 
                         {project.link && (
@@ -249,7 +252,7 @@ export const PortfolioSection: React.FC = () => {
                             className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:scale-105 transition-all"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
-                            Ver en Vivo
+                            {t('portfolio.ver_en_vivo', 'Ver en Vivo')}
                           </a>
                         )}
                       </div>
@@ -271,10 +274,16 @@ export const PortfolioSection: React.FC = () => {
 
                   <div>
                     <h3 className="text-lg font-bold font-montserrat text-foreground mb-1">
-                      ¿Querés tu sitio o sistema en producción?
+                      {t(
+                        'portfolio.custom_card_titulo',
+                        '¿Querés tu sitio o sistema en producción?'
+                      )}
                     </h3>
                     <p className="text-xs text-muted-foreground max-w-xs mx-auto">
-                      Creamos desarrollos a medida con código propio y despliegue rápido.
+                      {t(
+                        'portfolio.custom_card_desc',
+                        'Creamos desarrollos a medida con código propio y despliegue rápido.'
+                      )}
                     </p>
                   </div>
 
@@ -287,7 +296,7 @@ export const PortfolioSection: React.FC = () => {
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-cyan text-background font-bold text-xs uppercase tracking-wider hover:bg-accent-cyan/90 transition-all shadow-md cursor-pointer"
                   >
                     <Zap className="w-3.5 h-3.5" />
-                    Pedir Presupuesto
+                    {t('portfolio.pedir_presupuesto', 'Pedir Presupuesto')}
                   </a>
                 </motion.div>
               </AnimatePresence>
@@ -310,13 +319,17 @@ export const PortfolioSection: React.FC = () => {
               </div>
 
               <h3 className="text-2xl sm:text-4xl font-black font-montserrat text-foreground tracking-tight">
-                ¿Tenés un proyecto o sistema para llevar a producción?
+                {t(
+                  'portfolio.banner_titulo',
+                  '¿Tenés un proyecto o sistema para llevar a producción?'
+                )}
               </h3>
 
               <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Desarrollamos soluciones web a medida de punta a punta: desde plataformas SaaS y
-                sistemas de agendamiento de turnos, hasta tiendas e-commerce de alto impacto y
-                landings corporativas ultra-rápidas.
+                {t(
+                  'portfolio.banner_desc',
+                  'Desarrollamos soluciones web a medida de punta a punta: desde plataformas SaaS y sistemas de agendamiento de turnos, hasta tiendas e-commerce de alto impacto y landings corporativas ultra-rápidas.'
+                )}
               </p>
 
               {/* Grid de capacidades */}
@@ -324,40 +337,52 @@ export const PortfolioSection: React.FC = () => {
                 <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
                   <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>SaaS & Cloud</span>
+                    <span>{t('portfolio.cap_saas', 'SaaS & Cloud')}</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Paneles administrativos, gestión de datos y arquitecturas escalables.
+                    {t(
+                      'portfolio.cap_saas_desc',
+                      'Paneles administrativos, gestión de datos y arquitecturas escalables.'
+                    )}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
                   <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>E-Commerce</span>
+                    <span>{t('portfolio.cap_ecommerce', 'E-Commerce')}</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Tiendas online con pasarelas de pago y conversión optimizada.
+                    {t(
+                      'portfolio.cap_ecommerce_desc',
+                      'Tiendas online con pasarelas de pago y conversión optimizada.'
+                    )}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
                   <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>Turnos Online</span>
+                    <span>{t('portfolio.cap_turnos', 'Turnos Online')}</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Agendamiento en tiempo real sin registro obligatorio ni fricción.
+                    {t(
+                      'portfolio.cap_turnos_desc',
+                      'Agendamiento en tiempo real sin registro obligatorio ni fricción.'
+                    )}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
                   <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>Webs & Landings</span>
+                    <span>{t('portfolio.cap_webs', 'Webs & Landings')}</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Carga ultrarrápida, SEO técnico de primer nivel y diseño moderno.
+                    {t(
+                      'portfolio.cap_webs_desc',
+                      'Carga ultrarrápida, SEO técnico de primer nivel y diseño moderno.'
+                    )}
                   </p>
                 </div>
               </div>
@@ -373,7 +398,7 @@ export const PortfolioSection: React.FC = () => {
                   className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-accent-cyan/20 hover:scale-105 transition-all cursor-pointer"
                 >
                   <Zap className="w-4 h-4 text-slate-950" />
-                  <span>Cotizar Mi Proyecto a Medida</span>
+                  <span>{t('portfolio.cta_cotizar', 'Cotizar Mi Proyecto a Medida')}</span>
                 </a>
               </div>
             </div>

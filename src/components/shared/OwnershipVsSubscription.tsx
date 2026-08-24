@@ -72,50 +72,50 @@ export const OwnershipVsSubscription: React.FC = () => {
   const ownershipSteps = [
     {
       title: t('versus.propiedad_step1', 'Pagás por desarrollo'),
-      desc: 'Inversión única en tu activo digital',
+      desc: t('versus.propiedad_step1_desc', 'Inversión única en tu activo digital'),
     },
     {
       title: t('versus.propiedad_step2', 'Diseño personalizado'),
-      desc: 'Identidad exclusiva creada para tu marca',
+      desc: t('versus.propiedad_step2_desc', 'Identidad exclusiva creada para tu marca'),
     },
     {
       title: t('versus.propiedad_step3', 'Funciones específicas'),
-      desc: 'Arquitectura alineada a tus procesos',
+      desc: t('versus.propiedad_step3_desc', 'Arquitectura alineada a tus procesos'),
     },
     {
       title: t('versus.propiedad_step4', 'Automatizaciones'),
-      desc: 'Ahorro de horas operativas e integración de IA',
+      desc: t('versus.propiedad_step4_desc', 'Ahorro de horas operativas e integración de IA'),
     },
     {
       title: t('versus.propiedad_step5', 'Código del proyecto'),
-      desc: 'Repositorio, recursos y documentación en tu poder',
+      desc: t('versus.propiedad_step5_desc', 'Repositorio, recursos y documentación en tu poder'),
     },
     {
       title: t('versus.propiedad_step6', 'El negocio es dueño de su software'),
-      desc: 'Independencia total sin mensualidades cautivas',
+      desc: t('versus.propiedad_step6_desc', 'Independencia total sin mensualidades cautivas'),
     },
   ]
 
   const subscriptionSteps = [
     {
       title: t('versus.alquiler_step1', 'Pagás mensualidad'),
-      desc: 'Costo infinito recurrente que jamás se detiene',
+      desc: t('versus.alquiler_step1_desc', 'Costo infinito recurrente que jamás se detiene'),
     },
     {
       title: t('versus.alquiler_step2', 'Plantilla'),
-      desc: 'Diseño idéntico al de miles de otros competidores',
+      desc: t('versus.alquiler_step2_desc', 'Diseño idéntico al de miles de otros competidores'),
     },
     {
       title: t('versus.alquiler_step3', 'Funciones predeterminadas'),
-      desc: 'Debés adaptar tu negocio al sistema',
+      desc: t('versus.alquiler_step3_desc', 'Debés adaptar tu negocio al sistema'),
     },
     {
       title: t('versus.alquiler_step4', 'Personalización limitada'),
-      desc: 'Bloqueos técnicos y restricciones de plataforma',
+      desc: t('versus.alquiler_step4_desc', 'Bloqueos técnicos y restricciones de plataforma'),
     },
     {
       title: t('versus.alquiler_step5', 'Dependencia de la Plataforma'),
-      desc: 'Si dejás de pagar, perdés tu página y tus datos',
+      desc: t('versus.alquiler_step5_desc', 'Si dejás de pagar, perdés tu página y tus datos'),
     },
   ]
 
@@ -233,7 +233,7 @@ export const OwnershipVsSubscription: React.FC = () => {
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-4 sm:mb-6 backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-              <span>Diferencial Estratégico</span>
+              <span>{t('versus.diferencial_badge', 'Diferencial Estratégico')}</span>
             </div>
 
             <blockquote className="text-base sm:text-2xl md:text-3xl font-extrabold text-white leading-relaxed max-w-4xl mx-auto font-display tracking-tight drop-shadow-md px-1">
@@ -248,7 +248,12 @@ export const OwnershipVsSubscription: React.FC = () => {
             <div className="mt-6 flex items-center justify-center gap-4 flex-wrap">
               <div className="flex items-center gap-2 text-xs font-semibold text-cyan-400/80 uppercase tracking-widest">
                 <span className="w-8 h-[1px] bg-gradient-to-r from-transparent to-cyan-400/60 hidden sm:inline-block" />
-                <span>Código Propio • Libertad Absoluta • Sin Mensualidades Ocultas</span>
+                <span>
+                  {t(
+                    'versus.frase_banner',
+                    'Código Propio • Libertad Absoluta • Sin Mensualidades Ocultas'
+                  )}
+                </span>
                 <span className="w-8 h-[1px] bg-gradient-to-l from-transparent to-cyan-400/60 hidden sm:inline-block" />
               </div>
 
@@ -263,12 +268,14 @@ export const OwnershipVsSubscription: React.FC = () => {
                 {copied ? (
                   <>
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-emerald-300 font-extrabold">¡Copiado!</span>
+                    <span className="text-emerald-300 font-extrabold">
+                      {t('versus.copiado', '¡Copiado!')}
+                    </span>
                   </>
                 ) : (
                   <>
                     <Code2 className="w-3.5 h-3.5" />
-                    <span>Copiar Frase Clave</span>
+                    <span>{t('versus.copiar_frase', 'Copiar Frase Clave')}</span>
                   </>
                 )}
               </motion.button>
@@ -301,7 +308,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                 </div>
               </div>
               <span className="px-2.5 py-1 text-[11px] sm:text-xs font-black rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 uppercase tracking-wider">
-                100% Tuyo
+                {t('versus.propiedad_tag', '100% Tuyo')}
               </span>
             </div>
 
@@ -368,7 +375,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                 </div>
               </div>
               <span className="px-2.5 py-1 text-[11px] sm:text-xs font-bold rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 uppercase tracking-wider">
-                Rehén Mensual
+                {t('versus.alquiler_tag', 'Rehén Mensual')}
               </span>
             </div>
 
@@ -424,8 +431,10 @@ export const OwnershipVsSubscription: React.FC = () => {
               {t('versus.quote1_title', 'Tecnología Adaptada')}
             </h4>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              “No buscamos que tu negocio se adapte a nuestra plantilla. Construimos la herramienta
-              para que la tecnología se adapte a tu negocio.”
+              {t(
+                'versus.quote1_desc',
+                '“No buscamos que tu negocio se adapte a nuestra plantilla. Construimos la herramienta para que la tecnología se adapte a tu negocio.”'
+              )}
             </p>
           </motion.div>
 
@@ -441,8 +450,10 @@ export const OwnershipVsSubscription: React.FC = () => {
               {t('versus.quote2_title', 'Competir por la Atención')}
             </h4>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              “En 2026, la clave estratégica es competir por la atención con experiencia de usuario,
-              diseño exclusivo, ventas y automatización real.”
+              {t(
+                'versus.quote2_desc',
+                '“En 2026, la clave estratégica es competir por la atención con experiencia de usuario, diseño exclusivo, ventas y automatización real.”'
+              )}
             </p>
           </motion.div>
 
@@ -458,8 +469,10 @@ export const OwnershipVsSubscription: React.FC = () => {
               {t('versus.quote3_title', 'El Proyecto es Tuyo')}
             </h4>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              “No te alquilo una página. Te construyo una herramienta digital que es tuya. Código,
-              recursos y documentación, como corresponde.”
+              {t(
+                'versus.quote3_desc',
+                '“No te alquilo una página. Te construyo una herramienta digital que es tuya. Código, recursos y documentación, como corresponde.”'
+              )}
             </p>
           </motion.div>
         </div>

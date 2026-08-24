@@ -125,24 +125,37 @@ export async function POST(req: NextRequest) {
           typeof eventData.from === 'string'
             ? eventData.from
             : eventData.from?.email || eventData.from?.[0] || 'remitente_desconocido'
-        const subject = eventData.subject || 'Nuevo correo recibido en Contacto@exepaginasweb.com'
+        const toEmail =
+          typeof eventData.to === 'string'
+            ? eventData.to
+            : Array.isArray(eventData.to)
+              ? eventData.to.join(', ')
+              : eventData.to?.email || 'Contacto@exepaginasweb.com'
+        const subject = eventData.subject || 'Nuevo correo recibido en ExeSistemasWEB'
         const bodyContent = eventData.text || eventData.html || ''
         const adminDestination = process.env.ADMIN_EMAIL || 'Exemetal@hotmail.com'
         const detectedLang = detectLanguage(bodyContent + ' ' + subject, '')
-        const ticketId = `EXE-MX-${Date.now().toString(36).toUpperCase().slice(-5)}`
+        const isSales =
+          toEmail.toLowerCase().includes('ventas') ||
+          subject.toLowerCase().includes('ventas') ||
+          subject.toLowerCase().includes('cotiz')
+        const ticketPrefix = isSales ? 'EXE-VNT' : 'EXE-CNT'
+        const ticketId = `${ticketPrefix}-${Date.now().toString(36).toUpperCase().slice(-5)}`
 
         if (process.env.RESEND_API_KEY) {
           const inboundTasks = [
-            // 1. Reenvío al Administrador
+            // 1. Reenvío al Administrador (Exemetal@hotmail.com)
             sendEmail({
               to: adminDestination,
-              subject: `[${ticketId}] [Email Entrante] ${subject}`,
+              subject: `[${ticketId}] [${isSales ? 'Ventas' : 'Contacto'}] ${subject}`,
               replyTo: fromEmail,
               html: inboundEmailNotification({
                 fromEmail,
+                toEmail,
                 subject,
                 html: eventData.html,
                 text: eventData.text,
+                ticketId,
               }),
             }),
             // 2. Auto-respuesta instantánea al remitente si no es el admin
@@ -165,7 +178,7 @@ export async function POST(req: NextRequest) {
 
           await Promise.allSettled(inboundTasks)
           console.log(
-            `[resend-webhook] 📩 Email entrante ${ticketId} procesado con éxito (Lang: ${detectedLang})`
+            `[resend-webhook] 📩 Email entrante ${ticketId} (${toEmail}) procesado con éxito (Lang: ${detectedLang})`
           )
         }
       } catch (forwardErr: any) {

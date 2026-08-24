@@ -132,8 +132,9 @@ const Footer = () => {
             <ul className="space-y-3.5 text-sm">
               <li>
                 <a
-                  href="mailto:Contacto@exepaginasweb.com"
+                  href="mailto:Exemetal@hotmail.com?subject=Contacto%20ExeSistemasWEB&body=Hola%20ExeSistemasWEB,%20quisiera%20hacer%20una%20consulta:"
                   className="group flex items-center gap-2.5 text-primary-secondary hover:text-accent-cyan transition-colors"
+                  title="Contacto directo a Exemetal@hotmail.com"
                 >
                   <Mail size={15} className="text-accent-cyan shrink-0" />
                   <span className="break-all font-medium">Contacto@exepaginasweb.com</span>
@@ -141,8 +142,9 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="mailto:Ventas@exepaginasweb.com"
+                  href="mailto:Exemetal@hotmail.com?subject=Ventas%20y%20Cotizaciones%20ExeSistemasWEB&body=Hola%20ExeSistemasWEB,%20quisiera%20cotizar%20un%20proyecto:"
                   className="group flex items-center gap-2.5 text-primary-secondary hover:text-accent-magenta transition-colors"
+                  title="Ventas directo a Exemetal@hotmail.com"
                 >
                   <Send size={15} className="text-accent-magenta shrink-0" />
                   <span className="break-all font-medium">Ventas@exepaginasweb.com</span>

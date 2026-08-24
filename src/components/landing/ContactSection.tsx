@@ -29,14 +29,14 @@ const ContactSection = () => {
       icon: Mail,
       tag: 'CONTACTO & SOPORTE',
       value: 'Contacto@exepaginasweb.com',
-      href: 'mailto:Contacto@exepaginasweb.com',
+      href: 'mailto:Exemetal@hotmail.com?subject=Contacto%20y%20Soporte%20ExeSistemasWEB&body=Hola%20ExeSistemasWEB,%20quisiera%20hacer%20una%20consulta:',
       color: '#06b6d4',
     },
     {
       icon: Send,
       tag: 'VENTAS & PROYECTOS',
       value: 'Ventas@exepaginasweb.com',
-      href: 'mailto:Ventas@exepaginasweb.com',
+      href: 'mailto:Exemetal@hotmail.com?subject=Ventas%20y%20Proyectos%20ExeSistemasWEB&body=Hola%20ExeSistemasWEB,%20quisiera%20cotizar%20un%20proyecto:',
       color: '#ec4899',
     },
   ]

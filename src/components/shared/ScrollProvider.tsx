@@ -5,7 +5,9 @@ import Lenis from 'lenis'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-gsap.registerPlugin(ScrollTrigger)
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
 let globalLenis: Lenis | null = null
 
@@ -25,7 +27,7 @@ export function scrollToElement(
   options?: Parameters<Lenis['scrollTo']>[1]
 ) {
   if (globalLenis) {
-    globalLenis.scrollTo(target, { duration: 1.0, ...options })
+    globalLenis.scrollTo(target, { duration: 0.9, ...options })
   } else {
     const el = typeof target === 'string' ? document.querySelector(target) : target
     if (el) {
@@ -36,12 +38,17 @@ export function scrollToElement(
 
 export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
+    // No inicializar smooth scroll en dispositivos con preferencia de movimiento reducido
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return
+    }
+
     const lenis = new Lenis({
-      duration: 1.0,
+      duration: 0.9,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1.2,
       infinite: false,
       prevent: (node) => {
         if (!node || !(node instanceof HTMLElement)) return false
@@ -59,17 +66,18 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     globalLenis = lenis
 
+    // Sincronizar ScrollTrigger con Lenis sin lagSmoothing conflictivo
     lenis.on('scroll', ScrollTrigger.update)
 
+    let rafId: number
     const updateRaf = (time: number) => {
-      lenis.raf(time * 1000)
+      lenis.raf(time)
+      rafId = requestAnimationFrame(updateRaf)
     }
-
-    gsap.ticker.add(updateRaf)
-    gsap.ticker.lagSmoothing(1000, 16)
+    rafId = requestAnimationFrame(updateRaf)
 
     return () => {
-      gsap.ticker.remove(updateRaf)
+      cancelAnimationFrame(rafId)
       lenis.destroy()
       if (globalLenis === lenis) {
         globalLenis = null

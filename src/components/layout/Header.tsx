@@ -22,6 +22,8 @@ const navLabelKeys: Record<string, string> = {
   contact: 'nav.contacto',
 }
 
+const NAV_SECTION_IDS = NAV_ITEMS.map((item) => item.id)
+
 const Header = () => {
   const { t } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -32,7 +34,14 @@ const Header = () => {
   const isLoggedIn = user !== null
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12)
+    let prevScrolled = false
+    const onScroll = () => {
+      const isPast = window.scrollY > 12
+      if (isPast !== prevScrolled) {
+        prevScrolled = isPast
+        setScrolled(isPast)
+      }
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -44,7 +53,7 @@ const Header = () => {
     }
   }, [isMenuOpen])
 
-  const activeId = useScrollSpy([...NAV_ITEMS.map((item) => item.id)], { offset: SCROLL_OFFSET })
+  const activeId = useScrollSpy(NAV_SECTION_IDS, { offset: SCROLL_OFFSET })
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     const el = document.getElementById(id)

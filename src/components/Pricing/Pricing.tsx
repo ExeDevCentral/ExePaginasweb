@@ -41,11 +41,24 @@ const PricingCard = ({
   const { t } = useTranslation()
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
+  const rectRef = React.useRef<{ left: number; top: number } | null>(null)
 
-  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect()
-    mouseX.set(clientX - left)
-    mouseY.set(clientY - top)
+  function handleMouseEnter(e: React.MouseEvent<HTMLDivElement>) {
+    const { left, top } = e.currentTarget.getBoundingClientRect()
+    rectRef.current = { left, top }
+  }
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!rectRef.current) {
+      const { left, top } = e.currentTarget.getBoundingClientRect()
+      rectRef.current = { left, top }
+    }
+    mouseX.set(e.clientX - rectRef.current.left)
+    mouseY.set(e.clientY - rectRef.current.top)
+  }
+
+  function handleMouseLeave() {
+    rectRef.current = null
   }
 
   return (
@@ -54,7 +67,9 @@ const PricingCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.2 }}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className={`group relative rounded-2xl sm:rounded-[2.5rem] bg-card backdrop-blur-xl border overflow-hidden transition-all duration-500 hover:-translate-y-2 p-5 sm:p-8 md:p-10 flex flex-col ${
         plan.popular
           ? 'border-accent-magenta/50 shadow-2xl shadow-accent-magenta/10 hover:shadow-accent-magenta/20'

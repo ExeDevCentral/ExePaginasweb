@@ -5,10 +5,10 @@ import { useEffect, useRef } from 'react'
 const DARK_COLORS = ['#60a5fa', '#c084fc', '#34d399']
 const LIGHT_COLORS = ['#0284c7', '#7c3aed', '#059669']
 
-const NODE_COUNT = 90
-const MOBILE_NODE_COUNT = 22
-const LINK_DIST = 140
-const MOUSE_RADIUS = 170
+const NODE_COUNT = 55
+const MOBILE_NODE_COUNT = 18
+const LINK_DIST = 130
+const MOUSE_RADIUS = 160
 
 class Node {
   x: number
@@ -23,8 +23,8 @@ class Node {
   constructor(w: number, h: number, isMobile = false) {
     this.x = Math.random() * w
     this.y = Math.random() * h
-    this.vx = (Math.random() - 0.5) * 0.45
-    this.vy = (Math.random() - 0.5) * 0.45
+    this.vx = (Math.random() - 0.5) * 0.4
+    this.vy = (Math.random() - 0.5) * 0.4
     this.r = Math.random() * 2 + 1.2
     this.colorIdx = Math.floor(Math.random() * DARK_COLORS.length)
     this.baseR = this.r
@@ -46,7 +46,7 @@ class Node {
         const force = (1 - dist / MOUSE_RADIUS) * 0.7
         this.vx += (dx / dist) * force
         this.vy += (dy / dist) * force
-        this.r = this.baseR + (1 - dist / MOUSE_RADIUS) * 3.5
+        this.r = this.baseR + (1 - dist / MOUSE_RADIUS) * 3
       } else {
         this.r += (this.baseR - this.r) * 0.1
       }
@@ -61,8 +61,8 @@ class Node {
     // Movimiento mínimo constante
     const speed = Math.hypot(this.vx, this.vy)
     if (speed < 0.15) {
-      this.vx += (Math.random() - 0.5) * 0.06
-      this.vy += (Math.random() - 0.5) * 0.06
+      this.vx += (Math.random() - 0.5) * 0.05
+      this.vy += (Math.random() - 0.5) * 0.05
     }
   }
 
@@ -73,12 +73,7 @@ class Node {
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2)
     ctx.fillStyle = color
-    if (!this.isMobile) {
-      ctx.shadowBlur = isDark ? 8 : 4
-      ctx.shadowColor = color
-    }
     ctx.fill()
-    ctx.shadowBlur = 0
   }
 }
 
@@ -88,7 +83,7 @@ const PremiumBackground = () => {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
     const isMobile = window.innerWidth < 768
@@ -101,7 +96,7 @@ const PremiumBackground = () => {
       w = canvas.width = window.innerWidth
       h = canvas.height = window.innerHeight
     }
-    window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', handleResize, { passive: true })
 
     const mouse = { x: -9999, y: -9999, active: false }
     const nodeCount = isMobile ? MOBILE_NODE_COUNT : NODE_COUNT
@@ -112,8 +107,8 @@ const PremiumBackground = () => {
         const dx = n.x - mouse.x
         const dy = n.y - mouse.y
         const dist = Math.hypot(dx, dy) || 1
-        if (dist < 260) {
-          const force = (1 - dist / 260) * 7
+        if (dist < 240) {
+          const force = (1 - dist / 240) * 6
           n.vx += (dx / dist) * force
           n.vy += (dy / dist) * force
         }
@@ -151,23 +146,36 @@ const PremiumBackground = () => {
       }
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseleave', handleMouseLeave)
-    window.addEventListener('mousedown', handleMouseDown)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    window.addEventListener('mouseleave', handleMouseLeave, { passive: true })
+    window.addEventListener('mousedown', handleMouseDown, { passive: true })
     window.addEventListener('touchmove', handleTouchMove, { passive: true })
     window.addEventListener('touchstart', handleTouchStart, { passive: true })
 
+    let isDocumentVisible = true
+    const handleVisibilityChange = () => {
+      isDocumentVisible = document.visibilityState === 'visible'
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
     const drawLinks = () => {
       const darkTheme = document.documentElement.classList.contains('dark')
-      const maxDist = isMobile ? 100 : LINK_DIST
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i]
+      const maxDist = isMobile ? 90 : LINK_DIST
+      const len = nodes.length
+
+      for (let i = 0; i < len; i++) {
+        const a = nodes[i]
+        for (let j = i + 1; j < len; j++) {
           const b = nodes[j]
-          const dist = Math.hypot(a.x - b.x, a.y - b.y)
-          if (dist < maxDist) {
+          const dx = a.x - b.x
+          const dy = a.y - b.y
+          const distSq = dx * dx + dy * dy
+          const maxDistSq = maxDist * maxDist
+
+          if (distSq < maxDistSq) {
+            const dist = Math.sqrt(distSq)
             const factor = 1 - dist / maxDist
-            const opacity = darkTheme ? factor * 0.45 : factor * 0.35
+            const opacity = darkTheme ? factor * 0.4 : factor * 0.3
             const lineColor = darkTheme
               ? `rgba(148, 163, 184, ${opacity})`
               : `rgba(71, 85, 105, ${opacity})`
@@ -184,6 +192,9 @@ const PremiumBackground = () => {
 
     let animId: number
     const loop = () => {
+      animId = requestAnimationFrame(loop)
+      if (!isDocumentVisible) return
+
       ctx.clearRect(0, 0, w, h)
       drawLinks()
       const darkTheme = document.documentElement.classList.contains('dark')
@@ -191,8 +202,6 @@ const PremiumBackground = () => {
         n.update(w, h, mouse)
         n.draw(ctx, darkTheme)
       })
-
-      animId = requestAnimationFrame(loop)
     }
 
     loop()
@@ -205,6 +214,7 @@ const PremiumBackground = () => {
       window.removeEventListener('mousedown', handleMouseDown)
       window.removeEventListener('touchmove', handleTouchMove)
       window.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [])
 

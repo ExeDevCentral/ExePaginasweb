@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 
@@ -7,23 +7,29 @@ export default function HeroCompare() {
   const containerRef = useRef<HTMLDivElement>(null)
   const afterRef = useRef<HTMLDivElement>(null)
   const handleRef = useRef<HTMLDivElement>(null)
-  const [pct, setPct] = useState(50)
   const draggingRef = useRef(false)
   const userInteractedRef = useRef(false)
   const demoRafRef = useRef<number | null>(null)
 
-  const setPosition = useCallback((clientX: number) => {
-    const rect = containerRef.current?.getBoundingClientRect()
-    if (!rect) return
-    let p = ((clientX - rect.left) / rect.width) * 100
-    p = Math.max(0, Math.min(100, p))
-    setPct(p)
+  const updatePosition = useCallback((percentage: number) => {
+    const clamped = Math.max(0, Math.min(100, percentage))
+    if (afterRef.current) {
+      afterRef.current.style.clipPath = `inset(0 0 0 ${clamped}%)`
+    }
+    if (handleRef.current) {
+      handleRef.current.style.left = `${clamped}%`
+    }
   }, [])
 
-  useEffect(() => {
-    if (afterRef.current) afterRef.current.style.clipPath = `inset(0 0 0 ${pct}%)`
-    if (handleRef.current) handleRef.current.style.left = `${pct}%`
-  }, [pct])
+  const setPositionFromClientX = useCallback(
+    (clientX: number) => {
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect) return
+      const p = ((clientX - rect.left) / rect.width) * 100
+      updatePosition(p)
+    },
+    [updatePosition]
+  )
 
   const stopDemo = useCallback(() => {
     userInteractedRef.current = true
@@ -31,18 +37,18 @@ export default function HeroCompare() {
     demoRafRef.current = null
   }, [])
 
-  // Auto demo sweep al montar: desliza un poco y vuelve
+  // Auto demo sweep al montar: animación fluida directa en DOM (cero re-renders de React)
   useEffect(() => {
     let demoTime = 0
     const sweep = () => {
       if (userInteractedRef.current) return
-      demoTime += 0.02
+      demoTime += 0.025
       const p = 50 + Math.sin(demoTime) * 15
       if (demoTime < Math.PI * 2) {
-        setPct(p)
+        updatePosition(p)
         demoRafRef.current = requestAnimationFrame(sweep)
       } else {
-        setPct(50)
+        updatePosition(50)
       }
     }
     const timer = setTimeout(() => {
@@ -52,17 +58,17 @@ export default function HeroCompare() {
       clearTimeout(timer)
       if (demoRafRef.current) cancelAnimationFrame(demoRafRef.current)
     }
-  }, [])
+  }, [updatePosition])
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     draggingRef.current = true
     stopDemo()
-    setPosition(e.clientX)
+    setPositionFromClientX(e.clientX)
     e.currentTarget.setPointerCapture?.(e.pointerId)
   }
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!draggingRef.current) return
-    setPosition(e.clientX)
+    setPositionFromClientX(e.clientX)
   }
   const onPointerUp = () => {
     draggingRef.current = false

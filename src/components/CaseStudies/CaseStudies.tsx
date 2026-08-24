@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { TrendingUp, Clock, Users } from 'lucide-react'
@@ -31,11 +32,24 @@ const CaseCard = ({ study, index }: { study: (typeof CASES)[0]; index: number })
   const { t } = useTranslation()
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
+  const rectRef = useRef<{ left: number; top: number } | null>(null)
 
-  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect()
-    mouseX.set(clientX - left)
-    mouseY.set(clientY - top)
+  function handleMouseEnter(e: React.MouseEvent<HTMLDivElement>) {
+    const { left, top } = e.currentTarget.getBoundingClientRect()
+    rectRef.current = { left, top }
+  }
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!rectRef.current) {
+      const { left, top } = e.currentTarget.getBoundingClientRect()
+      rectRef.current = { left, top }
+    }
+    mouseX.set(e.clientX - rectRef.current.left)
+    mouseY.set(e.clientY - rectRef.current.top)
+  }
+
+  function handleMouseLeave() {
+    rectRef.current = null
   }
 
   return (
@@ -44,7 +58,9 @@ const CaseCard = ({ study, index }: { study: (typeof CASES)[0]; index: number })
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.2 }}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className={`group relative p-8 rounded-[2rem] bg-card backdrop-blur-md border border-border overflow-hidden transition-all duration-500 hover:border-foreground/30 hover:-translate-y-2 hover:shadow-2xl hover:shadow-foreground/5`}
     >
       <motion.div

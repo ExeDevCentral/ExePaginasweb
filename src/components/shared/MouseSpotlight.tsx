@@ -1,27 +1,36 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { motion, useSpring } from 'framer-motion'
+import { useEffect, useState, useRef } from 'react'
+import { motion, useSpring, useMotionValue } from 'framer-motion'
 
 export default function MouseSpotlight() {
-  const [isHovered, setIsHovered] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const isVisibleRef = useRef(false)
 
-  // Spring animations for silky smooth 60fps tracking
-  const mouseX = useSpring(0, { stiffness: 80, damping: 25 })
-  const mouseY = useSpring(0, { stiffness: 80, damping: 25 })
+  // Spring animation for smooth cursor following
+  const mouseX = useMotionValue(-1000)
+  const mouseY = useMotionValue(-1000)
+  const smoothX = useSpring(mouseX, { stiffness: 120, damping: 28, mass: 0.5 })
+  const smoothY = useSpring(mouseY, { stiffness: 120, damping: 28, mass: 0.5 })
 
   useEffect(() => {
     // Only activate on devices with fine pointer (mouse/trackpad)
     if (window.matchMedia('(pointer: coarse)').matches) return
+    setMounted(true)
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX)
       mouseY.set(e.clientY)
-      if (!isHovered) setIsHovered(true)
+      if (!isVisibleRef.current) {
+        isVisibleRef.current = true
+        setIsVisible(true)
+      }
     }
 
     const handleMouseLeave = () => {
-      setIsHovered(false)
+      isVisibleRef.current = false
+      setIsVisible(false)
     }
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
@@ -31,20 +40,31 @@ export default function MouseSpotlight() {
       window.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseleave', handleMouseLeave)
     }
-  }, [mouseX, mouseY, isHovered])
+  }, [mouseX, mouseY])
 
-  if (!isHovered) return null
+  if (!mounted) return null
 
   return (
     <motion.div
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: isVisible ? 1 : 0 }}
+      transition={{ duration: 0.4 }}
     >
+      {/* 
+        Aceleración por GPU usando radial-gradient en lugar de un filtro CSS blur-[120px].
+        Esto evita stalls de rasterizado y re-dibujado en GPU cuando se solapa con 
+        elementos que usan backdrop-filter (como el Header o las tarjetas).
+      */}
       <motion.div
-        className="absolute w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 dark:opacity-30 blur-[120px] will-change-transform bg-gradient-to-r from-accent-cyan via-accent-magenta to-accent-cyan"
+        className="absolute w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transform-gpu"
         style={{
-          x: mouseX,
-          y: mouseY,
+          x: smoothX,
+          y: smoothY,
+          background:
+            'radial-gradient(circle, rgba(14,165,233,0.14) 0%, rgba(99,102,241,0.09) 35%, rgba(14,165,233,0.03) 55%, transparent 70%)',
+          willChange: 'transform',
         }}
       />
     </motion.div>

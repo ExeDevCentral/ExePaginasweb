@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface UseScrollSpyOptions {
   /** Offset desde el top para considerar la sección como activa (en px) */
@@ -8,70 +8,77 @@ interface UseScrollSpyOptions {
 }
 
 /**
- * Hook personalizado para detectar qué sección está visible en el scroll
- * @param sectionIds - Array de IDs de secciones a monitorear
- * @param options - Opciones de configuración
- * @returns El ID de la sección actualmente activa
- *
- * @example
- * ```tsx
- * const activeSection = useScrollSpy(['home', 'products', 'features', 'contact'])
- * ```
+ * Hook de alto rendimiento para detectar qué sección está visible en el scroll.
+ * Optimizado para evitar recálculos excesivos de layout (layout thrashing) y re-renders innecesarios.
  */
 export function useScrollSpy(sectionIds: string[], options: UseScrollSpyOptions = {}): string {
   const { offset = 120, useRAF = true } = options
   const [activeId, setActiveId] = useState<string>(sectionIds[0] || '')
+  const activeIdRef = useRef(activeId)
+  activeIdRef.current = activeId
 
-  const updateActiveSection = useCallback(() => {
-    const scrollY = window.scrollY
-    let current: string = sectionIds[0] || ''
+  // Referencia estable de los IDs para evitar recalcular listeners si la referencia del array cambia
+  const idsKey = sectionIds.join(',')
 
-    for (const id of sectionIds) {
-      const element = document.getElementById(id)
-      if (!element) continue
+  useEffect(() => {
+    const ids = idsKey.split(',').filter(Boolean)
+    if (ids.length === 0) return
 
-      const elementTop = element.getBoundingClientRect().top + scrollY
-      if (scrollY + offset >= elementTop) {
-        current = id
+    let rafId: number | null = null
+    let isTicking = false
+
+    const updateActiveSection = () => {
+      const scrollY = window.scrollY
+      let current: string = ids[0] || ''
+
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i]
+        const element = document.getElementById(id)
+        if (!element) continue
+
+        // Usar offsetTop o getBoundingClientRect
+        const rect = element.getBoundingClientRect()
+        const elementTop = rect.top + scrollY
+        if (scrollY + offset >= elementTop) {
+          current = id
+        }
+      }
+
+      // Solo actualizar estado si realmente cambió la sección activa
+      if (current !== activeIdRef.current) {
+        activeIdRef.current = current
+        setActiveId(current)
       }
     }
 
-    setActiveId(current)
-  }, [sectionIds, offset])
-
-  useEffect(() => {
-    let rafId: number
-    let ticking = false
-
     const handleScroll = () => {
       if (useRAF) {
-        if (!ticking) {
+        if (!isTicking) {
+          isTicking = true
           rafId = requestAnimationFrame(() => {
             updateActiveSection()
-            ticking = false
+            isTicking = false
           })
-          ticking = true
         }
       } else {
         updateActiveSection()
       }
     }
 
-    // Ejecutar inicialmente
+    // Ejecución inicial
     updateActiveSection()
 
-    // Escuchar eventos de scroll con passive: true para mejor rendimiento
     window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', handleScroll)
+    window.addEventListener('resize', handleScroll, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', handleScroll)
-      if (rafId) {
+      if (rafId !== null) {
         cancelAnimationFrame(rafId)
       }
     }
-  }, [updateActiveSection, useRAF])
+  }, [idsKey, offset, useRAF])
 
   return activeId
 }

@@ -59,7 +59,7 @@ export const ThreeHeroScene: React.FC = () => {
     scene.add(pointLight)
 
     // Particles Generation
-    const count = isLowTier ? 300 : 1000
+    const count = isLowTier ? 250 : 800
     const init = new Float32Array(count * 3)
     const target = new Float32Array(count * 3)
     const current = new Float32Array(count * 3)
@@ -151,12 +151,30 @@ export const ThreeHeroScene: React.FC = () => {
     }
     window.addEventListener('resize', handleResize)
 
+    // Intersection Observer to pause rendering when hero is off-screen
+    let isVisible = true
+    const observer =
+      typeof IntersectionObserver !== 'undefined'
+        ? new IntersectionObserver(
+            ([entry]) => {
+              isVisible = entry.isIntersecting
+            },
+            { rootMargin: '120px' }
+          )
+        : null
+
+    if (observer) {
+      observer.observe(canvas)
+    }
+
     // Animation Loop
     let animId: number
     const clock = new THREE.Clock()
 
     const animate = () => {
       animId = requestAnimationFrame(animate)
+      if (!isVisible) return
+
       const t = clock.getElapsedTime()
       const p = progressRef.current
 
@@ -182,6 +200,7 @@ export const ThreeHeroScene: React.FC = () => {
     return () => {
       cancelAnimationFrame(animId)
       window.removeEventListener('resize', handleResize)
+      observer?.disconnect()
       trigger?.kill()
       geometry.dispose()
       material.dispose()

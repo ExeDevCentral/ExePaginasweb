@@ -15,9 +15,7 @@ import {
 export const OwnershipVsSubscription: React.FC = () => {
   const { t } = useTranslation()
   const cardRef = React.useRef<HTMLDivElement>(null)
-  const [tilt, setTilt] = React.useState({ rx: 0, ry: 0 })
-  const [glowPos, setGlowPos] = React.useState({ x: 50, y: 50 })
-  const [isHovered, setIsHovered] = React.useState(false)
+  const spotlightRef = React.useRef<HTMLDivElement>(null)
   const [copied, setCopied] = React.useState(false)
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -31,20 +29,34 @@ export const OwnershipVsSubscription: React.FC = () => {
     const y = e.clientY - rect.top
     const px = x / rect.width
     const py = y / rect.height
-    setGlowPos({ x: Math.round(px * 100), y: Math.round(py * 100) })
-    setTilt({
-      rx: Number.parseFloat(((0.5 - py) * 10).toFixed(2)),
-      ry: Number.parseFloat(((px - 0.5) * 10).toFixed(2)),
-    })
+    const rx = ((0.5 - py) * 8).toFixed(2)
+    const ry = ((px - 0.5) * 8).toFixed(2)
+
+    cardRef.current.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg)`
+    if (spotlightRef.current) {
+      spotlightRef.current.style.background = `radial-gradient(550px circle at ${Math.round(px * 100)}% ${Math.round(py * 100)}%, rgba(6, 182, 212, 0.22), transparent 75%)`
+      spotlightRef.current.style.opacity = '1'
+    }
   }
 
   const handlePointerEnter = () => {
     if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) return
-    setIsHovered(true)
+    if (cardRef.current) {
+      cardRef.current.style.transition = 'transform 0.08s ease-out'
+    }
+    if (spotlightRef.current) {
+      spotlightRef.current.style.opacity = '1'
+    }
   }
+
   const handlePointerLeave = () => {
-    setIsHovered(false)
-    setTilt({ rx: 0, ry: 0 })
+    if (cardRef.current) {
+      cardRef.current.style.transition = 'transform 0.5s ease-out'
+      cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)'
+    }
+    if (spotlightRef.current) {
+      spotlightRef.current.style.opacity = '0.4'
+    }
   }
 
   const handleCopyQuote = () => {
@@ -151,19 +163,16 @@ export const OwnershipVsSubscription: React.FC = () => {
           onPointerMove={handlePointerMove}
           onPointerEnter={handlePointerEnter}
           onPointerLeave={handlePointerLeave}
-          animate={{
-            rotateX: tilt.rx,
-            rotateY: tilt.ry,
-          }}
-          style={{ perspective: 1000 }}
-          className="mb-12 sm:mb-16 p-5 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/90 backdrop-blur-2xl relative overflow-hidden shadow-[0_20px_60px_rgba(6,182,212,0.15)] text-center group cursor-pointer transition-shadow duration-500 hover:shadow-[0_25px_70px_rgba(6,182,212,0.3)]"
+          style={{ perspective: 1000, willChange: 'transform' }}
+          className="mb-12 sm:mb-16 p-5 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/90 backdrop-blur-2xl relative overflow-hidden shadow-[0_20px_60px_rgba(6,182,212,0.15)] text-center group cursor-pointer transition-shadow duration-500 hover:shadow-[0_25px_70px_rgba(6,182,212,0.3)] transform-gpu"
         >
           {/* Dynamic Spotlight Effect following Mouse */}
           <div
-            className="pointer-events-none absolute -inset-1 transition-opacity duration-300"
+            ref={spotlightRef}
+            className="pointer-events-none absolute -inset-1 transition-opacity duration-300 opacity-40"
             style={{
-              opacity: isHovered ? 1 : 0.4,
-              background: `radial-gradient(550px circle at ${glowPos.x}% ${glowPos.y}%, rgba(6, 182, 212, 0.22), transparent 75%)`,
+              background:
+                'radial-gradient(550px circle at 50% 50%, rgba(6, 182, 212, 0.22), transparent 75%)',
             }}
           />
 

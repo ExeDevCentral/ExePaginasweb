@@ -24,12 +24,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (saved === 'light' || saved === 'dark') {
       setTheme(saved)
       document.documentElement.classList.toggle('dark', saved === 'dark')
-    } else if (window.matchMedia?.('(prefers-color-scheme: light)').matches) {
-      setTheme('light')
-      document.documentElement.classList.toggle('dark', false)
     } else {
+      // Default to dark theme for ExePaginasWeb dark cyber aesthetic
       setTheme('dark')
-      document.documentElement.classList.toggle('dark', true)
+      document.documentElement.classList.add('dark')
     }
   }, [])
 

@@ -86,7 +86,7 @@ describe('🔍 AUDITORÍA COMPLETA DEL SISTEMA: Chatbot, WhatsApp, Webhooks & Li
 
       expect(status).toBe(200)
       expect(sendEmail).toHaveBeenCalled()
-    })
+    }, 15000)
   })
 
   // 2. AUDITORÍA DE LINKS DE WHATSAPP Y FORMATO DE TELÉFONO

@@ -3,6 +3,8 @@ import PlanCard, { type PlanData } from './PlanCard'
 
 interface PlanGridProps {
   plans: PlanData[]
+  currency: 'ARS' | 'USD'
+  isAnnual: boolean
   onSelectPlan: (plan: PlanData) => void
 }
 
@@ -14,17 +16,24 @@ const containerVariants = {
   },
 }
 
-export default function PlanGrid({ plans, onSelectPlan }: PlanGridProps) {
+export default function PlanGrid({ plans, currency, isAnnual, onSelectPlan }: PlanGridProps) {
   return (
     <motion.div
-      className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+      className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-80px' }}
+      viewport={{ once: true, margin: '-60px' }}
     >
       {plans.map((plan, index) => (
-        <PlanCard key={plan.id} plan={plan} index={index} onSelect={onSelectPlan} />
+        <PlanCard
+          key={plan.id}
+          plan={plan}
+          index={index}
+          currency={currency}
+          isAnnual={isAnnual}
+          onSelect={onSelectPlan}
+        />
       ))}
     </motion.div>
   )

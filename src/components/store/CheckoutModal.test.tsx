@@ -16,6 +16,8 @@ describe('Store & Checkout Model Unit Tests', () => {
     popular: false,
     price: '$29.000',
     priceUSD: 'USD 29',
+    rawPriceARS: 29000,
+    rawPriceUSD: 29,
     period: 'mes',
   }
 

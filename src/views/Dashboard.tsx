@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
+import { useEffect, useState, useTransition, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../core/infra/supabase/client'
 import {
@@ -32,44 +32,16 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 import { queryKeys } from '../core/infra/query/queryKeys'
 import { SupabaseTenantServiceRepository } from '../core/infra/repositories/SupabaseTenantServiceRepository'
 import { SupabaseInvoiceRepository } from '../core/infra/repositories/SupabaseInvoiceRepository'
+import { SupabaseSLAContractRepository } from '../core/infra/repositories/SupabaseSLAContractRepository'
+import { SupabaseWorkGroupRepository } from '../core/infra/repositories/SupabaseWorkGroupRepository'
 import { PREMIUM_TOKENS } from '../styles/premium-tokens'
 import BrandLoader from '../components/layout/BrandLoader'
 
-import { lazyWithRetry } from '../utils/lazyWithRetry'
-
-// Lazy loaded panels con reintento automático ante nuevos despliegues
-const WorkGroupsPanel = lazyWithRetry(() => import('../components/workgroups/WorkGroupsPanel'))
-const ServicesPanel = lazyWithRetry(() => import('../components/services/ServicesPanel'))
-const SLADashboard = lazyWithRetry(() => import('../components/sla/SLADashboard'))
-const InvoicesPanel = lazyWithRetry(() => import('../components/invoices/InvoicesPanel'))
-
-const SkeletonBlock = ({ className = '' }: { className?: string }) => (
-  <div className={`relative overflow-hidden bg-slate-200/70 dark:bg-slate-800/40 ${className}`}>
-    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_infinite] bg-gradient-to-r from-transparent via-slate-300/40 dark:via-white/[0.08] to-transparent" />
-  </div>
-)
-
-const PanelSkeleton = () => (
-  <div className="rounded-3xl border border-slate-200 dark:border-white/15 bg-white/90 dark:bg-[#090a12]/80 p-8 backdrop-blur-2xl space-y-6 shadow-xl dark:shadow-2xl">
-    <div className="flex items-center justify-between">
-      <div className="space-y-2">
-        <SkeletonBlock className="h-6 w-48 rounded-lg" />
-        <SkeletonBlock className="h-4 w-72 rounded-lg" />
-      </div>
-      <SkeletonBlock className="h-10 w-28 rounded-xl" />
-    </div>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <SkeletonBlock className="h-32 rounded-2xl animate-pulse" />
-      <SkeletonBlock className="h-32 rounded-2xl animate-pulse" />
-      <SkeletonBlock className="h-32 rounded-2xl animate-pulse" />
-    </div>
-    <div className="space-y-4">
-      <SkeletonBlock className="h-12 w-full rounded-xl" />
-      <SkeletonBlock className="h-12 w-full rounded-xl" />
-      <SkeletonBlock className="h-12 w-full rounded-xl" />
-    </div>
-  </div>
-)
+// High-performance direct panel imports to eliminate chunk loading waterfalls & freeze lag
+import WorkGroupsPanel from '../components/workgroups/WorkGroupsPanel'
+import ServicesPanel from '../components/services/ServicesPanel'
+import SLADashboard from '../components/sla/SLADashboard'
+import InvoicesPanel from '../components/invoices/InvoicesPanel'
 
 type DashboardView = 'overview' | 'services' | 'workgroups' | 'sla' | 'invoices' | 'admin'
 
@@ -83,17 +55,23 @@ const VIEW_TABS: { id: DashboardView; labelKey: string; icon: typeof LayoutDashb
 
 export default function Dashboard() {
   const router = useRouter()
-  const navigate = (path: string, options?: { replace?: boolean }) => {
-    if (options?.replace) {
-      router.replace(path)
-    } else {
-      router.push(path)
-    }
-  }
+  const navigate = useCallback(
+    (path: string, options?: { replace?: boolean }) => {
+      if (options?.replace) {
+        router.replace(path)
+      } else {
+        router.push(path)
+      }
+    },
+    [router]
+  )
+
   const { t } = useTranslation()
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
   const prefersReducedMotion = useReducedMotion()
+  const [, startTransition] = useTransition()
+
   const { ready, session } = useAuthSession()
   const { loading, error, cliente, suscripciones, pagos, planTier, refresh } = useDashboard(
     ready && !!session
@@ -101,6 +79,7 @@ export default function Dashboard() {
   const { role } = useAuthRole()
   const isAdmin = role === 'admin'
   const [viewMode, setViewMode] = useState<'admin' | 'client'>('admin')
+
   const tabParam = searchParams.get('tab') as DashboardView | null
   const [activeView, setActiveView] = useState<DashboardView>(
     tabParam && ['overview', 'services', 'workgroups', 'sla', 'invoices'].includes(tabParam)
@@ -108,28 +87,83 @@ export default function Dashboard() {
       : 'overview'
   )
 
-  // Sync activeView with searchParams tab
+  // Keep-alive cache: track which tabs have been visited so they stay mounted in memory
+  const [visitedTabs, setVisitedTabs] = useState<Set<DashboardView>>(() => new Set([activeView]))
+
+  // Sync activeView with searchParams tab without lag
   useEffect(() => {
     const tab = searchParams.get('tab') as DashboardView | null
     if (tab && ['overview', 'services', 'workgroups', 'sla', 'invoices'].includes(tab)) {
       setActiveView(tab)
+      setVisitedTabs((prev) => {
+        if (prev.has(tab)) return prev
+        const next = new Set(prev)
+        next.add(tab)
+        return next
+      })
     }
   }, [searchParams])
 
-  // Reset scroll to top on tab view change
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [activeView])
+  const handleTabChange = (tabId: DashboardView) => {
+    if (activeView === tabId) return
+    startTransition(() => {
+      setActiveView(tabId)
+      setVisitedTabs((prev) => {
+        if (prev.has(tabId)) return prev
+        const next = new Set(prev)
+        next.add(tabId)
+        return next
+      })
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        url.searchParams.set('tab', tabId)
+        window.history.replaceState(null, '', url.pathname + url.search)
+      }
+    })
+  }
 
   // Feature Flag / Rollback Support (?ui=legacy or NEXT_PUBLIC_DASHBOARD_UI=legacy)
   const isLegacyUI =
     searchParams.get('ui') === 'legacy' ||
     process.env.NEXT_PUBLIC_DASHBOARD_UI === 'legacy' ||
-    (typeof window !== 'undefined' && (window as any).__DASHBOARD_UI__ === 'legacy')
+    (typeof window !== 'undefined' &&
+      (window as unknown as { __DASHBOARD_UI__?: string }).__DASHBOARD_UI__ === 'legacy')
 
   const { data: tenants = [] } = useTenant(cliente?.id ?? null, ready && !!session && !!cliente?.id)
-
   const currentTenant = tenants[0] || null
+
+  // Eager parallel data prefetching: as soon as currentTenant is known, preheat all caches
+  useEffect(() => {
+    if (!currentTenant?.id) return
+    const tid = currentTenant.id
+
+    // Prefetch all panels concurrently with generous staleTime
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.tenantServices.byTenant(tid),
+      queryFn: () => new SupabaseTenantServiceRepository().listByTenantId(tid),
+      staleTime: 5 * 60 * 1000,
+    })
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.invoices.byTenant(tid),
+      queryFn: () => new SupabaseInvoiceRepository().listByTenantId(tid),
+      staleTime: 5 * 60 * 1000,
+    })
+    queryClient.prefetchQuery({
+      queryKey: ['sla-active', tid],
+      queryFn: () => new SupabaseSLAContractRepository().getActiveByTenantId(tid),
+      staleTime: 5 * 60 * 1000,
+    })
+    queryClient.prefetchQuery({
+      queryKey: ['sla-breaches', tid],
+      queryFn: () => new SupabaseSLAContractRepository().checkBreaches(tid),
+      staleTime: 60 * 1000,
+    })
+    queryClient.prefetchQuery({
+      queryKey: ['work-groups', tid],
+      queryFn: () => new SupabaseWorkGroupRepository().listByTenantId(tid),
+      staleTime: 5 * 60 * 1000,
+    })
+  }, [currentTenant?.id, queryClient])
 
   const {
     loading: adminLoading,
@@ -164,7 +198,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (!ready) return
     if (!session) navigate('/login', { replace: true })
-  }, [ready, session])
+  }, [ready, session, navigate])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -284,7 +318,7 @@ export default function Dashboard() {
                   type="button"
                   onClick={() => (viewMode === 'admin' ? refreshAdmin() : refresh())}
                   disabled={loading || adminLoading}
-                  className="p-3 rounded-2xl border border-slate-200 dark:border-white/15 bg-white dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white shadow-md"
+                  className="p-3 rounded-2xl border border-slate-200 dark:border-white/15 bg-white dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white shadow-md cursor-pointer"
                 >
                   <RefreshCw
                     size={18}
@@ -326,8 +360,8 @@ export default function Dashboard() {
           </PanelErrorBoundary>
         ) : (
           <>
-            {/* SaaS Segmented Tabs Bar (Scroll-snap horizontal on mobile) */}
-            <div className={PREMIUM_TOKENS.tabsBar + ' snap-x'}>
+            {/* SaaS Segmented Tabs Bar (Ultra-responsive, Zero-latency sliding pill) */}
+            <div className={PREMIUM_TOKENS.tabsBar + ' snap-x relative'}>
               {VIEW_TABS.map((tab) => {
                 const Icon = tab.icon
                 const isActive = activeView === tab.id
@@ -335,98 +369,113 @@ export default function Dashboard() {
                   <button
                     key={tab.id}
                     type="button"
-                    onClick={() => {
-                      setActiveView(tab.id)
-                      if (typeof window !== 'undefined') {
-                        const url = new URL(window.location.href)
-                        url.searchParams.set('tab', tab.id)
-                        window.history.replaceState(null, '', url.pathname + url.search)
-                      }
-                    }}
-                    onMouseEnter={() => {
-                      if (!currentTenant?.id) return
-                      if (tab.id === 'services') {
-                        queryClient.prefetchQuery({
-                          queryKey: queryKeys.tenantServices.byTenant(currentTenant.id),
-                          queryFn: () =>
-                            new SupabaseTenantServiceRepository().listByTenantId(currentTenant.id),
-                        })
-                      } else if (tab.id === 'invoices') {
-                        queryClient.prefetchQuery({
-                          queryKey: queryKeys.invoices.byTenant(currentTenant.id),
-                          queryFn: () =>
-                            new SupabaseInvoiceRepository().listByTenantId(currentTenant.id),
-                        })
-                      }
-                    }}
-                    className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all whitespace-nowrap snap-start ${
-                      isActive ? PREMIUM_TOKENS.activeTabGradient : PREMIUM_TOKENS.inactiveTab
+                    onClick={() => handleTabChange(tab.id)}
+                    className={`relative flex items-center gap-2.5 px-5 py-3 rounded-xl text-xs sm:text-sm font-extrabold transition-colors whitespace-nowrap snap-start cursor-pointer z-10 ${
+                      isActive
+                        ? 'text-white'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeTabPill"
+                        className="absolute inset-0 rounded-xl bg-gradient-to-r from-accent-cyan via-purple-600 to-pink-500 shadow-md -z-10"
+                        transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                      />
+                    )}
+                    <Icon className="w-4 h-4" />
                     <span>{t(tab.labelKey)}</span>
                   </button>
                 )
               })}
             </div>
 
-            {/* Content View Panels with Individual Panel Error Boundaries */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeView}
-                initial={prefersReducedMotion ? undefined : { opacity: 0, y: 12, scale: 0.98 }}
-                animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
-                exit={prefersReducedMotion ? undefined : { opacity: 0, y: -12, scale: 0.98 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            {/* High-Performance Keep-Alive Panels Container */}
+            <div className="relative mt-2">
+              {/* Overview (Resumen) Panel */}
+              <div
+                className={`transition-opacity duration-150 ${
+                  activeView === 'overview' ? 'block opacity-100' : 'hidden opacity-0'
+                }`}
               >
-                <Suspense fallback={<PanelSkeleton />}>
-                  {activeView === 'overview' && (
-                    <PanelErrorBoundary panelName="Resumen Cliente">
-                      <ClientDashboard
-                        planTier={planTier}
-                        cliente={cliente}
-                        suscripciones={suscripciones}
-                        pagos={pagos}
-                        onRefresh={refresh}
-                        refreshing={loading}
-                        onLogout={handleLogout}
-                      />
-                    </PanelErrorBoundary>
-                  )}
-                  {activeView === 'services' && currentTenant && (
-                    <PanelErrorBoundary panelName="Servicios">
-                      <ServicesPanel tenantId={currentTenant.id} />
-                    </PanelErrorBoundary>
-                  )}
-                  {activeView === 'workgroups' && currentTenant && (
-                    <PanelErrorBoundary panelName="Equipo">
-                      <WorkGroupsPanel tenantId={currentTenant.id} />
-                    </PanelErrorBoundary>
-                  )}
-                  {activeView === 'sla' && currentTenant && (
-                    <PanelErrorBoundary panelName="SLA">
-                      <SLADashboard tenantId={currentTenant.id} />
-                    </PanelErrorBoundary>
-                  )}
-                  {activeView === 'invoices' && currentTenant && (
-                    <PanelErrorBoundary panelName="Facturas">
-                      <InvoicesPanel tenantId={currentTenant.id} />
-                    </PanelErrorBoundary>
-                  )}
-                  {activeView !== 'overview' && !currentTenant && (
-                    <div className="text-center py-16 rounded-3xl border border-slate-200 dark:border-white/15 bg-white/90 dark:bg-[#090a12]/80 backdrop-blur-2xl shadow-xl dark:shadow-2xl">
-                      <Settings className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                        {t('dashboard.configura_espacio')}
-                      </h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-md mx-auto font-medium">
-                        {t('dashboard.compra_plan_hint')}
-                      </p>
-                    </div>
-                  )}
-                </Suspense>
-              </motion.div>
-            </AnimatePresence>
+                <PanelErrorBoundary panelName="Resumen Cliente">
+                  <ClientDashboard
+                    planTier={planTier}
+                    cliente={cliente}
+                    suscripciones={suscripciones}
+                    pagos={pagos}
+                    onRefresh={refresh}
+                    refreshing={loading}
+                    onLogout={handleLogout}
+                  />
+                </PanelErrorBoundary>
+              </div>
+
+              {/* Services (Servicios) Panel */}
+              {currentTenant && (visitedTabs.has('services') || activeView === 'services') && (
+                <div
+                  className={`transition-opacity duration-150 ${
+                    activeView === 'services' ? 'block opacity-100' : 'hidden opacity-0'
+                  }`}
+                >
+                  <PanelErrorBoundary panelName="Servicios">
+                    <ServicesPanel tenantId={currentTenant.id} />
+                  </PanelErrorBoundary>
+                </div>
+              )}
+
+              {/* Workgroups (Equipo) Panel */}
+              {currentTenant && (visitedTabs.has('workgroups') || activeView === 'workgroups') && (
+                <div
+                  className={`transition-opacity duration-150 ${
+                    activeView === 'workgroups' ? 'block opacity-100' : 'hidden opacity-0'
+                  }`}
+                >
+                  <PanelErrorBoundary panelName="Equipo">
+                    <WorkGroupsPanel tenantId={currentTenant.id} />
+                  </PanelErrorBoundary>
+                </div>
+              )}
+
+              {/* SLA Panel */}
+              {currentTenant && (visitedTabs.has('sla') || activeView === 'sla') && (
+                <div
+                  className={`transition-opacity duration-150 ${
+                    activeView === 'sla' ? 'block opacity-100' : 'hidden opacity-0'
+                  }`}
+                >
+                  <PanelErrorBoundary panelName="SLA">
+                    <SLADashboard tenantId={currentTenant.id} />
+                  </PanelErrorBoundary>
+                </div>
+              )}
+
+              {/* Invoices (Facturas) Panel */}
+              {currentTenant && (visitedTabs.has('invoices') || activeView === 'invoices') && (
+                <div
+                  className={`transition-opacity duration-150 ${
+                    activeView === 'invoices' ? 'block opacity-100' : 'hidden opacity-0'
+                  }`}
+                >
+                  <PanelErrorBoundary panelName="Facturas">
+                    <InvoicesPanel tenantId={currentTenant.id} />
+                  </PanelErrorBoundary>
+                </div>
+              )}
+
+              {/* Fallback if no current tenant */}
+              {activeView !== 'overview' && !currentTenant && (
+                <div className="text-center py-16 rounded-3xl border border-slate-200 dark:border-white/15 bg-white/90 dark:bg-[#090a12]/80 backdrop-blur-2xl shadow-xl dark:shadow-2xl">
+                  <Settings className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                    {t('dashboard.configura_espacio')}
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-md mx-auto font-medium">
+                    {t('dashboard.compra_plan_hint')}
+                  </p>
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>

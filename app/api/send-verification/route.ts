@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 import { sendEmail } from '@/lib/email/send'
 import { emailVerification } from '@/lib/email/templates.js'
 
-const RATE_LIMIT_WINDOW_MS = 3600_000
+const RATE_LIMIT_WINDOW_MS = 3_600_000
 const RATE_LIMIT_MAX_REQUESTS = 5
 const requestLog = new Map<string, number[]>()
+
+const SendVerificationSchema = z.object({
+  email: z.string().trim().email().max(255),
+  name: z.string().trim().max(100).nullish(),
+  verificationUrl: z.string().max(1000).nullish(),
+  token: z.string().max(255).nullish(),
+})
 
 function getClientIp(req: NextRequest): string {
   const forwardedFor = req.headers.get('x-forwarded-for')
@@ -60,21 +68,25 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  let body: any
+  let body: unknown = null
   try {
     body = await req.json()
   } catch {
     return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
   }
 
-  const { email, name, verificationUrl, token } = body || {}
-
-  if (!email || typeof email !== 'string') {
+  const parseResult = SendVerificationSchema.safeParse(body)
+  if (!parseResult.success) {
     return NextResponse.json(
-      { error: 'El email del destinatario es obligatorio.' },
+      {
+        error: 'El email del destinatario es obligatorio o inválido.',
+        details: parseResult.error.flatten(),
+      },
       { status: 400 }
     )
   }
+
+  const { email, name, verificationUrl, token } = parseResult.data
 
   try {
     if (!process.env.RESEND_API_KEY) {
@@ -87,9 +99,9 @@ export async function POST(req: NextRequest) {
 
     const safeUrl = sanitizeUrl(verificationUrl)
     const html = emailVerification({
-      name,
+      name: name || undefined,
       verificationUrl: safeUrl,
-      token,
+      token: token || undefined,
     })
 
     const result = await sendEmail({
@@ -103,12 +115,13 @@ export async function POST(req: NextRequest) {
       message: 'Email de verificación enviado exitosamente.',
       data: result,
     })
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unknown error'
     console.error('[verification-email] Error al enviar email de verificación:', err)
     return NextResponse.json(
       {
         error: 'Error al enviar el email de verificación.',
-        details: err.message,
+        details: msg,
       },
       { status: 500 }
     )

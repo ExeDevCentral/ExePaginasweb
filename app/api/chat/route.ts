@@ -11,14 +11,15 @@ const RATE_LIMIT_MAX_REQUESTS = 10
 const requestLog = new Map<string, number[]>()
 
 const ChatRequestSchema = z.object({
-  message: z.string().min(1).max(1500),
+  message: z.string().trim().min(1).max(1500),
   history: z
     .array(
       z.object({
         role: z.enum(['user', 'assistant']),
-        content: z.string(),
+        content: z.string().max(2000),
       })
     )
+    .max(20)
     .nullish(),
 })
 
@@ -124,7 +125,7 @@ export async function POST(req: NextRequest) {
   const validation = ChatRequestSchema.safeParse(body)
   if (!validation.success) {
     return NextResponse.json(
-      { error: 'Datos de mensaje inválidos.', details: validation.error.format() },
+      { error: 'Datos de mensaje inválidos.', details: validation.error.flatten() },
       { status: 400 }
     )
   }

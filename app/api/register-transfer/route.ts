@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 import { supabaseAdmin as db } from '@/lib/supabase/admin'
 
 const PLAN_MONTOS_ARS: Record<string, number> = {
@@ -7,9 +8,17 @@ const PLAN_MONTOS_ARS: Record<string, number> = {
   'mantenimiento-premium': 150000,
 }
 
-const RATE_LIMIT_WINDOW_MS = 3600_000
+const RATE_LIMIT_WINDOW_MS = 3_600_000
 const RATE_LIMIT_MAX_REQUESTS = 10
 const requestLog = new Map<string, number[]>()
+
+const RegisterTransferSchema = z.object({
+  email: z.string().trim().email().max(255),
+  fullName: z.string().trim().max(100).nullish(),
+  planSlug: z.enum(['mantenimiento-basico', 'mantenimiento-avanzado', 'mantenimiento-premium']),
+  planNombre: z.string().trim().max(100).nullish(),
+  tipoProyecto: z.string().trim().max(50).nullish(),
+})
 
 function getClientIp(req: NextRequest): string {
   const forwardedFor = req.headers.get('x-forwarded-for')
@@ -43,8 +52,9 @@ async function getOrCreateCliente(email: string, fullName?: string | null): Prom
     const { data: authUser } = await db.auth.admin.listUsers()
     const match = authUser?.users?.find((u) => u.email?.toLowerCase() === email?.toLowerCase())
     id = match?.id || null
-  } catch (e: any) {
-    console.warn('[register-transfer] No se pudo buscar en auth.users:', e.message)
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : 'Unknown auth error'
+    console.warn('[register-transfer] No se pudo buscar en auth.users:', msg)
   }
 
   if (!id) return null
@@ -67,21 +77,22 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  let body: any
+  let body: unknown = null
   try {
     body = await req.json()
   } catch {
     return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
   }
 
-  const { email, fullName, planSlug, planNombre, tipoProyecto } = body || {}
-
-  if (!email || !planSlug) {
+  const parseResult = RegisterTransferSchema.safeParse(body)
+  if (!parseResult.success) {
     return NextResponse.json(
-      { error: 'Faltan campos requeridos (email, planSlug).' },
+      { error: 'Faltan campos requeridos o son inválidos.', details: parseResult.error.flatten() },
       { status: 400 }
     )
   }
+
+  const { email, fullName, planSlug, planNombre, tipoProyecto } = parseResult.data
 
   if (!db) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })

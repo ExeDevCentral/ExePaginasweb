@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { z } from 'zod'
 import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'
 import {
   contactNotification,
@@ -6,9 +7,20 @@ import {
   aiDiagnosticAutoReply,
 } from '@/lib/email/templates.js'
 
-const RATE_LIMIT_WINDOW_MS = 3600_000
+const RATE_LIMIT_WINDOW_MS = 3_600_000
 const RATE_LIMIT_MAX_REQUESTS = 5
 const requestLog = new Map<string, number[]>()
+
+const ContactSchema = z.object({
+  name: z.string().trim().min(1, 'El nombre es requerido').max(100, 'Nombre demasiado largo'),
+  email: z.string().trim().email('Email inválido').max(255),
+  message: z.string().trim().min(1, 'El mensaje es requerido').max(5000, 'Mensaje demasiado largo'),
+  lang: z.string().max(10).nullish(),
+  locale: z.string().max(10).nullish(),
+  isDiagnostic: z.boolean().nullish(),
+  projectType: z.string().max(100).nullish(),
+  total: z.union([z.number(), z.string()]).nullish(),
+})
 
 function getClientIp(req: NextRequest): string {
   const forwardedFor = req.headers.get('x-forwarded-for')
@@ -49,18 +61,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Demasiados mensajes. Intenta más tarde.' }, { status: 429 })
   }
 
-  let body: Record<string, unknown> | null = null
+  let body: unknown = null
   try {
     body = await req.json()
   } catch {
     return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
   }
 
-  const { name, email, message, lang, locale, isDiagnostic, projectType, total } =
-    (body as Record<string, any>) || {}
-  if (!name || !email || !message) {
-    return NextResponse.json({ error: 'Faltan campos requeridos.' }, { status: 400 })
+  const parseResult = ContactSchema.safeParse(body)
+  if (!parseResult.success) {
+    return NextResponse.json(
+      { error: 'Faltan campos requeridos o son inválidos.', details: parseResult.error.flatten() },
+      { status: 400 }
+    )
   }
+
+  const { name, email, message, lang, locale, isDiagnostic, projectType, total } = parseResult.data
 
   const clientLang = lang || locale || req.headers.get('accept-language')
   const detectedLang = detectLanguage(message, clientLang)
@@ -82,8 +98,8 @@ export async function POST(req: NextRequest) {
             name,
             message,
             ticketId,
-            projectType,
-            total,
+            projectType: projectType || undefined,
+            total: total ?? undefined,
             lang: detectedLang,
           })
         : contactAutoReply({ name, message, ticketId, lang: detectedLang })

@@ -23,7 +23,6 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', id: 'home' as SectionId, href: '#home' },
   { label: 'Sistemas', id: 'products' as SectionId, href: '#products' },
-  { label: 'Features', id: 'features' as SectionId, href: '#features' },
   { label: 'Contacto', id: 'contact' as SectionId, href: '#contact' },
 ] as const
 

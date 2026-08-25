@@ -22,6 +22,47 @@ export function resetScrollToTop() {
   }
 }
 
+export function navigateToSection(
+  targetId: string,
+  options?: {
+    offset?: number
+  }
+) {
+  const cleanId = targetId.replace(/^#/, '')
+  const el = document.getElementById(cleanId)
+  if (!el) {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/#' + cleanId
+    }
+    return false
+  }
+
+  const offset = options?.offset ?? 72
+  const elementPosition = el.getBoundingClientRect().top
+  const offsetPosition = elementPosition + window.pageYOffset - offset
+
+  const performJump = () => {
+    if (globalLenis) {
+      globalLenis.scrollTo(offsetPosition, { immediate: true })
+    } else {
+      window.scrollTo({ top: offsetPosition, behavior: 'instant' })
+    }
+  }
+
+  // Si el navegador soporta View Transitions (Chrome, Edge, Safari 18+), hace un crossfade de seda
+  if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+    ;(document as unknown as { startViewTransition: (cb: () => void) => void }).startViewTransition(
+      () => {
+        performJump()
+      }
+    )
+  } else {
+    performJump()
+  }
+
+  return true
+}
+
 export function scrollToElement(
   target: string | HTMLElement,
   options?: Parameters<Lenis['scrollTo']>[1]

@@ -111,6 +111,43 @@
     pointer-events: none;
   }
 
+  /* View Transitions suaves para navegación entre secciones (evita desenfoque por velocidad) */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.22s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  ::view-transition-old(root) {
+    animation-name: crossfade-out;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: crossfade-in;
+  }
+
+  @keyframes crossfade-out {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.99);
+    }
+  }
+
+  @keyframes crossfade-in {
+    from {
+      opacity: 0;
+      transform: scale(1.01);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased transition-colors duration-300;
     overscroll-behavior-y: auto;

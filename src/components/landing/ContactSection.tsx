@@ -98,8 +98,8 @@ const ContactSection = () => {
   }
 
   return (
-    <section id="contact" className="relative px-4 py-28 sm:px-6 lg:px-8 overflow-hidden z-10">
-      <span id="contacto" className="absolute -top-24" />
+    <section id="contact" className="relative px-4 py-24 sm:px-6 lg:px-8 overflow-hidden z-10">
+      <span id="contacto" className="absolute top-0" />
       {/* Ambient blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-24 left-1/3 h-72 w-72 rounded-full bg-accent-cyan/8 blur-[100px]" />

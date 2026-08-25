@@ -31,6 +31,7 @@ import StoreTelemetryHUD from './StoreTelemetryHUD'
 import PlanComparisonMatrix from './PlanComparisonMatrix'
 import StoreGuarantees from './StoreGuarantees'
 import { storeAudio } from '../../core/utils/storeAudio'
+import { getWhatsAppUrl } from '../../core/utils/whatsappUtils'
 import { toast } from 'sonner'
 
 const basePlans: Omit<PlanData, 'price' | 'priceUSD' | 'period' | 'rawPriceARS' | 'rawPriceUSD'>[] =
@@ -384,7 +385,9 @@ export default function StorePage() {
               </motion.a>
 
               <motion.a
-                href="https://wa.me/5491168340150?text=Hola%20ExeSistemasWEB,%20quiero%20consultar%20por%20los%20abonos%20de%20mantenimiento"
+                href={getWhatsAppUrl(
+                  'Hola ExeSistemasWEB, quiero consultar por los abonos de mantenimiento'
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.04 }}

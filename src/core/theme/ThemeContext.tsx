@@ -1,6 +1,14 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+  type ReactNode,
+} from 'react'
 
 type Theme = 'dark' | 'light'
 
@@ -16,36 +24,45 @@ const ThemeContext = createContext<ThemeContextValue>({
   toggleTheme: () => {},
 })
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [theme, setTheme] = useState<Theme>('dark')
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme')
-    if (saved === 'light' || saved === 'dark') {
-      setTheme(saved)
-      document.documentElement.classList.toggle('dark', saved === 'dark')
-    } else {
-      // Default to dark theme for ExePaginasWeb dark cyber aesthetic
+    try {
+      const saved = localStorage.getItem('theme')
+      if (saved === 'light') {
+        // Reset any broken light mode state to restore dark cyber studio aesthetic
+        setTheme('dark')
+        document.documentElement.classList.add('dark')
+        localStorage.setItem('theme', 'dark')
+      } else {
+        setTheme('dark')
+        document.documentElement.classList.add('dark')
+      }
+    } catch {
       setTheme('dark')
       document.documentElement.classList.add('dark')
     }
   }, [])
 
-  const applyTheme = (t: Theme) => {
+  const applyTheme = useCallback((t: Theme) => {
     setTheme(t)
     if (typeof document !== 'undefined') {
       document.documentElement.classList.toggle('dark', t === 'dark')
       localStorage.setItem('theme', t)
     }
-  }
+  }, [])
 
-  const toggleTheme = () => applyTheme(theme === 'dark' ? 'light' : 'dark')
+  const toggleTheme = useCallback(() => {
+    applyTheme(theme === 'dark' ? 'light' : 'dark')
+  }, [theme, applyTheme])
 
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme: applyTheme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
+  const contextValue = useMemo(
+    () => ({ theme, setTheme: applyTheme, toggleTheme }),
+    [theme, applyTheme, toggleTheme]
   )
+
+  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>
 }
 
 export const useTheme = () => useContext(ThemeContext)

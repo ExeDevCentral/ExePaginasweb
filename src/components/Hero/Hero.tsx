@@ -101,8 +101,8 @@ const Hero: React.FC = () => {
     >
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent-magenta/10 pointer-events-none" />
 
-      <div className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full bg-accent-cyan/15 blur-[60px] sm:blur-[100px] md:blur-[120px] pointer-events-none z-0" />
-      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full bg-accent-magenta/15 blur-[60px] sm:blur-[100px] md:blur-[120px] pointer-events-none z-0" />
+      <div className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full bg-cyan-500/5 dark:bg-cyan-500/15 blur-[60px] sm:blur-[100px] md:blur-[120px] pointer-events-none z-0" />
+      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full bg-fuchsia-500/5 dark:bg-fuchsia-500/15 blur-[60px] sm:blur-[100px] md:blur-[120px] pointer-events-none z-0" />
 
       <div className="relative z-10 flex flex-col items-center justify-center px-3 sm:px-4 text-center max-w-5xl mx-auto w-full">
         <Badge text={t('hero.badge')} />

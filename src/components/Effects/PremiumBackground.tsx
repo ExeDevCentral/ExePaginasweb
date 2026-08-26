@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 
 const DARK_COLORS = ['#60a5fa', '#c084fc', '#34d399']
-const LIGHT_COLORS = ['#0284c7', '#7c3aed', '#059669']
+const LIGHT_COLORS = ['#60a5fa', '#a78bfa', '#34d399']
 
 const NODE_COUNT = 55
 const MOBILE_NODE_COUNT = 18
@@ -175,15 +175,13 @@ const PremiumBackground = () => {
           if (distSq < maxDistSq) {
             const dist = Math.sqrt(distSq)
             const factor = 1 - dist / maxDist
-            const opacity = darkTheme ? factor * 0.4 : factor * 0.3
-            const lineColor = darkTheme
-              ? `rgba(148, 163, 184, ${opacity})`
-              : `rgba(71, 85, 105, ${opacity})`
+            const opacity = darkTheme ? factor * 0.4 : factor * 0.15
+            const lineColor = `rgba(148, 163, 184, ${opacity})`
             ctx.beginPath()
             ctx.moveTo(a.x, a.y)
             ctx.lineTo(b.x, b.y)
             ctx.strokeStyle = lineColor
-            ctx.lineWidth = darkTheme ? 0.6 : 0.8
+            ctx.lineWidth = darkTheme ? 0.6 : 0.7
             ctx.stroke()
           }
         }

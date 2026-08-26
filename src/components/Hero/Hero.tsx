@@ -11,13 +11,13 @@ const Badge: React.FC<{ text: string }> = ({ text }) => (
     initial={{ opacity: 0, scale: 0.8 }}
     animate={{ opacity: 1, scale: 1 }}
     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-    className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 backdrop-blur-md mb-8 group/badge shadow-sm"
+    className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/40 backdrop-blur-md mb-8 group/badge shadow-sm"
   >
     <span className="relative flex h-2 w-2">
       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
     </span>
-    <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-accent-cyan group-hover/badge:text-foreground transition-colors">
+    <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-cyan-600 dark:text-cyan-400 group-hover/badge:text-slate-900 dark:group-hover/badge:text-white transition-colors">
       {text}
     </span>
   </motion.div>
@@ -56,8 +56,8 @@ const TitleLine: React.FC<{
       <span
         className={`relative inline-block ${
           isPunchline
-            ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-cyan-300 to-fuchsia-400 font-black drop-shadow-[0_2px_20px_rgba(14,165,233,0.35)]'
-            : 'text-foreground font-extrabold tracking-tight drop-shadow-sm'
+            ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-cyan-500 to-indigo-600 dark:from-sky-400 dark:via-cyan-300 dark:to-fuchsia-400 font-black drop-shadow-[0_2px_20px_rgba(14,165,233,0.35)]'
+            : 'text-slate-900 dark:text-white font-extrabold tracking-tight drop-shadow-sm'
         }`}
       >
         {text}
@@ -124,16 +124,16 @@ const Hero: React.FC = () => {
           })}
         </motion.h1>
 
-        {/* Hero Banner Card — Glass with Cyan Glow */}
+        {/* Hero Banner Card — Dual Glass with Cyan Glow */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 1.7 }}
-          className="inline-flex flex-col items-center gap-1.5 px-4 py-3.5 sm:px-7 sm:py-4 rounded-xl sm:rounded-2xl bg-card/90 border border-border backdrop-blur-xl mb-5 sm:mb-6 max-w-2xl shadow-lg dark:shadow-[0_10px_35px_rgba(6,182,212,0.18)] hover:border-accent-cyan/60 transition-all w-full sm:w-auto"
+          className="inline-flex flex-col items-center gap-1.5 px-4 py-3.5 sm:px-7 sm:py-4 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-[#090a16]/95 border border-slate-200/90 dark:border-cyan-500/30 backdrop-blur-xl mb-5 sm:mb-6 max-w-2xl shadow-lg dark:shadow-[0_10px_35px_rgba(6,182,212,0.18)] hover:border-cyan-500/60 transition-all w-full sm:w-auto"
         >
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-accent-cyan shrink-0" />
-            <p className="text-xs sm:text-sm md:text-base text-foreground font-bold">
+            <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
+            <p className="text-xs sm:text-sm md:text-base text-slate-800 dark:text-slate-100 font-bold">
               {t('hero.titulo_2')}
             </p>
           </div>
@@ -146,7 +146,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 1.9 }}
-          className="text-sm sm:text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mb-6 sm:mb-7 font-semibold px-2"
+          className="text-sm sm:text-lg md:text-xl text-slate-700 dark:text-slate-200 leading-relaxed max-w-3xl mx-auto mb-6 sm:mb-7 font-semibold px-2"
         >
           {t('hero.descripcion')}
         </motion.p>
@@ -166,7 +166,7 @@ const Hero: React.FC = () => {
             }}
           />
           <MagneticButton href="#contact">
-            <span className="w-full sm:w-auto text-center px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl border border-border text-foreground font-extrabold bg-card/90 backdrop-blur-md hover:bg-muted hover:border-accent-cyan/50 transition-all text-xs sm:text-sm tracking-wider uppercase block shadow-md hover:shadow-lg">
+            <span className="w-full sm:w-auto text-center px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl border border-slate-300 dark:border-cyan-500/30 text-slate-900 dark:text-white font-extrabold bg-white dark:bg-[#0e101c] backdrop-blur-md hover:bg-slate-100 dark:hover:bg-[#141728] hover:border-cyan-500/50 transition-all text-xs sm:text-sm tracking-wider uppercase block shadow-md hover:shadow-lg">
               {t('hero.cta_proyecto')}
             </span>
           </MagneticButton>

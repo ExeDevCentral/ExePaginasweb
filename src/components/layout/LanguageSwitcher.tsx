@@ -37,17 +37,18 @@ export default function LanguageSwitcher({ className = '' }: Readonly<LanguageSw
     <div className={`relative group ${className}`}>
       <button
         type="button"
-        className="h-8 px-2 flex items-center justify-center gap-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-all text-xs font-semibold cursor-pointer select-none"
+        className="h-8 px-2 flex items-center justify-center gap-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10 transition-all text-xs font-semibold cursor-pointer select-none"
         aria-label="Switch language"
       >
-        <Globe size={14} className="text-accent-cyan shrink-0" />
-        <span className="text-[11px] font-sans font-bold uppercase tracking-wider text-foreground">
+        <Globe size={14} className="text-cyan-600 dark:text-cyan-400 shrink-0" />
+        <span className="text-[11px] font-sans font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
           {currentLang.label}
         </span>
       </button>
 
-      <div className="absolute right-0 top-full mt-2 bg-card/95 border border-border rounded-xl shadow-xl dark:shadow-2xl shadow-black/10 dark:shadow-black/80 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 min-w-[155px] p-1.5 backdrop-blur-2xl">
-        <div className="px-2.5 py-1 mb-1 border-b border-border text-[10px] font-sans font-semibold uppercase tracking-wider text-muted-foreground">
+      {/* 100% Solid Opaque Dropdown Container (Zero Transparency / Zero Bleed-through) */}
+      <div className="absolute right-0 top-full mt-2 bg-white dark:bg-[#0c0d14] border border-slate-200 dark:border-white/15 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 min-w-[170px] p-1.5">
+        <div className="px-2.5 py-1 mb-1 border-b border-slate-100 dark:border-white/10 text-[10px] font-sans font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
           Idioma / Language
         </div>
         {LANGUAGES.map((lang) => {
@@ -58,17 +59,22 @@ export default function LanguageSwitcher({ className = '' }: Readonly<LanguageSw
               key={lang.code}
               type="button"
               onClick={() => change(lang.code)}
-              className={`w-full px-2.5 py-1.5 rounded-lg text-left text-xs font-medium tracking-wide transition-all flex items-center justify-between gap-2 cursor-pointer ${
+              className={`w-full px-2.5 py-2 rounded-lg text-left text-xs font-semibold tracking-wide transition-all flex items-center justify-between gap-2 cursor-pointer ${
                 isSelected
-                  ? 'bg-accent-cyan/15 text-accent-cyan font-semibold border border-accent-cyan/30'
-                  : 'text-foreground hover:bg-muted/80 border border-transparent'
+                  ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 font-bold border border-cyan-500/30'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-950 dark:hover:text-white border border-transparent'
               }`}
             >
               <span className="flex items-center gap-2">
-                <span className="text-sm">{lang.flag}</span>
+                <span className="text-base leading-none">{lang.flag}</span>
                 <span>{lang.name}</span>
               </span>
-              {isSelected && <Check size={13} className="text-accent-cyan shrink-0" />}
+              {isSelected && (
+                <Check
+                  size={14}
+                  className="text-cyan-600 dark:text-cyan-400 shrink-0 stroke-[2.5]"
+                />
+              )}
             </button>
           )
         })}

@@ -87,8 +87,8 @@ const Header = () => {
     <motion.header
       className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-background/95 backdrop-blur-2xl border-b border-border shadow-sm dark:shadow-[0_4px_24px_rgba(0,0,0,0.6)]'
-          : 'bg-background/90 backdrop-blur-xl border-b border-border/60'
+          ? 'bg-white/95 dark:bg-[#050508]/95 backdrop-blur-2xl border-b border-slate-200/80 dark:border-white/10 shadow-sm dark:shadow-[0_4px_24px_rgba(0,0,0,0.6)]'
+          : 'bg-white/90 dark:bg-[#050508]/90 backdrop-blur-xl border-b border-slate-200/60 dark:border-white/[0.06]'
       }`}
       initial={{ y: -80, opacity: 1 }}
       animate={{ y: 0, opacity: 1 }}
@@ -96,7 +96,7 @@ const Header = () => {
     >
       {/* Subtle bottom gradient glow */}
       <div
-        className={`absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-accent-cyan/50 to-transparent pointer-events-none transition-opacity duration-300 ${
+        className={`absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent pointer-events-none transition-opacity duration-300 ${
           scrolled ? 'opacity-100' : 'opacity-30'
         }`}
       />
@@ -115,27 +115,29 @@ const Header = () => {
               className="h-8 w-auto shrink-0 transition-transform duration-300 group-hover:scale-105"
             />
             <div className="flex items-baseline gap-1 select-none">
-              <span className="text-foreground text-sm font-black tracking-tight font-sans">
+              <span className="text-slate-900 dark:text-white text-sm font-black tracking-tight font-sans">
                 EXE
               </span>
-              <span className="text-accent-yellow font-bold text-xs">{'//'}</span>
-              <span className="text-foreground text-sm font-extrabold tracking-tight font-sans">
+              <span className="text-yellow-500 dark:text-yellow-400 font-bold text-xs">{'//'}</span>
+              <span className="text-slate-900 dark:text-white text-sm font-extrabold tracking-tight font-sans">
                 PAGINASWEB
               </span>
-              <span className="text-accent-cyan font-bold text-[10px] tracking-normal">.COM</span>
+              <span className="text-cyan-600 dark:text-cyan-400 font-bold text-[10px] tracking-normal">
+                .COM
+              </span>
             </div>
           </motion.a>
 
           {/* Navegación Central Flotante (Desktop Pill Island Pro) */}
-          <nav className="hidden lg:flex items-center gap-1 p-1 rounded-full bg-card/80 border border-border backdrop-blur-xl shadow-inner shrink-0">
+          <nav className="hidden lg:flex items-center gap-1 p-1 rounded-full bg-slate-100/90 dark:bg-[#0e101c]/90 border border-slate-200/80 dark:border-white/10 backdrop-blur-xl shadow-inner shrink-0">
             {/* Inicio */}
             <motion.a
               href="#home"
               onClick={(e) => scrollToSection(e, 'home')}
               className={`relative px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full transition-all duration-200 select-none ${
                 activeId === 'home'
-                  ? 'text-accent-cyan font-bold bg-accent-cyan/15 border border-accent-cyan/30 shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/80 border border-transparent'
+                  ? 'text-cyan-700 dark:text-cyan-300 font-bold bg-white dark:bg-cyan-500/15 border border-slate-200 dark:border-cyan-500/30 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10 border border-transparent'
               }`}
               whileTap={{ scale: 0.96 }}
             >
@@ -148,8 +150,8 @@ const Header = () => {
               onClick={(e) => scrollToSection(e, 'products')}
               className={`relative px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full transition-all duration-200 select-none ${
                 activeId === 'products'
-                  ? 'text-accent-cyan font-bold bg-accent-cyan/15 border border-accent-cyan/30 shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/80 border border-transparent'
+                  ? 'text-cyan-700 dark:text-cyan-300 font-bold bg-white dark:bg-cyan-500/15 border border-slate-200 dark:border-cyan-500/30 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10 border border-transparent'
               }`}
               whileTap={{ scale: 0.96 }}
             >
@@ -159,7 +161,7 @@ const Header = () => {
             {/* Cotizador */}
             <motion.a
               href="/cotizador"
-              className="relative flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full text-muted-foreground hover:text-emerald-500 hover:bg-emerald-500/15 border border-transparent hover:border-emerald-500/30 transition-all duration-200 select-none group"
+              className="relative flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-300 hover:bg-emerald-500/15 border border-transparent hover:border-emerald-500/30 transition-all duration-200 select-none group"
               whileTap={{ scale: 0.96 }}
             >
               <Sparkles
@@ -176,7 +178,7 @@ const Header = () => {
                 e.preventDefault()
                 navigate('/tienda')
               }}
-              className="relative flex items-center gap-1 px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full text-muted-foreground hover:text-accent-cyan hover:bg-accent-cyan/15 border border-transparent hover:border-accent-cyan/30 transition-all duration-200 select-none group"
+              className="relative flex items-center gap-1 px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full text-slate-600 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-300 hover:bg-cyan-500/15 border border-transparent hover:border-cyan-500/30 transition-all duration-200 select-none group"
               whileTap={{ scale: 0.96 }}
             >
               <span>{t('nav.tienda_online')}</span>
@@ -192,8 +194,8 @@ const Header = () => {
               onClick={(e) => scrollToSection(e, 'contact')}
               className={`relative px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full transition-all duration-200 select-none ${
                 activeId === 'contact'
-                  ? 'text-accent-cyan font-bold bg-accent-cyan/15 border border-accent-cyan/30 shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/80 border border-transparent'
+                  ? 'text-cyan-700 dark:text-cyan-300 font-bold bg-white dark:bg-cyan-500/15 border border-slate-200 dark:border-cyan-500/30 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10 border border-transparent'
               }`}
               whileTap={{ scale: 0.96 }}
             >
@@ -204,7 +206,7 @@ const Header = () => {
           {/* Acciones Derecha Desktop */}
           <div className="hidden lg:flex items-center gap-3 shrink-0">
             {/* Dock de utilidades (Idioma + Modo Oscuro) */}
-            <div className="flex items-center gap-0.5 p-0.5 rounded-full bg-card/80 border border-border backdrop-blur-md shrink-0">
+            <div className="flex items-center gap-0.5 p-0.5 rounded-full bg-slate-100/90 dark:bg-[#0e101c]/90 border border-slate-200/80 dark:border-white/10 backdrop-blur-md shrink-0">
               <LanguageSwitcher />
               <ThemeToggle />
             </div>
@@ -214,16 +216,19 @@ const Header = () => {
               <div className="flex items-center gap-2 shrink-0">
                 <motion.button
                   onClick={() => navigate('/dashboard')}
-                  className="h-9 px-4 text-xs font-bold rounded-full border border-accent-cyan/40 text-accent-cyan bg-accent-cyan/10 hover:bg-accent-cyan/20 transition-all flex items-center gap-1.5 shadow-sm shrink-0 select-none cursor-pointer"
+                  className="h-9 px-4 text-xs font-bold rounded-full border border-cyan-500/40 text-cyan-700 dark:text-cyan-300 bg-cyan-500/10 dark:bg-cyan-500/15 hover:bg-cyan-500/20 dark:hover:bg-cyan-500/25 transition-all flex items-center gap-1.5 shadow-sm shrink-0 select-none cursor-pointer"
                   whileTap={{ scale: 0.96 }}
                 >
-                  <LayoutDashboard size={13} className="shrink-0 text-accent-cyan" />
+                  <LayoutDashboard
+                    size={13}
+                    className="shrink-0 text-cyan-600 dark:text-cyan-400"
+                  />
                   <span>{t('nav.panel_cliente')}</span>
                 </motion.button>
 
                 <motion.button
                   onClick={handleLogout}
-                  className="h-9 w-9 flex items-center justify-center rounded-full text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 transition-colors shrink-0 cursor-pointer"
+                  className="h-9 w-9 flex items-center justify-center rounded-full text-slate-600 dark:text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors shrink-0 cursor-pointer"
                   whileTap={{ scale: 0.96 }}
                   title={t('nav.cerrar_sesion')}
                   aria-label={t('nav.cerrar_sesion')}
@@ -250,14 +255,14 @@ const Header = () => {
           {/* Mobile / Tablet controls (pantallas < lg: 1024px) */}
           <div className="lg:hidden flex items-center gap-2 shrink-0">
             {/* Dock de utilidades para móvil */}
-            <div className="flex items-center gap-0.5 p-0.5 rounded-xl bg-card/90 border border-border shrink-0">
+            <div className="flex items-center gap-0.5 p-0.5 rounded-xl bg-slate-100/90 dark:bg-[#0e101c]/90 border border-slate-200/80 dark:border-white/10 shrink-0">
               <LanguageSwitcher />
               <ThemeToggle />
             </div>
 
             {/* Botón Hamburguesa con MorphIcon */}
             <motion.button
-              className="w-9 h-9 flex items-center justify-center border border-border text-foreground hover:text-accent-cyan bg-card hover:bg-muted/80 backdrop-blur-md transition-all duration-200 rounded-xl shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan shadow-sm cursor-pointer"
+              className="w-9 h-9 flex items-center justify-center border border-slate-200/80 dark:border-white/15 text-slate-800 dark:text-white hover:text-cyan-600 dark:hover:text-cyan-400 bg-white dark:bg-[#0c0d14] hover:bg-slate-100 dark:hover:bg-white/10 backdrop-blur-md transition-all duration-200 rounded-xl shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 shadow-sm cursor-pointer"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               whileTap={{ scale: 0.95 }}
               aria-label={isMenuOpen ? 'Cerrar menú principal' : 'Abrir menú principal'}

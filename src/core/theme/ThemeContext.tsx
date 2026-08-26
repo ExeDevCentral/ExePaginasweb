@@ -30,11 +30,9 @@ export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
   useEffect(() => {
     try {
       const saved = localStorage.getItem('theme')
-      if (saved === 'light') {
-        // Reset any broken light mode state to restore dark cyber studio aesthetic
-        setTheme('dark')
-        document.documentElement.classList.add('dark')
-        localStorage.setItem('theme', 'dark')
+      if (saved === 'light' || saved === 'dark') {
+        setTheme(saved)
+        document.documentElement.classList.toggle('dark', saved === 'dark')
       } else {
         setTheme('dark')
         document.documentElement.classList.add('dark')

@@ -1,368 +1,301 @@
-# ExeSistemasWEB — Plataforma SaaS Multi-Tenant
-
 <div align="center">
-  <img src="public/logo.webp" alt="ExeSistemasWEB Logo" width="80" height="80" style="border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,212,255,0.2);" />
+  <img src="public/logo.webp" alt="ExeSistemasWEB Logo" width="90" height="90" style="border-radius: 20px; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(6,182,212,0.3);" />
 
-  <h3>SaaS B2B para automatizar reservas, soporte y cobros de negocios locales</h3>
+# ⚡ ExeSistemasWEB — Enterprise SaaS Multi-Tenant Platform
 
-[![Estado](https://img.shields.io/badge/Status-Production-00d4ff?style=for-the-badge&logo=vercel&logoColor=white)](https://exepaginasweb.com)
-[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev)
+  <p align="center">
+    <strong>Plataforma SaaS B2B de ingeniería web boutique diseñada para automatizar reservas, soporte con SLA, facturación secuencial y cobros recurrentes de negocios locales y profesionales independientes.</strong>
+  </p>
+
+[![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-19_/_18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
-[![Supabase](https://img.shields.io/badge/Supabase-Auth_&_DB-3ECF8E?style=for-the-badge&logo=supabase&logoColor=3ECF8E)](https://supabase.com)
-[![Sileo](https://img.shields.io/badge/Sileo-Toasts-FF6B6B?style=for-the-badge&logoColor=white)](https://github.com/user/sileo)
-[![PayPal](https://img.shields.io/badge/PayPal-Integration-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.com)
+[![Supabase](https://img.shields.io/badge/Supabase-Auth_&_Postgres_RLS-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Vitest](https://img.shields.io/badge/Vitest-98_Passed_Tests-FCC72B?style=for-the-badge&logo=vitest&logoColor=black)](https://vitest.dev)
+[![Speed Insights](https://img.shields.io/badge/Core_Web_Vitals-RES_94+-00f2fe?style=for-the-badge&logo=vercel&logoColor=black)](https://exepaginasweb.com)
+[![License](https://img.shields.io/badge/License-Proprietary-FF5722?style=for-the-badge)](LICENSE)
 
 </div>
 
 ---
 
-## Vision del Proyecto
+## 🧭 Visión y Propósito del Sistema
 
-> **No hacemos paginas web. Construimos sistemas de software que resuelven problemas operativos.**
->
-> **ExeSistemasWEB** es una plataforma SaaS B2B multi-tenant, disenada para automatizar la operativa, el soporte y los cobros de negocios locales y profesionales independientes.
->
-> Cada cliente (tenant) tiene su propio entorno aislado con work groups, catalogo de servicios, contratos SLA, facturacion y panel de administracion completo.
+> _"No hacemos páginas web estáticas. Construimos sistemas de software integrados que eliminan cuellos de botella operativos y multiplican la rentabilidad de negocios reales."_
 
----
+**ExeSistemasWEB** opera como una solución SaaS integral con aislamiento de datos a nivel de base de datos (Row Level Security en PostgreSQL). Cada cliente (**tenant**) dispone de su propio entorno administrativo para gestionar:
 
-## Caracteristicas Destacadas
-
-- **Work Groups:** Equipos de trabajo por tenant con roles y asignacion de miembros a tickets y reservas.
-- **Catalogo de Servicios:** Planes, addons, servicios profesionales y one-time con precios y intervalos configurables.
-- **Contratos SLA:** Acuerdos de nivel de servicio con umbrales de resolucion por prioridad.
-- **Sistema de Facturacion:** Generacion automatica de facturas secuenciales, renovaciones programadas y tracking de pagos.
-- **Audit Log:** Registro completo de acciones administrativas con trazabilidad.
-- **Dashboard Multi-Tenant:** Panel con tabs de Resumen, Servicios, Equipo, SLA y Facturas.
-- **Autenticacion OAuth:** Google y Facebook via Supabase Auth con flow PKCE y popup mode.
-- **Hero 3D Interactivo:** Efecto parallax por mouse con capas de profundidad y hotspot markers.
-- **Store Redesign:** PlanCard con 3D tilt, mouse-tracking glow, floating particles, shimmer sweep CTA.
-- **Login Aurora + 3D:** Canvas aurora borealis con fbm noise, Three.js escena con geometria cristalina flotante, 200 partículas3D, mouse-reactive lighting.
-- **Toasts Sincronizados:** Sistema de notificaciones que respeta el tema dark/light de la app.
-- **Email Templates:** 7 templates transaccionales (contacto, pagos, facturas) via Resend.
-- **Auto-Assign Tickets:** RPC que asigna automaticamente tickets al work group con menor carga.
-- **Seguridad RLS:** Row Level Security en todas las tablas SaaS, validacion CORS, rate limiting, proteccion XSS, AuthGuard en rutas protegidas.
+1. **Work Groups & Equipos:** Distribución de carga laboral y asignación inteligente de tareas/tickets.
+2. **Catálogo de Servicios & Addons:** Gestión de planes recurrentes, paquetes profesionales y servicios on-demand.
+3. **Contratos SLA:** Monitoreo estricto de tiempos de respuesta y resolución por nivel de prioridad.
+4. **Facturación & Cobros:** Generación automática de comprobantes secuenciales, conciliación bancaria y webhooks de PayPal.
+5. **Telemetría & Auditoría:** Registro inmutable de actividad administrativa (`audit_log`) y métricas de rendimiento en tiempo real.
 
 ---
 
-## Arquitectura
+## 🏛️ Arquitectura del Sistema
 
 ```
- Cliente (Browser)
-       |
-       | [CDN / Edge: Vercel Network]
-       +--------------------------------------+
-       |                                      |
-       v                                      v
- +---------------------+          +------------------------+
- |   React 18 SPA      |          |  Serverless Functions   |
- |   (Vite + TS)       +--------->+  /api/chat             +---> Groq LLM (Streaming)
- |                     |          |  /api/contact          +---> Resend (Email)
- |  +---------------+  |          |  /api/paypal-webhook   +---> Supabase DB
- |  | Header/Hero   |  |          +------------------------+
- |  | ServiceCards  |  |
- |  +---------------+  |          +------------------------+
- |  | Dashboard     |  |          |   Supabase Postgres    |
- |  | (Tabs: Res,   |  +--------->+   +------------------+ |
- |  |  Serv, Team,  |  |          |   | tenants          | |
- |  |  SLA, Bills)  |  |          |   | work_groups      | |
- |  +---------------+  |          |   | work_members     | |
- |  | Landing       |  |          |   | service_catalog  | |
- |  | Features      |  |          |   | tenant_services  | |
- |  | Pricing       |  |          |   | sla_contracts    | |
- |  | Contact       |  |          |   | invoices         | |
- |  +---------------+  |          |   | audit_log        | |
- +---------------------+          |   | tickets          | |
-                                  |   | notificaciones   | |
-                                  |   | clientes         | |
-                                  |   | suscripciones    | |
-                                  |   | pagos            | |
-                                  |   +------------------+ |
-                                  +------------------------+
+                            [ USUARIO / BROWSER ]
+                                      │
+                         [ Vercel Edge Global Network ]
+                                      │
+            ┌─────────────────────────┴─────────────────────────┐
+            ▼                                                   ▼
+ ┌──────────────────────┐                           ┌──────────────────────┐
+ │  Next.js App Router  │                           │   Serverless API     │
+ │  (Turbopack + SSR)   │                           │   Route Handlers     │
+ ├──────────────────────┤                           ├──────────────────────┤
+ │ • Landing Page (/)   │                           │ • /api/chat (Groq/AI)│
+ │ • Tienda (/tienda)   │                           │ • /api/contact       │
+ │ • Cotizador          │                           │ • /api/paypal-webhook│
+ │ • Dashboard Multi    │                           │ • /api/webhooks/resend│
+ │ • Login Aurora 3D    │                           │ • /api/register-trans│
+ └──────────┬───────────┘                           └──────────┬───────────┘
+            │                                                  │
+            └─────────────────────────┬────────────────────────┘
+                                      ▼
+                        ┌───────────────────────────┐
+                        │   Supabase Cloud Platform │
+                        │  (PostgreSQL 15 + SSR)    │
+                        ├───────────────────────────┤
+                        │ • Row Level Security (RLS)│
+                        │ • 21 SQL Migrations       │
+                        │ • Stored Procedures (RPC) │
+                        │ • Auth (OAuth + PKCE)     │
+                        │ • Realtime & Triggers     │
+                        └───────────────────────────┘
+                                      │
+          ┌───────────────────────────┼───────────────────────────┐
+          ▼                           ▼                           ▼
+┌──────────────────┐        ┌──────────────────┐        ┌──────────────────┐
+│  Groq Cloud LLM  │        │   Resend + Svix  │        │  PayPal Sandbox  │
+│ (Streaming Chat) │        │ (Transac. Emails)│        │ & Live Webhooks  │
+└──────────────────┘        └──────────────────┘        └──────────────────┘
 ```
 
 ---
 
-## Tech Stack
+## ⚡ Características Principales
 
-### Frontend
+### 💎 Frontend & Experiencia de Usuario (UI/UX)
 
-| Libreria / Herramienta | Version | Proposito                                       |
-| ---------------------- | ------- | ----------------------------------------------- |
-| React                  | 18.3    | UI declarativa y reactiva                       |
-| TypeScript             | 5.7     | Tipado estricto                                 |
-| Vite                   | 6.2     | Build ultra veloz + HMR                         |
-| TailwindCSS            | 3.4     | Sistema de diseño adaptativo y variables CSS    |
-| Framer Motion          | 12.x    | Micro-interacciones y animaciones fluidas       |
-| Three.js               | 0.173   | Escenas 3D, geometrías y shaders interactivos   |
-| @react-three/fiber     | 8.17    | React renderer para Three.js                    |
-| @react-three/drei      | 9.121   | Helpers, cámara y materiales R3F                |
-| TanStack React Query   | 5.x     | Cache y gestión de estado asíncrono             |
-| React Router DOM       | 7.18    | Routing SPA client-side                         |
-| i18next / react-i18n   | 24.x    | Internacionalización (i18n) nativa en 7 idiomas |
-| Zod                    | 3.x     | Validación de esquemas y modelos de datos       |
-| React Hook Form        | 7.x     | Gestor de formularios reactivos                 |
-| Lucide React           | 0.475   | Iconografía SVG vectorial                       |
-| Sonner & Sileo         | latest  | Notificaciones Toast animadas y adaptativas     |
+- **Hero Interactivo Ultra-Rápido:** Renderizado inmediato optimizado para Largest Contentful Paint (LCP < 1.5s), efecto 3D Parallax por mouse y comparador en tiempo real.
+- **Login Aurora Borealis + 3D:** Canvas interactivo con ruido fraccional browniano (`fbm noise`), partículas reactivas y escena Three.js con geometrías flotantes de refracción vítrea.
+- **Store 3D Tilt Cards:** Tarjetas interactivas con física de inclinación 3D, reflejo dinámico al cursor, partículas de brillo y flujo de checkout directo con validación de transferencias bancarias y PayPal.
+- **Cotizador en Vivo:** Algoritmo dinámico de cálculo de presupuestos instantáneos según volumen de páginas, usuarios e integraciones requeridas.
+- **Internacionalización (i18n):** Traducción y formateo localizado en **7 idiomas** (Español, Inglés, Alemán, Francés, Árabe, Portugués de Brasil, Chino Simplificado).
+- **Sistema de Temas Dual:** Modo Crema Editorial (`#FDF8F3`) y Modo Dark Cyberpunk Absoluto (`#030712`), con sincronización automática en Toasters (`Sonner` y `Sileo`).
 
-### Backend, Database & Cloud Infrastructure
+### 🛡️ Seguridad y Resiliencia Empresarial
 
-| Servicio / Protocolo        | Proposito                                                       |
-| --------------------------- | --------------------------------------------------------------- |
-| Supabase (PostgreSQL 15)    | Database, Auth (Google OAuth/Email), RLS Multi-Tenant, Triggers |
-| Vercel Serverless Functions | Endpoints API Node.js/Express                                   |
-| Groq Cloud API              | Motor LLM de Inteligencia Artificial (Chatbot streaming IA)     |
-| PayPal API & Webhooks       | Pasarela de cobro y gestión de suscripciones SaaS               |
-| Resend API                  | Notificaciones por email transaccional                          |
-| Svix                        | Verificación de firma y seguridad en Webhooks                   |
-| Sentry                      | Monitoreo de performance y reporte de errores en tiempo real    |
-
-### SaaS Core
-
-| Modulo                | Archivos | Descripcion                                   |
-| --------------------- | -------- | --------------------------------------------- |
-| Domain Entities       | 14       | Tenant, WorkGroup, WorkMember, Invoice, etc.  |
-| Repository Interfaces | 9        | Contratos para persistencia                   |
-| Supabase Repositories | 13       | Implementaciones con Supabase                 |
-| React Query Hooks     | 15       | useTenant, useWorkGroups, useInvoices, etc.   |
-| UI Panels             | 4        | WorkGroups, Services, SLA, Invoices           |
-| Email Templates       | 7        | contactNotification, paymentConfirmation, etc |
-| SQL Migrations        | 21       | Schema, RLS policies, RPC functions           |
+- **Row Level Security (RLS) Estricto:** Políticas granulares en todas las tablas (`tenants`, `work_groups`, `invoices`, `tickets`, `sla_contracts`, `audit_log`).
+- **Webhooks Criptográficos (Svix):** Validación de firmas SHA-256 en endpoints de Resend y verificación de credenciales en PayPal IPN.
+- **Content Security Policy (CSP) Endurecida:** Cabeceras HTTP seguras, HSTS, X-Frame-Options DENY, prevención de clickjacking y protección anti-XSS.
+- **Rate Limiting & Anti-Abuse:** Control estricto de peticiones en rutas públicas de contacto y chat IA.
 
 ---
 
-## Sistema de Theme
+## 📁 Estructura del Proyecto
 
-- **Default:** Tema Crema Premium (`background: #FDF8F3`, `foreground: #2D2B2A`)
-- **Dark mode:** Toggle via icono sol/luna, persiste en `localStorage`
-- **CSS Variables:** Todas las referencias de color via `var()` — `bg-background`, `text-foreground`, `border-border`, `bg-card`, `bg-muted`
-- **Tailwind: `darkMode: "class"`** — se agrega/remueve clase `.dark` en `<html>`
-- **Sileo Toaster:** Sincronizado automaticamente con el tema via `ThemedToaster`
-
----
-
-## Variables de Entorno
-
-```env
-# Supabase (requerido para que la app funcione)
-NEXT_PUBLIC_SUPABASE_URL=https://bksonxnxshxinqffswqc.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
-NEXT_PUBLIC_SITE_URL=https://exepaginasweb.com
-SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
-
-# IA (Gemini & Groq)
-GEMINI_API_KEY=tu_gemini_api_key
-GROQ_API_KEY=tu_groq_api_key
-
-# PayPal
-NEXT_PUBLIC_PAYPAL_CLIENT_ID=tu_client_id_frontend
-PAYPAL_CLIENT_ID=tu_client_id_backend
-PAYPAL_CLIENT_SECRET=tu_client_secret
-PAYPAL_WEBHOOK_ID=tu_webhook_id
-PAYPAL_API_BASE=https://api-m.sandbox.paypal.com
-
-# Resend (Emails)
-RESEND_API_KEY=re_xxxx
-RESEND_FROM_EMAIL=Contacto@exepaginasweb.com
-RESEND_WEBHOOK_SIGNING_SECRET=whsec_xxxx
+```
+ExePaginasweb/
+├── app/                          # Next.js App Router (Páginas y API Routes)
+│   ├── api/                      # Route Handlers del Backend
+│   │   ├── chat/                 # Motor LLM de streaming con captura de tickets EXE-CHT
+│   │   ├── check-admin/          # Validación de roles administrativos vía RPC
+│   │   ├── contact/              # Procesador de contactos con tickets EXE-CNT y Resend
+│   │   ├── paypal-webhook/       # Ingesta de webhooks de PayPal y creación de facturas
+│   │   ├── register-transfer/    # Registro de pagos por transferencia bancaria
+│   │   ├── send-verification/    # Envío de códigos de seguridad por email
+│   │   └── webhooks/resend/      # Receiver Svix para telemetría de emails
+│   ├── auth/callback/            # Receptor de callbacks OAuth de Supabase
+│   ├── cotizador/                # Página interactiva de cotización de software
+│   ├── dashboard/                # Panel de control SaaS Multi-Tenant
+│   ├── login/                    # Pantalla de autenticación con Aurora y Three.js
+│   ├── privacidad/               # Políticas de privacidad conformes a RGPD
+│   ├── terminos/                 # Términos y condiciones del servicio
+│   ├── tienda/                   # Catálogo de planes y pasarela de suscripción
+│   ├── layout.tsx                # Root layout con providers (Theme, i18n, Analytics)
+│   └── page.tsx                  # Landing page principal
+│
+├── src/
+│   ├── components/               # Componentes UI Modulares
+│   │   ├── Hero/                 # Hero principal, comparador y badges
+│   │   ├── dashboard/            # Tablas administrativas (Clientes, Pagos, SLA, Workgroups)
+│   │   ├── store/                # PlanCard 3D, CheckoutModal, TransferInstructions
+│   │   ├── layout/               # Header, Footer, LanguageSwitcher, ThemeToggle
+│   │   ├── Effects/              # Escenas 3D (Three.js), Canvas Aurora, CoffeePortal
+│   │   └── shared/               # Botones magnéticos, modales, toasters
+│   ├── core/                     # Lógica de Dominio y Capa de Infraestructura
+│   │   ├── domain/               # Motores de negocio (financialEngine, availability, reservations)
+│   │   ├── infra/                # Clientes y repositorios de persistencia (Supabase)
+│   │   ├── auth/                 # Contexto de sesión, guards y resolutor de roles
+│   │   └── i18n/                 # Diccionarios de idiomas y configuración i18next
+│   └── hooks/                    # Custom Hooks reactivos (useTenant, useInvoices, etc.)
+│
+├── supabase/                     # Configuración de Base de Datos
+│   ├── migrations/               # 21 migraciones SQL versionadas
+│   ├── seed.sql                  # Datos semilla para pruebas locales
+│   └── config.toml               # Configuración del entorno Supabase
+│
+├── tests/                        # Suite de Pruebas Automatizadas (Vitest)
+│   ├── api/                      # Tests de integración de Route Handlers y Webhooks
+│   └── src/                      # Pruebas unitarias de motores de dominio y componentes
+│
+├── docs/                         # Documentación Técnica y Arquitectónica
+│   ├── adr/                      # Architecture Decision Records (0001 a 0004)
+│   ├── agents/                   # Guías de triaje y domain context para agentes IA
+│   └── context/                  # Modelo de dominio formal y ubiquitous language
+│
+└── web-automation-cli/           # CLI autónoma para automatización de workflows
 ```
 
 ---
 
-## Primeros Pasos
+## 🛠️ Tech Stack Detallado
 
-### 1. Clonar e Instalar
+| Capa / Módulo            | Tecnologías y Librerías                      | Propósito                                                |
+| :----------------------- | :------------------------------------------- | :------------------------------------------------------- |
+| **Framework Base**       | `Next.js 16.3.1 (App Router, Turbopack)`     | SSR, ISR, Server Components y Edge Routing               |
+| **Librería UI**          | `React 18.3.1 / React 19 Compat`             | Renderizado reactivo y gestión declarativa               |
+| **Lenguaje**             | `TypeScript 5.7.3`                           | Tipado estricto de extremo a extremo                     |
+| **Estilos & CSS**        | `TailwindCSS 3.4.17 + PostCSS + CSS Vars`    | Tokens de diseño adaptativos y paleta dual               |
+| **Animaciones**          | `Framer Motion 12.39 + GSAP 3.15 + Lenis`    | Micro-animaciones a 60fps y scroll suave                 |
+| **Gráficos 3D**          | `Three.js 0.173`                             | Renderizado WebGL y geometrías interactivas              |
+| **Base de Datos & Auth** | `Supabase (PostgreSQL 15, Auth PKCE, RLS)`   | Persistencia relacional, seguridad y sesiones            |
+| **Manejo de Estado**     | `@tanstack/react-query 5.100`                | Caché asíncrona, revalidación y sincronización           |
+| **Formularios & Zod**    | `React Hook Form 7.76 + Zod 4.4`             | Validación de esquemas y tipado de inputs                |
+| **Testing**              | `Vitest 4.1.6 + Testing Library`             | Suite de pruebas unitarias y de integración (98 tests)   |
+| **Emails & Webhooks**    | `Resend API + Svix 1.96`                     | Envío de correos transaccionales con firma criptográfica |
+| **Pasarela de Pago**     | `PayPal SDK + Webhooks`                      | Cobro y conciliación de suscripciones                    |
+| **Monitoreo**            | `@vercel/analytics + @vercel/speed-insights` | Telemetría en tiempo real y Core Web Vitals              |
+
+---
+
+## 🚀 Puesta en Marcha (Guía Rápida)
+
+### 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/ExeDevCentral/ExePaginasweb.git
 cd ExePaginasweb
+```
+
+### 2. Instalar dependencias
+
+```bash
 npm install
 ```
 
-### 2. Variables de Entorno
+### 3. Configurar variables de entorno
 
-Crear archivo `.env.local` en la raíz con las variables de arriba (o copiar `.env.example`). Sin `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` la app no conecta a Supabase.
+Crea un archivo `.env.local` en la raíz tomando como base `.env.example`:
 
-### 3. Aplicar Migraciones
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
+SUPABASE_SERVICE_ROLE_KEY=tu-service-role-key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-```bash
-npm run supabase:link    # Vincular proyecto
-npm run supabase:push    # Aplicar migraciones (21 archivos SQL)
+# Inteligencia Artificial
+GROQ_API_KEY=gsk_tu_clave_de_groq
+GEMINI_API_KEY=tu_clave_de_gemini
+
+# Resend (Emails)
+RESEND_API_KEY=re_tu_clave_resend
+RESEND_FROM_EMAIL=Contacto@exepaginasweb.com
+RESEND_WEBHOOK_SIGNING_SECRET=whsec_tu_secreto_svix
+
+# PayPal
+NEXT_PUBLIC_PAYPAL_CLIENT_ID=tu_paypal_client_id
+PAYPAL_CLIENT_SECRET=tu_paypal_secret
+PAYPAL_WEBHOOK_ID=tu_paypal_webhook_id
 ```
 
-### 4. Levantar Servidores
+### 4. Iniciar el servidor de desarrollo
 
 ```bash
-# Backend API local (Express, puerto 3000)
-npm run api
-
-# Frontend Vite (puerto 5173)
 npm run dev
 ```
 
-### 5. Scripts Disponibles
-
-| Script            | Accion                             |
-| ----------------- | ---------------------------------- |
-| `npm run dev`     | Inicia Vite dev server             |
-| `npm run api`     | Inicia API local en `:3000`        |
-| `npm run build`   | Build produccion con typecheck     |
-| `npm run lint`    | ESLint con reglas de accesibilidad |
-| `npm run format`  | Prettier a todo el proyecto        |
-| `npm run test`    | Ejecuta tests unitarios            |
-| `npm run deploy`  | Deploy a Vercel produccion         |
-| `npm run preview` | Preview del build local            |
+La aplicación estará disponible en `http://localhost:3000`.
 
 ---
 
-## Estructura del Proyecto
+## 🧪 Comandos y Scripts Disponibles
 
-```
-src/
-  App.tsx                   # Landing page con lazy loading
-  main.tsx                  # Entry point + routing + Toaster
-  index.css                 # CSS variables (light/dark) + utilidades
-  components/
-    Hero/                   # Hero.tsx, Hero3DImage, ServiceSelector, BookingModal
-    dashboard/              # AdminDashboard, ClientDashboard, PlanDashboardView,
-                            # OnboardingWizard, ServicePulseHub, SupportTicketPanel
-    workgroups/             # WorkGroupsPanel
-    services/               # ServicesPanel
-    sla/                    # SLADashboard
-    invoices/               # InvoicesPanel
-    DemoZone/               # Demo interactiva + AuthModal + authService
-    Effects/                # CoffeePortal3D, PremiumBackground, LoginBackground (canvas aurora + Three.js 3D), LoginScene
-    BookingDemo/            # BookingDemo (lead capture)
-    CaseStudies/            # Casos de exito + DashboardMock
-    Features/               # Feature cards con iconos
-    Pricing/                # Planes + ROI Calculator
-    Products/               # Productos destacados
-    Process/                # Proceso de trabajo
-    FAQ/                    # Preguntas frecuentes
-    SocialProof/            # Testimonios y estadisticas
-    TechStack/              # Tecnologias que usamos
-    chat/                   # ChatbaseWidget
-    landing/                # ContactSection
-    layout/                 # Header, Footer, ErrorBoundary, ThemeToggle, LanguageSwitcher
-    store/                  # StorePage, PlanCard (3D tilt), PlanGrid, CheckoutModal, TransferInstructions, PaywallModal
-    shared/                 # SalonBloomButton, ThemedToaster
-    Audit/                  # AutomationAudit (lead capture)
-  core/
-    auth/                   # AuthSessionProvider, userAuth, AuthGuard, siteUrl, roleConfig
-    domain/
-      entities/             # 14 entidades (Tenant, WorkGroup, Invoice, SLAContract, etc.)
-      repositories/         # 9 interfaces (ITenantRepo, IWorkGroupRepo, etc.)
-      availability/         # availabilityEngine + tests
-      reservations/         # conflictDetector, reservationService + tests
-      slots/                # slotGenerator + tests
-    infra/
-      supabase/             # client.ts
-      repositories/         # 13 implementaciones Supabase + 1 test
-      memory/               # InMemoryReservationRepository (testing)
-    i18n/                   # config + 7 locales (es, en, de, fr, ar, pt-BR, zh-CN)
-    theme/                  # ThemeContext (light/dark toggle)
-  hooks/                    # 15 hooks (useTenant, useWorkGroups, useInvoices, useSLA, etc.)
-  pages/                    # Login (aurora + 3D scene), Dashboard, AuthCallback, NotFound, PrivacyPolicy, TermsOfService
+```bash
+# Servidor de desarrollo con Turbopack
+npm run dev
 
-api/                        # Serverless Functions (Vercel)
-  chat.js                   # Streaming chat con Groq
-  contact.js                # Email via Resend (contactNotification template)
-  paypal-webhook.js         # Webhook PayPal → genera facturas SaaS via RPC, envia paymentConfirmation
-  check-admin.js            # Admin role check
-  test-paypal.js            # PayPal test endpoint
-  webhooks/resend.js        # Resend webhook receiver
-  lib/email/                # send.js + templates.js (7 templates transaccionales)
+# Compilación de producción con validación de TypeScript
+npm run build
 
-supabase/migrations/        # 21 migraciones SQL (000-020)
+# Iniciar servidor en modo producción local
+npm run start
+
+# Ejecutar la suite completa de tests (98 tests)
+npm test
+
+# Ejecutar tests en modo watch interactivo
+npm run test:watch
+
+# Análisis estático con ESLint
+npm run lint
+
+# Formateo automático de código con Prettier
+npm run format
+
+# Sincronización con base de datos de Supabase
+npm run supabase:push
 ```
 
 ---
 
-## Tests
+## 📊 Matriz de Tests y Calidad de Software
+
+La plataforma cuenta con un arnés de testing automatizado mediante **Vitest**, asegurando cero regresiones en lógica crítica:
 
 ```
-src/core/domain/availability/availabilityEngine.test.ts
-src/core/domain/slots/slotGenerator.test.ts
-src/core/domain/reservations/conflictDetector.test.ts
-src/core/domain/reservations/reservationService.test.ts
-src/core/infra/repositories/SupabaseTenantRepository.test.ts
-src/hooks/useTenant.test.ts
+✓ tests/api/audit/system-audit.test.js     # Auditoría de Chatbot, Contacto y Webhooks
+✓ tests/api/webhooks/resend.test.js       # Validación de firmas Svix y eventos Resend
+✓ src/core/domain/financial/              # Motor financiero y cálculo de comisiones
+✓ src/core/domain/tenant/                 # Resolución de planes y cuotas multi-tenant
+✓ src/core/domain/reservations/           # Detección de colisiones de agenda
+✓ src/core/domain/availability/           # Cálculo dinámico de franjas horarias
+✓ src/components/store/CheckoutModal.test # Flujos de pago y validación UI
 ```
 
-Ejecutar con: `npm run test` (vitest)
+---
+
+## 🌐 Endpoints de la API Backend
+
+| Método | Endpoint                 | Descripción                                                    | Autenticación          |
+| :----- | :----------------------- | :------------------------------------------------------------- | :--------------------- |
+| `POST` | `/api/chat`              | Chatbot IA con streaming y emisión de ticket `EXE-CHT`         | Pública / Rate Limited |
+| `POST` | `/api/contact`           | Recepción de consultas, email a admin y confirmación a cliente | Pública / Sanitizada   |
+| `POST` | `/api/webhooks/resend`   | Ingesta de eventos Svix (entregas, rebotes, clics)             | Firma Svix Requerida   |
+| `POST` | `/api/paypal-webhook`    | Procesamiento de cobros y facturación vía RPC                  | Firma PayPal           |
+| `POST` | `/api/register-transfer` | Registro de comprobantes de transferencia bancaria             | Pública / Validada     |
+| `GET`  | `/api/check-admin`       | Verificación de privilegios de administración                  | Sesión Supabase        |
+| `POST` | `/api/send-verification` | Envío de tokens de verificación por correo                     | Token interno          |
 
 ---
 
-## Rutas
+## 🤝 Contacto Comercial y Desarrollo Boutique
 
-| Ruta             | Pagina                  |
-| ---------------- | ----------------------- |
-| `/`              | Landing (App.tsx)       |
-| `/tienda`        | Store / Planes          |
-| `/login`         | Login                   |
-| `/dashboard`     | Dashboard multi-tenant  |
-| `/auth/callback` | Callback OAuth Supabase |
-| `/privacidad`    | Politica de privacidad  |
-| `/terminos`      | Terminos de servicio    |
-| `*`              | 404 NotFound            |
+**ExeDevCentral — Software Engineering & Digital Acceleration Studio**
+
+- 🌐 **Sitio Web Oficial:** [exepaginasweb.com](https://exepaginasweb.com)
+- 📧 **Email Directo:** [Contacto@exepaginasweb.com](mailto:Contacto@exepaginasweb.com) / [Exemetal@hotmail.com](mailto:Exemetal@hotmail.com)
+- 📱 **WhatsApp:** [+54 9 341 6874786](https://wa.me/5493416874786)
+- 💻 **GitHub:** [@ExeDevCentral](https://github.com/ExeDevCentral)
 
 ---
 
-## CI/CD
-
-- **Plataforma:** Vercel (auto-deploy desde `main`)
-- **Pre-deploy:** TypeScript typecheck + Vite build
-- **Headers de seguridad:** HSTS, X-Content-Type-Options, CSP, X-Frame-Options DENY via `vercel.json`
-- **Assets:** Cache inmutable (1 ano), imagenes con `stale-while-revalidate`
-- **Branch:** `main` (no `master`)
-
----
-
-## Roadmap
-
-### Completado
-
-- [x] Landing page con Hero 3D interactivo
-- [x] Autenticacion Google/Facebook (Supabase PKCE)
-- [x] Dashboard multi-tenant con tabs
-- [x] Sistema de tickets con triggers y auto-assign
-- [x] Work groups y asignacion de miembros
-- [x] Catalogo de servicios (plan, addon, professional, one_time)
-- [x] Contratos SLA con umbrales por prioridad
-- [x] Sistema de facturacion con numeracion secuencial
-- [x] Audit log para trazabilidad
-- [x] Migraciones SQL (21 archivos)
-- [x] RLS en todas las tablas SaaS
-- [x] Seguridad: XSS fixes, CORS validation, rate limiting, AuthGuard
-- [x] Store page redesign: 3D tilt cards, premium visuals, component decomposition
-- [x] Login aurora borealis (canvas + fbm noise) + Three.js 3D scene
-- [x] Email templates (7 templates transaccionales via Resend)
-- [x] PayPal webhook genera facturas SaaS via RPC
-- [x] Dashboard i18n (hardcoded strings → t())
-
-### Por Implementar
-
-- [ ] Conectar frontend a Supabase real (configurar env vars en Vercel)
-- [ ] Aplicar migraciones 018-020 en produccion
-- [ ] Flujos de renovacion automatica de suscripciones
-- [ ] Notificaciones push para tickets y SLA breaches
-- [ ] Reportes y analytics por tenant
-- [ ] Integracion WhatsApp Business API
-- [ ] App movil (React Native o PWA avanzada)
-- [ ] Tests de integracion end-to-end
-
----
-
-## Contacto
-
-**ExeDevCentral** — Estudio Boutique de Sistemas Web Premium
-
-- **Web:** [exepaginasweb.com](https://exepaginasweb.com)
-- **Email:** [Exemetal@hotmail.com](mailto:Exemetal@hotmail.com)
-- **WhatsApp:** [+54 9 341 6874786](https://wa.me/5493416874786)
-- **GitHub:** [@ExeDevCentral](https://github.com/ExeDevCentral)
-
----
-
-> _"El software de alta calidad no es un gasto, es el activo digital mas rentable para automatizar los procesos de tu negocio."_
+<div align="center">
+  <sub>Construido con precisión técnica y estándares enterprise por ExeDevCentral. Todos los derechos reservados.</sub>
+</div>

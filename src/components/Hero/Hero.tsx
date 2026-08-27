@@ -8,9 +8,9 @@ import MagneticButton from '../shared/MagneticButton'
 
 const Badge: React.FC<{ text: string }> = ({ text }) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.8 }}
+    initial={{ opacity: 0.85, scale: 0.96 }}
     animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
     className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/40 backdrop-blur-md mb-8 group/badge shadow-sm"
   >
     <span className="relative flex h-2 w-2">
@@ -28,14 +28,13 @@ const TitleLine: React.FC<{
   delay: number
   duration?: number
   index: number
-}> = ({ text, delay, duration = 1.2, index }) => {
-  const fromLeft = index % 2 === 0
+}> = ({ text, delay, duration = 0.4, index }) => {
   const isPunchline = index > 0
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: fromLeft ? -100 : 100, filter: 'blur(10px)' }}
-      animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+      initial={{ opacity: 0.95, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{
         duration,
         ease: [0.16, 1, 0.3, 1],
@@ -46,9 +45,9 @@ const TitleLine: React.FC<{
       {/* Ambient glowing aura behind the punchline */}
       {isPunchline && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: [0.4, 0.7, 0.4], scale: [0.95, 1.05, 0.95] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: delay + 0.5 }}
+          initial={{ opacity: 0.35, scale: 0.95 }}
+          animate={{ opacity: [0.35, 0.65, 0.35], scale: [0.96, 1.04, 0.96] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-cyan-500/25 via-indigo-500/20 to-fuchsia-500/25 blur-2xl pointer-events-none -z-10"
         />
       )}
@@ -72,9 +71,9 @@ const TitleLine: React.FC<{
             transition={{
               duration: 2.2,
               repeat: Infinity,
-              repeatDelay: 3.5,
+              repeatDelay: 3,
               ease: 'easeInOut',
-              delay: delay + 1.2,
+              delay: 0.4,
             }}
           >
             {text}
@@ -107,7 +106,7 @@ const Hero: React.FC = () => {
       <div className="relative z-10 flex flex-col items-center justify-center px-3 sm:px-4 text-center max-w-5xl mx-auto w-full">
         <Badge text={t('hero.badge')} />
 
-        <motion.h1 className="text-[1.65rem] xs:text-3xl sm:text-5xl md:text-7xl lg:text-[5.25rem] font-montserrat font-black tracking-tight leading-[1.2] sm:leading-[1.12] md:leading-[1.08] mb-5 sm:mb-6 max-w-5xl overflow-visible">
+        <h1 className="text-[1.65rem] xs:text-3xl sm:text-5xl md:text-7xl lg:text-[5.25rem] font-montserrat font-black tracking-tight leading-[1.2] sm:leading-[1.12] md:leading-[1.08] mb-5 sm:mb-6 max-w-5xl overflow-visible">
           {titleParts.map((part, i) => {
             const hasPunctuation =
               part.endsWith('.') || part.endsWith('。') || i === titleParts.length - 1
@@ -117,18 +116,18 @@ const Hero: React.FC = () => {
                 key={`hero-title-line-${part.substring(0, 15)}`}
                 index={i}
                 text={lineText}
-                delay={i === 0 ? 0.2 : 0.9}
-                duration={1.1}
+                delay={i * 0.08}
+                duration={0.4}
               />
             )
           })}
-        </motion.h1>
+        </h1>
 
         {/* Hero Banner Card — Dual Glass with Cyan Glow */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0.85, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 1.7 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.16 }}
           className="inline-flex flex-col items-center gap-1.5 px-4 py-3.5 sm:px-7 sm:py-4 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-[#090a16]/95 border border-slate-200/90 dark:border-cyan-500/30 backdrop-blur-xl mb-5 sm:mb-6 max-w-2xl shadow-lg dark:shadow-[0_10px_35px_rgba(6,182,212,0.18)] hover:border-cyan-500/60 transition-all w-full sm:w-auto"
         >
           <div className="flex items-center gap-2">
@@ -143,18 +142,18 @@ const Hero: React.FC = () => {
         </motion.div>
 
         <motion.p
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0.85, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 1.9 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.22 }}
           className="text-sm sm:text-lg md:text-xl text-slate-700 dark:text-slate-200 leading-relaxed max-w-3xl mx-auto mb-6 sm:mb-7 font-semibold px-2"
         >
           {t('hero.descripcion')}
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0.85, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 2.1 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.28 }}
           className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center w-full sm:w-auto px-2 sm:px-4 mb-6"
         >
           <SalonBloomButton
@@ -173,9 +172,9 @@ const Hero: React.FC = () => {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.9, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.34 }}
           className="w-full"
         >
           <HeroCompare />

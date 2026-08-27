@@ -77,18 +77,18 @@ export default function HeroCompare() {
   return (
     <div className="relative mt-16 w-full max-w-5xl mx-auto z-10">
       <motion.h2
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0.9, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
         className="text-2xl md:text-3xl font-black font-montserrat text-foreground mb-8"
       >
         {t('hero.compare_titulo')}
       </motion.h2>
 
       <motion.div
-        initial={{ opacity: 0, y: 40, scale: 0.96 }}
+        initial={{ opacity: 0.95, y: 15, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className="hc-compare"
         ref={containerRef}
         onPointerDown={onPointerDown}
@@ -155,9 +155,9 @@ export default function HeroCompare() {
       </motion.div>
 
       <motion.p
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 0.85 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
+        transition={{ duration: 0.4, delay: 0.15 }}
         className="mt-6 text-sm text-muted-foreground"
       >
         {t('hero.compare_hint')}

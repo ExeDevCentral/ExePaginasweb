@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 
 import Header from '@/components/layout/Header'
 import Hero from '@/components/Hero/Hero'
+import BrandIntroSplash from '@/components/layout/BrandIntroSplash'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import ScrollProvider from '@/components/shared/ScrollProvider'
 import MouseSpotlight from '@/components/shared/MouseSpotlight'
@@ -69,6 +70,7 @@ export default function HomePage() {
 
   return (
     <ErrorBoundary>
+      <BrandIntroSplash />
       <ScrollProvider>
         <div className="min-h-screen bg-transparent text-primary-text relative">
           <MouseSpotlight />

@@ -22,22 +22,22 @@ export const PLAN_CATALOG: PlanCatalogEntry[] = [
     id: 'mantenimiento-basico',
     tier: 'basico',
     nombre: 'Abono Básico',
-    precio: 25000,
-    precioUSD: 20,
+    precio: 32000,
+    precioUSD: 28,
   },
   {
     id: 'mantenimiento-avanzado',
     tier: 'avanzado',
     nombre: 'Abono Avanzado',
-    precio: 50000,
-    precioUSD: 40,
+    precio: 65000,
+    precioUSD: 55,
   },
   {
     id: 'mantenimiento-premium',
     tier: 'premium',
     nombre: 'Abono Premium',
-    precio: 150000,
-    precioUSD: 100,
+    precio: 195000,
+    precioUSD: 140,
   },
 ]
 

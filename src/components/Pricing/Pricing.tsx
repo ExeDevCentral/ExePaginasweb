@@ -15,15 +15,15 @@ interface PlanData {
 const PRICING_PLANS: PlanData[] = [
   {
     tKey: 'landing',
-    setupFee: { ARS: '$350.000', USD: 'u$s 300' },
-    monthlyFee: { ARS: '$10.000', USD: 'u$s 20' },
+    setupFee: { ARS: '$450.000', USD: 'u$s 380' },
+    monthlyFee: { ARS: '$15.000', USD: 'u$s 25' },
     includedFeatures: [true, true, true, true, false, false],
     popular: false,
   },
   {
     tKey: 'ecommerce',
-    setupFee: { ARS: '$600.000', USD: 'u$s 700' },
-    monthlyFee: { ARS: '$25.000', USD: 'u$s 50' },
+    setupFee: { ARS: '$750.000', USD: 'u$s 850' },
+    monthlyFee: { ARS: '$35.000', USD: 'u$s 60' },
     includedFeatures: [true, true, true, true, true, true],
     popular: true,
   },

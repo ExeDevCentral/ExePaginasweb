@@ -46,8 +46,8 @@ function getPlans(t: (key: string) => string): PlanData[] {
       id: 'plan-landing',
       name: t('cotizador.plan_landing_name'),
       description: t('cotizador.plan_landing_desc'),
-      setup: { ARS: '$350.000', USD: 'u$s 300' },
-      monthly: { ARS: '$10.000', USD: 'u$s 20' },
+      setup: { ARS: '$450.000', USD: 'u$s 380' },
+      monthly: { ARS: '$15.000', USD: 'u$s 25' },
       features: [
         t('cotizador.plan_landing_feat_1'),
         t('cotizador.plan_landing_feat_2'),
@@ -63,8 +63,8 @@ function getPlans(t: (key: string) => string): PlanData[] {
       id: 'plan-ecommerce',
       name: t('cotizador.plan_ecommerce_name'),
       description: t('cotizador.plan_ecommerce_desc'),
-      setup: { ARS: '$600.000', USD: 'u$s 700' },
-      monthly: { ARS: '$25.000', USD: 'u$s 50' },
+      setup: { ARS: '$750.000', USD: 'u$s 850' },
+      monthly: { ARS: '$35.000', USD: 'u$s 60' },
       features: [
         t('cotizador.plan_ecommerce_feat_1'),
         t('cotizador.plan_ecommerce_feat_2'),
@@ -93,42 +93,42 @@ const PROJECT_TYPES: ProjectType[] = [
     label: 'Landing Page',
     icon: Layout,
     description: 'Sitio de una página, ideal para campañas o presentación',
-    basePrice: 350000,
+    basePrice: 450000,
   },
   {
     id: 'institucional',
     label: 'Sitio Web Institucional',
     icon: Smartphone,
     description: '5-10 páginas, diseño profesional, blog',
-    basePrice: 350000,
+    basePrice: 450000,
   },
   {
     id: 'ecommerce',
     label: 'Tienda Online',
     icon: ShoppingCart,
     description: 'Catálogo, carrito, pasarela de pagos, stock',
-    basePrice: 600000,
+    basePrice: 750000,
   },
   {
     id: 'reservas',
     label: 'Sistema de Reservas',
     icon: Calendar,
     description: 'Calendario, turnos, notificaciones, disponibilidad',
-    basePrice: 500000,
+    basePrice: 650000,
   },
   {
     id: 'webapp',
     label: 'Aplicación Web',
     icon: Code,
     description: 'SaaS, dashboard, usuarios, lógica de negocio a medida',
-    basePrice: 800000,
+    basePrice: 1100000,
   },
   {
     id: 'crm',
     label: 'CRM / Panel Gestión',
     icon: BarChart3,
     description: 'Clientes, ventas, reportes, equipo',
-    basePrice: 700000,
+    basePrice: 890000,
   },
 ]
 
@@ -145,14 +145,14 @@ const FEATURES: Feature[] = [
   {
     id: 'admin',
     label: 'Panel Administrador',
-    price: 100000,
+    price: 130000,
     popular: true,
     description: 'Gestión total de contenidos, publicaciones y clientes a medida.',
   },
   {
     id: 'payments',
     label: 'Pasarela de Pagos',
-    price: 80000,
+    price: 95000,
     hasAsterisk: true,
     description:
       'Integración técnica de cobros (Mercado Pago, Stripe). Comisiones y alta comercial a cargo de la pasarela.*',
@@ -160,7 +160,7 @@ const FEATURES: Feature[] = [
   {
     id: 'domain',
     label: 'Registro / Gestión de Dominio',
-    price: 50000,
+    price: 65000,
     hasAsterisk: true,
     description:
       'Gestión y alta anual (.com / .com.ar). Sujeto a disponibilidad en registrador oficial.*',
@@ -168,7 +168,7 @@ const FEATURES: Feature[] = [
   {
     id: 'chatbot',
     label: 'Chatbot con IA',
-    price: 120000,
+    price: 150000,
     hasAsterisk: true,
     description:
       'Entrenamiento del bot y prompt a medida. Consumo de API / Tokens mediante cuenta propia del cliente.*',
@@ -176,13 +176,13 @@ const FEATURES: Feature[] = [
   {
     id: 'database',
     label: 'Base de Datos Cloud',
-    price: 60000,
+    price: 75000,
     description: 'Almacenamiento seguro, copias de seguridad y esquemas relacionales optimizados.',
   },
   {
     id: 'api',
     label: 'API / Integraciones Externas',
-    price: 100000,
+    price: 130000,
     hasAsterisk: true,
     description:
       'Conexión con ERP, CRM o APIs externas. API Keys/licencias de terceros a cargo del cliente o evaluadas según complejidad.*',
@@ -190,25 +190,25 @@ const FEATURES: Feature[] = [
   {
     id: 'dashboard',
     label: 'Dashboard con Gráficos',
-    price: 80000,
+    price: 95000,
     description: 'Métricas clave, reportes visuales y analítica interactiva.',
   },
   {
     id: 'multicurrency',
     label: 'Multimoneda',
-    price: 50000,
+    price: 60000,
     description: 'Cotizaciones automáticas y conversión de divisas en tiempo real.',
   },
   {
     id: 'i18n',
     label: 'Multi-idioma',
-    price: 50000,
+    price: 60000,
     description: 'Internacionalización completa (ES, EN, PT, etc.) con selector integrado.',
   },
   {
     id: 'notifications',
     label: 'Notificaciones Email & Mail Corp.',
-    price: 40000,
+    price: 50000,
     hasAsterisk: true,
     description:
       'Emails transaccionales y casillas de empresa (Google Workspace, Zoho, Resend). Costos de suscripción según proveedor.*',
@@ -216,7 +216,7 @@ const FEATURES: Feature[] = [
   {
     id: 'roles',
     label: 'Usuarios y Roles',
-    price: 80000,
+    price: 95000,
     description:
       'Permisos granulares, autenticación y niveles de acceso (Admin, Operador, Cliente).',
   },
@@ -232,13 +232,13 @@ const DESIGN_TIERS = [
   {
     id: 'custom',
     label: 'Diseño UI/UX desde Cero',
-    price: 150000,
+    price: 190000,
     description: 'Wireframes, prototipo, diseño exclusivo',
   },
   {
     id: 'branding',
     label: 'Branding Completo',
-    price: 250000,
+    price: 320000,
     description: 'Logo, paleta, tipografía, identidad visual',
   },
 ]

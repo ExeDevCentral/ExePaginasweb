@@ -28,36 +28,58 @@ const TitleLine: React.FC<{
   delay: number
   duration?: number
   index: number
-}> = ({ text, delay, duration = 0.4, index }) => {
+}> = ({ text, delay, duration = 0.85, index }) => {
   const isPunchline = index > 0
+  const initialX = isPunchline ? 50 : -50
 
   return (
     <motion.div
-      initial={{ opacity: 0.95, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: initialX, filter: 'blur(8px)', scale: isPunchline ? 0.95 : 1 }}
+      animate={{ opacity: 1, x: 0, filter: 'blur(0px)', scale: 1 }}
       transition={{
         duration,
         ease: [0.16, 1, 0.3, 1],
         delay,
       }}
-      className="relative block will-change-transform my-1"
+      className="relative block will-change-transform my-1.5"
     >
-      {/* Sutil halo ambiental detrás de la frase principal */}
+      {/* Sutil halo ambiental brillante detrás de la frase principal */}
       {isPunchline && (
-        <div
-          aria-hidden="true"
-          className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-cyan-500/20 via-indigo-500/15 to-fuchsia-500/20 blur-2xl pointer-events-none -z-10 transform-gpu opacity-60"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: [0, 0.65, 0.45], scale: [0.92, 1.06, 1] }}
+          transition={{ duration: 1.2, delay: delay + 0.1, ease: 'easeOut' }}
+          className="absolute -inset-6 rounded-3xl bg-gradient-to-r from-cyan-500/25 via-indigo-500/20 to-fuchsia-500/25 blur-3xl pointer-events-none -z-10 transform-gpu"
         />
       )}
 
       <span
         className={`relative inline-block ${
           isPunchline
-            ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-cyan-500 to-indigo-600 dark:from-sky-400 dark:via-cyan-300 dark:to-fuchsia-400 font-black drop-shadow-[0_2px_15px_rgba(14,165,233,0.25)]'
+            ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-cyan-300 to-indigo-400 dark:from-sky-400 dark:via-cyan-300 dark:to-fuchsia-400 font-black drop-shadow-[0_2px_25px_rgba(14,165,233,0.35)]'
             : 'text-slate-900 dark:text-white font-extrabold tracking-tight drop-shadow-sm'
         }`}
       >
         {text}
+
+        {/* Shimmer light sweep across the punchline text */}
+        {isPunchline && (
+          <motion.span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/40 dark:via-white/50 to-transparent bg-clip-text text-transparent"
+            style={{ transform: 'translateX(-100%) skewX(-20deg)' }}
+            animate={{ x: ['-100%', '200%'] }}
+            transition={{
+              duration: 2.2,
+              repeat: Infinity,
+              repeatDelay: 3.5,
+              ease: 'easeInOut',
+              delay: delay + 0.3,
+            }}
+          >
+            {text}
+          </motion.span>
+        )}
       </span>
     </motion.div>
   )
@@ -90,13 +112,14 @@ const Hero: React.FC = () => {
             const hasPunctuation =
               part.endsWith('.') || part.endsWith('。') || i === titleParts.length - 1
             const lineText = `${part}${!hasPunctuation ? '.' : ''}`
+            const lineDelay = i === 0 ? 0.15 : 2.2
             return (
               <TitleLine
                 key={`hero-title-line-${part.substring(0, 15)}`}
                 index={i}
                 text={lineText}
-                delay={i * 0.08}
-                duration={0.4}
+                delay={lineDelay}
+                duration={i === 0 ? 0.85 : 1.0}
               />
             )
           })}
@@ -104,9 +127,9 @@ const Hero: React.FC = () => {
 
         {/* Hero Banner Card — Dual Glass with Cyan Glow */}
         <motion.div
-          initial={{ opacity: 0.85, y: 10 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.16 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 2.4 }}
           className="inline-flex flex-col items-center gap-1.5 px-4 py-3.5 sm:px-7 sm:py-4 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-[#090a16]/95 border border-slate-200/90 dark:border-cyan-500/30 backdrop-blur-xl mb-5 sm:mb-6 max-w-2xl shadow-lg dark:shadow-[0_10px_35px_rgba(6,182,212,0.18)] hover:border-cyan-500/60 transition-all w-full sm:w-auto"
         >
           <div className="flex items-center gap-2">
@@ -121,18 +144,18 @@ const Hero: React.FC = () => {
         </motion.div>
 
         <motion.p
-          initial={{ opacity: 0.85, y: 10 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.22 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 2.6 }}
           className="text-sm sm:text-lg md:text-xl text-slate-700 dark:text-slate-200 leading-relaxed max-w-3xl mx-auto mb-6 sm:mb-7 font-semibold px-2"
         >
           {t('hero.descripcion')}
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0.85, y: 10 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.28 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 2.8 }}
           className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center w-full sm:w-auto px-2 sm:px-4 mb-6"
         >
           <SalonBloomButton
@@ -151,9 +174,9 @@ const Hero: React.FC = () => {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0.9, y: 15 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.34 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 3.0 }}
           className="w-full"
         >
           <HeroCompare />

@@ -39,11 +39,11 @@ const Footer = () => {
             </p>
             {/* Tech badges compactas */}
             <div className="flex flex-wrap gap-2 mb-6">
-              {TECH_ITEMS.map((item, i) => {
+              {TECH_ITEMS.map((item) => {
                 const Icon = item.icon
                 return (
                   <span
-                    key={i}
+                    key={item.labelKey}
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${item.bg} ${item.color} border border-foreground/5`}
                   >
                     <Icon className="w-3 h-3" />
@@ -167,6 +167,42 @@ const Footer = () => {
                 </Link>
               </li>
             </ul>
+          </div>
+        </div>
+
+        {/* Trust & Live Infrastructure Telemetry Bar */}
+        <div className="mb-12 p-6 rounded-2xl bg-slate-900/60 dark:bg-[#0b0c16]/80 border border-slate-200/20 dark:border-cyan-500/20 backdrop-blur-xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3.5">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 shadow-[0_0_8px_#10b981]" />
+            </span>
+            <div>
+              <p className="text-xs font-bold text-slate-100 flex items-center gap-2">
+                Infraestructura &amp; Sistemas 100% Operativos
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  Uptime 99.99%
+                </span>
+              </p>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Red Global Vercel Edge · Base de Datos Supabase Postgres · Cifrado SSL A+
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono font-bold text-slate-300">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/60 text-cyan-400">
+              ⚡ Latencia &lt; 45ms
+            </span>
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/60 text-emerald-400">
+              🔒 SSL 256-Bit
+            </span>
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/60 text-yellow-400">
+              🚀 Código 100% Propio
+            </span>
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/60 text-indigo-400">
+              ⏱️ SLA &lt; 2h
+            </span>
           </div>
         </div>
 

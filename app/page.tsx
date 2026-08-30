@@ -10,70 +10,26 @@ import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import ScrollProvider from '@/components/shared/ScrollProvider'
 import MouseSpotlight from '@/components/shared/MouseSpotlight'
 
-import BrandLoader from '@/components/layout/BrandLoader'
+import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription'
+import SocialProof from '@/components/SocialProof/SocialProof'
+import Products from '@/components/Products/Products'
+import CaseStudies from '@/components/CaseStudies/CaseStudies'
+import PortfolioSection from '@/components/Portfolio/PortfolioSection'
+import DemoZone from '@/components/DemoZone/DemoZone'
+import Process from '@/components/Process/Process'
+import Pricing from '@/components/Pricing/Pricing'
+import ContactSection from '@/components/landing/ContactSection'
+import FaqSection from '@/components/FAQ/FAQ'
 
-// Dynamic components for high performance and SSR safety
-const SocialProof = dynamic(() => import('@/components/SocialProof/SocialProof'), {
-  loading: () => <SectionSkeleton />,
-})
-const Process = dynamic(() => import('@/components/Process/Process'), {
-  loading: () => <SectionSkeleton />,
-})
-const FaqSection = dynamic(() => import('@/components/FAQ/FAQ'), {
-  loading: () => <SectionSkeleton />,
-})
+// Componentes secundarios pesados diferidos tras la carga inicial
 const Footer = dynamic(() => import('@/components/layout/Footer'), {
   loading: () => <div className="h-20" />,
 })
 const AIChatWidget = dynamic(() => import('@/components/chat/AIChatWidget'), {
   ssr: false,
 })
-const ContactSection = dynamic(() => import('@/components/landing/ContactSection'), {
-  loading: () => (
-    <div className="py-24 text-center flex justify-center items-center">
-      <BrandLoader size="sm" text="EXESISTEMASWEB" subtext="Cargando contacto..." />
-    </div>
-  ),
-})
-const Pricing = dynamic(() => import('@/components/Pricing/Pricing'), {
-  loading: () => <SectionSkeleton />,
-})
-const OwnershipVsSubscription = dynamic(
-  () => import('@/components/shared/OwnershipVsSubscription'),
-  { loading: () => <SectionSkeleton /> }
-)
-const PortfolioSection = dynamic(() => import('@/components/Portfolio/PortfolioSection'), {
-  loading: () => <SectionSkeleton />,
-})
-const DemoZone = dynamic(() => import('@/components/DemoZone/DemoZone'), {
-  loading: () => <SectionSkeleton />,
-})
-const Products = dynamic(() => import('@/components/Products/Products'), {
-  loading: () => <SectionSkeleton />,
-})
-const CaseStudies = dynamic(() => import('@/components/CaseStudies/CaseStudies'), {
-  loading: () => <SectionSkeleton />,
-})
 
-const SkeletonBlock = ({ className = '' }: { className?: string }) => (
-  <div className={`relative overflow-hidden ${className}`}>
-    <div className="absolute inset-0 bg-muted/60" />
-    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_infinite] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-  </div>
-)
-
-const SectionSkeleton = () => (
-  <div className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center justify-center">
-    <BrandLoader size="sm" />
-    <div className="w-full max-w-4xl mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 opacity-40">
-      {[1, 2, 3].map((i) => (
-        <SkeletonBlock key={i} className="h-44 rounded-2xl" />
-      ))}
-    </div>
-  </div>
-)
-
-const WaveDivider = ({ flip = false }: { flip?: boolean; color?: string }) => (
+const WaveDivider = ({ flip = false }: { flip?: boolean }) => (
   <div
     className={`relative w-full h-8 sm:h-12 -my-1 z-10 pointer-events-none flex items-center justify-center overflow-hidden ${flip ? 'rotate-180' : ''}`}
   >

@@ -42,43 +42,22 @@ const TitleLine: React.FC<{
       }}
       className="relative block will-change-transform my-1"
     >
-      {/* Ambient glowing aura behind the punchline */}
+      {/* Sutil halo ambiental detrás de la frase principal */}
       {isPunchline && (
-        <motion.div
-          initial={{ opacity: 0.35, scale: 0.95 }}
-          animate={{ opacity: [0.35, 0.65, 0.35], scale: [0.96, 1.04, 0.96] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-cyan-500/25 via-indigo-500/20 to-fuchsia-500/25 blur-2xl pointer-events-none -z-10"
+        <div
+          aria-hidden="true"
+          className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-cyan-500/20 via-indigo-500/15 to-fuchsia-500/20 blur-2xl pointer-events-none -z-10 transform-gpu opacity-60"
         />
       )}
 
       <span
         className={`relative inline-block ${
           isPunchline
-            ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-cyan-500 to-indigo-600 dark:from-sky-400 dark:via-cyan-300 dark:to-fuchsia-400 font-black drop-shadow-[0_2px_20px_rgba(14,165,233,0.35)]'
+            ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-cyan-500 to-indigo-600 dark:from-sky-400 dark:via-cyan-300 dark:to-fuchsia-400 font-black drop-shadow-[0_2px_15px_rgba(14,165,233,0.25)]'
             : 'text-slate-900 dark:text-white font-extrabold tracking-tight drop-shadow-sm'
         }`}
       >
         {text}
-
-        {/* Shimmer light sweep across the punchline */}
-        {isPunchline && (
-          <motion.span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/30 dark:via-white/40 to-transparent bg-clip-text text-transparent"
-            style={{ transform: 'translateX(-100%) skewX(-20deg)' }}
-            animate={{ x: ['-100%', '200%'] }}
-            transition={{
-              duration: 2.2,
-              repeat: Infinity,
-              repeatDelay: 3,
-              ease: 'easeInOut',
-              delay: 0.4,
-            }}
-          >
-            {text}
-          </motion.span>
-        )}
       </span>
     </motion.div>
   )

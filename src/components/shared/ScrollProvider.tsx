@@ -41,23 +41,10 @@ export function navigateToSection(
   const elementPosition = el.getBoundingClientRect().top
   const offsetPosition = elementPosition + window.pageYOffset - offset
 
-  const performJump = () => {
-    if (globalLenis) {
-      globalLenis.scrollTo(offsetPosition, { immediate: true })
-    } else {
-      window.scrollTo({ top: offsetPosition, behavior: 'instant' })
-    }
-  }
-
-  // Si el navegador soporta View Transitions (Chrome, Edge, Safari 18+), hace un crossfade de seda
-  if (typeof document !== 'undefined' && 'startViewTransition' in document) {
-    ;(document as unknown as { startViewTransition: (cb: () => void) => void }).startViewTransition(
-      () => {
-        performJump()
-      }
-    )
+  if (globalLenis) {
+    globalLenis.scrollTo(offsetPosition, { duration: 0.65 })
   } else {
-    performJump()
+    window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
   }
 
   return true
@@ -68,7 +55,7 @@ export function scrollToElement(
   options?: Parameters<Lenis['scrollTo']>[1]
 ) {
   if (globalLenis) {
-    globalLenis.scrollTo(target, { duration: 0.9, ...options })
+    globalLenis.scrollTo(target, { duration: 0.65, ...options })
   } else {
     const el = typeof target === 'string' ? document.querySelector(target) : target
     if (el) {
@@ -79,17 +66,21 @@ export function scrollToElement(
 
 export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
-    // No inicializar smooth scroll en dispositivos con preferencia de movimiento reducido
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // No inicializar smooth scroll en dispositivos con preferencia de movimiento reducido o táctiles (móvil)
+    if (
+      typeof window === 'undefined' ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      window.matchMedia('(pointer: coarse)').matches
+    ) {
       return
     }
 
     const lenis = new Lenis({
-      duration: 0.9,
+      duration: 0.65,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 1.2,
+      touchMultiplier: 1.0,
       infinite: false,
       prevent: (node) => {
         if (!node || !(node instanceof HTMLElement)) return false
@@ -107,7 +98,7 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     globalLenis = lenis
 
-    // Sincronizar ScrollTrigger con Lenis sin lagSmoothing conflictivo
+    // Sincronizar ScrollTrigger con Lenis
     lenis.on('scroll', ScrollTrigger.update)
 
     let rafId: number

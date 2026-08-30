@@ -42,19 +42,42 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
       return
     }
 
-    let isVisible = true
+    let isVisible = false
+    let animId: number | null = null
+
+    const startLoop = () => {
+      if (!animId && isVisible) {
+        animate()
+      }
+    }
+
+    const stopLoop = () => {
+      if (animId) {
+        cancelAnimationFrame(animId)
+        animId = null
+      }
+    }
+
     const observer =
       typeof IntersectionObserver !== 'undefined'
         ? new IntersectionObserver(
             ([entry]) => {
               isVisible = entry.isIntersecting
+              if (isVisible) {
+                startLoop()
+              } else {
+                stopLoop()
+              }
             },
-            { rootMargin: '100px' }
+            { rootMargin: '80px' }
           )
         : null
 
     if (observer) {
       observer.observe(canvas)
+    } else {
+      isVisible = true
+      startLoop()
     }
 
     // Lights
@@ -338,14 +361,15 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
     disposables.push(particleGeo, particleMat)
 
     // Animation Loop
-    let animId: number
-    const clock = new THREE.Clock()
+    const animate = (currentTime = 0) => {
+      if (!isVisible) {
+        animId = null
+        return
+      }
 
-    const animate = () => {
       animId = requestAnimationFrame(animate)
-      if (!isVisible) return
+      const t = currentTime * 0.001
 
-      const t = clock.getElapsedTime()
       const isHov = hoverRef.current
       const targetScale = isHov ? 1.15 : 1.0
       rootGroup.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1)
@@ -427,10 +451,8 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
       renderer?.render(scene, camera)
     }
 
-    animate()
-
     return () => {
-      cancelAnimationFrame(animId)
+      stopLoop()
       observer?.disconnect()
       disposables.forEach((d) => d.dispose())
       renderer?.dispose()

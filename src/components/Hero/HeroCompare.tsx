@@ -64,7 +64,11 @@ export default function HeroCompare() {
     draggingRef.current = true
     stopDemo()
     setPositionFromClientX(e.clientX)
-    e.currentTarget.setPointerCapture?.(e.pointerId)
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId)
+    } catch {
+      // safe fallback for older WebKit / mobile browsers
+    }
   }
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!draggingRef.current) return

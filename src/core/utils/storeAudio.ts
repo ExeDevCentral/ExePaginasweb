@@ -9,8 +9,12 @@ class StoreAudioManager {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('exe_sound_fx')
-      this.enabled = stored !== 'false'
+      try {
+        const stored = localStorage.getItem('exe_sound_fx')
+        this.enabled = stored !== 'false'
+      } catch {
+        this.enabled = true
+      }
     }
   }
 
@@ -37,7 +41,11 @@ class StoreAudioManager {
   public setEnabled(val: boolean) {
     this.enabled = val
     if (typeof window !== 'undefined') {
-      localStorage.setItem('exe_sound_fx', String(val))
+      try {
+        localStorage.setItem('exe_sound_fx', String(val))
+      } catch {
+        // safe fallback
+      }
     }
   }
 

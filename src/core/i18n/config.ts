@@ -10,7 +10,11 @@ import zhCN from './locales/zh-CN.json'
 
 const getInitialLang = () => {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('lang') || 'es'
+    try {
+      return localStorage.getItem('lang') || 'es'
+    } catch {
+      return 'es'
+    }
   }
   return 'es'
 }
@@ -31,12 +35,12 @@ if (!i18n.isInitialized) {
     interpolation: { escapeValue: false },
   })
 
-  const RTL_LANGS = ['ar']
+  const RTL_LANGS = new Set(['ar'])
   if (typeof window !== 'undefined') {
     i18n.on('languageChanged', (lng) => {
-      document.documentElement.dir = RTL_LANGS.includes(lng) ? 'rtl' : 'ltr'
+      document.documentElement.dir = RTL_LANGS.has(lng) ? 'rtl' : 'ltr'
     })
-    document.documentElement.dir = RTL_LANGS.includes(i18n.language) ? 'rtl' : 'ltr'
+    document.documentElement.dir = RTL_LANGS.has(i18n.language) ? 'rtl' : 'ltr'
   }
 }
 

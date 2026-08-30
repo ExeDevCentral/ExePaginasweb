@@ -8,15 +8,21 @@ export default function MouseSpotlight() {
   const [isVisible, setIsVisible] = useState(false)
   const isVisibleRef = useRef(false)
 
-  // Spring animation for smooth cursor following
+  // Spring animation for smooth cursor following (ligero y sin sobrecarga)
   const mouseX = useMotionValue(-1000)
   const mouseY = useMotionValue(-1000)
-  const smoothX = useSpring(mouseX, { stiffness: 120, damping: 28, mass: 0.5 })
-  const smoothY = useSpring(mouseY, { stiffness: 120, damping: 28, mass: 0.5 })
+  const smoothX = useSpring(mouseX, { stiffness: 140, damping: 26, mass: 0.4 })
+  const smoothY = useSpring(mouseY, { stiffness: 140, damping: 26, mass: 0.4 })
 
   useEffect(() => {
-    // Only activate on devices with fine pointer (mouse/trackpad)
-    if (window.matchMedia('(pointer: coarse)').matches) return
+    // Only activate on devices with fine pointer (mouse/trackpad) and without reduced motion preference
+    if (
+      typeof window === 'undefined' ||
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return
+    }
     setMounted(true)
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -50,20 +56,15 @@ export default function MouseSpotlight() {
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: isVisible ? 1 : 0 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.3 }}
     >
-      {/* 
-        Aceleración por GPU usando radial-gradient en lugar de un filtro CSS blur-[120px].
-        Esto evita stalls de rasterizado y re-dibujado en GPU cuando se solapa con 
-        elementos que usan backdrop-filter (como el Header o las tarjetas).
-      */}
       <motion.div
-        className="absolute w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transform-gpu"
+        className="absolute w-[480px] h-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transform-gpu"
         style={{
           x: smoothX,
           y: smoothY,
           background:
-            'radial-gradient(circle, rgba(14,165,233,0.14) 0%, rgba(99,102,241,0.09) 35%, rgba(14,165,233,0.03) 55%, transparent 70%)',
+            'radial-gradient(circle, rgba(14,165,233,0.11) 0%, rgba(99,102,241,0.06) 35%, rgba(14,165,233,0.02) 60%, transparent 70%)',
           willChange: 'transform',
         }}
       />

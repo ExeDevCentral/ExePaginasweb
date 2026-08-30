@@ -47,7 +47,11 @@ export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
     setTheme(t)
     if (typeof document !== 'undefined') {
       document.documentElement.classList.toggle('dark', t === 'dark')
-      localStorage.setItem('theme', t)
+      try {
+        localStorage.setItem('theme', t)
+      } catch {
+        // safe fallback
+      }
     }
   }, [])
 

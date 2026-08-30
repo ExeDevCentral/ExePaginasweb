@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  let body: any
+  let body: unknown = null
   try {
     body = await req.json()
   } catch {
@@ -181,9 +181,51 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  const aiGatewayKey = process.env.AI_GATEWAY_API_KEY
   const geminiKey = process.env.GEMINI_API_KEY
   const groqKey = process.env.GROQ_API_KEY
 
+  // --- TIER 1: Vercel AI Gateway (Universal Router: OpenAI, Claude, Llama) ---
+  if (aiGatewayKey) {
+    try {
+      const messages = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...history.map((m) => ({ role: m.role, content: m.content })),
+        { role: 'user', content: userMessage },
+      ]
+
+      const gatewayResp = await fetch('https://ai-gateway.vercel.sh/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${aiGatewayKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'openai/gpt-4o-mini',
+          messages,
+          temperature: 0.6,
+          max_tokens: 450,
+        }),
+      })
+
+      if (gatewayResp.ok) {
+        const gatewayData = await gatewayResp.json()
+        const replyText = gatewayData.choices?.[0]?.message?.content
+        if (replyText) {
+          return NextResponse.json({ reply: replyText, provider: 'vercel-ai-gateway' })
+        }
+      } else {
+        console.warn(
+          `[chat] Vercel AI Gateway returned status ${gatewayResp.status} (credits/quota). Falling back to Tier 2...`
+        )
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown gateway error'
+      console.warn('[chat] Vercel AI Gateway request failed, cascading to fallback:', msg)
+    }
+  }
+
+  // --- TIER 2: Google Gemini (Free / Direct) ---
   if (geminiKey) {
     try {
       const contents = [
@@ -223,11 +265,13 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ reply: replyText, provider: 'gemini' })
       }
-    } catch (err: any) {
-      console.error('[chat] Gemini error:', err.message)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown Gemini error'
+      console.warn('[chat] Gemini error, cascading to next tier:', msg)
     }
   }
 
+  // --- TIER 3: Groq Cloud (Free Llama 3.3 70B) ---
   if (groqKey) {
     try {
       const messages = [
@@ -256,12 +300,13 @@ export async function POST(req: NextRequest) {
           groqData.choices?.[0]?.message?.content || getDevFallbackResponse(userMessage)
         return NextResponse.json({ reply: replyText, provider: 'groq' })
       }
-    } catch (err: any) {
-      console.error('[chat] Groq error:', err.message)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown Groq error'
+      console.warn('[chat] Groq error, cascading to local engine:', msg)
     }
   }
 
-  // Fallback dev response
+  // --- TIER 4: Motor Local Inteligente Exe (100% Sin Costo / Offline Safe) ---
   const fallbackReply = getDevFallbackResponse(userMessage)
-  return NextResponse.json({ reply: fallbackReply, fallback: true })
+  return NextResponse.json({ reply: fallbackReply, fallback: true, provider: 'local-knowledge' })
 }

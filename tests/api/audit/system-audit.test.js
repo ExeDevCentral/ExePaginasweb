@@ -79,6 +79,66 @@ describe('🔍 AUDITORÍA COMPLETA DEL SISTEMA: Chatbot, WhatsApp, Webhooks & Li
       expect(json.error).toContain('inválidos')
     })
 
+    it('debe responder vía Vercel AI Gateway cuando AI_GATEWAY_API_KEY está configurada', async () => {
+      const originalFetch = globalThis.fetch
+      globalThis.fetch = vi.fn().mockImplementation((url) => {
+        if (typeof url === 'string' && url.includes('ai-gateway.vercel.sh')) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: async () => ({
+              choices: [{ message: { content: '¡Hola! Respuesta desde Vercel AI Gateway.' } }],
+            }),
+          })
+        }
+        return originalFetch(url)
+      })
+
+      process.env.AI_GATEWAY_API_KEY = 'vck_test_gateway_key'
+      const { status, json } = await callRoute(chatHandler, 'http://localhost:3000/api/chat', {
+        message: '¿Cuánto cuesta una web institucional?',
+      })
+
+      globalThis.fetch = originalFetch
+      expect(status).toBe(200)
+      expect(json.provider).toBe('vercel-ai-gateway')
+      expect(json.reply).toContain('Vercel AI Gateway')
+    })
+
+    it('debe conmutar automáticamente (fallback) al motor local/Groq si AI Gateway no tiene créditos (402/429)', async () => {
+      const originalFetch = globalThis.fetch
+      globalThis.fetch = vi.fn().mockImplementation((url) => {
+        if (typeof url === 'string' && url.includes('ai-gateway.vercel.sh')) {
+          return Promise.resolve({
+            ok: false,
+            status: 402,
+            json: async () => ({ error: 'Payment Required / Out of Credits' }),
+          })
+        }
+        if (typeof url === 'string' && url.includes('api.groq.com')) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: async () => ({
+              choices: [{ message: { content: 'Respuesta fluida desde Groq Cloud Fallback.' } }],
+            }),
+          })
+        }
+        return originalFetch(url)
+      })
+
+      process.env.AI_GATEWAY_API_KEY = 'vck_test_expired_key'
+      process.env.GROQ_API_KEY = 'gsk_test_groq_key'
+      const { status, json } = await callRoute(chatHandler, 'http://localhost:3000/api/chat', {
+        message: 'Hola, quiero consultar por una tienda online',
+      })
+
+      globalThis.fetch = originalFetch
+      expect(status).toBe(200)
+      expect(json.provider).toBe('groq')
+      expect(json.reply).toContain('Groq Cloud Fallback')
+    })
+
     it('debe capturar emails en el chat, generar Ticket EXE-CHT y enviar correo de confirmación', async () => {
       const { status } = await callRoute(chatHandler, 'http://localhost:3000/api/chat', {
         message: 'Hola! Mi email es audit.test@example.com y necesito presupuesto',

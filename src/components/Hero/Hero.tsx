@@ -5,6 +5,7 @@ import { Sparkles } from 'lucide-react'
 import { SalonBloomButton } from '../shared/SalonBloomButton'
 import HeroCompare from './HeroCompare'
 import MagneticButton from '../shared/MagneticButton'
+import { trackEvent } from '@/core/analytics/trackEvent'
 
 const Badge: React.FC<{ text: string }> = ({ text }) => (
   <motion.div
@@ -162,11 +163,17 @@ const Hero: React.FC = () => {
             href="#demo"
             onClick={(e) => {
               e.preventDefault()
+              trackEvent('hero_cta_demo_clicked', { source: 'hero_primary_button' })
               const el = document.getElementById('demo')
               if (el) el.scrollIntoView({ behavior: 'smooth' })
             }}
           />
-          <MagneticButton href="#contact">
+          <MagneticButton
+            href="#contact"
+            onClick={() => {
+              trackEvent('hero_cta_contact_clicked', { source: 'hero_secondary_button' })
+            }}
+          >
             <span className="w-full sm:w-auto text-center px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl border border-slate-300 dark:border-cyan-500/30 text-slate-900 dark:text-white font-extrabold bg-white dark:bg-[#0e101c] backdrop-blur-md hover:bg-slate-100 dark:hover:bg-[#141728] hover:border-cyan-500/50 transition-all text-xs sm:text-sm tracking-wider uppercase block shadow-md hover:shadow-lg">
               {t('hero.cta_proyecto')}
             </span>

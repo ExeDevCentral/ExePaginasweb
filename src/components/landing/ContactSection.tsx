@@ -5,6 +5,7 @@ import { MessageCircle, ArrowRight, CheckCircle, Mail, Send } from 'lucide-react
 import { supabase } from '../../core/infra/supabase/client'
 import { toast } from 'sonner'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
+import { trackEvent } from '@/core/analytics/trackEvent'
 
 const ContactSection = () => {
   const { t, i18n } = useTranslation()
@@ -74,6 +75,11 @@ const ContactSection = () => {
         if (data.ticketId) {
           setTicketId(data.ticketId)
         }
+
+        trackEvent('contact_form_submitted', {
+          lang: i18n.language,
+          ticketId: data.ticketId || 'none',
+        })
 
         setStatus('success')
         const successMsg = data.message || t('contact.form_exito')

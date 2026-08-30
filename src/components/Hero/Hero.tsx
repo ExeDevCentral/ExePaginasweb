@@ -28,13 +28,13 @@ const TitleLine: React.FC<{
   delay: number
   duration?: number
   index: number
-}> = ({ text, delay, duration = 0.85, index }) => {
+}> = ({ text, delay, duration = 0.65, index }) => {
   const isPunchline = index > 0
-  const initialX = isPunchline ? 50 : -50
+  const initialX = isPunchline ? 40 : -40
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: initialX, filter: 'blur(8px)', scale: isPunchline ? 0.95 : 1 }}
+      initial={{ opacity: 0, x: initialX, filter: 'blur(6px)', scale: isPunchline ? 0.96 : 1 }}
       animate={{ opacity: 1, x: 0, filter: 'blur(0px)', scale: 1 }}
       transition={{
         duration,
@@ -47,8 +47,8 @@ const TitleLine: React.FC<{
       {isPunchline && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: [0, 0.65, 0.45], scale: [0.92, 1.06, 1] }}
-          transition={{ duration: 1.2, delay: delay + 0.1, ease: 'easeOut' }}
+          animate={{ opacity: [0, 0.65, 0.45], scale: [0.92, 1.05, 1] }}
+          transition={{ duration: 0.9, delay: delay + 0.05, ease: 'easeOut' }}
           className="absolute -inset-6 rounded-3xl bg-gradient-to-r from-cyan-500/25 via-indigo-500/20 to-fuchsia-500/25 blur-3xl pointer-events-none -z-10 transform-gpu"
         />
       )}
@@ -74,7 +74,7 @@ const TitleLine: React.FC<{
               repeat: Infinity,
               repeatDelay: 3.5,
               ease: 'easeInOut',
-              delay: delay + 0.3,
+              delay: delay + 0.2,
             }}
           >
             {text}
@@ -112,14 +112,14 @@ const Hero: React.FC = () => {
             const hasPunctuation =
               part.endsWith('.') || part.endsWith('。') || i === titleParts.length - 1
             const lineText = `${part}${!hasPunctuation ? '.' : ''}`
-            const lineDelay = i === 0 ? 0.15 : 2.2
+            const lineDelay = i === 0 ? 0.05 : 0.4
             return (
               <TitleLine
                 key={`hero-title-line-${part.substring(0, 15)}`}
                 index={i}
                 text={lineText}
                 delay={lineDelay}
-                duration={i === 0 ? 0.85 : 1.0}
+                duration={i === 0 ? 0.65 : 0.75}
               />
             )
           })}
@@ -129,7 +129,7 @@ const Hero: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 2.4 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.65 }}
           className="inline-flex flex-col items-center gap-1.5 px-4 py-3.5 sm:px-7 sm:py-4 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-[#090a16]/95 border border-slate-200/90 dark:border-cyan-500/30 backdrop-blur-xl mb-5 sm:mb-6 max-w-2xl shadow-lg dark:shadow-[0_10px_35px_rgba(6,182,212,0.18)] hover:border-cyan-500/60 transition-all w-full sm:w-auto"
         >
           <div className="flex items-center gap-2">
@@ -146,7 +146,7 @@ const Hero: React.FC = () => {
         <motion.p
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 2.6 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
           className="text-sm sm:text-lg md:text-xl text-slate-700 dark:text-slate-200 leading-relaxed max-w-3xl mx-auto mb-6 sm:mb-7 font-semibold px-2"
         >
           {t('hero.descripcion')}
@@ -155,7 +155,7 @@ const Hero: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 2.8 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.95 }}
           className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center w-full sm:w-auto px-2 sm:px-4 mb-6"
         >
           <SalonBloomButton
@@ -176,7 +176,7 @@ const Hero: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 3.0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 1.1 }}
           className="w-full"
         >
           <HeroCompare />

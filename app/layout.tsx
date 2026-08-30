@@ -89,7 +89,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
@@ -126,6 +130,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <head>
+        <link
+          rel="preconnect"
+          href="https://bksonxnxshxinqffswqc.supabase.co"
+          crossOrigin="anonymous"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

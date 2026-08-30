@@ -19,7 +19,7 @@ export default function BrandIntroSplash() {
 
     const timer = setTimeout(() => {
       setVisible(false)
-    }, 850)
+    }, 450)
 
     return () => clearTimeout(timer)
   }, [])
@@ -32,9 +32,9 @@ export default function BrandIntroSplash() {
           initial={{ opacity: 1 }}
           exit={{
             opacity: 0,
-            y: -25,
+            y: -20,
             scale: 1.02,
-            transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+            transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
           }}
           className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#05060f] select-none pointer-events-auto"
         >
@@ -44,35 +44,35 @@ export default function BrandIntroSplash() {
 
           {/* Center Content Box */}
           <motion.div
-            initial={{ scale: 0.88, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col items-center"
           >
             {/* Logo Badge Container */}
-            <div className="relative p-4 rounded-3xl bg-slate-900/90 border border-cyan-500/30 shadow-[0_0_40px_rgba(6,182,212,0.25)] flex items-center justify-center mb-6">
+            <div className="relative p-3.5 rounded-3xl bg-slate-900/90 border border-cyan-500/30 shadow-[0_0_40px_rgba(6,182,212,0.25)] flex items-center justify-center mb-5">
               <span className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-500 to-fuchsia-500 opacity-30 blur-md pointer-events-none" />
-              <Logo size={52} className="relative z-10" />
+              <Logo size={48} className="relative z-10" />
             </div>
 
             {/* Brand Title */}
-            <div className="flex items-baseline gap-1.5 font-sans select-none mb-4">
-              <span className="text-white text-lg font-black tracking-tight font-montserrat">
+            <div className="flex items-baseline gap-1.5 font-sans select-none mb-3.5">
+              <span className="text-white text-base sm:text-lg font-black tracking-tight font-montserrat">
                 EXE
               </span>
-              <span className="text-yellow-400 font-black text-sm">{'//'}</span>
-              <span className="text-white text-lg font-extrabold tracking-tight font-montserrat">
+              <span className="text-yellow-400 font-black text-xs sm:text-sm">{'//'}</span>
+              <span className="text-white text-base sm:text-lg font-extrabold tracking-tight font-montserrat">
                 PAGINASWEB
               </span>
               <span className="text-cyan-400 font-bold text-xs">.COM</span>
             </div>
 
             {/* Progress line */}
-            <div className="w-44 h-1 bg-slate-800/80 rounded-full overflow-hidden relative">
+            <div className="w-40 h-1 bg-slate-800/80 rounded-full overflow-hidden relative">
               <motion.div
                 initial={{ x: '-100%' }}
                 animate={{ x: '100%' }}
-                transition={{ duration: 0.8, ease: 'easeInOut' }}
+                transition={{ duration: 0.45, ease: 'easeInOut' }}
                 className="w-full h-full bg-gradient-to-r from-cyan-400 via-sky-300 to-fuchsia-400"
               />
             </div>

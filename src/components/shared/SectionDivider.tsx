@@ -126,16 +126,18 @@ export const SectionDivider: React.FC<SectionDividerProps> = ({
   if (variant === 'cyber') {
     return (
       <div
-        className={`relative w-full py-6 sm:py-8 z-10 pointer-events-none flex items-center justify-center ${
-          flip ? 'rotate-180' : ''
-        } ${className}`}
+        className={`relative w-full py-6 sm:py-8 z-10 pointer-events-none flex items-center justify-center ${className}`}
       >
         {/* Soft atmospheric backlight halo */}
         <div
           className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 max-w-4xl h-12 bg-gradient-to-r ${theme.glow} blur-2xl opacity-50 dark:opacity-75`}
         />
 
-        <div className="relative w-full max-w-7xl px-4 sm:px-6 flex items-center justify-center">
+        <div
+          className={`relative w-full max-w-7xl px-4 sm:px-6 flex items-center justify-center ${
+            flip ? 'flex-row-reverse' : ''
+          }`}
+        >
           {/* Left Laser Line */}
           <div className="relative flex-1 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-cyan-400/70 dark:via-cyan-400/50 dark:to-cyan-400">
             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-[2px] bg-cyan-400/60 blur-[1px]" />
@@ -232,16 +234,18 @@ export const SectionDivider: React.FC<SectionDividerProps> = ({
   if (variant === 'beam') {
     return (
       <div
-        className={`relative w-full py-6 sm:py-8 z-10 pointer-events-none flex items-center justify-center overflow-hidden ${
-          flip ? 'rotate-180' : ''
-        } ${className}`}
+        className={`relative w-full py-6 sm:py-8 z-10 pointer-events-none flex items-center justify-center overflow-hidden ${className}`}
       >
         {/* Ambient atmospheric flare */}
         <div
           className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 max-w-4xl h-10 bg-gradient-to-r ${theme.glow} blur-xl opacity-60 dark:opacity-80`}
         />
 
-        <div className="relative w-full max-w-7xl px-4 sm:px-8 flex items-center justify-center">
+        <div
+          className={`relative w-full max-w-7xl px-4 sm:px-8 flex items-center justify-center ${
+            flip ? 'flex-row-reverse' : ''
+          }`}
+        >
           {/* Main Laser Core Line */}
           <div className={`w-full h-px bg-gradient-to-r ${theme.line}`} />
 
@@ -279,9 +283,7 @@ export const SectionDivider: React.FC<SectionDividerProps> = ({
   // Default: GLOW variant (Laser beam with premium diamond center node & micro-details)
   return (
     <div
-      className={`relative w-full py-5 sm:py-7 z-10 pointer-events-none flex items-center justify-center overflow-hidden ${
-        flip ? 'rotate-180' : ''
-      } ${className}`}
+      className={`relative w-full py-5 sm:py-7 z-10 pointer-events-none flex items-center justify-center overflow-hidden ${className}`}
     >
       {/* 1. Large Ambient Radial Halo */}
       <div
@@ -289,7 +291,11 @@ export const SectionDivider: React.FC<SectionDividerProps> = ({
       />
 
       {/* 2. Precision Laser Beam Line */}
-      <div className="relative w-full max-w-7xl px-4 sm:px-8 flex items-center justify-center">
+      <div
+        className={`relative w-full max-w-7xl px-4 sm:px-8 flex items-center justify-center ${
+          flip ? 'flex-row-reverse' : ''
+        }`}
+      >
         {/* Left segment */}
         <div
           className={`flex-1 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-cyan-400/80 dark:via-cyan-400/60 dark:to-cyan-300`}

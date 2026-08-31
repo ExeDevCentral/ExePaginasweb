@@ -91,7 +91,7 @@ export default function HomePage() {
             <DemoZone />
             <SectionDivider variant="minimal" accent="cyan" />
             <Process />
-            <SectionDivider variant="cyber" accent="mixed" label="PLANES & INVERSIÓN" flip />
+            <SectionDivider variant="cyber" accent="mixed" label="PLANES & INVERSIÓN" />
             <Pricing />
             <SectionDivider variant="glow" accent="magenta" />
             <ContactSection />

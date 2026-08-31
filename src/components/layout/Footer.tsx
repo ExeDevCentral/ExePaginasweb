@@ -72,7 +72,7 @@ const Footer = () => {
                 <Instagram size={18} />
               </a>
               <a
-                href="https://www.linkedin.com/in/exequiel.echevarria/"
+                href="https://www.linkedin.com/in/exequiel-echevarria/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2.5 rounded-2xl bg-card border border-border text-muted-foreground hover:text-sky-400 transition-colors duration-300 shadow-sm"

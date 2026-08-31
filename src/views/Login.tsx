@@ -783,7 +783,7 @@ export default function Login() {
 
       {/* Page Footer */}
       <footer className="relative z-10 w-full max-w-6xl mx-auto text-center text-[11px] text-slate-500 py-2 font-mono">
-        © {new Date().getFullYear()} ExePaginasWeb — Todos los derechos reservados.
+        © 2025 ExeSistemasWEB — Todos los derechos reservados.
       </footer>
     </div>
   )

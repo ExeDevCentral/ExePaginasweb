@@ -46,7 +46,7 @@ const basePlans: Omit<PlanData, 'price' | 'priceUSD' | 'period' | 'rawPriceARS' 
       border: 'border-cyan-500/30',
       features: [
         'Hosting de alta velocidad Vercel Edge',
-        'Renovación de dominio anual (.com / .ar)',
+        'Monitoreo de uptime y disponibilidad 24/7',
         'Actualizaciones continuas de seguridad',
         'Certificado SSL bancario automático',
         'Soporte técnico estándar por ticket',
@@ -63,6 +63,7 @@ const basePlans: Omit<PlanData, 'price' | 'priceUSD' | 'period' | 'rawPriceARS' 
       border: 'border-purple-500/50',
       features: [
         'Todo lo del Abono Básico',
+        'Renovación de dominio anual bonificada*',
         'Gestión y monitoreo de Base de Datos',
         'Backups diarios automáticos en la nube',
         'Monitoreo de pasarelas de pago y webhooks',

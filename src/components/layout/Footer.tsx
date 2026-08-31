@@ -208,7 +208,7 @@ const Footer = () => {
 
         <div className="pt-8 border-t border-foreground/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-primary-secondary text-xs">
-            © {new Date().getFullYear()} ExeSistemasWEB. {t('footer.derechos')}
+            © 2025 ExeSistemasWEB. {t('footer.derechos')}
           </p>
           <p className="text-primary-secondary text-xs flex items-center gap-1.5">
             Built &amp; maintained by{' '}

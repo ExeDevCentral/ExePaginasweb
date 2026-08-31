@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { Check, ArrowRight, Sparkles, Shield, Zap, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -34,20 +34,28 @@ interface PlanCardProps {
 export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: PlanCardProps) {
   const { t } = useTranslation()
   const cardRef = useRef<HTMLDivElement>(null)
+  const [isButtonHovered, setIsButtonHovered] = useState(false)
 
   // 3D Motion Values
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
   // Spring physics for buttery-smooth tilt
-  const springConfig = { damping: 20, stiffness: 200 }
+  const springConfig = { damping: 25, stiffness: 220 }
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), springConfig)
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), springConfig)
   const glareX = useSpring(useTransform(x, [-0.5, 0.5], [0, 100]), springConfig)
   const glareY = useSpring(useTransform(y, [-0.5, 0.5], [0, 100]), springConfig)
 
+  useEffect(() => {
+    if (isButtonHovered) {
+      x.set(0)
+      y.set(0)
+    }
+  }, [isButtonHovered, x, y])
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return
+    if (!cardRef.current || isButtonHovered) return
     const rect = cardRef.current.getBoundingClientRect()
     const mouseX = (e.clientX - rect.left) / rect.width - 0.5
     const mouseY = (e.clientY - rect.top) / rect.height - 0.5
@@ -60,6 +68,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
   }
 
   const handleMouseLeave = () => {
+    setIsButtonHovered(false)
     x.set(0)
     y.set(0)
   }
@@ -89,19 +98,37 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        animate={
+          isButtonHovered
+            ? {
+                rotateX: 0,
+                rotateY: 0,
+                y: -8,
+                scale: 1.02,
+              }
+            : {
+                y: 0,
+                scale: 1,
+              }
+        }
+        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
         style={{
-          rotateX,
-          rotateY,
+          rotateX: isButtonHovered ? 0 : rotateX,
+          rotateY: isButtonHovered ? 0 : rotateY,
           transformStyle: 'preserve-3d',
         }}
         className="relative transition-shadow duration-300"
       >
-        {/* Glow de fondo amplificado */}
+        {/* Glow de fondo amplificado y destacado al interactuar con el botón */}
         <div
           className={`absolute -inset-4 rounded-[36px] blur-[36px] -z-10 pointer-events-none transition-all duration-500 ${
             plan.popular
-              ? 'bg-gradient-to-r from-cyan-500/30 via-purple-500/40 to-pink-500/30 opacity-90 group-hover:opacity-100 group-hover:scale-105'
-              : 'bg-black/40 dark:bg-accent-cyan/10 opacity-40 group-hover:opacity-80 group-hover:scale-105'
+              ? isButtonHovered
+                ? 'bg-gradient-to-r from-cyan-400/60 via-purple-500/70 to-pink-500/60 opacity-100 scale-110'
+                : 'bg-gradient-to-r from-cyan-500/30 via-purple-500/40 to-pink-500/30 opacity-90 group-hover:opacity-100 group-hover:scale-105'
+              : isButtonHovered
+                ? 'bg-gradient-to-r from-cyan-500/50 via-indigo-500/40 to-fuchsia-500/50 opacity-100 scale-110'
+                : 'bg-black/40 dark:bg-accent-cyan/10 opacity-40 group-hover:opacity-80 group-hover:scale-105'
           }`}
         />
 
@@ -120,10 +147,14 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
 
         {/* Tarjeta Principal Adaptativa con Alto Contraste y Vidrio Holográfico */}
         <div
-          className={`relative rounded-3xl bg-white/95 dark:bg-[#0c0e1a]/90 border border-slate-200/90 dark:border-white/15 backdrop-blur-2xl p-7 sm:p-9 flex flex-col text-left transition-all duration-300 shadow-2xl overflow-hidden ${
-            plan.popular
-              ? 'border-purple-500/60 dark:border-purple-500/60 ring-2 ring-purple-500/30'
-              : 'hover:border-accent-cyan/60'
+          className={`relative rounded-3xl bg-white/95 dark:bg-[#0c0e1a]/90 border backdrop-blur-2xl p-7 sm:p-9 flex flex-col text-left transition-all duration-300 shadow-2xl overflow-hidden ${
+            isButtonHovered
+              ? plan.popular
+                ? 'border-purple-400 ring-2 ring-purple-400/60 shadow-[0_25px_60px_rgba(168,85,247,0.4)]'
+                : 'border-cyan-400 ring-2 ring-cyan-400/60 shadow-[0_25px_60px_rgba(6,182,212,0.35)]'
+              : plan.popular
+                ? 'border-purple-500/60 dark:border-purple-500/60 ring-2 ring-purple-500/30'
+                : 'border-slate-200/90 dark:border-white/15 hover:border-accent-cyan/60'
           }`}
         >
           {/* Reflejo Especular Holográfico Interactivo */}
@@ -225,7 +256,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
             </ul>
           </div>
 
-          {/* Botón de Suscripción con Efecto de Destello */}
+          {/* Botón de Suscripción con Efecto de Destello y Latido */}
           <div className="relative z-30 mt-auto pt-2">
             <motion.button
               type="button"
@@ -233,9 +264,48 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
                 storeAudio.playSelect()
                 onSelect(plan)
               }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="relative w-full py-4 rounded-2xl font-black text-white flex items-center justify-center gap-2 overflow-hidden group/btn cursor-pointer shadow-xl"
+              onMouseEnter={(e) => {
+                e.stopPropagation()
+                setIsButtonHovered(true)
+                x.set(0)
+                y.set(0)
+              }}
+              onMouseMove={(e) => {
+                e.stopPropagation()
+                if (!isButtonHovered) setIsButtonHovered(true)
+                x.set(0)
+                y.set(0)
+              }}
+              onMouseLeave={(e) => {
+                e.stopPropagation()
+                setIsButtonHovered(false)
+              }}
+              animate={
+                isButtonHovered
+                  ? {
+                      scale: [1.02, 1.05, 1.02],
+                      boxShadow: [
+                        '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
+                        '0 20px 35px -5px rgba(0, 0, 0, 0.45)',
+                        '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
+                      ],
+                    }
+                  : {
+                      scale: 1,
+                      boxShadow: '0 10px 20px -5px rgba(0, 0, 0, 0.25)',
+                    }
+              }
+              transition={
+                isButtonHovered
+                  ? {
+                      duration: 1.15,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }
+                  : { duration: 0.22, ease: 'easeOut' }
+              }
+              whileTap={{ scale: 0.96 }}
+              className="relative w-full py-4 rounded-2xl font-black text-white flex items-center justify-center gap-2 overflow-hidden group/btn cursor-pointer shadow-xl will-change-transform"
             >
               <div className={`absolute inset-0 bg-gradient-to-r ${plan.color}`} />
               <motion.div

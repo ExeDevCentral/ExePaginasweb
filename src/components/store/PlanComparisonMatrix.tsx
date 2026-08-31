@@ -49,10 +49,11 @@ const COMPARISON_CATEGORIES: FeatureCategory[] = [
       },
       {
         name: 'Renovación de Dominio Anual',
-        tooltip: 'Gestión y costo de renovación de tu dominio (.com o .com.ar) bonificado.',
-        basico: true,
-        avanzado: true,
-        premium: true,
+        tooltip:
+          'Gestión y costo de renovación de tu dominio (.com o .com.ar) 100% bonificado para suscriptores activos (antigüedad mínima de 6 meses).',
+        basico: false,
+        avanzado: 'Bonificado*',
+        premium: 'Bonificado*',
       },
       {
         name: 'CDN Global Anycast Ultra-Rápido',
@@ -279,6 +280,14 @@ export const PlanComparisonMatrix: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+              <div className="p-3.5 sm:p-4 border-t border-border/40 bg-slate-100/50 dark:bg-white/[0.02] text-xs text-slate-500 dark:text-slate-400">
+                <p>
+                  <span className="text-cyan-500 font-bold">*</span>{' '}
+                  <strong>Renovación de Dominio:</strong> La bonificación del costo de renovación
+                  anual (.com / .com.ar) aplica para clientes activos a partir del 6º mes
+                  ininterrumpido de suscripción en Abonos Avanzado y Premium.
+                </p>
+              </div>
             </div>
           </motion.div>
         )}

@@ -56,7 +56,7 @@ export const PLAN_THEMES: Record<Exclude<PlanTier, 'none'>, PlanDashboardTheme> 
     activities: [
       { label: 'Certificado SSL verificado', time: 'hace 1h', status: 'ok' },
       { label: 'Parche de seguridad aplicado', time: 'hace 6h', status: 'ok' },
-      { label: 'Dominio en renovación automática', time: 'ayer', status: 'info' },
+      { label: 'Uptime verificado (100% online)', time: 'ayer', status: 'ok' },
     ],
     perks: [
       'Hosting Vercel Edge',

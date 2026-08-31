@@ -5,6 +5,7 @@ import { Sparkles } from 'lucide-react'
 import { SalonBloomButton } from '../shared/SalonBloomButton'
 import HeroCompare from './HeroCompare'
 import MagneticButton from '../shared/MagneticButton'
+import CyberTypewriter from './CyberTypewriter'
 import { trackEvent } from '@/core/analytics/trackEvent'
 
 const Badge: React.FC<{ text: string }> = ({ text }) => (
@@ -29,13 +30,13 @@ const TitleLine: React.FC<{
   delay: number
   duration?: number
   index: number
-}> = ({ text, delay, duration = 0.65, index }) => {
+}> = ({ text, delay, duration = 0.75, index }) => {
   const isPunchline = index > 0
-  const initialX = isPunchline ? 40 : -40
+  const initialX = isPunchline ? 60 : -60
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: initialX, filter: 'blur(6px)', scale: isPunchline ? 0.96 : 1 }}
+      initial={{ opacity: 0, x: initialX, filter: 'blur(8px)', scale: isPunchline ? 0.96 : 1 }}
       animate={{ opacity: 1, x: 0, filter: 'blur(0px)', scale: 1 }}
       transition={{
         duration,
@@ -113,14 +114,14 @@ const Hero: React.FC = () => {
             const hasPunctuation =
               part.endsWith('.') || part.endsWith('。') || i === titleParts.length - 1
             const lineText = `${part}${!hasPunctuation ? '.' : ''}`
-            const lineDelay = i === 0 ? 0.05 : 0.4
+            const lineDelay = i === 0 ? 0.1 : 2.1
             return (
               <TitleLine
                 key={`hero-title-line-${part.substring(0, 15)}`}
                 index={i}
                 text={lineText}
                 delay={lineDelay}
-                duration={i === 0 ? 0.65 : 0.75}
+                duration={i === 0 ? 0.7 : 0.8}
               />
             )
           })}
@@ -130,13 +131,13 @@ const Hero: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.65 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 2.5 }}
           className="inline-flex flex-col items-center gap-1.5 px-4 py-3.5 sm:px-7 sm:py-4 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-[#090a16]/95 border border-slate-200/90 dark:border-cyan-500/30 backdrop-blur-xl mb-5 sm:mb-6 max-w-2xl shadow-lg dark:shadow-[0_10px_35px_rgba(6,182,212,0.18)] hover:border-cyan-500/60 transition-all w-full sm:w-auto"
         >
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-            <p className="text-xs sm:text-sm md:text-base text-slate-800 dark:text-slate-100 font-bold">
-              {t('hero.titulo_2')}
+            <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0 animate-pulse" />
+            <p className="text-xs sm:text-sm md:text-base text-slate-800 dark:text-slate-100 font-bold min-h-[1.5rem] flex items-center">
+              <CyberTypewriter text={t('hero.titulo_2')} startDelay={2600} speed={34} />
             </p>
           </div>
           <p className="text-lg sm:text-xl md:text-2xl font-black text-gradient-spectacular">
@@ -147,7 +148,7 @@ const Hero: React.FC = () => {
         <motion.p
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 2.7 }}
           className="text-sm sm:text-lg md:text-xl text-slate-700 dark:text-slate-200 leading-relaxed max-w-3xl mx-auto mb-6 sm:mb-7 font-semibold px-2"
         >
           {t('hero.descripcion')}
@@ -156,7 +157,7 @@ const Hero: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.95 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 2.9 }}
           className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center w-full sm:w-auto px-2 sm:px-4 mb-6"
         >
           <SalonBloomButton
@@ -183,7 +184,7 @@ const Hero: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 1.1 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 3.1 }}
           className="w-full"
         >
           <HeroCompare />

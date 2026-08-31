@@ -546,7 +546,7 @@ export default function Dashboard() {
           >
             <Menu className="w-5 h-5" />
           </button>
-          <span className="font-bold text-white text-sm">Dashdark X</span>
+          <span className="font-bold text-white text-sm">ExeSistemasWEB</span>
           <button
             type="button"
             onClick={handleLogout}

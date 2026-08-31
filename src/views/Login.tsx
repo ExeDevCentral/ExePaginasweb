@@ -427,17 +427,6 @@ export default function Login() {
                   )}
                 </motion.button>
 
-                {/* Instant Local Preview / Demo Mode Button */}
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate('/dashboard?preview=true')}
-                  className="w-full mt-3 py-3 px-4 rounded-2xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 bg-[#151B28] hover:bg-[#1C2438] text-[#38BDF8] border border-[#1E2638] shadow-sm cursor-pointer"
-                >
-                  <span>✨ Ver Dashboard Demo Dashdark X (Local) →</span>
-                </motion.button>
-
                 <div className="relative my-6 text-center">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-white/10" />

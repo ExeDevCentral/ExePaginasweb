@@ -31,7 +31,6 @@ import type { Cliente } from '../core/domain/entities/Cliente'
 import type { Suscripcion } from '../core/domain/entities/Suscripcion'
 import ClientDashboard from '../components/dashboard/ClientDashboard'
 import AdminDashboardView from '../components/dashboard/AdminDashboardView'
-import OnboardingWizard from '../components/dashboard/OnboardingWizard'
 import DashboardHeader from '../components/dashboard/DashboardHeader'
 import PanelErrorBoundary from '../components/dashboard/PanelErrorBoundary'
 import { useAdminDashboard } from '../hooks/useAdminDashboard'
@@ -172,8 +171,16 @@ export default function Dashboard() {
     !isPreview && ready && !!session && !!cliente?.id
   )
   const currentTenant = isPreview
-    ? { id: 'demo-tenant-1', nombre: 'Dashdark Workspace', slug: 'dashdark-ws' }
-    : tenants[0] || null
+    ? { id: 'demo-tenant-1', nombre: 'Workspace ExeSistemasWEB', slug: 'exesistemasweb-ws' }
+    : tenants[0] ||
+      (effectiveCliente
+        ? {
+            id: effectiveCliente.id,
+            nombre: effectiveCliente.full_name || 'Espacio ExeSistemasWEB',
+            slug: 'exesistemasweb-ws',
+          }
+        : { id: 'default-tenant', nombre: 'Espacio ExeSistemasWEB', slug: 'exesistemasweb-ws' })
+  const effectiveTenant = currentTenant
 
   // Eager parallel data prefetching
   useEffect(() => {
@@ -641,17 +648,6 @@ export default function Dashboard() {
                 refreshing={adminLoading}
               />
             </PanelErrorBoundary>
-          ) : !isPreview && !currentTenant && effectiveCliente ? (
-            <PanelErrorBoundary panelName="Onboarding">
-              <OnboardingWizard
-                cliente={effectiveCliente}
-                planTier={effectiveTier}
-                onComplete={async () => {
-                  await queryClient.invalidateQueries({ queryKey: ['tenant'] })
-                  refresh()
-                }}
-              />
-            </PanelErrorBoundary>
           ) : (
             <div className="space-y-6">
               {/* Overview (Resumen) Panel */}
@@ -674,7 +670,7 @@ export default function Dashboard() {
               </div>
 
               {/* Services (Servicios) Panel */}
-              {currentTenant && (visitedTabs.has('services') || activeView === 'services') && (
+              {(visitedTabs.has('services') || activeView === 'services') && (
                 <div
                   className={`transition-opacity duration-150 ${
                     activeView === 'services' ? 'block opacity-100' : 'hidden opacity-0'
@@ -682,14 +678,14 @@ export default function Dashboard() {
                 >
                   <PanelErrorBoundary panelName="Servicios">
                     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-                      <ServicesPanel tenantId={currentTenant.id} />
+                      <ServicesPanel tenantId={effectiveTenant.id} />
                     </div>
                   </PanelErrorBoundary>
                 </div>
               )}
 
               {/* Workgroups (Equipo) Panel */}
-              {currentTenant && (visitedTabs.has('workgroups') || activeView === 'workgroups') && (
+              {(visitedTabs.has('workgroups') || activeView === 'workgroups') && (
                 <div
                   className={`transition-opacity duration-150 ${
                     activeView === 'workgroups' ? 'block opacity-100' : 'hidden opacity-0'
@@ -697,14 +693,14 @@ export default function Dashboard() {
                 >
                   <PanelErrorBoundary panelName="Equipo">
                     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-                      <WorkGroupsPanel tenantId={currentTenant.id} />
+                      <WorkGroupsPanel tenantId={effectiveTenant.id} />
                     </div>
                   </PanelErrorBoundary>
                 </div>
               )}
 
               {/* SLA Panel */}
-              {currentTenant && (visitedTabs.has('sla') || activeView === 'sla') && (
+              {(visitedTabs.has('sla') || activeView === 'sla') && (
                 <div
                   className={`transition-opacity duration-150 ${
                     activeView === 'sla' ? 'block opacity-100' : 'hidden opacity-0'
@@ -712,14 +708,14 @@ export default function Dashboard() {
                 >
                   <PanelErrorBoundary panelName="SLA">
                     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-                      <SLADashboard tenantId={currentTenant.id} />
+                      <SLADashboard tenantId={effectiveTenant.id} />
                     </div>
                   </PanelErrorBoundary>
                 </div>
               )}
 
               {/* Invoices (Facturas) Panel */}
-              {currentTenant && (visitedTabs.has('invoices') || activeView === 'invoices') && (
+              {(visitedTabs.has('invoices') || activeView === 'invoices') && (
                 <div
                   className={`transition-opacity duration-150 ${
                     activeView === 'invoices' ? 'block opacity-100' : 'hidden opacity-0'
@@ -727,7 +723,7 @@ export default function Dashboard() {
                 >
                   <PanelErrorBoundary panelName="Facturas">
                     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-                      <InvoicesPanel tenantId={currentTenant.id} />
+                      <InvoicesPanel tenantId={effectiveTenant.id} />
                     </div>
                   </PanelErrorBoundary>
                 </div>

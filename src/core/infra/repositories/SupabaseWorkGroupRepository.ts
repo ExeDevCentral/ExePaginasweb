@@ -2,9 +2,11 @@ import { supabase } from '../supabase/client'
 import { WorkGroup, WorkGroupWithMembers } from '../../domain/entities/WorkGroup'
 import { WorkMember } from '../../domain/entities/WorkMember'
 import { IWorkGroupRepository } from '../../domain/repositories/IWorkGroupRepository'
+import { isValidUUID } from '../../utils/uuid'
 
 export class SupabaseWorkGroupRepository implements IWorkGroupRepository {
   async listByTenantId(tenantId: string): Promise<WorkGroupWithMembers[]> {
+    if (!isValidUUID(tenantId)) return []
     const { data: groups, error } = await supabase
       .from('work_groups')
       .select('*')
@@ -34,6 +36,7 @@ export class SupabaseWorkGroupRepository implements IWorkGroupRepository {
   }
 
   async getById(id: string): Promise<WorkGroupWithMembers | null> {
+    if (!isValidUUID(id)) return null
     const { data: group, error } = await supabase
       .from('work_groups')
       .select('*')
@@ -68,6 +71,7 @@ export class SupabaseWorkGroupRepository implements IWorkGroupRepository {
   }
 
   async update(id: string, data: Partial<WorkGroup>): Promise<WorkGroup> {
+    if (!isValidUUID(id)) throw new Error('Invalid ID')
     const { data: updated, error } = await supabase
       .from('work_groups')
       .update(data)
@@ -80,7 +84,8 @@ export class SupabaseWorkGroupRepository implements IWorkGroupRepository {
   }
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase.from('work_groups').delete().eq('id', id)
+    if (!isValidUUID(id)) return
+    const { error } = await supabase.from('work_groups').update({ activo: false }).eq('id', id)
 
     if (error) throw error
   }

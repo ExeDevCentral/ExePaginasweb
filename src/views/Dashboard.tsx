@@ -31,8 +31,10 @@ import type { Cliente } from '../core/domain/entities/Cliente'
 import type { Suscripcion } from '../core/domain/entities/Suscripcion'
 import ClientDashboard from '../components/dashboard/ClientDashboard'
 import AdminDashboardView from '../components/dashboard/AdminDashboardView'
+import OnboardingWizard from '../components/dashboard/OnboardingWizard'
 import DashboardHeader from '../components/dashboard/DashboardHeader'
 import PanelErrorBoundary from '../components/dashboard/PanelErrorBoundary'
+import { isValidUUID } from '../core/utils/uuid'
 import { useAdminDashboard } from '../hooks/useAdminDashboard'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -172,19 +174,12 @@ export default function Dashboard() {
   )
   const currentTenant = isPreview
     ? { id: 'demo-tenant-1', nombre: 'Workspace ExeSistemasWEB', slug: 'exesistemasweb-ws' }
-    : tenants[0] ||
-      (effectiveCliente
-        ? {
-            id: effectiveCliente.id,
-            nombre: effectiveCliente.full_name || 'Espacio ExeSistemasWEB',
-            slug: 'exesistemasweb-ws',
-          }
-        : { id: 'default-tenant', nombre: 'Espacio ExeSistemasWEB', slug: 'exesistemasweb-ws' })
-  const effectiveTenant = currentTenant
+    : tenants[0] || null
+  const effectiveTenantId = currentTenant?.id || 'demo-tenant-1'
 
-  // Eager parallel data prefetching
+  // Eager parallel data prefetching only when a valid UUID tenant exists
   useEffect(() => {
-    if (isPreview || !currentTenant?.id) return
+    if (isPreview || !currentTenant?.id || !isValidUUID(currentTenant.id)) return
     const tid = currentTenant.id
 
     queryClient.prefetchQuery({
@@ -648,6 +643,17 @@ export default function Dashboard() {
                 refreshing={adminLoading}
               />
             </PanelErrorBoundary>
+          ) : !isPreview && !currentTenant && effectiveCliente && effectiveTier !== 'none' ? (
+            <PanelErrorBoundary panelName="Onboarding">
+              <OnboardingWizard
+                cliente={effectiveCliente}
+                planTier={effectiveTier}
+                onComplete={async () => {
+                  await queryClient.invalidateQueries({ queryKey: ['tenant'] })
+                  refresh()
+                }}
+              />
+            </PanelErrorBoundary>
           ) : (
             <div className="space-y-6">
               {/* Overview (Resumen) Panel */}
@@ -678,7 +684,7 @@ export default function Dashboard() {
                 >
                   <PanelErrorBoundary panelName="Servicios">
                     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-                      <ServicesPanel tenantId={effectiveTenant.id} />
+                      <ServicesPanel tenantId={effectiveTenantId} />
                     </div>
                   </PanelErrorBoundary>
                 </div>
@@ -693,7 +699,7 @@ export default function Dashboard() {
                 >
                   <PanelErrorBoundary panelName="Equipo">
                     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-                      <WorkGroupsPanel tenantId={effectiveTenant.id} />
+                      <WorkGroupsPanel tenantId={effectiveTenantId} />
                     </div>
                   </PanelErrorBoundary>
                 </div>
@@ -708,7 +714,7 @@ export default function Dashboard() {
                 >
                   <PanelErrorBoundary panelName="SLA">
                     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-                      <SLADashboard tenantId={effectiveTenant.id} />
+                      <SLADashboard tenantId={effectiveTenantId} />
                     </div>
                   </PanelErrorBoundary>
                 </div>
@@ -723,7 +729,7 @@ export default function Dashboard() {
                 >
                   <PanelErrorBoundary panelName="Facturas">
                     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-                      <InvoicesPanel tenantId={effectiveTenant.id} />
+                      <InvoicesPanel tenantId={effectiveTenantId} />
                     </div>
                   </PanelErrorBoundary>
                 </div>

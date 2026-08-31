@@ -6,6 +6,7 @@ import type {
   TenantServiceWithDetails,
 } from '../core/domain/entities/TenantService'
 import { queryKeys } from '../core/infra/query/queryKeys'
+import { isValidUUID } from '../core/utils/uuid'
 
 const catalogRepo = new SupabaseServiceCatalogRepository()
 const tenantServiceRepo = new SupabaseTenantServiceRepository()
@@ -29,8 +30,9 @@ export function useAllServices() {
 export function useTenantServices(tenantId: string | null, enabled = true) {
   return useQuery({
     queryKey: queryKeys.tenantServices.byTenant(tenantId),
-    queryFn: () => tenantServiceRepo.listByTenantId(tenantId!),
-    enabled: enabled && !!tenantId,
+    queryFn: () =>
+      isValidUUID(tenantId) ? tenantServiceRepo.listByTenantId(tenantId!) : Promise.resolve([]),
+    enabled: enabled && !!tenantId && isValidUUID(tenantId),
     staleTime: 2 * 60 * 1000,
   })
 }

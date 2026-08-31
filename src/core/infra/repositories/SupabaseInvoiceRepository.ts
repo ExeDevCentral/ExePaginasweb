@@ -1,9 +1,11 @@
 import { supabase } from '../supabase/client'
 import { Invoice } from '../../domain/entities/Invoice'
 import { IInvoiceRepository } from '../../domain/repositories/IInvoiceRepository'
+import { isValidUUID } from '../../utils/uuid'
 
 export class SupabaseInvoiceRepository implements IInvoiceRepository {
   async listByTenantId(tenantId: string, limit = 20, offset = 0): Promise<Invoice[]> {
+    if (!isValidUUID(tenantId)) return []
     const { data, error } = await supabase
       .from('invoices')
       .select('*')
@@ -16,6 +18,7 @@ export class SupabaseInvoiceRepository implements IInvoiceRepository {
   }
 
   async listByClienteId(clienteId: string, limit = 20, offset = 0): Promise<Invoice[]> {
+    if (!isValidUUID(clienteId)) return []
     const { data, error } = await supabase
       .from('invoices')
       .select('*')
@@ -28,6 +31,7 @@ export class SupabaseInvoiceRepository implements IInvoiceRepository {
   }
 
   async getById(id: string): Promise<Invoice | null> {
+    if (!isValidUUID(id)) return null
     const { data, error } = await supabase.from('invoices').select('*').eq('id', id).maybeSingle()
 
     if (error) throw error
@@ -48,6 +52,7 @@ export class SupabaseInvoiceRepository implements IInvoiceRepository {
   }
 
   async markAsPaid(id: string, pagoId: string): Promise<void> {
+    if (!isValidUUID(id)) return
     const { error } = await supabase
       .from('invoices')
       .update({
@@ -61,6 +66,7 @@ export class SupabaseInvoiceRepository implements IInvoiceRepository {
   }
 
   async countByTenantId(tenantId: string): Promise<number> {
+    if (!isValidUUID(tenantId)) return 0
     const { count, error } = await supabase
       .from('invoices')
       .select('id', { count: 'exact', head: true })
@@ -71,6 +77,7 @@ export class SupabaseInvoiceRepository implements IInvoiceRepository {
   }
 
   async sumTotalByTenantId(tenantId: string): Promise<number> {
+    if (!isValidUUID(tenantId)) return 0
     const { data, error } = await supabase
       .from('invoices')
       .select('total')

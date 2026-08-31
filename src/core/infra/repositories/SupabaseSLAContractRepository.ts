@@ -1,9 +1,11 @@
 import { supabase } from '../supabase/client'
 import { SLAContract, SLABreach } from '../../domain/entities/SLAContract'
 import { ISLAContractRepository } from '../../domain/repositories/ISLAContractRepository'
+import { isValidUUID } from '../../utils/uuid'
 
 export class SupabaseSLAContractRepository implements ISLAContractRepository {
   async listByTenantId(tenantId: string): Promise<SLAContract[]> {
+    if (!isValidUUID(tenantId)) return []
     const { data, error } = await supabase
       .from('sla_contracts')
       .select('*')
@@ -15,6 +17,7 @@ export class SupabaseSLAContractRepository implements ISLAContractRepository {
   }
 
   async getActiveByTenantId(tenantId: string): Promise<SLAContract | null> {
+    if (!isValidUUID(tenantId)) return null
     const { data, error } = await supabase
       .from('sla_contracts')
       .select('*')
@@ -40,6 +43,7 @@ export class SupabaseSLAContractRepository implements ISLAContractRepository {
   }
 
   async update(id: string, data: Partial<SLAContract>): Promise<SLAContract> {
+    if (!isValidUUID(id)) throw new Error('Invalid ID')
     const { data: updated, error } = await supabase
       .from('sla_contracts')
       .update(data)
@@ -52,6 +56,7 @@ export class SupabaseSLAContractRepository implements ISLAContractRepository {
   }
 
   async checkBreaches(tenantId: string): Promise<SLABreach[]> {
+    if (!isValidUUID(tenantId)) return []
     const { data, error } = await supabase.rpc('check_sla_breaches', {
       p_tenant_id: tenantId,
     })

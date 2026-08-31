@@ -1,14 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { SupabaseWorkMemberRepository } from '../core/infra/repositories/SupabaseWorkMemberRepository'
 import type { WorkMember } from '../core/domain/entities/WorkMember'
+import { isValidUUID } from '../core/utils/uuid'
 
 const repo = new SupabaseWorkMemberRepository()
 
 export function useWorkMembers(tenantId: string | null, enabled = true) {
   return useQuery({
     queryKey: ['work-members', tenantId],
-    queryFn: () => repo.listByTenantId(tenantId!),
-    enabled: enabled && !!tenantId,
+    queryFn: () => (isValidUUID(tenantId) ? repo.listByTenantId(tenantId!) : Promise.resolve([])),
+    enabled: enabled && !!tenantId && isValidUUID(tenantId),
     staleTime: 2 * 60 * 1000,
   })
 }
@@ -16,8 +17,8 @@ export function useWorkMembers(tenantId: string | null, enabled = true) {
 export function useWorkMember(id: string | null, enabled = true) {
   return useQuery({
     queryKey: ['work-member', id],
-    queryFn: () => repo.getById(id!),
-    enabled: enabled && !!id,
+    queryFn: () => (isValidUUID(id) ? repo.getById(id!) : Promise.resolve(null)),
+    enabled: enabled && !!id && isValidUUID(id),
   })
 }
 

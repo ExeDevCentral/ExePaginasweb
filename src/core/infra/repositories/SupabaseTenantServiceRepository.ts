@@ -1,9 +1,11 @@
 import { supabase } from '../supabase/client'
 import { TenantService, TenantServiceWithDetails } from '../../domain/entities/TenantService'
 import { ITenantServiceRepository } from '../../domain/repositories/ITenantServiceRepository'
+import { isValidUUID } from '../../utils/uuid'
 
 export class SupabaseTenantServiceRepository implements ITenantServiceRepository {
   async listByTenantId(tenantId: string): Promise<TenantServiceWithDetails[]> {
+    if (!isValidUUID(tenantId)) return []
     const { data, error } = await supabase
       .from('tenant_services')
       .select(
@@ -20,6 +22,7 @@ export class SupabaseTenantServiceRepository implements ITenantServiceRepository
   }
 
   async getById(id: string): Promise<TenantServiceWithDetails | null> {
+    if (!isValidUUID(id)) return null
     const { data, error } = await supabase
       .from('tenant_services')
       .select(
@@ -49,6 +52,7 @@ export class SupabaseTenantServiceRepository implements ITenantServiceRepository
   }
 
   async update(id: string, data: Partial<TenantService>): Promise<TenantService> {
+    if (!isValidUUID(id)) throw new Error('Invalid ID')
     const { data: updated, error } = await supabase
       .from('tenant_services')
       .update(data)
@@ -61,6 +65,7 @@ export class SupabaseTenantServiceRepository implements ITenantServiceRepository
   }
 
   async cancel(id: string): Promise<void> {
+    if (!isValidUUID(id)) return
     const { error } = await supabase
       .from('tenant_services')
       .update({ estado: 'cancelado', auto_renew: false })
@@ -70,6 +75,7 @@ export class SupabaseTenantServiceRepository implements ITenantServiceRepository
   }
 
   async getActiveCount(tenantId: string): Promise<number> {
+    if (!isValidUUID(tenantId)) return 0
     const { count, error } = await supabase
       .from('tenant_services')
       .select('id', { count: 'exact', head: true })

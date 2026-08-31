@@ -1,9 +1,11 @@
 import { supabase } from '../supabase/client'
 import { WorkMember, WorkMemberWithGroup } from '../../domain/entities/WorkMember'
 import { IWorkMemberRepository } from '../../domain/repositories/IWorkMemberRepository'
+import { isValidUUID } from '../../utils/uuid'
 
 export class SupabaseWorkMemberRepository implements IWorkMemberRepository {
   async listByTenantId(tenantId: string): Promise<WorkMemberWithGroup[]> {
+    if (!isValidUUID(tenantId)) return []
     const { data, error } = await supabase
       .from('work_members')
       .select(
@@ -20,6 +22,7 @@ export class SupabaseWorkMemberRepository implements IWorkMemberRepository {
   }
 
   async getById(id: string): Promise<WorkMemberWithGroup | null> {
+    if (!isValidUUID(id)) return null
     const { data, error } = await supabase
       .from('work_members')
       .select(
@@ -36,6 +39,7 @@ export class SupabaseWorkMemberRepository implements IWorkMemberRepository {
   }
 
   async getByUserId(userId: string): Promise<WorkMemberWithGroup | null> {
+    if (!isValidUUID(userId)) return null
     const { data, error } = await supabase
       .from('work_members')
       .select(
@@ -64,6 +68,7 @@ export class SupabaseWorkMemberRepository implements IWorkMemberRepository {
   }
 
   async update(id: string, data: Partial<WorkMember>): Promise<WorkMember> {
+    if (!isValidUUID(id)) throw new Error('Invalid ID')
     const { data: updated, error } = await supabase
       .from('work_members')
       .update(data)
@@ -76,12 +81,14 @@ export class SupabaseWorkMemberRepository implements IWorkMemberRepository {
   }
 
   async delete(id: string): Promise<void> {
+    if (!isValidUUID(id)) return
     const { error } = await supabase.from('work_members').delete().eq('id', id)
 
     if (error) throw error
   }
 
   async countByTenantId(tenantId: string): Promise<number> {
+    if (!isValidUUID(tenantId)) return 0
     const { count, error } = await supabase
       .from('work_members')
       .select('id', { count: 'exact', head: true })

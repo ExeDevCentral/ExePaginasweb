@@ -10,6 +10,7 @@ import BrandIntroSplash from '@/components/layout/BrandIntroSplash'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import ScrollProvider from '@/components/shared/ScrollProvider'
 import MouseSpotlight from '@/components/shared/MouseSpotlight'
+import SectionDivider from '@/components/shared/SectionDivider'
 
 import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription'
 import SocialProof from '@/components/SocialProof/SocialProof'
@@ -29,14 +30,6 @@ const Footer = dynamic(() => import('@/components/layout/Footer'), {
 const AIChatWidget = dynamic(() => import('@/components/chat/AIChatWidget'), {
   ssr: false,
 })
-
-const WaveDivider = ({ flip = false }: { flip?: boolean }) => (
-  <div
-    className={`relative w-full h-8 sm:h-12 -my-1 z-10 pointer-events-none flex items-center justify-center overflow-hidden ${flip ? 'rotate-180' : ''}`}
-  >
-    <div className="w-full max-w-7xl h-px bg-gradient-to-r from-transparent via-accent-cyan/25 to-transparent" />
-  </div>
-)
 
 export default function HomePage() {
   const [loadHeavyComponents, setLoadHeavyComponents] = useState(false)
@@ -84,18 +77,25 @@ export default function HomePage() {
           <Header />
           <main>
             <Hero />
-            <WaveDivider />
+            <SectionDivider variant="glow" accent="cyan" />
             <OwnershipVsSubscription />
+            <SectionDivider variant="minimal" accent="cyan" />
             <SocialProof />
+            <SectionDivider variant="cyber" accent="mixed" label="SOLUCIONES" />
             <Products />
+            <SectionDivider variant="beam" accent="cyan" />
             <CaseStudies />
+            <SectionDivider variant="glow" accent="purple" />
             <PortfolioSection />
+            <SectionDivider variant="cyber" accent="cyan" label="DEMOS LIVE" />
             <DemoZone />
+            <SectionDivider variant="minimal" accent="cyan" />
             <Process />
-            <WaveDivider flip />
+            <SectionDivider variant="cyber" accent="mixed" label="PLANES & INVERSIÓN" flip />
             <Pricing />
-            <WaveDivider />
+            <SectionDivider variant="glow" accent="magenta" />
             <ContactSection />
+            <SectionDivider variant="beam" accent="cyan" />
             <FaqSection />
           </main>
 

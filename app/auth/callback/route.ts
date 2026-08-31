@@ -9,7 +9,12 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code')
   const errorParam = searchParams.get('error_description') || searchParams.get('error')
   const rawNext = searchParams.get('next') ?? '/dashboard'
-  const next = rawNext.startsWith('/') ? rawNext : `/${rawNext}`
+
+  // Sanitizar el parámetro next para prevenir ataques de Open Redirect
+  let next = rawNext.startsWith('/') ? rawNext : `/${rawNext}`
+  if (next.startsWith('//') || next.startsWith('/\\') || next.includes('://')) {
+    next = '/dashboard'
+  }
 
   // Resolver el origen respetando proxies inversos y Vercel
   const forwardedHost = request.headers.get('x-forwarded-host')

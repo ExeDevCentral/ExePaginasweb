@@ -5,7 +5,6 @@ import { ArrowLeft, ShieldCheck, LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from '../layout/LanguageSwitcher'
-import Logo from '../layout/Logo'
 import ThemeToggle from '../layout/ThemeToggle'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 
@@ -21,7 +20,7 @@ export function DashboardHeader({ userEmail, onLogout }: Readonly<DashboardHeade
   const prefersReducedMotion = useReducedMotion()
 
   return (
-    <header className="sticky top-0 z-50 mb-8 p-3.5 sm:p-4 rounded-3xl bg-white/95 dark:bg-[#090a12]/90 border border-slate-200/90 dark:border-white/15 backdrop-blur-2xl shadow-md dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-wrap items-center justify-between gap-4 transition-all duration-300">
+    <header className="sticky top-0 z-50 mb-6 p-3 sm:p-4 rounded-2xl bg-[#0D111A] border border-[#1E2638] shadow-sm flex flex-wrap items-center justify-between gap-4 transition-all duration-300">
       <div className="flex items-center gap-3 sm:gap-4">
         <motion.a
           href="/"
@@ -29,18 +28,17 @@ export function DashboardHeader({ userEmail, onLogout }: Readonly<DashboardHeade
             e.preventDefault()
             navigate('/')
           }}
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-2.5 cursor-pointer group"
           whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
           whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
         >
-          <Logo
-            className="h-9 w-auto"
-            size={38}
-            variant="auto"
-            showText
-            animated={!prefersReducedMotion}
-            textClassName="text-slate-900 dark:text-white text-sm sm:text-base font-black tracking-widest uppercase font-mono"
-          />
+          {/* Dashdark X Style Logo Icon */}
+          <div className="flex items-center gap-1">
+            <span className="w-3.5 h-3.5 rounded-full bg-[#4361EE]" />
+            <span className="w-3.5 h-3.5 rounded-full bg-[#38BDF8]" />
+          </div>
+          <span className="text-white font-bold text-base sm:text-lg tracking-tight">ExeDash</span>
+          <span className="text-[11px] font-mono text-[#64748B] ml-1">&lt;&gt;</span>
         </motion.a>
 
         <motion.a
@@ -49,20 +47,20 @@ export function DashboardHeader({ userEmail, onLogout }: Readonly<DashboardHeade
             e.preventDefault()
             navigate('/')
           }}
-          className="hidden md:inline-flex items-center gap-2 text-xs font-bold px-3.5 py-1.5 rounded-full bg-slate-200/80 dark:bg-slate-900/80 hover:bg-slate-300 dark:hover:bg-slate-800 border border-slate-300/80 dark:border-white/10 text-slate-800 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white transition-all shadow-sm"
+          className="hidden md:inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl bg-[#151B28] hover:bg-[#1C2438] border border-[#1E2638] text-slate-300 transition-all shadow-sm"
         >
-          <ArrowLeft size={13} className="text-cyan-600 dark:text-cyan-400" />
-          <span>{t('dashboard.volver_exepaginasweb')}</span>
+          <ArrowLeft size={13} className="text-[#38BDF8]" />
+          <span>{t('dashboard.volver_exepaginasweb', 'Volver al Sitio')}</span>
         </motion.a>
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
         {/* Real-time SSL Security Badge */}
-        <div className="hidden lg:flex items-center gap-2 text-[11px] font-mono font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100/90 dark:bg-emerald-950/50 backdrop-blur-xl px-3.5 py-1.5 rounded-full border border-emerald-300 dark:border-emerald-500/30 shadow-sm">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          <span className="tracking-wider">SSL SECURE</span>
+        <div className="hidden lg:flex items-center gap-1.5 text-xs font-mono font-medium text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-xl border border-emerald-500/20 shadow-sm">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+          <span>SSL 100% SECURE</span>
           <span
-            className={`w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 ${
+            className={`w-1.5 h-1.5 rounded-full bg-emerald-400 ${
               prefersReducedMotion ? '' : 'animate-ping'
             }`}
           />
@@ -71,14 +69,14 @@ export function DashboardHeader({ userEmail, onLogout }: Readonly<DashboardHeade
         {/* Language Switcher Selector */}
         <LanguageSwitcher />
 
-        {/* Theme Toggle Sun (☀️) / Moon (🌙) Button */}
-        <div className="p-1 rounded-2xl bg-slate-200/80 dark:bg-slate-900/80 border border-slate-300/80 dark:border-white/15 flex items-center justify-center shadow-sm">
+        {/* Theme Toggle Button */}
+        <div className="p-1 rounded-xl bg-[#151B28] border border-[#1E2638] flex items-center justify-center shadow-sm">
           <ThemeToggle />
         </div>
 
         {/* User Email Indicator */}
         {userEmail && (
-          <div className="hidden sm:block text-xs font-mono font-bold text-slate-800 dark:text-slate-200 bg-slate-200/80 dark:bg-slate-900/80 px-3.5 py-1.5 rounded-full border border-slate-300/80 dark:border-white/10 shadow-sm max-w-[200px] truncate">
+          <div className="hidden sm:block text-xs font-medium text-slate-300 bg-[#151B28] px-3 py-1.5 rounded-xl border border-[#1E2638] shadow-sm max-w-[200px] truncate">
             {userEmail}
           </div>
         )}
@@ -87,10 +85,10 @@ export function DashboardHeader({ userEmail, onLogout }: Readonly<DashboardHeade
         <button
           type="button"
           onClick={onLogout}
-          className="flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-2xl border border-rose-300 dark:border-rose-500/20 bg-rose-100 dark:bg-rose-500/10 hover:bg-rose-200 dark:hover:bg-rose-500/20 text-rose-800 dark:text-rose-300 text-xs font-bold transition-all shadow-sm"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-rose-500/20 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold transition-all shadow-sm cursor-pointer"
         >
-          <LogOut className="w-4 h-4" />
-          <span>{t('dashboard.salir')}</span>
+          <LogOut className="w-3.5 h-3.5" />
+          <span>{t('dashboard.salir', 'Salir')}</span>
         </button>
       </div>
     </header>

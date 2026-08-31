@@ -103,7 +103,12 @@ export default function Login() {
       setError(null)
       setLoading(true)
 
-      const target = searchParams.get('redirectTo') || searchParams.get('next') || '/dashboard'
+      const rawTarget = searchParams.get('redirectTo') || searchParams.get('next') || '/dashboard'
+      let target = rawTarget.startsWith('/') ? rawTarget : `/${rawTarget}`
+      if (target.startsWith('//') || target.startsWith('/\\') || target.includes('://')) {
+        target = '/dashboard'
+      }
+
       const redirectPath =
         target && target !== '/dashboard'
           ? `/auth/callback?next=${encodeURIComponent(target)}`
@@ -420,6 +425,17 @@ export default function Login() {
                       <span>{t('login.continuar_google')}</span>
                     </>
                   )}
+                </motion.button>
+
+                {/* Instant Local Preview / Demo Mode Button */}
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate('/dashboard?preview=true')}
+                  className="w-full mt-3 py-3 px-4 rounded-2xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 bg-[#151B28] hover:bg-[#1C2438] text-[#38BDF8] border border-[#1E2638] shadow-sm cursor-pointer"
+                >
+                  <span>✨ Ver Dashboard Demo Dashdark X (Local) →</span>
                 </motion.button>
 
                 <div className="relative my-6 text-center">

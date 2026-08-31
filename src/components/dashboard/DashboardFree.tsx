@@ -41,25 +41,25 @@ export default function DashboardFree({ cliente, onLogout }: Readonly<DashboardF
   const unreadCount = notifications.filter((n) => !n.leida).length
 
   return (
-    <div className="relative space-y-8">
+    <div className="relative space-y-6">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-[2.5rem] border border-slate-200/90 dark:border-white/15 bg-white/95 dark:bg-[#090a12]/90 p-8 sm:p-10 backdrop-blur-2xl shadow-xl dark:shadow-2xl"
+        className="rounded-2xl border border-[#1E2638] bg-[#111622] p-6 sm:p-8 shadow-sm"
       >
         <div className="flex flex-col md:flex-row items-start justify-between gap-6">
-          <div className="flex items-start gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-500/30 flex items-center justify-center shrink-0 shadow-md">
-              <Sparkles className="w-7 h-7 text-pink-600 dark:text-pink-400" />
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#151B28] border border-[#1E2638] flex items-center justify-center shrink-0">
+              <Sparkles className="w-6 h-6 text-[#38BDF8]" />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-[0.35em] text-cyan-600 dark:text-cyan-400 font-black">
+              <p className="text-xs uppercase tracking-wider text-[#38BDF8] font-bold">
                 {t('dash.sin_suscripcion', 'Sin Suscripción Activa')}
               </p>
-              <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mt-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mt-1">
                 {t('dashboard.hola', 'Hola')}, {nombre}
               </h1>
-              <p className="mt-2 text-slate-600 dark:text-slate-300 max-w-xl text-sm sm:text-base font-medium">
+              <p className="mt-1 text-sm text-[#8C9BB0] font-medium max-w-xl">
                 {t(
                   'dash.activar_suscripcion_desc',
                   'Activá tu abono mensual para acceder al panel completo y soporte 24/7.'
@@ -68,7 +68,7 @@ export default function DashboardFree({ cliente, onLogout }: Readonly<DashboardF
               <button
                 type="button"
                 onClick={onLogout}
-                className="mt-4 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
+                className="mt-3 text-xs font-semibold text-[#8C9BB0] hover:text-rose-400 transition-colors cursor-pointer"
               >
                 {t('dashboard.salir', 'Cerrar Sesión')}
               </button>
@@ -78,7 +78,7 @@ export default function DashboardFree({ cliente, onLogout }: Readonly<DashboardF
           <button
             type="button"
             onClick={() => navigate('/tienda')}
-            className="w-full md:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 dark:from-cyan-500 dark:via-purple-600 dark:to-pink-500 text-white font-black hover:opacity-95 transition-all shadow-lg flex items-center justify-center gap-2"
+            className="w-full md:w-auto px-6 py-3 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white font-semibold text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
           >
             <span>{t('dash.subir_plan', 'Mejorar Plan')}</span>
             <ArrowRight size={16} />
@@ -98,46 +98,39 @@ export default function DashboardFree({ cliente, onLogout }: Readonly<DashboardF
         />
       </div>
 
-      <div className="pt-4">
-        <p className="mb-6 text-xs font-black uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400 text-center">
+      <div className="pt-2">
+        <p className="mb-4 text-xs font-bold uppercase tracking-wider text-[#8C9BB0]">
           {t('dashboard.vista_previa_planes', 'Vista previa por plan')}
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {PREVIEW_TIERS.map(({ tier, icon: Icon }, i) => {
-            const t = PLAN_THEMES[tier]
+            const planTheme = PLAN_THEMES[tier]
             return (
               <motion.div
                 key={tier}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -6 }}
-                className={`rounded-3xl border ${t.border} bg-white/90 dark:bg-[#090a12]/90 p-7 backdrop-blur-xl shadow-md dark:shadow-xl cursor-default transition-all`}
+                transition={{ delay: i * 0.08 }}
+                className="rounded-2xl border border-[#1E2638] bg-[#111622] p-6 shadow-sm cursor-default"
               >
-                <div
-                  className={`w-12 h-12 rounded-2xl border ${t.border} flex items-center justify-center mb-4 ${t.glow} shadow-sm`}
-                >
-                  <Icon className={`w-6 h-6 ${t.accent}`} />
+                <div className="w-10 h-10 rounded-xl border border-[#1E2638] bg-[#151B28] flex items-center justify-center mb-3.5">
+                  <Icon className={`w-5 h-5 ${planTheme.accent}`} />
                 </div>
-                <h3 className={`text-xl font-black ${t.accent}`}>{t.badge}</h3>
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 font-medium">
-                  {t.subtitle}
-                </p>
-                <ul className="mt-5 space-y-2">
-                  {t.perks.slice(0, 3).map((p) => (
+                <h3 className="text-lg font-bold text-white">{planTheme.badge}</h3>
+                <p className="mt-1 text-xs text-[#8C9BB0] font-medium">{planTheme.subtitle}</p>
+                <ul className="mt-4 space-y-2">
+                  {planTheme.perks.slice(0, 3).map((p) => (
                     <li
                       key={p}
-                      className="text-xs text-slate-700 dark:text-slate-300 font-semibold flex items-center gap-2"
+                      className="text-xs text-slate-300 font-medium flex items-center gap-2"
                     >
-                      <span className="text-cyan-500">✦</span>
+                      <span className="text-[#38BDF8]">✦</span>
                       <span>{p}</span>
                     </li>
                   ))}
                 </ul>
-                <p className="mt-6 text-[10px] font-mono text-slate-400 dark:text-slate-500">
-                  dashboard.{tier}.exe
-                </p>
+                <p className="mt-5 text-[10px] font-mono text-[#64748B]">dashboard.{tier}.exe</p>
               </motion.div>
             )
           })}

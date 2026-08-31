@@ -137,7 +137,7 @@ const Hero: React.FC = () => {
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0 animate-pulse" />
             <p className="text-xs sm:text-sm md:text-base text-slate-800 dark:text-slate-100 font-bold min-h-[1.5rem] flex items-center">
-              <CyberTypewriter text={t('hero.titulo_2')} startDelay={820} speed={30} />
+              <CyberTypewriter text={t('hero.titulo_2')} startDelay={2500} speed={38} />
             </p>
           </div>
           <p className="text-lg sm:text-xl md:text-2xl font-black text-gradient-spectacular">

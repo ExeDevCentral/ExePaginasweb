@@ -16,7 +16,6 @@ import {
   ChevronRight,
   Star,
   DollarSign,
-  Plug,
   Menu,
   X,
   ArrowRight,
@@ -50,8 +49,16 @@ import WorkGroupsPanel from '../components/workgroups/WorkGroupsPanel'
 import ServicesPanel from '../components/services/ServicesPanel'
 import SLADashboard from '../components/sla/SLADashboard'
 import InvoicesPanel from '../components/invoices/InvoicesPanel'
+import SettingsPanel from '../components/dashboard/SettingsPanel'
 
-type DashboardView = 'overview' | 'services' | 'workgroups' | 'sla' | 'invoices' | 'admin'
+type DashboardView =
+  | 'overview'
+  | 'services'
+  | 'workgroups'
+  | 'sla'
+  | 'invoices'
+  | 'settings'
+  | 'admin'
 
 export default function Dashboard() {
   const router = useRouter()
@@ -85,7 +92,10 @@ export default function Dashboard() {
 
   const tabParam = searchParams.get('tab') as DashboardView | null
   const [activeView, setActiveView] = useState<DashboardView>(
-    tabParam && ['overview', 'services', 'workgroups', 'sla', 'invoices'].includes(tabParam)
+    tabParam &&
+      ['overview', 'services', 'workgroups', 'sla', 'invoices', 'settings', 'admin'].includes(
+        tabParam
+      )
       ? tabParam
       : 'overview'
   )
@@ -138,7 +148,10 @@ export default function Dashboard() {
   // Sync activeView with searchParams tab without lag
   useEffect(() => {
     const tab = searchParams.get('tab') as DashboardView | null
-    if (tab && ['overview', 'services', 'workgroups', 'sla', 'invoices'].includes(tab)) {
+    if (
+      tab &&
+      ['overview', 'services', 'workgroups', 'sla', 'invoices', 'settings', 'admin'].includes(tab)
+    ) {
       setActiveView(tab)
       setVisitedTabs((prev) => {
         if (prev.has(tab)) return prev
@@ -447,7 +460,11 @@ export default function Dashboard() {
               <button
                 type="button"
                 onClick={() => handleTabChange('invoices')}
-                className="w-full text-left px-3 py-2 rounded-xl text-xs text-[#8C9BB0] hover:text-white hover:bg-[#151B28] font-medium transition-colors flex items-center justify-between cursor-pointer"
+                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${
+                  activeView === 'invoices'
+                    ? 'bg-[#1C2438] text-white font-semibold border-l-2 border-[#4361EE] shadow-sm'
+                    : 'text-[#8C9BB0] hover:text-white hover:bg-[#151B28]'
+                }`}
               >
                 <span className="flex items-center gap-2.5">
                   <DollarSign className="w-3.5 h-3.5 text-[#8C9BB0]" />
@@ -455,27 +472,18 @@ export default function Dashboard() {
                 </span>
                 <ChevronRight className="w-3.5 h-3.5 text-[#64748B]" />
               </button>
-
-              <a
-                href="https://wa.me/5493416874786"
-                target="_blank"
-                rel="noreferrer"
-                className="w-full text-left px-3 py-2 rounded-xl text-xs text-[#8C9BB0] hover:text-white hover:bg-[#151B28] font-medium transition-colors flex items-center justify-between cursor-pointer"
-              >
-                <span className="flex items-center gap-2.5">
-                  <Plug className="w-3.5 h-3.5 text-[#8C9BB0]" />
-                  WhatsApp & Bot
-                </span>
-                <ChevronRight className="w-3.5 h-3.5 text-[#64748B]" />
-              </a>
             </div>
 
             {/* Bottom Pages */}
             <div className="space-y-1 pt-2 border-t border-[#1E2638]">
               <button
                 type="button"
-                onClick={() => handleTabChange('overview')}
-                className="w-full text-left px-3 py-2 rounded-xl text-xs text-[#8C9BB0] hover:text-white hover:bg-[#151B28] font-medium transition-colors flex items-center justify-between cursor-pointer"
+                onClick={() => handleTabChange('settings')}
+                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${
+                  activeView === 'settings'
+                    ? 'bg-[#1C2438] text-white font-semibold border-l-2 border-[#4361EE] shadow-sm'
+                    : 'text-[#8C9BB0] hover:text-white hover:bg-[#151B28]'
+                }`}
               >
                 <span className="flex items-center gap-2.5">
                   <Settings className="w-3.5 h-3.5 text-[#8C9BB0]" />
@@ -516,15 +524,14 @@ export default function Dashboard() {
           </div>
 
           {/* Primary Action Button */}
-          <a
-            href="https://wa.me/5493416874786?text=Hola%20ExePaginasWeb!%20Necesito%20soporte%20VIP"
-            target="_blank"
-            rel="noreferrer"
+          <button
+            type="button"
+            onClick={() => handleTabChange('sla')}
             className="w-full py-2.5 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white font-semibold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
           >
-            <span>Soporte WhatsApp VIP</span>
+            <span>Mesa de Ayuda & Tickets</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </a>
+          </button>
         </div>
       </aside>
 
@@ -590,9 +597,12 @@ export default function Dashboard() {
                   <div className="flex bg-[#151B28] p-1 rounded-xl border border-[#1E2638]">
                     <button
                       type="button"
-                      onClick={() => setViewMode('admin')}
+                      onClick={() => {
+                        setViewMode('admin')
+                        handleTabChange('overview')
+                      }}
                       className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        viewMode === 'admin'
+                        viewMode === 'admin' && activeView === 'overview'
                           ? 'bg-[#4361EE] text-white shadow-sm'
                           : 'text-[#8C9BB0] hover:text-white'
                       }`}
@@ -601,9 +611,12 @@ export default function Dashboard() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setViewMode('client')}
+                      onClick={() => {
+                        setViewMode('client')
+                        handleTabChange('overview')
+                      }}
                       className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        viewMode === 'client'
+                        viewMode === 'client' && activeView === 'overview'
                           ? 'bg-[#4361EE] text-white shadow-sm'
                           : 'text-[#8C9BB0] hover:text-white'
                       }`}
@@ -631,7 +644,7 @@ export default function Dashboard() {
           )}
 
           {/* Main Dashboard Views */}
-          {!isPreview && isAdmin && viewMode === 'admin' ? (
+          {!isPreview && isAdmin && viewMode === 'admin' && activeView === 'overview' ? (
             <PanelErrorBoundary panelName="Admin Dashboard">
               <AdminDashboardView
                 clientes={adminClientes}
@@ -643,7 +656,11 @@ export default function Dashboard() {
                 refreshing={adminLoading}
               />
             </PanelErrorBoundary>
-          ) : !isPreview && !currentTenant && effectiveCliente && effectiveTier !== 'none' ? (
+          ) : !isPreview &&
+            !currentTenant &&
+            effectiveCliente &&
+            effectiveTier !== 'none' &&
+            activeView === 'overview' ? (
             <PanelErrorBoundary panelName="Onboarding">
               <OnboardingWizard
                 cliente={effectiveCliente}
@@ -656,6 +673,21 @@ export default function Dashboard() {
             </PanelErrorBoundary>
           ) : (
             <div className="space-y-6">
+              {/* Admin Panel when tab 'admin' is selected */}
+              {activeView === 'admin' && (
+                <PanelErrorBoundary panelName="Admin Dashboard">
+                  <AdminDashboardView
+                    clientes={adminClientes}
+                    suscripciones={adminSuscripciones}
+                    pagos={adminPagos}
+                    tickets={adminTickets}
+                    stats={adminStats}
+                    onRefresh={refreshAdmin}
+                    refreshing={adminLoading}
+                  />
+                </PanelErrorBoundary>
+              )}
+
               {/* Overview (Resumen) Panel */}
               <div
                 className={`transition-opacity duration-150 ${
@@ -729,7 +761,33 @@ export default function Dashboard() {
                 >
                   <PanelErrorBoundary panelName="Facturas">
                     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-                      <InvoicesPanel tenantId={effectiveTenantId} />
+                      <InvoicesPanel
+                        tenantId={effectiveTenantId}
+                        pagos={effectivePagos}
+                        onOpenTicket={() => handleTabChange('sla')}
+                      />
+                    </div>
+                  </PanelErrorBoundary>
+                </div>
+              )}
+
+              {/* Settings (Configuración) Panel */}
+              {(visitedTabs.has('settings') || activeView === 'settings') && (
+                <div
+                  className={`transition-opacity duration-150 ${
+                    activeView === 'settings' ? 'block opacity-100' : 'hidden opacity-0'
+                  }`}
+                >
+                  <PanelErrorBoundary panelName="Configuración">
+                    <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
+                      <SettingsPanel
+                        cliente={effectiveCliente}
+                        userEmail={session?.user?.email}
+                        role={role}
+                        currentTenant={currentTenant}
+                        onLogout={handleLogout}
+                        onRefreshProfile={refresh}
+                      />
                     </div>
                   </PanelErrorBoundary>
                 </div>

@@ -254,7 +254,11 @@ export function DashdarkRevenueChart({
 }
 
 // 4. Inversión & Abono Mensual Widget (Top Right Column)
-export function DashdarkProfitCard() {
+export function DashdarkProfitCard({
+  amountText = 'Abono Activo',
+}: Readonly<{
+  amountText?: string
+}>) {
   const { t } = useTranslation()
   const barHeights = [45, 65, 30, 80, 55, 90, 70, 85, 40, 95, 60, 75, 88, 50, 92, 65]
 
@@ -271,7 +275,7 @@ export function DashdarkProfitCard() {
           <span>{t('dashboard.total_profit', 'Inversión de tu Abono')}</span>
         </div>
         <div className="flex items-baseline gap-2.5 mt-2">
-          <span className="text-2xl font-bold text-white tracking-tight">$45.000 / mes</span>
+          <span className="text-2xl font-bold text-white tracking-tight">{amountText}</span>
           <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             Al Día ●
           </span>
@@ -460,15 +464,12 @@ export function LiveHealthCard({ theme: _theme }: Readonly<{ theme: PlanDashboar
 // 7. Quick Actions Hub
 export function QuickActionsHub({
   onOpenTicket,
-  userEmail,
+  userEmail: _userEmail,
 }: Readonly<{
   onOpenTicket: () => void
   userEmail?: string
 }>) {
   const { t } = useTranslation()
-  const waMsg = encodeURIComponent(
-    `Hola ExePaginasWeb! Necesito soporte VIP para mi sitio web (Cliente: ${userEmail || 'Registrado'}).`
-  )
 
   return (
     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 space-y-4 shadow-sm">
@@ -490,20 +491,19 @@ export function QuickActionsHub({
           </p>
         </button>
 
-        <a
-          href={`https://wa.me/5493416874786?text=${waMsg}`}
-          target="_blank"
-          rel="noreferrer"
+        <button
+          type="button"
+          onClick={onOpenTicket}
           className="p-4 rounded-xl bg-[#151B28] border border-[#1E2638] hover:border-emerald-500/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
           <MessageSquare className="w-5 h-5 text-emerald-400 mb-2 group-hover:scale-110 transition-transform" />
           <p className="text-xs font-bold text-white">
-            {t('dashboard.soporte_vip_whatsapp', 'Soporte VIP WhatsApp')}
+            {t('dashboard.soporte_interno', 'Mesa de Ayuda')}
           </p>
           <p className="text-xs text-[#8C9BB0] mt-0.5">
-            {t('dashboard.chat_directo', 'Chat directo 24/7')}
+            {t('dashboard.tickets_canal_oficial', 'Crear ticket de soporte')}
           </p>
-        </a>
+        </button>
 
         <Link
           href="/dashboard?tab=invoices"

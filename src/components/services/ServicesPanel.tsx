@@ -23,6 +23,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 
 interface Props {
   tenantId: string
+  onOpenTicket?: () => void
 }
 
 function getIntervalLabel(intervalo: string | null | undefined) {
@@ -31,7 +32,7 @@ function getIntervalLabel(intervalo: string | null | undefined) {
   return 'único'
 }
 
-export default function ServicesPanel({ tenantId }: Readonly<Props>) {
+export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props>) {
   const { t, i18n } = useTranslation()
   const { data: dbServices = [], isLoading: servicesLoading } = useTenantServices(tenantId)
   const { data: catalog = [], isLoading: catalogLoading } = useServiceCatalog()
@@ -83,7 +84,8 @@ export default function ServicesPanel({ tenantId }: Readonly<Props>) {
           id: 'srv-turnos',
           slug: 'motor-turnos',
           nombre: 'Motor de Turnos & Reservas 24/7',
-          descripcion: 'Sistema inteligente de reservas de turnos en tiempo real con WhatsApp Bot.',
+          descripcion:
+            'Sistema inteligente de reservas de turnos en tiempo real con notificaciones automáticas.',
           tipo: 'saas',
           intervalo: 'mensual',
           precio_base: 0,
@@ -241,14 +243,20 @@ export default function ServicesPanel({ tenantId }: Readonly<Props>) {
           </p>
         </div>
 
-        <a
-          href="https://wa.me/5493416874786?text=Hola%20ExePaginasWeb!%20Quisiera%20consultar%20sobre%20mis%20servicios"
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white text-xs font-semibold transition-all shadow-sm cursor-pointer w-fit"
-        >
-          <span>Soporte de Servicios</span>
-        </a>
+        {onOpenTicket ? (
+          <button
+            type="button"
+            onClick={onOpenTicket}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white text-xs font-semibold transition-all shadow-sm cursor-pointer w-fit"
+          >
+            <span>Consultar Soporte</span>
+          </button>
+        ) : (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Infraestructura Online</span>
+          </span>
+        )}
       </div>
 
       {/* Services Table */}
@@ -276,50 +284,47 @@ export default function ServicesPanel({ tenantId }: Readonly<Props>) {
                 !services.some((s: TenantServiceWithDetails) => s.service_id === c.id)
             )
             .slice(0, 4)
-            .map((item: ServiceCatalog) => {
-              const waAddonMsg = encodeURIComponent(
-                `¡Hola ExePaginasWeb! Quisiera solicitar contratar el complemento/servicio: "${item.nombre}" ($${item.precio_base.toLocaleString('es-AR')} ${item.moneda}).`
-              )
-              return (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rounded-2xl border border-[#1E2638] bg-[#111622] p-5 hover:border-[#2C3852] transition-all shadow-sm flex flex-col justify-between"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-[10px] font-bold text-[#38BDF8] uppercase tracking-wider">
-                        {tipoLabels[item.tipo] || item.tipo}
+            .map((item: ServiceCatalog) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-2xl border border-[#1E2638] bg-[#111622] p-5 hover:border-[#2C3852] transition-all shadow-sm flex flex-col justify-between"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-bold text-[#38BDF8] uppercase tracking-wider">
+                      {tipoLabels[item.tipo] || item.tipo}
+                    </p>
+                    <p className="text-sm font-bold text-white mt-1">{item.nombre}</p>
+                    {item.descripcion && (
+                      <p className="text-xs text-[#8C9BB0] mt-1 font-medium leading-relaxed">
+                        {item.descripcion}
                       </p>
-                      <p className="text-sm font-bold text-white mt-1">{item.nombre}</p>
-                      {item.descripcion && (
-                        <p className="text-xs text-[#8C9BB0] mt-1 font-medium leading-relaxed">
-                          {item.descripcion}
-                        </p>
-                      )}
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-lg font-bold font-mono text-white">
-                        ${item.precio_base.toLocaleString(i18n.language || 'es-AR')}
-                      </p>
-                      <p className="text-[10px] text-[#64748B] uppercase font-bold">
-                        {item.moneda} / {getIntervalLabel(item.intervalo)}
-                      </p>
-                    </div>
+                    )}
                   </div>
-                  <a
-                    href={`https://wa.me/5493416874786?text=${waAddonMsg}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#38BDF8] hover:underline w-fit cursor-pointer"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    <span>{t('services.solicitar', 'Solicitar')}</span>
-                  </a>
-                </motion.div>
-              )
-            })}
+                  <div className="text-right shrink-0">
+                    <p className="text-lg font-bold font-mono text-white">
+                      ${item.precio_base.toLocaleString(i18n.language || 'es-AR')}
+                    </p>
+                    <p className="text-[10px] text-[#64748B] uppercase font-bold">
+                      {item.moneda} / {getIntervalLabel(item.intervalo)}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onOpenTicket) onOpenTicket()
+                    else window.location.href = '/tienda'
+                  }}
+                  className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#38BDF8] hover:underline w-fit cursor-pointer"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>{t('services.solicitar', 'Solicitar Activación')}</span>
+                </button>
+              </motion.div>
+            ))}
         </div>
       </div>
     </div>

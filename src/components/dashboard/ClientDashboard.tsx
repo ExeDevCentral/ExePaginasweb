@@ -15,11 +15,11 @@ type ClientDashboardProps = {
   onLogout: () => void
 }
 
-export default function ClientDashboard(props: ClientDashboardProps) {
+export default function ClientDashboard(props: Readonly<ClientDashboardProps>) {
   const { planTier, ...rest } = props
 
   if (planTier === 'none') {
-    return <DashboardFree cliente={rest.cliente} onLogout={rest.onLogout} />
+    return <DashboardFree {...rest} />
   }
 
   return <PlanDashboardView tier={planTier} {...rest} />

@@ -716,7 +716,10 @@ export default function Dashboard() {
                 >
                   <PanelErrorBoundary panelName="Servicios">
                     <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-                      <ServicesPanel tenantId={effectiveTenantId} />
+                      <ServicesPanel
+                        tenantId={effectiveTenantId}
+                        onOpenTicket={() => handleTabChange('sla')}
+                      />
                     </div>
                   </PanelErrorBoundary>
                 </div>

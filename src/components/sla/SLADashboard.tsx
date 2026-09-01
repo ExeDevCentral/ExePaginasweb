@@ -85,14 +85,10 @@ export default function SLADashboard({ tenantId }: Readonly<Props>) {
           </p>
         </div>
 
-        <a
-          href="https://wa.me/5493416874786?text=Hola%20ExePaginasWeb!%20Tengo%20una%20consulta%20de%20soporte%20SLA"
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white text-xs font-semibold transition-all shadow-sm cursor-pointer w-fit"
-        >
-          <span>Soporte VIP WhatsApp</span>
-        </a>
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>SLA 99.9% Garantizado</span>
+        </div>
       </div>
 
       {/* SLA Contract Card */}

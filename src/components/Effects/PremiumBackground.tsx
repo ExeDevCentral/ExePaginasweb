@@ -98,7 +98,6 @@ const PremiumBackground = () => {
     const nodes = Array.from({ length: nodeCount }, () => new Node(w, h, isMobile))
 
     let isDocumentVisible = true
-    let isScrolling = false
     let isSleeping = false
     let lastActivityTime = performance.now()
     let animId: number | null = null
@@ -155,21 +154,11 @@ const PremiumBackground = () => {
       }
     }
 
-    let scrollTimeout: NodeJS.Timeout
-    const handleScroll = () => {
-      isScrolling = true
-      clearTimeout(scrollTimeout)
-      scrollTimeout = setTimeout(() => {
-        isScrolling = false
-      }, 100)
-    }
-
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
-    window.addEventListener('mouseleave', handleMouseLeave, { passive: true })
+    window.addEventListener('mouseleave', handleMouseLeave)
     window.addEventListener('mousedown', burst, { passive: true })
     window.addEventListener('touchmove', handleTouchMove, { passive: true })
     window.addEventListener('touchstart', burst, { passive: true })
-    window.addEventListener('scroll', handleScroll, { passive: true })
 
     const handleVisibilityChange = () => {
       isDocumentVisible = document.visibilityState === 'visible'
@@ -227,7 +216,6 @@ const PremiumBackground = () => {
         window.removeEventListener('mousedown', burst)
         window.removeEventListener('touchmove', handleTouchMove)
         window.removeEventListener('touchstart', burst)
-        window.removeEventListener('scroll', handleScroll)
         document.removeEventListener('visibilitychange', handleVisibilityChange)
       }
     }
@@ -248,9 +236,6 @@ const PremiumBackground = () => {
 
       animId = requestAnimationFrame(loop)
 
-      // Durante scroll rápido, saltar cálculo de enlaces para mantener el hilo libre
-      if (isScrolling) return
-
       ctx.clearRect(0, 0, w, h)
       drawLinks()
       const darkTheme = document.documentElement.classList.contains('dark')
@@ -264,14 +249,12 @@ const PremiumBackground = () => {
 
     return () => {
       if (animId) cancelAnimationFrame(animId)
-      clearTimeout(scrollTimeout)
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseleave', handleMouseLeave)
       window.removeEventListener('mousedown', burst)
       window.removeEventListener('touchmove', handleTouchMove)
       window.removeEventListener('touchstart', burst)
-      window.removeEventListener('scroll', handleScroll)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [])

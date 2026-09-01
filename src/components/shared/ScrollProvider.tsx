@@ -76,8 +76,10 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     const lenis = new Lenis({
-      duration: 0.65,
+      duration: 0.8,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1.0,
       touchMultiplier: 1.0,
@@ -101,15 +103,15 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // Sincronizar ScrollTrigger con Lenis
     lenis.on('scroll', ScrollTrigger.update)
 
-    let rafId: number
-    const updateRaf = (time: number) => {
-      lenis.raf(time)
-      rafId = requestAnimationFrame(updateRaf)
+    // Conectar el ticker de GSAP a Lenis para sincronización frame a frame y evitar tirones
+    const updateTicker = (time: number) => {
+      lenis.raf(time * 1000)
     }
-    rafId = requestAnimationFrame(updateRaf)
+    gsap.ticker.add(updateTicker)
+    gsap.ticker.lagSmoothing(0)
 
     return () => {
-      cancelAnimationFrame(rafId)
+      gsap.ticker.remove(updateTicker)
       lenis.destroy()
       if (globalLenis === lenis) {
         globalLenis = null

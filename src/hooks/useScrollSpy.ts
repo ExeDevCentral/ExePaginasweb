@@ -9,7 +9,8 @@ interface UseScrollSpyOptions {
 
 /**
  * Hook de alto rendimiento para detectar qué sección está visible en el scroll.
- * Optimizado para evitar recálculos excesivos de layout (layout thrashing) y re-renders innecesarios.
+ * Cachea las posiciones de las secciones para eliminar layout thrashing (getBoundingClientRect)
+ * durante el scroll activo.
  */
 export function useScrollSpy(sectionIds: string[], options: UseScrollSpyOptions = {}): string {
   const { offset = 120, useRAF = true } = options
@@ -26,21 +27,31 @@ export function useScrollSpy(sectionIds: string[], options: UseScrollSpyOptions 
 
     let rafId: number | null = null
     let isTicking = false
+    let cachedTops: { id: string; top: number }[] = []
+
+    const recalculateTops = () => {
+      const scrollY = window.scrollY
+      cachedTops = ids
+        .map((id) => {
+          const el = document.getElementById(id)
+          if (!el) return null
+          return { id, top: el.getBoundingClientRect().top + scrollY }
+        })
+        .filter((item): item is { id: string; top: number } => item !== null)
+    }
+
+    recalculateTops()
 
     const updateActiveSection = () => {
-      const scrollY = window.scrollY
-      let current: string = ids[0] || ''
+      if (cachedTops.length === 0) {
+        recalculateTops()
+      }
+      const scrollPosition = window.scrollY + offset
+      let current = ids[0] || ''
 
-      for (let i = 0; i < ids.length; i++) {
-        const id = ids[i]
-        const element = document.getElementById(id)
-        if (!element) continue
-
-        // Usar offsetTop o getBoundingClientRect
-        const rect = element.getBoundingClientRect()
-        const elementTop = rect.top + scrollY
-        if (scrollY + offset >= elementTop) {
-          current = id
+      for (const item of cachedTops) {
+        if (scrollPosition >= item.top) {
+          current = item.id
         }
       }
 
@@ -65,15 +76,24 @@ export function useScrollSpy(sectionIds: string[], options: UseScrollSpyOptions 
       }
     }
 
+    const handleResize = () => {
+      recalculateTops()
+      handleScroll()
+    }
+
     // Ejecución inicial
     updateActiveSection()
 
+    // Recalcular posiciones tras renderizados diferidos
+    const refreshTimer = setTimeout(recalculateTops, 1200)
+
     window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', handleScroll, { passive: true })
+    window.addEventListener('resize', handleResize, { passive: true })
 
     return () => {
+      clearTimeout(refreshTimer)
       window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleScroll)
+      window.removeEventListener('resize', handleResize)
       if (rafId !== null) {
         cancelAnimationFrame(rafId)
       }

@@ -126,7 +126,7 @@ export const SectionDivider: React.FC<SectionDividerProps> = ({
   if (variant === 'cyber') {
     return (
       <div
-        className={`relative w-full py-6 sm:py-8 z-10 pointer-events-none flex items-center justify-center ${className}`}
+        className={`relative w-full py-6 sm:py-8 z-10 pointer-events-none flex items-center justify-center overflow-hidden ${className}`}
       >
         {/* Soft atmospheric backlight halo */}
         <div
@@ -191,10 +191,10 @@ export const SectionDivider: React.FC<SectionDividerProps> = ({
         {/* Traveling light particle */}
         {animated && (
           <motion.div
-            className={`absolute h-[2px] w-24 bg-gradient-to-r ${theme.spark} blur-[1px]`}
-            initial={{ left: '-10%', opacity: 0 }}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 h-[2px] w-24 bg-gradient-to-r ${theme.spark} blur-[1px] will-change-transform transform-gpu pointer-events-none`}
+            initial={{ x: '-120px', opacity: 0 }}
             animate={{
-              left: ['0%', '100%'],
+              x: ['0vw', '100vw'],
               opacity: [0, 1, 1, 0],
             }}
             transition={{
@@ -262,10 +262,10 @@ export const SectionDivider: React.FC<SectionDividerProps> = ({
         {/* Dynamic Energy sweep */}
         {animated && (
           <motion.div
-            className={`absolute h-[2px] w-32 bg-gradient-to-r ${theme.spark} blur-[1px]`}
-            initial={{ left: '-15%', opacity: 0 }}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 h-[2px] w-32 bg-gradient-to-r ${theme.spark} blur-[1px] will-change-transform transform-gpu pointer-events-none`}
+            initial={{ x: '-150px', opacity: 0 }}
             animate={{
-              left: ['0%', '100%'],
+              x: ['0vw', '100vw'],
               opacity: [0, 0.9, 0.9, 0],
             }}
             transition={{
@@ -337,10 +337,10 @@ export const SectionDivider: React.FC<SectionDividerProps> = ({
       {/* 3. Subtle animated photon spark traversing the beam */}
       {animated && (
         <motion.div
-          className={`absolute h-[2px] w-28 bg-gradient-to-r ${theme.spark} blur-[1px]`}
-          initial={{ left: '-10%', opacity: 0 }}
+          className={`absolute left-0 top-1/2 -translate-y-1/2 h-[2px] w-28 bg-gradient-to-r ${theme.spark} blur-[1px] will-change-transform transform-gpu pointer-events-none`}
+          initial={{ x: '-140px', opacity: 0 }}
           animate={{
-            left: ['-5%', '105%'],
+            x: ['0vw', '100vw'],
             opacity: [0, 0.85, 0.85, 0],
           }}
           transition={{

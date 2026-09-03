@@ -180,6 +180,32 @@ const INITIAL_PROJECTS: Project[] = [
     status: 'live',
     statusLabel: 'EN PRODUCCIÓN',
   },
+  {
+    id: 'bilex',
+    title: 'Bilex — Traductor de PDFs e Imágenes',
+    category: 'web',
+    categoryLabel: 'Herramienta Web',
+    client: 'Bilex · Herramienta de Traducción Bilingüe',
+    description:
+      'Aplicación web para traducir documentos completos (PDFs e imágenes) con vista dual bilingüe sincronizada. OCR con Tesseract.js, múltiples motores de traducción (Gemini, Groq, DeepL, OpenAI, Claude), exportación a PDF, TXT, Markdown y sesiones JSON.',
+    image: '/portfolio/bilex.svg',
+    tags: ['React', 'TypeScript', 'Vite', 'OCR', 'PDF', 'Traducción'],
+    metrics: [
+      { label: 'Stack', value: 'React + Vite' },
+      { label: 'Tipo', value: 'Herramienta OCR/IA' },
+    ],
+    highlights: [
+      'Extracción de texto de PDFs digitales y escaneados (OCR WASM)',
+      'Lector bilingüe dual sincronizado párrafo a párrafo',
+      '7 motores de traducción modulares con modo demo offline',
+      'Exportación multi-formato: PDF bilingüe, TXT, Markdown, JSON',
+      'Detección automática de idioma con franc-min',
+      'Tema oscuro/claro y diseño responsive',
+    ],
+    link: 'https://dualdoc-translate.vercel.app',
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
+  },
 ]
 
 export const PortfolioSection: React.FC = () => {

@@ -206,6 +206,32 @@ const INITIAL_PROJECTS: Project[] = [
     status: 'live',
     statusLabel: 'EN PRODUCCIÓN',
   },
+  {
+    id: 'owleye',
+    title: 'OwlEyeEngine — Ciberseguridad & Defensa Activa',
+    category: 'saas',
+    categoryLabel: 'SaaS & Cloud',
+    client: 'OwlEyeEngine · Motor de Seguridad',
+    description:
+      'Plataforma de ciberseguridad de monitoreo en tiempo real: inspección de procesos y red de bajo nivel (psutil), motor heurístico de puntuación de amenazas (0-100), mitigación activa (auto-kill de procesos y bloqueo de IPs en firewall) y dashboard web glassmorphic con stream en vivo vía WebSocket.',
+    image: '/portfolio/owleye.png',
+    tags: ['Python', 'FastAPI', 'WebSocket', 'psutil', 'Active Defense'],
+    metrics: [
+      { label: 'Stack', value: 'Python + FastAPI' },
+      { label: 'Tipo', value: 'Seguridad / EDR' },
+    ],
+    highlights: [
+      'Detección heurística con scoring de amenazas (LOW→CRITICAL)',
+      'Defensa activa: auto-kill de procesos y bloqueo de IPs en firewall',
+      'Monitoreo de procesos y red de bajo nivel (psutil)',
+      'Dashboard glassmorphic en tiempo real con WebSocket',
+      'Modo demo con datos simulados para despliegue serverless',
+      'Alertas por Telegram y registro sigiloso persistente',
+    ],
+    link: 'https://owleye.vercel.app',
+    status: 'demo',
+    statusLabel: 'DEMO EN LÍNEA',
+  },
 ]
 
 export const PortfolioSection: React.FC = () => {

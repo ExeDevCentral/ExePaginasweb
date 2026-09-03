@@ -228,9 +228,9 @@ const INITIAL_PROJECTS: Project[] = [
       'Modo demo con datos simulados para despliegue serverless',
       'Alertas por Telegram y registro sigiloso persistente',
     ],
-    link: 'https://owleye.vercel.app',
-    status: 'demo',
-    statusLabel: 'DEMO EN LÍNEA',
+    link: 'https://owl-eye-engine.vercel.app',
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
   },
 ]
 

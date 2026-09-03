@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#141210"/>
+      <stop offset="50%" stop-color="#292524"/>
+      <stop offset="100%" stop-color="#3f2d0e"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d4af37"/>
+      <stop offset="50%" stop-color="#f4e8a3"/>
+      <stop offset="100%" stop-color="#b8860b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <circle cx="1120" cy="120" r="240" fill="#d4af37" opacity="0.08"/>
+  <circle cx="160" cy="520" r="280" fill="#b8860b" opacity="0.08"/>
+  <rect x="940" y="130" width="230" height="340" rx="12" fill="none" stroke="#d4af37" stroke-opacity="0.35" stroke-width="3"/>
+  <path d="M1045 200 l35 -26 35 26" fill="none" stroke="#d4af37" stroke-width="4"/>
+  <rect x="958" y="188" width="16" height="60" rx="4" fill="#d4af37" opacity="0.5"/>
+  <rect x="1136" y="188" width="16" height="60" rx="4" fill="#d4af37" opacity="0.5"/>
+  <text x="60" y="100" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#d4af37" font-weight="bold" letter-spacing="2">LANDING &amp; WEB</text>
+  <text x="60" y="300" font-family="Georgia, 'Times New Roman', serif" font-size="60" fill="url(#gold)" font-weight="bold">Colección Patrimonial</text>
+  <text x="60" y="365" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-style="italic" fill="#e7e5e4">&amp; Archivo Histórico de Chile</text>
+  <text x="60" y="540" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#a8a29e">Museo digital · React/Vite · Tailwind · Donación museográfica</text>
+</svg>

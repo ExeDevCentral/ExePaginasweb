@@ -34,7 +34,150 @@ export interface Project {
 }
 
 // Proyectos reales desplegados en producción Vercel
-const INITIAL_PROJECTS: Project[] = []
+const INITIAL_PROJECTS: Project[] = [
+  {
+    id: 'chispa32',
+    title: 'Chispa32 — Taller ESP32',
+    category: 'web',
+    categoryLabel: 'Landing & Web',
+    client: 'Chispa32 · Rosario, Argentina',
+    description:
+      'Landing de alta conversión para taller especializado en reparación y reflasheo de placas ESP32. Diseño técnico premium con propuesta de valor clara, servicios y contacto directo.',
+    image: '/portfolio/chispa32.png',
+    tags: ['Next.js', 'Tailwind', 'SEO', 'Landing'],
+    metrics: [
+      { label: 'Stack', value: 'Next.js' },
+      { label: 'Tipo', value: 'Landing' },
+    ],
+    highlights: [
+      'Diseño orientado a nicho técnico (ESP32 / IoT)',
+      'Sección de servicios y consultas a medida',
+      'Despliegue automático en producción Vercel',
+      'Optimización de carga y SEO técnico',
+    ],
+    link: 'https://chispa32.vercel.app',
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
+  },
+  {
+    id: 'gam',
+    title: 'Taller Artesanal GAM',
+    category: 'web',
+    categoryLabel: 'Landing & Web',
+    client: 'GAM · Restauración de Máquinas de Escribir',
+    description:
+      'Web dedicada a la restauración artesanal de máquinas de escribir. Estética vintage-premium que posiciona el oficio, muestra el taller y facilita el contacto para trabajos de restauración.',
+    image: '/portfolio/gam.png',
+    tags: ['Vite', 'Tailwind', 'Vintage', 'Landing'],
+    metrics: [
+      { label: 'Stack', value: 'Vite' },
+      { label: 'Tipo', value: 'Landing' },
+    ],
+    highlights: [
+      'Identidad visual artesanal y premium',
+      'Refleja el oficio de restauración',
+      'Carga ultrarrápida (Vite)',
+      'Desplegada en producción',
+    ],
+    link: 'https://restauracion-maquinas-gam.vercel.app',
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
+  },
+  {
+    id: 'chambea',
+    title: 'Chambea — Profesionales de Oficio',
+    category: 'ecommerce',
+    categoryLabel: 'Marketplace',
+    client: 'Chambea · Marketplace de Servicios',
+    description:
+      'Marketplace de servicios locales que conecta profesionales de oficio con clientes. Gestión de perfiles, fichas de servicio, Supabase y experiencia de usuario optimizada para conversión.',
+    image: '/portfolio/chambea.png',
+    tags: ['React', 'Vite', 'Supabase', 'Marketplace'],
+    metrics: [
+      { label: 'Stack', value: 'React' },
+      { label: 'Servicios', value: 'Marketplace' },
+    ],
+    highlights: [
+      'Conexión profesionales de oficio ↔ clientes',
+      'Backend con Supabase (auth + datos)',
+      'Fichas de servicio y perfiles',
+      'Flujo de contacto optimizado',
+    ],
+    link: 'https://chambea.vercel.app',
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
+  },
+  {
+    id: 'noema',
+    title: 'Noema — Consultora',
+    category: 'web',
+    categoryLabel: 'Landing & Web',
+    client: 'Noema · Consultora',
+    description:
+      'Sitio corporativo para consultora. Presencia profesional con servicios, propuesta de valor y canales de contacto claros. Web sobria y efectiva para generar confianza en clientes B2B.',
+    image: '/portfolio/noema.png',
+    tags: ['Web', 'Corporate', 'Landing'],
+    metrics: [
+      { label: 'Stack', value: 'Web' },
+      { label: 'Tipo', value: 'Consultora' },
+    ],
+    highlights: [
+      'Imagen corporativa profesional',
+      'Sección de servicios y propuesta de valor',
+      'Contacto y captación B2B',
+      'Desplegada en producción',
+    ],
+    link: 'https://noema.vercel.app',
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
+  },
+  {
+    id: 'celstore',
+    title: 'CelStore — Atelier 3D & E-commerce',
+    category: 'ecommerce',
+    categoryLabel: 'E-Commerce',
+    client: 'CelStore · Atelier Generacional & 3D Studio',
+    description:
+      'Tienda online con experiencia 3D (Three.js), sistema de boutiques, catálogo de accesorios y pasarela de pago MercadoPago. E-commerce visual premium con panel de administración.',
+    image: '/portfolio/celstore.svg',
+    tags: ['Next.js', 'Three.js', '3D', 'MercadoPago'],
+    metrics: [
+      { label: 'Stack', value: 'Next.js' },
+      { label: 'Pagos', value: 'MercadoPago' },
+    ],
+    highlights: [
+      'Experiencia visual 3D con Three.js',
+      'E-commerce con catálogo de boutiques y accesorios',
+      'Pagos integrados con MercadoPago',
+      'Panel de administración propio',
+    ],
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
+  },
+  {
+    id: 'landing-maquinas',
+    title: 'Landing Restauración de Máquinas',
+    category: 'web',
+    categoryLabel: 'Landing & Web',
+    client: 'Restauración de Máquinas de Escribir',
+    description:
+      'Landing de restauración de máquinas de escribir con enfoque en captación. Presentación del oficio, galería de trabajos y formulario de consulta para pedidos de restauración.',
+    image: '/portfolio/landing-maquinas.svg',
+    tags: ['Landing', 'HTML/CSS', 'Web'],
+    metrics: [
+      { label: 'Stack', value: 'Web' },
+      { label: 'Tipo', value: 'Landing' },
+    ],
+    highlights: [
+      'Captación de pedidos de restauración',
+      'Galería y presentación del oficio',
+      'Optimizada para conversión',
+      'Producción y despliegue web',
+    ],
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
+  },
+]
 
 export const PortfolioSection: React.FC = () => {
   const { t } = useTranslation()

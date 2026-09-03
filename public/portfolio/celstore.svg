@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#312e81"/>
+      <stop offset="100%" stop-color="#4c1d95"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <circle cx="1100" cy="120" r="220" fill="#22d3ee" opacity="0.12"/>
+  <circle cx="180" cy="520" r="260" fill="#a855f7" opacity="0.12"/>
+  <text x="60" y="100" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#22d3ee" font-weight="bold" letter-spacing="2">E-COMMERCE</text>
+  <text x="60" y="320" font-family="Arial, Helvetica, sans-serif" font-size="72" fill="url(#title)" font-weight="900">CelStore</text>
+  <text x="60" y="380" font-family="Arial, Helvetica, sans-serif" font-size="34" fill="#cbd5e1">Atelier Generacional &amp; 3D Studio</text>
+  <text x="60" y="560" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#64748b">Next.js · Three.js · MercadoPago · 3D</text>
+</svg>

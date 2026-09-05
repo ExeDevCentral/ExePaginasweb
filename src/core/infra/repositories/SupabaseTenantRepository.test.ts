@@ -197,4 +197,47 @@ describe('SupabaseTenantRepository', () => {
       expect(result.total_revenue).toBe(150)
     })
   })
+
+  describe('createWorkspace', () => {
+    const params = {
+      slug: 'acme-corp',
+      nombre: 'Acme Corp',
+      duenoId: 'c1',
+      estado: 'activo' as TenantEstado,
+      trialEndsAt: null,
+      settings: { brandColor: '#6366f1', theme: 'dark', language: 'es' },
+      clienteNombre: 'Ana',
+      clienteEmail: 'ana@test.com',
+      createDefaultGroups: true,
+      workGroups: [{ nombre: 'Soporte', descripcion: 'x', color: '#6366f1', icono: 'shield' }],
+    }
+
+    it('debe mapear los params al RPC create_workspace', async () => {
+      await repository.createWorkspace(params)
+
+      expect(rpcMock).toHaveBeenCalledWith('create_workspace', {
+        p_slug: 'acme-corp',
+        p_nombre: 'Acme Corp',
+        p_dueno_id: 'c1',
+        p_estado: 'activo',
+        p_trial_ends_at: null,
+        p_settings: params.settings,
+        p_cliente_nombre: 'Ana',
+        p_cliente_email: 'ana@test.com',
+        p_create_groups: true,
+        p_work_groups: params.workGroups,
+      })
+    })
+
+    it('debe usar el slug como id cuando el RPC no devuelve data', async () => {
+      rpcMock.mockResolvedValueOnce({ data: null, error: null })
+      const tenant = await repository.createWorkspace(params)
+      expect(tenant.id).toBe('acme-corp')
+    })
+
+    it('debe lanzar error si el RPC falla', async () => {
+      rpcMock.mockResolvedValueOnce({ data: null, error: new Error('duplicate slug') })
+      await expect(repository.createWorkspace(params)).rejects.toThrow('duplicate slug')
+    })
+  })
 })

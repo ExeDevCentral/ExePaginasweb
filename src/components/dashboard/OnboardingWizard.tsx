@@ -10,49 +10,46 @@ import {
   Languages,
   Monitor,
 } from 'lucide-react'
-import { supabase } from '../../core/infra/supabase/client'
 import { useTheme } from '../../core/theme/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import type { Cliente } from '../../core/domain/entities/Cliente'
-import type { TenantEstado } from '../../core/domain/entities/Tenant'
 import { toast } from 'sonner'
+import type { ITenantRepository } from '../../core/domain/repositories/ITenantRepository'
+import { SupabaseTenantRepository } from '../../core/infra/repositories/SupabaseTenantRepository'
+import { WorkspaceOnboardingService } from '../../core/domain/onboarding/WorkspaceOnboardingService'
+import {
+  EMPTY_ONBOARDING_FORM,
+  BRAND_COLORS,
+  slugFromName,
+  isValidSlug,
+} from '../../core/domain/onboarding/workspaceOnboarding'
 
 interface Props {
   cliente: Cliente
   planTier: string
   onComplete: () => void
+  tenantRepo?: ITenantRepository
 }
 
-const BRAND_COLORS = [
-  { name: 'Indigo Neon', value: '#6366f1' },
-  { name: 'Cyan Eléctrico', value: '#0ea5e9' },
-  { name: 'Rosa Cyberpunk', value: '#ec4899' },
-  { name: 'Esmeralda Aurora', value: '#10b981' },
-  { name: 'Ámbar Sol', value: '#f59e0b' },
-]
-
-export default function OnboardingWizard({ cliente, planTier, onComplete }: Props) {
+export default function OnboardingWizard({ cliente, planTier, onComplete, tenantRepo }: Props) {
   const { theme, setTheme } = useTheme()
   const { i18n } = useTranslation()
+  const service = new WorkspaceOnboardingService(tenantRepo ?? new SupabaseTenantRepository())
 
-  const [step, setStep] = useState(1)
-  const [nombre, setNombre] = useState('')
-  const [slug, setSlug] = useState('')
-  const [color, setColor] = useState('#6366f1')
-  const [selectedTheme, setSelectedTheme] = useState<'dark' | 'light'>(theme)
-  const [selectedLang, setSelectedLang] = useState(i18n.language)
-  const [createDefaultGroups, setCreateDefaultGroups] = useState(true)
+  const [step, setStep] = useState<1 | 2 | 3>(1)
+  const [formData, setFormData] = useState({
+    ...EMPTY_ONBOARDING_FORM,
+    theme,
+    lang: i18n.language,
+  })
   const [submitting, setSubmitting] = useState(false)
 
+  const { nombre, slug, color, theme: themeSel, lang: selectedLang, createDefaultGroups } = formData
+
+  const update = (patch: Partial<typeof formData>) => setFormData((prev) => ({ ...prev, ...patch }))
+
   const handleNameChange = (val: string) => {
-    setNombre(val)
-    // Autogenerate slug: lowercase, replace spaces with hyphens, remove special characters
-    const cleanSlug = val
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-    setSlug(cleanSlug)
+    setFormData((prev) => ({ ...prev, nombre: val, slug: slugFromName(val) }))
   }
 
   const handleNext = () => {
@@ -63,66 +60,29 @@ export default function OnboardingWizard({ cliente, planTier, onComplete }: Prop
         })
         return
       }
-      if (!slug.trim() || !/^[a-z0-9-]+$/.test(slug)) {
+      if (!slug.trim() || !isValidSlug(slug)) {
         toast.error('Slug inválido', {
           description: 'El identificador solo puede contener letras minúsculas, números y guiones.',
         })
         return
       }
     }
-    setStep((s) => s + 1)
+    setStep((s) => (s < 3 ? ((s + 1) as 1 | 2 | 3) : s))
   }
 
   const handleBack = () => {
-    setStep((s) => s - 1)
+    setStep((s) => (s > 1 ? ((s - 1) as 1 | 2 | 3) : s))
   }
 
   const handleFinish = async () => {
     try {
       setSubmitting(true)
 
-      // Apply theme + language immediately
-      setTheme(selectedTheme)
-      i18n.changeLanguage(selectedLang)
-      localStorage.setItem('lang', selectedLang)
+      setTheme(formData.theme)
+      i18n.changeLanguage(formData.lang)
+      localStorage.setItem('lang', formData.lang)
 
-      const isTrial = planTier === 'none'
-      const estado: TenantEstado = isTrial ? 'trial' : 'activo'
-      const trialEnds = isTrial
-        ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
-        : null
-
-      const workGroups = createDefaultGroups
-        ? [
-            {
-              nombre: 'Soporte',
-              descripcion: 'Atención a clientes y resolución de tickets',
-              color,
-              icono: 'shield',
-            },
-            {
-              nombre: 'Desarrollo',
-              descripcion: 'Construcción y despliegue de funcionalidades',
-              color: '#ec4899',
-              icono: 'code',
-            },
-          ]
-        : []
-
-      const { error } = await supabase.rpc('create_workspace', {
-        p_slug: slug,
-        p_nombre: nombre.trim(),
-        p_dueno_id: cliente.id,
-        p_estado: estado,
-        p_trial_ends_at: trialEnds,
-        p_settings: { brandColor: color, theme: selectedTheme, language: selectedLang },
-        p_cliente_nombre: cliente.full_name,
-        p_cliente_email: cliente.email,
-        p_create_groups: createDefaultGroups,
-        p_work_groups: workGroups,
-      })
-
-      if (error) throw error
+      await service.createWorkspace({ form: formData, cliente, planTier })
 
       toast.success('¡Workspace Creado!', {
         description: `Tu espacio "${nombre}" está listo.`,
@@ -230,7 +190,9 @@ export default function OnboardingWizard({ cliente, planTier, onComplete }: Prop
                         name="empresaSlug"
                         type="text"
                         value={slug}
-                        onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
+                        onChange={(e) =>
+                          update({ slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })
+                        }
                         placeholder="acme-corp"
                         className="w-full pl-5 pr-28 py-4 rounded-2xl bg-muted/40 border border-border focus:border-accent-cyan/60 outline-none text-foreground transition-all placeholder:text-muted-foreground/50 text-sm font-mono font-medium"
                         disabled={submitting}
@@ -278,7 +240,7 @@ export default function OnboardingWizard({ cliente, planTier, onComplete }: Prop
                         <button
                           key={c.value}
                           type="button"
-                          onClick={() => setColor(c.value)}
+                          onClick={() => update({ color: c.value })}
                           className={`w-10 h-10 rounded-full border-2 transition-all relative flex items-center justify-center ${
                             color === c.value
                               ? 'border-foreground scale-110 shadow-lg'
@@ -309,9 +271,9 @@ export default function OnboardingWizard({ cliente, planTier, onComplete }: Prop
                           <button
                             key={t}
                             type="button"
-                            onClick={() => setSelectedTheme(t)}
+                            onClick={() => update({ theme: t })}
                             className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-bold transition-all ${
-                              selectedTheme === t
+                              themeSel === t
                                 ? 'border-accent-cyan bg-accent-cyan/10 text-foreground'
                                 : 'border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
                             }`}
@@ -338,7 +300,7 @@ export default function OnboardingWizard({ cliente, planTier, onComplete }: Prop
                           <button
                             key={l.code}
                             type="button"
-                            onClick={() => setSelectedLang(l.code)}
+                            onClick={() => update({ lang: l.code })}
                             className={`flex-1 px-4 py-3 rounded-xl border-2 text-sm font-bold transition-all ${
                               selectedLang === l.code
                                 ? 'border-accent-cyan bg-accent-cyan/10 text-foreground'
@@ -358,7 +320,7 @@ export default function OnboardingWizard({ cliente, planTier, onComplete }: Prop
                       id="defaultGroups"
                       name="defaultGroups"
                       checked={createDefaultGroups}
-                      onChange={(e) => setCreateDefaultGroups(e.target.checked)}
+                      onChange={(e) => update({ createDefaultGroups: e.target.checked })}
                       className="mt-1 accent-accent-cyan w-4 h-4 rounded"
                       disabled={submitting}
                     />
@@ -419,7 +381,7 @@ export default function OnboardingWizard({ cliente, planTier, onComplete }: Prop
                   <div className="flex justify-between pb-3 border-b border-border/40">
                     <span className="text-muted-foreground">Tema</span>
                     <span className="font-bold text-foreground">
-                      {selectedTheme === 'dark' ? '🌙 Oscuro' : '☀️ Claro'}
+                      {themeSel === 'dark' ? '🌙 Oscuro' : '☀️ Claro'}
                     </span>
                   </div>
                   <div className="flex justify-between pb-3 border-b border-border/40">

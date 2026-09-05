@@ -31,6 +31,9 @@ docs/supabase-env.local.md
 .next
 .vercel
 
+# TypeScript build cache (regenerado en cada tsc/build)
+tsconfig.tsbuildinfo
+
 # Environment variables
 .env
 .env.production

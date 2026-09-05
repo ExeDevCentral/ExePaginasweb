@@ -1,33 +1,115 @@
 import { useMemo } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../core/infra/supabase/client'
+import { IClienteRepository } from '../core/domain/repositories/IClienteRepository'
+import { ISubscriptionRepository } from '../core/domain/repositories/ISubscriptionRepository'
+import { IClientePagoRepository } from '../core/domain/repositories/IClientePagoRepository'
 import { SupabaseClienteRepository } from '../core/infra/repositories/SupabaseClienteRepository'
 import { SupabaseSubscriptionRepository } from '../core/infra/repositories/SupabaseSubscriptionRepository'
+import { SupabaseClientePagoRepository } from '../core/infra/repositories/SupabaseClientePagoRepository'
 import { Cliente } from '../core/domain/entities/Cliente'
 import { Suscripcion } from '../core/domain/entities/Suscripcion'
+import { Pago } from '../core/domain/entities/Pago'
 import { resolvePlanTier, type PlanTier } from '../components/dashboard/resolvePlanTier'
 import { getErrorMessage, formatSupabaseErrorDetails } from '../core/utils/errorUtils'
 
-export interface Pago {
-  id: string
-  monto: number
-  moneda: string
-  estado: string
-  plan_nombre: string | null
-  plan_slug: string | null
-  created_at: string
+export type { Pago } from '../core/domain/entities/Pago'
+
+export interface DashboardData {
+  cliente: Cliente | null
+  suscripciones: Suscripcion[]
+  pagos: Pago[]
 }
 
-const clienteRepo = new SupabaseClienteRepository()
-const subscriptionRepo = new SupabaseSubscriptionRepository()
+export interface DashboardDataDeps {
+  clienteRepo: IClienteRepository
+  subRepo: ISubscriptionRepository
+  pagoRepo: IClientePagoRepository
+}
 
-export function useDashboard(enabled = true) {
+export interface DashboardUser {
+  id: string
+  email?: string
+  full_name?: string | null
+}
+
+export async function fetchDashboardData(
+  deps: DashboardDataDeps,
+  user: DashboardUser
+): Promise<DashboardData> {
+  if (!user || !user.email) {
+    return { cliente: null, suscripciones: [], pagos: [] }
+  }
+
+  let clienteData: Cliente | null = null
+
+  try {
+    clienteData = await deps.clienteRepo.getByAuthId(user.id)
+  } catch (e: unknown) {
+    console.error('[useDashboard] clienteRepo.getByAuthId error:', e)
+    clienteData = null
+  }
+
+  if (!clienteData) {
+    try {
+      clienteData = await deps.clienteRepo.ensureByAuthId(user.id, {
+        full_name: user.full_name ?? null,
+        email: user.email,
+      })
+    } catch (e: unknown) {
+      console.error('[useDashboard] ensureByAuthId error (fallback):', e)
+      clienteData = {
+        id: user.id,
+        full_name: user.full_name ?? null,
+        email: user.email,
+      }
+    }
+  }
+
+  let suscripcionesData: Suscripcion[] = []
+  let pagosDataList: Pago[] = []
+
+  if (clienteData) {
+    try {
+      suscripcionesData = await deps.subRepo.getByClienteId(clienteData.id)
+    } catch {
+      suscripcionesData = []
+    }
+
+    try {
+      pagosDataList = await deps.pagoRepo.listByClienteId(clienteData.id)
+    } catch {
+      pagosDataList = []
+    }
+  }
+
+  return {
+    cliente: clienteData,
+    suscripciones: suscripcionesData,
+    pagos: pagosDataList,
+  }
+}
+
+export interface UseDashboardOptions {
+  enabled?: boolean
+  clienteRepo?: IClienteRepository
+  subRepo?: ISubscriptionRepository
+  pagoRepo?: IClientePagoRepository
+}
+
+export function useDashboard(options: UseDashboardOptions = {}) {
+  const {
+    enabled = true,
+    clienteRepo = new SupabaseClienteRepository(),
+    subRepo = new SupabaseSubscriptionRepository(),
+    pagoRepo = new SupabaseClientePagoRepository(),
+  } = options
   const queryClient = useQueryClient()
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['client-dashboard'],
     enabled,
-    staleTime: 1000 * 60 * 3, // 3 minutos de caché fresco
+    staleTime: 1000 * 60 * 3,
     queryFn: async () => {
       const {
         data: { user },
@@ -39,72 +121,14 @@ export function useDashboard(enabled = true) {
         throw authError
       }
 
-      if (!user || !user.email) {
-        return { cliente: null, suscripciones: [], pagos: [] }
-      }
-
-      let clienteData: Cliente | null = null
-
-      try {
-        clienteData = await clienteRepo.getByAuthId(user.id)
-      } catch (e: unknown) {
-        console.error('[useDashboard] clienteRepo.getByAuthId error:', e)
-        clienteData = null
-      }
-
-      if (!clienteData) {
-        try {
-          const { data: newCliente, error: insertError } = await supabase
-            .from('clientes')
-            .upsert(
-              {
-                id: user.id,
-                full_name: user.user_metadata?.full_name ?? null,
-                email: user.email,
-              },
-              { onConflict: 'id' }
-            )
-            .select('id, full_name, email')
-            .single()
-          if (!insertError) clienteData = newCliente as unknown as Cliente
-        } catch (e: unknown) {
-          console.error('[useDashboard] upsert clientes error (fallback):', e)
-          clienteData = {
-            id: user.id,
-            full_name: user.user_metadata?.full_name ?? null,
-            email: user.email,
-          }
+      return fetchDashboardData(
+        { clienteRepo, subRepo, pagoRepo },
+        {
+          id: user?.id ?? '',
+          email: user?.email,
+          full_name: user?.user_metadata?.full_name ?? null,
         }
-      }
-
-      let suscripcionesData: Suscripcion[] = []
-      let pagosDataList: Pago[] = []
-
-      if (clienteData) {
-        try {
-          suscripcionesData = await subscriptionRepo.getByClienteId(clienteData.id)
-        } catch {
-          suscripcionesData = []
-        }
-
-        try {
-          const { data: rawPagos } = await supabase
-            .from('pagos')
-            .select('id, monto, moneda, estado, plan_nombre, plan_slug, created_at')
-            .eq('cliente_id', clienteData.id)
-            .order('created_at', { ascending: false })
-            .limit(10)
-          pagosDataList = (rawPagos as Pago[]) || []
-        } catch {
-          pagosDataList = []
-        }
-      }
-
-      return {
-        cliente: clienteData,
-        suscripciones: suscripcionesData,
-        pagos: pagosDataList,
-      }
+      )
     },
   })
 

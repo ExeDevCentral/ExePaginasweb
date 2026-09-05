@@ -1,7 +1,8 @@
 import { supabase } from '../supabase/client'
 import { Suscripcion } from '../../domain/entities/Suscripcion'
+import { ISubscriptionRepository } from '../../domain/repositories/ISubscriptionRepository'
 
-export class SupabaseSubscriptionRepository {
+export class SupabaseSubscriptionRepository implements ISubscriptionRepository {
   async getByClienteId(clienteId: string): Promise<Suscripcion[]> {
     const { data, error } = await supabase
       .from('suscripciones')

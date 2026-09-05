@@ -13,10 +13,12 @@ import {
   KeyRound,
   Laptop,
 } from 'lucide-react'
-import { supabase } from '../../core/infra/supabase/client'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import type { Cliente } from '../../core/domain/entities/Cliente'
+import type { IAuthRepository } from '../../core/domain/repositories/IAuthRepository'
+import { SupabaseAuthRepository } from '../../core/infra/repositories/SupabaseAuthRepository'
+import { firstPasswordRuleFailed } from '../../core/domain/auth/passwordPolicy'
 
 interface SettingsPanelProps {
   cliente: Cliente | null
@@ -25,6 +27,7 @@ interface SettingsPanelProps {
   currentTenant?: { id: string; nombre: string; slug?: string } | null
   onLogout: () => void
   onRefreshProfile?: () => void
+  authRepo?: IAuthRepository
 }
 
 export default function SettingsPanel({
@@ -34,8 +37,10 @@ export default function SettingsPanel({
   currentTenant,
   onLogout,
   onRefreshProfile,
+  authRepo,
 }: Readonly<SettingsPanelProps>) {
   const { t } = useTranslation()
+  const repo = authRepo ?? new SupabaseAuthRepository()
   const [fullName, setFullName] = useState(cliente?.full_name || '')
   const [savingProfile, setSavingProfile] = useState(false)
 
@@ -49,16 +54,7 @@ export default function SettingsPanel({
 
     setSavingProfile(true)
     try {
-      const { error } = await supabase
-        .from('clientes')
-        .update({ full_name: fullName })
-        .eq('id', cliente.id)
-
-      if (error) throw error
-
-      await supabase.auth.updateUser({
-        data: { full_name: fullName },
-      })
+      await repo.updateProfile({ clienteId: cliente.id, fullName })
 
       toast.success(t('dashboard.perfil_actualizado', 'Perfil actualizado'), {
         description: 'Tus datos de cuenta fueron guardados correctamente.',
@@ -76,9 +72,10 @@ export default function SettingsPanel({
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newPassword || newPassword.length < 6) {
+    const failed = firstPasswordRuleFailed(newPassword)
+    if (failed) {
       toast.error('Contraseña débil', {
-        description: 'La contraseña debe tener al menos 6 caracteres.',
+        description: `La contraseña debe cumplir: ${failed.label}.`,
       })
       return
     }
@@ -92,11 +89,7 @@ export default function SettingsPanel({
 
     setSavingPassword(true)
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword,
-      })
-
-      if (error) throw error
+      await repo.updatePassword(newPassword)
 
       toast.success('Contraseña actualizada', {
         description: 'Tu clave de acceso se ha modificado exitosamente.',

@@ -27,6 +27,11 @@ import { toast } from 'sonner'
 import LoginBackground from '../components/Effects/LoginBackground'
 import Logo from '../components/layout/Logo'
 import { getErrorMessage } from '../core/utils/errorUtils'
+import {
+  PASSWORD_RULES,
+  PASSWORD_MIN_LENGTH,
+  firstPasswordRuleFailed,
+} from '../core/domain/auth/passwordPolicy'
 
 type Mode = 'login' | 'register' | 'forgot' | 'update-password'
 
@@ -84,12 +89,7 @@ export default function Login() {
     }
   }, [ready, session, navigate, mode, searchParams])
 
-  const passwordRules = [
-    { label: '8+ caracteres', test: (p: string) => p.length >= 8 },
-    { label: 'Mayúscula', test: (p: string) => /[A-Z]/.test(p) },
-    { label: 'Minúscula', test: (p: string) => /[a-z]/.test(p) },
-    { label: 'Número', test: (p: string) => /\d/.test(p) },
-  ]
+  const passwordRules = PASSWORD_RULES
 
   const switchMode = useCallback((newMode: Mode) => {
     setMode(newMode)
@@ -158,8 +158,9 @@ export default function Login() {
 
   const handleUpdatePassword = async () => {
     setError(null)
-    if (password.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres')
+    const failedRule = firstPasswordRuleFailed(password)
+    if (failedRule) {
+      setError(`La contraseña debe cumplir: ${failedRule.label}`)
       return
     }
     if (password !== confirmPassword) {
@@ -198,11 +199,16 @@ export default function Login() {
       setError('Ingresá un email válido')
       return
     }
-    if (password.length < 8) {
+    if (password.length < PASSWORD_MIN_LENGTH) {
       setError('La contraseña debe tener al menos 8 caracteres')
       return
     }
     if (mode === 'register') {
+      const failedRule = firstPasswordRuleFailed(password)
+      if (failedRule) {
+        setError(`La contraseña debe cumplir: ${failedRule.label}`)
+        return
+      }
       if (!name.trim()) {
         setError('Ingresá tu nombre')
         return

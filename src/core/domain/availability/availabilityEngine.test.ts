@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { isEmployeeWorkingAt } from './availabilityEngine'
-import { WeeklySchedule } from './types'
+import { ScheduleException, WeeklySchedule } from './types'
 
 describe('Availability Engine', () => {
   it('retorna false si el día no está configurado en el horario (día libre)', () => {
@@ -70,7 +70,7 @@ describe('Availability Engine', () => {
         shifts: { 1: [{ startTime: '09:00', endTime: '18:00' }] },
       }
 
-      const exceptions: any[] = [
+      const exceptions: ScheduleException[] = [
         {
           id: 'exc-1',
           businessId: 'biz-1',

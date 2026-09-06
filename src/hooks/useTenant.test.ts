@@ -41,43 +41,51 @@ import {
   useUpdateTenant,
 } from './useTenant'
 
+type HookOptions = {
+  queryKey: unknown[]
+  enabled?: boolean
+  refetchInterval?: number
+  queryFn?: () => Promise<unknown>
+  mutationFn?: (value: unknown) => Promise<unknown>
+}
+
 describe('useTenant Hook', () => {
   it('useTenant debe configurar useQuery con queryKey y queryFn', async () => {
-    const options: any = useTenant('owner-123')
+    const options = useTenant('owner-123') as unknown as HookOptions
 
     expect(options.queryKey).toEqual(['tenant', 'owner-123'])
     expect(options.enabled).toBe(true)
 
     // Ejecutar queryFn y verificar que llama a repo.getByOwnerId
-    const result = await options.queryFn()
+    const result = await options.queryFn!()
     expect(mockGetByOwnerId).toHaveBeenCalledWith('owner-123')
     expect(result).toEqual(['tenant-1'])
   })
 
   it('useTenantById debe configurar useQuery con queryKey e id de tenant', async () => {
-    const options: any = useTenantById('tenant-abc')
+    const options = useTenantById('tenant-abc') as unknown as HookOptions
 
     expect(options.queryKey).toEqual(['tenant-detail', 'tenant-abc'])
     expect(options.enabled).toBe(true)
 
-    const result = await options.queryFn()
+    const result = await options.queryFn!()
     expect(mockGetById).toHaveBeenCalledWith('tenant-abc')
     expect(result).toEqual({ id: 'tenant-1' })
   })
 
   it('useTenantStats debe configurar useQuery con queryKey e intervalo de refetch', async () => {
-    const options: any = useTenantStats('tenant-abc')
+    const options = useTenantStats('tenant-abc') as unknown as HookOptions
 
     expect(options.queryKey).toEqual(['tenant-stats', 'tenant-abc'])
     expect(options.refetchInterval).toBe(30 * 1000)
 
-    const result = await options.queryFn()
+    const result = await options.queryFn!()
     expect(mockGetTenantStats).toHaveBeenCalledWith('tenant-abc')
     expect(result).toEqual({ total_members: 3 })
   })
 
   it('useCreateTenant debe configurar useMutation', async () => {
-    const options: any = useCreateTenant()
+    const options = useCreateTenant() as unknown as HookOptions
 
     expect(options.mutationFn).toBeDefined()
     const newTenantData = {
@@ -90,18 +98,18 @@ describe('useTenant Hook', () => {
       settings: {},
     }
 
-    const result = await options.mutationFn(newTenantData)
+    const result = await options.mutationFn!(newTenantData)
     expect(mockCreate).toHaveBeenCalledWith(newTenantData)
     expect(result).toEqual({ id: 'new-tenant' })
   })
 
   it('useUpdateTenant debe configurar useMutation de actualización', async () => {
-    const options: any = useUpdateTenant()
+    const options = useUpdateTenant() as unknown as HookOptions
 
     expect(options.mutationFn).toBeDefined()
     const updates = { id: 'tenant-123', data: { nombre: 'Nuevo Nombre' } }
 
-    const result = await options.mutationFn(updates)
+    const result = await options.mutationFn!(updates)
     expect(mockUpdate).toHaveBeenCalledWith('tenant-123', { nombre: 'Nuevo Nombre' })
     expect(result).toEqual({ id: 'updated-tenant' })
   })

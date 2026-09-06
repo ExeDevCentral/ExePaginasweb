@@ -18,13 +18,21 @@ vi.mock('../supabase/client', () => {
   }
 })
 
+type MockFunction = ReturnType<typeof vi.fn>
+type QueryBuilderMock = {
+  eq: MockFunction
+  order: MockFunction
+  limit: MockFunction
+}
+type SupabaseFromMock = MockFunction & (() => QueryBuilderMock)
+
 describe('SupabaseClientePagoRepository', () => {
   let repo: SupabaseClientePagoRepository
-  let fromMock: any
+  let fromMock: SupabaseFromMock
 
   beforeEach(() => {
     repo = new SupabaseClientePagoRepository()
-    fromMock = vi.mocked(supabase.from)
+    fromMock = vi.mocked(supabase.from) as unknown as SupabaseFromMock
     vi.clearAllMocks()
   })
 

@@ -15,7 +15,7 @@ import {
   Zap,
   FileText,
 } from 'lucide-react'
-import { scrollToElement } from '../shared/ScrollProvider'
+import { scrollToElement } from '../shared/scrollUtils'
 
 export interface Project {
   id: string

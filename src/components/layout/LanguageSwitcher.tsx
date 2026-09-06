@@ -52,12 +52,7 @@ export default function LanguageSwitcher({ className = '' }: Readonly<LanguageSw
     LANGUAGES.find((l) => l.code === current || current.startsWith(l.code)) ?? LANGUAGES[0]
 
   return (
-    <div
-      ref={containerRef}
-      className={`relative group ${className}`}
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
-    >
+    <div ref={containerRef} className={`relative group ${className}`}>
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -74,7 +69,9 @@ export default function LanguageSwitcher({ className = '' }: Readonly<LanguageSw
       {/* 100% Solid Opaque Dropdown Container (Zero Transparency / Zero Bleed-through) */}
       <div
         className={`absolute right-0 top-full mt-2 bg-white dark:bg-[#0c0d14] border border-slate-200 dark:border-white/15 rounded-xl shadow-2xl transition-all duration-200 z-50 min-w-[170px] p-1.5 ${
-          isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-1'
+          isOpen
+            ? 'opacity-100 visible translate-y-0'
+            : 'opacity-0 invisible -translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0'
         }`}
       >
         <div className="px-2.5 py-1 mb-1 border-b border-slate-100 dark:border-white/10 text-[10px] font-sans font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">

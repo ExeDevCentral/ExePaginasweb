@@ -27,7 +27,7 @@ import ThemeToggle from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
 import Logo from './Logo'
 import { toast } from 'sonner'
-import { navigateToSection } from '../shared/ScrollProvider'
+import { navigateToSection } from '../shared/scrollUtils'
 import { getWhatsAppUrl } from '../../core/utils/whatsappUtils'
 
 const ALL_SECTION_IDS = Array.from(SECTION_IDS)

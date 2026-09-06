@@ -86,7 +86,7 @@ describe('fetchDashboardData', () => {
     expect(result.pagos[0].monto).toBe(144.6)
   })
 
-  it('tolera fallos de repos de suscripciones y pagos', async () => {
+  it('propaga fallos de repos de suscripciones y pagos', async () => {
     const deps = buildDeps()
     deps.clienteRepo.seed([{ id: 'user-1', full_name: null, email: 'ana@test.com' }])
 
@@ -99,11 +99,11 @@ describe('fetchDashboardData', () => {
       pagoRepo: { listByClienteId: throwing } as unknown as typeof deps.pagoRepo,
     }
 
-    const result = await fetchDashboardData(brokenDeps, {
-      id: 'user-1',
-      email: 'ana@test.com',
-    })
-    expect(result.suscripciones).toEqual([])
-    expect(result.pagos).toEqual([])
+    await expect(
+      fetchDashboardData(brokenDeps, {
+        id: 'user-1',
+        email: 'ana@test.com',
+      })
+    ).rejects.toThrow('repo down')
   })
 })

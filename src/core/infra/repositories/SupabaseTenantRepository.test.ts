@@ -23,15 +23,27 @@ vi.mock('../supabase/client', () => {
   }
 })
 
+type MockFunction = ReturnType<typeof vi.fn>
+type QueryBuilderMock = {
+  select: MockFunction
+  insert: MockFunction
+  update: MockFunction
+  eq: MockFunction
+  order: MockFunction
+  single: MockFunction
+  maybeSingle: MockFunction
+}
+type SupabaseFromMock = MockFunction & (() => QueryBuilderMock)
+
 describe('SupabaseTenantRepository', () => {
   let repository: SupabaseTenantRepository
-  let fromMock: any
-  let rpcMock: any
+  let fromMock: SupabaseFromMock
+  let rpcMock: MockFunction
 
   beforeEach(() => {
     repository = new SupabaseTenantRepository()
-    fromMock = vi.mocked(supabase.from)
-    rpcMock = vi.mocked(supabase.rpc)
+    fromMock = vi.mocked(supabase.from) as unknown as SupabaseFromMock
+    rpcMock = vi.mocked(supabase.rpc) as unknown as MockFunction
     vi.clearAllMocks()
   })
 

@@ -89,13 +89,15 @@ export function DataTable<TData, TValue>({
                         className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none"
                       >
                         {header.isPlaceholder ? null : (
-                          <div
+                          <button
+                            type="button"
                             className={`flex items-center gap-1.5 ${
                               canSort
                                 ? 'cursor-pointer hover:text-foreground transition-colors'
-                                : ''
+                                : 'cursor-default'
                             }`}
                             onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                            disabled={!canSort}
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
                             {canSort && (
@@ -109,7 +111,7 @@ export function DataTable<TData, TValue>({
                                 )}
                               </span>
                             )}
-                          </div>
+                          </button>
                         )}
                       </th>
                     )

@@ -229,12 +229,9 @@ export default function OnboardingWizard({ cliente, planTier, onComplete, tenant
 
                 <div className="space-y-6">
                   <div>
-                    <label
-                      id="label-brandColor"
-                      className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3"
-                    >
+                    <p className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">
                       Color Primario de tu Marca
-                    </label>
+                    </p>
                     <div className="flex flex-wrap gap-4">
                       {BRAND_COLORS.map((c) => (
                         <button
@@ -259,13 +256,10 @@ export default function OnboardingWizard({ cliente, planTier, onComplete, tenant
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label
-                        id="label-theme"
-                        className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-1.5"
-                      >
+                      <p className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-1.5">
                         <Monitor className="w-3.5 h-3.5" />
                         Tema
-                      </label>
+                      </p>
                       <div className="flex gap-3">
                         {(['dark', 'light'] as const).map((t) => (
                           <button
@@ -285,13 +279,10 @@ export default function OnboardingWizard({ cliente, planTier, onComplete, tenant
                     </div>
 
                     <div>
-                      <label
-                        id="label-lang"
-                        className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-1.5"
-                      >
+                      <p className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-1.5">
                         <Languages className="w-3.5 h-3.5" />
                         Idioma
-                      </label>
+                      </p>
                       <div className="flex gap-3">
                         {[
                           { code: 'es', label: 'ES' },

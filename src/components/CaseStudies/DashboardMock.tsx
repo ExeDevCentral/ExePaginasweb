@@ -233,8 +233,19 @@ const DashboardMock = () => {
               return (
                 <div
                   key={i}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Ver valor de ${bar.label}`}
                   onMouseEnter={() => setHoveredBar(i)}
                   onMouseLeave={() => setHoveredBar(null)}
+                  onFocus={() => setHoveredBar(i)}
+                  onBlur={() => setHoveredBar(null)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      setHoveredBar(i)
+                    }
+                  }}
                   className="flex-1 h-full flex flex-col justify-end items-center cursor-pointer group/bar"
                 >
                   {/* Animated Bar */}

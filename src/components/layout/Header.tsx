@@ -13,7 +13,6 @@ import {
   Send,
   MessageCircle,
   X,
-  User,
 } from 'lucide-react'
 import { MorphIcon } from 'morphicons/react'
 import { Menu as MenuData, X as XData } from 'lucide'
@@ -23,8 +22,8 @@ import { useScrollSpy } from '../../hooks/useScrollSpy'
 import { SCROLL_OFFSET, SECTION_IDS } from '../landing/constants'
 import { useRouter } from 'next/navigation'
 import { useAuthRole } from '../../core/auth/userAuth'
-import ThemeToggle from './ThemeToggle'
-import LanguageSwitcher from './LanguageSwitcher'
+import UtilityDock from './UtilityDock'
+import ClientAreaButton from './ClientAreaButton'
 import Logo from './Logo'
 import { toast } from 'sonner'
 import { navigateToSection } from '../shared/scrollUtils'
@@ -206,10 +205,7 @@ const Header = () => {
           {/* Acciones Derecha Desktop */}
           <div className="hidden lg:flex items-center gap-3 shrink-0">
             {/* Dock de utilidades (Idioma + Modo Oscuro) */}
-            <div className="flex items-center gap-0.5 p-0.5 rounded-full bg-slate-100/90 dark:bg-[#0e101c]/90 border border-slate-200/80 dark:border-white/10 backdrop-blur-md shrink-0">
-              <LanguageSwitcher />
-              <ThemeToggle />
-            </div>
+            <UtilityDock />
 
             {/* Auth / Dashboard o CTA Principal */}
             {isLoggedIn ? (
@@ -237,28 +233,14 @@ const Header = () => {
                 </motion.button>
               </div>
             ) : (
-              <motion.button
-                type="button"
-                onClick={goToClientArea}
-                className="relative group overflow-hidden h-9 px-4 rounded-full bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-bold shadow-md shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1.5 shrink-0 select-none cursor-pointer"
-                whileTap={{ scale: 0.96 }}
-              >
-                <span>{t('nav.area_cliente')}</span>
-                <ChevronRight
-                  size={13}
-                  className="text-white/80 group-hover:translate-x-0.5 transition-transform"
-                />
-              </motion.button>
+              <ClientAreaButton onClick={goToClientArea} label={t('nav.area_cliente')} />
             )}
           </div>
 
           {/* Mobile / Tablet controls (pantallas < lg: 1024px) */}
           <div className="lg:hidden flex items-center gap-2 shrink-0">
             {/* Dock de utilidades para móvil */}
-            <div className="flex items-center gap-0.5 p-0.5 rounded-xl bg-slate-100/90 dark:bg-[#0e101c]/90 border border-slate-200/80 dark:border-white/10 shrink-0">
-              <LanguageSwitcher />
-              <ThemeToggle />
-            </div>
+            <UtilityDock className="rounded-xl" />
 
             {/* Botón Hamburguesa con MorphIcon */}
             <motion.button
@@ -484,15 +466,14 @@ const Header = () => {
 
               {/* Botón Área de Cliente inferior */}
               <div className="mt-auto pt-4 pb-4 border-t border-slate-200 dark:border-white/10 flex flex-col gap-2.5">
-                <button
-                  type="button"
-                  onClick={goToClientArea}
-                  className="w-full py-3.5 text-xs font-black uppercase tracking-wider text-white bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 active:scale-[0.99] transition-all rounded-xl shadow-lg shadow-cyan-500/30 cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <User size={14} />
-                  <span>{isLoggedIn ? t('nav.panel_cliente') : t('nav.area_cliente')}</span>
-                  <ChevronRight size={14} />
-                </button>
+                <ClientAreaButton
+                  onClick={() => {
+                    goToClientArea()
+                    setIsMenuOpen(false)
+                  }}
+                  label={isLoggedIn ? t('nav.panel_cliente') : t('nav.area_cliente')}
+                  variant="mobile"
+                />
               </div>
             </nav>
           </motion.div>

@@ -88,6 +88,9 @@ export default {
         'glow-pulse': 'glowPulse 4s ease-in-out infinite',
         'float-slow': 'floatSlow 6s ease-in-out infinite',
         'spin-slow': 'spin 4s linear infinite',
+        'gradient-x': 'gradientX 4s ease infinite',
+        'shimmer-sweep': 'shimmerSweep 1.2s ease-in-out',
+        ripple: 'ripple 0.7s ease-out forwards',
       },
       boxShadow: {
         '2xs': 'var(--shadow-2xs)',
@@ -144,6 +147,18 @@ export default {
         floatSlow: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-8px)' },
+        },
+        gradientX: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        shimmerSweep: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+        ripple: {
+          '0%': { transform: 'scale(0)', opacity: '0.6' },
+          '100%': { transform: 'scale(24)', opacity: '0' },
         },
       },
     },

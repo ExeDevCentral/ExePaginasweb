@@ -91,6 +91,8 @@ export default {
         'gradient-x': 'gradientX 4s ease infinite',
         'shimmer-sweep': 'shimmerSweep 1.2s ease-in-out',
         ripple: 'ripple 0.7s ease-out forwards',
+        'signature-shimmer': 'signatureShimmer 2.5s ease-in-out infinite',
+        'signature-glow': 'signatureGlow 3s ease-in-out infinite',
       },
       boxShadow: {
         '2xs': 'var(--shadow-2xs)',
@@ -159,6 +161,14 @@ export default {
         ripple: {
           '0%': { transform: 'scale(0)', opacity: '0.6' },
           '100%': { transform: 'scale(24)', opacity: '0' },
+        },
+        signatureShimmer: {
+          '0%, 100%': { backgroundPosition: '-200% 0' },
+          '50%': { backgroundPosition: '200% 0' },
+        },
+        signatureGlow: {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.8' },
         },
       },
     },

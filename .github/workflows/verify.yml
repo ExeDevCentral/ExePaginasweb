@@ -16,17 +16,26 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22.x'
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci --ignore-scripts
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run typecheck
 
       - name: Run Automated Test Suite (Vitest)
         run: npm test
         env:
-          NEXT_PUBLIC_SUPABASE_URL: https://bksonxnxshxinqffswqc.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_NMmYBCHV_xhHpcPWDS2DLA_5lhUeGSb
+          NEXT_PUBLIC_SUPABASE_URL: https://ci.supabase.invalid
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_ci_only
           RESEND_API_KEY: re_test_mock_key
           RESEND_WEBHOOK_SECRET: whsec_MfValidSecretForTesting123=
           GROQ_API_KEY: gsk_test_mock_key
@@ -35,7 +44,30 @@ jobs:
       - name: Type check and Build
         run: npm run build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: https://bksonxnxshxinqffswqc.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_NMmYBCHV_xhHpcPWDS2DLA_5lhUeGSb
+          NEXT_PUBLIC_SUPABASE_URL: https://ci.supabase.invalid
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_ci_only
           NEXT_PUBLIC_SITE_URL: https://exepaginasweb.com
           CI: true
+
+  cli:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: web-automation-cli
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+          cache-dependency-path: web-automation-cli/package-lock.json
+
+      - name: Install CLI dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Build CLI
+        run: npm run build

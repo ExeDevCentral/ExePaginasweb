@@ -23,6 +23,7 @@ export default function TransferInstructions({
   const [registering, setRegistering] = useState(false)
   const [registered, setRegistered] = useState(false)
   const [error, setError] = useState('')
+  const [idempotencyKey] = useState(() => crypto.randomUUID())
 
   useEffect(() => {
     if (session?.user?.email) setEmail(session.user.email)
@@ -48,11 +49,20 @@ export default function TransferInstructions({
     setError('')
     setRegistering(true)
     try {
+      if (!session?.access_token || !session.user.email) {
+        setError('Iniciá sesión antes de registrar una transferencia.')
+        return
+      }
+
       const resp = await fetch('/api/register-transfer', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+          'Idempotency-Key': idempotencyKey,
+        },
         body: JSON.stringify({
-          email: targetEmail,
+          email: session.user.email,
           fullName: session?.user?.user_metadata?.full_name ?? null,
           planSlug,
           planNombre: planTitle,

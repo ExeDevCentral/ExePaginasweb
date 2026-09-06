@@ -6,10 +6,7 @@ import {
   contactAutoReply,
   aiDiagnosticAutoReply,
 } from '@/lib/email/templates.js'
-
-const RATE_LIMIT_WINDOW_MS = 3_600_000
-const RATE_LIMIT_MAX_REQUESTS = 5
-const requestLog = new Map<string, number[]>()
+import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 
 const ContactSchema = z.object({
   name: z.string().trim().min(1, 'El nombre es requerido').max(100, 'Nombre demasiado largo'),
@@ -21,27 +18,6 @@ const ContactSchema = z.object({
   projectType: z.string().max(100).nullish(),
   total: z.union([z.number(), z.string()]).nullish(),
 })
-
-function getClientIp(req: NextRequest): string {
-  const forwardedFor = req.headers.get('x-forwarded-for')
-  if (forwardedFor) {
-    return forwardedFor.split(',')[0].trim()
-  }
-  return req.headers.get('x-real-ip') ?? 'unknown'
-}
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const previous = requestLog.get(ip) ?? []
-  const recent = previous.filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS)
-  if (recent.length >= RATE_LIMIT_MAX_REQUESTS) {
-    requestLog.set(ip, recent)
-    return true
-  }
-  recent.push(now)
-  requestLog.set(ip, recent)
-  return false
-}
 
 export function detectLanguage(text: string, clientLang?: string | null): 'en' | 'es' {
   if (clientLang && typeof clientLang === 'string') {
@@ -56,9 +32,17 @@ export function detectLanguage(text: string, clientLang?: string | null): 'en' |
 }
 
 export async function POST(req: NextRequest) {
-  const ip = getClientIp(req)
-  if (isRateLimited(ip)) {
-    return NextResponse.json({ error: 'Demasiados mensajes. Intenta más tarde.' }, { status: 429 })
+  try {
+    const limit = await checkRateLimit(`contact:${clientIp(req)}`, 3_600, 5)
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: 'Demasiados mensajes. Intenta más tarde.' },
+        { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
+      )
+    }
+  } catch (rateLimitError) {
+    console.error('[contact] Rate limiter unavailable:', rateLimitError)
+    return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
   let body: unknown = null

@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { timingSafeEqual } from 'node:crypto'
 import { z } from 'zod'
 import { sendEmail } from '@/lib/email/send'
 import { emailVerification } from '@/lib/email/templates.js'
-
-const RATE_LIMIT_WINDOW_MS = 3_600_000
-const RATE_LIMIT_MAX_REQUESTS = 5
-const requestLog = new Map<string, number[]>()
+import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 
 const SendVerificationSchema = z.object({
   email: z.string().trim().email().max(255),
@@ -14,34 +12,19 @@ const SendVerificationSchema = z.object({
   token: z.string().max(255).nullish(),
 })
 
-function getClientIp(req: NextRequest): string {
-  const forwardedFor = req.headers.get('x-forwarded-for')
-  if (forwardedFor) {
-    return forwardedFor.split(',')[0].trim()
-  }
-  return req.headers.get('x-real-ip') ?? 'unknown'
-}
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const previous = requestLog.get(ip) ?? []
-  const recent = previous.filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS)
-  if (recent.length >= RATE_LIMIT_MAX_REQUESTS) {
-    requestLog.set(ip, recent)
-    return true
-  }
-  recent.push(now)
-  requestLog.set(ip, recent)
-  return false
-}
-
 function sanitizeUrl(targetUrl?: string | null): string {
   const defaultUrl = `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://exepaginasweb.com'}/dashboard`
   if (!targetUrl || typeof targetUrl !== 'string') return defaultUrl
 
   try {
     const parsed = new URL(targetUrl)
-    const allowedHosts = ['exepaginasweb.com', 'www.exepaginasweb.com', 'localhost', '127.0.0.1']
+    const allowedHosts = ['exepaginasweb.com', 'www.exepaginasweb.com']
+    const isLocalHost = parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1'
+    const isLocalDevelopment = process.env.NODE_ENV !== 'production' && isLocalHost
+
+    if (parsed.protocol !== 'https:' && !isLocalDevelopment) return defaultUrl
+
+    if (isLocalDevelopment) allowedHosts.push(parsed.hostname)
     if (process.env.SITE_URL) {
       try {
         allowedHosts.push(new URL(process.env.SITE_URL).hostname)
@@ -59,13 +42,38 @@ function sanitizeUrl(targetUrl?: string | null): string {
   return defaultUrl
 }
 
+function hasInternalAuthorization(req: NextRequest): boolean {
+  const expected = process.env.VERIFICATION_API_KEY
+  const provided =
+    req.headers.get('x-internal-verification-key') ||
+    req.headers.get('authorization')?.match(/^Bearer\s+(.+)$/i)?.[1]
+
+  if (!expected || !provided) return false
+
+  const expectedBuffer = Buffer.from(expected)
+  const providedBuffer = Buffer.from(provided)
+  return (
+    expectedBuffer.length === providedBuffer.length &&
+    timingSafeEqual(expectedBuffer, providedBuffer)
+  )
+}
+
 export async function POST(req: NextRequest) {
-  const ip = getClientIp(req)
-  if (isRateLimited(ip)) {
-    return NextResponse.json(
-      { error: 'Demasiadas solicitudes. Intenta más tarde.' },
-      { status: 429 }
-    )
+  if (!hasInternalAuthorization(req)) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+
+  try {
+    const limit = await checkRateLimit(`send-verification:${clientIp(req)}`, 3_600, 5)
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: 'Demasiadas solicitudes. Intenta más tarde.' },
+        { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
+      )
+    }
+  } catch (rateLimitError) {
+    console.error('[verification-email] Rate limiter unavailable:', rateLimitError)
+    return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
   let body: unknown = null
@@ -116,14 +124,12 @@ export async function POST(req: NextRequest) {
       data: result,
     })
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : 'Unknown error'
     console.error('[verification-email] Error al enviar email de verificación:', err)
     return NextResponse.json(
       {
         error: 'Error al enviar el email de verificación.',
-        details: msg,
       },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'no-store' } }
     )
   }
 }

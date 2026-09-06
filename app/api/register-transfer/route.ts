@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { supabaseAdmin as db } from '@/lib/supabase/admin'
+import { isSupabaseAdminConfigured, supabaseAdmin as db } from '@/lib/supabase/admin'
+import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 
 const PLAN_MONTOS_ARS: Record<string, number> = {
   'mantenimiento-basico': 25000,
   'mantenimiento-avanzado': 50000,
   'mantenimiento-premium': 150000,
 }
-
-const RATE_LIMIT_WINDOW_MS = 3_600_000
-const RATE_LIMIT_MAX_REQUESTS = 10
-const requestLog = new Map<string, number[]>()
 
 const RegisterTransferSchema = z.object({
   email: z.string().trim().email().max(255),
@@ -20,61 +17,49 @@ const RegisterTransferSchema = z.object({
   tipoProyecto: z.string().trim().max(50).nullish(),
 })
 
-function getClientIp(req: NextRequest): string {
-  const forwardedFor = req.headers.get('x-forwarded-for')
-  if (forwardedFor) {
-    return forwardedFor.split(',')[0].trim()
-  }
-  return req.headers.get('x-real-ip') ?? 'unknown'
-}
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const previous = requestLog.get(ip) ?? []
-  const recent = previous.filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS)
-  if (recent.length >= RATE_LIMIT_MAX_REQUESTS) {
-    requestLog.set(ip, recent)
-    return true
-  }
-  recent.push(now)
-  requestLog.set(ip, recent)
-  return false
-}
-
-async function getOrCreateCliente(email: string, fullName?: string | null): Promise<string | null> {
-  if (!db) return null
-
-  const { data: existentes } = await db.from('clientes').select('id').eq('email', email).limit(1)
-  if (existentes?.[0]) return existentes[0].id
-
-  let id: string | null = null
-  try {
-    const { data: authUser } = await db.auth.admin.listUsers()
-    const match = authUser?.users?.find((u) => u.email?.toLowerCase() === email?.toLowerCase())
-    id = match?.id || null
-  } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : 'Unknown auth error'
-    console.warn('[register-transfer] No se pudo buscar en auth.users:', msg)
-  }
-
-  if (!id) return null
-
-  const { data: nuevo } = await db
+async function getOrCreateCliente(
+  authUserId: string,
+  email: string,
+  fullName?: string | null
+): Promise<string> {
+  const { data: existente, error: lookupError } = await db
     .from('clientes')
-    .insert({ id, email, full_name: fullName || null })
+    .select('id')
+    .eq('id', authUserId)
+    .maybeSingle()
+
+  if (lookupError) throw lookupError
+  if (existente?.id) return existente.id
+
+  const { data: nuevo, error: insertError } = await db
+    .from('clientes')
+    .insert({ id: authUserId, email, full_name: fullName || null })
     .select('id')
     .single()
 
-  return nuevo?.id || id
+  if (insertError) throw insertError
+  if (!nuevo?.id) throw new Error('Cliente no pudo ser creado')
+  return nuevo.id
+}
+
+function getBearerToken(req: NextRequest): string | null {
+  const value = req.headers.get('authorization')
+  const match = value?.match(/^Bearer\s+(.+)$/i)
+  return match?.[1]?.trim() || null
 }
 
 export async function POST(req: NextRequest) {
-  const ip = getClientIp(req)
-  if (isRateLimited(ip)) {
-    return NextResponse.json(
-      { error: 'Demasiadas solicitudes. Intenta más tarde.' },
-      { status: 429 }
-    )
+  try {
+    const limit = await checkRateLimit(`register-transfer:${clientIp(req)}`, 3_600, 10)
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: 'Demasiadas solicitudes. Intenta más tarde.' },
+        { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
+      )
+    }
+  } catch (rateLimitError) {
+    console.error('[register-transfer] Rate limiter unavailable:', rateLimitError)
+    return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
   let body: unknown = null
@@ -93,18 +78,53 @@ export async function POST(req: NextRequest) {
   }
 
   const { email, fullName, planSlug, planNombre, tipoProyecto } = parseResult.data
+  const idempotencyKey = req.headers.get('idempotency-key')?.trim()
 
-  if (!db) {
+  if (!idempotencyKey || idempotencyKey.length < 16 || idempotencyKey.length > 128) {
+    return NextResponse.json({ error: 'Falta una clave de idempotencia válida.' }, { status: 400 })
+  }
+
+  if (!isSupabaseAdminConfigured()) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
   }
 
   try {
-    const clienteId = await getOrCreateCliente(email, fullName || null)
-    if (!clienteId) {
+    const accessToken = getBearerToken(req)
+    if (!accessToken) {
+      return NextResponse.json({ error: 'Autenticación requerida.' }, { status: 401 })
+    }
+
+    const {
+      data: { user },
+      error: authError,
+    } = await db.auth.getUser(accessToken)
+
+    if (authError || !user?.id || !user.email) {
+      return NextResponse.json({ error: 'Sesión inválida o expirada.' }, { status: 401 })
+    }
+
+    if (email.toLowerCase() !== user.email.toLowerCase()) {
       return NextResponse.json(
-        { error: 'No existe una cuenta registrada con ese email. Creá una cuenta primero.' },
-        { status: 400 }
+        { error: 'El email debe coincidir con la cuenta autenticada.' },
+        { status: 403 }
       )
+    }
+
+    const authenticatedName =
+      typeof user.user_metadata?.full_name === 'string' ? user.user_metadata.full_name : fullName
+    const clienteId = await getOrCreateCliente(user.id, user.email, authenticatedName || null)
+
+    const { data: existingPayment, error: existingPaymentError } = await db
+      .from('pagos')
+      .select('id, monto, moneda, estado, created_at')
+      .eq('cliente_id', clienteId)
+      .eq('provider', 'transferencia')
+      .eq('idempotency_key', idempotencyKey)
+      .maybeSingle()
+
+    if (existingPaymentError) throw existingPaymentError
+    if (existingPayment) {
+      return NextResponse.json({ ok: true, pagoId: existingPayment.id, duplicate: true })
     }
 
     const monto = PLAN_MONTOS_ARS[planSlug]
@@ -123,13 +143,14 @@ export async function POST(req: NextRequest) {
         plan_slug: planSlug,
         tipo_proyecto: tipoProyecto || 'mantenimiento',
         provider: 'transferencia',
+        idempotency_key: idempotencyKey,
       })
       .select('id, monto, moneda, estado, created_at')
       .single()
 
     if (pagoError) {
       console.error('[register-transfer] Error inserting pago:', pagoError)
-      return NextResponse.json({ error: pagoError.message }, { status: 500 })
+      return NextResponse.json({ error: 'No se pudo registrar la transferencia.' }, { status: 500 })
     }
 
     console.log(`[register-transfer] Transferencia pendiente registrada para ${email}:`, pago.id)

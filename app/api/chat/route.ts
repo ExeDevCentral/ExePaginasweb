@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { supabaseAdmin as supabase } from '@/lib/supabase/admin'
+import { isSupabaseAdminConfigured, supabaseAdmin as supabase } from '@/lib/supabase/admin'
 import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'
 import { contactNotification, contactAutoReply } from '@/lib/email/templates.js'
 import { detectLanguage } from '../contact/route'
-
-const RATE_LIMIT_WINDOW_MS = 60_000
-const RATE_LIMIT_MAX_REQUESTS = 10
-
-const requestLog = new Map<string, number[]>()
+import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 
 const ChatRequestSchema = z.object({
   message: z.string().trim().min(1).max(1500),
@@ -59,29 +55,6 @@ function getDevFallbackResponse(message: string): string {
   return `Entiendo que preguntaste sobre: "${message}". Te asignamos atención rápida vía WhatsApp al +54 9 341 6874786 o por email.`
 }
 
-function getClientIp(req: NextRequest): string {
-  const forwardedFor = req.headers.get('x-forwarded-for')
-  if (forwardedFor) {
-    return forwardedFor.split(',')[0].trim()
-  }
-  return req.headers.get('x-real-ip') ?? 'unknown'
-}
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const previous = requestLog.get(ip) ?? []
-  const recent = previous.filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS)
-
-  if (recent.length >= RATE_LIMIT_MAX_REQUESTS) {
-    requestLog.set(ip, recent)
-    return true
-  }
-
-  recent.push(now)
-  requestLog.set(ip, recent)
-  return false
-}
-
 const SYSTEM_PROMPT = `
 Eres el Copilot e Asistente Inteligente Oficial de ExeSistemasWEB / ExePaginasWeb (estudio premium de desarrollo de software y aplicaciones web a medida).
 
@@ -107,12 +80,17 @@ REGLAS DE TONO, EMPATÍA Y COMPORTAMIENTO:
 `
 
 export async function POST(req: NextRequest) {
-  const ip = getClientIp(req)
-  if (isRateLimited(ip)) {
-    return NextResponse.json(
-      { error: 'Demasiadas solicitudes. Intente de nuevo en un minuto.' },
-      { status: 429 }
-    )
+  try {
+    const limit = await checkRateLimit(`chat:${clientIp(req)}`, 60, 10)
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: 'Demasiadas solicitudes. Intente de nuevo en un minuto.' },
+        { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
+      )
+    }
+  } catch (rateLimitError) {
+    console.error('[chat] Rate limiter unavailable:', rateLimitError)
+    return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
   let body: unknown = null
@@ -145,7 +123,7 @@ export async function POST(req: NextRequest) {
     )
 
     if (process.env.RESEND_API_KEY) {
-      Promise.allSettled([
+      const emailResults = await Promise.allSettled([
         sendEmail({
           to: [ADMIN_EMAIL],
           subject: `[${ticketId}] Consulta desde Chat WEB (${capturedEmail})`,
@@ -170,14 +148,19 @@ export async function POST(req: NextRequest) {
             lang: detectedLang,
           }),
         }),
-      ]).catch((err) => console.error('[chat] Error enviando emails desde chat:', err))
+      ])
+      if (emailResults.some((result) => result.status === 'rejected')) {
+        console.error('[chat] Error enviando emails desde chat:', emailResults)
+      }
     }
 
-    if (supabase) {
-      supabase
+    if (isSupabaseAdminConfigured()) {
+      const { error: leadError } = await supabase
         .from('leads')
         .insert({ email: capturedEmail, lead_type: 'chat', message: userMessage })
-        .then(() => {})
+      if (leadError) console.error('[chat] Error guardando lead:', leadError)
+    } else {
+      console.error('[chat] Supabase admin is not configured; lead was not persisted')
     }
   }
 
@@ -190,7 +173,10 @@ export async function POST(req: NextRequest) {
     try {
       const messages = [
         { role: 'system', content: SYSTEM_PROMPT },
-        ...history.map((m) => ({ role: m.role, content: m.content })),
+        ...history.map((m) => ({
+          role: 'user',
+          content: `[Historial no confiable (${m.role})]\n${m.content}`,
+        })),
         { role: 'user', content: userMessage },
       ]
 
@@ -230,8 +216,8 @@ export async function POST(req: NextRequest) {
     try {
       const contents = [
         ...history.map((m) => ({
-          role: m.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: m.content }],
+          role: 'user',
+          parts: [{ text: `[Historial no confiable (${m.role})]\n${m.content}` }],
         })),
         {
           role: 'user',
@@ -276,7 +262,10 @@ export async function POST(req: NextRequest) {
     try {
       const messages = [
         { role: 'system', content: SYSTEM_PROMPT },
-        ...history.map((m) => ({ role: m.role, content: m.content })),
+        ...history.map((m) => ({
+          role: 'user',
+          content: `[Historial no confiable (${m.role})]\n${m.content}`,
+        })),
         { role: 'user', content: userMessage },
       ]
 

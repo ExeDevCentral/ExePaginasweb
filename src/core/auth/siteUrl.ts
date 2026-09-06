@@ -24,6 +24,34 @@ export function getAuthRedirectUrl(path = '/dashboard'): string {
   return `${base}${normalizedPath}`
 }
 
+/**
+ * Accept only an internal application path. Query strings are preserved, but
+ * absolute URLs, protocol-relative URLs and backslash variants are rejected.
+ */
+export function sanitizeInternalPath(
+  value: string | null | undefined,
+  fallback = '/dashboard'
+): string {
+  if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('\\')) {
+    return fallback
+  }
+
+  try {
+    const parsed = new URL(value, 'https://internal.invalid')
+    if (parsed.origin !== 'https://internal.invalid') return fallback
+    return `${parsed.pathname}${parsed.search}${parsed.hash}` || fallback
+  } catch {
+    return fallback
+  }
+}
+
+export function isLocalDashboardPreview(searchParams: URLSearchParams): boolean {
+  return (
+    process.env.NODE_ENV !== 'production' &&
+    (searchParams.get('preview') === 'true' || searchParams.get('demo') === '1')
+  )
+}
+
 export function hasAuthCallbackInUrl(): boolean {
   if (typeof window === 'undefined') return false
   const { hash, search } = window.location

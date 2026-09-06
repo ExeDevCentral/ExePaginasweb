@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { useAuthSession } from './AuthSessionProvider'
 import { useAuthRole, type Role } from './userAuth'
+import { isLocalDashboardPreview, sanitizeInternalPath } from './siteUrl'
 
 interface AuthGuardProps {
   children: React.ReactNode
@@ -21,14 +22,14 @@ export function AuthGuard({
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const isPreview = searchParams.get('preview') === 'true' || searchParams.get('demo') === '1'
+  const isPreview = isLocalDashboardPreview(searchParams)
 
   useEffect(() => {
     if (isPreview) return
     if (!ready || loading) return
 
     if (!session) {
-      router.replace(`${fallback}?redirectTo=${encodeURIComponent(pathname)}`)
+      router.replace(`${fallback}?redirectTo=${encodeURIComponent(sanitizeInternalPath(pathname))}`)
       return
     }
 

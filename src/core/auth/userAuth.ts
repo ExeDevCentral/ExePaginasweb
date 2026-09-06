@@ -23,17 +23,20 @@ export function useAuthRole() {
     if (cachedUserId === userId && cachedRole) return cachedRole
     try {
       const { data: isAdmin, error } = await supabase.rpc('is_admin')
-      if (error) return 'client'
+      if (error) throw error
       const resolved = isAdmin === true ? 'admin' : 'client'
       cachedUserId = userId
       cachedRole = resolved
       return resolved
-    } catch {
-      return 'client'
+    } catch (error) {
+      console.error('[auth] Could not resolve user role:', error)
+      throw error
     }
   }, [])
 
   useEffect(() => {
+    let cancelled = false
+
     if (!ready) return
 
     const u = session?.user
@@ -43,16 +46,29 @@ export function useAuthRole() {
       setLoading(false)
       cachedRole = null
       cachedUserId = null
-      return
+      return () => {
+        cancelled = true
+      }
     }
 
     const appUser = { id: u.id, email: u.email ?? null }
     setUser(appUser)
 
-    resolveRole(u.id).then((resolvedRole) => {
-      setRole(resolvedRole)
-      setLoading(false)
-    })
+    resolveRole(u.id)
+      .then((resolvedRole) => {
+        if (cancelled) return
+        setRole(resolvedRole)
+        setLoading(false)
+      })
+      .catch(() => {
+        if (cancelled) return
+        setRole('unknown')
+        setLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [ready, session, resolveRole])
 
   const signInWithGoogle = async () => {

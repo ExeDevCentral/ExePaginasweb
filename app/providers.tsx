@@ -27,6 +27,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         },
       })
   )
+  const enableVercelTelemetry = process.env.NEXT_PUBLIC_ENABLE_VERCEL_TELEMETRY === 'true'
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -37,8 +38,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           {children}
         </ThemeProvider>
       </AuthSessionProvider>
-      <SpeedInsights />
-      <Analytics />
+      {enableVercelTelemetry && <SpeedInsights />}
+      {enableVercelTelemetry && <Analytics />}
     </QueryClientProvider>
   )
 }

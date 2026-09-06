@@ -13,7 +13,9 @@ const { mockSupabaseInstance } = vi.hoisted(() => ({
     from: vi.fn(() => ({
       insert: vi.fn().mockResolvedValue({ data: null, error: null }),
       select: vi.fn().mockReturnThis(),
-      update: vi.fn().mockResolvedValue({ data: null, error: null }),
+      update: vi.fn(() => ({
+        eq: vi.fn(() => ({ eq: vi.fn().mockResolvedValue({ data: null, error: null }) })),
+      })),
     })),
   },
 }))
@@ -24,6 +26,7 @@ vi.mock('@supabase/supabase-js', () => ({
 
 vi.mock('@/lib/supabase/admin', () => ({
   supabaseAdmin: mockSupabaseInstance,
+  isSupabaseAdminConfigured: () => true,
 }))
 
 vi.mock('../../../lib/email/send.js', () => ({

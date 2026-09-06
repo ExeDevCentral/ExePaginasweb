@@ -39,6 +39,7 @@ vi.mock('@supabase/supabase-js', () => ({
 
 vi.mock('@/lib/supabase/admin', () => ({
   supabaseAdmin: mockSupabaseInstance,
+  isSupabaseAdminConfigured: () => true,
 }))
 
 vi.mock('../../lib/email/send.js', () => ({
@@ -151,7 +152,7 @@ describe('🛡️ SUITE DE PRUEBAS RIGUROSA: Clientes, Tokens, Lista de Pagos, M
               purchase_units: [
                 {
                   custom_id: 'mantenimiento-pro|nuevo.cliente@empresa.com|saas',
-                  amount: { value: '99.00' },
+                  amount: { value: '99.00', currency_code: 'USD' },
                   description: 'Plan Mantenimiento Pro',
                 },
               ],
@@ -162,6 +163,7 @@ describe('🛡️ SUITE DE PRUEBAS RIGUROSA: Clientes, Tokens, Lista de Pagos, M
       })
 
       const payload = JSON.stringify({
+        id: 'WH-EVENT-ORDER-999',
         event_type: 'CHECKOUT.ORDER.APPROVED',
         resource: { id: 'PAYPAL_ORDER_999' },
       })
@@ -408,6 +410,7 @@ describe('🛡️ SUITE DE PRUEBAS RIGUROSA: Clientes, Tokens, Lista de Pagos, M
       })
 
       const payload = JSON.stringify({
+        id: 'WH-EVENT-REFUND-99',
         event_type: 'PAYMENT.CAPTURE.REFUNDED',
         resource: { id: 'PAYPAL_ORDER_REFUND_99', amount: { value: '49.00' } },
       })

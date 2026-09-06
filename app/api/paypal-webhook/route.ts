@@ -1,9 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin as db } from '@/lib/supabase/admin'
+import { isSupabaseAdminConfigured, supabaseAdmin as db } from '@/lib/supabase/admin'
 import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'
 import { paymentConfirmation, paymentNotification } from '@/lib/email/templates.js'
+import {
+  claimWebhookEvent,
+  markWebhookFailed,
+  markWebhookProcessed,
+} from '@/lib/server/webhookEvents'
 
 const PAYPAL_API_BASE = process.env.PAYPAL_API_BASE || 'https://api-m.sandbox.paypal.com'
+
+type PayPalPlan = { id: string; slug: string; nombre: string }
+type PayPalCapture = {
+  id?: string
+  status?: string
+  payer?: { email_address?: string; name?: { given_name?: string } }
+  purchase_units?: PayPalPurchaseUnit[]
+}
+type PayPalPurchaseUnit = {
+  custom_id?: string
+  description?: string
+  amount?: { value?: string; currency_code?: string }
+  payments?: { captures?: PayPalCapture[] }
+}
+type PayPalResource = {
+  id?: string
+  amount?: { value?: string }
+  custom_id?: string
+  payer?: { email_address?: string; name?: { given_name?: string } }
+  supplementary_data?: { related_ids?: { order_id?: string } }
+}
+type PayPalWebhookBody = {
+  id: string
+  event_type: string
+  resource?: PayPalResource
+}
 
 async function getPayPalAccessToken(): Promise<string | null> {
   const clientId = process.env.PAYPAL_CLIENT_ID
@@ -39,8 +70,11 @@ async function getOrCreateCliente(email: string, fullName?: string): Promise<str
     const { data: authUser } = await db.auth.admin.listUsers()
     const match = authUser?.users?.find((u) => u.email?.toLowerCase() === email?.toLowerCase())
     id = match?.id || null
-  } catch (e: any) {
-    console.warn('[paypal-webhook] No se pudo buscar en auth.users:', e.message)
+  } catch (e: unknown) {
+    console.warn(
+      '[paypal-webhook] No se pudo buscar en auth.users:',
+      e instanceof Error ? e.message : 'Unknown auth error'
+    )
   }
 
   if (!id) return null
@@ -54,7 +88,7 @@ async function getOrCreateCliente(email: string, fullName?: string): Promise<str
   return nuevo?.id || id
 }
 
-async function getPlanBySlug(slug: string): Promise<any> {
+async function getPlanBySlug(slug: string): Promise<PayPalPlan | null> {
   if (!db) return null
 
   const { data: planes } = await db
@@ -63,21 +97,13 @@ async function getPlanBySlug(slug: string): Promise<any> {
     .eq('slug', slug)
     .limit(1)
 
-  if (planes?.[0]) return planes[0]
-
-  const { data: porNombre } = await db
-    .from('planes')
-    .select('id, slug, nombre')
-    .ilike('nombre', `%${slug}%`)
-    .limit(1)
-
-  return porNombre?.[0] || null
+  return (planes?.[0] as PayPalPlan | undefined) || null
 }
 
 async function getOrCreateTenant(
   clienteId: string,
   email: string,
-  plan: any
+  plan: PayPalPlan | null
 ): Promise<string | null> {
   if (!db) return null
 
@@ -112,7 +138,7 @@ async function getOrCreateTenant(
   return tenant?.id || null
 }
 
-async function capturePayPalOrder(orderId: string, token: string): Promise<any> {
+async function capturePayPalOrder(orderId: string, token: string): Promise<PayPalCapture | null> {
   const resp = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}/capture`, {
     method: 'POST',
     headers: {
@@ -127,7 +153,7 @@ async function capturePayPalOrder(orderId: string, token: string): Promise<any> 
     return null
   }
 
-  return resp.json()
+  return (await resp.json()) as PayPalCapture
 }
 
 async function verifyWebhookSignature(req: NextRequest, rawBody: string): Promise<boolean> {
@@ -166,6 +192,22 @@ async function verifyWebhookSignature(req: NextRequest, rawBody: string): Promis
 }
 
 export async function POST(req: NextRequest) {
+  if (!process.env.PAYPAL_WEBHOOK_ID) {
+    console.error('[paypal-webhook] PAYPAL_WEBHOOK_ID not configured')
+    return NextResponse.json(
+      { error: 'Webhook verification is not configured' },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } }
+    )
+  }
+
+  if (!isSupabaseAdminConfigured()) {
+    console.error('[paypal-webhook] Supabase admin client is not configured')
+    return NextResponse.json(
+      { error: 'Payment processing is not configured' },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } }
+    )
+  }
+
   let rawBody = ''
   try {
     rawBody = await req.text()
@@ -173,23 +215,40 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Body could not be read' }, { status: 400 })
   }
 
-  let body: any
+  let body: PayPalWebhookBody
   try {
-    body = JSON.parse(rawBody)
+    body = JSON.parse(rawBody) as PayPalWebhookBody
   } catch {
-    return NextResponse.json({ ok: true })
+    return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 })
   }
 
-  // Only enforce signature if PAYPAL_WEBHOOK_ID is set in production
-  if (process.env.PAYPAL_WEBHOOK_ID) {
-    const verified = await verifyWebhookSignature(req, rawBody)
-    if (!verified) {
-      console.error('[paypal-webhook] Unverified webhook, rejecting')
-      return NextResponse.json({ error: 'webhook verification failed' }, { status: 403 })
-    }
+  if (!body || typeof body.event_type !== 'string' || typeof body.id !== 'string') {
+    return NextResponse.json({ error: 'Invalid webhook event' }, { status: 400 })
+  }
+
+  const verified = await verifyWebhookSignature(req, rawBody)
+  if (!verified) {
+    console.error('[paypal-webhook] Unverified webhook, rejecting')
+    return NextResponse.json({ error: 'webhook verification failed' }, { status: 403 })
   }
 
   const eventType = body.event_type
+  const eventId = body.id
+  try {
+    const claimed = await claimWebhookEvent('paypal', eventId, eventType, body)
+    if (!claimed) {
+      return NextResponse.json({ ok: true, duplicate: true })
+    }
+  } catch (claimError) {
+    console.error('[paypal-webhook] Failed to claim event:', claimError)
+    return NextResponse.json({ error: 'Webhook storage unavailable' }, { status: 503 })
+  }
+
+  const failProcessing = async (message: string) => {
+    await markWebhookFailed('paypal', eventId, new Error(message))
+    return NextResponse.json({ error: message }, { status: 503 })
+  }
+
   const resource = body.resource || {}
   console.log('[paypal-webhook] event:', eventType, '| id:', resource?.id)
 
@@ -212,36 +271,39 @@ export async function POST(req: NextRequest) {
       }
     }
   } else if (eventType === 'PAYMENT.CAPTURE.REFUNDED') {
-    const paypalOrderId = resource.id
+    const paypalCaptureId = resource.id
     const amount = resource.amount?.value
-    console.log(`[paypal-webhook] Reembolso: ${paypalOrderId} - $${amount} USD`)
+    console.log(`[paypal-webhook] Reembolso: ${paypalCaptureId} - $${amount} USD`)
     if (db) {
       const { data: pagos } = await db
         .from('pagos')
-        .select('cliente_id')
-        .eq('paypal_order_id', paypalOrderId)
+        .select('cliente_id, plan_slug, paypal_order_id, paypal_capture_id')
+        .eq('paypal_capture_id', paypalCaptureId)
         .limit(1)
       if (pagos?.[0]) {
         await db
           .from('pagos')
           .update({ estado: 'reembolsado' })
-          .eq('paypal_order_id', paypalOrderId)
-        await db
+          .eq('paypal_capture_id', paypalCaptureId)
+        const subscriptionUpdate = db
           .from('suscripciones')
           .update({ estado: 'cancelada', fecha_fin: new Date().toISOString() })
           .eq('cliente_id', pagos[0].cliente_id)
           .eq('estado', 'activa')
+        if (pagos[0].plan_slug) subscriptionUpdate.eq('plan_slug', pagos[0].plan_slug)
+        await subscriptionUpdate
       }
     }
   } else if (eventType === 'CHECKOUT.ORDER.APPROVED') {
     const orderId = resource.id
+    if (!orderId) return failProcessing('PayPal order ID is missing')
     const token = await getPayPalAccessToken()
-    if (!token) return NextResponse.json({ ok: true })
+    if (!token) return failProcessing('PayPal credentials are not configured')
 
     const captured = await capturePayPalOrder(orderId, token)
     if (!captured || captured.status !== 'COMPLETED') {
       console.error('[paypal-webhook] capture failed or incomplete')
-      return NextResponse.json({ ok: true })
+      return failProcessing('PayPal capture failed')
     }
 
     const purchaseUnit = captured.purchase_units?.[0]
@@ -250,21 +312,30 @@ export async function POST(req: NextRequest) {
     const email = captured.payer?.email_address || customId.split('|')[1] || ''
     const tipoProyecto = customId.split('|')[2] || 'mantenimiento'
     const amount = purchaseUnit?.amount?.value
+    const currency = purchaseUnit?.amount?.currency_code
     const payerName = captured.payer?.name?.given_name || ''
-    const paypalOrderId = captured.id
+    const paypalOrderId = orderId
+    const paypalCaptureId = purchaseUnit?.payments?.captures?.[0]?.id || captured.id
 
-    if (!email || !amount) {
+    if (
+      !email ||
+      !amount ||
+      currency !== 'USD' ||
+      !Number.isFinite(Number(amount)) ||
+      Number(amount) <= 0
+    ) {
       console.error('[paypal-webhook] missing email or amount')
-      return NextResponse.json({ ok: true })
+      return failProcessing('PayPal payload is missing payment data')
     }
 
     const clienteId = await getOrCreateCliente(email, payerName)
     if (!clienteId) {
       console.error('[paypal-webhook] Could not get or create cliente')
-      return NextResponse.json({ ok: true })
+      return failProcessing('Customer could not be resolved')
     }
 
     const plan = await getPlanBySlug(planSlug)
+    if (!plan) return failProcessing('Unknown PayPal plan')
     const planNombre = plan?.nombre || purchaseUnit?.description || 'Plan'
 
     if (db) {
@@ -280,6 +351,7 @@ export async function POST(req: NextRequest) {
           tipo_proyecto: tipoProyecto || 'mantenimiento',
           provider: 'paypal',
           paypal_order_id: paypalOrderId,
+          paypal_capture_id: paypalCaptureId,
         })
         .select('id')
         .single()
@@ -345,6 +417,16 @@ export async function POST(req: NextRequest) {
         console.error('[paypal-webhook] Email error:', e)
       }
     }
+  }
+
+  try {
+    await markWebhookProcessed('paypal', eventId)
+  } catch (processError) {
+    await markWebhookFailed('paypal', eventId, processError)
+    return NextResponse.json(
+      { error: 'Webhook processing could not be confirmed' },
+      { status: 503 }
+    )
   }
 
   return NextResponse.json({ ok: true })

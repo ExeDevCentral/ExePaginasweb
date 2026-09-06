@@ -5,6 +5,7 @@ import type { Cliente } from '../core/domain/entities/Cliente'
 import type { Suscripcion } from '../core/domain/entities/Suscripcion'
 import type { Pago } from '../core/domain/entities/Pago'
 import type { PlanTier } from '../core/domain/planCatalog'
+import { isLocalDashboardPreview } from '../core/auth/siteUrl'
 
 const VALID_TIERS: PlanTier[] = ['basico', 'avanzado', 'premium']
 
@@ -74,7 +75,7 @@ const DEMO_PAGOS: Pago[] = [
 
 export function useDemoData(options: UseDemoDataOptions = {}): DemoDataResult {
   const searchParams = useSearchParams()
-  const isPreview = searchParams.get('preview') === 'true' || searchParams.get('demo') === '1'
+  const isPreview = isLocalDashboardPreview(searchParams)
 
   const effectiveCliente = isPreview ? DEMO_CLIENTE : (options.cliente ?? null)
   const tierParam = searchParams.get('tier')

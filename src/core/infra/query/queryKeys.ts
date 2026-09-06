@@ -11,6 +11,8 @@ export const queryKeys = {
   invoices: {
     all: ['invoices'] as const,
     byTenant: (tenantId: string | null) => ['invoices', tenantId] as const,
+    byCliente: (clienteId: string | null) => ['invoices', 'cliente', clienteId] as const,
+    detail: (invoiceId: string | null) => ['invoices', 'detail', invoiceId] as const,
   },
   workGroups: {
     all: ['work-groups'] as const,

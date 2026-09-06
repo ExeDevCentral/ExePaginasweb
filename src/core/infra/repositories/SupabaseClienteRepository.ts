@@ -19,24 +19,20 @@ export class SupabaseClienteRepository implements IClienteRepository {
     authId: string,
     fallback: Pick<Cliente, 'full_name' | 'email'>
   ): Promise<Cliente> {
+    const payload: { id: string; email: string; full_name?: string } = {
+      id: authId,
+      email: fallback.email,
+    }
+
+    if (fallback.full_name) payload.full_name = fallback.full_name
+
     const { data, error } = await supabase
       .from('clientes')
-      .upsert(
-        {
-          id: authId,
-          full_name: fallback.full_name ?? null,
-          email: fallback.email,
-        },
-        { onConflict: 'id' }
-      )
+      .upsert(payload, { onConflict: 'id' })
       .select('id, full_name, email')
       .single()
 
-    if (!error) return data as unknown as Cliente
-    return {
-      id: authId,
-      full_name: fallback.full_name ?? null,
-      email: fallback.email,
-    }
+    if (error) throw error
+    return data as Cliente
   }
 }

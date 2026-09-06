@@ -16,23 +16,35 @@ export class SupabaseWorkGroupRepository implements IWorkGroupRepository {
 
     if (error) throw error
 
-    const result: WorkGroupWithMembers[] = []
+    const groupRows = groups ?? []
+    if (groupRows.length === 0) return []
 
-    for (const group of groups ?? []) {
-      const { data: members } = await supabase
-        .from('work_members')
-        .select('*')
-        .eq('work_group_id', group.id)
-        .eq('activo', true)
+    const { data: members, error: membersError } = await supabase
+      .from('work_members')
+      .select('*')
+      .in(
+        'work_group_id',
+        groupRows.map((group) => group.id)
+      )
+      .eq('activo', true)
 
-      result.push({
-        ...group,
-        members: (members ?? []) as WorkMember[],
-        member_count: members?.length ?? 0,
-      })
+    if (membersError) throw membersError
+
+    const membersByGroup = new Map<string, WorkMember[]>()
+    for (const member of members ?? []) {
+      const groupMembers = membersByGroup.get(member.work_group_id) ?? []
+      groupMembers.push(member as WorkMember)
+      membersByGroup.set(member.work_group_id, groupMembers)
     }
 
-    return result
+    return groupRows.map((group) => {
+      const groupMembers = membersByGroup.get(group.id) ?? []
+      return {
+        ...group,
+        members: groupMembers,
+        member_count: groupMembers.length,
+      }
+    })
   }
 
   async getById(id: string): Promise<WorkGroupWithMembers | null> {
@@ -46,11 +58,13 @@ export class SupabaseWorkGroupRepository implements IWorkGroupRepository {
     if (error) throw error
     if (!group) return null
 
-    const { data: members } = await supabase
+    const { data: members, error: membersError } = await supabase
       .from('work_members')
       .select('*')
       .eq('work_group_id', id)
       .eq('activo', true)
+
+    if (membersError) throw membersError
 
     return {
       ...group,

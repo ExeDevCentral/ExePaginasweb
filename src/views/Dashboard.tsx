@@ -15,6 +15,7 @@ import { useDemoData } from '../hooks/useDemoData'
 import { useAuthRole } from '../core/auth/userAuth'
 import { useAuthSession } from '../core/auth/AuthSessionProvider'
 import { useTenant } from '../hooks/useTenant'
+import { isLocalDashboardPreview } from '../core/auth/siteUrl'
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar'
 import { DashboardViewport } from '../components/dashboard/DashboardViewport'
 import BrandLoader from '../components/layout/BrandLoader'
@@ -36,11 +37,12 @@ export default function Dashboard() {
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
 
-  const isPreview = searchParams.get('preview') === 'true' || searchParams.get('demo') === '1'
+  const isPreview = isLocalDashboardPreview(searchParams)
 
   const { ready, session } = useAuthSession()
   const { loading, error, cliente, suscripciones, pagos, planTier, refresh } = useDashboard({
     enabled: !isPreview && ready && !!session,
+    userId: session?.user?.id,
   })
   const { role } = useAuthRole()
   const isAdmin = role === 'admin'
@@ -86,6 +88,7 @@ export default function Dashboard() {
     refresh: refreshAdmin,
   } = useAdminDashboard({
     enabled: !isPreview && ready && !!session && isAdmin && viewMode === 'admin',
+    userId: session?.user?.id,
   })
 
   // Notify & de-dup payment success params
@@ -122,6 +125,7 @@ export default function Dashboard() {
       return
     }
     await supabase.auth.signOut()
+    queryClient.clear()
     toast.success('Sesión cerrada', { description: 'Has cerrado sesión correctamente' })
     navigate('/login')
   }

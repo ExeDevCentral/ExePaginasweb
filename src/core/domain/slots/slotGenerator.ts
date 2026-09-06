@@ -16,6 +16,16 @@ export interface SlotGeneratorParams {
 
 function parseTime(timeStr: string): number {
   const [hours, minutes] = timeStr.split(':').map(Number)
+  if (
+    !Number.isInteger(hours) ||
+    !Number.isInteger(minutes) ||
+    hours < 0 ||
+    hours > 23 ||
+    minutes < 0 ||
+    minutes > 59
+  ) {
+    throw new RangeError(`Invalid shift time: ${timeStr}`)
+  }
   return hours * 60 + minutes
 }
 
@@ -28,6 +38,15 @@ function formatTime(totalMinutes: number): string {
 }
 
 export function generateAvailableSlots(params: SlotGeneratorParams): string[] {
+  if (
+    !Number.isFinite(params.serviceDurationMinutes) ||
+    params.serviceDurationMinutes <= 0 ||
+    !Number.isFinite(params.intervalMinutes) ||
+    params.intervalMinutes <= 0
+  ) {
+    throw new RangeError('Service duration and interval must be positive finite numbers')
+  }
+
   const shifts = getEffectiveShifts(params.date, params.schedule, params.exceptions || [])
 
   if (!shifts || shifts.length === 0) {
@@ -39,6 +58,10 @@ export function generateAvailableSlots(params: SlotGeneratorParams): string[] {
   for (const shift of shifts) {
     let currentMin = parseTime(shift.startTime)
     const endMin = parseTime(shift.endTime)
+
+    if (endMin <= currentMin) {
+      throw new RangeError('Overnight or empty shifts are not supported')
+    }
 
     while (currentMin + params.serviceDurationMinutes <= endMin) {
       // Reconstruir Date objects para el checker de conflictos
@@ -63,5 +86,5 @@ export function generateAvailableSlots(params: SlotGeneratorParams): string[] {
     }
   }
 
-  return availableSlots
+  return [...new Set(availableSlots)]
 }

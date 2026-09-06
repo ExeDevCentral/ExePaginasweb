@@ -100,4 +100,20 @@ describe('Slot Generator', () => {
     const slots = generateAvailableSlots(params)
     expect(slots).toEqual([])
   })
+
+  it('rechaza intervalos que podrían provocar un bucle infinito', () => {
+    const params: SlotGeneratorParams = {
+      date: new Date('2026-06-01T00:00:00Z'),
+      schedule: {
+        employeeId: 'emp-1',
+        businessId: 'biz-1',
+        shifts: { 1: [{ startTime: '09:00', endTime: '10:00' }] },
+      },
+      existingReservations: [],
+      serviceDurationMinutes: 30,
+      intervalMinutes: 0,
+    }
+
+    expect(() => generateAvailableSlots(params)).toThrow(RangeError)
+  })
 })

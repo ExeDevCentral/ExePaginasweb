@@ -22,6 +22,7 @@ export type {
 
 export interface UseAdminDashboardOptions {
   enabled?: boolean
+  userId?: string
   repo?: IAdminDashboardRepository
 }
 
@@ -46,12 +47,14 @@ export async function fetchAdminDashboard(
   return { ...overview, stats }
 }
 
+const defaultAdminDashboardRepo = new SupabaseAdminDashboardRepository()
+
 export function useAdminDashboard(options: UseAdminDashboardOptions = {}) {
-  const { enabled = true, repo = new SupabaseAdminDashboardRepository() } = options
+  const { enabled = true, userId, repo = defaultAdminDashboardRepo } = options
   const queryClient = useQueryClient()
 
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['admin-dashboard'],
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['admin-dashboard', userId ?? null],
     enabled,
     staleTime: 1000 * 60 * 2,
     queryFn: () => fetchAdminDashboard(repo),
@@ -64,8 +67,7 @@ export function useAdminDashboard(options: UseAdminDashboardOptions = {}) {
   const stats = data?.stats ?? DEFAULT_ADMIN_STATS
 
   const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ['admin-dashboard'] })
-    refetch()
+    void queryClient.invalidateQueries({ queryKey: ['admin-dashboard', userId ?? null] })
   }
 
   return {

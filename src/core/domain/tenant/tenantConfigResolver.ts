@@ -18,8 +18,10 @@ export function resolveTenantConfig(tenantId: string, planSlug: string): TenantC
   const normalizedSlug = (planSlug || '').toLowerCase().trim()
 
   const isBookingOnly = normalizedSlug.includes('booking') || normalizedSlug.includes('reserva')
-  const isPremium = normalizedSlug.includes('premium') || normalizedSlug.includes('pro')
-  const isAvanzado = normalizedSlug.includes('avanzado')
+  const catalogTier = tierFromStorePlanId(normalizedSlug)
+  const tier: PlanTier = catalogTier === 'none' ? tierFromPlanLabel(normalizedSlug) : catalogTier
+  const isPremium = tier === 'premium'
+  const isAvanzado = tier === 'avanzado'
 
   return {
     tenantId,
@@ -33,3 +35,4 @@ export function resolveTenantConfig(tenantId: string, planSlug: string): TenantC
     },
   }
 }
+import { tierFromPlanLabel, tierFromStorePlanId, type PlanTier } from '../planCatalog'

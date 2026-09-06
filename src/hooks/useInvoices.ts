@@ -16,7 +16,7 @@ export function useInvoicesByTenant(tenantId: string | null, enabled = true) {
 
 export function useInvoicesByCliente(clienteId: string | null, enabled = true) {
   return useQuery({
-    queryKey: ['invoices', 'cliente', clienteId],
+    queryKey: queryKeys.invoices.byCliente(clienteId),
     queryFn: () =>
       isValidUUID(clienteId) ? repo.listByClienteId(clienteId!) : Promise.resolve([]),
     enabled: enabled && !!clienteId && isValidUUID(clienteId),
@@ -26,7 +26,7 @@ export function useInvoicesByCliente(clienteId: string | null, enabled = true) {
 
 export function useInvoice(id: string | null, enabled = true) {
   return useQuery({
-    queryKey: ['invoice', id],
+    queryKey: queryKeys.invoices.detail(id),
     queryFn: () => (isValidUUID(id) ? repo.getById(id!) : Promise.resolve(null)),
     enabled: enabled && !!id && isValidUUID(id),
   })

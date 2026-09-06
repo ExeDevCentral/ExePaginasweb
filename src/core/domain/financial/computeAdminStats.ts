@@ -5,6 +5,7 @@ import {
   AdminTicket,
   AdminStats,
 } from '../entities/AdminDashboard'
+import { tierFromPlanLabel, tierFromStorePlanId } from '../planCatalog'
 
 export function computeAdminStats(
   clientes: AdminCliente[],
@@ -37,13 +38,12 @@ export function computeAdminStats(
     } else {
       const activeSub = clienteSubs[0]
       const slug = activeSub.plan_slug || ''
-      if (slug.includes('premium')) {
-        planPremium++
-      } else if (slug.includes('avanzado') || slug.includes('pro')) {
-        planAvanzado++
-      } else {
-        planBasico++
-      }
+      const catalogTier = tierFromStorePlanId(slug)
+      const tier = catalogTier === 'none' ? tierFromPlanLabel(slug) : catalogTier
+      if (tier === 'premium') planPremium++
+      else if (tier === 'avanzado') planAvanzado++
+      else if (tier === 'basico') planBasico++
+      else sinPlan++
     }
   })
 

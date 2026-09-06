@@ -43,45 +43,19 @@ export async function fetchDashboardData(
 
   let clienteData: Cliente | null = null
 
-  try {
-    clienteData = await deps.clienteRepo.getByAuthId(user.id)
-  } catch (e: unknown) {
-    console.error('[useDashboard] clienteRepo.getByAuthId error:', e)
-    clienteData = null
-  }
+  clienteData = await deps.clienteRepo.getByAuthId(user.id)
 
   if (!clienteData) {
-    try {
-      clienteData = await deps.clienteRepo.ensureByAuthId(user.id, {
-        full_name: user.full_name ?? null,
-        email: user.email,
-      })
-    } catch (e: unknown) {
-      console.error('[useDashboard] ensureByAuthId error (fallback):', e)
-      clienteData = {
-        id: user.id,
-        full_name: user.full_name ?? null,
-        email: user.email,
-      }
-    }
+    clienteData = await deps.clienteRepo.ensureByAuthId(user.id, {
+      full_name: user.full_name ?? null,
+      email: user.email,
+    })
   }
 
-  let suscripcionesData: Suscripcion[] = []
-  let pagosDataList: Pago[] = []
-
-  if (clienteData) {
-    try {
-      suscripcionesData = await deps.subRepo.getByClienteId(clienteData.id)
-    } catch {
-      suscripcionesData = []
-    }
-
-    try {
-      pagosDataList = await deps.pagoRepo.listByClienteId(clienteData.id)
-    } catch {
-      pagosDataList = []
-    }
-  }
+  const [suscripcionesData, pagosDataList] = await Promise.all([
+    deps.subRepo.getByClienteId(clienteData.id),
+    deps.pagoRepo.listByClienteId(clienteData.id),
+  ])
 
   return {
     cliente: clienteData,
@@ -92,22 +66,28 @@ export async function fetchDashboardData(
 
 export interface UseDashboardOptions {
   enabled?: boolean
+  userId?: string
   clienteRepo?: IClienteRepository
   subRepo?: ISubscriptionRepository
   pagoRepo?: IClientePagoRepository
 }
 
+const defaultClienteRepo = new SupabaseClienteRepository()
+const defaultSubRepo = new SupabaseSubscriptionRepository()
+const defaultPagoRepo = new SupabaseClientePagoRepository()
+
 export function useDashboard(options: UseDashboardOptions = {}) {
   const {
     enabled = true,
-    clienteRepo = new SupabaseClienteRepository(),
-    subRepo = new SupabaseSubscriptionRepository(),
-    pagoRepo = new SupabaseClientePagoRepository(),
+    userId,
+    clienteRepo = defaultClienteRepo,
+    subRepo = defaultSubRepo,
+    pagoRepo = defaultPagoRepo,
   } = options
   const queryClient = useQueryClient()
 
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['client-dashboard'],
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['client-dashboard', userId ?? null],
     enabled,
     staleTime: 1000 * 60 * 3,
     queryFn: async () => {
@@ -134,18 +114,21 @@ export function useDashboard(options: UseDashboardOptions = {}) {
 
   const cliente = data?.cliente ?? null
   const suscripciones = useMemo(() => data?.suscripciones ?? [], [data?.suscripciones])
+  const activeSuscripciones = useMemo(
+    () => suscripciones.filter((subscription) => subscription.estado === 'activa'),
+    [suscripciones]
+  )
   const pagos = useMemo(() => data?.pagos ?? [], [data?.pagos])
 
-  const isPremium = useMemo(() => suscripciones.length > 0, [suscripciones.length])
+  const isPremium = activeSuscripciones.length > 0
 
   const planTier = useMemo<PlanTier>(
-    () => resolvePlanTier(suscripciones, pagos[0]?.plan_nombre, pagos[0]?.plan_slug),
-    [suscripciones, pagos]
+    () => resolvePlanTier(activeSuscripciones, pagos[0]?.plan_nombre, pagos[0]?.plan_slug),
+    [activeSuscripciones, pagos]
   )
 
   const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ['client-dashboard'] })
-    refetch()
+    void queryClient.invalidateQueries({ queryKey: ['client-dashboard', userId ?? null] })
   }
 
   return {

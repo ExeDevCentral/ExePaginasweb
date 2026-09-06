@@ -20,7 +20,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { supabase } from '../core/infra/supabase/client'
-import { getAuthRedirectUrl } from '../core/auth/siteUrl'
+import { getAuthRedirectUrl, sanitizeInternalPath } from '../core/auth/siteUrl'
 import { useAuthSession } from '../core/auth/AuthSessionProvider'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -84,7 +84,7 @@ export default function Login() {
 
   useEffect(() => {
     if (ready && session && mode !== 'update-password') {
-      const target = searchParams.get('redirectTo') || '/dashboard'
+      const target = sanitizeInternalPath(searchParams.get('redirectTo'))
       navigate(target, { replace: true })
     }
   }, [ready, session, navigate, mode, searchParams])
@@ -103,11 +103,9 @@ export default function Login() {
       setError(null)
       setLoading(true)
 
-      const rawTarget = searchParams.get('redirectTo') || searchParams.get('next') || '/dashboard'
-      let target = rawTarget.startsWith('/') ? rawTarget : `/${rawTarget}`
-      if (target.startsWith('//') || target.startsWith('/\\') || target.includes('://')) {
-        target = '/dashboard'
-      }
+      const target = sanitizeInternalPath(
+        searchParams.get('redirectTo') || searchParams.get('next')
+      )
 
       const redirectPath =
         target && target !== '/dashboard'

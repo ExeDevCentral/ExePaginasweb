@@ -2,6 +2,14 @@ import { supabase } from '../supabase/client'
 import { User } from '../../domain/entities/User'
 import { IUserRepository } from '../../domain/repositories/IUserRepository'
 
+type ProfileRow = {
+  id: string
+  email: string
+  full_name: string | null
+  role: User['role']
+  created_at: string
+}
+
 export class SupabaseUserRepository implements IUserRepository {
   async getAll(): Promise<User[]> {
     const { data, error } = await supabase
@@ -16,7 +24,8 @@ export class SupabaseUserRepository implements IUserRepository {
   async getById(id: string): Promise<User | null> {
     const { data, error } = await supabase.from('profiles').select('*').eq('id', id).single()
 
-    if (error) return null
+    if (error?.code === 'PGRST116') return null
+    if (error) throw error
     return this.mapToDomain(data)
   }
 
@@ -32,11 +41,11 @@ export class SupabaseUserRepository implements IUserRepository {
     if (error) throw error
   }
 
-  private mapToDomain(raw: any): User {
+  private mapToDomain(raw: ProfileRow): User {
     return {
       id: raw.id,
       email: raw.email,
-      fullName: raw.full_name,
+      fullName: raw.full_name ?? '',
       role: raw.role,
       createdAt: raw.created_at,
     }

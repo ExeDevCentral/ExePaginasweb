@@ -2,6 +2,18 @@ import { supabase } from '../supabase/client'
 import { Suscripcion } from '../../domain/entities/Suscripcion'
 import { ISubscriptionRepository } from '../../domain/repositories/ISubscriptionRepository'
 
+type SubscriptionRow = Pick<
+  Suscripcion,
+  'id' | 'cliente_id' | 'plan_slug' | 'estado' | 'fecha_inicio'
+>
+
+type PlanRow = {
+  slug: string
+  nombre: string | null
+  precio: number | null
+  caracteristicas: string | null
+}
+
 export class SupabaseSubscriptionRepository implements ISubscriptionRepository {
   async getByClienteId(clienteId: string): Promise<Suscripcion[]> {
     const { data, error } = await supabase
@@ -12,18 +24,20 @@ export class SupabaseSubscriptionRepository implements ISubscriptionRepository {
 
     if (error) throw error
 
-    const subs = (data ?? []) as any[]
+    const subs = (data ?? []) as unknown as SubscriptionRow[]
 
     const slugs = [...new Set(subs.map((s) => s.plan_slug).filter(Boolean))]
-    const { data: planes } =
+    const { data: planes, error: planesError } =
       slugs.length > 0
         ? await supabase
             .from('planes')
             .select('slug, nombre, precio, caracteristicas')
             .in('slug', slugs)
-        : { data: [] }
+        : { data: [], error: null }
 
-    const planMap = new Map((planes || []).map((p) => [p.slug, p]))
+    if (planesError) throw planesError
+
+    const planMap = new Map((planes ?? ([] as PlanRow[])).map((p) => [p.slug, p]))
 
     return subs.map((s) => ({
       ...s,

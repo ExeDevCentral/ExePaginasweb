@@ -16,7 +16,7 @@ export function resolvePlanTier(
   planNombrePago?: string | null,
   planSlugPago?: string | null
 ): PlanTier {
-  const active = suscripciones.find((s) => s.estado !== 'cancelada') ?? suscripciones[0]
+  const active = suscripciones.find((s) => s.estado === 'activa')
 
   const slug = active?.plan?.slug ?? planSlugPago
   if (slug) {

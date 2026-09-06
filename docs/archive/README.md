@@ -15,4 +15,4 @@ Este directorio almacena registros de versiones tempranas, notas de correcciones
 ---
 
 > [!NOTE]
-> Para consultar la arquitectura activa y la documentación oficial actualizada, dirígete a [`docs/README.md`](file:///C:/Users/exeme/Desktop/ExePaginasweb/docs/README.md) y al [`README.md`](file:///C:/Users/exeme/Desktop/ExePaginasweb/README.md) principal en la raíz.
+> Para consultar la arquitectura activa y la documentación oficial actualizada, dirígete a [`docs/README.md`](../README.md) y al [`README.md`](../../README.md) principal en la raíz.

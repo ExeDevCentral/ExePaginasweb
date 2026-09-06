@@ -8,11 +8,11 @@
   </p>
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
-[![React](https://img.shields.io/badge/React-19_/_18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Supabase](https://img.shields.io/badge/Supabase-Auth_&_Postgres_RLS-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![Vitest](https://img.shields.io/badge/Vitest-98_Passed_Tests-FCC72B?style=for-the-badge&logo=vitest&logoColor=black)](https://vitest.dev)
+[![Vitest](https://img.shields.io/badge/Vitest-151_Passed_Tests-FCC72B?style=for-the-badge&logo=vitest&logoColor=black)](https://vitest.dev)
 [![Speed Insights](https://img.shields.io/badge/Core_Web_Vitals-RES_94+-00f2fe?style=for-the-badge&logo=vercel&logoColor=black)](https://exepaginasweb.com)
 [![License](https://img.shields.io/badge/License-Proprietary-FF5722?style=for-the-badge)](LICENSE)
 
@@ -61,7 +61,7 @@
                         │  (PostgreSQL 15 + SSR)    │
                         ├───────────────────────────┤
                         │ • Row Level Security (RLS)│
-                        │ • 21 SQL Migrations       │
+                        │ • 27 SQL Migrations       │
                         │ • Stored Procedures (RPC) │
                         │ • Auth (OAuth + PKCE)     │
                         │ • Realtime & Triggers     │
@@ -86,7 +86,7 @@
 - **Store 3D Tilt Cards:** Tarjetas interactivas con física de inclinación 3D, reflejo dinámico al cursor, partículas de brillo y flujo de checkout directo con validación de transferencias bancarias y PayPal.
 - **Cotizador en Vivo:** Algoritmo dinámico de cálculo de presupuestos instantáneos según volumen de páginas, usuarios e integraciones requeridas.
 - **Internacionalización (i18n):** Traducción y formateo localizado en **7 idiomas** (Español, Inglés, Alemán, Francés, Árabe, Portugués de Brasil, Chino Simplificado).
-- **Sistema de Temas Dual:** Modo Crema Editorial (`#FDF8F3`) y Modo Dark Cyberpunk Absoluto (`#030712`), con sincronización automática en Toasters (`Sonner` y `Sileo`).
+- **Sistema de Temas Dual:** Modo Crema Editorial (`#FDF8F3`) y Modo Dark Cyberpunk Absoluto (`#030712`), con sincronización automática en toasters (`Sonner`).
 
 ### 🛡️ Seguridad y Resiliencia Empresarial
 
@@ -116,6 +116,7 @@ ExePaginasweb/
 │   ├── login/                    # Pantalla de autenticación con Aurora y Three.js
 │   ├── privacidad/               # Políticas de privacidad conformes a RGPD
 │   ├── terminos/                 # Términos y condiciones del servicio
+│   ├── test-preview/             # Vista previa de plantillas/maquetas
 │   ├── tienda/                   # Catálogo de planes y pasarela de suscripción
 │   ├── layout.tsx                # Root layout con providers (Theme, i18n, Analytics)
 │   └── page.tsx                  # Landing page principal
@@ -123,29 +124,39 @@ ExePaginasweb/
 ├── src/
 │   ├── components/               # Componentes UI Modulares
 │   │   ├── Hero/                 # Hero principal, comparador y badges
-│   │   ├── dashboard/            # Tablas administrativas (Clientes, Pagos, SLA, Workgroups)
+│   │   ├── dashboard/            # Vistas y paneles (Dashboard shell, Immobilizer, Onboarding, Settings)
 │   │   ├── store/                # PlanCard 3D, CheckoutModal, TransferInstructions
 │   │   ├── layout/               # Header, Footer, LanguageSwitcher, ThemeToggle
 │   │   ├── Effects/              # Escenas 3D (Three.js), Canvas Aurora, CoffeePortal
 │   │   └── shared/               # Botones magnéticos, modales, toasters
 │   ├── core/                     # Lógica de Dominio y Capa de Infraestructura
-│   │   ├── domain/               # Motores de negocio (financialEngine, availability, reservations)
-│   │   ├── infra/                # Clientes y repositorios de persistencia (Supabase)
+│   │   ├── domain/               # Motores de negocio, entidades, repositorios (ports) y servicios
+│   │   │   ├── auth/             # Política de contraseñas y validaciones de seguridad
+│   │   │   ├── financial/        # Motor financiero, facturación y comisiones
+│   │   │   ├── onboarding/       # Onboarding de workspaces (slug, trial, grupos por defecto)
+│   │   │   ├── repositories/     # Interfaces de repositorio (IAuth, ITenant, ICliente...)
+│   │   │   └── ...
+│   │   ├── infra/                # Adapters de infraestructura
+│   │   │   ├── repositories/     # Implementaciones Supabase + fakes InMemory (tests)
+│   │   │   └── supabase/         # Cliente Supabase
 │   │   ├── auth/                 # Contexto de sesión, guards y resolutor de roles
-│   │   └── i18n/                 # Diccionarios de idiomas y configuración i18next
-│   └── hooks/                    # Custom Hooks reactivos (useTenant, useInvoices, etc.)
+│   │   ├── i18n/                 # Diccionarios de idiomas (7 locales) y configuración i18next
+│   │   ├── theme/                # ThemeContext y modo oscuro
+│   │   ├── analytics/            # Integraciones de analítica
+│   │   └── utils/                # Utilidades de dominio (errorUtils)
+│   └── hooks/                    # Custom hooks reactivos (useDashboard, useAdminDashboard, useTenant)
 │
 ├── supabase/                     # Configuración de Base de Datos
-│   ├── migrations/               # 21 migraciones SQL versionadas
+│   ├── migrations/               # 27 migraciones SQL versionadas
 │   ├── seed.sql                  # Datos semilla para pruebas locales
 │   └── config.toml               # Configuración del entorno Supabase
 │
 ├── tests/                        # Suite de Pruebas Automatizadas (Vitest)
 │   ├── api/                      # Tests de integración de Route Handlers y Webhooks
-│   └── src/                      # Pruebas unitarias de motores de dominio y componentes
+│   └── e2e-units/                # Tests de Dashboard, auth y responsive mobile
 │
 ├── docs/                         # Documentación Técnica y Arquitectónica
-│   ├── adr/                      # Architecture Decision Records (0001 a 0004)
+│   ├── adr/                      # Architecture Decision Records (0001 a 0006)
 │   ├── agents/                   # Guías de triaje y domain context para agentes IA
 │   └── context/                  # Modelo de dominio formal y ubiquitous language
 │
@@ -159,15 +170,15 @@ ExePaginasweb/
 | Capa / Módulo            | Tecnologías y Librerías                      | Propósito                                                |
 | :----------------------- | :------------------------------------------- | :------------------------------------------------------- |
 | **Framework Base**       | `Next.js 16.3.1 (App Router, Turbopack)`     | SSR, ISR, Server Components y Edge Routing               |
-| **Librería UI**          | `React 18.3.1 / React 19 Compat`             | Renderizado reactivo y gestión declarativa               |
+| **Librería UI**          | `React 18.3.1`                               | Renderizado reactivo y gestión declarativa               |
 | **Lenguaje**             | `TypeScript 5.7.3`                           | Tipado estricto de extremo a extremo                     |
 | **Estilos & CSS**        | `TailwindCSS 3.4.17 + PostCSS + CSS Vars`    | Tokens de diseño adaptativos y paleta dual               |
 | **Animaciones**          | `Framer Motion 12.39 + GSAP 3.15 + Lenis`    | Micro-animaciones a 60fps y scroll suave                 |
 | **Gráficos 3D**          | `Three.js 0.173`                             | Renderizado WebGL y geometrías interactivas              |
 | **Base de Datos & Auth** | `Supabase (PostgreSQL 15, Auth PKCE, RLS)`   | Persistencia relacional, seguridad y sesiones            |
 | **Manejo de Estado**     | `@tanstack/react-query 5.100`                | Caché asíncrona, revalidación y sincronización           |
-| **Formularios & Zod**    | `React Hook Form 7.76 + Zod 4.4`             | Validación de esquemas y tipado de inputs                |
-| **Testing**              | `Vitest 4.1.6 + Testing Library`             | Suite de pruebas unitarias y de integración (98 tests)   |
+| **Formularios & Zod**    | `Zod 4.4`                                    | Validación de esquemas y tipado de inputs                |
+| **Testing**              | `Vitest 4.1.6 + Testing Library`             | Suite de pruebas unitarias y de integración (151 tests)  |
 | **Emails & Webhooks**    | `Resend API + Svix 1.96`                     | Envío de correos transaccionales con firma criptográfica |
 | **Pasarela de Pago**     | `PayPal SDK + Webhooks`                      | Cobro y conciliación de suscripciones                    |
 | **Monitoreo**            | `@vercel/analytics + @vercel/speed-insights` | Telemetría en tiempo real y Core Web Vitals              |
@@ -237,7 +248,7 @@ npm run build
 # Iniciar servidor en modo producción local
 npm run start
 
-# Ejecutar la suite completa de tests (98 tests)
+# Ejecutar la suite completa de tests (151 tests)
 npm test
 
 # Ejecutar tests en modo watch interactivo
@@ -260,13 +271,17 @@ npm run supabase:push
 La plataforma cuenta con un arnés de testing automatizado mediante **Vitest**, asegurando cero regresiones en lógica crítica:
 
 ```
-✓ tests/api/audit/system-audit.test.js     # Auditoría de Chatbot, Contacto y Webhooks
-✓ tests/api/webhooks/resend.test.js       # Validación de firmas Svix y eventos Resend
-✓ src/core/domain/financial/              # Motor financiero y cálculo de comisiones
-✓ src/core/domain/tenant/                 # Resolución de planes y cuotas multi-tenant
-✓ src/core/domain/reservations/           # Detección de colisiones de agenda
-✓ src/core/domain/availability/           # Cálculo dinámico de franjas horarias
-✓ src/components/store/CheckoutModal.test # Flujos de pago y validación UI
+✓ tests/api/                          # Auditoría, Webhooks (Svix/Resend) y payments
+✓ src/core/domain/financial/          # Motor financiero y cálculo de comisiones
+✓ src/core/domain/tenant/             # Resolución de planes y cuotas multi-tenant
+✓ src/core/domain/auth/               # Política de contraseñas y validaciones de seguridad
+✓ src/core/domain/onboarding/         # Onboarding de workspaces (slug, trial, grupos)
+✓ src/core/domain/reservations/       # Detección de colisiones de agenda
+✓ src/core/domain/availability/       # Cálculo dinámico de franjas horarias
+✓ src/core/infra/repositories/        # Adapters Supabase (Tenant, Auth, ClientePago) + fakes InMemory
+✓ src/hooks/                          # Hooks de Dashboard/Admin testeados vía repositorios
+✓ src/components/dashboard/           # DashboardView (registry de tabs) y resolvePlanTier
+✓ src/components/store/CheckoutModal  # Flujos de pago y validación UI
 ```
 
 ---

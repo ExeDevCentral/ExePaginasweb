@@ -69,6 +69,8 @@ El ciclo de vida del esquema de datos está gobernado por migraciones incrementa
 | `024_add_clientes_updated_at.sql`       | Trigger de actualización de timestamps (`updated_at`).                                                    |
 | `025_fix_rpc_work_groups_normalize.sql` | Normalización y tipado de respuestas JSON en work groups.                                                 |
 | `026_fix_rls_circular_recursion.sql`    | Refactorización final de directivas de seguridad para máxima velocidad.                                   |
+| `027_harden_webhooks_and_billing.sql`   | Idempotencia de webhooks, capturas PayPal, reasignación de claims stale y RPCs `SECURITY DEFINER` endurecidas. |
+| `028_durable_api_rate_limits.sql`       | RPC `check_api_rate_limit` para rate limiting distribuido y durable en Postgres.                            |
 
 ---
 
@@ -80,8 +82,10 @@ El ciclo de vida del esquema de datos está gobernado por migraciones incrementa
    - Evalúa la carga actual de los Work Groups del tenant y asigna el ticket al grupo con menor número de casos activos.
 3. **`create_invoice_from_payment(p_payment_data)`**
    - Ejecutado de forma segura por el webhook de PayPal para emitir facturas secuenciales y actualizar el estado de suscripción.
-4. **`create_workspace(p_name, p_plan_id)`**
-   - Aprovisiona atómicamente el Tenant, el Work Group por defecto (`General`), el contrato SLA y la suscripción inicial.
+4. **`create_workspace(p_slug, p_nombre, p_dueno_id, p_estado, p_trial_ends_at, p_settings, ...)`**
+   - Aprovisiona atómicamente el Tenant, el perfil de cliente (upsert), el Work Group por defecto (`General`), el contrato SLA y la suscripción inicial en una transacción. Ver `src/core/infra/repositories/SupabaseTenantRepository.ts` → `createWorkspace()`.
+5. **`check_api_rate_limit(p_key, p_window_seconds, p_max_requests)`**
+   - Rate limiting distribuido y durable: devuelve `(allowed, attempts, retry_after_seconds)`. Ver `lib/server/rateLimit.ts` → `checkRateLimit()`.
 
 ---
 

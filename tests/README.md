@@ -6,34 +6,51 @@ Este directorio y la suite de pruebas del proyecto garantizan la integridad, seg
 
 ## 📊 Cobertura y Estructura de Tests
 
-El arnés de pruebas cuenta con **17 suites de test** y más de **98 casos de prueba automatizados** ejecutados con `Vitest`.
+El arnés de pruebas cuenta con **27 suites de test** y **151 casos de prueba** ejecutados con `Vitest`.
 
 ```
 tests/ y src/
+├── Backend, APIs & Webhooks
+│   ├── api/audit/system-audit.test.js         # Auditoría integral: Chatbot, Contacto y Tickets
+│   ├── api/webhooks/resend.test.js            # Verificación de firma Svix y eventos de email
+│   ├── api/saas-clients-payments.test.js      # Flujos de clientes y cobranzas
+│   ├── e2e-units/dashboard-services-auth.test.ts # Permisos y autenticación en Dashboard
+│   └── e2e-units/responsive-mobile.test.ts       # Navegación y soporte táctil mobile
+│
 ├── Motores de Dominio (Domain Engines)
-│   ├── financialEngine.test.ts          # Cálculos de facturación, cuotas e impuestos
-│   ├── tenantConfigResolver.test.ts     # Resolución y cascada de configuración multi-tenant
-│   ├── availabilityEngine.test.ts       # Disponibilidad de agenda y cálculo de bloques
-│   ├── conflictDetector.test.ts         # Prevención y detección de solapamiento de turnos
-│   ├── reservationService.test.ts       # Ciclo de vida de reservas y estados
-│   └── slotGenerator.test.ts            # Generación de franjas horarias configurables
+│   ├── financialEngine.test.ts                # Cálculos de facturación, cuotas e impuestos
+│   ├── computeAdminStats.test.ts              # Estadísticas administrativas (función pura)
+│   ├── tenantConfigResolver.test.ts           # Resolución y cascada de configuración multi-tenant
+│   ├── availabilityEngine.test.ts             # Disponibilidad de agenda y cálculo de bloques
+│   ├── conflictDetector.test.ts               # Prevención y detección de solapamiento de turnos
+│   ├── reservationService.test.ts             # Ciclo de vida de reservas y estados
+│   └── slotGenerator.test.ts                  # Generación de franjas horarias configurables
+│
+├── Política y Autenticación
+│   └── passwordPolicy.test.ts                 # Validación de contraseñas (longitud, mayúsculas, etc.)
+│
+├── Onboarding de Workspaces
+│   ├── workspaceOnboarding.test.ts            # Funciones puras (slug, trial, validación)
+│   └── WorkspaceOnboardingService.test.ts     # Servicio con ITenantRepository inyectado
 │
 ├── Infraestructura & Repositorios
-│   ├── SupabaseTenantRepository.test.ts # Contratos de persistencia y mapeo de datos
-│   ├── useTenant.test.ts                # React Query hooks y cache asíncrona
-│   └── errorUtils.test.ts               # Sanitización y formateo de excepciones
+│   ├── SupabaseTenantRepository.test.ts       # Contratos de persistencia (CRUD + create_workspace)
+│   ├── SupabaseClientePagoRepository.test.ts  # Pagos de clientes (adapters Supabase)
+│   ├── SupabaseAuthRepository.test.ts         # Perfiles y cambio de contraseña
+│   └── useTenant.test.ts                      # React Query hooks y caché asíncrona
 │
-├── Componentes de Interfaz de Usuario (UI)
-│   ├── CheckoutModal.test.tsx           # Modales de pago (PayPal / Transferencias)
-│   ├── InvoicesPanel.test.tsx           # Renderizado de facturas y estados de pago
-│   └── resolvePlanTier.test.ts          # Clasificación y badge de planes SaaS
+├── Hooks del Dashboard
+│   ├── useDashboard.test.ts                   # useDashboard (IClienteRepository, ISubscriptionRepository)
+│   └── useAdminDashboard.test.ts              # useAdminDashboard (IAdminDashboardRepository, computeAdminStats)
 │
-└── Backend, APIs & Webhooks
-    ├── tests/api/audit/system-audit.test.js    # Auditoría integral: Chatbot, Contacto y Tickets
-    ├── tests/api/webhooks/resend.test.js       # Verificación de firma Svix y eventos de email
-    ├── tests/api/saas-clients-payments.test.js # Flujos de clientes y cobranzas
-    ├── tests/e2e-units/dashboard-services-auth # Permisos y autenticación en Dashboard
-    └── tests/e2e-units/responsive-mobile.test  # Navegación y soporte táctil mobile
+├── Componentes de Interfaz (UI)
+│   ├── DashboardView.test.ts                   # Registry de tabs y navegación del dashboard
+│   ├── CheckoutModal.test.tsx                 # Modales de pago (PayPal / Transferencias)
+│   ├── InvoicesPanel.test.tsx                 # Renderizado de facturas y estados de pago
+│   └── resolvePlanTier.test.ts                # Clasificación y badge de planes SaaS
+│
+└── Utilidades
+    └── errorUtils.test.ts                     # Sanitización y formateo de excepciones
 ```
 
 ---

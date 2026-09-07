@@ -235,6 +235,31 @@ const INITIAL_PROJECTS: Project[] = [
     status: 'live',
     statusLabel: 'EN PRODUCCIÓN',
   },
+  {
+    id: 'fixi',
+    title: 'FIXI — Marketplace de Servicios Locales',
+    category: 'ecommerce',
+    categoryLabel: 'Marketplace',
+    client: 'FIXI · Rosario y Región',
+    description:
+      'Plataforma inteligente que conecta profesionales de oficio (jardinería, electricidad, fletes, plomería, pintura y más) con clientes de Rosario y la región. Contacto directo por WhatsApp, sistema de alertas con geolocalización en tiempo real, tablero de trabajos solicitados, perfiles con valoraciones y experiencia inmersiva con 3D.',
+    image: '/portfolio/fixi.jpg',
+    tags: ['React', 'Vite', 'Three.js', 'Supabase', 'Marketplace'],
+    metrics: [
+      { label: 'Stack', value: 'React + Vite' },
+      { label: 'Servicios', value: 'Marketplace + GPS' },
+    ],
+    highlights: [
+      'Hero inmersivo con visual 3D (Three.js + React Three Fiber)',
+      'Contacto directo profesional ↔ cliente por WhatsApp',
+      'Alertas de solicitudes y trabajos con geolocalización',
+      'Tablero de trabajos solicitados y perfiles con valoraciones',
+      'Backend con Supabase (auth + datos) y modo demo offline',
+      'Zonas de cobertura: Rosario, Funes, Roldán, Baigorria',
+    ],
+    status: 'building',
+    statusLabel: 'EN DESARROLLO',
+  },
 ]
 
 export const PortfolioSection: React.FC = () => {

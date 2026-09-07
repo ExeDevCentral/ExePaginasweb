@@ -5,6 +5,7 @@ import { Code2, Github, Instagram, Linkedin, Mail, Zap, Shield, Search, Send } f
 import Link from 'next/link'
 
 import Logo from './Logo'
+import CraftedBySignature from '../shared/CraftedBySignature'
 
 const TECH_ITEMS = [
   { icon: Zap, labelKey: 'card_1_titulo', color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
@@ -222,6 +223,8 @@ const Footer = () => {
             </a>
           </p>
         </div>
+
+        <CraftedBySignature variant="dark" showBar className="mt-10" />
       </div>
     </footer>
   )

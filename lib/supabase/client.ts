@@ -1,6 +1,11 @@
 import { createBrowserClient } from '@supabase/ssr'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
-export function createClient() {
+let cachedClient: SupabaseClient | null = null
+
+function createClient(): SupabaseClient {
+  if (cachedClient) return cachedClient
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
@@ -11,8 +16,18 @@ export function createClient() {
     )
   }
 
-  return createBrowserClient(supabaseUrl, supabaseAnonKey)
+  cachedClient = createBrowserClient(supabaseUrl, supabaseAnonKey)
+  return cachedClient
 }
 
-// Singleton client for standard client components
-export const supabase = createClient()
+export { createClient }
+
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    const client = createClient()
+    const value = (client as unknown as Record<string, unknown>)[prop as string]
+    return typeof value === 'function'
+      ? (value as (...args: unknown[]) => unknown).bind(client)
+      : value
+  },
+})

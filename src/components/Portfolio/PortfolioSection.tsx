@@ -83,30 +83,7 @@ const INITIAL_PROJECTS: Project[] = [
     status: 'live',
     statusLabel: 'EN PRODUCCIÓN',
   },
-  {
-    id: 'chambea',
-    title: 'Chambea — Profesionales de Oficio',
-    category: 'ecommerce',
-    categoryLabel: 'Marketplace',
-    client: 'Chambea · Marketplace de Servicios',
-    description:
-      'Marketplace de servicios locales que conecta profesionales de oficio con clientes. Gestión de perfiles, fichas de servicio, Supabase y experiencia de usuario optimizada para conversión.',
-    image: '/portfolio/chambea.png',
-    tags: ['React', 'Vite', 'Supabase', 'Marketplace'],
-    metrics: [
-      { label: 'Stack', value: 'React' },
-      { label: 'Servicios', value: 'Marketplace' },
-    ],
-    highlights: [
-      'Conexión profesionales de oficio ↔ clientes',
-      'Backend con Supabase (auth + datos)',
-      'Fichas de servicio y perfiles',
-      'Flujo de contacto optimizado',
-    ],
-    link: 'https://chambea.vercel.app',
-    status: 'live',
-    statusLabel: 'EN PRODUCCIÓN',
-  },
+
   {
     id: 'noema',
     title: 'Noema — Investigación de Mercado',

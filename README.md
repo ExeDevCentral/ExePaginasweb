@@ -13,7 +13,8 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Auth_&_Postgres_RLS-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Vitest](https://img.shields.io/badge/Vitest-151_Passed_Tests-FCC72B?style=for-the-badge&logo=vitest&logoColor=black)](https://vitest.dev)
-[![Speed Insights](https://img.shields.io/badge/Core_Web_Vitals-RES_94+-00f2fe?style=for-the-badge&logo=vercel&logoColor=black)](https://exepaginasweb.com)
+[![CI](https://img.shields.io/github/actions/workflow/status/ExeDevCentral/ExePaginasweb/verify.yml?label=CI&style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/ExeDevCentral/ExePaginasweb/actions)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://exepaginasweb.com)
 [![License](https://img.shields.io/badge/License-Proprietary-FF5722?style=for-the-badge)](LICENSE)
 
 </div>

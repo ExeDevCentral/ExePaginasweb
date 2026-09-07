@@ -71,7 +71,7 @@ export default function ClientAreaButton({
         ref.current?.style.removeProperty('--spot-y')
       }}
       whileTap={{ scale: 0.96 }}
-      className="relative group overflow-hidden h-10 pl-4 pr-3 rounded-full text-white text-xs font-bold shadow-[0_0_20px_-5px_rgba(6,182,212,0.45)] hover:shadow-[0_0_28px_-4px_rgba(6,182,212,0.6)] transition-shadow duration-500 flex items-center gap-2 shrink-0 select-none cursor-pointer isolate"
+      className="relative group overflow-hidden h-11 pl-5 pr-4 rounded-full text-white text-[13px] font-black tracking-wide shadow-[0_0_24px_-4px_rgba(6,182,212,0.55)] hover:shadow-[0_0_36px_-2px_rgba(6,182,212,0.75)] transition-shadow duration-500 flex items-center gap-2.5 shrink-0 select-none cursor-pointer isolate"
     >
       {/* Animated gradient background */}
       <span className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-sky-500 via-50% to-blue-600 animate-gradient-x bg-[length:200%_100%]" />
@@ -110,19 +110,19 @@ export default function ClientAreaButton({
       </span>
 
       {/* Live status dot */}
-      <span className="relative z-10 flex items-center gap-2">
-        <span className="relative flex h-1.5 w-1.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75" />
-          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+      <span className="relative z-10 flex items-center gap-2.5">
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-80" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
         </span>
-        <Sparkles size={13} className="text-white/90" />
-        <span>{label}</span>
+        <Sparkles size={14} className="text-white/90" />
+        <span className="drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]">{label}</span>
       </span>
 
       {/* Arrow with hover animation */}
-      <span className="relative z-10 flex items-center justify-center h-5 w-5 rounded-full bg-white/15 group-hover:bg-white/25 transition-colors">
+      <span className="relative z-10 flex items-center justify-center h-6 w-6 rounded-full bg-white/15 group-hover:bg-white/25 transition-colors">
         <ChevronRight
-          size={13}
+          size={14}
           className="text-white group-hover:translate-x-0.5 transition-transform duration-300"
         />
       </span>

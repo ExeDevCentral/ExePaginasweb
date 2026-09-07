@@ -234,8 +234,9 @@ const INITIAL_PROJECTS: Project[] = [
       'Backend con Supabase (auth + datos) y modo demo offline',
       'Zonas de cobertura: Rosario, Funes, Roldán, Baigorria',
     ],
-    status: 'building',
-    statusLabel: 'EN DESARROLLO',
+    link: 'https://fixi-phi.vercel.app/',
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
   },
 ]
 

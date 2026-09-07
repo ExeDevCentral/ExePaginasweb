@@ -1,0 +1,62 @@
+# Dependabot configuration — keep the repo quiet and focused.
+# Security updates still land the moment a fixed version is released,
+# but version bumps are grouped once a week to avoid notification noise.
+
+version: 2
+updates:
+  # Main Next.js app
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    groups:
+      nextjs:
+        patterns: ["next", "next-*"]
+      supabase:
+        patterns: ["@supabase/*"]
+      tanstack:
+        patterns: ["@tanstack/*"]
+      react:
+        patterns: ["react", "react-*"]
+      dev-tooling:
+        patterns: ["*"]
+        exclude-patterns:
+          - "next"
+          - "next-*"
+          - "@supabase/*"
+          - "@tanstack/*"
+          - "react"
+          - "react-*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Headless browser CLI
+  - package-ecosystem: "npm"
+    directory: "/web-automation-cli"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 2
+
+  # huashu-design skill tooling
+  - package-ecosystem: "npm"
+    directory: "/.agents/skills/huashu-design"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    ignore:
+      - dependency-name: "image-size"
+        versions: [">=1.2.1"]
+        reason: "Superseded by the huashu-design skill; only minted for old image-size advisories."
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 2

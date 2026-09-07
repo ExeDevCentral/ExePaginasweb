@@ -1,0 +1,27 @@
+---
+name: Refactor
+description: Restructure code without changing behavior, filing the why and the scope.
+title: "refactor: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Why
+      description: What problem in the current structure does this address?
+    validations:
+      required: true
+  - type: textarea
+    id: plan
+    attributes:
+      label: Plan
+      description: Step-by-step restructure. Note any module boundaries or seams to preserve.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Checkable outcomes — tests, lint, build, no behavior change.
+    validations:
+      required: false

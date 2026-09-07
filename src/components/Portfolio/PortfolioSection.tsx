@@ -205,7 +205,7 @@ const INITIAL_PROJECTS: Project[] = [
       'Detección automática de idioma con franc-min',
       'Tema oscuro/claro y diseño responsive',
     ],
-    link: 'https://dualdoc-translate.vercel.app',
+    link: 'https://bilex-tau.vercel.app',
     status: 'live',
     statusLabel: 'EN PRODUCCIÓN',
   },

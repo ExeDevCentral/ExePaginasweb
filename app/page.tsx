@@ -15,13 +15,14 @@ import SectionDivider from '@/components/shared/SectionDivider'
 import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription'
 import SocialProof from '@/components/SocialProof/SocialProof'
 import Products from '@/components/Products/Products'
-import CaseStudies from '@/components/CaseStudies/CaseStudies'
+
 import PortfolioSection from '@/components/Portfolio/PortfolioSection'
 import DemoZone from '@/components/DemoZone/DemoZone'
 import Process from '@/components/Process/Process'
 import Pricing from '@/components/Pricing/Pricing'
 import ContactSection from '@/components/landing/ContactSection'
 import FaqSection from '@/components/FAQ/FAQ'
+import MobileLanding from '@/components/Hero/MobileLanding'
 
 // Componentes secundarios pesados diferidos tras la carga inicial
 const Footer = dynamic(() => import('@/components/layout/Footer'), {
@@ -75,7 +76,14 @@ export default function HomePage() {
           />
 
           <Header />
-          <main>
+
+          {/* Versión móvil optimizada (solo celulares) */}
+          <main className="md:hidden">
+            <MobileLanding />
+          </main>
+
+          {/* Sitio completo (solo PC y tablet) */}
+          <main className="hidden md:block">
             <Hero />
             <SectionDivider variant="glow" accent="cyan" />
             <OwnershipVsSubscription />
@@ -83,8 +91,6 @@ export default function HomePage() {
             <SocialProof />
             <SectionDivider variant="cyber" accent="mixed" label="SOLUCIONES" />
             <Products />
-            <SectionDivider variant="beam" accent="cyan" />
-            <CaseStudies />
             <SectionDivider variant="glow" accent="purple" />
             <PortfolioSection />
             <SectionDivider variant="cyber" accent="cyan" label="DEMOS LIVE" />
@@ -99,7 +105,11 @@ export default function HomePage() {
             <FaqSection />
           </main>
 
-          {loadHeavyComponents && <Footer />}
+          {loadHeavyComponents && (
+            <div className="hidden md:block">
+              <Footer />
+            </div>
+          )}
           {loadHeavyComponents && <AIChatWidget />}
         </div>
       </ScrollProvider>

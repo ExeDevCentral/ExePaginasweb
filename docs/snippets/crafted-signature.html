@@ -1,0 +1,217 @@
+<!--
+  ============================================================================
+  FIRMA "Crafted with precision by Exepaginasweb.com ✦"
+  Snippet HTML + CSS 100% autónomo (sin JS, sin dependencias, sin variables
+  de tema del host). Funciona en cualquier stack: Next.js, Vite, React, HTML.
+
+  CÓMO USARLO (para que aparezca en TODAS las páginas del proyecto):
+    - Next.js (App Router): pegá el bloque HTML en app/layout.tsx, justo
+      después de <Footer />, o directamente dentro de tu componente Footer.
+    - Vite / React: pegá el bloque en el Footer compartido o en el JSX raíz.
+    - HTML estático: pegá el bloque antes de </body> en el archivo maestro o
+      en el fragmento/footer que se repite en cada página.
+
+  El <style> puede ir una sola vez en el layout raíz (recomendado) o junto
+  al HTML. El HTML embebido respeta identidades ya utilizadas por el host.
+  ============================================================================
+-->
+
+<style>
+  /* 1) Reset + contenedor (auto light/dark con prefers-color-scheme) */
+  :where(.xepw-crafted) {
+    --xepw-bg: #162330;
+    --xepw-ink: rgba(250, 248, 245, 0.6);
+    --xepw-ink-hover: rgba(250, 248, 245, 0.95);
+    --xepw-accent: #C88A6E;
+    --xepw-accent-soft: #E8BFAC;
+    --xepw-line: rgba(200, 138, 110, 0.18);
+    --xepw-badge: rgba(255, 255, 255, 0.03);
+    --xepw-border: rgba(200, 138, 110, 0.12);
+    --xepw-border-hover: rgba(200, 138, 110, 0.3);
+    --xepw-glow: rgba(200, 138, 110, 0.2);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 1.15rem 1rem;
+    background: var(--xepw-bg);
+    border-top: 1px solid var(--xepw-line);
+    width: 100%;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :where(.xepw-crafted) {
+      --xepw-bg: #FAF8F5;
+      --xepw-ink: rgba(27, 42, 56, 0.66);
+      --xepw-ink-hover: rgba(27, 42, 56, 0.95);
+      --xepw-accent: #A66A4E;
+      --xepw-accent-soft: #8A503C;
+      --xepw-line: rgba(166, 106, 78, 0.18);
+      --xepw-badge: rgba(27, 42, 56, 0.03);
+      --xepw-border: rgba(166, 106, 78, 0.15);
+      --xepw-border-hover: rgba(166, 106, 78, 0.35);
+      --xepw-glow: rgba(166, 106, 78, 0.18);
+    }
+  }
+
+  /* 2) Línea decorativa superior centrada */
+  :where(.xepw-crafted)::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--xepw-accent), transparent);
+  }
+
+  /* 3) Halo continuo que "late" detrás del badge */
+  :where(.xepw-crafted) .xepw-sig-glow {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200, 138, 110, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+    animation: xepw-sig-pulse 4s ease-in-out infinite;
+  }
+
+  /* 4) El badge (la firma propiamente dicha) */
+  :where(.xepw-crafted) .xepw-sig-link {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 1.1rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    background: var(--xepw-badge);
+    border: 1px solid var(--xepw-border);
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--xepw-ink);
+    transition:
+      color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      background 0.4s ease,
+      border-color 0.4s ease,
+      box-shadow 0.4s ease,
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  :where(.xepw-crafted) .xepw-sig-link:hover {
+    color: var(--xepw-ink-hover);
+    background: rgba(200, 138, 110, 0.08);
+    border-color: var(--xepw-border-hover);
+    box-shadow: 0 0 25px var(--xepw-glow), 0 0 60px rgba(200, 138, 110, 0.08);
+    transform: translateY(-2px);
+  }
+
+  /* 5) Barrido de luz (shimmer) al hacer hover */
+  :where(.xepw-crafted) .xepw-sig-shimmer {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  :where(.xepw-crafted) .xepw-sig-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(110deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+    transform: translateX(-120%);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  :where(.xepw-crafted) .xepw-sig-link:hover .xepw-sig-shimmer::after {
+    transform: translateX(260%);
+  }
+
+  /* 6) Textos */
+  :where(.xepw-crafted) .xepw-sig-prefix {
+    font-weight: 400;
+    opacity: 0.75;
+    white-space: nowrap;
+  }
+
+  :where(.xepw-crafted) .xepw-sig-brand {
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--xepw-accent-soft) 0%, var(--xepw-accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    white-space: nowrap;
+  }
+
+  /* 7) El sparkle ✦ rota y crece al hover */
+  :where(.xepw-crafted) .xepw-sig-sparkle {
+    color: var(--xepw-accent-soft);
+    font-size: 0.85rem;
+    line-height: 1;
+    display: inline-block;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+  }
+
+  :where(.xepw-crafted) .xepw-sig-link:hover .xepw-sig-sparkle {
+    transform: rotate(180deg) scale(1.3);
+    color: var(--xepw-accent);
+  }
+
+  /* 8) Responsive: en pantallas chicas solo queda la marca */
+  @media (max-width: 768px) {
+    :where(.xepw-crafted) .xepw-sig-prefix {
+      display: none;
+    }
+    :where(.xepw-crafted) .xepw-sig-link {
+      letter-spacing: 0.14em;
+    }
+  }
+
+  /* 9) Accesibilidad: respetar "reducir movimiento" */
+  @media (prefers-reduced-motion: reduce) {
+    :where(.xepw-crafted) .xepw-sig-glow {
+      animation: none;
+    }
+    :where(.xepw-crafted) .xepw-sig-shimmer::after {
+      transition: none;
+      transform: none;
+    }
+    :where(.xepw-crafted) .xepw-sig-sparkle {
+      transition: none;
+    }
+  }
+
+  @keyframes xepw-sig-pulse {
+    0%, 100% { opacity: 0.35; transform: translate(-50%, -50%) scale(0.92); }
+    50%      { opacity: 0.85; transform: translate(-50%, -50%) scale(1.05); }
+  }
+</style>
+
+<div class="xepw-crafted" role="contentinfo">
+  <div class="xepw-sig-glow" aria-hidden="true"></div>
+  <a
+    class="xepw-sig-link"
+    href="https://exepaginasweb.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    title="Diseño & Desarrollo por Exepaginasweb.com"
+  >
+    <span class="xepw-sig-shimmer" aria-hidden="true"></span>
+    <span class="xepw-sig-prefix">Crafted with precision by</span>
+    <span class="xepw-sig-brand">Exepaginasweb.com</span>
+    <span class="xepw-sig-sparkle" aria-hidden="true">✦</span>
+  </a>
+</div>

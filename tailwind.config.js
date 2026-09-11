@@ -72,9 +72,13 @@ export default {
         heading: ['var(--font-heading)', 'Space Grotesk', 'sans-serif'],
         serif: ['var(--font-heading)', 'Space Grotesk', 'sans-serif'],
         mono: ['var(--font-mono)', 'JetBrains Mono', 'monospace'],
-        montserrat: ['Space Grotesk', 'sans-serif'],
-        outfit: ['Space Grotesk', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
+        montserrat: ['var(--font-display)', 'Space Grotesk', 'sans-serif'],
+        outfit: ['var(--font-display)', 'Space Grotesk', 'sans-serif'],
+        inter: ['var(--font-sans)', 'Inter', 'sans-serif'],
+      },
+      fontWeight: {
+        black: '750',
+        extrabold: '750',
       },
       letterSpacing: {
         display: '-0.03em',

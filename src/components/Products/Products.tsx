@@ -25,6 +25,7 @@ const Products = () => {
       color: 'from-pink-500 via-rose-500 to-purple-600',
       demoLink: '#demo-peluqueria',
       tKey: 'peluqueria',
+      anchorId: 'peluqueria',
     },
     {
       icon: Coffee,
@@ -33,6 +34,7 @@ const Products = () => {
       color: 'from-amber-500 via-orange-500 to-yellow-600',
       demoLink: '#demo-panaderia',
       tKey: 'panaderia',
+      anchorId: 'panaderia',
     },
     {
       icon: ShoppingBag,
@@ -41,6 +43,7 @@ const Products = () => {
       color: 'from-emerald-400 via-teal-500 to-cyan-600',
       demoLink: '#demo-ropa',
       tKey: 'ropa',
+      anchorId: 'indumentaria',
     },
     {
       icon: Calendar,
@@ -49,6 +52,7 @@ const Products = () => {
       color: 'from-cyan-400 via-blue-500 to-indigo-600',
       demoLink: '#demo-padel',
       tKey: 'padel',
+      anchorId: 'canchas',
     },
   ]
 
@@ -85,7 +89,7 @@ const Products = () => {
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] text-accent-cyan/80">
             {t('products.seccion_titulo')}
           </p>
-          <h2 className="font-montserrat text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl mb-6">
+          <h2 className="font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl mb-6">
             <span className="text-gradient-animated">{t('products.heading')}</span>
           </h2>
           <p className="text-lg text-primary-secondary max-w-3xl mx-auto leading-relaxed">

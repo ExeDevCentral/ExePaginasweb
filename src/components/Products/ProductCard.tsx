@@ -19,6 +19,7 @@ type Product = {
   color: string
   demoLink: string
   tKey: string
+  anchorId: string
 }
 
 const ROI_BADGES: Record<string, { label: string; color: string }> = {
@@ -76,7 +77,7 @@ export default function ProductCard({
   const estimatedTotal = basePriceNum * sucursales + (includeWhatsAppBot ? 80 : 0)
 
   return (
-    <div className="relative w-full group">
+    <div id={product.anchorId} className="relative w-full scroll-mt-24 group">
       <div className="relative">
         {/* Sombra Glow adaptada al color */}
         <div className="absolute -inset-4 rounded-[28px] bg-black/40 dark:bg-black/70 blur-[25px] -z-10 pointer-events-none transition-opacity duration-300 group-hover:opacity-100 opacity-60" />
@@ -126,7 +127,7 @@ export default function ProductCard({
 
           {/* Título y Descripción */}
           <div>
-            <h3 className="text-xl sm:text-2xl font-bold mb-2 font-montserrat text-foreground group-hover:text-accent-cyan transition-colors duration-300">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-2 font-display leading-tight text-foreground group-hover:text-accent-cyan transition-colors duration-300">
               {t(`products.${product.tKey}_titulo`)}
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-5 sm:mb-6 leading-relaxed">

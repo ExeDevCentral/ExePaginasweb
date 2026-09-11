@@ -80,6 +80,32 @@
     @apply border-border;
   }
 
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    line-height: 1.6;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+
   html {
     scroll-behavior: auto;
     -webkit-overflow-scrolling: touch;
@@ -134,6 +160,25 @@
     to {
       opacity: 0;
       transform: scale(0.99);
+    }
+  }
+
+  @layer utilities {
+    .content-width {
+      width: min(100% - 2rem, 80rem);
+      margin-inline: auto;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .content-width {
+      width: min(100% - 3rem, 80rem);
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .content-width {
+      width: min(100% - 4rem, 88rem);
     }
   }
 

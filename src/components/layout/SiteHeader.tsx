@@ -27,7 +27,7 @@ export default function SiteHeader() {
       <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex shrink-0 items-center gap-2.5" onClick={closeMobile}>
           <Logo size={32} className="h-8 w-auto" />
-          <span className="text-sm font-black tracking-tight text-white">
+          <span className="min-w-0 truncate text-xs font-black tracking-tight text-white sm:text-sm">
             EXE<span className="text-yellow-400">//</span>PAGINASWEB<span className="text-cyan-400">.COM</span>
           </span>
         </Link>
@@ -76,8 +76,8 @@ export default function SiteHeader() {
           <Link href="/#contact" className="rounded-full bg-cyan-400 px-4 py-2 text-xs font-black text-slate-950 hover:bg-cyan-300">Hablemos</Link>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
-          <UtilityDock className="rounded-xl" />
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 lg:hidden">
+          <UtilityDock className="hidden rounded-xl sm:flex" />
           <button type="button" onClick={() => setMobileOpen((open) => !open)} aria-expanded={mobileOpen} aria-controls="mobile-site-menu" aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'} className="rounded-xl border border-white/15 p-2 text-white">
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>

@@ -129,8 +129,8 @@ export default function AdminDashboardView({
           </div>
 
           {/* Filtros Contextuales */}
-          <div className="flex flex-wrap items-center gap-4 flex-1 lg:justify-end">
-            <div className="relative min-w-[240px] flex-1 max-w-sm">
+          <div className="flex min-w-0 flex-wrap items-center gap-4 flex-1 lg:justify-end">
+            <div className="relative min-w-0 w-full flex-1 max-w-sm">
               <Search
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
                 size={16}

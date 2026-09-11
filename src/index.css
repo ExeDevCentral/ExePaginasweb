@@ -80,10 +80,17 @@
     @apply border-border;
   }
 
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-size: 1rem;
     line-height: 1.6;
+    font-family: var(--font-sans);
   }
 
   h1,
@@ -99,6 +106,19 @@
   button,
   a {
     text-wrap: pretty;
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    max-width: 100%;
   }
 
   html {
@@ -155,6 +175,25 @@
     to {
       opacity: 0;
       transform: scale(0.99);
+    }
+  }
+
+  @layer utilities {
+    .content-width {
+      width: min(100% - 2rem, 80rem);
+      margin-inline: auto;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .content-width {
+      width: min(100% - 3rem, 80rem);
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .content-width {
+      width: min(100% - 4rem, 88rem);
     }
   }
 

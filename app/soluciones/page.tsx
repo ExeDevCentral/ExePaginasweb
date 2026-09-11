@@ -21,6 +21,11 @@ const DemoZone = dynamic(() => import('@/components/DemoZone/DemoZone'), {
   ),
 })
 
+const ContactSection = dynamic(() => import('@/components/landing/ContactSection'), {
+  ssr: false,
+  loading: () => <div className="h-40" />,
+})
+
 export default function SolutionsPage() {
   return (
     <>
@@ -28,6 +33,7 @@ export default function SolutionsPage() {
       <main className="pt-20">
         <Products />
         <DemoZone />
+        <ContactSection />
       </main>
     </>
   )

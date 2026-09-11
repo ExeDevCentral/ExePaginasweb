@@ -268,7 +268,7 @@ const INITIAL_PROJECTS: Project[] = [
   },
 ]
 
-export const PortfolioSection: React.FC = () => {
+export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({ featuredOnly = false }) => {
   const { t } = useTranslation()
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
@@ -285,6 +285,9 @@ export const PortfolioSection: React.FC = () => {
     activeCategory === 'all'
       ? INITIAL_PROJECTS
       : INITIAL_PROJECTS.filter((p) => p.category === activeCategory)
+  const visibleProjects = featuredOnly
+    ? INITIAL_PROJECTS.filter((project) => ['sportmanager', 'fixi', 'noema'].includes(project.id))
+    : filteredProjects
 
   return (
     <section id="portafolio" className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
@@ -354,7 +357,7 @@ export const PortfolioSection: React.FC = () => {
         {hasProjects ? (
           <>
             {/* Botones de Categorías */}
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
+            {!featuredOnly && <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
               {CATEGORIES.map((cat) => {
                 const Icon = cat.icon
                 const isActive = activeCategory === cat.id
@@ -374,12 +377,12 @@ export const PortfolioSection: React.FC = () => {
                   </button>
                 )
               })}
-            </div>
+            </div>}
 
             {/* Grid interactivo de proyectos */}
             <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <AnimatePresence mode="popLayout">
-                {filteredProjects.map((project, idx) => (
+                {visibleProjects.map((project, idx) => (
                   <motion.div
                     key={project.id}
                     layout

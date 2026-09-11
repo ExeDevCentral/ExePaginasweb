@@ -5,17 +5,17 @@
 :root {
   color-scheme: light;
   /* Paleta Light Mode Descansada y Premium (Estilo Linear / Apple / Stripe) — Fondo suave, cero fatiga visual */
-  --background: #f1f5f9;
+  --background: #e8eef5;
   --foreground: #0f172a;
-  --card: #ffffff;
+  --card: #f8fafc;
   --card-foreground: #0f172a;
-  --popover: #ffffff;
+  --popover: #f8fafc;
   --popover-foreground: #0f172a;
   --primary: #0284c7;
   --primary-foreground: #ffffff;
-  --secondary: #e2e8f0;
+  --secondary: #dce5ef;
   --secondary-foreground: #0f172a;
-  --muted: #e2e8f0;
+  --muted: #dce5ef;
   --muted-foreground: #475569;
   --accent: #6366f1;
   --accent-foreground: #ffffff;
@@ -35,7 +35,7 @@
   --accent-cyan: #0284c7;
   --accent-magenta: #6366f1;
   --accent-yellow: #b45309;
-  --primary-bg: #f1f5f9;
+  --primary-bg: #e8eef5;
   --primary-text: #0f172a;
   --primary-secondary: #475569;
 
@@ -78,6 +78,48 @@
 @layer base {
   * {
     @apply border-border;
+  }
+
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  button,
+  a {
+    text-wrap: pretty;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    max-width: 100%;
   }
 
   html {
@@ -134,6 +176,25 @@
     to {
       opacity: 0;
       transform: scale(0.99);
+    }
+  }
+
+  @layer utilities {
+    .content-width {
+      width: min(100% - 2rem, 80rem);
+      margin-inline: auto;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .content-width {
+      width: min(100% - 3rem, 80rem);
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .content-width {
+      width: min(100% - 4rem, 88rem);
     }
   }
 

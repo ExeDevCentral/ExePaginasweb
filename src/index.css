@@ -5,17 +5,17 @@
 :root {
   color-scheme: light;
   /* Paleta Light Mode Descansada y Premium (Estilo Linear / Apple / Stripe) — Fondo suave, cero fatiga visual */
-  --background: #f1f5f9;
+  --background: #e8eef5;
   --foreground: #0f172a;
-  --card: #ffffff;
+  --card: #f8fafc;
   --card-foreground: #0f172a;
-  --popover: #ffffff;
+  --popover: #f8fafc;
   --popover-foreground: #0f172a;
   --primary: #0284c7;
   --primary-foreground: #ffffff;
-  --secondary: #e2e8f0;
+  --secondary: #dce5ef;
   --secondary-foreground: #0f172a;
-  --muted: #e2e8f0;
+  --muted: #dce5ef;
   --muted-foreground: #475569;
   --accent: #6366f1;
   --accent-foreground: #ffffff;
@@ -35,7 +35,7 @@
   --accent-cyan: #0284c7;
   --accent-magenta: #6366f1;
   --accent-yellow: #b45309;
-  --primary-bg: #f1f5f9;
+  --primary-bg: #e8eef5;
   --primary-text: #0f172a;
   --primary-secondary: #475569;
 

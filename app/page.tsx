@@ -16,7 +16,6 @@ import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription
 import SocialProof from '@/components/SocialProof/SocialProof'
 
 import PortfolioSection from '@/components/Portfolio/PortfolioSection'
-import DemoZone from '@/components/DemoZone/DemoZone'
 import Process from '@/components/Process/Process'
 import Pricing from '@/components/Pricing/Pricing'
 import ContactSection from '@/components/landing/ContactSection'
@@ -91,8 +90,6 @@ export default function HomePage() {
             <SectionDivider variant="cyber" accent="mixed" label="SOLUCIONES" />
             <SectionDivider variant="glow" accent="purple" />
             <PortfolioSection />
-            <SectionDivider variant="cyber" accent="cyan" label="DEMOS LIVE" />
-            <DemoZone />
             <SectionDivider variant="minimal" accent="cyan" />
             <Process />
             <SectionDivider variant="cyber" accent="mixed" label="PLANES & INVERSIÓN" />

@@ -12,12 +12,22 @@ const Products = dynamic(() => import('@/components/Products/Products'), {
   ),
 })
 
+const DemoZone = dynamic(() => import('@/components/DemoZone/DemoZone'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex min-h-screen items-center justify-center text-cyan-300">
+      Cargando demos...
+    </div>
+  ),
+})
+
 export default function SolutionsPage() {
   return (
     <>
       <Header />
       <main className="pt-20">
         <Products />
+        <DemoZone />
       </main>
     </>
   )

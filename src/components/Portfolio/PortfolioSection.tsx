@@ -238,6 +238,34 @@ const INITIAL_PROJECTS: Project[] = [
     status: 'live',
     statusLabel: 'EN PRODUCCIÓN',
   },
+  {
+    id: 'sportmanager',
+    title: 'SportManager / PlayHub — Gestión Deportiva SaaS',
+    category: 'turnos',
+    categoryLabel: 'Turnos & Reservas',
+    client: 'SportManager · Centros Deportivos',
+    description:
+      'Plataforma SaaS completa de gestión para complejos deportivos: reservas multi-espacio con calendario visual, pagos por webhook Mercado Pago, CRM de clientes, importación masiva desde Excel, notificaciones email/WhatsApp y analítica en tiempo real. Arquitectura multi-tenant con Supabase, anti doble-reserva con EXCLUDE GiST y roles por complejo.',
+    image: '/portfolio/sportmanager.jpg',
+    tags: ['Next.js 16', 'Supabase', 'Mercado Pago', 'SaaS', 'Multi-Tenant'],
+    metrics: [
+      { label: 'Stack', value: 'Next.js + Supabase' },
+      { label: 'Tipo', value: 'SaaS Multi-Tenant' },
+    ],
+    highlights: [
+      'Calendario visual multi-espacio con anti doble-reserva (GiST EXCLUDE)',
+      'Pagos confirmados solo por webhook Mercado Pago (idempotentes)',
+      'CRM completo: ficha de cliente, historial, gasto total y preferencias',
+      'Importación masiva desde Excel con staging, deduplicación y auditoría',
+      'Notificaciones email/WhatsApp según canal preferido del cliente',
+      'Roles por complejo (Owner/Admin/Operador/Plataforma) con RLS',
+      'Dashboard con KPIs, ocupación, ingresos y analítica en tiempo real',
+      'Multi-deporte por diseño: pádel, tenis, fútbol, natación, yoga y más',
+    ],
+    link: 'https://sportmanager-playhub.vercel.app',
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
+  },
 ]
 
 export const PortfolioSection: React.FC = () => {

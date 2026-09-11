@@ -1,7 +1,13 @@
-'use client'
-
 import dynamic from 'next/dynamic'
+import type { Metadata } from 'next'
 import SiteHeader from '@/components/layout/SiteHeader'
+
+export const metadata: Metadata = {
+  title: 'Soluciones Web para Negocios',
+  description:
+    'Sistemas web a medida para peluquerías, panaderías, tiendas de indumentaria y canchas: turnos, pedidos, ventas y reservas.',
+  alternates: { canonical: '/soluciones' },
+}
 
 const Products = dynamic(() => import('@/components/Products/Products'), { loading: () => <PageLoading /> })
 

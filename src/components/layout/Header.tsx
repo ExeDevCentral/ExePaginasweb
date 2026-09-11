@@ -145,7 +145,7 @@ const Header = () => {
 
             {/* Sistemas */}
             <motion.a
-              href="#products"
+              href="/soluciones"
               onClick={(e) => scrollToSection(e, 'products')}
               className={`relative px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full transition-all duration-200 select-none ${
                 activeId === 'products'
@@ -323,7 +323,7 @@ const Header = () => {
 
               {/* Enlace Sistemas */}
               <motion.a
-                href="#products"
+                href="/soluciones"
                 className={`p-3.5 rounded-xl border transition-all flex items-center justify-between ${
                   activeId === 'products'
                     ? 'bg-cyan-500/15 dark:bg-cyan-500/20 border-cyan-500/50 dark:border-cyan-500/60 text-cyan-700 dark:text-cyan-300 font-bold'

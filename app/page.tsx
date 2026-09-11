@@ -14,7 +14,6 @@ import SectionDivider from '@/components/shared/SectionDivider'
 
 import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription'
 import SocialProof from '@/components/SocialProof/SocialProof'
-import Products from '@/components/Products/Products'
 
 import PortfolioSection from '@/components/Portfolio/PortfolioSection'
 import DemoZone from '@/components/DemoZone/DemoZone'
@@ -90,7 +89,6 @@ export default function HomePage() {
             <SectionDivider variant="minimal" accent="cyan" />
             <SocialProof />
             <SectionDivider variant="cyber" accent="mixed" label="SOLUCIONES" />
-            <Products />
             <SectionDivider variant="glow" accent="purple" />
             <PortfolioSection />
             <SectionDivider variant="cyber" accent="cyan" label="DEMOS LIVE" />

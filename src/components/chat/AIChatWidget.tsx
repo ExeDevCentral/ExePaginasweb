@@ -1,4 +1,8 @@
+'use client'
+
 import React, { useState, useRef, useEffect } from 'react'
+import { useChat } from '@ai-sdk/react'
+import { DefaultChatTransport, type UIMessage } from 'ai'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Bot,
@@ -18,13 +22,14 @@ import {
 import { toast } from 'sonner'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
 
-interface Message {
-  id: string
-  role: 'user' | 'assistant'
-  content: string
-  timestamp: string
-  ticketId?: string
-}
+const WELCOME_TEXT =
+  '¡Hola! 👋 Soy el asistente IA de ExeSistemasWEB. ¿En qué proyecto o sistema web te puedo asesorar hoy?'
+
+const RESET_TEXT =
+  '¡Conversación reiniciada! 👋 ¿En qué proyecto o sistema web te podemos asesorar ahora?'
+
+const ERROR_TEXT =
+  '¡Perdón! 😅 Tuve un problema técnico momentáneo con mi conexión. Te dejo mi WhatsApp +54 9 341 6874786 para ayudarte al instante, o podés reintentar en unos segundos.'
 
 const INITIAL_TOPICS = [
   '💻 Cotizar Desarrollo Web',
@@ -32,6 +37,94 @@ const INITIAL_TOPICS = [
   '📊 Dashboard o SaaS a Medida',
   '💬 Hablar con un Humano por WhatsApp',
 ]
+
+function makeMessage(role: 'user' | 'assistant', text: string, id?: string): UIMessage {
+  return {
+    id: id ?? `${role}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    role,
+    parts: [{ type: 'text', text }],
+  }
+}
+
+function welcomeMessage(text = WELCOME_TEXT): UIMessage {
+  return makeMessage('assistant', text, `welcome-${Date.now()}`)
+}
+
+function extractTicket(text: string): string | null {
+  const match = text.match(/\[(EXE-CHT-[A-Z0-9]+)\]/)
+  return match?.[1] ?? null
+}
+
+function getMessageText(msg: { parts?: Array<{ type?: string; text?: string }> }): string {
+  if (!Array.isArray(msg.parts)) return ''
+  return msg.parts
+    .filter((p) => p?.type === 'text' && typeof p.text === 'string')
+    .map((p) => p.text ?? '')
+    .join('')
+}
+
+function buildClientFallback(text: string): string {
+  const lowerText = text.toLowerCase()
+  const ticket = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
+
+  if (
+    lowerText.includes('abogad') ||
+    lowerText.includes('abogada') ||
+    lowerText.includes('legal') ||
+    lowerText.includes('estudio') ||
+    lowerText.includes('juridic')
+  ) {
+    return `¡Hola! ⚖️ Sí, por supuesto. Para estudios jurídicos y abogados desarrollamos páginas web institucionales de alto impacto, sistemas de agendamiento de consultas legales y recepción segura de documentación.\n\nPara enviarte una propuesta técnica a medida con el Ticket [${ticket}], ¿nos dejas tu email aquí en el chat o prefieres hablar por WhatsApp con un especialista?`
+  }
+  if (
+    lowerText.includes('padel') ||
+    lowerText.includes('pádel') ||
+    lowerText.includes('cancha') ||
+    lowerText.includes('deport') ||
+    lowerText.includes('futbol') ||
+    lowerText.includes('fútbol') ||
+    lowerText.includes('gimnasio')
+  ) {
+    return `¡Excelente proyecto! 🎾 Para complejos de pádel o canchas deportivas, desarrollamos plataformas de reserva en tiempo real donde los jugadores eligen la cancha, la franja horaria y abonan la seña online, enviando notificaciones automáticas por WhatsApp.\n\nPara prepararte una propuesta técnica a medida bajo el Ticket [${ticket}], ¿nos dejas tu email aquí en el chat o prefieres consultarnos directo por WhatsApp?`
+  }
+  if (
+    lowerText.includes('medic') ||
+    lowerText.includes('salud') ||
+    lowerText.includes('doct') ||
+    lowerText.includes('clinic') ||
+    lowerText.includes('dentist') ||
+    lowerText.includes('psicolog')
+  ) {
+    return `¡Excelente! 🩺 Para clínicas, médicos y profesionales de la salud desarrollamos sitios web con agendamiento de turnos, notificaciones por email/WhatsApp y recordatorios a pacientes.\n\nPara armarte una propuesta con el Ticket [${ticket}], ¿nos dejas tu email aquí en el chat o nos contactas por WhatsApp?`
+  }
+  if (lowerText.includes('turno') || lowerText.includes('reserva') || lowerText.includes('cita')) {
+    return '¡Nos encanta ese tipo de soluciones! 📅 Desarrollamos sistemas de turnos y reservas en tiempo real con integración a WhatsApp, cobro de señas y notificaciones automáticas. ¿Te gustaría solicitarnos una propuesta a medida para tu negocio?'
+  }
+  if (
+    lowerText.includes('precio') ||
+    lowerText.includes('cuanto') ||
+    lowerText.includes('costo') ||
+    lowerText.includes('cotiz')
+  ) {
+    return `¡Genial! Cada sistema web lo desarrollamos a la medida exacta de tus objetivos. Para prepararte un presupuesto detallado con el Ticket [${ticket}], ¿nos dejas tu email por aquí o prefieres consultarnos directo por WhatsApp?`
+  }
+  if (
+    lowerText.includes('dashboard') ||
+    lowerText.includes('saas') ||
+    lowerText.includes('panel')
+  ) {
+    return '¡Espectacular! 📊 Diseñamos dashboards administrativos y plataformas SaaS avanzadas a medida con métricas en tiempo real, roles de usuario y reportes exportables. ¿Qué funcionalidades principales te gustaría incluir?'
+  }
+  if (
+    lowerText.trim() === 'hola' ||
+    lowerText.trim() === 'buenas' ||
+    lowerText.trim() === 'hey' ||
+    text.length < 8
+  ) {
+    return '¡Hola! 👋 Qué gusto saludarte. Soy el asistente inteligente de ExeSistemasWEB. ¿En qué proyecto o sistema web te gustaría que te asesoremos hoy?'
+  }
+  return `¡Excelente idea de proyecto! 🚀 Desarrollamos sistemas y páginas web a medida adaptados a tu negocio. Para coordinar una propuesta técnica con el Ticket [${ticket}], ¿nos dejas tu email aquí en el chat o prefieres escribirnos por WhatsApp?`
+}
 
 const playChimeSound = () => {
   try {
@@ -58,24 +151,23 @@ const playChimeSound = () => {
 
 export const AIChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [input, setInput] = useState('')
   const [soundEnabled, setSoundEnabled] = useState(true)
   const [copiedTicket, setCopiedTicket] = useState<string | null>(null)
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'welcome-1',
-      role: 'assistant',
-      content:
-        '¡Hola! 👋 Soy el asistente IA de ExeSistemasWEB. ¿En qué proyecto o sistema web te puedo asesorar hoy?',
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    },
-  ])
-  const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
   const [currentTicket, setCurrentTicket] = useState<string | null>(null)
+
+  const { messages, setMessages, sendMessage, status, error, stop, clearError } = useChat({
+    transport: new DefaultChatTransport({ api: '/api/chat' }),
+    messages: [welcomeMessage()],
+  })
+
+  const isLoading = status === 'submitted' || status === 'streaming'
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const lastMessageRef = useRef<{ text: string; time: number } | null>(null)
   const responseCacheRef = useRef<Map<string, string>>(new Map())
+  const timestampsRef = useRef<Map<string, string>>(new Map())
+  const handledErrorsRef = useRef<Set<string>>(new Set())
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -87,6 +179,53 @@ export const AIChatWidget: React.FC = () => {
     }
   }, [messages, isOpen])
 
+  // Registrar un timestamp de visualización para cada mensaje nuevo
+  useEffect(() => {
+    for (const m of messages) {
+      if (!timestampsRef.current.has(m.id)) {
+        timestampsRef.current.set(
+          m.id,
+          new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        )
+      }
+    }
+  }, [messages])
+
+  // Chime cuando el streaming de una respuesta del asistente termina
+  const prevStatusRef = useRef<ReturnType<typeof useChat>['status']>(status)
+  useEffect(() => {
+    const prev = prevStatusRef.current
+    prevStatusRef.current = status
+    if ((prev === 'submitted' || prev === 'streaming') && status === 'ready') {
+      const lastMsg = messages[messages.length - 1]
+      if (lastMsg?.role === 'assistant' && getMessageText(lastMsg)) {
+        if (soundEnabled) playChimeSound()
+      }
+    }
+  }, [status, messages, soundEnabled])
+
+  // Sincronizar ticket detectado para el handoff por WhatsApp
+  useEffect(() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const t = extractTicket(getMessageText(messages[i]))
+      if (t) {
+        setCurrentTicket(t)
+        return
+      }
+    }
+  }, [messages])
+
+  // Fallback visual si el streaming falla (backend caído)
+  useEffect(() => {
+    if (!error || handledErrorsRef.current.has(error.message)) return
+    handledErrorsRef.current.add(error.message)
+    const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user')
+    const reply = lastUserMsg ? buildClientFallback(getMessageText(lastUserMsg)) : ERROR_TEXT
+    setMessages((prev) => [...prev, makeMessage('assistant', reply)])
+    clearError()
+    if (soundEnabled) playChimeSound()
+  }, [error, messages, setMessages, clearError, soundEnabled])
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
     setCopiedTicket(text)
@@ -95,40 +234,33 @@ export const AIChatWidget: React.FC = () => {
   }
 
   const resetChat = () => {
-    setMessages([
-      {
-        id: `welcome-${Date.now()}`,
-        role: 'assistant',
-        content:
-          '¡Conversación reiniciada! 👋 ¿En qué proyecto o sistema web te podemos asesorar ahora?',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      },
-    ])
+    stop()
+    clearError()
+    setMessages([welcomeMessage(RESET_TEXT)])
     setCurrentTicket(null)
     toast.info('Conversación reiniciada')
   }
 
-  const handleSendMessage = async (textToSend?: string) => {
+  const handleSendMessage = (textToSend?: string) => {
     const text = (textToSend || input).trim()
     if (!text || isLoading) return
 
     const now = Date.now()
     const lowerText = text.toLowerCase()
 
-    // 1. Protection against repeated spam messages from impatient users
+    // 1. Protección contra spam de mensajes repetidos en menos de 8s
     if (
       lastMessageRef.current &&
       lastMessageRef.current.text === lowerText &&
       now - lastMessageRef.current.time < 8000
     ) {
-      const fastReplyMsg: Message = {
-        id: `ast-fast-${now}`,
-        role: 'assistant',
-        content:
-          '⚡ ¡Estoy aquí con vos! Ya tengo registrado tu mensaje anterior. Para atención prioritaria inmediata, podés hacer clic abajo en "Continuar por WhatsApp".',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      }
-      setMessages((prev) => [...prev, fastReplyMsg])
+      setMessages((prev) => [
+        ...prev,
+        makeMessage(
+          'assistant',
+          '⚡ ¡Estoy aquí con vos! Ya tengo registrado tu mensaje anterior. Para atención prioritaria inmediata, podés hacer clic abajo en "Continuar por WhatsApp".'
+        ),
+      ])
       if (!textToSend) setInput('')
       if (soundEnabled) playChimeSound()
       return
@@ -136,177 +268,31 @@ export const AIChatWidget: React.FC = () => {
 
     lastMessageRef.current = { text: lowerText, time: now }
 
-    const userMsgId = `usr-${now}`
-    const newMsg: Message = {
-      id: userMsgId,
-      role: 'user',
-      content: text,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    }
-
-    setMessages((prev) => [...prev, newMsg])
-    if (!textToSend) setInput('')
-
-    // 2. Instant 0ms cache lookup for repeated queries
+    // 2. Respuesta instantánea desde caché para consultas repetidas
     const cachedResponse = responseCacheRef.current.get(lowerText)
     if (cachedResponse) {
-      const assistantMsg: Message = {
-        id: `ast-cache-${now}`,
-        role: 'assistant',
-        content: cachedResponse,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      }
-      setMessages((prev) => [...prev, assistantMsg])
+      setMessages((prev) => [
+        ...prev,
+        makeMessage('user', text),
+        makeMessage('assistant', cachedResponse),
+      ])
+      if (!textToSend) setInput('')
       if (soundEnabled) playChimeSound()
       return
     }
 
-    setIsLoading(true)
+    if (!textToSend) setInput('')
 
-    // Build chat history for API
-    const historyPayload = messages.slice(-6).map((m) => ({
-      role: m.role,
-      content: m.content,
-    }))
-
-    try {
-      let response: Response | null = null
-      try {
-        response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text, history: historyPayload }),
-        })
-      } catch {
-        // Fallback for dev mode if proxy is not listening
-        response = await fetch('http://localhost:3000/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text, history: historyPayload }),
-        })
-      }
-
-      if (!response || !response.ok) {
-        throw new Error('No response from AI backend')
-      }
-
-      const data = await response.json()
-      const replyText = data.reply || '¡Recibido! ¿En qué más podemos ayudarte?'
-      responseCacheRef.current.set(lowerText, replyText)
-
-      // Check if ticket ID was returned or extracted
-      const ticketMatch = replyText.match(/\[(EXE-CHT-[A-Z0-9]+)\]/)
-      const ticket: string | null = ticketMatch && ticketMatch[1] ? ticketMatch[1] : null
-      if (ticket) setCurrentTicket(ticket)
-
-      const assistantMsg: Message = {
-        id: `ast-${Date.now()}`,
-        role: 'assistant',
-        content: replyText,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        ticketId: ticket || undefined,
-      }
-
-      setMessages((prev) => [...prev, assistantMsg])
-      if (soundEnabled) playChimeSound()
-    } catch (err) {
-      console.warn('[AIChatWidget] Backend no disponible, usando respuesta dinámica:', err)
-      const lowerText = text.toLowerCase()
-      let dynamicReply = ''
-
-      if (
-        lowerText.includes('abogad') ||
-        lowerText.includes('abogada') ||
-        lowerText.includes('legal') ||
-        lowerText.includes('estudio') ||
-        lowerText.includes('juridic')
-      ) {
-        const generatedTicket = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
-        setCurrentTicket(generatedTicket)
-        dynamicReply = `¡Hola! ⚖️ Sí, por supuesto. Para estudios jurídicos y abogados desarrollamos páginas web institucionales de alto impacto, sistemas de agendamiento de consultas legales y recepción segura de documentación.\n\nPara enviarte una propuesta técnica a medida con el Ticket [${generatedTicket}], ¿nos dejas tu email aquí en el chat o prefieres hablar por WhatsApp con un especialista?`
-      } else if (
-        lowerText.includes('padel') ||
-        lowerText.includes('pádel') ||
-        lowerText.includes('cancha') ||
-        lowerText.includes('deport') ||
-        lowerText.includes('futbol') ||
-        lowerText.includes('fútbol') ||
-        lowerText.includes('gimnasio')
-      ) {
-        const generatedTicket = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
-        setCurrentTicket(generatedTicket)
-        dynamicReply = `¡Excelente proyecto! 🎾 Para complejos de pádel o canchas deportivas, desarrollamos plataformas de reserva en tiempo real donde los jugadores eligen la cancha, la franja horaria y abonan la seña online, enviando notificaciones automáticas por WhatsApp.\n\nPara prepararte una propuesta técnica a medida bajo el Ticket [${generatedTicket}], ¿nos dejas tu email aquí en el chat o prefieres consultarnos directo por WhatsApp?`
-      } else if (
-        lowerText.includes('medic') ||
-        lowerText.includes('salud') ||
-        lowerText.includes('doct') ||
-        lowerText.includes('clinic') ||
-        lowerText.includes('dentist') ||
-        lowerText.includes('psicolog')
-      ) {
-        const generatedTicket = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
-        setCurrentTicket(generatedTicket)
-        dynamicReply = `¡Excelente! 🩺 Para clínicas, médicos y profesionales de la salud desarrollamos sitios web con agendamiento de turnos, notificaciones por email/WhatsApp y recordatorios a pacientes.\n\nPara armarte una propuesta con el Ticket [${generatedTicket}], ¿nos dejas tu email aquí en el chat o nos contactas por WhatsApp?`
-      } else if (
-        lowerText.includes('turno') ||
-        lowerText.includes('reserva') ||
-        lowerText.includes('cita')
-      ) {
-        dynamicReply =
-          '¡Nos encanta ese tipo de soluciones! 📅 Desarrollamos sistemas de turnos y reservas en tiempo real con integración a WhatsApp, cobro de señas y notificaciones automáticas. ¿Te gustaría solicitarnos una propuesta a medida para tu negocio?'
-      } else if (
-        lowerText.includes('precio') ||
-        lowerText.includes('cuanto') ||
-        lowerText.includes('costo') ||
-        lowerText.includes('cotiz')
-      ) {
-        const generatedTicket = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
-        setCurrentTicket(generatedTicket)
-        dynamicReply = `¡Genial! Cada sistema web lo desarrollamos a la medida exacta de tus objetivos. Para prepararte un presupuesto detallado con el Ticket [${generatedTicket}], ¿nos dejas tu email por aquí o prefieres consultarnos directo por WhatsApp?`
-      } else if (
-        lowerText.includes('dashboard') ||
-        lowerText.includes('saas') ||
-        lowerText.includes('panel')
-      ) {
-        dynamicReply =
-          '¡Espectacular! 📊 Diseñamos dashboards administrativos y plataformas SaaS avanzadas a medida con métricas en tiempo real, roles de usuario y reportes exportables. ¿Qué funcionalidades principales te gustaría incluir?'
-      } else if (
-        lowerText.trim() === 'hola' ||
-        lowerText.trim() === 'buenas' ||
-        lowerText.trim() === 'hey' ||
-        text.length < 8
-      ) {
-        dynamicReply =
-          '¡Hola! 👋 Qué gusto saludarte. Soy el asistente inteligente de ExeSistemasWEB. ¿En qué proyecto o sistema web te gustaría que te asesoremos hoy?'
-      } else {
-        const generatedTicket = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
-        setCurrentTicket(generatedTicket)
-        dynamicReply = `¡Excelente idea de proyecto! 🚀 Desarrollamos sistemas y páginas web a medida adaptados a tu negocio. Para coordinar una propuesta técnica con el Ticket [${generatedTicket}], ¿nos dejas tu email aquí en el chat o prefieres escribirnos por WhatsApp?`
-      }
-
-      const ticketMatch = dynamicReply.match(/\[(EXE-CHT-[A-Z0-9]+)\]/)
-      const ticketExtracted = ticketMatch ? ticketMatch[1] : undefined
-
-      const fallbackMsg: Message = {
-        id: `ast-dyn-${Date.now()}`,
-        role: 'assistant',
-        content: dynamicReply,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        ticketId: ticketExtracted,
-      }
-      setMessages((prev) => [...prev, fallbackMsg])
-      if (soundEnabled) playChimeSound()
-    } finally {
-      setIsLoading(false)
-    }
+    // 3. Streaming con Vercel AI SDK (los tokens llegan en vivo)
+    sendMessage({ text })
   }
 
-  // Get current chat context for WhatsApp prefilled link
+  // Contexto actual para el enlace prefilled de WhatsApp
   const getWhatsAppHandoffUrl = () => {
-    const lastUserMsg =
-      [...messages].reverse().find((m) => m.role === 'user')?.content || 'Consulta desde la web'
+    const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user') ?? null
+    const lastUserText = lastUserMsg ? getMessageText(lastUserMsg) : 'Consulta desde la web'
     const ticketStr = currentTicket ? ` [Ticket: ${currentTicket}]` : ''
-    const fullText = `¡Hola ExePaginasWeb! Estaba consultando en el chat sobre: "${lastUserMsg}"${ticketStr}. Quisiera hablar con un especialista.`
+    const fullText = `¡Hola ExePaginasWeb! Estaba consultando en el chat sobre: "${lastUserText}"${ticketStr}. Quisiera hablar con un especialista.`
     return getWhatsAppUrl(fullText)
   }
 
@@ -437,8 +423,8 @@ export const AIChatWidget: React.FC = () => {
             >
               {messages.map((msg) => {
                 const isUser = msg.role === 'user'
-                const extractedTicket =
-                  msg.ticketId || msg.content.match(/\[(EXE-CHT-[A-Z0-9]+)\]/)?.[1]
+                const textContent = getMessageText(msg)
+                const extractedTicket = extractTicket(textContent)
 
                 return (
                   <motion.div
@@ -465,7 +451,16 @@ export const AIChatWidget: React.FC = () => {
                             : 'bg-muted/90 border border-border text-foreground rounded-tl-none shadow-sm whitespace-pre-line'
                         }`}
                       >
-                        {msg.content}
+                        {textContent}
+                        {isLoading &&
+                          isUser === false &&
+                          msg.id === messages[messages.length - 1]?.id && (
+                            <span className="inline-flex items-center gap-1 ml-1">
+                              <span className="w-1 h-1 rounded-full bg-accent-cyan animate-bounce [animation-delay:0ms]" />
+                              <span className="w-1 h-1 rounded-full bg-accent-cyan animate-bounce [animation-delay:120ms]" />
+                              <span className="w-1 h-1 rounded-full bg-accent-cyan animate-bounce [animation-delay:240ms]" />
+                            </span>
+                          )}
                       </div>
 
                       {/* Interactive Ticket Copy Badge */}
@@ -491,7 +486,7 @@ export const AIChatWidget: React.FC = () => {
                           isUser ? 'text-right' : 'text-left'
                         }`}
                       >
-                        {msg.timestamp}
+                        {timestampsRef.current.get(msg.id) ?? ''}
                       </div>
                     </div>
                   </motion.div>

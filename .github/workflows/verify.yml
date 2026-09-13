@@ -49,6 +49,29 @@ jobs:
           NEXT_PUBLIC_SITE_URL: https://exepaginasweb.com
           CI: true
 
+  playwright:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright a11y tests
+        run: npx playwright test
+        env:
+          CI: true
+
   cli:
     runs-on: ubuntu-latest
 

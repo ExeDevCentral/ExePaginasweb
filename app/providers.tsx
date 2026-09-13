@@ -6,6 +6,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 import { AuthSessionProvider } from '@/core/auth/AuthSessionProvider'
 import { ThemeProvider } from '@/core/theme/ThemeContext'
+import { PostHogProvider } from '@/lib/posthog/PostHogProvider'
 import ThemedToaster from '@/components/shared/ThemedToaster'
 import PremiumBackground from '@/components/Effects/PremiumBackground'
 import '@/core/i18n/config'
@@ -33,9 +34,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <AuthSessionProvider>
         <ThemeProvider>
-          <PremiumBackground />
-          <ThemedToaster />
-          {children}
+          <PostHogProvider>
+            <PremiumBackground />
+            <ThemedToaster />
+            {children}
+          </PostHogProvider>
         </ThemeProvider>
       </AuthSessionProvider>
       {enableVercelTelemetry && <SpeedInsights />}

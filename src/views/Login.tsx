@@ -623,6 +623,7 @@ export default function Login() {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
+                          aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                           className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                           tabIndex={-1}
                         >
@@ -791,7 +792,7 @@ export default function Login() {
       </main>
 
       {/* Page Footer */}
-      <footer className="relative z-10 w-full max-w-6xl mx-auto text-center text-[11px] text-slate-500 py-2 font-mono">
+      <footer className="relative z-10 w-full max-w-6xl mx-auto text-center text-[11px] text-slate-400 py-2 font-mono">
         © 2025 ExeSistemasWEB — Todos los derechos reservados.
       </footer>
     </div>

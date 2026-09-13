@@ -76,21 +76,12 @@ export const metadata: Metadata = {
     title: 'ExePaginasWeb | Desarrollo Web a Medida y Sistemas SaaS',
     description:
       'Creamos páginas web, tiendas online y sistemas de software SaaS a medida con código propio.',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'ExePaginasWeb - Estudio de Desarrollo Web',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'ExePaginasWeb | Desarrollo Web a Medida',
     description:
       'Creamos páginas web, tiendas online y sistemas de software SaaS a medida con código propio.',
-    images: ['/og-image.png'],
   },
 }
 

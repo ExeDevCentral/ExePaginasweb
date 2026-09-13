@@ -1,0 +1,109 @@
+# PostHog self-hosted (evaluación local / demo)
+#
+# Levantar:  $env:POSTHOG_SECRET_KEY="<al menos 32 chars>"; docker compose -f docker-compose.posthog.yml up -d
+# UI:        http://localhost:8000
+# Luego configurar en el proyecto:
+#   NEXT_PUBLIC_POSTHOG_ENABLED=true
+#   NEXT_PUBLIC_POSTHOG_KEY=<project_api_key>
+#   NEXT_PUBLIC_POSTHOG_HOST=http://localhost:8000
+#
+# Para producción real seguir la referencia oficial (Kubernetes/Helm):
+# https://posthog.com/docs/self-host
+# La app web se autentica con first user via http://localhost:8000 (superuser).
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: posthog
+      POSTGRES_USER: posthog
+      POSTGRES_PASSWORD: posthog
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U posthog -d posthog']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8-alpine
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    environment:
+      KAFKA_ENABLE_KRAFT: 'yes'
+      KAFKA_CFG_NODE_ID: '1'
+      KAFKA_CFG_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
+      KAFKA_CFG_LISTENERS: 'PLAINTEXT://:9092,CONTROLLER://:29093'
+      KAFKA_CFG_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT'
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+
+  posthog:
+    image: posthog/posthog:latest-release
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_started
+      kafka:
+        condition: service_started
+    environment:
+      SECRET_KEY: ${POSTHOG_SECRET_KEY:?Debes definir POSTHOG_SECRET_KEY (>=32 chars)}
+      DATABASE_URL: postgres://posthog:posthog@postgres:5432/posthog
+      REDIS_URL: redis://redis:6379/
+      CLICKHOUSE_HOST: clickhouse
+      KAFKA_HOST: kafka
+      KAFKA_PORT: '9092'
+      POSTHOG_URL: http://localhost:8000
+      SERVER_MODE: production
+    ports:
+      - '8000:8000'
+
+  plugin-server:
+    image: posthog/plugin-server:latest-release
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_started
+      kafka:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgres://posthog:posthog@postgres:5432/posthog
+      REDIS_URL: redis://redis:6379/
+      CLICKHOUSE_HOST: clickhouse
+      KAFKA_HOST: kafka
+      KAFKA_PORT: '9092'
+
+volumes:
+  postgres_data:
+  redis_data:
+  clickhouse_data:
+  kafka_data:

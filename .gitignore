@@ -31,6 +31,12 @@ docs/supabase-env.local.md
 .next
 .vercel
 
+# Playwright
+test-results
+playwright-report
+blob-report
+playwright/.cache
+
 # TypeScript build cache (regenerado en cada tsc/build)
 tsconfig.tsbuildinfo
 

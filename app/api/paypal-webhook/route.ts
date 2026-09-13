@@ -50,7 +50,19 @@ async function getPayPalAccessToken(): Promise<string | null> {
     },
     body: 'grant_type=client_credentials',
   })
-  const data = await resp.json()
+
+  if (!resp.ok) {
+    const err = await resp.text()
+    console.error('[paypal-webhook] OAuth token request failed:', resp.status, err)
+    return null
+  }
+
+  const data = (await resp.json()) as { access_token?: string }
+  if (!data.access_token) {
+    console.error('[paypal-webhook] OAuth response missing access_token')
+    return null
+  }
+
   return data.access_token
 }
 
@@ -356,7 +368,10 @@ export async function POST(req: NextRequest) {
         .select('id')
         .single()
 
-      if (pagoError) console.error('[paypal-webhook] Error inserting pago:', pagoError)
+      if (pagoError) {
+        console.error('[paypal-webhook] Error inserting pago:', pagoError)
+        return failProcessing('Failed to record payment')
+      }
       const pagoId = pagoInsertado?.id || null
 
       const { error: subError } = await db.from('suscripciones').insert({
@@ -366,7 +381,10 @@ export async function POST(req: NextRequest) {
         fecha_inicio: new Date().toISOString(),
       })
 
-      if (subError) console.error('[paypal-webhook] Error inserting suscripcion:', subError)
+      if (subError) {
+        console.error('[paypal-webhook] Error inserting suscripcion:', subError)
+        return failProcessing('Failed to create subscription')
+      }
 
       const tenantId = await getOrCreateTenant(clienteId, email, plan)
       if (tenantId && pagoId) {

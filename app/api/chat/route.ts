@@ -1,22 +1,26 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { z } from 'zod'
+import {
+  streamText,
+  createUIMessageStream,
+  createUIMessageStreamResponse,
+  convertToModelMessages,
+  generateId,
+  zodSchema,
+  type UIMessage,
+} from 'ai'
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
+import { createGroq } from '@ai-sdk/groq'
 import { isSupabaseAdminConfigured, supabaseAdmin as supabase } from '@/lib/supabase/admin'
 import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'
 import { contactNotification, contactAutoReply } from '@/lib/email/templates.js'
 import { detectLanguage } from '../contact/route'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 
-const ChatRequestSchema = z.object({
-  message: z.string().trim().min(1).max(1500),
-  history: z
-    .array(
-      z.object({
-        role: z.enum(['user', 'assistant']),
-        content: z.string().max(2000),
-      })
-    )
-    .max(20)
-    .nullish(),
+const ChatRequestBodySchema = z.object({
+  messages: z.array(z.any()).min(1).max(30),
+  id: z.string().nullish(),
 })
 
 const DEV_FALLBACK_RESPONSES = [
@@ -47,12 +51,35 @@ const DEV_FALLBACK_RESPONSES = [
   },
 ]
 
+const FALLBACK_FALLBACK =
+  '¡Entendido! Soy el asistente de ExeSistemasWEB. Para asesorarte mejor, anotá tu email en el chat o escribinos por WhatsApp al +54 9 341 6874786.'
+
 function getDevFallbackResponse(message: string): string {
   const lowerMsg = message.toLowerCase()
   for (const item of DEV_FALLBACK_RESPONSES) {
     if (item.keywords.some((kw) => lowerMsg.includes(kw))) return item.response
   }
   return `Entiendo que preguntaste sobre: "${message}". Te asignamos atención rápida vía WhatsApp al +54 9 341 6874786 o por email.`
+}
+
+function getLastUserText(
+  messages: Array<{ role?: string; content?: unknown; parts?: unknown }>
+): string {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i]
+    if (m?.role !== 'user') continue
+    if (typeof m.content === 'string' && m.content) return m.content
+    if (Array.isArray(m.parts)) {
+      const text = m.parts
+        .filter(
+          (p: { type?: string; text?: string }) => p?.type === 'text' && typeof p.text === 'string'
+        )
+        .map((p: { text?: string }) => p.text)
+        .join('')
+      if (text) return text
+    }
+  }
+  return ''
 }
 
 const SYSTEM_PROMPT = `
@@ -75,43 +102,95 @@ REGLAS DE TONO, EMPATÍA Y COMPORTAMIENTO:
    - Si el usuario pregunta cosas ajenas (recetas, noticias, deportes de TV), declina con amabilidad y calidez: "Como asistente de ExeSistemasWEB, me enfoco en ayudarte a impulsar tu negocio con software web a medida. ¿Te gustaría cotizar un sistema para tu proyecto?"
 
 4. ASIGNACIÓN DE TICKETS Y PEDIDO DE CORREO:
+   - Cuando el visitante quiera cotizar, pedir una propuesta o presupuesto, nombrar un proyecto o tipo de sistema, dejar su email o hablar con un humano, OBLIGATORIAMENTE llamá a la herramienta "createTicket".
+   - Usá el ticketId devuelto por la herramienta en tu respuesta con el formato [EXE-CHT-XXXXX].
    - Si el usuario no dejó su email, pídeselo con entusiasmo: "Para enviarte la propuesta personalizada y dar seguimiento al Ticket [EXE-CHT-XXXXX], ¿nos dejas tu email por aquí o prefieres consultarnos por WhatsApp?"
    - Si el usuario dejó su email, confírmale: "¡Genial! Registramos tu Ticket [EXE-CHT-XXXXX] y te enviamos la confirmación instantánea a tu correo. Un especialista te responderá en menos de 2 horas."
 `
+
+const createTicketTool = {
+  description:
+    'Crea un ticket de atención con un ID único de seguimiento (formato EXE-CHT-XXXXX). Llamá SOLO cuando el visitante quiera cotizar, pedir una propuesta/presupuesto, nombrar un proyecto o tipo de sistema, dejar su email, o quiera hablar con un humano.',
+  inputSchema: zodSchema(
+    z.object({
+      contactEmail: z
+        .string()
+        .email()
+        .nullish()
+        .describe('Email del visitante si lo escribió en el chat'),
+      projectType: z
+        .string()
+        .nullish()
+        .describe(
+          'Tipo de proyecto: turnos/reservas, saas/dashboard, web/landing, ecommerce, salud, jurídico, deportivo/pádel'
+        ),
+    })
+  ),
+  execute: async ({
+    contactEmail,
+    projectType,
+  }: {
+    contactEmail?: string | null
+    projectType?: string | null
+  }) => {
+    const ticketId = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
+    return {
+      ticketId,
+      contactEmail: contactEmail ?? null,
+      projectType: projectType ?? null,
+    }
+  },
+}
+
+function streamLocalFallback(text: string): Response {
+  const stream = createUIMessageStream({
+    execute: ({ writer }) => {
+      const id = generateId()
+      writer.write({ type: 'text-start', id })
+      writer.write({ type: 'text-delta', id, delta: text })
+      writer.write({ type: 'text-end', id })
+      writer.write({ type: 'finish', finishReason: 'stop' })
+    },
+  })
+  return createUIMessageStreamResponse({
+    headers: { 'Cache-Control': 'no-cache, no-transform' },
+    stream,
+  })
+}
 
 export async function POST(req: NextRequest) {
   try {
     const limit = await checkRateLimit(`chat:${clientIp(req)}`, 60, 10)
     if (!limit.allowed) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Demasiadas solicitudes. Intente de nuevo en un minuto.' },
         { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
       )
     }
   } catch (rateLimitError) {
     console.error('[chat] Rate limiter unavailable:', rateLimitError)
-    return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
+    return Response.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
   let body: unknown = null
   try {
     body = await req.json()
   } catch {
-    return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
+    return Response.json({ error: 'JSON inválido' }, { status: 400 })
   }
 
-  const validation = ChatRequestSchema.safeParse(body)
+  const validation = ChatRequestBodySchema.safeParse(body)
   if (!validation.success) {
-    return NextResponse.json(
+    return Response.json(
       { error: 'Datos de mensaje inválidos.', details: validation.error.flatten() },
       { status: 400 }
     )
   }
 
-  const { message: userMessage, history: rawHistory } = validation.data
-  const history = rawHistory || []
+  const messages = validation.data.messages as UIMessage[]
+  const userMessage = getLastUserText(messages)
 
-  // Capturar email si el usuario lo escribió en el chat
+  // Capturar email si el usuario lo escribió en el chat (lógica determinística, antes del streaming)
   const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/
   const emailMatch = userMessage.match(emailRegex)
   if (emailMatch && emailMatch[0]) {
@@ -168,43 +247,32 @@ export async function POST(req: NextRequest) {
   const geminiKey = process.env.GEMINI_API_KEY
   const groqKey = process.env.GROQ_API_KEY
 
+  const commonSettings = {
+    system: SYSTEM_PROMPT,
+    messages: await convertToModelMessages(messages),
+    temperature: 0.6,
+    maxTokens: 450,
+    tools: { createTicket: createTicketTool },
+  }
+
   // --- TIER 1: Vercel AI Gateway (Universal Router: OpenAI, Claude, Llama) ---
   if (aiGatewayKey) {
     try {
-      const messages = [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...history.map((m) => ({
-          role: 'user',
-          content: `[Historial no confiable (${m.role})]\n${m.content}`,
-        })),
-        { role: 'user', content: userMessage },
-      ]
-
-      const gatewayResp = await fetch('https://ai-gateway.vercel.sh/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${aiGatewayKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'openai/gpt-4o-mini',
-          messages,
-          temperature: 0.6,
-          max_tokens: 450,
-        }),
+      const gateway = createOpenAICompatible({
+        name: 'vercel-ai-gateway',
+        baseURL: 'https://ai-gateway.vercel.sh/v1',
+        apiKey: aiGatewayKey,
       })
-
-      if (gatewayResp.ok) {
-        const gatewayData = await gatewayResp.json()
-        const replyText = gatewayData.choices?.[0]?.message?.content
-        if (replyText) {
-          return NextResponse.json({ reply: replyText, provider: 'vercel-ai-gateway' })
-        }
-      } else {
-        console.warn(
-          `[chat] Vercel AI Gateway returned status ${gatewayResp.status} (credits/quota). Falling back to Tier 2...`
-        )
-      }
+      const result = streamText({
+        ...commonSettings,
+        model: gateway('openai/gpt-4o-mini'),
+      })
+      return result.toUIMessageStreamResponse({
+        headers: {
+          'Cache-Control': 'no-cache, no-transform',
+          'X-AI-Provider': 'vercel-ai-gateway',
+        },
+      })
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unknown gateway error'
       console.warn('[chat] Vercel AI Gateway request failed, cascading to fallback:', msg)
@@ -214,81 +282,31 @@ export async function POST(req: NextRequest) {
   // --- TIER 2: Google Gemini (Free / Direct) ---
   if (geminiKey) {
     try {
-      const contents = [
-        ...history.map((m) => ({
-          role: 'user',
-          parts: [{ text: `[Historial no confiable (${m.role})]\n${m.content}` }],
-        })),
-        {
-          role: 'user',
-          parts: [{ text: userMessage }],
-        },
-      ]
-
-      const geminiResp = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: SYSTEM_PROMPT }],
-            },
-            contents,
-            generationConfig: {
-              temperature: 0.6,
-              maxOutputTokens: 400,
-            },
-          }),
-        }
-      )
-
-      if (geminiResp.ok) {
-        const geminiData = await geminiResp.json()
-        const replyText =
-          geminiData.candidates?.[0]?.content?.parts?.[0]?.text ||
-          getDevFallbackResponse(userMessage)
-
-        return NextResponse.json({ reply: replyText, provider: 'gemini' })
-      }
+      const google = createGoogleGenerativeAI({ apiKey: geminiKey })
+      const result = streamText({
+        ...commonSettings,
+        model: google('gemini-2.5-flash'),
+      })
+      return result.toUIMessageStreamResponse({
+        headers: { 'Cache-Control': 'no-cache, no-transform', 'X-AI-Provider': 'gemini' },
+      })
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unknown Gemini error'
-      console.warn('[chat] Gemini error, cascading to next tier:', msg)
+      console.warn('[chat] Gemini error, cascading to fallback:', msg)
     }
   }
 
   // --- TIER 3: Groq Cloud (Free Llama 3.3 70B) ---
   if (groqKey) {
     try {
-      const messages = [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...history.map((m) => ({
-          role: 'user',
-          content: `[Historial no confiable (${m.role})]\n${m.content}`,
-        })),
-        { role: 'user', content: userMessage },
-      ]
-
-      const groqResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${groqKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          messages,
-          temperature: 0.6,
-          max_tokens: 400,
-        }),
+      const groq = createGroq({ apiKey: groqKey })
+      const result = streamText({
+        ...commonSettings,
+        model: groq('llama-3.3-70b-versatile'),
       })
-
-      if (groqResp.ok) {
-        const groqData = await groqResp.json()
-        const replyText =
-          groqData.choices?.[0]?.message?.content || getDevFallbackResponse(userMessage)
-        return NextResponse.json({ reply: replyText, provider: 'groq' })
-      }
+      return result.toUIMessageStreamResponse({
+        headers: { 'Cache-Control': 'no-cache, no-transform', 'X-AI-Provider': 'groq' },
+      })
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unknown Groq error'
       console.warn('[chat] Groq error, cascading to local engine:', msg)
@@ -296,6 +314,6 @@ export async function POST(req: NextRequest) {
   }
 
   // --- TIER 4: Motor Local Inteligente Exe (100% Sin Costo / Offline Safe) ---
-  const fallbackReply = getDevFallbackResponse(userMessage)
-  return NextResponse.json({ reply: fallbackReply, fallback: true, provider: 'local-knowledge' })
+  const fallbackReply = getDevFallbackResponse(userMessage || 'hola') || FALLBACK_FALLBACK
+  return streamLocalFallback(fallbackReply)
 }

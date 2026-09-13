@@ -69,7 +69,10 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
           {/* Slider Horas */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <label className="text-sm font-bold text-foreground flex items-center gap-2">
+              <label
+                htmlFor="roi-slider-hours"
+                className="text-sm font-bold text-foreground flex items-center gap-2"
+              >
                 <Hourglass className="w-4 h-4 text-accent-cyan animate-pulse" />
                 {t('calculador.horas_label')}
               </label>
@@ -78,6 +81,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
               </span>
             </div>
             <input
+              id="roi-slider-hours"
               type="range"
               min={2}
               max={40}
@@ -92,7 +96,10 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
           {/* Slider Costo por hora */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <label className="text-sm font-bold text-foreground flex items-center gap-2">
+              <label
+                htmlFor="roi-slider-cost"
+                className="text-sm font-bold text-foreground flex items-center gap-2"
+              >
                 <TrendingUp className="w-4 h-4 text-accent-magenta" />
                 {t('calculador.valor_label')}
               </label>
@@ -101,6 +108,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
               </span>
             </div>
             <input
+              id="roi-slider-cost"
               type="range"
               min={minHourlyCost}
               max={maxHourlyCost}

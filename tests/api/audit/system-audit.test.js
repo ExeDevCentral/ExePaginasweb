@@ -63,6 +63,81 @@ async function callRoute(handler, url, body, headers = {}) {
   return { status: res.status, json }
 }
 
+function buildChatMessages(...texts) {
+  return texts.map((text, index) => ({
+    id: `audit-msg-${index}`,
+    role: 'user',
+    parts: [{ type: 'text', text }],
+  }))
+}
+
+function mockOpenAISSE(text) {
+  const encoder = new TextEncoder()
+  const chunks = [
+    {
+      id: 'chatcmpl-audit',
+      object: 'chat.completion.chunk',
+      created: 1,
+      model: 'gpt-4o-mini',
+      choices: [{ index: 0, delta: { role: 'assistant', content: '' }, finish_reason: null }],
+    },
+    {
+      id: 'chatcmpl-audit',
+      object: 'chat.completion.chunk',
+      created: 1,
+      model: 'gpt-4o-mini',
+      choices: [{ index: 0, delta: { content: text }, finish_reason: null }],
+    },
+    {
+      id: 'chatcmpl-audit',
+      object: 'chat.completion.chunk',
+      created: 1,
+      model: 'gpt-4o-mini',
+      choices: [{ index: 0, delta: {}, finish_reason: 'stop' }],
+    },
+  ]
+  const body = new ReadableStream({
+    start(controller) {
+      for (const chunk of chunks) {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`))
+      }
+      controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+      controller.close()
+    },
+  })
+  return {
+    ok: true,
+    status: 200,
+    headers: new Headers({ 'content-type': 'text/event-stream' }),
+    body,
+    json: async () => ({ choices: [{ message: { content: text } }] }),
+  }
+}
+
+async function callChat(handler, messages) {
+  const res = await handler(
+    new NextRequest('http://localhost:3000/api/chat', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ messages }),
+    })
+  )
+  const raw = await res.text()
+  let reply = ''
+  for (const line of raw.split('\n')) {
+    const trimmed = line.trim()
+    if (!trimmed.startsWith('data:')) continue
+    const payload = trimmed.replace(/^data:\s*/, '')
+    try {
+      const chunk = JSON.parse(payload)
+      if (chunk.type === 'text-delta' && typeof chunk.delta === 'string') reply += chunk.delta
+    } catch {
+      // ignora líneas auxiliares del stream
+    }
+  }
+  return { status: res.status, provider: res.headers.get('X-AI-Provider'), reply }
+}
+
 describe('🔍 AUDITORÍA COMPLETA DEL SISTEMA: Chatbot, WhatsApp, Webhooks & Links', () => {
   const TEST_SECRET = 'whsec_MfValidSecretForTesting123='
 
@@ -86,68 +161,67 @@ describe('🔍 AUDITORÍA COMPLETA DEL SISTEMA: Chatbot, WhatsApp, Webhooks & Li
       const originalFetch = globalThis.fetch
       globalThis.fetch = vi.fn().mockImplementation((url) => {
         if (typeof url === 'string' && url.includes('ai-gateway.vercel.sh')) {
-          return Promise.resolve({
-            ok: true,
-            status: 200,
-            json: async () => ({
-              choices: [{ message: { content: '¡Hola! Respuesta desde Vercel AI Gateway.' } }],
-            }),
-          })
+          return Promise.resolve(mockOpenAISSE('¡Hola! Respuesta desde Vercel AI Gateway.'))
         }
         return originalFetch(url)
       })
 
       process.env.AI_GATEWAY_API_KEY = 'vck_test_gateway_key'
-      const { status, json } = await callRoute(chatHandler, 'http://localhost:3000/api/chat', {
-        message: '¿Cuánto cuesta una web institucional?',
-      })
+      delete process.env.GROQ_API_KEY
+      const result = await callChat(
+        chatHandler,
+        buildChatMessages('¿Cuánto cuesta una web institucional?')
+      )
 
       globalThis.fetch = originalFetch
-      expect(status).toBe(200)
-      expect(json.provider).toBe('vercel-ai-gateway')
-      expect(json.reply).toContain('Vercel AI Gateway')
+      delete process.env.AI_GATEWAY_API_KEY
+      expect(result.status).toBe(200)
+      expect(result.provider).toBe('vercel-ai-gateway')
+      expect(result.reply).toContain('Vercel AI Gateway')
     })
 
-    it('debe conmutar automáticamente (fallback) al motor local/Groq si AI Gateway no tiene créditos (402/429)', async () => {
+    it('debe usar Groq Cloud cuando solo está configurada la clave de Groq', async () => {
       const originalFetch = globalThis.fetch
       globalThis.fetch = vi.fn().mockImplementation((url) => {
-        if (typeof url === 'string' && url.includes('ai-gateway.vercel.sh')) {
-          return Promise.resolve({
-            ok: false,
-            status: 402,
-            json: async () => ({ error: 'Payment Required / Out of Credits' }),
-          })
-        }
         if (typeof url === 'string' && url.includes('api.groq.com')) {
-          return Promise.resolve({
-            ok: true,
-            status: 200,
-            json: async () => ({
-              choices: [{ message: { content: 'Respuesta fluida desde Groq Cloud Fallback.' } }],
-            }),
-          })
+          return Promise.resolve(mockOpenAISSE('Respuesta fluida desde Groq Cloud Fallback.'))
         }
         return originalFetch(url)
       })
 
-      process.env.AI_GATEWAY_API_KEY = 'vck_test_expired_key'
+      delete process.env.AI_GATEWAY_API_KEY
       process.env.GROQ_API_KEY = 'gsk_test_groq_key'
-      const { status, json } = await callRoute(chatHandler, 'http://localhost:3000/api/chat', {
-        message: 'Hola, quiero consultar por una tienda online',
-      })
+      const result = await callChat(
+        chatHandler,
+        buildChatMessages('Hola, quiero consultar por una tienda online')
+      )
 
       globalThis.fetch = originalFetch
-      expect(status).toBe(200)
-      expect(json.provider).toBe('groq')
-      expect(json.reply).toContain('Groq Cloud Fallback')
+      expect(result.status).toBe(200)
+      expect(result.provider).toBe('groq')
+      expect(result.reply).toContain('Groq Cloud Fallback')
+    })
+
+    it('debe responder con el motor local cuando no hay claves de IA configuradas', async () => {
+      delete process.env.AI_GATEWAY_API_KEY
+      delete process.env.GROQ_API_KEY
+      delete process.env.GEMINI_API_KEY
+      const result = await callChat(chatHandler, buildChatMessages('Hola'))
+
+      expect(result.status).toBe(200)
+      expect(result.reply).toContain('ExeSistemasWEB')
     })
 
     it('debe capturar emails en el chat, generar Ticket EXE-CHT y enviar correo de confirmación', async () => {
-      const { status } = await callRoute(chatHandler, 'http://localhost:3000/api/chat', {
-        message: 'Hola! Mi email es audit.test@example.com y necesito presupuesto',
-      })
+      delete process.env.AI_GATEWAY_API_KEY
+      delete process.env.GROQ_API_KEY
+      delete process.env.GEMINI_API_KEY
+      const result = await callChat(
+        chatHandler,
+        buildChatMessages('Hola! Mi email es audit.test@example.com y necesito presupuesto')
+      )
 
-      expect(status).toBe(200)
+      expect(result.status).toBe(200)
       expect(sendEmail).toHaveBeenCalled()
     }, 15000)
   })

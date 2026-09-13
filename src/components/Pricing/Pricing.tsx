@@ -3,8 +3,9 @@
 import React, { useState } from 'react'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { Check, X, Coins } from 'lucide-react'
+import { Check, X, Coins, MessageCircle } from 'lucide-react'
 import ROICalculator from './ROICalculator'
+import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '@/core/utils/whatsappUtils'
 
 interface PlanData {
   tKey: 'landing' | 'ecommerce'
@@ -61,6 +62,20 @@ const PricingCard = ({
 
   function handleMouseLeave() {
     rectRef.current = null
+  }
+
+  const handleRequestClick = () => {
+    if (currency === 'ARS') {
+      // Abrir WhatsApp con cotización en pesos
+      const message = `¡Hola ExeSistemasWEB! Me interesa el plan ${plan.tKey === 'landing' ? 'Landing' : 'E-commerce'}. Setup: ${plan.setupFee.ARS}, Mantenimiento: ${plan.monthlyFee.ARS}/mes. Quisiera más información. 👋`
+      window.open(getWhatsAppUrl(message), '_blank')
+    } else {
+      // Para USD, ir a la sección de contacto
+      const contactSection = document.getElementById('contact')
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
   }
 
   return (
@@ -152,21 +167,28 @@ const PricingCard = ({
           ))}
         </ul>
 
-        <a
-          href="#contact"
-          className={`block w-full py-4 rounded-xl text-center font-bold transition-all duration-300 relative overflow-hidden group ${
+        <button
+          onClick={handleRequestClick}
+          className={`block w-full py-4 rounded-xl text-center font-bold transition-all duration-300 relative overflow-hidden group cursor-pointer ${
             plan.popular
               ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground hover:opacity-90 hover:shadow-lg hover:shadow-accent-magenta/20'
               : 'border border-border bg-card/50 text-foreground hover:border-accent-cyan/30 hover:bg-card hover:shadow-sm hover:shadow-accent-cyan/5'
           }`}
         >
-          <span className="relative z-10">
-            {currency === 'ARS' ? t('pricing.solicitar_pesos') : t('pricing.request_quotation')}
+          <span className="relative z-10 flex items-center justify-center gap-2">
+            {currency === 'ARS' ? (
+              <>
+                <MessageCircle className="w-4 h-4" />
+                {t('pricing.solicitar_pesos')}
+              </>
+            ) : (
+              t('pricing.request_quotation')
+            )}
           </span>
           {!plan.popular && (
             <div className="absolute inset-0 bg-gradient-to-r from-accent-cyan/0 via-accent-cyan/5 to-accent-cyan/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           )}
-        </a>
+        </button>
       </div>
     </motion.div>
   )
@@ -220,7 +242,7 @@ const Pricing = () => {
           >
             <button
               onClick={() => setCurrency('ARS')}
-              className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
                 currency === 'ARS'
                   ? 'bg-gradient-to-r from-accent-cyan to-accent-cyan/80 text-black shadow-lg shadow-accent-cyan/25'
                   : 'text-foreground/60 hover:text-foreground'
@@ -231,7 +253,7 @@ const Pricing = () => {
             </button>
             <button
               onClick={() => setCurrency('USD')}
-              className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
                 currency === 'USD'
                   ? 'bg-gradient-to-r from-accent-magenta to-accent-magenta/80 text-foreground shadow-lg shadow-accent-magenta/25'
                   : 'text-foreground/60 hover:text-foreground'

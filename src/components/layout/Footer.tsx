@@ -1,11 +1,90 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
+import { useEffect, useRef, useState } from 'react'
 import { Code2, Github, Instagram, Linkedin, Mail, Zap, Shield, Search, Send } from 'lucide-react'
 import Link from 'next/link'
 
 import Logo from './Logo'
-import CraftedBySignature from '../shared/CraftedBySignature'
+
+// ── Matrix letter cycling component ──────────────────────────────────────────
+const MATRIX_CHARS = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ'
+const DOMAIN_COLORS = [
+  '#00ff41', // matrix green bright
+  '#00c832', // matrix green mid
+  '#008f20', // matrix green dark
+  '#0ea5e9', // accent-cyan
+  '#38bdf8', // sky-300
+  '#00e5a0', // cyan-green blend
+]
+
+function MatrixLetter({ char, index }: { char: string; index: number }) {
+  const restColor = DOMAIN_COLORS[index % DOMAIN_COLORS.length] ?? '#00ff41'
+  const [display, setDisplay] = useState(char)
+  const [color, setColor] = useState(restColor)
+  const [scrambling, setScrambling] = useState(false)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const scramble = () => {
+    if (scrambling) return
+    setScrambling(true)
+    let tick = 0
+    const total = 8 + Math.floor(Math.random() * 6)
+    intervalRef.current = setInterval(() => {
+      setDisplay(MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)] ?? char)
+      setColor(DOMAIN_COLORS[Math.floor(Math.random() * DOMAIN_COLORS.length)] ?? '#00ff41')
+      tick++
+      if (tick >= total) {
+        clearInterval(intervalRef.current!)
+        setDisplay(char)
+        setColor(restColor)
+        setScrambling(false)
+      }
+    }, 45)
+  }
+
+  // Auto-cascade on mount: each letter starts with a staggered delay
+  useEffect(() => {
+    timeoutRef.current = setTimeout(() => scramble(), index * 80 + Math.random() * 120)
+    return () => {
+      clearTimeout(timeoutRef.current!)
+      clearInterval(intervalRef.current!)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <span
+      onMouseEnter={(e) => {
+        e.stopPropagation()
+        scramble()
+      }}
+      style={{
+        color,
+        textShadow: `0 0 6px ${color}66`,
+        // Fixed width — prevents layout shift when scrambling to wider chars
+        display: 'inline-block',
+        width: '0.62em',
+        textAlign: 'center',
+        overflow: 'hidden',
+      }}
+      className="font-black font-mono transition-colors duration-75 cursor-default select-none"
+    >
+      {display}
+    </span>
+  )
+}
+
+function MatrixDomainText({ text }: { text: string }) {
+  return (
+    <span className="inline-flex">
+      {text.split('').map((char, i) => (
+        <MatrixLetter key={i} char={char} index={i} />
+      ))}
+    </span>
+  )
+}
 
 const TECH_ITEMS = [
   { icon: Zap, labelKey: 'card_1_titulo', color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
@@ -207,24 +286,57 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-foreground/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-primary-secondary text-xs">
-            © 2025 ExeSistemasWEB. {t('footer.derechos')}
-          </p>
-          <p className="text-primary-secondary text-xs flex items-center gap-1.5">
-            Built &amp; maintained by{' '}
+        {/* ── Bottom bar ─────────────────────────────────────────────────────── */}
+        <div className="pt-6 border-t border-foreground/10">
+          {/* Matrix scan-line accent */}
+          <div className="relative mb-5 h-px w-full overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-cyan/40 to-transparent animate-[gradientX_4s_ease_infinite]" />
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+            {/* Copyright */}
+            <p className="text-primary-secondary text-[11px] font-mono tracking-wide">
+              © 2025 <span className="text-foreground/80 font-semibold">ExeSistemasWEB</span>
+              {'. '}
+              {t('footer.derechos')}
+            </p>
+
+            {/* Crafted signature — inline, no extra top margin */}
             <a
-              href="https://github.com/ExeDevCentral"
+              href="https://exepaginasweb.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-cyan hover:text-foreground transition-colors font-medium"
+              title="Diseño & Desarrollo por Exepaginasweb.com"
+              className="group relative inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent-cyan/20 bg-white/[0.03] hover:border-accent-cyan/50 hover:bg-accent-cyan/[0.07] transition-all duration-500 hover:shadow-[0_6px_24px_-6px_rgba(14,165,233,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/50"
             >
-              ExeDevCentral
-            </a>
-          </p>
-        </div>
+              {/* Shimmer sweep */}
+              <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 bg-[linear-gradient(110deg,transparent_30%,rgba(255,255,255,0.14)_50%,transparent_70%)] bg-[length:200%_100%] animate-signature-shimmer transition-opacity duration-500" />
 
-        <CraftedBySignature variant="dark" showBar className="mt-10" />
+              <span className="relative z-10 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400/80">
+                Crafted with precision by
+              </span>
+              <span className="relative z-10 text-[10px] uppercase tracking-[0.18em]">
+                <MatrixDomainText text="Exepaginasweb.com" />
+              </span>
+              {/* Tiny matrix blink cursor */}
+              <span className="relative z-10 inline-block w-[5px] h-[11px] bg-accent-cyan/70 animate-[glowPulse_1.2s_ease-in-out_infinite] rounded-[1px]" />
+            </a>
+
+            {/* Built by */}
+            <p className="text-primary-secondary text-[11px] font-mono tracking-wide flex items-center gap-1.5">
+              <span className="text-slate-500">Built &amp; maintained by</span>
+              <a
+                href="https://github.com/ExeDevCentral"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-bold text-accent-cyan hover:text-foreground transition-colors"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981] inline-block" />
+                ExeDevCentral
+              </a>
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
   )

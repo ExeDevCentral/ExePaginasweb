@@ -1,13 +1,23 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Delaunator from 'delaunator'
 
 const DARK_COLORS = ['#38bdf8', '#818cf8', '#34d399']
 const LIGHT_COLORS = ['#0284c7', '#6366f1', '#10b981']
 
-const NODE_COUNT = 20
-const MOBILE_NODE_COUNT = 8
-const LINK_DIST = 140
+// ── Density-aware constants ───────────────────────────────────────────────────
+// More points → smaller link radius so visual density stays constant.
+// Formula: LINK_DIST_BASE / sqrt(nodeCount / BASE_COUNT)
+const BASE_COUNT = 20 // original reference
+const LINK_DIST_BASE = 140 // px at BASE_COUNT nodes
+const NODE_COUNT = 63 // desktop (+15% over previous 55)
+const MOBILE_NODE_COUNT = 21 // mobile (+15% over previous 18)
+
+function linkDist(count: number): number {
+  return LINK_DIST_BASE * Math.sqrt(BASE_COUNT / count)
+}
+
 const MOUSE_RADIUS = 150
 
 class Node {
@@ -95,6 +105,7 @@ const PremiumBackground = () => {
 
     const mouse = { x: -9999, y: -9999, active: false }
     const nodeCount = isMobile ? MOBILE_NODE_COUNT : NODE_COUNT
+    const maxDist = isMobile ? linkDist(MOBILE_NODE_COUNT) : linkDist(NODE_COUNT)
     const nodes = Array.from({ length: nodeCount }, () => new Node(w, h, isMobile))
 
     let isDocumentVisible = true
@@ -168,39 +179,67 @@ const PremiumBackground = () => {
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
-    const drawLinks = () => {
+    // ── Delaunay triangulation mesh ───────────────────────────────────────────
+    // Builds a triangulation each frame, then draws only the edges whose
+    // endpoint distance ≤ maxDist — giving a clean low-poly faceted network.
+    const drawDelaunay = () => {
       const darkTheme = document.documentElement.classList.contains('dark')
-      const maxDist = isMobile ? 80 : LINK_DIST
-      const len = nodes.length
 
-      for (let i = 0; i < len; i++) {
-        const a = nodes[i]!
-        for (let j = i + 1; j < len; j++) {
-          const b = nodes[j]!
-          const dx = a.x - b.x
-          const dy = a.y - b.y
-          const distSq = dx * dx + dy * dy
-          const maxDistSq = maxDist * maxDist
+      // Flat [x0,y0, x1,y1, ...] coords for delaunator
+      const coords = new Float64Array(nodes.length * 2)
+      for (let i = 0; i < nodes.length; i++) {
+        coords[i * 2] = nodes[i]!.x
+        coords[i * 2 + 1] = nodes[i]!.y
+      }
 
-          if (distSq < maxDistSq) {
-            const dist = Math.sqrt(distSq)
-            const factor = 1 - dist / maxDist
-            const opacity = darkTheme ? factor * 0.25 : factor * 0.12
-            const lineColor = `rgba(148, 163, 184, ${opacity})`
-            ctx.beginPath()
-            ctx.moveTo(a.x, a.y)
-            ctx.lineTo(b.x, b.y)
-            ctx.strokeStyle = lineColor
-            ctx.lineWidth = 0.6
-            ctx.stroke()
-          }
+      const del = new Delaunator(coords)
+      const tris = del.triangles // indices: every 3 entries = one triangle
+
+      // Collect unique edges from the triangulation
+      // Use a Set<string> to skip duplicates (each interior edge appears twice)
+      const drawn = new Set<string>()
+
+      for (let t = 0; t < tris.length; t += 3) {
+        const [a, b, c] = [tris[t]!, tris[t + 1]!, tris[t + 2]!]
+        const pairs: [number, number][] = [
+          [Math.min(a, b), Math.max(a, b)],
+          [Math.min(b, c), Math.max(b, c)],
+          [Math.min(a, c), Math.max(a, c)],
+        ]
+
+        for (const [i, j] of pairs) {
+          const key = `${i}-${j}`
+          if (drawn.has(key)) continue
+          drawn.add(key)
+
+          const na = nodes[i]!
+          const nb = nodes[j]!
+          const dx = na.x - nb.x
+          const dy = na.y - nb.y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+
+          // Skip long edges — keeps the mesh local and avoids crossing diagonals
+          if (dist > maxDist) continue
+
+          const factor = 1 - dist / maxDist
+          const opacity = darkTheme ? factor * 0.22 : factor * 0.1
+
+          // Cyan/teal tint for edges — matches site accent palette
+          ctx.beginPath()
+          ctx.moveTo(na.x, na.y)
+          ctx.lineTo(nb.x, nb.y)
+          ctx.strokeStyle = darkTheme
+            ? `rgba(56, 189, 248, ${opacity})` // sky-400 (cyan)
+            : `rgba(14, 116, 144, ${opacity})` // teal-700
+          ctx.lineWidth = 0.55
+          ctx.stroke()
         }
       }
     }
 
     const renderFrame = () => {
       ctx.clearRect(0, 0, w, h)
-      drawLinks()
+      drawDelaunay()
       const darkTheme = document.documentElement.classList.contains('dark')
       nodes.forEach((n) => {
         n.draw(ctx, darkTheme)
@@ -237,7 +276,7 @@ const PremiumBackground = () => {
       animId = requestAnimationFrame(loop)
 
       ctx.clearRect(0, 0, w, h)
-      drawLinks()
+      drawDelaunay()
       const darkTheme = document.documentElement.classList.contains('dark')
       nodes.forEach((n) => {
         n.update(w, h, mouse)

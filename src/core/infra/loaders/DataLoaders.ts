@@ -62,9 +62,9 @@ export class DataLoader<K, V> {
 
       results.forEach((result, i) => {
         if (result instanceof Error) {
-          batch[i].reject(result)
+          batch[i]!.reject(result)
         } else {
-          batch[i].resolve(result)
+          batch[i]!.resolve(result)
         }
       })
     } catch (error) {

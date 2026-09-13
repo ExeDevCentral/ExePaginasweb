@@ -5,11 +5,48 @@
  * - Query latency
  * - API response time
  * - Error rates
+ *
+ * NOTE: @opentelemetry/api is not installed; this file uses a lightweight no-op shim.
+ * Install @opentelemetry/api and remove the shim block below when full tracing is needed.
  */
 
-import { trace, context, SpanStatusCode } from '@opentelemetry/api'
-
-const tracer = trace.getTracer('exe-sistemas-web', '1.0.0')
+// ─── No-op shim ──────────────────────────────────────────────────────────────
+// Replace this block by importing from '@opentelemetry/api' once the package is installed.
+interface Span {
+  end(): void
+  recordException(err: Error): void
+  setStatus(opts: { code: number }): void
+  addEvent(name: string, attrs?: Record<string, unknown>): void
+}
+const SpanStatusCode = { ERROR: 2 } as const
+const _noopSpan: Span = {
+  end() {},
+  recordException() {},
+  setStatus() {},
+  addEvent() {},
+}
+const tracer = {
+  startSpan(_name: string, _opts?: unknown): Span {
+    return _noopSpan
+  },
+}
+const context = {
+  active() {
+    return {}
+  },
+  with<T>(_ctx: unknown, fn: () => T): T {
+    return fn()
+  },
+}
+const trace = {
+  getTracer(_name: string, _version?: string) {
+    return tracer
+  },
+  setSpan(_ctx: unknown, _span: Span) {
+    return _ctx
+  },
+}
+// ─── End shim ─────────────────────────────────────────────────────────────────
 
 /**
  * Decorador para tracing automático

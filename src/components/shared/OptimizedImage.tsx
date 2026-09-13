@@ -37,7 +37,7 @@ export function OptimizedImage({
   sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 80vw',
   className = '',
   containerClassName = '',
-  _blurColor = '#e5e7eb',
+  blurColor: _blurColor = '#e5e7eb',
   aspectRatio,
   ...props
 }: OptimizedImageProps) {
@@ -50,8 +50,8 @@ export function OptimizedImage({
       <Image
         src={src}
         alt={alt}
-        width={width}
-        height={height}
+        {...(width !== undefined ? { width } : {})}
+        {...(height !== undefined ? { height } : {})}
         priority={priority}
         quality={quality}
         sizes={sizes}

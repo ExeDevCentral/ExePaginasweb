@@ -25,7 +25,7 @@ export interface ICacheProvider {
  */
 export class MemoryCache implements ICacheProvider {
   private cache = new Map<string, CacheEntry<unknown>>()
-  private cleanupInterval: NodeJS.Timer
+  private cleanupInterval: ReturnType<typeof setInterval>
 
   constructor(private defaultTtl = 300) {
     this.cleanupInterval = setInterval(() => this.cleanup(), 60000)

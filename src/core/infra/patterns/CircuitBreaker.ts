@@ -27,7 +27,10 @@ export class CircuitBreaker<T = unknown> {
   private failureCount = 0
   private successCount = 0
   private lastFailureTime = 0
-  private options: Required<CircuitBreakerOptions>
+  private options: Required<Omit<CircuitBreakerOptions, 'fallback' | 'onStateChange'>> & {
+    fallback: CircuitBreakerOptions['fallback']
+    onStateChange: CircuitBreakerOptions['onStateChange']
+  }
 
   constructor(
     private fn: () => Promise<T>,

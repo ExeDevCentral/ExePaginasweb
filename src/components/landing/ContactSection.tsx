@@ -1,3 +1,5 @@
+'use client'
+
 import { motion } from 'framer-motion'
 import { FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'

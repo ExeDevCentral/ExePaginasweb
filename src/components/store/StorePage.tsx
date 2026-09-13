@@ -227,7 +227,7 @@ export default function StorePage() {
               <span>{t('store.portal_clientes')} • CLOUD NEXUS</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-montserrat font-black text-slate-900 dark:text-white mb-6 tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold leading-tight text-slate-900 dark:text-white mb-6 tracking-tight">
               Abonos de{' '}
               <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Mantenimiento

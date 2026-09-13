@@ -145,7 +145,7 @@ const Header = () => {
 
             {/* Sistemas */}
             <motion.a
-              href="#products"
+              href="/soluciones"
               onClick={(e) => scrollToSection(e, 'products')}
               className={`relative px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full transition-all duration-200 select-none ${
                 activeId === 'products'
@@ -263,7 +263,7 @@ const Header = () => {
           <motion.div
             id="mobile-menu-drawer"
             key="mob-drawer"
-            className="lg:hidden fixed top-16 left-0 right-0 bottom-0 z-50 flex flex-col bg-white dark:bg-[#07080f] border-t border-slate-200 dark:border-white/10 shadow-2xl overflow-hidden"
+            className="lg:hidden fixed top-16 left-0 right-0 bottom-0 z-50 flex flex-col bg-white dark:bg-[#070b16] border-t border-slate-200 dark:border-[#26344b] shadow-[0_20px_60px_rgba(0,0,0,0.55)] overflow-hidden"
             style={{
               height: 'calc(100dvh - 64px)',
             }}
@@ -273,7 +273,7 @@ const Header = () => {
             transition={{ duration: 0.2, ease: 'easeOut' }}
           >
             {/* Cabecera del Drawer */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0c0d18]">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200 dark:border-[#26344b] bg-slate-50 dark:bg-[#0d1422]">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
                 <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest">
@@ -293,7 +293,7 @@ const Header = () => {
             {/* Lista de enlaces limpia y 100% opaca */}
             <nav
               data-lenis-prevent
-              className="flex flex-col px-5 py-4 gap-2 flex-1 overflow-y-auto bg-white dark:bg-[#07080f]"
+              className="flex flex-col px-5 py-4 gap-2 flex-1 overflow-y-auto bg-white dark:bg-[#070b16]"
             >
               {/* Enlace Inicio */}
               <motion.a
@@ -301,7 +301,7 @@ const Header = () => {
                 className={`p-3.5 rounded-xl border transition-all flex items-center justify-between ${
                   activeId === 'home'
                     ? 'bg-cyan-500/15 dark:bg-cyan-500/20 border-cyan-500/50 dark:border-cyan-500/60 text-cyan-700 dark:text-cyan-300 font-bold'
-                    : 'bg-slate-50 dark:bg-[#0e101c] border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-100 hover:border-cyan-500/40 hover:bg-slate-100 dark:hover:bg-[#141728]'
+                    : 'bg-slate-50 dark:bg-[#111a2b] border-slate-200 dark:border-[#26344b] text-slate-800 dark:text-slate-100 hover:border-cyan-400/60 hover:bg-slate-900/80'
                 }`}
                 onClick={(e) => scrollToSection(e, 'home')}
                 whileTap={{ scale: 0.98 }}
@@ -323,11 +323,11 @@ const Header = () => {
 
               {/* Enlace Sistemas */}
               <motion.a
-                href="#products"
+                href="/soluciones"
                 className={`p-3.5 rounded-xl border transition-all flex items-center justify-between ${
                   activeId === 'products'
                     ? 'bg-cyan-500/15 dark:bg-cyan-500/20 border-cyan-500/50 dark:border-cyan-500/60 text-cyan-700 dark:text-cyan-300 font-bold'
-                    : 'bg-slate-50 dark:bg-[#0e101c] border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-100 hover:border-cyan-500/40 hover:bg-slate-100 dark:hover:bg-[#141728]'
+                    : 'bg-slate-50 dark:bg-[#111a2b] border-slate-200 dark:border-[#26344b] text-slate-800 dark:text-slate-100 hover:border-cyan-400/60 hover:bg-slate-900/80'
                 }`}
                 onClick={(e) => scrollToSection(e, 'products')}
                 whileTap={{ scale: 0.98 }}

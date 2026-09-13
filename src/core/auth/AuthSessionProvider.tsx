@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import type { Session } from '@supabase/supabase-js'
 import * as Sentry from '@sentry/react'
 import { supabase } from '../infra/supabase/client'
+import { isLocalDashboardPreview } from './siteUrl'
 
 type AuthSessionContextValue = {
   ready: boolean
@@ -25,6 +26,16 @@ export function AuthSessionProvider({ children }: { readonly children: ReactNode
 
   useEffect(() => {
     let mounted = true
+
+    if (
+      typeof window !== 'undefined' &&
+      isLocalDashboardPreview(new URLSearchParams(window.location.search))
+    ) {
+      setReady(true)
+      return () => {
+        mounted = false
+      }
+    }
 
     const syncSentryUser = (currentSession: Session | null) => {
       if (currentSession?.user) {

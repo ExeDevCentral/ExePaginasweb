@@ -124,7 +124,7 @@ export function DashboardViewport({
       </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 xl:px-10 2xl:px-12 w-full space-y-6">
+      <main className="min-w-0 flex-1 space-y-4 p-3 sm:space-y-6 sm:p-6 lg:p-8 xl:px-10 2xl:px-12 w-full">
         <DashboardHeader
           userEmail={isPreview ? 'john.carter@dashdark.io' : userEmail}
           onLogout={onLogout}
@@ -255,7 +255,7 @@ export function DashboardViewport({
                 }`}
               >
                 <PanelErrorBoundary panelName="Servicios">
-                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
+                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-4 sm:p-6 shadow-sm">
                     <ServicesPanel
                       tenantId={effectiveTenantId}
                       onOpenTicket={() => onNavigate('sla')}
@@ -273,7 +273,7 @@ export function DashboardViewport({
                 }`}
               >
                 <PanelErrorBoundary panelName="Equipo">
-                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
+                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-4 sm:p-6 shadow-sm">
                     <WorkGroupsPanel tenantId={effectiveTenantId} />
                   </div>
                 </PanelErrorBoundary>
@@ -288,7 +288,7 @@ export function DashboardViewport({
                 }`}
               >
                 <PanelErrorBoundary panelName="SLA">
-                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
+                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-4 sm:p-6 shadow-sm">
                     <SLADashboard tenantId={effectiveTenantId} />
                   </div>
                 </PanelErrorBoundary>
@@ -303,7 +303,7 @@ export function DashboardViewport({
                 }`}
               >
                 <PanelErrorBoundary panelName="Facturas">
-                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
+                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-4 sm:p-6 shadow-sm">
                     <InvoicesPanel
                       tenantId={effectiveTenantId}
                       pagos={effectivePagos}
@@ -322,7 +322,7 @@ export function DashboardViewport({
                 }`}
               >
                 <PanelErrorBoundary panelName="Configuración">
-                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
+                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-4 sm:p-6 shadow-sm">
                     <SettingsPanel
                       cliente={effectiveCliente}
                       userEmail={userEmail}

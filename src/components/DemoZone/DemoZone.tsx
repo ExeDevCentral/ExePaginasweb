@@ -1370,7 +1370,7 @@ const DemoZone = () => {
                   <p className="text-sm uppercase tracking-[0.3em] text-accent-cyan font-bold mb-3">
                     {selectedProject.category}
                   </p>
-                  <h2 className="text-5xl sm:text-7xl font-montserrat font-black bg-gradient-to-r from-foreground via-primary-text to-primary-secondary bg-clip-text text-transparent">
+                  <h2 className="text-5xl sm:text-7xl font-display font-bold leading-none bg-gradient-to-r from-foreground via-primary-text to-primary-secondary bg-clip-text text-transparent">
                     {selectedProject.title}
                   </h2>
                   <p className="mt-4 text-xl text-primary-secondary max-w-3xl">

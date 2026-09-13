@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     template: '%s | ExePaginasWeb',
   },
   description:
-    'Creamos páginas web, tiendas online y sistemas de software SaaS a medida con código propio de alto rendimiento.',
+    'Exe Paginas Web crea páginas web, tiendas online y sistemas SaaS a medida con código propio para negocios de Rosario, Argentina y todo el mundo.',
   keywords: [
     'desarrollo web a medida',
     'sistemas saas',
@@ -45,9 +45,14 @@ export const metadata: Metadata = {
     'aplicaciones web',
     'código propio',
     'ExePaginasWeb',
+    'Exe Paginas Web',
+    'ExeSistemasWEB',
     'Rosario',
     'Argentina',
   ],
+  alternates: {
+    canonical: '/',
+  },
   authors: [{ name: 'ExeSistemasWEB' }],
   creator: 'ExeSistemasWEB',
   publisher: 'ExeSistemasWEB',
@@ -96,9 +101,10 @@ export default function RootLayout({
 }>) {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
+    '@type': ['ProfessionalService', 'Organization'],
     '@id': 'https://exepaginasweb.com/#organization',
-    name: 'ExePaginasWeb',
+    name: 'Exe Paginas Web',
+    alternateName: ['ExePaginasWeb', 'ExeSistemasWEB'],
     url: 'https://exepaginasweb.com/',
     logo: 'https://exepaginasweb.com/logo.png',
     image: 'https://exepaginasweb.com/og-image.png',
@@ -121,6 +127,12 @@ export default function RootLayout({
       addressCountry: 'AR',
     },
     priceRange: '$$',
+    knowsAbout: [
+      'Desarrollo web a medida',
+      'Sistemas SaaS',
+      'Tiendas online',
+      'Automatización de negocios',
+    ],
   }
 
   return (

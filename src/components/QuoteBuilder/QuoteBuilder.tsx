@@ -825,7 +825,7 @@ export default function QuoteBuilder() {
                 >
                   <div className="text-center mb-10">
                     <Sparkles className="w-8 h-8 text-accent-cyan mx-auto mb-4" />
-                    <h1 className="text-4xl md:text-5xl font-montserrat font-black text-foreground mb-3">
+                    <h1 className="text-4xl md:text-5xl font-display font-bold leading-tight text-foreground mb-3">
                       {t('cotizador.que_necesitas')}
                     </h1>
                     <p className="text-muted-foreground">{t('cotizador.que_necesitas_desc')}</p>
@@ -886,7 +886,7 @@ export default function QuoteBuilder() {
                   exit={{ opacity: 0, x: -30 }}
                 >
                   <div className="text-center mb-10">
-                    <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
+                    <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight text-foreground mb-3">
                       {t('cotizador.funcionalidades')}
                     </h2>
                     <p className="text-muted-foreground">{t('cotizador.funcionalidades_desc')}</p>
@@ -993,7 +993,7 @@ export default function QuoteBuilder() {
                   exit={{ opacity: 0, x: -30 }}
                 >
                   <div className="text-center mb-10">
-                    <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
+                    <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight text-foreground mb-3">
                       {t('cotizador.diseno')}
                     </h2>
                     <p className="text-muted-foreground">{t('cotizador.diseno_desc')}</p>
@@ -1049,7 +1049,7 @@ export default function QuoteBuilder() {
                   exit={{ opacity: 0, x: -30 }}
                 >
                   <div className="text-center mb-10">
-                    <h2 className="text-3xl md:text-4xl font-montserrat font-black text-foreground mb-3">
+                    <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight text-foreground mb-3">
                       {t('cotizador.tu_cotizacion')}
                     </h2>
                     <p className="text-muted-foreground">{t('cotizador.completa_datos')}</p>

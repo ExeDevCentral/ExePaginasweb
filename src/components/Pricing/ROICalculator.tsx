@@ -158,7 +158,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
                   <Sparkles size={18} />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-accent-magenta">
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
                     {t('calculador.roi_titulo')}
                   </p>
                   <p className="text-sm font-bold text-foreground">

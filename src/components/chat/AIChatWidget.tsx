@@ -191,7 +191,8 @@ export const AIChatWidget: React.FC = () => {
     }
   }, [messages])
 
-  // Chime cuando el streaming de una respuesta del asistente termina
+  // Chime cuando el streaming de una respuesta del asistente termina y
+  // cachear la respuesta completa para consultas repetidas (insta-cache)
   const prevStatusRef = useRef<ReturnType<typeof useChat>['status']>(status)
   useEffect(() => {
     const prev = prevStatusRef.current
@@ -200,6 +201,12 @@ export const AIChatWidget: React.FC = () => {
       const lastMsg = messages[messages.length - 1]
       if (lastMsg?.role === 'assistant' && getMessageText(lastMsg)) {
         if (soundEnabled) playChimeSound()
+        const cachedAnswer = getMessageText(lastMsg)
+        const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user')
+        const lastUserText = lastUserMsg ? getMessageText(lastUserMsg).trim() : ''
+        if (lastUserText) {
+          responseCacheRef.current.set(lastUserText.toLowerCase(), cachedAnswer)
+        }
       }
     }
   }, [status, messages, soundEnabled])

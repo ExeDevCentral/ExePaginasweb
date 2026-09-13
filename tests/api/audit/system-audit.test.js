@@ -180,6 +180,42 @@ describe('🔍 AUDITORÍA COMPLETA DEL SISTEMA: Chatbot, WhatsApp, Webhooks & Li
       expect(result.reply).toContain('Vercel AI Gateway')
     })
 
+    it('debe cascada a Groq cuando el gateway falla EN STREAMING (402/out of credits)', async () => {
+      const originalFetch = globalThis.fetch
+      globalThis.fetch = vi.fn().mockImplementation((url) => {
+        if (typeof url === 'string' && url.includes('ai-gateway.vercel.sh')) {
+          return Promise.resolve({
+            ok: false,
+            status: 402,
+            statusText: 'Payment Required',
+            headers: new Headers({ 'content-type': 'application/json' }),
+            text: async () => '{"error":{"message":"out of credits"}}',
+            json: async () => ({}),
+          })
+        }
+        if (typeof url === 'string' && url.includes('api.groq.com')) {
+          return Promise.resolve(
+            mockOpenAISSE('Respuesta fallback desde Groq tras el error del gateway.')
+          )
+        }
+        return originalFetch(url)
+      })
+
+      process.env.AI_GATEWAY_API_KEY = 'vck_test_gateway_key'
+      process.env.GROQ_API_KEY = 'gsk_test_fallback_key'
+      const result = await callChat(
+        chatHandler,
+        buildChatMessages('Quiero cotizar una web para mi negocio')
+      )
+
+      globalThis.fetch = originalFetch
+      delete process.env.AI_GATEWAY_API_KEY
+      delete process.env.GROQ_API_KEY
+      expect(result.status).toBe(200)
+      expect(result.provider).toBe('groq')
+      expect(result.reply).toContain('Groq tras el error')
+    })
+
     it('debe usar Groq Cloud cuando solo está configurada la clave de Groq', async () => {
       const originalFetch = globalThis.fetch
       globalThis.fetch = vi.fn().mockImplementation((url) => {

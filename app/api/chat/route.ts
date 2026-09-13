@@ -4,10 +4,13 @@ import {
   streamText,
   createUIMessageStream,
   createUIMessageStreamResponse,
+  toUIMessageStream,
   convertToModelMessages,
   generateId,
   zodSchema,
   type UIMessage,
+  type UIMessageChunk,
+  type TextStreamPart,
 } from 'ai'
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
@@ -18,8 +21,19 @@ import { contactNotification, contactAutoReply } from '@/lib/email/templates.js'
 import { detectLanguage } from '../contact/route'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 
+const ChatMessageSchema = z
+  .object({
+    id: z.string().min(1, { message: 'id requerido' }),
+    role: z.string().min(1, { message: 'rol requerido' }),
+    content: z.string().optional(),
+    parts: z.array(z.object({ type: z.string().min(1) }).passthrough()).optional(),
+  })
+  .refine((msg) => msg.content !== undefined || msg.parts !== undefined, {
+    message: 'cada mensaje debe incluir content o parts',
+  })
+
 const ChatRequestBodySchema = z.object({
-  messages: z.array(z.any()).min(1).max(30),
+  messages: z.array(ChatMessageSchema).min(1).max(30),
   id: z.string().nullish(),
 })
 
@@ -101,16 +115,16 @@ REGLAS DE TONO, EMPATÍA Y COMPORTAMIENTO:
    - Responde únicamente consultas relacionadas con desarrollo web, software a medida, cotizaciones e integraciones de ExeSistemasWEB.
    - Si el usuario pregunta cosas ajenas (recetas, noticias, deportes de TV), declina con amabilidad y calidez: "Como asistente de ExeSistemasWEB, me enfoco en ayudarte a impulsar tu negocio con software web a medida. ¿Te gustaría cotizar un sistema para tu proyecto?"
 
-4. ASIGNACIÓN DE TICKETS Y PEDIDO DE CORREO:
+4. SEGUIMIENTO DE SOLICITUDES Y PEDIDO DE CORREO:
    - Cuando el visitante quiera cotizar, pedir una propuesta o presupuesto, nombrar un proyecto o tipo de sistema, dejar su email o hablar con un humano, OBLIGATORIAMENTE llamá a la herramienta "createTicket".
-   - Usá el ticketId devuelto por la herramienta en tu respuesta con el formato [EXE-CHT-XXXXX].
-   - Si el usuario no dejó su email, pídeselo con entusiasmo: "Para enviarte la propuesta personalizada y dar seguimiento al Ticket [EXE-CHT-XXXXX], ¿nos dejas tu email por aquí o prefieres consultarnos por WhatsApp?"
-   - Si el usuario dejó su email, confírmale: "¡Genial! Registramos tu Ticket [EXE-CHT-XXXXX] y te enviamos la confirmación instantánea a tu correo. Un especialista te responderá en menos de 2 horas."
+   - Usá el identificador devuelto por la herramienta en tu respuesta con el formato [EXE-CHT-XXXXX].
+   - Si el usuario no dejó su email, pídeselo con entusiasmo: "Para enviarte la propuesta personalizada y dar seguimiento a la solicitud [EXE-CHT-XXXXX], ¿nos dejas tu email por aquí o prefieres consultarnos por WhatsApp?"
+   - Si el usuario dejó su email, confírmale: "¡Genial! Recibimos tu solicitud y generamos el identificador [EXE-CHT-XXXXX]. Nuestro equipo revisará tu consulta."
 `
 
 const createTicketTool = {
   description:
-    'Crea un ticket de atención con un ID único de seguimiento (formato EXE-CHT-XXXXX). Llamá SOLO cuando el visitante quiera cotizar, pedir una propuesta/presupuesto, nombrar un proyecto o tipo de sistema, dejar su email, o quiera hablar con un humano.',
+    'Genera un identificador único de seguimiento de la solicitud (formato EXE-CHT-XXXXX) y la registra. Llamá SOLO cuando el visitante quiera cotizar, pedir una propuesta/presupuesto, nombrar un proyecto o tipo de sistema, dejar su email, o quiera hablar con un humano.',
   inputSchema: zodSchema(
     z.object({
       contactEmail: z
@@ -134,6 +148,26 @@ const createTicketTool = {
     projectType?: string | null
   }) => {
     const ticketId = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
+
+    if (isSupabaseAdminConfigured()) {
+      try {
+        const { error: leadError } = await supabase.from('leads').insert({
+          email: contactEmail ?? null,
+          lead_type: 'chat',
+          message: `[${ticketId}] ${projectType ?? 'solicitud sin tipo'} — registrado vía asistente IA`,
+        })
+        if (leadError) {
+          console.error('[chat][createTicket] Error persistiendo la solicitud:', leadError)
+        }
+      } catch (persistError) {
+        console.error('[chat][createTicket] No se pudo guardar la solicitud:', persistError)
+      }
+    } else {
+      console.error(
+        '[chat][createTicket] Supabase admin no está configurado; la solicitud no se persiste'
+      )
+    }
+
     return {
       ticketId,
       contactEmail: contactEmail ?? null,
@@ -154,6 +188,89 @@ function streamLocalFallback(text: string): Response {
   })
   return createUIMessageStreamResponse({
     headers: { 'Cache-Control': 'no-cache, no-transform' },
+    stream,
+  })
+}
+
+type ChatTools = { createTicket: typeof createTicketTool }
+
+type ProviderFactory = {
+  name: string
+  // El retorno real es StreamTextResult<ChatTools>; usamos una forma estructural
+  // mínima para poder iterar la cadena sin fricción de genéricos.
+  make: () => { stream: unknown }
+}
+
+type Winner = {
+  name: string
+  reader: ReadableStreamDefaultReader<UIMessageChunk>
+  startChunk: UIMessageChunk | null
+  firstChunk: UIMessageChunk
+}
+
+async function pickFirstProvider(factories: ProviderFactory[]): Promise<Winner | null> {
+  for (const factory of factories) {
+    try {
+      const result = factory.make()
+      const uiStream = toUIMessageStream({
+        stream: result.stream as ReadableStream<TextStreamPart<ChatTools>>,
+        tools: { createTicket: createTicketTool },
+      })
+      const reader = uiStream.getReader()
+
+      // `toUIMessageStream` emite un chunk `start` local (sin red). El primer
+      // chunk CON RED es el que valida que el proveedor aceptó la petición.
+      // Un 402/429, falta de créditos o rechazo llega como chunk de tipo
+      // `error` (no como excepción): lo tratamos como fallo del proveedor.
+      let startChunk: UIMessageChunk | null = null
+      let firstChunk: UIMessageChunk | null = null
+      let failedWithError: boolean = false
+      while (firstChunk === null && !failedWithError) {
+        const { value, done } = await reader.read()
+        if (done) break
+        if (value.type === 'start') {
+          startChunk = value
+          continue
+        }
+        if (value.type === 'error') {
+          failedWithError = true
+          continue
+        }
+        firstChunk = value
+      }
+
+      if (!firstChunk) {
+        reader.releaseLock()
+        continue
+      }
+      return { name: factory.name, reader, startChunk, firstChunk }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      console.warn(`[chat] ${factory.name} falló, cascada al siguiente proveedor:`, msg)
+    }
+  }
+  return null
+}
+
+function buildStreamingResponse(winner: Winner): Response {
+  const stream = createUIMessageStream({
+    execute: async ({ writer }) => {
+      const { reader } = winner
+      if (winner.startChunk) writer.write(winner.startChunk)
+      let chunk: UIMessageChunk | undefined = winner.firstChunk
+      while (chunk) {
+        writer.write(chunk)
+        const { value, done } = await reader.read()
+        if (done) break
+        chunk = value
+      }
+    },
+  })
+  return createUIMessageStreamResponse({
+    headers: {
+      'Cache-Control': 'no-cache, no-transform',
+      'X-AI-Provider': winner.name,
+    },
     stream,
   })
 }
@@ -247,73 +364,69 @@ export async function POST(req: NextRequest) {
   const geminiKey = process.env.GEMINI_API_KEY
   const groqKey = process.env.GROQ_API_KEY
 
+  // Convierte los mensajes UI a mensajes de modelo. Si la estructura es
+  // inválida devolvemos 400 controlado (nunca un 500 no manejado).
+  let modelMessages: Awaited<ReturnType<typeof convertToModelMessages>>
+  try {
+    modelMessages = await convertToModelMessages(messages)
+  } catch {
+    return Response.json({ error: 'Estructura de mensajes inválida.' }, { status: 400 })
+  }
+
   const commonSettings = {
     system: SYSTEM_PROMPT,
-    messages: await convertToModelMessages(messages),
+    messages: modelMessages,
     temperature: 0.6,
     maxTokens: 450,
     tools: { createTicket: createTicketTool },
   }
 
-  // --- TIER 1: Vercel AI Gateway (Universal Router: OpenAI, Claude, Llama) ---
+  // Cadena de proveedores en orden de prioridad. `streamText` no lanza al
+  // construir la respuesta: la petición real ocurre al consumir el stream.
+  // Por eso seleccionamos el proveedor leyendo el PRIMER chunk del stream
+  // (await real del upstream): si el proveedor responde 402/429, sin crédito o
+  // rechaza la petición, el error aparece antes de emitir texto y cascamos al
+  // siguiente proveedor sin entregar una respuesta fallida al cliente.
+  const aiProviderChain: Array<ProviderFactory> = []
   if (aiGatewayKey) {
-    try {
-      const gateway = createOpenAICompatible({
-        name: 'vercel-ai-gateway',
-        baseURL: 'https://ai-gateway.vercel.sh/v1',
-        apiKey: aiGatewayKey,
-      })
-      const result = streamText({
-        ...commonSettings,
-        model: gateway('openai/gpt-4o-mini'),
-      })
-      return result.toUIMessageStreamResponse({
-        headers: {
-          'Cache-Control': 'no-cache, no-transform',
-          'X-AI-Provider': 'vercel-ai-gateway',
-        },
-      })
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Unknown gateway error'
-      console.warn('[chat] Vercel AI Gateway request failed, cascading to fallback:', msg)
-    }
+    aiProviderChain.push({
+      name: 'vercel-ai-gateway',
+      make: () => {
+        const gateway = createOpenAICompatible({
+          name: 'vercel-ai-gateway',
+          baseURL: 'https://ai-gateway.vercel.sh/v1',
+          apiKey: aiGatewayKey,
+        })
+        return streamText({ ...commonSettings, model: gateway('openai/gpt-4o-mini') })
+      },
+    })
   }
-
-  // --- TIER 2: Google Gemini (Free / Direct) ---
   if (geminiKey) {
-    try {
-      const google = createGoogleGenerativeAI({ apiKey: geminiKey })
-      const result = streamText({
-        ...commonSettings,
-        model: google('gemini-2.5-flash'),
-      })
-      return result.toUIMessageStreamResponse({
-        headers: { 'Cache-Control': 'no-cache, no-transform', 'X-AI-Provider': 'gemini' },
-      })
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Unknown Gemini error'
-      console.warn('[chat] Gemini error, cascading to fallback:', msg)
-    }
+    aiProviderChain.push({
+      name: 'gemini',
+      make: () => {
+        const google = createGoogleGenerativeAI({ apiKey: geminiKey })
+        return streamText({ ...commonSettings, model: google('gemini-2.5-flash') })
+      },
+    })
   }
-
-  // --- TIER 3: Groq Cloud (Free Llama 3.3 70B) ---
   if (groqKey) {
-    try {
-      const groq = createGroq({ apiKey: groqKey })
-      const result = streamText({
-        ...commonSettings,
-        model: groq('llama-3.3-70b-versatile'),
-      })
-      return result.toUIMessageStreamResponse({
-        headers: { 'Cache-Control': 'no-cache, no-transform', 'X-AI-Provider': 'groq' },
-      })
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Unknown Groq error'
-      console.warn('[chat] Groq error, cascading to local engine:', msg)
-    }
+    aiProviderChain.push({
+      name: 'groq',
+      make: () => {
+        const groq = createGroq({ apiKey: groqKey })
+        return streamText({ ...commonSettings, model: groq('llama-3.3-70b-versatile') })
+      },
+    })
   }
 
-  // --- TIER 4: Motor Local Inteligente Exe (100% Sin Costo / Offline Safe) ---
+  if (aiProviderChain.length > 0) {
+    const winner = await pickFirstProvider(aiProviderChain)
+    if (winner) return buildStreamingResponse(winner)
+    console.warn('[chat] Todos los proveedores de IA fallaron; usando el motor local')
+  }
+
+  // --- Motor Local Inteligente Exe (100% Sin Costo / Offline Safe) ---
   const fallbackReply = getDevFallbackResponse(userMessage || 'hola') || FALLBACK_FALLBACK
   return streamLocalFallback(fallbackReply)
 }

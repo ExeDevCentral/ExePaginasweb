@@ -1,108 +1,25 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ChevronDown, Scissors, Wheat, Shirt, Volleyball, Menu, X, ArrowRight } from 'lucide-react'
 import Logo from './Logo'
 import UtilityDock from './UtilityDock'
-
-// ── Matrix scramble for header wordmark ──────────────────────────────────────
-const MATRIX_CHARS = '01アイウエオ#$%&?'
-
-/** Map each segment to its resting color */
-const SEGMENT_COLOR: Record<string, string> = {
-  exe: '#ffffff',
-  slash: '#facc15', // yellow-400
-  pages: '#ffffff',
-  dot: '#22d3ee', // cyan-400
-  com: '#22d3ee',
-}
-
-function HeaderMatrixLetter({
-  char,
-  restColor,
-  index,
-}: {
-  char: string
-  restColor: string
-  index: number
-}) {
-  const [display, setDisplay] = useState(char)
-  const [color, setColor] = useState(restColor)
-  const [glowing, setGlowing] = useState(false)
-  const ivRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const tvRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const scramble = () => {
-    if (ivRef.current) return
-    let tick = 0
-    const total = 6 + Math.floor(Math.random() * 5)
-    setGlowing(true)
-    ivRef.current = setInterval(() => {
-      setDisplay(MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)] ?? char)
-      setColor(
-        ['#00ff41', '#00e5a0', '#22d3ee', '#facc15'][Math.floor(Math.random() * 4)] ?? restColor
-      )
-      tick++
-      if (tick >= total) {
-        clearInterval(ivRef.current!)
-        ivRef.current = null
-        setDisplay(char)
-        setColor(restColor)
-        setGlowing(false)
-      }
-    }, 42)
-  }
-
-  useEffect(() => {
-    tvRef.current = setTimeout(scramble, index * 65 + Math.random() * 100)
-    return () => {
-      clearTimeout(tvRef.current!)
-      clearInterval(ivRef.current!)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return (
-    <span
-      onMouseEnter={(e) => {
-        e.stopPropagation()
-        scramble()
-      }}
-      style={{
-        color,
-        textShadow: glowing ? `0 0 8px ${color}99, 0 0 14px ${color}33` : `0 0 4px ${color}22`,
-        transition: 'text-shadow 0.2s',
-        // Fixed width per slot — prevents layout shift when scrambling to wider chars
-        display: 'inline-block',
-        width: '0.62em',
-        textAlign: 'center',
-        overflow: 'hidden',
-      }}
-      className="cursor-default select-none"
-    >
-      {display}
-    </span>
-  )
-}
+import { MatrixWordmark } from '@/components/Effects/MatrixText'
 
 /** Renders EXE//PAGINASWEB.COM with per-letter matrix scramble */
 function HeaderWordmark() {
-  // Build segments with their resting color
-  const parts: { char: string; color: string }[] = [
-    ...Array.from('EXE').map((c) => ({ char: c, color: SEGMENT_COLOR.exe! })),
-    ...Array.from('//').map((c) => ({ char: c, color: SEGMENT_COLOR.slash! })),
-    ...Array.from('PAGINASWEB').map((c) => ({ char: c, color: SEGMENT_COLOR.pages! })),
-    { char: '.', color: SEGMENT_COLOR.dot! },
-    ...Array.from('COM').map((c) => ({ char: c, color: SEGMENT_COLOR.com! })),
-  ]
-
   return (
-    <span className="min-w-0 truncate text-xs font-black tracking-tight font-mono sm:text-sm inline-flex">
-      {parts.map(({ char, color }, i) => (
-        <HeaderMatrixLetter key={i} char={char} restColor={color} index={i} />
-      ))}
-    </span>
+    <MatrixWordmark
+      parts={[
+        { text: 'EXE', color: '#ffffff' },
+        { text: '//', color: '#facc15' },
+        { text: 'PAGINASWEB', color: '#ffffff' },
+        { text: '.', color: '#22d3ee' },
+        { text: 'COM', color: '#22d3ee' },
+      ]}
+      className="text-xs font-black tracking-tight sm:text-sm"
+    />
   )
 }
 

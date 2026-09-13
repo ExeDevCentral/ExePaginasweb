@@ -1,90 +1,11 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
-import { useEffect, useRef, useState } from 'react'
 import { Code2, Github, Instagram, Linkedin, Mail, Zap, Shield, Search, Send } from 'lucide-react'
 import Link from 'next/link'
 
 import Logo from './Logo'
-
-// ── Matrix letter cycling component ──────────────────────────────────────────
-const MATRIX_CHARS = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ'
-const DOMAIN_COLORS = [
-  '#00ff41', // matrix green bright
-  '#00c832', // matrix green mid
-  '#008f20', // matrix green dark
-  '#0ea5e9', // accent-cyan
-  '#38bdf8', // sky-300
-  '#00e5a0', // cyan-green blend
-]
-
-function MatrixLetter({ char, index }: { char: string; index: number }) {
-  const restColor = DOMAIN_COLORS[index % DOMAIN_COLORS.length] ?? '#00ff41'
-  const [display, setDisplay] = useState(char)
-  const [color, setColor] = useState(restColor)
-  const [scrambling, setScrambling] = useState(false)
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const scramble = () => {
-    if (scrambling) return
-    setScrambling(true)
-    let tick = 0
-    const total = 8 + Math.floor(Math.random() * 6)
-    intervalRef.current = setInterval(() => {
-      setDisplay(MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)] ?? char)
-      setColor(DOMAIN_COLORS[Math.floor(Math.random() * DOMAIN_COLORS.length)] ?? '#00ff41')
-      tick++
-      if (tick >= total) {
-        clearInterval(intervalRef.current!)
-        setDisplay(char)
-        setColor(restColor)
-        setScrambling(false)
-      }
-    }, 45)
-  }
-
-  // Auto-cascade on mount: each letter starts with a staggered delay
-  useEffect(() => {
-    timeoutRef.current = setTimeout(() => scramble(), index * 80 + Math.random() * 120)
-    return () => {
-      clearTimeout(timeoutRef.current!)
-      clearInterval(intervalRef.current!)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return (
-    <span
-      onMouseEnter={(e) => {
-        e.stopPropagation()
-        scramble()
-      }}
-      style={{
-        color,
-        textShadow: `0 0 6px ${color}66`,
-        // Fixed width — prevents layout shift when scrambling to wider chars
-        display: 'inline-block',
-        width: '0.62em',
-        textAlign: 'center',
-        overflow: 'hidden',
-      }}
-      className="font-black font-mono transition-colors duration-75 cursor-default select-none"
-    >
-      {display}
-    </span>
-  )
-}
-
-function MatrixDomainText({ text }: { text: string }) {
-  return (
-    <span className="inline-flex">
-      {text.split('').map((char, i) => (
-        <MatrixLetter key={i} char={char} index={i} />
-      ))}
-    </span>
-  )
-}
+import { MatrixScramble } from '@/components/Effects/MatrixText'
 
 const TECH_ITEMS = [
   { icon: Zap, labelKey: 'card_1_titulo', color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
@@ -316,7 +237,11 @@ const Footer = () => {
                 Crafted with precision by
               </span>
               <span className="relative z-10 text-[10px] uppercase tracking-[0.18em]">
-                <MatrixDomainText text="Exepaginasweb.com" />
+                <MatrixScramble
+                  text="Exepaginasweb.com"
+                  palette="matrix"
+                  letterClassName="font-black"
+                />
               </span>
               {/* Tiny matrix blink cursor */}
               <span className="relative z-10 inline-block w-[5px] h-[11px] bg-accent-cyan/70 animate-[glowPulse_1.2s_ease-in-out_infinite] rounded-[1px]" />

@@ -128,7 +128,7 @@ async function getOrCreateTenant(
   if (existentes?.[0]) return existentes[0].id
 
   const baseSlug = (email || 'cliente')
-    .split('@')[0]
+    .split('@')[0]!
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
   const slug = `${baseSlug}-${clienteId.slice(0, 8)}`
@@ -320,7 +320,7 @@ export async function POST(req: NextRequest) {
 
     const purchaseUnit = captured.purchase_units?.[0]
     const customId = purchaseUnit?.custom_id || ''
-    const [planSlug] = customId.split('|')
+    const planSlug = customId.split('|')[0]!
     const email = captured.payer?.email_address || customId.split('|')[1] || ''
     const tipoProyecto = customId.split('|')[2] || 'mantenimiento'
     const amount = purchaseUnit?.amount?.value

@@ -24,7 +24,7 @@ class Particle {
     this.vy = -Math.random() * 0.4 - 0.1
     this.size = Math.random() * 2.5 + 0.5
     this.alpha = 0
-    this.color = colors[Math.floor(Math.random() * colors.length)]
+    this.color = colors[Math.floor(Math.random() * colors.length)]!
     this.life = 0
     this.maxLife = 300 + Math.random() * 500
   }
@@ -232,7 +232,7 @@ export default function LoginBackground() {
       }
 
       for (let i = particlesRef.current.length - 1; i >= 0; i--) {
-        const p = particlesRef.current[i]
+        const p = particlesRef.current[i]!
         p.update(mouse.x, mouse.y, mouse.active)
 
         if (p.isDead(w, h)) {

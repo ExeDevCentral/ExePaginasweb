@@ -245,8 +245,8 @@ export const CoffeePortal3D = ({
         const ease = 1 - Math.exp(-elapsed * 3.5)
 
         for (let i = 0; i < beanCount; i++) {
-          const m = beanMeshes[i]
-          const d = beanData[i]
+          const m = beanMeshes[i]!
+          const d = beanData[i]!
           const dist = ease * d.explodeSpeed
           m.position.copy(d.explodeDir).multiplyScalar(dist)
           m.rotation.x += d.rotSpeedX * 8
@@ -261,8 +261,8 @@ export const CoffeePortal3D = ({
       } else {
         explodeStartTime = null
         for (let i = 0; i < beanCount; i++) {
-          const m = beanMeshes[i]
-          const d = beanData[i]
+          const m = beanMeshes[i]!
+          const d = beanData[i]!
           const angle = d.orbitAngle + t * d.speed
           const bob = Math.sin(t * 1.2 + i) * 0.35
           m.position.set(

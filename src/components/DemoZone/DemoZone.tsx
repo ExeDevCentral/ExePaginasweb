@@ -500,7 +500,7 @@ const DemoZone = () => {
 
   // Casa Aura derived state optimizado
   const auraFeatured = useMemo(
-    () => PROPERTIES.find((p) => p.id === (whatsappProp ?? 1)) ?? PROPERTIES[0],
+    () => PROPERTIES.find((p) => p.id === (whatsappProp ?? 1)) ?? PROPERTIES[0]!,
     [whatsappProp]
   )
   const auraFiltered = useMemo(

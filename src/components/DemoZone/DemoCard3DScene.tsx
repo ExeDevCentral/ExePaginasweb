@@ -62,7 +62,7 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
       typeof IntersectionObserver !== 'undefined'
         ? new IntersectionObserver(
             ([entry]) => {
-              isVisible = entry.isIntersecting
+              isVisible = entry?.isIntersecting ?? false
               if (isVisible) {
                 startLoop()
               } else {
@@ -431,8 +431,8 @@ export const DemoCard3DScene: React.FC<DemoCard3DSceneProps> = memo(({ type, isH
           const mult = isHov ? 2.2 : 1.0
           const radExpand = isHov ? 1.25 : 1.0
           for (let i = 0; i < miniBeans.length; i++) {
-            const b = miniBeans[i]
-            const d = miniBeanData[i]
+            const b = miniBeans[i]!
+            const d = miniBeanData[i]!
             const a = d.angle + t * d.speed * mult
             b.position.set(
               Math.cos(a) * d.radius * radExpand,

@@ -39,7 +39,7 @@ export default function AutomationAudit() {
   const [email, setEmail] = useState('')
   const [step, setStep] = useState<'quiz' | 'email' | 'loading' | 'report'>('quiz')
 
-  const currentQ = QUESTIONS[currentQuestion]
+  const currentQ = QUESTIONS[currentQuestion]!
   const currentOptions = OPTIONS[currentQ.id as keyof typeof OPTIONS]
 
   const handleOptionSelect = (value: string) => {

@@ -101,7 +101,7 @@ export default function HeroCompare() {
       for (let i = 0; i < drops.length; i++) {
         const text = chars.charAt(Math.floor(Math.random() * chars.length))
         const x = i * fontSize
-        const y = drops[i] * fontSize
+        const y = drops[i]! * fontSize
 
         if (i % 4 === 0) {
           ctx.fillStyle = 'rgba(56, 189, 248, 0.7)' // Cyan neon
@@ -116,7 +116,7 @@ export default function HeroCompare() {
         if (y > canvas.height && Math.random() > 0.975) {
           drops[i] = 0
         }
-        drops[i]++
+        drops[i] = drops[i]! + 1
       }
     }
 

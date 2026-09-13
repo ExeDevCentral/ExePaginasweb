@@ -53,7 +53,7 @@ describe('buildDefaultWorkGroups', () => {
     const groups = buildDefaultWorkGroups('#6366f1')
     expect(groups).toHaveLength(2)
     expect(groups.map((g) => g.nombre)).toEqual(['Soporte', 'Desarrollo'])
-    expect(groups[0].color).toBe('#6366f1')
+    expect(groups[0]!.color).toBe('#6366f1')
   })
 })
 

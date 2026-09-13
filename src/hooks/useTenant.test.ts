@@ -26,8 +26,8 @@ vi.mock('../core/infra/repositories/SupabaseTenantRepository', () => {
 
 // Mock de React Query
 vi.mock('@tanstack/react-query', () => ({
-  useQuery: vi.fn((options) => options),
-  useMutation: vi.fn((options) => options),
+  useQuery: vi.fn((options: unknown) => options),
+  useMutation: vi.fn((options: unknown) => options),
   useQueryClient: vi.fn(() => ({
     invalidateQueries: vi.fn(),
   })),
@@ -41,17 +41,66 @@ import {
   useUpdateTenant,
 } from './useTenant'
 
-type HookOptions = {
-  queryKey: unknown[]
+type QueryHookOptions = {
+  queryKey: readonly unknown[]
+  queryFn?: () => Promise<unknown>
   enabled?: boolean
   refetchInterval?: number
-  queryFn?: () => Promise<unknown>
+}
+
+type MutationHookOptions = {
   mutationFn?: (value: unknown) => Promise<unknown>
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function toQueryFn(value: unknown): (() => Promise<unknown>) | undefined {
+  if (value === undefined) return undefined
+  if (typeof value !== 'function') {
+    throw new Error('Expected queryFn a ser una función')
+  }
+  return value as () => Promise<unknown>
+}
+
+function asQueryHookOptions(returnValue: unknown): QueryHookOptions {
+  if (!isRecord(returnValue)) {
+    throw new Error('Expected el hook a devolver las opciones de useQuery')
+  }
+  const { queryKey, queryFn, enabled, refetchInterval } = returnValue
+  if (!Array.isArray(queryKey)) {
+    throw new Error('Expected queryKey a ser un array')
+  }
+  if (enabled !== undefined && typeof enabled !== 'boolean') {
+    throw new Error('Expected enabled a ser boolean')
+  }
+  if (refetchInterval !== undefined && typeof refetchInterval !== 'number') {
+    throw new Error('Expected refetchInterval a ser number')
+  }
+  const narrowedQueryFn = toQueryFn(queryFn)
+  return {
+    queryKey,
+    ...(narrowedQueryFn ? { queryFn: narrowedQueryFn } : {}),
+    ...(enabled !== undefined ? { enabled } : {}),
+    ...(refetchInterval !== undefined ? { refetchInterval } : {}),
+  }
+}
+
+function asMutationHookOptions(returnValue: unknown): MutationHookOptions {
+  if (!isRecord(returnValue)) {
+    throw new Error('Expected el hook a devolver las opciones de useMutation')
+  }
+  const { mutationFn } = returnValue
+  if (mutationFn !== undefined && typeof mutationFn !== 'function') {
+    throw new Error('Expected mutationFn a ser una función')
+  }
+  return mutationFn ? { mutationFn: mutationFn as () => Promise<unknown> } : {}
 }
 
 describe('useTenant Hook', () => {
   it('useTenant debe configurar useQuery con queryKey y queryFn', async () => {
-    const options = useTenant('owner-123') as unknown as HookOptions
+    const options = asQueryHookOptions(useTenant('owner-123'))
 
     expect(options.queryKey).toEqual(['tenant', 'owner-123'])
     expect(options.enabled).toBe(true)
@@ -63,7 +112,7 @@ describe('useTenant Hook', () => {
   })
 
   it('useTenantById debe configurar useQuery con queryKey e id de tenant', async () => {
-    const options = useTenantById('tenant-abc') as unknown as HookOptions
+    const options = asQueryHookOptions(useTenantById('tenant-abc'))
 
     expect(options.queryKey).toEqual(['tenant-detail', 'tenant-abc'])
     expect(options.enabled).toBe(true)
@@ -74,7 +123,7 @@ describe('useTenant Hook', () => {
   })
 
   it('useTenantStats debe configurar useQuery con queryKey e intervalo de refetch', async () => {
-    const options = useTenantStats('tenant-abc') as unknown as HookOptions
+    const options = asQueryHookOptions(useTenantStats('tenant-abc'))
 
     expect(options.queryKey).toEqual(['tenant-stats', 'tenant-abc'])
     expect(options.refetchInterval).toBe(30 * 1000)
@@ -85,7 +134,7 @@ describe('useTenant Hook', () => {
   })
 
   it('useCreateTenant debe configurar useMutation', async () => {
-    const options = useCreateTenant() as unknown as HookOptions
+    const options = asMutationHookOptions(useCreateTenant())
 
     expect(options.mutationFn).toBeDefined()
     const newTenantData = {
@@ -104,7 +153,7 @@ describe('useTenant Hook', () => {
   })
 
   it('useUpdateTenant debe configurar useMutation de actualización', async () => {
-    const options = useUpdateTenant() as unknown as HookOptions
+    const options = asMutationHookOptions(useUpdateTenant())
 
     expect(options.mutationFn).toBeDefined()
     const updates = { id: 'tenant-123', data: { nombre: 'Nuevo Nombre' } }

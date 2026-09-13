@@ -36,7 +36,7 @@ export function computeAdminStats(
     if (clienteSubs.length === 0) {
       sinPlan++
     } else {
-      const activeSub = clienteSubs[0]
+      const activeSub = clienteSubs[0]!
       const slug = activeSub.plan_slug || ''
       const catalogTier = tierFromStorePlanId(slug)
       const tier = catalogTier === 'none' ? tierFromPlanLabel(slug) : catalogTier

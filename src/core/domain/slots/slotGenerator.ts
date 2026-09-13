@@ -15,7 +15,12 @@ export interface SlotGeneratorParams {
 }
 
 function parseTime(timeStr: string): number {
-  const [hours, minutes] = timeStr.split(':').map(Number)
+  const parts = timeStr.split(':')
+  if (parts.length < 2) {
+    throw new RangeError(`Invalid shift time: ${timeStr}`)
+  }
+  const hours = Number(parts[0])
+  const minutes = Number(parts[1])
   if (
     !Number.isInteger(hours) ||
     !Number.isInteger(minutes) ||

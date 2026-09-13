@@ -68,7 +68,7 @@ class Node {
 
   draw(ctx: CanvasRenderingContext2D, isDark: boolean) {
     const palette = isDark ? DARK_COLORS : LIGHT_COLORS
-    const color = palette[this.colorIdx]
+    const color = palette[this.colorIdx]!
 
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2)
@@ -147,8 +147,8 @@ const PremiumBackground = () => {
 
     const handleTouchMove = (e: TouchEvent) => {
       if (e.touches.length > 0) {
-        mouse.x = e.touches[0].clientX
-        mouse.y = e.touches[0].clientY
+        mouse.x = e.touches[0]!.clientX
+        mouse.y = e.touches[0]!.clientY
         mouse.active = true
         wakeUp()
       }
@@ -174,9 +174,9 @@ const PremiumBackground = () => {
       const len = nodes.length
 
       for (let i = 0; i < len; i++) {
-        const a = nodes[i]
+        const a = nodes[i]!
         for (let j = i + 1; j < len; j++) {
-          const b = nodes[j]
+          const b = nodes[j]!
           const dx = a.x - b.x
           const dy = a.y - b.y
           const distSq = dx * dx + dy * dy

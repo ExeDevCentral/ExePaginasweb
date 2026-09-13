@@ -1,25 +1,36 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from 'react'
 
 const CHATBOT_ID = 'TGRKNv4moe3sA5IMOc4jV'
 
+interface ChatbaseApi {
+  q: unknown[][]
+  (method: string, ...args: unknown[]): unknown
+}
+
+type ChatbaseWindow = Window & {
+  chatbaseConfig?: { chatbotId: string }
+  chatbase?: ChatbaseApi
+}
+
 const ChatbaseWidget = () => {
   useEffect(() => {
-    const win = window as any
+    const win = window as unknown as ChatbaseWindow
 
     const init = () => {
       // Configuración única de Chatbase para evitar duplicación de botones
       win.chatbaseConfig = { chatbotId: CHATBOT_ID }
 
       if (!win.chatbase || win.chatbase('getState') !== 'initialized') {
-        win.chatbase = (...args: any[]) => {
+        win.chatbase = ((...args: unknown[]) => {
+          if (!win.chatbase) win.chatbase = {} as ChatbaseApi
           if (!win.chatbase.q) win.chatbase.q = []
           win.chatbase.q.push(args)
-        }
-        win.chatbase = new Proxy(win.chatbase, {
-          get(target: any, prop: string) {
+        }) as ChatbaseApi
+        const base = win.chatbase
+        win.chatbase = new Proxy(base, {
+          get(target: ChatbaseApi, prop: string) {
             if (prop === 'q') return target.q
-            return (...args: any[]) => target(prop, ...args)
+            return (...args: unknown[]) => target(prop, ...args)
           },
         })
       }

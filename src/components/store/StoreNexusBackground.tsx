@@ -70,8 +70,8 @@ export const StoreNexusBackground: React.FC = () => {
 
     const handleTouchMove = (e: TouchEvent) => {
       if (e.touches.length > 0) {
-        mouse.targetX = e.touches[0].clientX
-        mouse.targetY = e.touches[0].clientY
+        mouse.targetX = e.touches[0]!.clientX
+        mouse.targetY = e.touches[0]!.clientY
         mouse.active = true
       }
     }
@@ -234,7 +234,7 @@ export const StoreNexusBackground: React.FC = () => {
           px = pkt.progress * width
         }
 
-        const color = colors[pkt.colorIdx]
+        const color = colors[pkt.colorIdx]!
 
         // Pulso luminoso de telemetría
         ctx.beginPath()
@@ -280,7 +280,7 @@ export const StoreNexusBackground: React.FC = () => {
 
         const pulse = 0.5 + 0.5 * Math.sin(time * 1.5 + n.pulsePhase)
         const alpha = isDark ? 0.25 + pulse * 0.45 : 0.18 + pulse * 0.35
-        const color = colors[n.colorIdx]
+        const color = colors[n.colorIdx]!
 
         ctx.beginPath()
         ctx.arc(n.x, n.y, n.size * (0.8 + pulse * 0.3), 0, Math.PI * 2)

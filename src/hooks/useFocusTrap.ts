@@ -19,8 +19,8 @@ export const useFocusTrap = (isActive: boolean) => {
 
       if (focusableElements.length === 0) return
 
-      const firstElement = focusableElements[0]
-      const lastElement = focusableElements[focusableElements.length - 1]
+      const firstElement = focusableElements[0]!
+      const lastElement = focusableElements[focusableElements.length - 1]!
 
       if (e.shiftKey) {
         if (
@@ -51,7 +51,7 @@ export const useFocusTrap = (isActive: boolean) => {
         const focusableElements =
           modalRef.current.querySelectorAll<HTMLElement>(focusableElementsString)
         if (focusableElements.length > 0) {
-          focusableElements[0].focus({ preventScroll: true })
+          focusableElements[0]!.focus({ preventScroll: true })
         }
       }
     }, 100)

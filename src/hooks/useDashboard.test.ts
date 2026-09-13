@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { fetchDashboardData } from './useDashboard'
+import { fetchDashboardData, type DashboardDataDeps } from './useDashboard'
 import { InMemoryClienteRepository } from '../core/infra/repositories/fakes/InMemoryClienteRepository'
 import { InMemorySubscriptionRepository } from '../core/infra/repositories/fakes/InMemorySubscriptionRepository'
 import { InMemoryClientePagoRepository } from '../core/infra/repositories/fakes/InMemoryClientePagoRepository'
@@ -83,7 +83,7 @@ describe('fetchDashboardData', () => {
     })
     expect(result.suscripciones).toHaveLength(1)
     expect(result.pagos).toHaveLength(1)
-    expect(result.pagos[0].monto).toBe(144.6)
+    expect(result.pagos[0]!.monto).toBe(144.6)
   })
 
   it('propaga fallos de repos de suscripciones y pagos', async () => {
@@ -93,10 +93,11 @@ describe('fetchDashboardData', () => {
     const throwing: () => Promise<never> = async () => {
       throw new Error('repo down')
     }
-    const brokenDeps = {
+
+    const brokenDeps: DashboardDataDeps = {
       clienteRepo: deps.clienteRepo,
-      subRepo: { getByClienteId: throwing } as unknown as typeof deps.subRepo,
-      pagoRepo: { listByClienteId: throwing } as unknown as typeof deps.pagoRepo,
+      subRepo: { getByClienteId: throwing },
+      pagoRepo: { listByClienteId: throwing },
     }
 
     await expect(

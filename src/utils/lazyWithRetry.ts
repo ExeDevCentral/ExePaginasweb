@@ -4,8 +4,7 @@ import { lazy, type ComponentType } from 'react'
  * Carga perezosa (lazy) de un componente React con reintento automático mediante recarga de página
  * si falla la importación dinámica (ej. después de un nuevo despliegue en Vercel donde cambiaron los hashes de los chunks).
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function lazyWithRetry<T extends ComponentType<any>>(
+export function lazyWithRetry<T extends ComponentType>(
   componentImport: () => Promise<{ default: T }>
 ) {
   return lazy(async () => {

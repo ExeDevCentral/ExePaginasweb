@@ -214,7 +214,7 @@ export const AIChatWidget: React.FC = () => {
   // Sincronizar ticket detectado para el handoff por WhatsApp
   useEffect(() => {
     for (let i = messages.length - 1; i >= 0; i--) {
-      const t = extractTicket(getMessageText(messages[i]))
+      const t = extractTicket(getMessageText(messages[i]!))
       if (t) {
         setCurrentTicket(t)
         return

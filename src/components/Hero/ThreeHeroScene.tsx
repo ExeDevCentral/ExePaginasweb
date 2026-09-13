@@ -96,9 +96,9 @@ export const ThreeHeroScene: React.FC = () => {
       target[i3 + 1] = (yIndex - gridSize / 2) * spacing
       target[i3 + 2] = (zIndex - gridSize / 2) * spacing
 
-      current[i3] = init[i3]
-      current[i3 + 1] = init[i3 + 1]
-      current[i3 + 2] = init[i3 + 2]
+      current[i3] = init[i3]!
+      current[i3 + 1] = init[i3 + 1]!
+      current[i3 + 2] = init[i3 + 2]!
 
       const mixRatio = Math.random()
       const particleColor = mixRatio < 0.4 ? cyanColor : mixRatio < 0.8 ? magentaColor : whiteColor
@@ -157,7 +157,7 @@ export const ThreeHeroScene: React.FC = () => {
       typeof IntersectionObserver !== 'undefined'
         ? new IntersectionObserver(
             ([entry]) => {
-              isVisible = entry.isIntersecting
+              isVisible = entry?.isIntersecting ?? false
             },
             { rootMargin: '120px' }
           )
@@ -182,10 +182,10 @@ export const ThreeHeroScene: React.FC = () => {
       const arr = posAttr.array as Float32Array
       for (let i = 0; i < count; i++) {
         const i3 = i * 3
-        const wave = Math.sin(t * 1.2 + init[i3]) * (1 - p) * 0.15
-        arr[i3] = init[i3] + (target[i3] - init[i3]) * p
-        arr[i3 + 1] = init[i3 + 1] + (target[i3 + 1] - init[i3 + 1]) * p + wave
-        arr[i3 + 2] = init[i3 + 2] + (target[i3 + 2] - init[i3 + 2]) * p
+        const wave = Math.sin(t * 1.2 + init[i3]!) * (1 - p) * 0.15
+        arr[i3] = init[i3]! + (target[i3]! - init[i3]!) * p
+        arr[i3 + 1] = init[i3 + 1]! + (target[i3 + 1]! - init[i3 + 1]!) * p + wave
+        arr[i3 + 2] = init[i3 + 2]! + (target[i3 + 2]! - init[i3 + 2]!) * p
       }
       posAttr.needsUpdate = true
 

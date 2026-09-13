@@ -28,7 +28,7 @@ export function useAdminDashboardFilters(
 
       const activeSubs = suscripciones.filter((s) => s.cliente_id === c.id && s.estado === 'activa')
       const hasPlan = activeSubs.length > 0
-      const primaryPlan = hasPlan ? activeSubs[0].plan_slug : 'none'
+      const primaryPlan = hasPlan ? activeSubs[0]!.plan_slug : 'none'
 
       if (planFilter === 'sin_plan') return !hasPlan
       if (planFilter === 'basico') return primaryPlan.includes('basico')

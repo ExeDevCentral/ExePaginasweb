@@ -42,7 +42,7 @@ export const CyberTypewriter: React.FC<CyberTypewriterProps> = ({
         }
 
         if (index < text.length) {
-          const randomGlyph = CYBER_GLYPHS[Math.floor(Math.random() * CYBER_GLYPHS.length)]
+          const randomGlyph = CYBER_GLYPHS[Math.floor(Math.random() * CYBER_GLYPHS.length)]!
           setGlitchChar(randomGlyph)
           setDisplayText(text.slice(0, index + 1))
           index++

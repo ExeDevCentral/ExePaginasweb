@@ -19,7 +19,7 @@ export const StoreTelemetryHUD: React.FC = () => {
     const interval = setInterval(() => {
       setLatency(Math.floor(12 + Math.random() * 6))
       if (Math.random() > 0.7) {
-        setActivePoP(pops[Math.floor(Math.random() * pops.length)])
+        setActivePoP(pops[Math.floor(Math.random() * pops.length)]!)
       }
     }, 4000)
     return () => clearInterval(interval)

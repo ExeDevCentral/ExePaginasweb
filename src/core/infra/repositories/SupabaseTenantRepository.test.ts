@@ -137,7 +137,7 @@ describe('SupabaseTenantRepository', () => {
       expect(mockQueryBuilder.eq).toHaveBeenCalledWith('dueno_id', 'owner-456')
       expect(mockQueryBuilder.order).toHaveBeenCalledWith('created_at', { ascending: false })
       expect(result).toHaveLength(1)
-      expect(result[0].id).toBe('tenant-123')
+      expect(result[0]!.id).toBe('tenant-123')
     })
   })
 

@@ -269,7 +269,7 @@ function ConfettiBurst({ trigger, intensity = 24 }: { trigger: number; intensity
         return {
           x: Math.cos(angle) * distance,
           y: Math.sin(angle) * distance - 30,
-          color: colors[i % colors.length],
+          color: colors[i % colors.length]!,
           size: 3 + Math.random() * 7,
           rotation: Math.random() * 720,
           shape: i % 3,

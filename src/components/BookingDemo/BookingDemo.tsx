@@ -57,7 +57,7 @@ export default function BookingDemo() {
       return
     }
 
-    const currentLog = AUTOMATION_LOGS[logIndex]
+    const currentLog = AUTOMATION_LOGS[logIndex]!
     const timeout = setTimeout(
       () => {
         setLogs((prev) => [...prev, currentLog.text])

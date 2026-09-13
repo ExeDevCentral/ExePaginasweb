@@ -73,7 +73,7 @@ export default function ProductCard({
   }
 
   const match = /(\d+)/.exec(product.price)
-  const basePriceNum = match ? Number.parseInt(match[1], 10) : 300
+  const basePriceNum = match ? Number.parseInt(match[1]!, 10) : 300
   const estimatedTotal = basePriceNum * sucursales + (includeWhatsAppBot ? 80 : 0)
 
   return (

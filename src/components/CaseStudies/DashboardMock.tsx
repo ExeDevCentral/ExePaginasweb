@@ -220,7 +220,7 @@ const DashboardMock = () => {
               {t('dashboard.rendimiento_semanal')}
             </span>
             <span className="text-[10px] font-mono text-muted-foreground">
-              {hoveredBar !== null ? CHART_DATA[activeTab][hoveredBar].val : 'Semana Actual'}
+              {hoveredBar !== null ? CHART_DATA[activeTab]![hoveredBar]!.val : 'Semana Actual'}
             </span>
           </div>
 

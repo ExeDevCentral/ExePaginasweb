@@ -15,7 +15,7 @@ export function AdminClientesTable({ clientes, suscripciones }: AdminClientesTab
       const activeSubs = suscripciones.filter(
         (s) => s.cliente_id === clienteId && s.estado === 'activa'
       )
-      return activeSubs.length > 0 ? activeSubs[0].plan_slug : null
+      return activeSubs.length > 0 ? activeSubs[0]!.plan_slug : null
     },
     [suscripciones]
   )

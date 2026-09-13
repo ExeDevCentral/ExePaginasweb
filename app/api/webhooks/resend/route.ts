@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Webhook } from 'svix'
+import { z } from 'zod'
 import { sendEmail } from '@/lib/email/send'
 import { inboundEmailNotification, contactAutoReply } from '@/lib/email/templates.js'
 import { detectLanguage } from '../../contact/route'
@@ -9,26 +10,33 @@ import {
   markWebhookProcessed,
 } from '@/lib/server/webhookEvents'
 
-type ResendAddress = string | string[] | { email?: string }
-type ResendEventData = {
-  id?: string
-  email_id?: string
-  to?: ResendAddress
-  recipient?: ResendAddress
-  from?: ResendAddress
-  subject?: string
-  text?: string
-  html?: string
-  bounce_type?: string
-  message?: string
-  click?: { link?: string }
-}
-type ResendEvent = {
-  type?: string
-  event?: string
-  data?: ResendEventData
-  [key: string]: unknown
-}
+const ResendAddressSchema = z.union([
+  z.string(),
+  z.array(z.string()),
+  z.object({ email: z.string().optional() }).catchall(z.unknown()),
+])
+const ResendEventDataSchema = z.object({
+  id: z.string().optional(),
+  email_id: z.string().optional(),
+  to: ResendAddressSchema.optional(),
+  recipient: ResendAddressSchema.optional(),
+  from: ResendAddressSchema.optional(),
+  subject: z.string().optional(),
+  text: z.string().optional(),
+  html: z.string().optional(),
+  bounce_type: z.string().optional(),
+  message: z.string().optional(),
+  click: z.object({ link: z.string().optional() }).optional(),
+})
+const ResendEventSchema = z.object({
+  type: z.string().optional(),
+  event: z.string().optional(),
+  data: ResendEventDataSchema.optional(),
+})
+
+type ResendAddress = z.infer<typeof ResendAddressSchema>
+type ResendEvent = z.infer<typeof ResendEventSchema>
+type ResendEventData = z.infer<typeof ResendEventDataSchema>
 
 function addressText(value: ResendAddress | undefined, fallback: string): string {
   if (typeof value === 'string') return value
@@ -72,11 +80,12 @@ export async function POST(req: NextRequest) {
   let event: ResendEvent
   try {
     const wh = new Webhook(secret)
-    event = wh.verify(payloadString, {
+    const verified = wh.verify(payloadString, {
       'svix-id': svixId,
       'svix-timestamp': svixTimestamp,
       'svix-signature': svixSignature,
-    }) as ResendEvent
+    })
+    event = ResendEventSchema.parse(verified)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown signature error'
     console.error('[resend-webhook] Signature verification failed:', message)

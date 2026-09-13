@@ -31,7 +31,7 @@ describe('WorkspaceOnboardingService.createWorkspace', () => {
     await service.createWorkspace({ form: form(), cliente: CLIENTE, planTier: 'avanzado' })
 
     expect(repo.all).toHaveLength(1)
-    const tenant = repo.all[0]
+    const tenant = repo.all[0]!
     expect(tenant.nombre).toBe('Acme Corp')
     expect(tenant.estado).toBe('activo')
     expect(tenant.trial_ends_at).toBeNull()
@@ -41,7 +41,7 @@ describe('WorkspaceOnboardingService.createWorkspace', () => {
     const now = new Date('2026-01-01T00:00:00Z')
     await service.createWorkspace({ form: form(), cliente: CLIENTE, planTier: 'none', now })
 
-    const tenant = repo.all[0]
+    const tenant = repo.all[0]!
     expect(tenant.estado).toBe('trial')
     expect(new Date(tenant.trial_ends_at!).getTime()).toBe(now.getTime() + 14 * 24 * 60 * 60 * 1000)
   })

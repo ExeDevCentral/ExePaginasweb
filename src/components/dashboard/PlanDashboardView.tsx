@@ -284,10 +284,10 @@ export default function PlanDashboardView({
                   {t('dashboard.ultimo_pago', 'Último pago')}
                 </p>
                 <p className="text-2xl font-bold font-mono text-white">
-                  ${pagos[0].monto} {pagos[0].moneda}
+                  ${pagos[0]!.monto} {pagos[0]!.moneda}
                 </p>
                 <p className="text-xs text-emerald-400 font-semibold uppercase tracking-wide">
-                  ● {pagos[0].estado}
+                  ● {pagos[0]!.estado}
                 </p>
               </div>
             )}

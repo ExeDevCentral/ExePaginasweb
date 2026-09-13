@@ -60,13 +60,13 @@ export class InMemoryTenantRepository implements ITenantRepository {
   async update(id: string, data: Partial<Tenant>): Promise<Tenant> {
     const idx = this.tenants.findIndex((t) => t.id === id)
     if (idx === -1) throw new Error('tenant not found')
-    this.tenants[idx] = {
-      ...this.tenants[idx],
+    this.tenants[idx]! = {
+      ...this.tenants[idx]!,
       ...data,
       id,
       updated_at: new Date().toISOString(),
     }
-    return this.tenants[idx]
+    return this.tenants[idx]!
   }
 
   async getTenantStats(): Promise<TenantStats> {

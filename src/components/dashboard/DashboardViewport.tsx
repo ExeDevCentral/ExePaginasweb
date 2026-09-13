@@ -28,7 +28,7 @@ import InvoicesPanel from '../invoices/InvoicesPanel'
 import SettingsPanel from './SettingsPanel'
 
 interface DashboardViewportProps {
-  userEmail?: string | null
+  userEmail?: string | null | undefined
   role: string | null
   isPreview: boolean
   isAdmin: boolean

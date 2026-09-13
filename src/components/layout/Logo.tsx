@@ -20,7 +20,7 @@ export const Logo: React.FC<LogoProps> = ({
   textClassName = 'text-white text-base font-black tracking-widest uppercase font-mono',
   animated = false,
 }) => {
-  const sizeStyle = size ? { width: `${size}px`, height: `${size}px` } : undefined
+  const sizeStyle = { width: `${size}px`, height: `${size}px` }
 
   const renderLogoImage = () => {
     const commonImgStyle: React.CSSProperties = {
@@ -90,8 +90,12 @@ export const Logo: React.FC<LogoProps> = ({
     <motion.div
       style={sizeStyle}
       className={`relative inline-flex items-center justify-center shrink-0 group ${className}`}
-      animate={animated ? { y: [0, -3, 0] } : undefined}
-      transition={animated ? { repeat: Infinity, duration: 3.5, ease: 'easeInOut' } : undefined}
+      {...(animated
+        ? {
+            animate: { y: [0, -3, 0] },
+            transition: { repeat: Infinity, duration: 3.5, ease: 'easeInOut' as const },
+          }
+        : {})}
     >
       {animated && (
         <div className="absolute inset-0 bg-yellow-400/20 blur-xl rounded-full animate-pulse pointer-events-none" />

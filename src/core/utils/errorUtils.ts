@@ -3,10 +3,10 @@
  */
 
 export interface SupabaseErrorLike {
-  message?: string
-  code?: string
-  details?: string
-  hint?: string
+  message?: string | undefined
+  code?: string | undefined
+  details?: string | undefined
+  hint?: string | undefined
 }
 
 /**

@@ -29,8 +29,8 @@ export interface DashboardDataDeps {
 
 export interface DashboardUser {
   id: string
-  email?: string
-  full_name?: string | null
+  email?: string | undefined
+  full_name?: string | null | undefined
 }
 
 export async function fetchDashboardData(
@@ -66,7 +66,7 @@ export async function fetchDashboardData(
 
 export interface UseDashboardOptions {
   enabled?: boolean
-  userId?: string
+  userId?: string | undefined
   clienteRepo?: IClienteRepository
   subRepo?: ISubscriptionRepository
   pagoRepo?: IClientePagoRepository
@@ -106,7 +106,10 @@ export function useDashboard(options: UseDashboardOptions = {}) {
         {
           id: user?.id ?? '',
           email: user?.email,
-          full_name: user?.user_metadata?.full_name ?? null,
+          full_name:
+            typeof user?.user_metadata?.full_name === 'string'
+              ? user.user_metadata.full_name
+              : null,
         }
       )
     },

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import type { LucideIcon } from 'lucide-react'
 
 type LaserBeamSide = 'top' | 'right' | 'bottom' | 'left'
 
@@ -54,7 +55,7 @@ function LaserBeam({ side }: { side: LaserBeamSide }) {
 }
 
 export type EnhancedFeatureCardProps = {
-  icon: React.ComponentType<{ className?: string }>
+  icon: LucideIcon
   title: string
   description: string
   colorClass: string

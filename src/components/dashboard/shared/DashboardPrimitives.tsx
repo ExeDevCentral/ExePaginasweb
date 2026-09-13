@@ -467,7 +467,7 @@ export function QuickActionsHub({
   userEmail: _userEmail,
 }: Readonly<{
   onOpenTicket: () => void
-  userEmail?: string
+  userEmail?: string | undefined
 }>) {
   const { t } = useTranslation()
 

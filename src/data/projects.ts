@@ -9,9 +9,9 @@ export interface Project {
   tags: string[]
   metrics: { label: string; value: string }[]
   highlights: string[]
-  link?: string
-  status?: 'live' | 'demo' | 'building'
-  statusLabel?: string
+  link?: string | undefined
+  status?: 'live' | 'demo' | 'building' | undefined
+  statusLabel?: string | undefined
 }
 
 // Proyectos reales desplegados en producción Vercel

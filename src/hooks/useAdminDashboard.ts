@@ -22,7 +22,7 @@ export type {
 
 export interface UseAdminDashboardOptions {
   enabled?: boolean
-  userId?: string
+  userId?: string | undefined
   repo?: IAdminDashboardRepository
 }
 

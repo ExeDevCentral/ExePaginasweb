@@ -1,12 +1,12 @@
 import type { CSSProperties } from 'react'
 
 export interface OgCardProps {
-  eyebrow?: string
+  eyebrow?: string | undefined
   title: string
-  description?: string
-  tags?: string[]
-  status?: 'live' | 'demo' | 'building'
-  statusLabel?: string
+  description?: string | undefined
+  tags?: string[] | undefined
+  status?: 'live' | 'demo' | 'building' | undefined
+  statusLabel?: string | undefined
 }
 
 const clamp = (text: string, max: number) =>

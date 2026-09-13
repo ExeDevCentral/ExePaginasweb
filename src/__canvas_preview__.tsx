@@ -1,6 +1,6 @@
 export interface CanvasPreviewProps {
-  component?: string
-  mode?: 'single' | 'multi' | 'app'
+  component?: string | undefined
+  mode?: 'single' | 'multi' | 'app' | undefined
 }
 
 export default function CanvasPreview(_props?: CanvasPreviewProps) {

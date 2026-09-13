@@ -39,7 +39,10 @@ export function AuthSessionProvider({ children }: { readonly children: ReactNode
 
     const syncSentryUser = (currentSession: Session | null) => {
       if (currentSession?.user) {
-        Sentry.setUser({ id: currentSession.user.id, email: currentSession.user.email })
+        Sentry.setUser({
+          id: currentSession.user.id,
+          ...(currentSession.user.email !== undefined ? { email: currentSession.user.email } : {}),
+        })
       } else {
         Sentry.setUser(null)
       }

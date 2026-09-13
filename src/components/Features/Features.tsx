@@ -93,7 +93,7 @@ const Features = () => {
                   className="group/stat rounded-2xl bg-muted p-6 border border-border hover:border-border transition-all"
                 >
                   <p className="text-sm text-muted-foreground font-medium mb-2">
-                    {t(`features.dashboard_${stat.tKey as string}`)}
+                    {t(`features.dashboard_${stat.tKey}`)}
                   </p>
                   <div className="flex items-end gap-3">
                     <p className={`text-4xl font-black ${stat.color}`}>{stat.value}</p>
@@ -112,7 +112,7 @@ const Features = () => {
           {features.map((feature, i) => (
             <EnhancedFeatureCard
               key={feature.title}
-              icon={feature.icon as unknown as React.ComponentType<{ className?: string }>}
+              icon={feature.icon}
               title={t(`features.card_${i + 1}_titulo`, feature.title)}
               description={t(`features.card_${i + 1}_desc`, feature.description)}
               colorClass={feature.color}

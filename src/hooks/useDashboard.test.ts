@@ -18,7 +18,7 @@ function buildDeps() {
 describe('fetchDashboardData', () => {
   it('retorna cliente nulo y listas vacias si el usuario no tiene email', async () => {
     const deps = buildDeps()
-    const result = await fetchDashboardData(deps, { id: 'x', email: undefined })
+    const result = await fetchDashboardData(deps, { id: 'x' })
     expect(result).toEqual({ cliente: null, suscripciones: [], pagos: [] })
   })
 

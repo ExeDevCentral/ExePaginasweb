@@ -9,7 +9,7 @@ import ThemeToggle from '../layout/ThemeToggle'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 
 interface DashboardHeaderProps {
-  userEmail?: string | null
+  userEmail?: string | null | undefined
   onLogout: () => void
 }
 
@@ -29,8 +29,9 @@ export function DashboardHeader({ userEmail, onLogout }: Readonly<DashboardHeade
             navigate('/')
           }}
           className="flex items-center gap-2.5 cursor-pointer group"
-          whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
-          whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
+          {...(!prefersReducedMotion
+            ? { whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 } }
+            : {})}
         >
           {/* Dashdark X Style Logo Icon */}
           <div className="flex items-center gap-1">

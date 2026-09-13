@@ -1,7 +1,7 @@
-import { Sparkles, ShieldCheck, Zap, Code2, Cpu } from 'lucide-react'
+import { Sparkles, ShieldCheck, Zap, Code2, Cpu, type LucideIcon } from 'lucide-react'
 
 export interface FeatureData {
-  icon: React.ComponentType<{ className?: string }>
+  icon: LucideIcon
   title: string
   description: string
   color: string
@@ -43,7 +43,7 @@ export const FEATURES_LIST: FeatureData[] = [
       'Implementamos Inteligencia Artificial cuando realmente aporta un retorno operativo o comercial claro.',
     color: 'from-accent-cyan to-accent-magenta',
   },
-] as const
+]
 
 export const DASHBOARD_STATS = [
   { tKey: 'consultas', value: '42', color: 'text-accent-cyan', trend: '+12%' },

@@ -22,9 +22,9 @@ import { firstPasswordRuleFailed } from '../../core/domain/auth/passwordPolicy'
 
 interface SettingsPanelProps {
   cliente: Cliente | null
-  userEmail?: string | null
-  role?: string | null
-  currentTenant?: { id: string; nombre: string; slug?: string } | null
+  userEmail?: string | null | undefined
+  role?: string | null | undefined
+  currentTenant?: { id: string; nombre: string; slug?: string } | null | undefined
   onLogout: () => void
   onRefreshProfile?: () => void
   authRepo?: IAuthRepository

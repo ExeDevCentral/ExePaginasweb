@@ -1,4 +1,9 @@
 /**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
+/**
  * DataLoader Pattern — Query Batching
  *
  * Problema: Si 100 componentes piden el mismo tenant, hace 100 queries

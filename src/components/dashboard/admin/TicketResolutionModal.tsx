@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { motion } from 'framer-motion'
 import type { AdminTicket } from '../../../hooks/useAdminDashboard'
 

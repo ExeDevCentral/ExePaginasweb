@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 export type ServiceTipo = 'plan' | 'addon' | 'professional' | 'one_time'
 export type ServiceIntervalo = 'one_time' | 'monthly' | 'quarterly' | 'annual'
 

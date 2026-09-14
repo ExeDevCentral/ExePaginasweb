@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { describe, it, expect, beforeEach } from 'vitest'
 import { ReservationService } from './reservationService'
 import { InMemoryReservationRepository } from '../../infra/memory/InMemoryReservationRepository'

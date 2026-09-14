@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { SupabaseServiceCatalogRepository } from '../core/infra/repositories/SupabaseServiceCatalogRepository'
 import { SupabaseTenantServiceRepository } from '../core/infra/repositories/SupabaseTenantServiceRepository'

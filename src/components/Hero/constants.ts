@@ -1,4 +1,9 @@
 /**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
+/**
  * Configuración de partículas para el Hero - Sensación premium
  * Velocidad suave y constante con movimiento orgánico
  */

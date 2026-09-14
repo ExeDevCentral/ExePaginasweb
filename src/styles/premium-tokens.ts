@@ -1,4 +1,9 @@
 /**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
+/**
  * Dashdark X Luxury SaaS Enterprise UI Tokens
  * Direct 1:1 match with the Dashdark X dark-navy aesthetic, cards, metrics & charts.
  */

@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- supabase/migrations/028_add_performance_indexes.sql
 -- Optimizaciones de índices para queries críticas
 

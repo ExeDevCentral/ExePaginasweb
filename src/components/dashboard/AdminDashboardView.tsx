@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { Users, CreditCard, Ticket, Search, Filter } from 'lucide-react'

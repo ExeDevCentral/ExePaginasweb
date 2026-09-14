@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { DayOfWeek, WeeklySchedule, ScheduleException, WorkShift } from './types'
 
 export function getEffectiveShifts(

@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 009_orders_api.sql: Add mp_order_id for Orders API compatibility
 
 ALTER TABLE public.pagos

@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { describe, it, expect } from 'vitest'
 import { Monitor } from 'lucide-react'
 import type { PlanData } from './PlanCard'

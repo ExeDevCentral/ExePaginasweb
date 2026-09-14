@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { Suscripcion } from '@/core/domain/entities/Suscripcion'
 import { ISubscriptionRepository } from '@/core/domain/repositories/ISubscriptionRepository'
 

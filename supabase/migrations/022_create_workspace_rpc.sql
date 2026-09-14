@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 022_create_workspace_rpc.sql
 -- SECURITY DEFINER RPC to create a tenant workspace in one transaction.
 -- Bypasses RLS so it works even when clientes row doesn't exist yet

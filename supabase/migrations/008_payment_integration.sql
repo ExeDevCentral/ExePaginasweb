@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 008_payment_integration.sql: PayPal columns + tipo_proyecto for pagos
 
 ALTER TABLE public.pagos

@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 011_fix_tickets_and_notifications.sql
 -- Arregla el sistema de tickets para que:
 --   1. is_admin() use auth.email() en lugar de auth.jwt() que puede estar vacío en OAuth

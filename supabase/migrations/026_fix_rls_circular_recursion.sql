@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- Fix RLS circular recursion between tenants, work_members, and work_groups
 -- All cross-table subqueries replaced with SECURITY DEFINER user_belongs_to_tenant()
 

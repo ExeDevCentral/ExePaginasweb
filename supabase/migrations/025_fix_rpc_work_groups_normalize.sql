@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 025_fix_rpc_work_groups_normalize.sql
 -- Fix "cannot call jsonb_to_recordset on a non-array" — normalize
 -- p_work_groups to handle both JSON string and JSON array from supabase-js

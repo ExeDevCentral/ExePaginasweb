@@ -1,4 +1,9 @@
 /**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
+/**
  * URL canónica del sitio. En localhost o desarrollo local usa siempre window.location.origin.
  * En producción (Vercel) usa NEXT_PUBLIC_SITE_URL o window.location.origin para la callback de OAuth.
  */

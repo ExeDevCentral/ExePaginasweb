@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 004_tickets.sql: Soporte al cliente (Tickets) y Notificaciones in-app
 
 -- 1. Tabla de Tickets de Soporte

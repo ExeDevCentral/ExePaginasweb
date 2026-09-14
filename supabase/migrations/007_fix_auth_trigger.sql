@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 007_fix_auth_trigger.sql: Reemplazar el trigger handle_new_user para resolver conflicto de IDs y claves foráneas en Google OAuth / PKCE
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()

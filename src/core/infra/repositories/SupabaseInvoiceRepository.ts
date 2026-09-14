@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { supabase } from '../supabase/client'
 import { Invoice } from '../../domain/entities/Invoice'
 import { IInvoiceRepository } from '../../domain/repositories/IInvoiceRepository'

@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { NextRequest, NextResponse } from 'next/server'
 import { isSupabaseAdminConfigured, supabaseAdmin as db } from '@/lib/supabase/admin'
 import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'

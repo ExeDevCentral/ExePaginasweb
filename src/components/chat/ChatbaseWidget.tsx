@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { useEffect } from 'react'
 
 const CHATBOT_ID = 'TGRKNv4moe3sA5IMOc4jV'

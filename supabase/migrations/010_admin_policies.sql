@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 010_admin_policies.sql: Habilitar acceso de lectura y gestión global a los administradores
 
 -- 1. Helper function para verificar si el usuario es administrador

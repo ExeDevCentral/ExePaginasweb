@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { describe, it, expect, vi } from 'vitest'
 
 describe('📱 SUITE DE VERIFICACIÓN RESPONSIVE: PC, Tablets y Celulares', () => {

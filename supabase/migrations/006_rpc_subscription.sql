@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 006_rpc_subscription.sql: Función RPC para actualizar suscripciones de forma atómica
 
 -- Esta función cancela de manera segura cualquier suscripción activa anterior e inserta la nueva

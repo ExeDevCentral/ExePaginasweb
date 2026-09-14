@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 014_admin_roles.sql: Sistema de roles escalable (reemplaza emails hardcodeados)
 -- Migración: ejecutar en orden después de 013_leads.sql
 

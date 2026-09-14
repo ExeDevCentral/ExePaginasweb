@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { describe, it, expect, beforeEach } from 'vitest'
 import { WorkspaceOnboardingService } from './WorkspaceOnboardingService'
 import { InMemoryTenantRepository } from '../../infra/repositories/fakes/InMemoryTenantRepository'

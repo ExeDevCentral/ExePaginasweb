@@ -1,6 +1,7 @@
 {
   "name": "web-automation-cli",
   "version": "1.0.0",
+  "license": "MIT",
   "description": "AI-powered web development automation CLI",
   "main": "dist/index.js",
   "bin": {

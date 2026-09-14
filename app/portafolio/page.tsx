@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import SiteHeader from '@/components/layout/SiteHeader'
 import type { Metadata } from 'next'
 import PortfolioSection from '@/components/Portfolio/PortfolioSection'
@@ -10,5 +15,12 @@ export const metadata: Metadata = {
 }
 
 export default function PortafolioPage() {
-  return <><SiteHeader /><main className="pt-16"><PortfolioSection /></main></>
+  return (
+    <>
+      <SiteHeader />
+      <main className="pt-16">
+        <PortfolioSection />
+      </main>
+    </>
+  )
 }

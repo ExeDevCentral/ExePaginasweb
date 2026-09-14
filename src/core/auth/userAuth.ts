@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { useEffect, useState, useCallback } from 'react'
 import { supabase } from '../infra/supabase/client'
 import { getAuthRedirectUrl } from './siteUrl'

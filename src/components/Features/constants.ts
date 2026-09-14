@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { Sparkles, ShieldCheck, Zap, Code2, Cpu, type LucideIcon } from 'lucide-react'
 
 export interface FeatureData {

@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 003_planes_subscriptions.sql: Catálogo de planes y suscripciones de clientes
 
 -- 1. Tabla de Catálogo de Planes

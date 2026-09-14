@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { useTheme } from '../../core/theme/ThemeContext'
 import { MorphIcon } from 'morphicons/react'
 import { Sun, Moon } from 'lucide'

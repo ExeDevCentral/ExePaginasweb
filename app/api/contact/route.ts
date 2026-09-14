@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
 import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'

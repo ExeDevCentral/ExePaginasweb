@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { useQuery } from '@tanstack/react-query'
 import { SupabaseSLAContractRepository } from '../core/infra/repositories/SupabaseSLAContractRepository'
 import { isValidUUID } from '../core/utils/uuid'

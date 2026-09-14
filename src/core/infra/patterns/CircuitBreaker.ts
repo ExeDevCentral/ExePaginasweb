@@ -1,4 +1,9 @@
 /**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
+/**
  * Circuit Breaker Pattern — Resilencia para llamadas a servicios externos
  *
  * Estados:

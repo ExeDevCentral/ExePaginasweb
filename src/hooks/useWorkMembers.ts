@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { SupabaseWorkMemberRepository } from '../core/infra/repositories/SupabaseWorkMemberRepository'
 import type { WorkMember } from '../core/domain/entities/WorkMember'

@@ -1,4 +1,9 @@
 /**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
+/**
  * apply-migration.mjs
  * Ejecuta una migración SQL contra Supabase usando la API REST (service_role key).
  * No necesita la DB password, solo el service role key del .env

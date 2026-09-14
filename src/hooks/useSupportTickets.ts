@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { useCallback, useEffect, useState } from 'react'
 import type { Cliente } from '../core/domain/entities/Cliente'
 import type { Notificacion, Ticket } from '../core/domain/entities/Ticket'

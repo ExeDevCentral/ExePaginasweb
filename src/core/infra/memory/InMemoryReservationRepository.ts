@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { IReservationRepository } from '../../domain/reservations/reservationRepository.interface'
 import { ExistingReservation } from '../../domain/reservations/types'
 

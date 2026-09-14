@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 
 import { Command } from 'commander'
 import { createProject } from './commands/create-project'

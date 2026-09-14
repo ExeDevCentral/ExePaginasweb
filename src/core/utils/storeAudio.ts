@@ -1,4 +1,9 @@
 /**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
+/**
  * Generador de micro-sonidos sintetizados en tiempo real mediante Web Audio API.
  * No requiere archivos de audio externos y es ultra liviano.
  */

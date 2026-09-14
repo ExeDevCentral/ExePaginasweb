@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 015_fix_tickets_policy.sql: Unifica SELECT de tickets para cliente propio + admin
 -- Reemplaza la policy de 004_tickets.sql que solo permitía cliente_id = auth.uid()
 

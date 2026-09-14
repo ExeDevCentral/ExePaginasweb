@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 'use client'
 
 import dynamic from 'next/dynamic'
@@ -9,7 +14,9 @@ import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription
 import PortfolioSection from '@/components/Portfolio/PortfolioSection'
 import ContactSection from '@/components/landing/ContactSection'
 
-const Footer = dynamic(() => import('@/components/layout/Footer'), { loading: () => <div className="h-20" /> })
+const Footer = dynamic(() => import('@/components/layout/Footer'), {
+  loading: () => <div className="h-20" />,
+})
 
 export default function HomePage() {
   const { scrollYProgress } = useScroll()

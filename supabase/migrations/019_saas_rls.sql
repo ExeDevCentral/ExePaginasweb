@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 019_saas_rls.sql: Row Level Security policies for SaaS tables
 -- SECURITY: Every table is locked down by default.
 -- Only tenant owners, admins, and assigned members can access their data.

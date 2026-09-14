@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 export type PlanTier = 'basico' | 'avanzado' | 'premium' | 'none'
 
 /** IDs de la tienda (/tienda) — misma fuente que StorePage */

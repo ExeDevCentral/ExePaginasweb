@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 000_clientes.sql: Catálogo de clientes con integración Supabase Auth / Google OAuth
 
 -- 1. Función genérica para actualizar el campo updated_at automáticamente

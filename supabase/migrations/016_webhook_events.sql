@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 CREATE TABLE IF NOT EXISTS webhook_events (
   id bigint primary key generated always as identity,
   event_type text not null,

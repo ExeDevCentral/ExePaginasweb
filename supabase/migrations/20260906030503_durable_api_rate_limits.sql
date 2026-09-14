@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 028_durable_api_rate_limits.sql
 -- Atomic, server-only rate limiting for horizontally scaled deployments.
 

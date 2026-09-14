@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 012_add_missing_ticket_columns.sql
 -- Agrega columnas faltantes a la tabla tickets que no se crearon en producción debido a que la tabla ya existía.
 

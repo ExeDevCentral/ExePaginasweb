@@ -1,4 +1,9 @@
 /**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
+/**
  * IDs de secciones para navegación
  */
 export const SECTION_IDS = ['home', 'products', 'features', 'contact'] as const

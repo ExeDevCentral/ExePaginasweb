@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { RefreshCw, AlertTriangle } from 'lucide-react'
 

@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 023_fix_rpc_use_full_name.sql
 -- Fix create_workspace RPC: remote clientes table has 'full_name' not 'nombre'
 -- + normalize p_work_groups to handle both JSON string and JSON array input

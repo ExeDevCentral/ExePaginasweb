@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { useEffect, useState } from 'react'
 import { Wallet, Mail, Loader2 } from 'lucide-react'
 import { MorphIcon } from 'morphicons/react'

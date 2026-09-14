@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 export type TicketEstado = 'abierto' | 'en_progreso' | 'resuelto' | 'cerrado'
 export type TicketPrioridad = 'baja' | 'normal' | 'alta' | 'urgente'
 

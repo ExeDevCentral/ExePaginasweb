@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import dynamic from 'next/dynamic'
 import type { Metadata } from 'next'
 import SiteHeader from '@/components/layout/SiteHeader'
@@ -9,14 +14,22 @@ export const metadata: Metadata = {
   alternates: { canonical: '/soluciones' },
 }
 
-const Products = dynamic(() => import('@/components/Products/Products'), { loading: () => <PageLoading /> })
-const DemoZone = dynamic(() => import('@/components/DemoZone/DemoZone'), { loading: () => <PageLoading /> })
+const Products = dynamic(() => import('@/components/Products/Products'), {
+  loading: () => <PageLoading />,
+})
+const DemoZone = dynamic(() => import('@/components/DemoZone/DemoZone'), {
+  loading: () => <PageLoading />,
+})
 const ContactSection = dynamic(() => import('@/components/landing/ContactSection'), {
   loading: () => <div className="h-40" />,
 })
 
 function PageLoading() {
-  return <div className="flex min-h-screen items-center justify-center text-cyan-300">Cargando soluciones...</div>
+  return (
+    <div className="flex min-h-screen items-center justify-center text-cyan-300">
+      Cargando soluciones...
+    </div>
+  )
 }
 
 export default function SolucionesPage() {

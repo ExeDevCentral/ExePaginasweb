@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { supabase } from '../supabase/client'
 import { AuditLogEntry, AuditAction } from '../../domain/entities/AuditLog'
 import { IAuditLogRepository } from '../../domain/repositories/IAuditLogRepository'

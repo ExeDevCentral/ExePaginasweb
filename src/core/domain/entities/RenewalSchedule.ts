@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 export type RenewalEstado = 'pendiente' | 'procesando' | 'completada' | 'fallida' | 'cancelada'
 
 export interface RenewalSchedule {

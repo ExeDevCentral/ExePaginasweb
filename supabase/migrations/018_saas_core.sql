@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 018_saas_core.sql: Core SaaS schema — Tenants, Work Groups, SLA, Invoices, Audit
 -- This migration transforms the project from a marketing site with checkout
 -- into a real multi-tenant SaaS platform.

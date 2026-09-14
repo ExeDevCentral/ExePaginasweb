@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { describe, it, expect } from 'vitest'
 import { fetchDashboardData, type DashboardDataDeps } from './useDashboard'
 import { InMemoryClienteRepository } from '../core/infra/repositories/fakes/InMemoryClienteRepository'

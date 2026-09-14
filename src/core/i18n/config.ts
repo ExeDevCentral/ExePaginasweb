@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import es from './locales/es.json'

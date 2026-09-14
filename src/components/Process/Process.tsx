@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import { motion, useScroll } from 'framer-motion'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'

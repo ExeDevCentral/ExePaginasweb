@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 027_harden_webhooks_and_billing.sql
 -- Durable webhook claims, payment idempotency and privileged RPC boundaries.
 

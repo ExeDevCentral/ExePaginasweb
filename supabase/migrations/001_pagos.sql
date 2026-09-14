@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 001_pagos.sql: Tabla de registros de cobros e integración con pasarela de pagos
 
 -- 1. Creación de la tabla pagos

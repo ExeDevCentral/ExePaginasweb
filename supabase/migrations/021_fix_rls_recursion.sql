@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 021_fix_rls_recursion.sql: Fix infinite recursion in work_members RLS
 -- The "Work members read own tenant" policy queried work_members inside its
 -- USING clause, creating infinite recursion. This broke ALL operations that

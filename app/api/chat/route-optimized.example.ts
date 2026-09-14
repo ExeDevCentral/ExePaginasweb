@@ -1,4 +1,9 @@
 /**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
+/**
  * app/api/chat/route.ts
  *
  * Streaming chat con LLM + Circuit Breaker + Rate Limiting

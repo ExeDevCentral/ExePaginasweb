@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import dynamic from 'next/dynamic'
 import type { Metadata } from 'next'
 import SiteHeader from '@/components/layout/SiteHeader'
@@ -9,8 +14,21 @@ export const metadata: Metadata = {
   alternates: { canonical: '/precios' },
 }
 
-const Pricing = dynamic(() => import('@/components/Pricing/Pricing'), { loading: () => <div className="flex min-h-screen items-center justify-center text-cyan-300">Cargando planes...</div> })
+const Pricing = dynamic(() => import('@/components/Pricing/Pricing'), {
+  loading: () => (
+    <div className="flex min-h-screen items-center justify-center text-cyan-300">
+      Cargando planes...
+    </div>
+  ),
+})
 
 export default function PreciosPage() {
-  return <><SiteHeader /><main className="pt-16"><Pricing /></main></>
+  return (
+    <>
+      <SiteHeader />
+      <main className="pt-16">
+        <Pricing />
+      </main>
+    </>
+  )
 }

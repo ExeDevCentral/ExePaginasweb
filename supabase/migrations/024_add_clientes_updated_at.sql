@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 -- 024_add_clientes_updated_at.sql
 -- Remote clientes table was missing updated_at column.
 -- The set_updated_at trigger exists but the column didn't,

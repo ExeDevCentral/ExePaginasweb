@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 import type { Metadata } from 'next'
 import Dashboard from '@/views/Dashboard'
 import { AuthGuard } from '@/core/auth/AuthGuard'

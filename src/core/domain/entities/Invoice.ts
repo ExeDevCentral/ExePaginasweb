@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 export type InvoiceTipo = 'A' | 'B' | 'C' | 'ticket' | 'proforma'
 export type InvoiceEstado = 'borrador' | 'emitida' | 'pagada' | 'vencida' | 'cancelada'
 

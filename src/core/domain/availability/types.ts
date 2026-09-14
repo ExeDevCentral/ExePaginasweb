@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6 // 0 = Domingo, 1 = Lunes
 
 export interface WorkShift {

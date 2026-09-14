@@ -1,3 +1,8 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
 export const OFFICIAL_WHATSAPP_NUMBER = '5493416874786'
 export const DISPLAY_WHATSAPP_NUMBER = '+54 9 341 6874786'
 

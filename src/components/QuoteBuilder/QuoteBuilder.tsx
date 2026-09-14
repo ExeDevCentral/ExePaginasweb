@@ -438,7 +438,7 @@ function PlanCard({
           <motion.div
             animate={{ scale: [1, 1.05, 1], opacity: [1, 0.8, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-xs font-bold text-foreground uppercase tracking-wider shadow-lg z-10"
+            className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 btn-soft-violet border border-violet-soft rounded-full text-xs font-bold text-accent-violet uppercase tracking-wider shadow-sm z-10"
           >
             {t('cotizador.mas_elegido')}
           </motion.div>
@@ -510,7 +510,7 @@ function PlanCard({
           onClick={onSelect}
           className={`w-full py-4 rounded-xl text-center font-bold transition-all duration-300 relative overflow-hidden group/btn ${
             plan.popular
-              ? 'bg-gradient-to-r from-accent-cyan via-accent-cyan/90 to-accent-magenta text-foreground shadow-lg shadow-accent-cyan/20 hover:shadow-xl hover:shadow-accent-magenta/20 bg-[length:200%_200%] animate-gradient-shift'
+              ? 'btn-gradient-cta text-foreground shadow-lg shadow-accent-cyan/20 hover:shadow-xl hover:shadow-accent-magenta/20'
               : 'border border-border bg-card/50 text-foreground hover:border-accent-cyan/40 hover:bg-card/80'
           }`}
         >
@@ -797,7 +797,7 @@ export default function QuoteBuilder() {
                     }
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                       i <= step
-                        ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground shadow-lg shadow-accent-cyan/20 bg-[length:200%_200%] animate-gradient-shift'
+                        ? 'btn-soft-violet text-accent-violet'
                         : 'bg-muted text-muted-foreground'
                     }`}
                   >
@@ -868,7 +868,7 @@ export default function QuoteBuilder() {
                     <button
                       disabled={!selectedType}
                       onClick={() => changeStep(1)}
-                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold disabled:opacity-30 transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
+                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-4 rounded-2xl btn-gradient-cta text-foreground font-bold disabled:opacity-30 transition-all hover:shadow-lg hover:shadow-accent-magenta/20"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
                       <span className="relative z-10">{t('cotizador.siguiente')}</span>{' '}
@@ -975,7 +975,7 @@ export default function QuoteBuilder() {
                     </button>
                     <button
                       onClick={() => changeStep(2)}
-                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
+                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-3 rounded-2xl btn-gradient-cta text-foreground font-bold transition-all hover:shadow-lg hover:shadow-accent-magenta/20"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
                       <span className="relative z-10">{t('cotizador.siguiente')}</span>{' '}
@@ -1031,7 +1031,7 @@ export default function QuoteBuilder() {
                     </button>
                     <button
                       onClick={() => changeStep(3)}
-                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
+                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-3 rounded-2xl btn-gradient-cta text-foreground font-bold transition-all hover:shadow-lg hover:shadow-accent-magenta/20"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
                       <span className="relative z-10">{t('cotizador.ver_cotizacion')}</span>{' '}
@@ -1169,7 +1169,7 @@ export default function QuoteBuilder() {
                           <button
                             onClick={handleSendQuote}
                             disabled={sending || !name || !email}
-                            className="relative overflow-hidden w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-cyan to-accent-magenta text-foreground font-bold disabled:opacity-30 transition-all bg-[length:200%_200%] animate-gradient-shift hover:shadow-lg hover:shadow-accent-magenta/20"
+                            className="relative overflow-hidden w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl btn-gradient-cta text-foreground font-bold disabled:opacity-30 transition-all hover:shadow-lg hover:shadow-accent-magenta/20"
                           >
                             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
                             {sending ? (

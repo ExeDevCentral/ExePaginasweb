@@ -32,9 +32,7 @@ const Process = () => {
           </p>
           <h2 className="font-montserrat text-4xl sm:text-5xl lg:text-6xl font-black mb-6">
             {t('process.heading_1')}{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">
-              {t('process.heading_2')}
-            </span>
+            <span className="text-accent-violet">{t('process.heading_2')}</span>
           </h2>
         </motion.div>
 

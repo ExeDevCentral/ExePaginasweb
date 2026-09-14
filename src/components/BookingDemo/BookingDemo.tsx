@@ -299,7 +299,7 @@ export default function BookingDemo() {
                       </button>
                       <button
                         type="submit"
-                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground font-bold text-sm hover:opacity-95 transition-all flex-1 shadow-lg"
+                        className="px-6 py-3 rounded-xl btn-gradient-cta text-foreground font-bold text-sm hover:opacity-95 transition-all flex-1 shadow-lg"
                       >
                         {t('bookingdemo.confirmar')}
                       </button>

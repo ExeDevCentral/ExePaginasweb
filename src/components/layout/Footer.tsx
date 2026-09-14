@@ -5,7 +5,7 @@ import { Code2, Github, Instagram, Linkedin, Mail, Zap, Shield, Search, Send } f
 import Link from 'next/link'
 
 import Logo from './Logo'
-import CraftedBySignature from '../shared/CraftedBySignature'
+import { MatrixScramble } from '@/components/Effects/MatrixText'
 
 const TECH_ITEMS = [
   { icon: Zap, labelKey: 'card_1_titulo', color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
@@ -172,7 +172,7 @@ const Footer = () => {
         </div>
 
         {/* Trust & Live Infrastructure Telemetry Bar */}
-        <div className="mb-12 p-6 rounded-2xl bg-slate-900/60 dark:bg-[#0b0c16]/80 border border-slate-200/20 dark:border-cyan-500/20 backdrop-blur-xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="mb-12 p-6 rounded-2xl bg-slate-900 dark:bg-[#0b0c16]/80 border border-slate-500/30 dark:border-cyan-500/20 backdrop-blur-xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3.5">
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -207,24 +207,61 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-foreground/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-primary-secondary text-xs">
-            © 2025 ExeSistemasWEB. {t('footer.derechos')}
-          </p>
-          <p className="text-primary-secondary text-xs flex items-center gap-1.5">
-            Built &amp; maintained by{' '}
+        {/* ── Bottom bar ─────────────────────────────────────────────────────── */}
+        <div className="pt-6 border-t border-foreground/10">
+          {/* Matrix scan-line accent */}
+          <div className="relative mb-5 h-px w-full overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-cyan/40 to-transparent animate-[gradientX_4s_ease_infinite]" />
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+            {/* Copyright */}
+            <p className="text-primary-secondary text-[11px] font-mono tracking-wide">
+              © 2025 <span className="text-foreground/80 font-semibold">ExeSistemasWEB</span>
+              {'. '}
+              {t('footer.derechos')}
+            </p>
+
+            {/* Crafted signature — inline, no extra top margin */}
             <a
-              href="https://github.com/ExeDevCentral"
+              href="https://exepaginasweb.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-cyan hover:text-foreground transition-colors font-medium"
+              title="Diseño & Desarrollo por Exepaginasweb.com"
+              className="group relative inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent-cyan/30 dark:border-accent-cyan/20 bg-accent-cyan/[0.06] dark:bg-white/[0.03] hover:border-accent-cyan/60 dark:hover:border-accent-cyan/50 hover:bg-accent-cyan/10 dark:hover:bg-accent-cyan/[0.07] transition-all duration-500 hover:shadow-[0_6px_24px_-6px_rgba(14,165,233,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/50"
             >
-              ExeDevCentral
-            </a>
-          </p>
-        </div>
+              {/* Shimmer sweep */}
+              <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 bg-[linear-gradient(110deg,transparent_30%,rgba(15,23,42,0.10)_50%,transparent_70%)] dark:bg-[linear-gradient(110deg,transparent_30%,rgba(255,255,255,0.14)_50%,transparent_70%)] bg-[length:200%_100%] animate-signature-shimmer transition-opacity duration-500" />
 
-        <CraftedBySignature variant="dark" showBar className="mt-10" />
+              <span className="relative z-10 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600 dark:text-slate-400/80">
+                Crafted with precision by
+              </span>
+              <span className="relative z-10 text-[10px] uppercase tracking-[0.18em]">
+                <MatrixScramble
+                  text="Exepaginasweb.com"
+                  palette="matrix"
+                  letterClassName="font-black"
+                />
+              </span>
+              {/* Tiny matrix blink cursor */}
+              <span className="relative z-10 inline-block w-[5px] h-[11px] bg-accent-cyan/70 animate-[glowPulse_1.2s_ease-in-out_infinite] rounded-[1px]" />
+            </a>
+
+            {/* Built by */}
+            <p className="text-primary-secondary text-[11px] font-mono tracking-wide flex items-center gap-1.5">
+              <span className="text-slate-500">Built &amp; maintained by</span>
+              <a
+                href="https://github.com/ExeDevCentral"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-bold text-accent-cyan hover:text-foreground transition-colors"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981] inline-block" />
+                ExeDevCentral
+              </a>
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
   )

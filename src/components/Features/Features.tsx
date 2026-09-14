@@ -56,9 +56,7 @@ const Features = () => {
           </p>
           <h2 className="mb-6 font-montserrat text-4xl font-black tracking-tight sm:text-6xl text-foreground">
             {t('features.heading_1')}{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-magenta">
-              {t('features.heading_2')}
-            </span>
+            <span className="text-accent-violet">{t('features.heading_2')}</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             {t('features.descripcion')}
@@ -135,7 +133,7 @@ const Features = () => {
               const el = document.getElementById('contact')
               if (el) el.scrollIntoView({ behavior: 'smooth' })
             }}
-            className="px-8 py-4 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-primary-bg font-semibold text-lg hover:shadow-lg hover:shadow-accent-cyan/25 transition-all duration-300"
+            className="px-8 py-4 btn-gradient-cta rounded-full font-semibold text-lg hover:shadow-lg hover:shadow-accent-cyan/25 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

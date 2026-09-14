@@ -157,7 +157,7 @@ export default function BookingModal({ isOpen, onClose, service }: BookingModalP
 
                         <button
                           onClick={() => setStep('calendar')}
-                          className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-accent-cyan to-blue-500 text-white font-bold text-sm hover:brightness-110 transition-all"
+                          className="w-full py-3.5 rounded-2xl btn-gradient-cta text-white font-bold text-sm hover:brightness-110 transition-all"
                         >
                           Elegir fecha y horario
                         </button>
@@ -259,7 +259,7 @@ export default function BookingModal({ isOpen, onClose, service }: BookingModalP
                           onClick={() => setStep('form')}
                           className={`w-full py-3.5 rounded-2xl font-bold text-sm transition-all ${
                             canProceedCalendar
-                              ? 'bg-gradient-to-r from-accent-cyan to-blue-500 text-white hover:brightness-110'
+                              ? 'btn-gradient-cta text-white hover:brightness-110'
                               : 'bg-white/5 text-white/20 cursor-not-allowed'
                           }`}
                         >
@@ -328,7 +328,7 @@ export default function BookingModal({ isOpen, onClose, service }: BookingModalP
                           onClick={handleSubmit}
                           className={`w-full py-3.5 rounded-2xl font-bold text-sm transition-all ${
                             canSubmitForm
-                              ? 'bg-gradient-to-r from-accent-cyan to-blue-500 text-white hover:brightness-110'
+                              ? 'btn-gradient-cta text-white hover:brightness-110'
                               : 'bg-white/5 text-white/20 cursor-not-allowed'
                           }`}
                         >

@@ -151,7 +151,7 @@ export default function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                   transition={{ delay: 2 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="block w-full py-4 px-6 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 rounded-2xl text-white font-semibold text-center transition-all shadow-lg shadow-purple-500/50"
+                  className="block w-full py-4 px-6 btn-gradient-cta rounded-2xl text-white font-semibold text-center transition-all shadow-lg shadow-purple-500/50"
                 >
                   Contactar 🚀
                 </motion.a>

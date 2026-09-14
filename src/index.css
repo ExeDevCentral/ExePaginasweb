@@ -182,6 +182,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-cyan: var(--accent-cyan);
+  --color-accent-violet: var(--accent-violet);
   --color-accent-magenta: var(--accent-magenta);
   --color-accent-yellow: var(--accent-yellow);
   --color-destructive: var(--destructive);
@@ -237,12 +238,21 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Colores corporativos amables a la vista humana */
-  --accent-cyan: #0284c7;
-  --accent-magenta: #6366f1;
+  --accent-cyan: #0369a1;
+  --accent-violet: #6d28d9;
+  --accent-magenta: #4f46e5;
   --accent-yellow: #b45309;
   --primary-bg: #e8eef5;
   --primary-text: #0f172a;
   --primary-secondary: #475569;
+
+  /* Paleta Matrix por tema: verde profundo en claro (legible), neón en dark */
+  --matrix-pal-0: #166534;
+  --matrix-pal-1: #15803d;
+  --matrix-pal-2: #065f46;
+  --matrix-pal-3: #0f766e;
+  --matrix-pal-4: #155e75;
+  --matrix-pal-5: #047857;
 }
 
 .dark {
@@ -268,11 +278,20 @@
   --ring: #0ea5e9;
 
   --accent-cyan: #0ea5e9;
+  --accent-violet: #8b5cf6;
   --accent-magenta: #6366f1;
   --accent-yellow: #ffd700;
   --primary-bg: #050508;
   --primary-text: #f8fafc;
   --primary-secondary: #8899aa;
+
+  /* Paleta Matrix por tema: neón clásico en dark */
+  --matrix-pal-0: #00ff41;
+  --matrix-pal-1: #00c832;
+  --matrix-pal-2: #008f20;
+  --matrix-pal-3: #0ea5e9;
+  --matrix-pal-4: #38bdf8;
+  --matrix-pal-5: #00e5a0;
 }
 
 @layer base {
@@ -376,6 +395,21 @@
     to {
       opacity: 0;
       transform: scale(0.99);
+    }
+  }
+
+  @keyframes glitchScan {
+    0% {
+      top: 5%;
+      opacity: 1;
+    }
+    60% {
+      top: 85%;
+      opacity: 0.8;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
     }
   }
 
@@ -677,6 +711,70 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* =============================================
+   PALETA DE ACENTO — violeta derivado (#8b5cf6)
+   El gradiente vibrante va SOLO en CTAs (+ hero/hover).
+   Lo secundario (tabs, filtros, badges, pills) usa esta clase
+   calma: fondo violeta ~10-14%, texto violeta saturado, bordes al 20-30%.
+   ============================================= */
+.btn-soft-violet {
+  background: color-mix(in oklab, var(--accent-violet) 14%, transparent);
+  color: var(--accent-violet);
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
+}
+.btn-soft-violet:hover {
+  background: color-mix(in oklab, var(--accent-violet) 22%, transparent);
+  box-shadow: 0 0 18px color-mix(in oklab, var(--accent-violet) 22%, transparent);
+}
+
+/* Borde violeta sutil (20-30%) para cards, badges y separadores */
+.border-violet-soft {
+  border-color: color-mix(in oklab, var(--accent-violet) 28%, transparent);
+}
+
+/* =============================================
+   BOTONES CTA — Gradiente premium cian → violeta → magenta
+   Aplicar SOLO a botones/links de acción principal (CTAs).
+   ============================================= */
+.btn-gradient-cta {
+  color: #0f172a;
+  background-image: linear-gradient(100deg, #06b6d4, #8b5cf6 50%, #d946ef);
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+  animation: gradientShift 8s ease infinite;
+  box-shadow:
+    0 4px 20px rgba(139, 92, 246, 0.28),
+    0 0 16px rgba(6, 182, 212, 0.15);
+  transition:
+    background-position 0.4s ease,
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
+}
+.btn-gradient-cta:hover {
+  background-position: 100% 50%;
+  filter: saturate(1.1) brightness(1.06);
+  box-shadow:
+    0 6px 28px rgba(217, 70, 239, 0.35),
+    0 0 24px rgba(139, 92, 246, 0.25);
+}
+.btn-gradient-cta:disabled {
+  filter: grayscale(0.8) opacity(0.45);
+  box-shadow: none;
+}
+
+/* Texto con el mismo gradiente (títulos/acentos, evitar en párrafos) */
+.text-gradient-cta {
+  background-image: linear-gradient(100deg, #06b6d4, #8b5cf6 50%, #d946ef);
+  background-size: 150% 150%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientShift 10s ease infinite;
 }
 
 /* =============================================

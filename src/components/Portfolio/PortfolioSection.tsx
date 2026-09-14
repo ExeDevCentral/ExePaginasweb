@@ -20,7 +20,9 @@ import {
 import { scrollToElement } from '../shared/scrollUtils'
 import { INITIAL_PROJECTS, type Project } from '@/data/projects'
 
-export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({ featuredOnly = false }) => {
+export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
+  featuredOnly = false,
+}) => {
   const { t } = useTranslation()
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
@@ -96,7 +98,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({ feature
               href="https://cv-xi-swart.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 text-white font-extrabold text-xs sm:text-sm hover:scale-105 transition-all shadow-xl shadow-purple-500/25 border border-white/25 cursor-pointer"
+              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl btn-gradient-cta text-white font-extrabold text-xs sm:text-sm hover:scale-105 transition-all shadow-xl shadow-purple-500/25 border border-white/25 cursor-pointer"
             >
               <FileText className="w-4 h-4 text-cyan-200 group-hover:rotate-12 transition-transform" />
               <span>📄 {t('portfolio.ver_cv', 'Ver Mi CV Profesional Completo')}</span>
@@ -109,27 +111,29 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({ feature
         {hasProjects ? (
           <>
             {/* Botones de Categorías */}
-            {!featuredOnly && <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
-              {CATEGORIES.map((cat) => {
-                const Icon = cat.icon
-                const isActive = activeCategory === cat.id
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
-                      isActive
-                        ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-white shadow-lg shadow-accent-cyan/20 scale-105'
-                        : 'bg-card/70 hover:bg-card border border-border text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{cat.label}</span>
-                  </button>
-                )
-              })}
-            </div>}
+            {!featuredOnly && (
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
+                {CATEGORIES.map((cat) => {
+                  const Icon = cat.icon
+                  const isActive = activeCategory === cat.id
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
+                        isActive
+                          ? 'btn-soft-violet border border-violet-soft text-accent-violet shadow-sm scale-105'
+                          : 'bg-card/70 hover:bg-card border border-border text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span>{cat.label}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
 
             {/* Grid interactivo de proyectos */}
             <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -382,7 +386,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({ feature
                     e.preventDefault()
                     scrollToElement('#contact')
                   }}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-accent-cyan/20 hover:scale-105 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl btn-gradient-cta text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-accent-cyan/20 hover:scale-105 transition-all cursor-pointer"
                 >
                   <Zap className="w-4 h-4 text-slate-950" />
                   <span>{t('portfolio.cta_cotizar', 'Cotizar Mi Proyecto a Medida')}</span>

@@ -18,16 +18,14 @@ export default function GlobalError({
   return (
     <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-8">
       <div className="max-w-md text-center">
-        <h1 className="text-3xl font-extrabold mb-4 bg-gradient-to-r from-accent-cyan to-accent-magenta bg-clip-text text-transparent">
-          Algo salió mal
-        </h1>
+        <h1 className="text-3xl font-extrabold mb-4 text-accent-violet">Algo salió mal</h1>
         <p className="text-muted-foreground mb-6">
           Ocurrió un error inesperado al cargar esta sección.
         </p>
         <button
           type="button"
           onClick={() => reset()}
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-magenta text-primary-bg font-bold shadow-lg hover:opacity-90 transition-all hover:scale-105 active:scale-95"
+          className="px-6 py-3 rounded-xl btn-gradient-cta font-bold shadow-lg hover:opacity-90 transition-all hover:scale-105 active:scale-95"
         >
           Reintentar
         </button>

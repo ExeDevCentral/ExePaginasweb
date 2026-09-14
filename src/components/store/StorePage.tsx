@@ -256,7 +256,7 @@ export default function StorePage() {
                 onClick={() => handleCurrencyChange('ARS')}
                 className={`px-4 py-2 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
                   currency === 'ARS'
-                    ? 'bg-gradient-to-r from-accent-cyan to-cyan-500 text-black shadow-lg shadow-accent-cyan/25'
+                    ? 'btn-soft-violet text-accent-violet'
                     : 'text-foreground/70 hover:text-foreground'
                 }`}
               >
@@ -268,7 +268,7 @@ export default function StorePage() {
                 onClick={() => handleCurrencyChange('USD')}
                 className={`px-4 py-2 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
                   currency === 'USD'
-                    ? 'bg-gradient-to-r from-accent-magenta to-pink-500 text-white shadow-lg shadow-accent-magenta/25'
+                    ? 'btn-soft-violet text-accent-violet'
                     : 'text-foreground/70 hover:text-foreground'
                 }`}
               >
@@ -296,7 +296,7 @@ export default function StorePage() {
                 onClick={() => handleBillingChange(true)}
                 className={`px-4 py-2 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
                   isAnnual
-                    ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-500/25'
+                    ? 'btn-soft-violet text-accent-violet'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -380,7 +380,7 @@ export default function StorePage() {
                 }}
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
-                className="w-full sm:w-auto flex-1 py-4 px-6 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 hover:from-indigo-400 hover:to-pink-400 rounded-2xl text-white font-bold text-sm text-center transition-all shadow-xl shadow-purple-500/40 cursor-pointer"
+                className="w-full sm:w-auto flex-1 py-4 px-6 btn-gradient-cta rounded-2xl text-white font-bold text-sm text-center transition-all shadow-xl shadow-purple-500/40 cursor-pointer"
               >
                 Acceder al Portal de Clientes
               </motion.a>

@@ -69,7 +69,7 @@ const PROJECTS: ProjectConfig[] = [
     iconBg: 'bg-pink-100 dark:bg-pink-500/20 border-pink-300 dark:border-pink-500/40',
     iconColor: 'text-pink-600 dark:text-pink-400',
     buttonClasses:
-      'bg-gradient-to-r from-pink-500 to-rose-600 text-white font-black shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 hover:scale-[1.02]',
+      'bg-gradient-to-r from-pink-500 to-rose-600 text-slate-900 font-black shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 hover:scale-[1.02]',
   },
   {
     id: 'neofit',
@@ -91,7 +91,7 @@ const PROJECTS: ProjectConfig[] = [
     iconBg: 'bg-emerald-100 dark:bg-emerald-500/20 border-emerald-300 dark:border-emerald-500/40',
     iconColor: 'text-emerald-600 dark:text-emerald-400',
     buttonClasses:
-      'bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02]',
+      'bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-900 font-black shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02]',
   },
   {
     id: 'aura',
@@ -113,7 +113,7 @@ const PROJECTS: ProjectConfig[] = [
     iconBg: 'bg-sky-100 dark:bg-sky-500/20 border-sky-300 dark:border-sky-500/40',
     iconColor: 'text-sky-600 dark:text-sky-400',
     buttonClasses:
-      'bg-gradient-to-r from-sky-500 to-blue-600 text-white font-black shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02]',
+      'bg-gradient-to-r from-sky-500 to-blue-600 text-slate-900 font-black shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02]',
   },
   {
     id: 'coffee',
@@ -135,7 +135,7 @@ const PROJECTS: ProjectConfig[] = [
     iconBg: 'bg-amber-100 dark:bg-amber-500/20 border-amber-300 dark:border-amber-500/40',
     iconColor: 'text-amber-600 dark:text-amber-400',
     buttonClasses:
-      'bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-[1.02]',
+      'bg-gradient-to-r from-amber-500 to-orange-600 text-slate-900 font-black shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-[1.02]',
   },
 ]
 

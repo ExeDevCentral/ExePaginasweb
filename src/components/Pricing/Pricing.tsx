@@ -109,7 +109,7 @@ const PricingCard = ({
       {plan.popular && (
         <>
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-magenta to-transparent" />
-          <div className="absolute -top-3.5 sm:-top-4 left-1/2 -translate-x-1/2 px-3.5 sm:px-4 py-0.5 sm:py-1 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full text-[10px] sm:text-xs font-black text-white uppercase tracking-wider shadow-lg">
+          <div className="absolute -top-3.5 sm:-top-4 left-1/2 -translate-x-1/2 px-3.5 sm:px-4 py-0.5 sm:py-1 btn-soft-violet border border-violet-soft rounded-full text-[10px] sm:text-xs font-black text-accent-violet uppercase tracking-wider shadow-sm">
             {t('pricing.popular')}
           </div>
         </>
@@ -171,7 +171,7 @@ const PricingCard = ({
           onClick={handleRequestClick}
           className={`block w-full py-4 rounded-xl text-center font-bold transition-all duration-300 relative overflow-hidden group cursor-pointer ${
             plan.popular
-              ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-foreground hover:opacity-90 hover:shadow-lg hover:shadow-accent-magenta/20'
+              ? 'btn-gradient-cta text-foreground hover:opacity-90 hover:shadow-lg hover:shadow-accent-magenta/20'
               : 'border border-border bg-card/50 text-foreground hover:border-accent-cyan/30 hover:bg-card hover:shadow-sm hover:shadow-accent-cyan/5'
           }`}
         >

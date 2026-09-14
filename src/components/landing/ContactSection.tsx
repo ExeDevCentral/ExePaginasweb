@@ -131,7 +131,7 @@ const ContactSection = () => {
             <br />
             <span className="relative inline-block">
               {t('contact.heading_2')}
-              <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-full" />
+              <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-gradient-to-r from-accent-cyan via-accent-violet to-accent-magenta rounded-full" />
             </span>
           </h2>
         </motion.div>
@@ -270,7 +270,7 @@ const ContactSection = () => {
                 <motion.button
                   type="submit"
                   disabled={status === 'sending'}
-                  className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-600 hover:opacity-95 px-6 py-4 font-extrabold text-white text-sm uppercase tracking-wider transition-all shadow-xl shadow-purple-500/25 border border-white/20 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                  className="group flex w-full items-center justify-center gap-3 rounded-2xl btn-gradient-cta hover:shadow-xl hover:shadow-purple-500/40 px-6 py-4 font-extrabold text-sm uppercase tracking-wider transition-all shadow-xl shadow-purple-500/25 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >

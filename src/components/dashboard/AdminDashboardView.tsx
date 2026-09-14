@@ -94,7 +94,7 @@ export default function AdminDashboardView({
               onClick={() => handleTabChange('clientes')}
               className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
                 activeTab === 'clientes'
-                  ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-primary-bg shadow-lg'
+                  ? 'btn-soft-violet text-accent-violet'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               }`}
             >
@@ -105,7 +105,7 @@ export default function AdminDashboardView({
               onClick={() => handleTabChange('tickets')}
               className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
                 activeTab === 'tickets'
-                  ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-primary-bg shadow-lg'
+                  ? 'btn-soft-violet text-accent-violet'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               }`}
             >
@@ -119,7 +119,7 @@ export default function AdminDashboardView({
               onClick={() => handleTabChange('pagos')}
               className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
                 activeTab === 'pagos'
-                  ? 'bg-gradient-to-r from-accent-cyan to-accent-magenta text-primary-bg shadow-lg'
+                  ? 'btn-soft-violet text-accent-violet'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               }`}
             >

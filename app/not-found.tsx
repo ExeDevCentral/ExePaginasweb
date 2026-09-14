@@ -51,8 +51,8 @@ const floatingShapes = [
     x: '50%',
     y: '15%',
     delay: 0.8,
-    color: 'bg-white/5',
-    border: 'border-white/10',
+    color: 'bg-accent-cyan/10 dark:bg-white/5',
+    border: 'border-accent-cyan/15 dark:border-white/10',
     duration: 7.5,
     shape: 'rounded-full',
   },
@@ -124,7 +124,7 @@ export default function NotFound() {
 
         <Link
           href="/"
-          className="mt-10 inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-accent-cyan to-accent-magenta rounded-2xl text-primary-bg font-bold hover:opacity-90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-accent-cyan/20"
+          className="mt-10 inline-flex items-center gap-2 px-8 py-4 btn-gradient-cta rounded-2xl font-bold hover:opacity-90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-accent-cyan/20"
         >
           <Home className="w-4 h-4" />
           {t('notfound.boton', 'Volver al inicio')}

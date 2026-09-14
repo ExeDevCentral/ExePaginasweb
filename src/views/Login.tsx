@@ -369,7 +369,7 @@ export default function Login() {
                   onClick={() => switchMode('login')}
                   className={`py-2.5 text-xs font-extrabold rounded-xl transition-all relative z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                     mode === 'login'
-                      ? 'text-white bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 shadow-[0_4px_20px_rgba(168,85,247,0.35)]'
+                      ? 'text-accent-violet btn-soft-violet'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
@@ -382,7 +382,7 @@ export default function Login() {
                   onClick={() => switchMode('register')}
                   className={`py-2.5 text-xs font-extrabold rounded-xl transition-all relative z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                     mode === 'register'
-                      ? 'text-white bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 shadow-[0_4px_20px_rgba(168,85,247,0.35)]'
+                      ? 'text-accent-violet btn-soft-violet'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
@@ -714,7 +714,7 @@ export default function Login() {
                       whileTap={{ scale: 0.98 }}
                       disabled={loading}
                       onClick={validateAndSubmit}
-                      className="w-full py-3.5 rounded-2xl font-black text-xs sm:text-sm tracking-wide uppercase transition-all bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 hover:from-cyan-400 hover:to-pink-400 text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.6)] disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="w-full py-3.5 rounded-2xl font-black text-xs sm:text-sm tracking-wide uppercase transition-all btn-gradient-cta text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.6)] disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {loading ? (
                         <div className="flex items-center justify-center gap-2">

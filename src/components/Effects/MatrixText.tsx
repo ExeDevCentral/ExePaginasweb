@@ -42,14 +42,15 @@ export const MATRIX_CHARS_SHORT = '01アイウエオ#$%&?'
 
 // ── Color palettes ────────────────────────────────────────────────────────────
 
-/** Green matrix + cyan/teal — for domains, signatures, decorative text */
+/** Green matrix + cyan/teal — for domains, signatures, decorative text.
+ *  Valores via CSS var para adaptarse al tema (neón en dark, verde profundo en light). */
 export const MATRIX_PALETTE = [
-  '#00ff41', // matrix green bright
-  '#00c832', // matrix green mid
-  '#008f20', // matrix green dark
-  '#0ea5e9', // accent-cyan
-  '#38bdf8', // sky-300
-  '#00e5a0', // cyan-green blend
+  'var(--matrix-pal-0)', // matrix green bright
+  'var(--matrix-pal-1)', // matrix green mid
+  'var(--matrix-pal-2)', // matrix green dark
+  'var(--matrix-pal-3)', // accent-cyan
+  'var(--matrix-pal-4)', // sky-300
+  'var(--matrix-pal-5)', // cyan-green blend
 ] as const
 
 /** Multi-color scramble set — for wordmarks and interactive headings */
@@ -130,12 +131,14 @@ function MatrixLetter({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const glowMix = (pct: number) => `color-mix(in srgb, ${color} ${pct}%, transparent)`
+
   const shadow =
     glow === 'strong' && glowing
-      ? `0 0 8px ${color}99, 0 0 14px ${color}33`
+      ? `0 0 8px ${glowMix(60)}, 0 0 14px ${glowMix(20)}`
       : glowing
-        ? `0 0 6px ${color}77`
-        : `0 0 4px ${color}33`
+        ? `0 0 6px ${glowMix(47)}`
+        : `0 0 4px ${glowMix(20)}`
 
   return (
     <span

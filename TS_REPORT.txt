@@ -1,0 +1,209 @@
+================================================================================
+EXEPAGINASWEB - REPORTE DE AVANCE TYPESCRIPT
+================================================================================
+Fecha: 2026-09-14
+Rama: main (b797587 - incluye matrix-effects + todas las correcciones)
+Estado: COMPLETADO
+
+================================================================================
+1. RESUMEN EJECUTIVO
+================================================================================
+
+El repositorio ExePaginasweb ha sido completado con todas las correcciones
+de TypeScript necesarias. El branch main ya contiene todo el trabajo aplicado.
+
+Estado final:
+- typecheck: 0 errores
+- lint: 0 errores (26 warnings preexistentes)
+- tests: 153 passing / 27 test files
+- build: pasa (verificado por CI)
+
+================================================================================
+2. HALLAZGOS DE SOURCERY - TODOS RESUELTOS
+================================================================================
+
+Encontrados y verificados en el branch de feature original (antes de merge a main):
+
+  [x] Finding #1: Provider fallback cascade
+      Archivo: app/api/chat/route.ts:211-253
+      Solucion: pickFirstProvider lee primer chunk de red, cascada ante 402/429/error
+
+  [x] Finding #2: createTicketTool persistencia
+      Archivo: app/api/chat/route.ts:152-169
+      Solucion: Persistencia a tabla leads implementada
+
+  [x] Finding #3: convertToModelMessages try/catch
+      Archivo: app/api/chat/route.ts:369-374
+      Solucion: Wrapped en try/catch -> 400 en lugar de 500
+
+  [x] Finding #4: CSP connect-src
+      Archivo: next.config.mjs:7-9
+      Solucion: NEXT_PUBLIC_POSTHOG_HOST incluido en connect-src
+
+  [x] Finding #5: WCAG contraste scanner
+      Archivo: tests/e2e/a11y.spec.ts:21-106
+      Solucion: collectContrastFailures reemplaza axe disabled color-contrast
+
+  [x] Finding #6: responseCacheRef
+      Archivo: src/components/chat/AIChatWidget.tsx:197-212
+      Solucion: responseCacheRef poblado en transicion a ready
+
+================================================================================
+3. VULNERABILIDADES - ESTADO
+================================================================================
+
+  [x] sharp CVE (GHSA-rgj7-g3m4-5g8c)
+      Version: 0.35.0 -> 0.35.4
+      Estado: CORREGIDO (PR #36, squash-merged a main)
+
+  [x] image-size (vía pptxgenjs)
+      Estado: Sin parche upstream disponible ("Patched versions: None")
+      Decicion: Riesgo aceptado, documentado
+
+================================================================================
+4. MATT POCKET / TOTAL TYPESCRIPT - MEJORAS APLICADAS
+================================================================================
+
+  [x] P1: app/api/webhooks/resend/route.ts
+      - Reemplazados tipos manuales por schemas Zod
+      - ResendAddressSchema, ResendEventDataSchema, ResendEventSchema
+      - type ResendEvent = z.infer<typeof ResendEventSchema>
+      - type ResendEventData = z.infer<typeof ResendEventDataSchema>
+      - Eliminado cast as ResendEvent
+
+  [x] P1: src/components/chat/ChatbaseWidget.tsx
+      - Eliminado window as any
+      - Interfaces tipadas: ChatbaseApi, ChatbaseWindow
+      - unknown[] en lugar de any
+
+  [x] P1: src/utils/lazyWithRetry.ts
+      - Eliminado ComponentType<any> -> ComponentType
+
+  [x] P2: src/hooks/useTenant.test.ts
+      - Eliminado as unknown as HookOptions
+      - Helpers asQueryHookOptions / asMutationHookOptions con validacion runtime
+      - Sin casteos as; uso de typeof narrowing
+
+  [x] P2: src/hooks/useDashboard.test.ts
+      - Eliminado as unknown as typeof deps.subRepo
+      - DashboardDataDeps satisface interfaz directamente
+      - Pagos[0]! con non-null assertion post-tieneLength
+
+================================================================================
+5. noUncheckedIndexedAccess + exactOptionalPropertyTypes
+================================================================================
+
+  [x] tsconfig.json: "noUncheckedIndexedAccess": true activado
+  [x] tsconfig.json: "exactOptionalPropertyTypes": true activado
+  [x] tsconfig.json: exclude incluye "**/*.example.ts", "**/*.example.tsx"
+
+  Errores resueltos por noUncheckedIndexedAccess: 128 errores en 25 archivos
+    - Efectos visuales 3D/canvas: 84 errores (CoffeePortal3D, DemoZone,
+      ThreeHeroScene, PremiumBackground, LoginBackground, DemoCard3DScene)
+    - Core domain: 6 (slotGenerator - refactorizado con narrowing real)
+    - Tests: 7 (WorkspaceOnboardingService, workspaceOnboarding, SupabaseTenant)
+    - Hooks: 4 (useFocusTrap, useDashboard.test, useTenant.test)
+    - Dashboard: 3 (PlanDashboardView, HeroCompare)
+    - Otros: 24 (single fixes con narrowing o ! justificado)
+
+  Metodologia:
+    - Para bucles con arrays de longitud garantizada: uso de non-null assertion (!)
+      justificado por verificacion previa de longitud (len > 0)
+    - Para funciones de parsing: refactorizado con narrowing real
+      (parseTime verifica parts.length antes de acceso)
+    - Para IntersectionObserver: entry?.isIntersecting ?? false
+
+================================================================================
+6. ARCHIVOS MODIFICADOS (COMPLETOS)
+================================================================================
+
+  33 archivos tocados (ya fusionados a main b797587):
+
+  Config:
+    tsconfig.json (noUncheckedIndexedAccess + exactOptionalPropertyTypes + exclude)
+
+  API Routes:
+    app/api/webhooks/resend/route.ts (Zod schemas)
+    app/api/paypal-webhook/route.ts (string | undefined fixes)
+
+  Chat Widgets:
+    src/components/chat/ChatbaseWidget.tsx (tipado de API)
+    src/components/chat/AIChatWidget.tsx (messages[i]!)
+
+  Effects (3D/Canvas):
+    src/components/Effects/CoffeePortal3D.tsx (21 fixes)
+    src/components/Effects/LoginBackground.tsx (15 fixes)
+    src/components/Effects/PremiumBackground.tsx (11 fixes)
+
+  DemoZone:
+    src/components/DemoZone/DemoZone.tsx (15 fixes)
+    src/components/DemoZone/DemoCard3DScene.tsx (9 fixes)
+
+  Hero:
+    src/components/Hero/ThreeHeroScene.tsx (13 fixes)
+    src/components/Hero/HeroCompare.tsx (2 fixes)
+    src/components/Hero/CyberTypewriter.tsx (1 fix)
+
+  Dashboard:
+    src/components/dashboard/PlanDashboardView.tsx (3 fixes)
+    src/components/dashboard/admin/AdminClientesTable.tsx (1 fix)
+    src/components/dashboard/admin/hooks/useAdminDashboardFilters.ts (1 fix)
+
+  Store:
+    src/components/store/StoreNexusBackground.tsx (5 fixes)
+    src/components/store/StoreTelemetryHUD.tsx (1 fix)
+
+  Components:
+    src/components/CaseStudies/DashboardMock.tsx (1 fix)
+    src/components/BookingDemo/BookingDemo.tsx (1 fix)
+    src/components/QuoteBuilder/QuoteBuilder.tsx (1 fix)
+    src/components/Products/ProductCard.tsx (1 fix)
+    src/components/Audit/AutomationAudit.tsx (4 fixes)
+
+  Core Domain:
+    src/core/domain/slots/slotGenerator.ts (6 fixes - narrowing real)
+    src/core/domain/financial/computeAdminStats.ts (1 fix)
+    src/core/domain/onboarding/WorkspaceOnboardingService.test.ts (5 fixes)
+    src/core/domain/onboarding/workspaceOnboarding.test.ts (1 fix)
+
+  Core Infra:
+    src/core/infra/repositories/fakes/InMemoryTenantRepository.ts (2 fixes)
+    src/core/infra/repositories/SupabaseTenantRepository.test.ts (1 fix)
+
+  Hooks:
+    src/hooks/useDashboard.test.ts (2 fixes)
+    src/hooks/useTenant.test.ts (69 lines - rewrite without as unknown as)
+    src/hooks/useFocusTrap.ts (3 fixes)
+
+  Utils:
+    src/utils/lazyWithRetry.ts (ComponentType<any> eliminado)
+
+================================================================================
+7. DEUDA DOCUMENTADA
+================================================================================
+
+  image-size vulnerability:
+    - Paquete: pptxgenjs dependencia -> image-size
+    - Sin patched version upstream disponible
+    - Riesgo: medio-bajo (no se expone en runtime del sitio web)
+    - Decicion: Aceptado, monitorear upstream
+
+  exactOptionalPropertyTypes:
+    - Nota: Este flag se mantiene activo en tsconfig.json
+    - La sesion de matrix-effects (b797587) ya resolvio todos los errores
+      asociados a este flag
+    - No se requiere trabajo adicional
+
+================================================================================
+8. VERIFICACIONES FINALES
+================================================================================
+
+  $ npm run typecheck  -> 0 errores
+  $ npm run lint       -> 0 errores, 26 warnings (preexistentes)
+  $ npm run test       -> 153 tests pasando (27 files)
+  $ npm run build      -> exito (verificado por CI)
+  $ playwright         -> tests pasando (verificado por CI)
+
+================================================================================
+FIN DEL REPORTE
+================================================================================

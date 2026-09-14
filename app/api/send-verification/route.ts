@@ -58,6 +58,8 @@ function hasInternalAuthorization(req: NextRequest): boolean {
   )
 }
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   if (!hasInternalAuthorization(req)) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })

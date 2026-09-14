@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { isSupabaseAdminConfigured, supabaseAdmin as supabase } from '@/lib/supabase/admin'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   if (!isSupabaseAdminConfigured()) {
     return NextResponse.json(

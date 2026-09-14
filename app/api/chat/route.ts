@@ -275,6 +275,8 @@ function buildStreamingResponse(winner: Winner): Response {
   })
 }
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   try {
     const limit = await checkRateLimit(`chat:${clientIp(req)}`, 60, 10)

@@ -203,6 +203,8 @@ async function verifyWebhookSignature(req: NextRequest, rawBody: string): Promis
   }
 }
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   if (!process.env.PAYPAL_WEBHOOK_ID) {
     console.error('[paypal-webhook] PAYPAL_WEBHOOK_ID not configured')

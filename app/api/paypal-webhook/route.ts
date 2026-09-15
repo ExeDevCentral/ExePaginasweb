@@ -5,172 +5,35 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { isSupabaseAdminConfigured, supabaseAdmin as db } from '@/lib/supabase/admin'
-import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'
-import { paymentConfirmation, paymentNotification } from '@/lib/email/templates.js'
+import {
+  PAYPAL_API_BASE,
+  capturePayPalOrder,
+  fetchPayPalOrder,
+  getPayPalAccessToken,
+  processPayPalCapture,
+  type PayPalCapturedOrder,
+} from '@/lib/server/paypal'
 import {
   claimWebhookEvent,
   markWebhookFailed,
   markWebhookProcessed,
 } from '@/lib/server/webhookEvents'
 
-const PAYPAL_API_BASE = process.env.PAYPAL_API_BASE || 'https://api-m.sandbox.paypal.com'
-
-type PayPalPlan = { id: string; slug: string; nombre: string }
-type PayPalCapture = {
+type PayPalCaptureEventResource = {
   id?: string
   status?: string
-  payer?: { email_address?: string; name?: { given_name?: string } }
-  purchase_units?: PayPalPurchaseUnit[]
-}
-type PayPalPurchaseUnit = {
-  custom_id?: string
-  description?: string
-  amount?: { value?: string; currency_code?: string }
-  payments?: { captures?: PayPalCapture[] }
-}
-type PayPalResource = {
-  id?: string
-  amount?: { value?: string }
+  amount?: { value?: string; total?: string; currency_code?: string }
   custom_id?: string
   payer?: { email_address?: string; name?: { given_name?: string } }
   supplementary_data?: { related_ids?: { order_id?: string } }
 }
+type PayPalOrderEventResource = {
+  id?: string
+}
 type PayPalWebhookBody = {
   id: string
   event_type: string
-  resource?: PayPalResource
-}
-
-async function getPayPalAccessToken(): Promise<string | null> {
-  const clientId = process.env.PAYPAL_CLIENT_ID
-  const clientSecret = process.env.PAYPAL_CLIENT_SECRET
-  if (!clientId || !clientSecret) return null
-
-  const base64 = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
-  const resp = await fetch(`${PAYPAL_API_BASE}/v1/oauth2/token`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${base64}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: 'grant_type=client_credentials',
-  })
-
-  if (!resp.ok) {
-    const err = await resp.text()
-    console.error('[paypal-webhook] OAuth token request failed:', resp.status, err)
-    return null
-  }
-
-  const data = (await resp.json()) as { access_token?: string }
-  if (!data.access_token) {
-    console.error('[paypal-webhook] OAuth response missing access_token')
-    return null
-  }
-
-  return data.access_token
-}
-
-async function getOrCreateCliente(email: string, fullName?: string): Promise<string | null> {
-  if (!db) return null
-
-  const { data: existentes } = await db
-    .from('clientes')
-    .select('id, nombre:full_name, email')
-    .eq('email', email)
-    .limit(1)
-
-  if (existentes?.[0]) return existentes[0].id
-
-  let id: string | null = null
-  try {
-    const { data: authUser } = await db.auth.admin.listUsers()
-    const match = authUser?.users?.find((u) => u.email?.toLowerCase() === email?.toLowerCase())
-    id = match?.id || null
-  } catch (e: unknown) {
-    console.warn(
-      '[paypal-webhook] No se pudo buscar en auth.users:',
-      e instanceof Error ? e.message : 'Unknown auth error'
-    )
-  }
-
-  if (!id) return null
-
-  const { data: nuevo } = await db
-    .from('clientes')
-    .insert({ id, email, full_name: fullName || null })
-    .select('id')
-    .single()
-
-  return nuevo?.id || id
-}
-
-async function getPlanBySlug(slug: string): Promise<PayPalPlan | null> {
-  if (!db) return null
-
-  const { data: planes } = await db
-    .from('planes')
-    .select('id, slug, nombre')
-    .eq('slug', slug)
-    .limit(1)
-
-  return (planes?.[0] as PayPalPlan | undefined) || null
-}
-
-async function getOrCreateTenant(
-  clienteId: string,
-  email: string,
-  plan: PayPalPlan | null
-): Promise<string | null> {
-  if (!db) return null
-
-  const { data: existentes } = await db
-    .from('tenants')
-    .select('id')
-    .eq('dueno_id', clienteId)
-    .limit(1)
-
-  if (existentes?.[0]) return existentes[0].id
-
-  const baseSlug = (email || 'cliente')
-    .split('@')[0]!
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-  const slug = `${baseSlug}-${clienteId.slice(0, 8)}`
-
-  const { data: tenant, error: tenantError } = await db
-    .from('tenants')
-    .insert({
-      slug,
-      nombre: baseSlug || 'Mi Empresa',
-      dueno_id: clienteId,
-      estado: 'activo',
-      plan_id: plan?.id || null,
-      settings: { source: 'paypal-webhook' },
-    })
-    .select('id')
-    .single()
-
-  if (tenantError) console.error('[paypal-webhook] Error creating tenant:', tenantError)
-  return tenant?.id || null
-}
-
-async function capturePayPalOrder(orderId: string, token: string): Promise<PayPalCapture | null> {
-  const resp = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}/capture`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  })
-
-  if (!resp.ok) {
-    const err = await resp.text()
-    console.error('[paypal-webhook] capture error:', resp.status, err)
-    return null
-  }
-
-  return (await resp.json()) as PayPalCapture
+  resource?: PayPalCaptureEventResource & PayPalOrderEventResource
 }
 
 async function verifyWebhookSignature(req: NextRequest, rawBody: string): Promise<boolean> {
@@ -272,9 +135,33 @@ export async function POST(req: NextRequest) {
   console.log('[paypal-webhook] event:', eventType, '| id:', resource?.id)
 
   if (eventType === 'PAYMENT.CAPTURE.COMPLETED') {
-    const paypalOrderId = resource.id
-    const amount = resource.amount?.value
-    console.log(`[paypal-webhook] Pago completado: ${paypalOrderId} - $${amount} USD`)
+    const orderId = resource.supplementary_data?.related_ids?.order_id || resource.id
+    const amountValue = resource.amount?.value || resource.amount?.total
+    const captured: PayPalCapturedOrder = {
+      ...(orderId ? { id: orderId } : {}),
+      status: 'COMPLETED',
+      ...(resource.payer ? { payer: resource.payer } : {}),
+      purchase_units: [
+        {
+          ...(resource.custom_id ? { custom_id: resource.custom_id } : {}),
+          amount: amountValue
+            ? { value: amountValue, currency_code: 'USD' }
+            : { currency_code: 'USD' },
+          payments: {
+            captures: resource.id
+              ? [{ id: resource.id, status: 'COMPLETED' }]
+              : [{ status: 'COMPLETED' }],
+          },
+        },
+      ],
+    }
+    console.log(`[paypal-webhook] Pago completado: ${orderId} - $${amountValue} USD`)
+
+    const result = await processPayPalCapture(captured)
+    if (!result.ok) {
+      console.error('[paypal-webhook] capture.completed processing failed:', result.error)
+      return failProcessing(result.error)
+    }
   } else if (eventType === 'PAYMENT.CAPTURE.DENIED') {
     const paypalOrderId = resource.id
     const email = resource.payer?.email_address || resource.custom_id?.split('|')?.[1]
@@ -291,7 +178,7 @@ export async function POST(req: NextRequest) {
     }
   } else if (eventType === 'PAYMENT.CAPTURE.REFUNDED') {
     const paypalCaptureId = resource.id
-    const amount = resource.amount?.value
+    const amount = resource.amount?.value || resource.amount?.total
     console.log(`[paypal-webhook] Reembolso: ${paypalCaptureId} - $${amount} USD`)
     if (db) {
       const { data: pagos } = await db
@@ -319,128 +206,29 @@ export async function POST(req: NextRequest) {
     const token = await getPayPalAccessToken()
     if (!token) return failProcessing('PayPal credentials are not configured')
 
-    const captured = await capturePayPalOrder(orderId, token)
-    if (!captured || captured.status !== 'COMPLETED') {
-      console.error('[paypal-webhook] capture failed or incomplete')
+    const captureResult = await capturePayPalOrder(orderId, token)
+    let captured: PayPalCapturedOrder | null = null
+
+    if (captureResult.ok) {
+      captured = captureResult.order
+    } else if (captureResult.alreadyCaptured) {
+      // Hosted buttons / cards capturan la orden antes de que llegue el webhook.
+      captured = await fetchPayPalOrder(orderId, token)
+      if (!captured?.id) return failProcessing('PayPal order could not be fetched')
+    } else {
+      console.error('[paypal-webhook] capture failed:', captureResult.status, captureResult.error)
       return failProcessing('PayPal capture failed')
     }
 
-    const purchaseUnit = captured.purchase_units?.[0]
-    const customId = purchaseUnit?.custom_id || ''
-    const planSlug = customId.split('|')[0]!
-    const email = captured.payer?.email_address || customId.split('|')[1] || ''
-    const tipoProyecto = customId.split('|')[2] || 'mantenimiento'
-    const amount = purchaseUnit?.amount?.value
-    const currency = purchaseUnit?.amount?.currency_code
-    const payerName = captured.payer?.name?.given_name || ''
-    const paypalOrderId = orderId
-    const paypalCaptureId = purchaseUnit?.payments?.captures?.[0]?.id || captured.id
-
-    if (
-      !email ||
-      !amount ||
-      currency !== 'USD' ||
-      !Number.isFinite(Number(amount)) ||
-      Number(amount) <= 0
-    ) {
-      console.error('[paypal-webhook] missing email or amount')
-      return failProcessing('PayPal payload is missing payment data')
+    if (captured.status !== 'COMPLETED') {
+      console.error('[paypal-webhook] captured order not completed:', captured.status)
+      return failProcessing('PayPal capture failed')
     }
 
-    const clienteId = await getOrCreateCliente(email, payerName)
-    if (!clienteId) {
-      console.error('[paypal-webhook] Could not get or create cliente')
-      return failProcessing('Customer could not be resolved')
-    }
-
-    const plan = await getPlanBySlug(planSlug)
-    if (!plan) return failProcessing('Unknown PayPal plan')
-    const planNombre = plan?.nombre || purchaseUnit?.description || 'Plan'
-
-    if (db) {
-      const { data: pagoInsertado, error: pagoError } = await db
-        .from('pagos')
-        .insert({
-          cliente_id: clienteId,
-          monto: parseFloat(amount),
-          moneda: 'USD',
-          estado: 'aprobado',
-          plan_nombre: planNombre,
-          plan_slug: plan?.slug || planSlug || null,
-          tipo_proyecto: tipoProyecto || 'mantenimiento',
-          provider: 'paypal',
-          paypal_order_id: paypalOrderId,
-          paypal_capture_id: paypalCaptureId,
-        })
-        .select('id')
-        .single()
-
-      if (pagoError) {
-        console.error('[paypal-webhook] Error inserting pago:', pagoError)
-        return failProcessing('Failed to record payment')
-      }
-      const pagoId = pagoInsertado?.id || null
-
-      const { error: subError } = await db.from('suscripciones').insert({
-        cliente_id: clienteId,
-        plan_slug: plan?.slug || planSlug || 'mantenimiento-basico',
-        estado: 'activa',
-        fecha_inicio: new Date().toISOString(),
-      })
-
-      if (subError) {
-        console.error('[paypal-webhook] Error inserting suscripcion:', subError)
-        return failProcessing('Failed to create subscription')
-      }
-
-      const tenantId = await getOrCreateTenant(clienteId, email, plan)
-      if (tenantId && pagoId) {
-        try {
-          const { data: invoiceResult, error: invoiceError } = await db.rpc(
-            'create_invoice_from_payment',
-            { p_pago_id: pagoId, p_tenant_id: tenantId }
-          )
-          if (invoiceError) console.error('[paypal-webhook] RPC error:', invoiceError)
-          if (invoiceResult) console.log('[paypal-webhook] Invoice created:', invoiceResult)
-        } catch (invoiceErr) {
-          console.error('[paypal-webhook] Error creating invoice via RPC:', invoiceErr)
-        }
-      }
-    }
-
-    if (process.env.RESEND_API_KEY) {
-      try {
-        const dashboardUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://exepaginasweb.com'}/dashboard`
-
-        await sendEmail({
-          to: [email],
-          subject: `Pago aprobado - ${planNombre}`,
-          html: paymentConfirmation({
-            name: payerName,
-            plan: planNombre,
-            amount,
-            currency: 'USD',
-            orderId: paypalOrderId,
-            dashboardUrl,
-          }),
-        })
-
-        await sendEmail({
-          to: [ADMIN_EMAIL],
-          subject: `Nueva venta! ${payerName || 'Un cliente'} compro ${planNombre}`,
-          html: paymentNotification({
-            name: payerName,
-            email,
-            plan: planNombre,
-            slug: planSlug,
-            amount,
-            tipoProyecto,
-            orderId: paypalOrderId,
-          }),
-        })
-      } catch (e) {
-        console.error('[paypal-webhook] Email error:', e)
-      }
+    const result = await processPayPalCapture(captured)
+    if (!result.ok) {
+      console.error('[paypal-webhook] approved processing failed:', result.error)
+      return failProcessing(result.error)
     }
   }
 

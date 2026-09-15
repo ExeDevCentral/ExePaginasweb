@@ -4,16 +4,36 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Globe, Monitor, Palette, ShoppingBag, Calendar } from 'lucide-react'
+import {
+  X,
+  Globe,
+  Monitor,
+  Palette,
+  ShoppingBag,
+  Calendar,
+  CheckCircle2,
+  LogIn,
+  RefreshCw,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
+import { useAuthSession } from '../../core/auth/AuthSessionProvider'
 import TransferInstructions from './TransferInstructions'
 import type { PlanData } from './PlanCard'
 
 declare global {
   interface Window {
     paypal?: {
-      HostedButtons: (opts: { hostedButtonId: string }) => { render: (sel: string) => void }
+      Buttons: (opts: {
+        style?: Record<string, string>
+        createOrder: () => Promise<string>
+        onApprove: (data: { orderID: string }) => void
+        onCancel?: () => void
+        onError?: () => void
+      }) => {
+        render: (sel: string) => Promise<void>
+      }
     }
   }
 }
@@ -25,11 +45,7 @@ const TIPO_PROYECTO_OPTIONS = [
   { value: 'reservas', label: 'Sistema de Reservas', icon: Calendar },
 ]
 
-const HOSTED_BUTTONS: Record<string, string> = {
-  'mantenimiento-basico': '27YN9Y5VT3UVQ',
-  'mantenimiento-avanzado': 'Y88QXE3UHZNHE',
-  'mantenimiento-premium': 'LMKVPLYDGVXJC',
-}
+type PaypalStatus = 'idle' | 'login' | 'loading' | 'ready' | 'error' | 'approval-error' | 'success'
 
 interface CheckoutModalProps {
   plan: PlanData
@@ -43,9 +59,13 @@ export default function CheckoutModal({
   onClose,
 }: CheckoutModalProps) {
   const { t } = useTranslation()
+  const router = useRouter()
+  const { session } = useAuthSession()
   const [tipoProyecto, setTipoProyecto] = useState('mantenimiento')
   const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'paypal'>(initialMethod)
-  const [paypalStatus, setPaypalStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
+  const [paypalStatus, setPaypalStatus] = useState<PaypalStatus>('idle')
+  const [paypalError, setPaypalError] = useState('')
+  const [renderNonce, setRenderNonce] = useState(0)
 
   useEffect(() => {
     if (paymentMethod !== 'paypal' || !plan) {
@@ -53,60 +73,119 @@ export default function CheckoutModal({
       return
     }
 
-    const buttonId = HOSTED_BUTTONS[plan.id]
-    if (!buttonId) return
+    if (!session?.access_token) {
+      setPaypalStatus('login')
+      return
+    }
 
-    setPaypalStatus('loading')
-
-    const containerId = `paypal-container-${buttonId}`
     let cancelled = false
-    let timeoutId: ReturnType<typeof setTimeout>
+    let renderTimeout: ReturnType<typeof setTimeout>
 
-    const renderButton = () => {
-      if (!window.paypal?.HostedButtons) {
-        timeoutId = setTimeout(renderButton, 500)
+    const doRender = () => {
+      if (cancelled || !window.paypal?.Buttons) return
+      const paypal = window.paypal
+      setPaypalStatus('ready')
+      renderTimeout = setTimeout(() => {
+        if (cancelled) return
+        paypal
+          .Buttons({
+            style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
+            createOrder: async () => {
+              const resp = await fetch('/api/paypal/orders', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({ planSlug: plan.id, tipoProyecto }),
+              })
+              const json = await resp.json().catch(() => ({}))
+              if (!resp.ok || !json?.id) {
+                throw new Error(json?.error || 'No se pudo iniciar el pago con PayPal.')
+              }
+              return json.id as string
+            },
+            onApprove: async (data: { orderID: string }) => {
+              try {
+                const resp = await fetch('/api/paypal/capture', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                  },
+                  body: JSON.stringify({ orderId: data.orderID }),
+                })
+                const json = await resp.json().catch(() => ({}))
+                if (!resp.ok) {
+                  setPaypalError(json?.error || 'No se pudo confirmar el pago.')
+                  setPaypalStatus('approval-error')
+                  return
+                }
+                setPaypalStatus('success')
+              } catch {
+                setPaypalError('Error de conexión al confirmar el pago.')
+                setPaypalStatus('approval-error')
+              }
+            },
+            onCancel: () => {
+              if (!cancelled) setPaypalStatus('ready')
+            },
+            onError: () => {
+              if (!cancelled) setPaypalStatus('error')
+            },
+          })
+          .render('#paypal-container')
+          .catch(() => {
+            if (!cancelled) setPaypalStatus('error')
+          })
+      }, 0)
+    }
+
+    const ensureSdk = () => {
+      if (window.paypal?.Buttons) {
+        doRender()
         return
       }
-      if (cancelled) return
-      setPaypalStatus('ready')
-      window.paypal.HostedButtons({ hostedButtonId: buttonId }).render(`#${containerId}`)
+      const scriptId = 'paypal-checkout-sdk'
+      if (document.getElementById(scriptId)) {
+        doRender()
+        return
+      }
+      const script = document.createElement('script')
+      script.id = scriptId
+      script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || ''}&components=buttons&disable-funding=venmo&currency=USD&intent=capture`
+      script.crossOrigin = 'anonymous'
+      script.onload = () => {
+        if (window.paypal?.Buttons) doRender()
+        else if (!cancelled) setPaypalStatus('error')
+      }
+      script.onerror = () => {
+        if (!cancelled) setPaypalStatus('error')
+      }
+      document.head.appendChild(script)
     }
 
-    if (window.paypal?.HostedButtons) {
-      renderButton()
-    } else {
-      const scriptId = 'paypal-hosted-sdk'
-      if (!document.getElementById(scriptId)) {
-        const script = document.createElement('script')
-        script.id = scriptId
-        script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || ''}&components=hosted-buttons&disable-funding=venmo&currency=USD`
-        script.crossOrigin = 'anonymous'
-        script.onload = () => {
-          if (window.paypal?.HostedButtons) renderButton()
-          else if (!cancelled) setPaypalStatus('error')
-        }
-        script.onerror = () => {
-          if (!cancelled) setPaypalStatus('error')
-        }
-        document.head.appendChild(script)
-      } else {
-        renderButton()
-      }
-    }
+    setPaypalStatus('loading')
+    ensureSdk()
 
-    timeoutId = setTimeout(() => {
-      if (!cancelled && !window.paypal?.HostedButtons) {
-        setPaypalStatus('error')
-      }
+    const timeoutId = setTimeout(() => {
+      if (!cancelled && !window.paypal?.Buttons) setPaypalStatus('error')
     }, 30000)
 
     return () => {
       cancelled = true
       clearTimeout(timeoutId)
-      const container = document.getElementById(containerId)
+      clearTimeout(renderTimeout)
+      const container = document.getElementById('paypal-container')
       if (container) container.innerHTML = ''
     }
-  }, [paymentMethod, plan])
+  }, [paymentMethod, plan, session?.access_token, tipoProyecto, renderNonce])
+
+  const retrySdk = () => {
+    setPaypalError('')
+    setPaypalStatus('loading')
+    setRenderNonce((n) => n + 1)
+  }
 
   return (
     <AnimatePresence>
@@ -197,7 +276,10 @@ export default function CheckoutModal({
               </button>
               <button
                 type="button"
-                onClick={() => setPaymentMethod('paypal')}
+                onClick={() => {
+                  setPaypalError('')
+                  setPaymentMethod('paypal')
+                }}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all ${
                   paymentMethod === 'paypal'
                     ? 'bg-gradient-to-r from-accent-magenta to-accent-magenta/80 text-white shadow-lg shadow-accent-magenta/15'
@@ -219,6 +301,48 @@ export default function CheckoutModal({
                 planPrice={plan.price}
                 projectType={tipoProyecto}
               />
+            ) : paypalStatus === 'success' ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-green-500/10 border border-green-500/30 rounded-2xl p-6 text-center"
+              >
+                <CheckCircle2 className="w-12 h-12 mx-auto text-green-500" />
+                <p className="text-lg font-bold text-foreground mt-3">
+                  Pago aprobado correctamente
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Tu abono quedó activado. Ya podés ingresar a tu panel.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => router.push('/dashboard')}
+                  className="w-full mt-4 py-3.5 rounded-xl font-black text-white bg-gradient-to-r from-emerald-500 to-emerald-400 hover:opacity-90 transition-all shadow-lg shadow-emerald-500/25"
+                >
+                  Ir al Dashboard
+                </button>
+              </motion.div>
+            ) : paypalStatus === 'login' ? (
+              <div className="space-y-3 text-center">
+                <LogIn className="w-8 h-8 mx-auto text-accent-magenta" />
+                <p className="text-sm text-muted-foreground">
+                  Iniciá sesión para pagar con PayPal.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => router.push('/login')}
+                  className="w-full py-3.5 rounded-xl font-black text-white bg-gradient-to-r from-accent-magenta to-accent-magenta/80 hover:opacity-90 transition-all shadow-lg shadow-accent-magenta/25"
+                >
+                  Iniciar sesión
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('transfer')}
+                  className="text-xs text-muted-foreground underline hover:text-foreground"
+                >
+                  O pagá por transferencia bancaria
+                </button>
+              </div>
             ) : (
               <div className="space-y-4">
                 {paypalStatus === 'loading' && (
@@ -232,6 +356,14 @@ export default function CheckoutModal({
                     <p className="text-sm text-accent-magenta">No se pudo cargar PayPal</p>
                     <button
                       type="button"
+                      onClick={retrySdk}
+                      className="inline-flex items-center gap-1.5 text-sm font-bold text-foreground underline hover:text-accent-magenta"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      Reintentar
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => setPaymentMethod('transfer')}
                       className="text-xs text-muted-foreground underline hover:text-foreground"
                     >
@@ -239,11 +371,24 @@ export default function CheckoutModal({
                     </button>
                   </div>
                 )}
-                {paypalStatus === 'ready' && HOSTED_BUTTONS[plan.id] && (
-                  <div
-                    id={`paypal-container-${HOSTED_BUTTONS[plan.id]}`}
-                    className="min-h-[50px]"
-                  />
+                {paypalStatus === 'approval-error' && (
+                  <div className="text-center min-h-[50px] flex flex-col items-center justify-center gap-2">
+                    <p className="text-sm text-accent-magenta">{paypalError}</p>
+                    <button
+                      type="button"
+                      onClick={retrySdk}
+                      className="inline-flex items-center gap-1.5 text-sm font-bold text-foreground underline hover:text-accent-magenta"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      Reintentar
+                    </button>
+                  </div>
+                )}
+                {(paypalStatus === 'ready' ||
+                  paypalStatus === 'loading' ||
+                  paypalStatus === 'error' ||
+                  paypalStatus === 'approval-error') && (
+                  <div id="paypal-container" className="min-h-[50px]" />
                 )}
               </div>
             )}

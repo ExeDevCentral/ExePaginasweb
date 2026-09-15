@@ -1,0 +1,140 @@
+================================================================================
+ REPORTE DE ESTADO DEL PROYECTO
+================================================================================
+ Fecha: 2026-09-15
+ Scope: git diff df3adc9...HEAD (5 commits)
+   - 27116a4 fix: contraste modo claro + accesibilidad + efectos matrix por tema
+   - eac6d39 fix: suprimir warnings de Cache-Control y allowScripts
+   - ae3933d chore: quitar bgm pesados del skill huashu-design
+   - c229303 chore: agregar licencias y headers de copyright (Exequiel Echevarria)
+   - 94eb3b5 fix: migrar checkout a PayPal Orders v2 con captura server-side
+ Método: skill de revision doble eje (Standards + Spec) en sub-agentes paralelos.
+
+ Estado de calidad verificado al momento del reporte:
+   - typecheck: PASA (npm run typecheck limpio)
+   - lint: 0 errores, 1 warning pre-existente (MatrixText.tsx:149, tolerado, repo permite <=50)
+   - tests: 158/158 (28 archivos), incluidos los 5 nuevos de paypal-orders-capture
+   - commits: Conventional Commits OK; no se commiteo ningun .env* real
+
+================================================================================
+ ## Standards — el codigo respeta los estandares documentados del repo
+================================================================================
+
+Baseline verificado (no corregido): npm run typecheck limpio; eslint sobre los
+10 archivos sustantivos -> 0 errores, 1 warning (jsx-a11y/no-static-element-
+interactions, MatrixText.tsx:149) PRE-EXISTENTE (el <span onMouseEnter>
+identico ya estaba en df3adc9); vitest paypal-orders-capture 5/5. Los 5 commits
+siguen Conventional Commits (fix:/chore:). Solo .env.example esta trackeado, no
+hay .env* reales commiteados (CONTRIBUTING). El test PayPal nuevo viajo en el
+mismo commit fix.
+
+VIOLACIONES HARD:
+   Ninguna.
+
+JUDGEMENT CALLS:
+   1. lib/server/paypal.ts:6 + .env.example — la base de API paso de
+      api-m.sandbox.paypal.com a https://api-m.paypal.com (produccion). No es
+      breach de estandares, pero default a PayPal PRODUCTIVO (cobros reales)
+      cuando la env no esta seteada es riesgoso; solo el comentario de
+      .env.example lo mitiga.
+   2. scripts/add-copyright-headers.mjs (nuevo) — sin formato Prettier (falta
+      salto de linea final). No lo cubre lint-staged (package.json restringe
+      *.{ts,tsx} y *.js), asi que pre-commit no lo puede atrapar.
+   3. src/index.css + package.json — Prettier [warn] pero YA fallaba en el
+      commit base (df3adc9); las lineas nuevas son format-neutral. No
+      introducido en este diff (transparencia).
+
+Omitidos (tooling/propios): header de copyright arriba de 'use client' (valido);
+test .js para rutas TS (coincide con la convencion tests/api/*.js); emoji en
+titulos Vitest (ningun estandar lo prohibe); layout de dominio segun
+docs/agents/domain.md.
+
+Total: 0 violaciones hard, 3 judgement calls (1 riesgo operativo PayPal prod).
+
+================================================================================
+ ## Spec — el codigo implementa fielmente la intencion / especificacion
+================================================================================
+
+Nota: NO hay issue/PRD formal en el repo (los commits no referencian issues, no
+hay docs de spec). La auditoria se hizo contra la agenda de desarrollo conocida.
+
+(a) REQUERIMIENTOS FALTANTES / PARCIALES:
+   1. Webhook DENIED incompleto (app/api/paypal-webhook/route.ts:165-178): loguea
+      el rechazo e inserta una fila en notificaciones, pero NUNCA actualiza
+      pagos.estado desde 'aprobado'. Un pago denegado queda como "approved" en
+      la DB — conciliacion parcial.
+   2. Lookup de reembolsos fragil (app/api/paypal-webhook/route.ts:184-187):
+      busca pagos solo por paypal_capture_id. Si el pago se registro por la
+      ruta de capture (siempre completa ese campo) funciona; pero si la ruta de
+      capture no corrio (camino solo-webhook), el reembolso se ignora en
+      silencio: sin update de estado ni cancelacion de suscripcion. Edge case
+      sin test.
+
+(b) SCOPE CREEP (no pedido):
+   1. Licencia MIT agregada a web-automation-cli/ (web-automation-cli/LICENSE +
+      license: "MIT" en package.json). La LICENSE raiz es proprietary. Una
+      sub-licencia MIT no estaba en la intencion.
+   2. Rediseno visual dentro del commit de accesibilidad (27116a4): SiteHeader
+      gano animacion neon-flicker de 16 pasos para HeaderLogo, scramble
+      MatrixWordmark para el wordmark, y una barra inferior nueva con efectos
+      shimmer/blink en Footer; utilities CSS nuevas (.btn-gradient-cta,
+      .text-gradient-cta, .btn-soft-violet, .border-violet-soft, keyframe
+      glitchScan) y restyle del boton activo de PortfolioSection a violeta.
+      Todo cosmetico, no arreglos de contraste.
+
+(c) IMPLEMENTADO PERO PARECE MAL:
+   1. Anio de copyright desincronizado: src/components/layout/Footer.tsx:225
+      sigue renderizando "© 2025" mientras la LICENSE actualizada dice
+      "Copyright (c) 2026".
+   2. SiteHeader ignora modo claro (SiteHeader.tsx): bg-[#050508]/90 hardcodeado
+      sin variante dark:. En modo claro el header queda oscuro opaco, minando el
+      objetivo de accesibilidad declarado.
+   3. Barra de telemetria del Footer con bg-slate-900 incondicional
+      (Footer.tsx:180), sin alternativa para modo claro: se lee como un hueco
+      oscuro en modo claro.
+   4. Fallback de monto en PAYMENT.CAPTURE.COMPLETED (route.ts:139):
+      resource.amount?.value || resource.amount?.total con total es un campo de
+      REST v1, no de Orders v2. Codigo muerto heredado del webhook viejo que
+      nunca se ejecuta y enmascara una brecha si PayPal manda una forma
+      inesperada.
+
+Total: 2 faltantes/parciales, 2 scope-creep, 4 implementado-pero-mal.
+
+================================================================================
+ ## SEGUIMIENTO — hallazgos derivados a GitHub (triage 2026-09-15)
+================================================================================
+
+ Cada hallazgo de la ax Spec se creo como issue con label de estado. Los 6
+ bugs pasaron a ready-for-agent con Agent Brief; los 2 de decision a
+ ready-for-human.
+
+   #42 fix(paypal-webhook): DENIED no actualiza pagos.estado (queda aprobado)
+      -> bug + ready-for-agent
+   #43 fix(paypal-webhook): REFUNDED fragil — solo busca por paypal_capture_id
+      -> bug + ready-for-agent
+   #44 chore: decidir licencia de web-automation-cli (MIT colado vs raiz)
+      -> enhancement + ready-for-human (decision del mantenedor)
+   #45 chore: rediseno visual colado en commit de accesibilidad (27116a4)
+      -> enhancement + ready-for-human (decision del mantenedor)
+   #46 fix(a11y): barra de telemetria del Footer fija en bg-slate-900 (modo claro)
+      -> bug + ready-for-agent
+   #47 fix(paypal-webhook): limpiar fallback de monto con campo v1 total (codigo muerto)
+      -> bug + ready-for-agent
+   #48 fix: Footer muestra "c 2025" pero LICENSE es 2026
+      -> bug + ready-for-agent
+   #49 fix(a11y): SiteHeader ignora modo claro (bg oscuro hardcodeado)
+      -> bug + ready-for-agent
+
+================================================================================
+ RESUMEN
+================================================================================
+ - Standards: 0 hard violations, 3 judgement calls. Peor: default de
+   PAYPAL_API_BASE a PRODUCCION sin env seteada (riesgo de cobro real
+   accidental).
+ - Spec: 2 faltantes/parciales + 2 scope-creep + 4 implementado-pero-mal.
+   Peores: webhook DENIED/REFUNDED que no reconcilia correctamente el estado
+   del pago, y la desincronizacion de modo claro en header/footer.
+ - Nota operativa pendiente (no es codigo): PAYPAL_WEBHOOK_ID sigue vacio —
+   el webhook devuelve 503 y la conciliacion DENIED/REFUNDED no esta activa
+   hasta cargar el ID real en Vercel y .env.local.
+================================================================================

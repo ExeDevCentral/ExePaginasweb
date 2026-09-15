@@ -67,13 +67,19 @@ function setupSupabaseMock() {
   mockSupabaseInstance.from = vi.fn().mockImplementation((tabla) => {
     return {
       select: vi.fn().mockImplementation(() => ({
-        eq: vi.fn().mockImplementation(() => ({
+        eq: vi.fn().mockImplementation((field, _value) => ({
           limit: vi.fn().mockResolvedValue({
             data:
               tabla === 'planes'
                 ? [{ id: 'plan_pro_01', slug: 'mantenimiento-pro', nombre: 'Plan Pro' }]
-                : tabla === 'pagos'
-                  ? [{ cliente_id: 'cli_refund_1' }]
+                : tabla === 'pagos' && (field === 'id' || field === 'paypal_capture_id')
+                  ? [
+                      {
+                        id: 'pago_refund_1',
+                        cliente_id: 'cli_refund_1',
+                        plan_slug: 'mantenimiento-pro',
+                      },
+                    ]
                   : [],
           }),
         })),
@@ -89,11 +95,10 @@ function setupSupabaseMock() {
           single: vi.fn().mockResolvedValue({ data: { id: `${tabla}_id_123` }, error: null }),
         })),
       })),
-      update: vi.fn().mockImplementation(() => ({
-        eq: vi.fn().mockImplementation(() => ({
-          eq: vi.fn().mockResolvedValue({ error: null }),
-        })),
-      })),
+      update: vi.fn().mockImplementation(() => {
+        const builder = { eq: vi.fn().mockImplementation(() => builder) }
+        return builder
+      }),
     }
   })
 }

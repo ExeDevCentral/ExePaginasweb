@@ -11,17 +11,20 @@ import { ChevronDown, Scissors, Wheat, Shirt, Volleyball, Menu, X, ArrowRight } 
 import Logo from './Logo'
 import UtilityDock from './UtilityDock'
 import { MatrixWordmark } from '@/components/Effects/MatrixText'
+import { useTheme } from '@/core/theme/ThemeContext'
 
 /** Renders EXE//PAGINASWEB.COM with per-letter matrix scramble */
 function HeaderWordmark() {
+  const { theme } = useTheme()
+  const light = theme === 'light'
   return (
     <MatrixWordmark
       parts={[
-        { text: 'EXE', color: '#ffffff' },
+        { text: 'EXE', color: light ? '#0f172a' : '#ffffff' },
         { text: '//', color: '#facc15' },
-        { text: 'PAGINASWEB', color: '#ffffff' },
-        { text: '.', color: '#22d3ee' },
-        { text: 'COM', color: '#22d3ee' },
+        { text: 'PAGINASWEB', color: light ? '#0f172a' : '#ffffff' },
+        { text: '.', color: light ? '#0891b2' : '#22d3ee' },
+        { text: 'COM', color: light ? '#0891b2' : '#22d3ee' },
       ]}
       className="text-xs font-black tracking-tight sm:text-sm"
     />
@@ -101,7 +104,7 @@ const solutions = [
 ]
 
 const linkClass =
-  'rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white'
+  'rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-black/5 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white'
 
 export default function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -110,7 +113,7 @@ export default function SiteHeader() {
   const closeMobile = () => setMobileOpen(false)
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#050508]/90 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-foreground/10 bg-[#050508]/90 backdrop-blur-xl dark:border-white/10 dark:bg-[#050508]/90">
       <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Logo + wordmark separados — sin hover compartido que mueva el nav */}
         <div className="flex shrink-0 items-center gap-3">
@@ -148,21 +151,23 @@ export default function SiteHeader() {
                 solutionsOpen ? 'visible opacity-100' : 'invisible opacity-0'
               }`}
             >
-              <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/10 bg-[#0c0e18] p-3 shadow-2xl">
+              <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/10 bg-[#0c0e18] p-3 shadow-2xl dark:border-white/10 dark:bg-[#0c0e18]">
                 {solutions.map(({ href, label, detail, icon: Icon }) => (
                   <Link
                     key={href}
                     href={href}
-                    className="group rounded-xl border border-white/5 p-3 hover:border-cyan-400/40 hover:bg-white/5"
+                    className="group rounded-xl border border-black/5 p-3 hover:border-cyan-400/40 hover:bg-black/5 dark:border-white/5 dark:hover:bg-white/5"
                   >
-                    <Icon size={19} className="mb-2 text-cyan-400" />
-                    <span className="block text-sm font-bold text-white">{label}</span>
-                    <span className="text-xs text-slate-400">{detail}</span>
+                    <Icon size={19} className="mb-2 text-cyan-500 dark:text-cyan-400" />
+                    <span className="block text-sm font-bold text-slate-900 dark:text-white">
+                      {label}
+                    </span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">{detail}</span>
                   </Link>
                 ))}
                 <Link
                   href="/soluciones"
-                  className="col-span-2 flex items-center justify-between rounded-xl border border-cyan-400/20 bg-cyan-400/5 px-3 py-2 text-xs font-bold text-cyan-300"
+                  className="col-span-2 flex items-center justify-between rounded-xl border border-cyan-400/20 bg-cyan-400/5 px-3 py-2 text-xs font-bold text-cyan-600 dark:text-cyan-300"
                 >
                   Ver los 4 rubros <ArrowRight size={14} />
                 </Link>
@@ -184,13 +189,13 @@ export default function SiteHeader() {
           <UtilityDock />
           <Link
             href="/cotizador"
-            className="rounded-full border border-emerald-400/40 px-3 py-2 text-xs font-bold text-emerald-300 hover:bg-emerald-400/10"
+            className="rounded-full border border-emerald-400/40 px-3 py-2 text-xs font-bold text-emerald-600 hover:bg-emerald-400/10 dark:text-emerald-300"
           >
             Cotizador
           </Link>
           <Link
             href="/tienda"
-            className="rounded-full border border-cyan-400/40 px-3 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-400/10"
+            className="rounded-full border border-cyan-400/40 px-3 py-2 text-xs font-bold text-cyan-600 hover:bg-cyan-400/10 dark:text-cyan-300"
           >
             Tienda
           </Link>
@@ -210,7 +215,7 @@ export default function SiteHeader() {
             aria-expanded={mobileOpen}
             aria-controls="mobile-site-menu"
             aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
-            className="rounded-xl border border-white/15 p-2 text-white"
+            className="rounded-xl border border-foreground/15 p-2 text-slate-800 dark:border-white/15 dark:text-white"
           >
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -219,7 +224,7 @@ export default function SiteHeader() {
 
       <div
         id="mobile-site-menu"
-        className={`lg:hidden overflow-hidden border-t border-white/10 bg-[#07080f] transition-[max-height,opacity] duration-300 ${mobileOpen ? 'max-h-[90vh] opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`lg:hidden overflow-hidden border-t border-foreground/10 bg-[#07080f] transition-[max-height,opacity] duration-300 dark:border-white/10 dark:bg-[#07080f] ${mobileOpen ? 'max-h-[90vh] opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <nav
           aria-label="Navegación móvil"
@@ -248,9 +253,9 @@ export default function SiteHeader() {
                 key={href}
                 href={href}
                 onClick={closeMobile}
-                className="rounded-lg bg-white/5 p-3 text-xs font-bold text-slate-200"
+                className="rounded-lg bg-black/5 p-3 text-xs font-bold text-slate-800 dark:bg-white/5 dark:text-slate-200"
               >
-                <Icon size={16} className="mb-1 text-cyan-400" />
+                <Icon size={16} className="mb-1 text-cyan-500 dark:text-cyan-400" />
                 {label}
               </Link>
             ))}
@@ -264,18 +269,18 @@ export default function SiteHeader() {
           <Link href="/#contact" className={linkClass} onClick={closeMobile}>
             Contacto
           </Link>
-          <div className="mt-2 flex gap-2 border-t border-white/10 pt-3">
+          <div className="mt-2 flex gap-2 border-t border-foreground/10 pt-3 dark:border-white/10">
             <Link
               href="/cotizador"
               onClick={closeMobile}
-              className="flex-1 rounded-lg bg-emerald-400/10 px-3 py-2 text-center text-xs font-bold text-emerald-300"
+              className="flex-1 rounded-lg bg-emerald-400/10 px-3 py-2 text-center text-xs font-bold text-emerald-600 dark:text-emerald-300"
             >
               Cotizador
             </Link>
             <Link
               href="/tienda"
               onClick={closeMobile}
-              className="flex-1 rounded-lg bg-cyan-400/10 px-3 py-2 text-center text-xs font-bold text-cyan-300"
+              className="flex-1 rounded-lg bg-cyan-400/10 px-3 py-2 text-center text-xs font-bold text-cyan-600 dark:text-cyan-300"
             >
               Tienda
             </Link>

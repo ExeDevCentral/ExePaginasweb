@@ -177,36 +177,36 @@ const Footer = () => {
         </div>
 
         {/* Trust & Live Infrastructure Telemetry Bar */}
-        <div className="mb-12 p-6 rounded-2xl bg-slate-900 dark:bg-[#0b0c16]/80 border border-slate-500/30 dark:border-cyan-500/20 backdrop-blur-xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="mb-12 p-6 rounded-2xl bg-card border border-foreground/10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 dark:bg-[#0b0c16]/80 dark:border-cyan-500/20 backdrop-blur-xl">
           <div className="flex items-center gap-3.5">
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 shadow-[0_0_8px_#10b981]" />
             </span>
             <div>
-              <p className="text-xs font-bold text-slate-100 flex items-center gap-2">
+              <p className="text-xs font-bold text-foreground flex items-center gap-2 dark:text-slate-100">
                 Infraestructura &amp; Sistemas 100% Operativos
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                   Uptime 99.99%
                 </span>
               </p>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[11px] text-muted-foreground mt-0.5 dark:text-slate-400">
                 Red Global Vercel Edge · Base de Datos Supabase Postgres · Cifrado SSL A+
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono font-bold text-slate-300">
-            <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/60 text-cyan-400">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono font-bold text-slate-500 dark:text-slate-300">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-cyan-600 dark:bg-slate-800/80 dark:border-slate-700/60 dark:text-cyan-400">
               ⚡ Latencia &lt; 45ms
             </span>
-            <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/60 text-emerald-400">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-emerald-600 dark:bg-slate-800/80 dark:border-slate-700/60 dark:text-emerald-400">
               🔒 SSL 256-Bit
             </span>
-            <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/60 text-yellow-400">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-yellow-600 dark:bg-slate-800/80 dark:border-slate-700/60 dark:text-yellow-400">
               🚀 Código 100% Propio
             </span>
-            <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/60 text-indigo-400">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-indigo-600 dark:bg-slate-800/80 dark:border-slate-700/60 dark:text-indigo-400">
               ⏱️ SLA &lt; 2h
             </span>
           </div>
@@ -222,7 +222,8 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             {/* Copyright */}
             <p className="text-primary-secondary text-[11px] font-mono tracking-wide">
-              © 2025 <span className="text-foreground/80 font-semibold">ExeSistemasWEB</span>
+              © {new Date().getFullYear()}{' '}
+              <span className="text-foreground/80 font-semibold">ExeSistemasWEB</span>
               {'. '}
               {t('footer.derechos')}
             </p>

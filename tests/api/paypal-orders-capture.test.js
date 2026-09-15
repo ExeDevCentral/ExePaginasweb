@@ -37,6 +37,8 @@ vi.mock('@/lib/email/templates.js', () => ({
   paymentNotification: vi.fn((args) => `<p>sell ${args.plan} ${args.amount}</p>`),
 }))
 
+let mockPagoRows = []
+
 function setupSupabaseMock() {
   const dataFor = (tabla) => {
     if (tabla === 'planes')
@@ -45,6 +47,7 @@ function setupSupabaseMock() {
         { id: 'plan_basico_01', slug: 'mantenimiento-basico', nombre: 'Abono Básico' },
         { id: 'plan_premium_01', slug: 'mantenimiento-premium', nombre: 'Abono Premium' },
       ]
+    if (tabla === 'pagos') return mockPagoRows
     return []
   }
 
@@ -77,11 +80,10 @@ function setupSupabaseMock() {
         single: vi.fn().mockResolvedValue({ data: { id: `${tabla}_id_123` }, error: null }),
       })),
     })),
-    update: vi.fn().mockImplementation(() => ({
-      eq: vi.fn().mockImplementation(() => ({
-        eq: vi.fn().mockResolvedValue({ error: null }),
-      })),
-    })),
+    update: vi.fn().mockImplementation(() => {
+      const builder = { eq: vi.fn().mockImplementation(() => builder) }
+      return builder
+    }),
   }))
 }
 
@@ -91,6 +93,12 @@ function mockPayPalFetch(orderResponses) {
       return Promise.resolve({
         ok: true,
         json: async () => ({ access_token: 'mock_paypal_token' }),
+      })
+    }
+    if (url.includes('/verify-webhook-signature')) {
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({ verification_status: 'SUCCESS' }),
       })
     }
     if (url.includes('/capture')) {
@@ -150,6 +158,7 @@ async function callRoute(handler, payload, headers = {}) {
 describe('💳 PayPal Orders v2: creación y captura server-side', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockPagoRows = []
     process.env.PAYPAL_CLIENT_ID = 'paypal_client_mock'
     process.env.PAYPAL_CLIENT_SECRET = 'paypal_secret_mock'
     process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://mock.supabase.co'
@@ -247,6 +256,114 @@ describe('💳 PayPal Orders v2: creación y captura server-side', () => {
       expect(status).toBe(200)
       expect(json.ok).toBe(true)
       expect(mockSupabaseInstance.from).toHaveBeenCalledWith('pagos')
+    })
+  })
+
+  describe('3. 📡 Webhook: conciliación DENIED y REFUNDED (webhook-only)', () => {
+    async function callPayPalWebhook(payload) {
+      const { POST } = await import('../../app/api/paypal-webhook/route')
+      const req = new NextRequest('http://localhost:3000/api/paypal-webhook', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'paypal-auth-algo': 'SHA256withRSA',
+          'paypal-cert-url': 'https://api.paypal.com/v1/notifications/certs/cert.pem',
+          'paypal-transmission-id': 'trans_123',
+          'paypal-transmission-sig': 'sig_123',
+          'paypal-transmission-time': '2026-08-10T15:00:00Z',
+        },
+        body: typeof payload === 'string' ? payload : JSON.stringify(payload),
+      })
+      const res = await POST(req)
+      const json = await res.json()
+      return { status: res.status, json }
+    }
+
+    it('DENIED marca pago rechazado, cancela suscripción y notifica al cliente', async () => {
+      process.env.PAYPAL_WEBHOOK_ID = 'wh_test_1'
+      mockPagoRows = [
+        { id: 'pago_den_1', cliente_id: 'cli_den_1', plan_slug: 'mantenimiento-avanzado' },
+      ]
+      mockPayPalFetch({})
+
+      const { status, json } = await callPayPalWebhook({
+        id: 'WH-EVT-DENIED-1',
+        event_type: 'PAYMENT.CAPTURE.DENIED',
+        resource: {
+          id: 'CAPTURE_DENIED_1',
+          supplementary_data: { related_ids: { order_id: 'PAYPAL_ORDER_DEN_1' } },
+          payer: { email_address: 'denied@test.com' },
+        },
+      })
+
+      expect(status).toBe(200)
+      expect(json).toEqual({ ok: true })
+      expect(mockSupabaseInstance.from).toHaveBeenCalledWith('pagos')
+      expect(mockSupabaseInstance.from).toHaveBeenCalledWith('suscripciones')
+    })
+
+    it('REFUNDED webhook-only busca por paypal_order_id cuando paypal_capture_id no coincide', async () => {
+      process.env.PAYPAL_WEBHOOK_ID = 'wh_test_1'
+      mockPagoRows = []
+
+      // Override from so pagos query only matches by paypal_order_id (webhook-only path)
+      mockSupabaseInstance.from = vi.fn().mockImplementation((tabla) => ({
+        select: vi.fn().mockImplementation(() => ({
+          eq: vi.fn().mockImplementation((field, _value) => ({
+            limit: vi.fn().mockResolvedValue({
+              data:
+                tabla === 'webhook_events'
+                  ? []
+                  : tabla === 'pagos' && field === 'paypal_order_id'
+                    ? [
+                        {
+                          id: 'pago_order_1',
+                          cliente_id: 'cli_order_1',
+                          plan_slug: 'mantenimiento-basico',
+                        },
+                      ]
+                    : [],
+            }),
+            single: vi.fn().mockResolvedValue({ data: { id: `${tabla}_s_123` }, error: null }),
+            maybeSingle: vi
+              .fn()
+              .mockResolvedValue({
+                data: { id: `${tabla}_m_123` },
+                status: 'processed',
+                attempts: 1,
+                claimed_at: new Date().toISOString(),
+                error: null,
+              }),
+          })),
+          single: vi.fn().mockResolvedValue({ data: { id: `${tabla}_single_123` }, error: null }),
+        })),
+        insert: vi.fn().mockImplementation(() => ({
+          select: vi.fn().mockImplementation(() => ({
+            single: vi.fn().mockResolvedValue({ data: { id: `${tabla}_ins_123` }, error: null }),
+          })),
+        })),
+        update: vi.fn().mockImplementation(() => {
+          const builder = { eq: vi.fn().mockImplementation(() => builder) }
+          return builder
+        }),
+      }))
+
+      mockPayPalFetch({})
+
+      const { status, json } = await callPayPalWebhook({
+        id: 'WH-EVT-REFUND-OR-2',
+        event_type: 'PAYMENT.CAPTURE.REFUNDED',
+        resource: {
+          id: 'NO_MATCH_CAPTURE_ID',
+          supplementary_data: { related_ids: { order_id: 'PAYPAL_ORDER_REF_1' } },
+          amount: { value: '28.00' },
+        },
+      })
+
+      expect(status).toBe(200)
+      expect(json).toEqual({ ok: true })
+      expect(mockSupabaseInstance.from).toHaveBeenCalledWith('pagos')
+      expect(mockSupabaseInstance.from).toHaveBeenCalledWith('suscripciones')
     })
   })
 })

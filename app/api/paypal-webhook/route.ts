@@ -22,10 +22,16 @@ import {
 type PayPalCaptureEventResource = {
   id?: string
   status?: string
-  amount?: { value?: string; total?: string; currency_code?: string }
+  amount?: { value?: string }
   custom_id?: string
   payer?: { email_address?: string; name?: { given_name?: string } }
   supplementary_data?: { related_ids?: { order_id?: string } }
+}
+
+type PayPalPagoRow = {
+  id: string
+  cliente_id?: string | null
+  plan_slug?: string | null
 }
 type PayPalOrderEventResource = {
   id?: string
@@ -69,6 +75,43 @@ async function verifyWebhookSignature(req: NextRequest, rawBody: string): Promis
     console.error('[paypal-webhook] Verification error:', e)
     return false
   }
+}
+
+async function findPagoByPaypalIds(
+  captureId?: string,
+  orderId?: string
+): Promise<PayPalPagoRow | null> {
+  if (!db || (!captureId && !orderId)) return null
+
+  const cols = 'id, cliente_id, plan_slug'
+  if (captureId) {
+    const { data: porCapture } = await db
+      .from('pagos')
+      .select(cols)
+      .eq('paypal_capture_id', captureId)
+      .limit(1)
+    if (porCapture?.[0]?.id) return porCapture[0] as PayPalPagoRow
+  }
+  if (orderId) {
+    const { data: porOrden } = await db
+      .from('pagos')
+      .select(cols)
+      .eq('paypal_order_id', orderId)
+      .limit(1)
+    if (porOrden?.[0]?.id) return porOrden[0] as PayPalPagoRow
+  }
+  return null
+}
+
+async function cancelSuscripcionActiva(clienteId?: string | null, planSlug?: string | null) {
+  if (!db || !clienteId) return
+  const update = db
+    .from('suscripciones')
+    .update({ estado: 'cancelada', fecha_fin: new Date().toISOString() })
+    .eq('cliente_id', clienteId)
+    .eq('estado', 'activa')
+  if (planSlug) update.eq('plan_slug', planSlug)
+  await update
 }
 
 export const dynamic = 'force-dynamic'
@@ -136,7 +179,11 @@ export async function POST(req: NextRequest) {
 
   if (eventType === 'PAYMENT.CAPTURE.COMPLETED') {
     const orderId = resource.supplementary_data?.related_ids?.order_id || resource.id
-    const amountValue = resource.amount?.value || resource.amount?.total
+    const amountValue = resource.amount?.value
+    if (!amountValue) {
+      console.error('[paypal-webhook] capture.completed missing amount:', orderId)
+      return failProcessing('PayPal capture is missing amount')
+    }
     const captured: PayPalCapturedOrder = {
       ...(orderId ? { id: orderId } : {}),
       status: 'COMPLETED',
@@ -144,9 +191,7 @@ export async function POST(req: NextRequest) {
       purchase_units: [
         {
           ...(resource.custom_id ? { custom_id: resource.custom_id } : {}),
-          amount: amountValue
-            ? { value: amountValue, currency_code: 'USD' }
-            : { currency_code: 'USD' },
+          amount: { value: amountValue, currency_code: 'USD' },
           payments: {
             captures: resource.id
               ? [{ id: resource.id, status: 'COMPLETED' }]
@@ -163,41 +208,48 @@ export async function POST(req: NextRequest) {
       return failProcessing(result.error)
     }
   } else if (eventType === 'PAYMENT.CAPTURE.DENIED') {
-    const paypalOrderId = resource.id
+    const captureId = resource.id
+    const orderId = resource.supplementary_data?.related_ids?.order_id
     const email = resource.payer?.email_address || resource.custom_id?.split('|')?.[1]
-    console.error(`[paypal-webhook] Pago DENEGADO: ${paypalOrderId} - ${email}`)
-    if (email && db) {
-      const { data: clientes } = await db.from('clientes').select('id').eq('email', email).limit(1)
-      if (clientes?.[0]) {
-        await db.from('notificaciones').insert({
-          cliente_id: clientes[0].id,
-          mensaje: 'Tu pago por PayPal fue denegado. Revisá tu método de pago.',
-          tipo: 'alerta',
-        })
+    console.error(`[paypal-webhook] Pago DENEGADO: ${captureId || orderId} - ${email}`)
+    if (db) {
+      if (email) {
+        const { data: clientes } = await db
+          .from('clientes')
+          .select('id')
+          .eq('email', email)
+          .limit(1)
+        if (clientes?.[0]) {
+          await db.from('notificaciones').insert({
+            cliente_id: clientes[0].id,
+            mensaje: 'Tu pago por PayPal fue denegado. Revisá tu método de pago.',
+            tipo: 'alerta',
+          })
+        }
+      }
+      const pago = await findPagoByPaypalIds(captureId, orderId)
+      if (pago) {
+        await db.from('pagos').update({ estado: 'rechazado' }).eq('id', pago.id)
+        await cancelSuscripcionActiva(pago.cliente_id, pago.plan_slug)
+      } else {
+        console.warn('[paypal-webhook] DENIED: no matching payment found for', captureId || orderId)
       }
     }
   } else if (eventType === 'PAYMENT.CAPTURE.REFUNDED') {
-    const paypalCaptureId = resource.id
-    const amount = resource.amount?.value || resource.amount?.total
-    console.log(`[paypal-webhook] Reembolso: ${paypalCaptureId} - $${amount} USD`)
+    const captureId = resource.id
+    const orderId = resource.supplementary_data?.related_ids?.order_id
+    const amount = resource.amount?.value
+    console.log(`[paypal-webhook] Reembolso: ${captureId || orderId} - $${amount} USD`)
     if (db) {
-      const { data: pagos } = await db
-        .from('pagos')
-        .select('cliente_id, plan_slug, paypal_order_id, paypal_capture_id')
-        .eq('paypal_capture_id', paypalCaptureId)
-        .limit(1)
-      if (pagos?.[0]) {
-        await db
-          .from('pagos')
-          .update({ estado: 'reembolsado' })
-          .eq('paypal_capture_id', paypalCaptureId)
-        const subscriptionUpdate = db
-          .from('suscripciones')
-          .update({ estado: 'cancelada', fecha_fin: new Date().toISOString() })
-          .eq('cliente_id', pagos[0].cliente_id)
-          .eq('estado', 'activa')
-        if (pagos[0].plan_slug) subscriptionUpdate.eq('plan_slug', pagos[0].plan_slug)
-        await subscriptionUpdate
+      const pago = await findPagoByPaypalIds(captureId, orderId)
+      if (pago) {
+        await db.from('pagos').update({ estado: 'reembolsado' }).eq('id', pago.id)
+        await cancelSuscripcionActiva(pago.cliente_id, pago.plan_slug)
+      } else {
+        console.warn(
+          '[paypal-webhook] REFUNDED: no matching payment found for',
+          captureId || orderId
+        )
       }
     }
   } else if (eventType === 'CHECKOUT.ORDER.APPROVED') {

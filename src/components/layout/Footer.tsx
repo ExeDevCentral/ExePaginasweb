@@ -186,7 +186,7 @@ const Footer = () => {
             <div>
               <p className="text-xs font-bold text-foreground flex items-center gap-2 dark:text-slate-100">
                 Infraestructura &amp; Sistemas 100% Operativos
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 dark:text-emerald-400">
                   Uptime 99.99%
                 </span>
               </p>

@@ -46,7 +46,7 @@ export const StoreTelemetryHUD: React.FC = () => {
           <button
             type="button"
             onClick={() => storeAudio.playHover()}
-            className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 font-mono font-bold hover:bg-emerald-500/20 transition-colors cursor-pointer"
+            className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-500 font-mono font-bold hover:bg-emerald-500/20 transition-colors cursor-pointer"
           >
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -64,19 +64,21 @@ export const StoreTelemetryHUD: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
+              <Zap className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
               <span>Latencia:</span>
-              <span className="text-amber-400 font-bold">{latency}ms</span>
+              <span className="text-amber-600 dark:text-amber-400 font-bold">{latency}ms</span>
             </div>
 
             <div className="hidden md:flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
               <span>WAF & SSL:</span>
-              <span className="text-emerald-400 font-semibold">Protección Activa</span>
+              <span className="text-emerald-700 dark:text-emerald-400 font-semibold">
+                Protección Activa
+              </span>
             </div>
 
             <div className="hidden lg:flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-purple-400" />
+              <Activity className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
               <span>Uptime SLA:</span>
               <span className="text-foreground font-bold">99.98%</span>
             </div>

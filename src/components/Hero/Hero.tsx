@@ -24,7 +24,7 @@ const Badge: React.FC<{ text: string }> = ({ text }) => (
       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
     </span>
-    <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-cyan-600 dark:text-cyan-400 group-hover/badge:text-slate-900 dark:group-hover/badge:text-white transition-colors">
+    <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-400 group-hover/badge:text-slate-900 dark:group-hover/badge:text-white transition-colors">
       {text}
     </span>
   </motion.div>
@@ -63,7 +63,7 @@ const TitleLine: React.FC<{
       <span
         className={`relative inline-block ${
           isPunchline
-            ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-cyan-300 to-indigo-400 dark:from-sky-400 dark:via-cyan-300 dark:to-fuchsia-400 font-black drop-shadow-[0_2px_25px_rgba(14,165,233,0.35)]'
+            ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-700 via-cyan-600 to-indigo-600 dark:from-sky-400 dark:via-cyan-300 dark:to-fuchsia-400 font-black drop-shadow-[0_2px_25px_rgba(14,165,233,0.35)]'
             : 'text-slate-900 dark:text-white font-extrabold tracking-tight drop-shadow-sm'
         }`}
       >

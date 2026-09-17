@@ -12,10 +12,10 @@ import {
   toUIMessageStream,
   convertToModelMessages,
   generateId,
-  zodSchema,
   type UIMessage,
   type UIMessageChunk,
   type TextStreamPart,
+  type ToolSet,
 } from 'ai'
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
@@ -25,6 +25,11 @@ import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'
 import { contactNotification, contactAutoReply } from '@/lib/email/templates.js'
 import { detectLanguage } from '../contact/route'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
+import { AiService } from '@/core/ai/aiService'
+import { SupabaseAiAuditRepository } from '@/core/infra/ai/SupabaseAiAuditRepository'
+import { SupabaseAiContextProvider } from '@/core/infra/ai/SupabaseAiContextProvider'
+import { buildExecutableTools } from '@/core/infra/ai/buildExecutableTools'
+import { resolveAiUserContext } from '@/core/infra/ai/resolveAiUserContext'
 
 const ChatMessageSchema = z
   .object({
@@ -101,86 +106,6 @@ function getLastUserText(
   return ''
 }
 
-const SYSTEM_PROMPT = `
-Eres el Copilot e Asistente Inteligente Oficial de ExeSistemasWEB / ExePaginasWeb (estudio premium de desarrollo de software y aplicaciones web a medida).
-
-REGLAS DE TONO, EMPATÍA Y COMPORTAMIENTO:
-1. EMPATÍA Y CALIDEZ HUMANA:
-   - Responde siempre con entusiasmo, calidez y empatía ("¡Excelente idea!", "¡Nos encanta desarrollar ese tipo de soluciones!", "Por supuesto, es un proyecto genial..."). Muestra interés genuino en el negocio del usuario y valida sus ideas.
-   - NUNCA des respuestas secas, robóticas o automáticas. Háblale de forma cercana y profesional.
-
-2. CASOS DE USO Y RUBROS (ABOGADOS, PÁDEL, SALUD, SAAS, E-COMMERCE):
-   - Abogados / Estudios Jurídicos: Desarrollamos portales web institucionales premium para abogados, agendamiento de consultas legales, recepción segura de casos y notificaciones automáticas.
-   - Canchas de Pádel / Complejos Deportivos: Plataformas de reserva en tiempo real con elección de cancha, horario, cobro de seña online y notificaciones por WhatsApp.
-   - Clínicas y Salud: Sistemas de turnos médicos, fichas de pacientes y recordatorios por email/SMS/WhatsApp.
-   - Webs y Landing Pages Premium: Diseño exclusivo UI/UX a medida para cualquier industria (arquitectura, inmobiliarias, gastronomía, comercios).
-   - Dashboards & SaaS: Paneles administrativos a medida, métricas en tiempo real, control de usuarios y facturación.
-
-3. EXCLUSIVIDAD DE ÁMBITO:
-   - Responde únicamente consultas relacionadas con desarrollo web, software a medida, cotizaciones e integraciones de ExeSistemasWEB.
-   - Si el usuario pregunta cosas ajenas (recetas, noticias, deportes de TV), declina con amabilidad y calidez: "Como asistente de ExeSistemasWEB, me enfoco en ayudarte a impulsar tu negocio con software web a medida. ¿Te gustaría cotizar un sistema para tu proyecto?"
-
-4. SEGUIMIENTO DE SOLICITUDES Y PEDIDO DE CORREO:
-   - Cuando el visitante quiera cotizar, pedir una propuesta o presupuesto, nombrar un proyecto o tipo de sistema, dejar su email o hablar con un humano, OBLIGATORIAMENTE llamá a la herramienta "createTicket".
-   - Usá el identificador devuelto por la herramienta en tu respuesta con el formato [EXE-CHT-XXXXX].
-   - Si el usuario no dejó su email, pídeselo con entusiasmo: "Para enviarte la propuesta personalizada y dar seguimiento a la solicitud [EXE-CHT-XXXXX], ¿nos dejas tu email por aquí o prefieres consultarnos por WhatsApp?"
-   - Si el usuario dejó su email, confírmale: "¡Genial! Recibimos tu solicitud y generamos el identificador [EXE-CHT-XXXXX]. Nuestro equipo revisará tu consulta."
-`
-
-const createTicketTool = {
-  description:
-    'Genera un identificador único de seguimiento de la solicitud (formato EXE-CHT-XXXXX) y la registra. Llamá SOLO cuando el visitante quiera cotizar, pedir una propuesta/presupuesto, nombrar un proyecto o tipo de sistema, dejar su email, o quiera hablar con un humano.',
-  inputSchema: zodSchema(
-    z.object({
-      contactEmail: z
-        .string()
-        .email()
-        .nullish()
-        .describe('Email del visitante si lo escribió en el chat'),
-      projectType: z
-        .string()
-        .nullish()
-        .describe(
-          'Tipo de proyecto: turnos/reservas, saas/dashboard, web/landing, ecommerce, salud, jurídico, deportivo/pádel'
-        ),
-    })
-  ),
-  execute: async ({
-    contactEmail,
-    projectType,
-  }: {
-    contactEmail?: string | null
-    projectType?: string | null
-  }) => {
-    const ticketId = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
-
-    if (isSupabaseAdminConfigured()) {
-      try {
-        const { error: leadError } = await supabase.from('leads').insert({
-          email: contactEmail ?? null,
-          lead_type: 'chat',
-          message: `[${ticketId}] ${projectType ?? 'solicitud sin tipo'} — registrado vía asistente IA`,
-        })
-        if (leadError) {
-          console.error('[chat][createTicket] Error persistiendo la solicitud:', leadError)
-        }
-      } catch (persistError) {
-        console.error('[chat][createTicket] No se pudo guardar la solicitud:', persistError)
-      }
-    } else {
-      console.error(
-        '[chat][createTicket] Supabase admin no está configurado; la solicitud no se persiste'
-      )
-    }
-
-    return {
-      ticketId,
-      contactEmail: contactEmail ?? null,
-      projectType: projectType ?? null,
-    }
-  },
-}
-
 function streamLocalFallback(text: string): Response {
   const stream = createUIMessageStream({
     execute: ({ writer }) => {
@@ -197,12 +122,8 @@ function streamLocalFallback(text: string): Response {
   })
 }
 
-type ChatTools = { createTicket: typeof createTicketTool }
-
 type ProviderFactory = {
   name: string
-  // El retorno real es StreamTextResult<ChatTools>; usamos una forma estructural
-  // mínima para poder iterar la cadena sin fricción de genéricos.
   make: () => { stream: unknown }
 }
 
@@ -213,20 +134,19 @@ type Winner = {
   firstChunk: UIMessageChunk
 }
 
-async function pickFirstProvider(factories: ProviderFactory[]): Promise<Winner | null> {
+async function pickFirstProvider(
+  factories: ProviderFactory[],
+  tools: Record<string, unknown>
+): Promise<Winner | null> {
   for (const factory of factories) {
     try {
       const result = factory.make()
       const uiStream = toUIMessageStream({
-        stream: result.stream as ReadableStream<TextStreamPart<ChatTools>>,
-        tools: { createTicket: createTicketTool },
+        stream: result.stream as ReadableStream<TextStreamPart<ToolSet>>,
+        tools: tools as ToolSet,
       })
       const reader = uiStream.getReader()
 
-      // `toUIMessageStream` emite un chunk `start` local (sin red). El primer
-      // chunk CON RED es el que valida que el proveedor aceptó la petición.
-      // Un 402/429, falta de créditos o rechazo llega como chunk de tipo
-      // `error` (no como excepción): lo tratamos como fallo del proveedor.
       let startChunk: UIMessageChunk | null = null
       let firstChunk: UIMessageChunk | null = null
       let failedWithError: boolean = false
@@ -283,6 +203,8 @@ function buildStreamingResponse(winner: Winner): Response {
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
+  const startedAt = performance.now()
+
   try {
     const limit = await checkRateLimit(`chat:${clientIp(req)}`, 60, 10)
     if (!limit.allowed) {
@@ -313,6 +235,20 @@ export async function POST(req: NextRequest) {
 
   const messages = validation.data.messages as UIMessage[]
   const userMessage = getLastUserText(messages)
+  const conversationId = validation.data.id ?? null
+
+  const userContext = await resolveAiUserContext(req)
+  const auditRepo = new SupabaseAiAuditRepository()
+  const contextProvider = new SupabaseAiContextProvider()
+  const aiService = new AiService({ audit: auditRepo, context: contextProvider })
+
+  let preparedRun
+  try {
+    preparedRun = await aiService.prepareRun({ userContext, conversationId })
+  } catch (usageError) {
+    const msg = usageError instanceof Error ? usageError.message : 'Límite de uso alcanzado.'
+    return Response.json({ error: msg }, { status: 429 })
+  }
 
   // Capturar email si el usuario lo escribió en el chat (lógica determinística, antes del streaming)
   const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/
@@ -380,12 +316,31 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Estructura de mensajes inválida.' }, { status: 400 })
   }
 
+  const activeRunId = await aiService
+    .createRunRecord(preparedRun, {
+      model: 'pending',
+      provider: 'pending',
+      status: 'failed',
+    })
+    .then((created) => created.runId)
+    .catch((recordError) => {
+      console.warn('[chat] No se pudo crear el registro de run de IA:', recordError)
+      return preparedRun.runId
+    })
+
+  const tools = buildExecutableTools({
+    userContext,
+    audit: auditRepo,
+    runId: activeRunId,
+    conversationId,
+  })
+
   const commonSettings = {
-    system: SYSTEM_PROMPT,
+    system: preparedRun.systemPrompt,
     messages: modelMessages,
     temperature: 0.6,
     maxTokens: 450,
-    tools: { createTicket: createTicketTool },
+    tools: tools as unknown as ToolSet,
   }
 
   // Cadena de proveedores en orden de prioridad. `streamText` no lanza al
@@ -394,7 +349,7 @@ export async function POST(req: NextRequest) {
   // (await real del upstream): si el proveedor responde 402/429, sin crédito o
   // rechaza la petición, el error aparece antes de emitir texto y cascamos al
   // siguiente proveedor sin entregar una respuesta fallida al cliente.
-  const aiProviderChain: Array<ProviderFactory> = []
+  const aiProviderChain: ProviderFactory[] = []
   if (aiGatewayKey) {
     aiProviderChain.push({
       name: 'vercel-ai-gateway',
@@ -427,13 +382,44 @@ export async function POST(req: NextRequest) {
     })
   }
 
+  const finalizeRun = (opts: {
+    model: string
+    provider: string
+    status?: 'completed' | 'failed' | 'cancelled'
+    inputTokens?: number
+    outputTokens?: number
+    error?: string | null
+  }) => {
+    const latencyMs = Math.round(performance.now() - startedAt)
+    aiService
+      .completeRun(activeRunId, {
+        status: opts.status ?? 'completed',
+        latencyMs,
+        inputTokens: opts.inputTokens ?? 0,
+        outputTokens: opts.outputTokens ?? 0,
+        model: opts.model,
+        error: opts.error ?? null,
+      })
+      .catch((recordError) => {
+        console.warn('[chat] No se pudo registrar el run de IA:', recordError)
+      })
+  }
+
   if (aiProviderChain.length > 0) {
-    const winner = await pickFirstProvider(aiProviderChain)
-    if (winner) return buildStreamingResponse(winner)
+    const factories: ProviderFactory[] = aiProviderChain
+    const winner = await pickFirstProvider(factories, tools as unknown as Record<string, unknown>)
+    if (winner) {
+      finalizeRun({
+        model: winner.name === 'gemini' ? 'gemini-2.5-flash' : 'openai/gpt-4o-mini',
+        provider: winner.name,
+      })
+      return buildStreamingResponse(winner)
+    }
     console.warn('[chat] Todos los proveedores de IA fallaron; usando el motor local')
   }
 
   // --- Motor Local Inteligente Exe (100% Sin Costo / Offline Safe) ---
   const fallbackReply = getDevFallbackResponse(userMessage || 'hola') || FALLBACK_FALLBACK
+  finalizeRun({ model: 'local-fallback', provider: 'local' })
   return streamLocalFallback(fallbackReply)
 }

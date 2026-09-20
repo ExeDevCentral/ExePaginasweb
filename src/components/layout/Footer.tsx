@@ -96,36 +96,28 @@ const Footer = () => {
             </h4>
             <ul className="space-y-3.5 text-sm">
               <li className="group">
-                <a
-                  href="#products"
+                <Link
+                  href="/soluciones"
                   className="text-primary-secondary hover:text-accent-cyan transition-all group-hover:translate-x-1 inline-block"
                 >
                   {t('footer.nav_sistemas')}
-                </a>
+                </Link>
               </li>
               <li className="group">
-                <a
-                  href="#features"
-                  className="text-primary-secondary hover:text-accent-cyan transition-all group-hover:translate-x-1 inline-block"
-                >
-                  {t('footer.nav_caracteristicas')}
-                </a>
-              </li>
-              <li className="group">
-                <a
-                  href="#demo"
+                <Link
+                  href="/demos"
                   className="text-primary-secondary hover:text-accent-cyan transition-all group-hover:translate-x-1 inline-block"
                 >
                   {t('footer.nav_demo')}
-                </a>
+                </Link>
               </li>
               <li className="group">
-                <a
-                  href="#contact"
+                <Link
+                  href="/#contact"
                   className="text-primary-secondary hover:text-accent-cyan transition-all group-hover:translate-x-1 inline-block"
                 >
                   {t('footer.nav_contacto')}
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

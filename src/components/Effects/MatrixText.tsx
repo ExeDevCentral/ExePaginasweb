@@ -105,10 +105,15 @@ function MatrixLetter({
   const [glowing, setGlowing] = useState(false)
   const ivRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const tvRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const scramblingRef = useRef(false)
+  const restColorRef = useRef(restColor)
   const chars = MATRIX_CHARS_FULL
+
+  restColorRef.current = restColor
 
   const scramble = () => {
     if (ivRef.current) return
+    scramblingRef.current = true
     setGlowing(true)
     let tick = 0
     const total = frames ?? 7 + Math.floor(Math.random() * 6)
@@ -119,8 +124,9 @@ function MatrixLetter({
       if (tick >= total) {
         clearInterval(ivRef.current!)
         ivRef.current = null
+        scramblingRef.current = false
         setDisplay(char)
-        setColor(restColor)
+        setColor(restColorRef.current)
         setGlowing(false)
       }
     }, frameMs)
@@ -135,6 +141,14 @@ function MatrixLetter({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Sync resting color when it changes (e.g. theme toggle) unless scrambling
+  useEffect(() => {
+    if (!scramblingRef.current) {
+      setColor(restColor)
+      setDisplay(char)
+    }
+  }, [restColor, char])
 
   const glowMix = (pct: number) => `color-mix(in srgb, ${color} ${pct}%, transparent)`
 

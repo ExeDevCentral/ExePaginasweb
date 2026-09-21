@@ -227,7 +227,7 @@
   --secondary: #dce5ef;
   --secondary-foreground: #0f172a;
   --muted: #dce5ef;
-  --muted-foreground: #475569;
+  --muted-foreground: #334155;
   --accent: #6366f1;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
@@ -243,13 +243,13 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Colores corporativos amables a la vista humana */
-  --accent-cyan: #0369a1;
+  --accent-cyan: #075985;
   --accent-violet: #6d28d9;
   --accent-magenta: #4f46e5;
   --accent-yellow: #b45309;
   --primary-bg: #e8eef5;
   --primary-text: #0f172a;
-  --primary-secondary: #475569;
+  --primary-secondary: #334155;
 
   /* Paleta Matrix por tema: verde profundo en claro (legible), neón en dark */
   --matrix-pal-0: #166534;
@@ -694,7 +694,7 @@
 
 @layer utilities {
   .animate-marquee {
-    animation: marquee 30s linear infinite;
+    animation: marquee var(--marquee-duration, 30s) linear infinite;
     will-change: transform;
   }
 }

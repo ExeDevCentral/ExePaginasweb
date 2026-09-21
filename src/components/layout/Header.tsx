@@ -119,14 +119,14 @@ const Header = () => {
               className="h-8 w-auto shrink-0 transition-transform duration-300 group-hover:scale-105"
             />
             <div className="flex items-baseline gap-1 select-none">
-              <span className="text-slate-900 dark:text-white text-sm font-black tracking-tight font-sans">
+              <span className="text-slate-900 dark:text-white text-[15px] font-black tracking-tight font-sans">
                 EXE
               </span>
-              <span className="text-yellow-500 dark:text-yellow-400 font-bold text-xs">{'//'}</span>
-              <span className="text-slate-900 dark:text-white text-sm font-extrabold tracking-tight font-sans">
+              <span className="text-amber-600 dark:text-yellow-400 font-bold text-xs">{'//'}</span>
+              <span className="text-slate-900 dark:text-white text-[15px] font-extrabold tracking-tight font-sans">
                 PAGINASWEB
               </span>
-              <span className="text-cyan-600 dark:text-cyan-400 font-bold text-[10px] tracking-normal">
+              <span className="text-cyan-700 dark:text-cyan-400 font-bold text-[11px] tracking-normal">
                 .COM
               </span>
             </div>

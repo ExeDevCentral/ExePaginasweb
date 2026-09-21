@@ -234,7 +234,7 @@ function DeedCard() {
           </div>
           <div>
             <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
-              EXEPAGINASWEB
+              {t('versus.propiedad_brand', 'EXEPAGINASWEB')}
             </span>
             <h3 className="text-xl sm:text-2xl font-bold text-foreground">
               {t('versus.propiedad_titulo', 'Modelo de Propiedad Real')}
@@ -327,7 +327,7 @@ function DeedCard() {
 
         {/* Mini sitio vivo */}
         <div className="mt-5 relative">
-          <SiteSkeleton url="tudominio.com" tone="emerald" />
+          <SiteSkeleton url={t('versus.escritura_url', 'tudominio.com')} tone="emerald" />
           {alive && (
             <>
               <motion.div
@@ -396,7 +396,7 @@ function DeedCard() {
           <div className="absolute -inset-10 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none animate-pulse" />
           <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(rgba(16,185,129,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.07)_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
 
-          <div className="relative w-max flex gap-4 animate-marquee group-hover:[animation-play-state:paused] [animation-duration:70s] [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
+          <div className="relative w-max flex gap-4 animate-marquee group-hover:[animation-play-state:paused] [--marquee-duration:90s] [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
             {[0, 1].map((track) => (
               <div
                 key={track}
@@ -516,7 +516,7 @@ function RentalCard() {
           </div>
           <div>
             <span className="text-[10px] font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400">
-              PLATAFORMAS TRADICIONALES
+              {t('versus.alquiler_brand', 'PLATAFORMAS TRADICIONALES')}
             </span>
             <h3 className="text-xl sm:text-2xl font-bold text-foreground">
               {t('versus.alquiler_titulo', 'Modelo de Alquiler / Plantilla')}
@@ -536,7 +536,7 @@ function RentalCard() {
           </span>
           <span className="flex items-center gap-1.5 text-[10px] font-bold text-rose-400/80">
             <MousePointerClick className="w-3.5 h-3.5" />
-            DEMO
+            {t('versus.demo_label', 'DEMO')}
           </span>
         </div>
 
@@ -610,7 +610,7 @@ function RentalCard() {
                 className="absolute inset-0 z-10 flex items-center justify-center"
               >
                 <span className="text-rose-300/90 font-mono text-[10px] tracking-[0.3em] font-bold uppercase">
-                  desintegrando…
+                  {t('versus.desintegrando', 'desintegrando…')}
                 </span>
               </motion.div>
             )}
@@ -746,7 +746,7 @@ function CostCard() {
             viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
             className="w-full h-auto block"
             role="img"
-            aria-label="Gráfico de costo acumulado"
+            aria-label={t('versus.costo_aria', 'Gráfico de costo acumulado')}
           >
             {/* Guías horizontales */}
             {[1000, 2000, 3000].map((g) => (
@@ -929,7 +929,13 @@ function CostCard() {
             </div>
             {!crossed && (
               <p className="mt-1 text-[10px] text-muted-foreground">
-                {`Año ${year}: la inversión inicial todavía se está amortizando.`}
+                {t(
+                  'versus.costo_amortizando',
+                  'Año {{year}}: la inversión inicial todavía se está amortizando.',
+                  {
+                    year,
+                  }
+                )}
               </p>
             )}
           </div>
@@ -1063,7 +1069,10 @@ function buildLines(t: (k: string, f: string) => string, mode: TermMode): TermLi
       { kind: 'cmd', parts: [{ text: '$ cat plantilla.html' }] },
       {
         kind: 'html',
-        parts: [{ text: '<div class="block1"> ' }, { text: '<!-- NO EDITAR -->', strike: true }],
+        parts: [
+          { text: '<div class="block1"> ' },
+          { text: t('versus.extra_terminal_noeditar', '<!-- NO EDITAR -->'), strike: true },
+        ],
       },
       {
         kind: 'err',
@@ -1245,7 +1254,7 @@ function CodeLiberationTerminal({ mode }: { mode: TermMode }) {
           </span>
           <span className="ml-auto flex items-center gap-1.5 text-[9px] font-bold text-emerald-300/80">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            PROPY-RUN
+            {t('versus.extra_terminal_run', 'PROPY-RUN')}
           </span>
         </div>
 

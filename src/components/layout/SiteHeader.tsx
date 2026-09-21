@@ -21,10 +21,10 @@ function HeaderWordmark() {
     <MatrixWordmark
       parts={[
         { text: 'EXE', color: light ? '#0f172a' : '#ffffff' },
-        { text: '//', color: '#facc15' },
+        { text: '//', color: light ? '#b45309' : '#facc15' },
         { text: 'PAGINASWEB', color: light ? '#0f172a' : '#ffffff' },
-        { text: '.', color: light ? '#0891b2' : '#22d3ee' },
-        { text: 'COM', color: light ? '#0891b2' : '#22d3ee' },
+        { text: '.', color: light ? '#0e7490' : '#22d3ee' },
+        { text: 'COM', color: light ? '#0e7490' : '#22d3ee' },
       ]}
       className="text-xs font-black tracking-tight sm:text-sm"
     />

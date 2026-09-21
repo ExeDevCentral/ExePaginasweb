@@ -396,7 +396,7 @@ function DeedCard() {
           <div className="absolute -inset-10 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none animate-pulse" />
           <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(rgba(16,185,129,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.07)_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
 
-          <div className="relative w-max flex gap-4 animate-marquee group-hover:[animation-play-state:paused] [animation-duration:42s] [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
+          <div className="relative w-max flex gap-4 animate-marquee group-hover:[animation-play-state:paused] [animation-duration:70s] [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
             {[0, 1].map((track) => (
               <div
                 key={track}
@@ -416,9 +416,9 @@ function DeedCard() {
                       }}
                     >
                       <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-cyan-500 via-fuchsia-500 to-pink-500 opacity-40 blur-md" />
-                      <span className="relative flex items-center gap-1.5 pl-2.5 pr-3.5 py-1.5 rounded-full bg-[#0b0f1e]/95">
-                        <Sparkles className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
-                        <span className="text-[11px] font-bold whitespace-nowrap text-transparent bg-clip-text bg-[linear-gradient(90deg,#22d3ee,#a78bfa,#f472b6)]">
+                      <span className="relative flex items-center gap-2 pl-3 pr-4 py-2 rounded-full bg-[#0b0f1e]/95">
+                        <Sparkles className="w-4 h-4 text-cyan-300 animate-pulse" />
+                        <span className="text-[13px] font-bold whitespace-nowrap text-transparent bg-clip-text bg-[linear-gradient(90deg,#22d3ee,#a78bfa,#f472b6)]">
                           {e.label}
                         </span>
                       </span>
@@ -426,10 +426,10 @@ function DeedCard() {
                   ) : (
                     <span
                       key={e.label}
-                      className="group/chip flex items-center gap-2 pl-2.5 pr-3 py-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/[0.07] backdrop-blur transition-all duration-200 hover:border-emerald-400/70 hover:bg-emerald-500/15 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 shrink-0 select-none cursor-default"
+                      className="group/chip flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full border border-emerald-500/25 bg-emerald-500/[0.07] backdrop-blur transition-all duration-200 hover:border-emerald-400/70 hover:bg-emerald-500/15 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 shrink-0 select-none cursor-default"
                     >
-                      <e.Icon className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-300 group-hover/chip:text-emerald-500 dark:group-hover/chip:text-emerald-200 transition-colors" />
-                      <span className="text-[11px] font-semibold text-emerald-800 dark:text-emerald-100/90 whitespace-nowrap">
+                      <e.Icon className="w-4 h-4 text-emerald-600 dark:text-emerald-300 group-hover/chip:text-emerald-500 dark:group-hover/chip:text-emerald-200 transition-colors" />
+                      <span className="text-[13px] font-semibold text-emerald-800 dark:text-emerald-100/90 whitespace-nowrap">
                         {e.label}
                       </span>
                       <span className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />

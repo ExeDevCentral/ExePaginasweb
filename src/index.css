@@ -601,6 +601,71 @@
   }
 }
 
+/* Neón realista: parpadeo errático de tubo de vidrio */
+@keyframes neon-flicker {
+  0% {
+    opacity: 1;
+  }
+  3% {
+    opacity: 1;
+  }
+  4% {
+    opacity: 0.35;
+  }
+  5% {
+    opacity: 1;
+  }
+  37% {
+    opacity: 1;
+  }
+  39% {
+    opacity: 0.55;
+  }
+  40% {
+    opacity: 1;
+  }
+  41% {
+    opacity: 0.2;
+  }
+  43% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+  }
+  74% {
+    opacity: 0.45;
+  }
+  76% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Glitch sutil de una línea bajo suspensión */
+@keyframes terminal-glitch {
+  0%,
+  91%,
+  100% {
+    text-shadow: none;
+    transform: translateX(0);
+  }
+  92% {
+    text-shadow: 1px 0 rgba(244, 63, 94, 0.7), -1px 0 rgba(251, 191, 36, 0.5);
+    transform: translateX(-1px);
+  }
+  94% {
+    text-shadow: -1px 0 rgba(244, 63, 94, 0.7), 1px 0 rgba(251, 191, 36, 0.5);
+    transform: translateX(1px);
+  }
+  96% {
+    text-shadow: 0 0;
+    transform: translateX(0);
+  }
+}
+
 @layer utilities {
   .animate-marquee {
     animation: marquee 30s linear infinite;
@@ -792,7 +857,9 @@
   min-height: 490px;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
   cursor: ew-resize;
   user-select: none;
   -webkit-user-select: none;
@@ -1090,10 +1157,7 @@
 .hc-scanlines {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    rgba(18, 16, 38, 0) 50%,
-    rgba(0, 255, 170, 0.035) 50%
-  );
+  background: linear-gradient(rgba(18, 16, 38, 0) 50%, rgba(0, 255, 170, 0.035) 50%);
   background-size: 100% 4px;
   z-index: 2;
   pointer-events: none;
@@ -1138,7 +1202,9 @@
   border-radius: 10px;
   padding: 8px 12px;
   text-align: left;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(52, 211, 153, 0.05);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    inset 0 0 12px rgba(52, 211, 153, 0.05);
   backdrop-filter: blur(8px);
 }
 
@@ -1204,7 +1270,9 @@
   padding: 3px 10px;
   border-radius: 9999px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  transition: border-color 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 }
 .hc-pill:hover {
   border-color: #38bdf8;

@@ -27,6 +27,32 @@ import {
   BadgeCheck,
   Terminal,
   RefreshCw,
+  Workflow,
+  Globe,
+  Database,
+  CreditCard,
+  Receipt,
+  BarChart3,
+  Webhook,
+  Bell,
+  Calendar,
+  MapPin,
+  HardDriveDownload,
+  KeyRound,
+  Smartphone,
+  Search,
+  Share2,
+  Send,
+  FileSpreadsheet,
+  Users,
+  Headphones,
+  Video,
+  Languages,
+  Coins,
+  PenLine,
+  LockKeyhole,
+  ChartLine,
+  ShieldAlert,
 } from 'lucide-react'
 
 const MONTHLY_RENTAL = 49
@@ -158,8 +184,34 @@ function DeedCard() {
   ]
 
   const extras: { label: string; Icon: typeof Bot; more?: boolean }[] = [
-    { label: t('versus.extra_ai', 'Agentes de IA'), Icon: Bot },
+    { label: t('versus.extra_ai', 'Agentes de IA'), Icon: Bot, more: true },
+    { label: t('versus.extra_n8n', 'n8n · Automatizaciones'), Icon: Workflow, more: true },
+    { label: t('versus.extra_apis', 'APIs externas de todo el mundo'), Icon: Globe, more: true },
     { label: t('versus.extra_tributario', 'Servicio tributario de capa país'), Icon: Landmark },
+    { label: t('versus.extra_bd', 'Base de datos propia'), Icon: Database },
+    { label: t('versus.extra_pagos', 'Pagos y facturación'), Icon: CreditCard },
+    { label: t('versus.extra_recibos', 'Recibos electrónicos'), Icon: Receipt },
+    { label: t('versus.extra_dashboard', 'Dashboard de analítica'), Icon: BarChart3 },
+    { label: t('versus.extra_webhooks', 'Webhooks propios'), Icon: Webhook },
+    { label: t('versus.extra_notificaciones', 'Push & notificaciones'), Icon: Bell },
+    { label: t('versus.extra_agenda', 'Reservas y agenda'), Icon: Calendar },
+    { label: t('versus.extra_maps', 'Mapas y ubicación'), Icon: MapPin },
+    { label: t('versus.extra_backups', 'Backups automáticos'), Icon: HardDriveDownload },
+    { label: t('versus.extra_roles', 'Accesos y roles'), Icon: KeyRound },
+    { label: t('versus.extra_pwa', 'App móvil / PWA'), Icon: Smartphone },
+    { label: t('versus.extra_seo', 'SEO integrado'), Icon: Search },
+    { label: t('versus.extra_redes', 'Redes conectadas'), Icon: Share2 },
+    { label: t('versus.extra_emails', 'Emails transaccionales'), Icon: Send },
+    { label: t('versus.extra_import', 'Importar/exportar datos'), Icon: FileSpreadsheet },
+    { label: t('versus.extra_crm', 'CRM de clientes'), Icon: Users },
+    { label: t('versus.extra_soporte', 'Soporte y tickets'), Icon: Headphones },
+    { label: t('versus.extra_videollamada', 'Video llamadas'), Icon: Video },
+    { label: t('versus.extra_idiomas', 'Multi-idioma'), Icon: Languages },
+    { label: t('versus.extra_planes', 'Planes y suscripciones'), Icon: Coins },
+    { label: t('versus.extra_blog', 'Blog / contenidos'), Icon: PenLine },
+    { label: t('versus.extra_seguridad', 'Seguridad reforzada'), Icon: LockKeyhole },
+    { label: t('versus.extra_reportes', 'Reportes automáticos'), Icon: ChartLine },
+    { label: t('versus.extra_proteccion', 'Protección anti-DDoS'), Icon: ShieldAlert },
     { label: t('versus.extra_mail', 'Email corporativo'), Icon: Mail },
     { label: t('versus.extra_whatsapp', 'WhatsApp'), Icon: MessageCircle },
     { label: t('versus.extra_chat', 'Chat propio'), Icon: MessageSquare },
@@ -177,11 +229,11 @@ function DeedCard() {
       {/* Encabezado de la card */}
       <div className="flex flex-wrap items-center justify-between pb-4 sm:pb-5 mb-4 sm:mb-5 border-b border-border/80 gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 sm:p-3 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
             <ShieldCheck className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
           <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
               EXEPAGINASWEB
             </span>
             <h3 className="text-xl sm:text-2xl font-bold text-foreground">
@@ -189,7 +241,7 @@ function DeedCard() {
             </h3>
           </div>
         </div>
-        <span className="px-2.5 py-1 text-[11px] sm:text-xs font-black rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 uppercase tracking-wider">
+        <span className="px-2.5 py-1 text-[11px] sm:text-xs font-black rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/40 uppercase tracking-wider">
           {t('versus.propiedad_tag', '100% Tuyo')}
         </span>
       </div>
@@ -265,7 +317,7 @@ function DeedCard() {
                 {f.label}
               </span>
               <span
-                className={`text-foreground font-semibold ${f.mono ? 'font-mono text-emerald-300/90' : ''}`}
+                className={`text-slate-100 font-semibold ${f.mono ? 'font-mono text-emerald-300/90' : ''}`}
               >
                 {f.value}
               </span>
@@ -310,7 +362,7 @@ function DeedCard() {
         <button
           type="button"
           onClick={() => setAlive((v) => !v)}
-          className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-emerald-400/40 bg-emerald-500/10 text-emerald-300 font-bold text-sm transition-all hover:bg-emerald-500/20 active:scale-[0.98]"
+          className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-emerald-400/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-bold text-sm transition-all hover:bg-emerald-500/20 active:scale-[0.98]"
         >
           <Power className="w-4 h-4" />
           {t('versus.pagar_boton', 'Dejá de pagar')}
@@ -324,7 +376,7 @@ function DeedCard() {
             key={idx}
             className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground font-medium"
           >
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>{s}</span>
           </div>
         ))}
@@ -332,7 +384,7 @@ function DeedCard() {
 
       {/* Extensibilidad — ticker neón */}
       <div className="mt-5">
-        <h4 className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.25em] text-emerald-400 mb-2.5">
+        <h4 className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400 mb-2.5">
           <span className="relative flex h-1.5 w-1.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
@@ -340,11 +392,11 @@ function DeedCard() {
           {t('versus.extra_titulo', 'Todo lo que podés sumarle')}
         </h4>
 
-        <div className="relative group overflow-hidden rounded-2xl border border-emerald-500/25 bg-emerald-950/30 p-3">
+        <div className="relative group overflow-hidden rounded-2xl border border-emerald-500/25 bg-emerald-500/[0.05] dark:bg-emerald-950/30 p-3">
           <div className="absolute -inset-10 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none animate-pulse" />
           <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(rgba(16,185,129,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.07)_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
 
-          <div className="relative w-max flex gap-4 animate-marquee group-hover:[animation-play-state:paused] [animation-duration:22s] [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
+          <div className="relative w-max flex gap-4 animate-marquee group-hover:[animation-play-state:paused] [animation-duration:42s] [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
             {[0, 1].map((track) => (
               <div
                 key={track}
@@ -376,8 +428,8 @@ function DeedCard() {
                       key={e.label}
                       className="group/chip flex items-center gap-2 pl-2.5 pr-3 py-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/[0.07] backdrop-blur transition-all duration-200 hover:border-emerald-400/70 hover:bg-emerald-500/15 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 shrink-0 select-none cursor-default"
                     >
-                      <e.Icon className="w-3.5 h-3.5 text-emerald-300 group-hover/chip:text-emerald-200 transition-colors" />
-                      <span className="text-[11px] font-semibold text-emerald-100/90 whitespace-nowrap">
+                      <e.Icon className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-300 group-hover/chip:text-emerald-500 dark:group-hover/chip:text-emerald-200 transition-colors" />
+                      <span className="text-[11px] font-semibold text-emerald-800 dark:text-emerald-100/90 whitespace-nowrap">
                         {e.label}
                       </span>
                       <span className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
@@ -398,8 +450,8 @@ function DeedCard() {
       </div>
 
       <div className="mt-5 p-3.5 sm:p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-3">
-        <FileSignature className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400 shrink-0 mt-0.5" />
-        <p className="text-xs sm:text-sm font-semibold text-emerald-300">
+        <FileSignature className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+        <p className="text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-300">
           {t(
             'versus.propiedad_footer',
             'Te entregamos el código fuente completo, documentación y todos los recursos. Tu negocio es dueño absoluto de su tecnología.'
@@ -459,11 +511,11 @@ function RentalCard() {
     >
       <div className="flex flex-wrap items-center justify-between pb-4 sm:pb-5 mb-4 sm:mb-5 border-b border-border/80 gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 sm:p-3 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/30">
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30">
             <Lock className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
           <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-rose-400">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400">
               PLATAFORMAS TRADICIONALES
             </span>
             <h3 className="text-xl sm:text-2xl font-bold text-foreground">
@@ -471,7 +523,7 @@ function RentalCard() {
             </h3>
           </div>
         </div>
-        <span className="px-2.5 py-1 text-[11px] sm:text-xs font-bold rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 uppercase tracking-wider">
+        <span className="px-2.5 py-1 text-[11px] sm:text-xs font-bold rounded-full bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-500/30 uppercase tracking-wider">
           {t('versus.alquiler_tag', 'Rehén Mensual')}
         </span>
       </div>
@@ -501,7 +553,7 @@ function RentalCard() {
             <div className="mt-3 text-rose-300 font-black uppercase tracking-[0.2em] text-xs sm:text-sm">
               {t('versus.sitio_404', 'ESTE SITIO YA NO EXISTE')}
             </div>
-            <div className="mt-3 max-w-xs mx-auto text-xs text-muted-foreground leading-relaxed">
+            <div className="mt-3 max-w-xs mx-auto text-xs text-slate-300/90 dark:text-muted-foreground leading-relaxed">
               {t(
                 'versus.alquiler_footer',
                 'Si dejás de pagar la suscripción mensual, tu sitio desaparece y perdés todo el trabajo acumulado.'
@@ -571,7 +623,7 @@ function RentalCard() {
         <button
           type="button"
           onClick={runDestroy}
-          className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-rose-400/50 bg-rose-500/10 text-rose-300 font-bold text-sm transition-all hover:bg-rose-500/20 active:scale-[0.98]"
+          className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-rose-400/50 bg-rose-500/10 text-rose-700 dark:text-rose-300 font-bold text-sm transition-all hover:bg-rose-500/20 active:scale-[0.98]"
         >
           <Power className="w-4 h-4" />
           {t('versus.pagar_boton', 'Dejá de pagar')}
@@ -585,7 +637,7 @@ function RentalCard() {
             key={idx}
             className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground font-medium"
           >
-            <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
             <span>{s}</span>
           </div>
         ))}
@@ -670,15 +722,15 @@ function CostCard() {
         </div>
 
         <div className="flex flex-col gap-1.5 text-xs font-semibold">
-          <span className="flex items-center gap-2 text-rose-400">
-            <i className="w-4 h-0.5 rounded bg-rose-400" />
+          <span className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
+            <i className="w-4 h-0.5 rounded bg-rose-600 dark:bg-rose-400" />
             {t('versus.costo_alquiler', 'Alquiler / plantilla')}
             <span className="text-muted-foreground font-normal">
               ({t('versus.costo_mensual_alquiler', '$49/mes')})
             </span>
           </span>
-          <span className="flex items-center gap-2 text-emerald-400">
-            <i className="w-4 h-0.5 rounded bg-emerald-400" />
+          <span className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
+            <i className="w-4 h-0.5 rounded bg-emerald-600 dark:bg-emerald-400" />
             {t('versus.costo_propia', 'Desarrollo propio')}
             <span className="text-muted-foreground font-normal">
               ({t('versus.costo_unica', 'inversión única')})
@@ -736,7 +788,7 @@ function CostCard() {
             <motion.polyline
               points={rentalPoints}
               fill="none"
-              stroke="#fb7185"
+              stroke="var(--chart-rose)"
               strokeWidth={3}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -749,7 +801,7 @@ function CostCard() {
             <motion.polyline
               points={ownPoints}
               fill="none"
-              stroke="#34d399"
+              stroke="var(--chart-emerald)"
               strokeWidth={3}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -762,8 +814,8 @@ function CostCard() {
             {/* Dots del año seleccionado */}
             <motion.circle
               r={4.5}
-              fill="#fb7185"
-              stroke="#0f0f16"
+              fill="var(--chart-rose)"
+              stroke="var(--chart-dot-ring)"
               strokeWidth={2}
               initial={{ cx: guideX, cy: rentY }}
               animate={{ cx: guideX, cy: rentY }}
@@ -771,8 +823,8 @@ function CostCard() {
             />
             <motion.circle
               r={4.5}
-              fill="#34d399"
-              stroke="#0f0f16"
+              fill="var(--chart-emerald)"
+              stroke="var(--chart-dot-ring)"
               strokeWidth={2}
               initial={{ cx: guideX, cy: ownY }}
               animate={{ cx: guideX, cy: ownY }}
@@ -815,34 +867,34 @@ function CostCard() {
         {/* Números */}
         <div className="lg:min-w-[280px] flex flex-col gap-3">
           <div ref={liveRef} className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-4">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-rose-400 mb-1">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400 mb-1">
               {t('versus.costo_alquiler', 'Alquiler / plantilla')}
             </div>
-            <div className="text-2xl sm:text-3xl font-black font-mono text-rose-400">
+            <div className="text-2xl sm:text-3xl font-black font-mono text-rose-600 dark:text-rose-400">
               <motion.span key={year} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
                 {fmtUsd(rentalCost(year))}
               </motion.span>
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 text-[11px] font-bold text-rose-300/90">
+            <div className="mt-2.5 flex items-center gap-1.5 text-[11px] font-bold text-rose-700 dark:text-rose-300/90">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-60" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-400" />
               </span>
               {t('versus.extra_en_vivo', 'EN VIVO')}
-              <span className="font-mono text-rose-300 tabular-nums transition-none">
+              <span className="font-mono text-rose-600 dark:text-rose-300 tabular-nums transition-none">
                 +{fmtUsdC(liveExtra)}
               </span>
-              <span className="text-rose-300/60 font-medium">
+              <span className="text-rose-700/70 dark:text-rose-300/60 font-medium">
                 {t('versus.extra_en_vivo_desc', 'mientras mirás, nunca se detiene')}
               </span>
             </div>
           </div>
 
           <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-1">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 mb-1">
               {t('versus.costo_propia', 'Desarrollo propio')}
             </div>
-            <div className="text-2xl sm:text-3xl font-black font-mono text-emerald-400">
+            <div className="text-2xl sm:text-3xl font-black font-mono text-emerald-700 dark:text-emerald-400">
               <motion.span
                 key={`own-${year}`}
                 initial={{ opacity: 0, y: 6 }}
@@ -860,12 +912,12 @@ function CostCard() {
           >
             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-foreground/70 mb-1">
               <Activity
-                className={`w-3.5 h-3.5 ${crossed ? 'text-emerald-400' : 'text-muted-foreground'}`}
+                className={`w-3.5 h-3.5 ${crossed ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}
               />
               {t('versus.costo_ahorro', 'Ahorro acumulado')} · {t('versus.costo_año', 'año')} {year}
             </div>
             <div
-              className={`text-3xl sm:text-4xl font-black font-mono ${crossed ? 'text-emerald-400' : 'text-muted-foreground'}`}
+              className={`text-3xl sm:text-4xl font-black font-mono ${crossed ? 'text-emerald-700 dark:text-emerald-400' : 'text-muted-foreground'}`}
             >
               <motion.span
                 key={`ahorro-${year}`}
@@ -909,12 +961,12 @@ function NeonSign({
   const isRose = color === 'rose'
   const glow = active
     ? isRose
-      ? '0 0 6px #f43f5e, 0 0 20px #f43f5e, 0 0 46px rgba(244,63,94,0.8), 0 0 90px rgba(244,63,94,0.45)'
-      : '0 0 6px #10b981, 0 0 20px #10b981, 0 0 46px rgba(16,185,129,0.8), 0 0 90px rgba(16,185,129,0.5)'
+      ? 'var(--neon-rose)'
+      : 'var(--neon-emerald)'
     : hovering
       ? isRose
-        ? '0 0 6px rgba(244,63,94,0.7), 0 0 22px rgba(244,63,94,0.4)'
-        : '0 0 6px rgba(16,185,129,0.7), 0 0 22px rgba(16,185,129,0.4)'
+        ? 'var(--neon-rose-hover)'
+        : 'var(--neon-emerald-hover)'
       : 'none'
 
   return (
@@ -925,9 +977,9 @@ function NeonSign({
       onMouseLeave={() => setHovering(false)}
       aria-pressed={active}
       style={{ textShadow: glow, animationDelay: delay }}
-      className={`font-black uppercase tracking-[0.14em] select-none cursor-pointer rounded-md transition-[text-shadow,color] duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#05070f] text-[26px] sm:text-4xl ${
+      className={`font-black uppercase tracking-[0.14em] select-none cursor-pointer rounded-md transition-[text-shadow,color] duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-[#05070f] text-[26px] sm:text-4xl ${
         active ? 'animate-[neon-flicker_8s_steps(1)_infinite]' : ''
-      } ${isRose ? (active ? 'text-rose-400/95' : 'text-rose-400/25') : active ? 'text-emerald-400/95' : 'text-emerald-400/25'}`}
+      } ${isRose ? (active ? 'text-rose-600 dark:text-rose-400/95' : 'text-rose-600/30 dark:text-rose-400/25') : active ? 'text-emerald-700 dark:text-emerald-400/95' : 'text-emerald-700/30 dark:text-emerald-400/25'}`}
     >
       {text}
     </button>

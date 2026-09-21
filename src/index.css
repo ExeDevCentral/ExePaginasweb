@@ -258,6 +258,19 @@
   --matrix-pal-3: #0f766e;
   --matrix-pal-4: #155e75;
   --matrix-pal-5: #047857;
+
+  /* Neón en claro: brillo compacto y legible sobre fondo claro */
+  --neon-emerald: 0 0 4px rgba(16, 185, 129, 0.55), 0 0 14px rgba(16, 185, 129, 0.3),
+    0 0 32px rgba(16, 185, 129, 0.16);
+  --neon-rose: 0 0 4px rgba(244, 63, 94, 0.55), 0 0 14px rgba(244, 63, 94, 0.3),
+    0 0 32px rgba(244, 63, 94, 0.16);
+  --neon-emerald-hover: 0 0 4px rgba(16, 185, 129, 0.6), 0 0 12px rgba(16, 185, 129, 0.3);
+  --neon-rose-hover: 0 0 4px rgba(244, 63, 94, 0.6), 0 0 12px rgba(244, 63, 94, 0.3);
+
+  /* Gráfico de costo: series con buen contraste en claro */
+  --chart-emerald: #059669;
+  --chart-rose: #e11d48;
+  --chart-dot-ring: #ffffff;
 }
 
 .dark {
@@ -297,6 +310,19 @@
   --matrix-pal-3: #0ea5e9;
   --matrix-pal-4: #38bdf8;
   --matrix-pal-5: #00e5a0;
+
+  /* Neón clásico de tubo de vidrio en dark */
+  --neon-emerald: 0 0 6px #10b981, 0 0 20px #10b981, 0 0 46px rgba(16, 185, 129, 0.8),
+    0 0 90px rgba(16, 185, 129, 0.5);
+  --neon-rose: 0 0 6px #f43f5e, 0 0 20px #f43f5e, 0 0 46px rgba(244, 63, 94, 0.8),
+    0 0 90px rgba(244, 63, 94, 0.45);
+  --neon-emerald-hover: 0 0 6px rgba(16, 185, 129, 0.7), 0 0 22px rgba(16, 185, 129, 0.4);
+  --neon-rose-hover: 0 0 6px rgba(244, 63, 94, 0.7), 0 0 22px rgba(244, 63, 94, 0.4);
+
+  /* Gráfico de costo: series neón sobre fondo oscuro */
+  --chart-emerald: #34d399;
+  --chart-rose: #fb7185;
+  --chart-dot-ring: #0f0f16;
 }
 
 @layer base {

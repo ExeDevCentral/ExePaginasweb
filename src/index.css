@@ -191,6 +191,42 @@
   --color-accent-magenta: var(--accent-magenta);
   --color-accent-yellow: var(--accent-yellow);
   --color-destructive: var(--destructive);
+
+  /* Comparativa — superficies oscuras de las tarjetas internas */
+  --color-surface-0: var(--surface-0);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-border-dark: var(--border-dark);
+  --color-text-hi: var(--text-hi);
+  --color-text-mid: var(--text-mid);
+  --color-text-lo: var(--text-lo);
+
+  /* Comparativa — lado "Propiedad" (emerald) */
+  --color-own-300: var(--own-300);
+  --color-own-400: var(--own-400);
+  --color-own-500: var(--own-500);
+  --color-own-600: var(--own-600);
+  --color-own-700: var(--own-700);
+  --color-own-800: var(--own-800);
+  --color-own-900: var(--own-900);
+  --color-own-tint: var(--own-tint);
+  --color-own-border: var(--own-border);
+  --color-own-glow: var(--own-glow);
+
+  /* Comparativa — lado "Alquiler" (rose) */
+  --color-rent-300: var(--rent-300);
+  --color-rent-400: var(--rent-400);
+  --color-rent-500: var(--rent-500);
+  --color-rent-600: var(--rent-600);
+  --color-rent-700: var(--rent-700);
+  --color-rent-800: var(--rent-800);
+  --color-rent-tint: var(--rent-tint);
+  --color-rent-border: var(--rent-border);
+  --color-rent-glow: var(--rent-glow);
+
+  /* Comparativa — acento de marca ecológico (emerald → cyan) */
+  --color-accent-brand: var(--accent-brand);
+  --color-own-accent: var(--own-accent);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
@@ -271,6 +307,42 @@
   --chart-emerald: #059669;
   --chart-rose: #e11d48;
   --chart-dot-ring: #ffffff;
+
+  /* Comparativa — superficies oscuras de tarjetas internas */
+  --surface-0: #070b14;
+  --surface-1: #0b1220;
+  --surface-2: #111a2e;
+  --border-dark: rgba(148, 163, 184, 0.16);
+  --text-hi: #e6edf7;
+  --text-mid: #9aa7b8;
+  --text-lo: #758496;
+
+  /* Comparativa — lado Propiedad (emerald) */
+  --own-300: #6ee7b7;
+  --own-400: #34d399;
+  --own-500: #10b981;
+  --own-600: #059669;
+  --own-700: #047857;
+  --own-800: #065f46;
+  --own-900: #064e3b;
+  --own-tint: #ecfdf5;
+  --own-border: rgba(16, 185, 129, 0.3);
+  --own-glow: rgba(16, 185, 129, 0.35);
+
+  /* Comparativa — lado Alquiler (rose) */
+  --rent-300: #fda4af;
+  --rent-400: #fb7185;
+  --rent-500: #f43f5e;
+  --rent-600: #e11d48;
+  --rent-700: #be123c;
+  --rent-800: #9f1239;
+  --rent-tint: #fff1f2;
+  --rent-border: rgba(244, 63, 94, 0.3);
+  --rent-glow: rgba(244, 63, 94, 0.35);
+
+  /* Comparativa — acento de marca (emerald → cyan) */
+  --accent-brand: #22d3ee;
+  --own-accent: linear-gradient(100deg, #10b981, #22d3ee);
 }
 
 .dark {
@@ -323,6 +395,42 @@
   --chart-emerald: #34d399;
   --chart-rose: #fb7185;
   --chart-dot-ring: #0f0f16;
+
+  /* Comparativa — superficies oscuras (idénticas en ambos temas) */
+  --surface-0: #070b14;
+  --surface-1: #0b1220;
+  --surface-2: #111a2e;
+  --border-dark: rgba(148, 163, 184, 0.16);
+  --text-hi: #e6edf7;
+  --text-mid: #9aa7b8;
+  --text-lo: #758496;
+
+  /* Comparativa — lado Propiedad (emerald) */
+  --own-300: #a7f3d0;
+  --own-400: #34d399;
+  --own-500: #10b981;
+  --own-600: #059669;
+  --own-700: #047857;
+  --own-800: #065f46;
+  --own-900: #022c22;
+  --own-tint: rgba(6, 78, 59, 0.35);
+  --own-border: rgba(52, 211, 153, 0.3);
+  --own-glow: rgba(16, 185, 129, 0.5);
+
+  /* Comparativa — lado Alquiler (rose) */
+  --rent-300: #fecdd3;
+  --rent-400: #fb7185;
+  --rent-500: #f43f5e;
+  --rent-600: #e11d48;
+  --rent-700: #be123c;
+  --rent-800: #9f1239;
+  --rent-tint: rgba(76, 5, 25, 0.35);
+  --rent-border: rgba(251, 113, 133, 0.3);
+  --rent-glow: rgba(244, 63, 94, 0.5);
+
+  /* Comparativa — acento de marca (emerald → cyan) */
+  --accent-brand: #22d3ee;
+  --own-accent: linear-gradient(100deg, #10b981, #22d3ee);
 }
 
 @layer base {
@@ -623,7 +731,7 @@
     transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -1466,4 +1574,225 @@
   .hc-tag-right {
     right: 8px;
   }
+}
+
+/* =============================================
+   COMPARATIVA PREMIUM — utilidades de acabado
+   (tokens definidos arriba; cero colores en JSX)
+   ============================================= */
+
+/* Carátula de tarjeta (Propiedad / Alquiler): borde 1px con highlight superior,
+   glass traslúcido y sombra en 2 capas (linear sutil + difusa profunda). */
+.card-own,
+.card-rent {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--own-border);
+  background: color-mix(in oklab, var(--card) 72%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 1px 2px -1px rgb(2 6 23 / 0.08),
+    0 24px 48px -24px rgb(2 6 23 / 0.16);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+.card-rent {
+  border-color: var(--rent-border);
+}
+.card-own::before,
+.card-rent::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--own-400) 60%, transparent),
+    transparent
+  );
+}
+.card-rent::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--rent-400) 60%, transparent),
+    transparent
+  );
+}
+.card-own::after,
+.card-rent::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+.card-own:hover,
+.card-rent:hover {
+  border-color: var(--own-500);
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 2px -1px rgb(2 6 23 / 0.08),
+    0 32px 56px -24px rgb(2 6 23 / 0.22);
+}
+.card-rent:hover {
+  border-color: var(--rent-500);
+}
+
+/* Panel oscuro interno (escritura / demo / terminal): superficie con
+   gradiente radial sutil en el acento correspondiente + grain. */
+.dark-card {
+  position: relative;
+  border: 1px solid var(--border-dark);
+  background: var(--surface-0);
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.04),
+    0 16px 40px -20px rgb(2 6 23 / 0.5);
+}
+.dark-card-own {
+  border-color: color-mix(in oklab, var(--own-500) 22%, transparent);
+  background-image:
+    radial-gradient(
+      100% 90% at 18% 0%,
+      color-mix(in oklab, var(--surface-2) 88%, var(--own-900)),
+      transparent 55%
+    ),
+    linear-gradient(160deg, var(--surface-1), var(--surface-0) 72%);
+}
+.dark-card-rent {
+  border-color: color-mix(in oklab, var(--rent-500) 22%, transparent);
+  background-image:
+    radial-gradient(
+      100% 90% at 82% 0%,
+      color-mix(in oklab, var(--surface-2) 88%, var(--rent-600)),
+      transparent 55%
+    ),
+    linear-gradient(160deg, var(--surface-1), var(--surface-0) 72%);
+}
+.dark-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+  opacity: 0.08;
+  mix-blend-mode: screen;
+}
+
+/* CTA primario (lado Propiedad): degradado emerald → teal, blanco legible,
+   glow de apoyo y tecla hover nítida (nunca parece deshabilitado). */
+.btn-own-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #fff;
+  font-weight: 700;
+  border: 1px solid color-mix(in oklab, var(--own-700) 70%, #022c22);
+  background-image: linear-gradient(180deg, #059669, #047857);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    0 10px 24px -10px rgb(5 150 105 / 0.55);
+  transition:
+    filter 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+.btn-own-primary:hover {
+  filter: brightness(1.06);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    0 14px 30px -10px rgb(5 150 105 / 0.7);
+  transform: translateY(-1px);
+}
+.btn-own-primary:active {
+  transform: translateY(0);
+}
+.btn-own-primary:focus-visible {
+  outline: 2px solid var(--own-400);
+  outline-offset: 2px;
+}
+
+/* Estado bloqueado (lado Alquiler): estilo de llave atrás, legible en ambos temas. */
+.btn-rent-blocked {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--rent-700);
+  font-weight: 600;
+  border: 1px solid var(--rent-border);
+  background: color-mix(in oklab, var(--rent-tint) 70%, transparent);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5);
+  opacity: 1;
+  cursor: not-allowed;
+  transition:
+    border-color 0.2s ease,
+    filter 0.2s ease;
+}
+.btn-rent-blocked:hover {
+  border-color: var(--rent-400);
+  filter: saturate(1.15);
+}
+.btn-rent-blocked:focus-visible {
+  outline: 2px solid var(--rent-400);
+  outline-offset: 2px;
+}
+.dark .btn-rent-blocked {
+  color: var(--rent-400);
+  background: color-mix(in oklab, var(--rent-500) 14%, transparent);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.05);
+}
+
+/* Fade lateral del carrusel: máscara reducida al 8% por borde. */
+.marquee-edge-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+
+/* Contenedor del carrusel: reserva vertical para que el chip suba al hover
+   sin cortarse por la máscara y el overflow. */
+.marquee-ticker {
+  overflow: hidden;
+  padding-block: 14px;
+}
+
+/* Chip del carrusel: el transform crea su propio contexto de apilamiento, por
+   eso el chip sobre el que se hace hover pisa al siguiente del DOM. Un z-index
+   explícito en hover lo pinta encima del vecino. */
+.marquee-chip {
+  position: relative;
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+.marquee-chip:hover {
+  transform: translateY(-3px) scale(1.03);
+  z-index: 2;
+}
+
+/* Chip de marca "Mucho más": gradiente emerald → cyan sobre superficie 2. */
+.chip-brand {
+  position: relative;
+  border: 1px solid color-mix(in oklab, var(--accent-brand) 35%, transparent);
+  background: var(--surface-1);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 8px 20px -8px rgb(2 6 23 / 0.5);
 }

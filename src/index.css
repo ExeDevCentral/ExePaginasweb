@@ -42,6 +42,16 @@
   --animate-ripple: ripple 0.7s ease-out forwards;
   --animate-signature-shimmer: signatureShimmer 2.5s ease-in-out infinite;
   --animate-signature-glow: signatureGlow 3s ease-in-out infinite;
+  --animate-border-spin: borderSpin 4s linear infinite;
+
+  @keyframes borderSpin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
   @keyframes spin {
     from {
@@ -252,18 +262,18 @@
 :root {
   color-scheme: light;
   /* Paleta Light Mode Descansada y Premium (Estilo Linear / Apple / Stripe) — Fondo suave, cero fatiga visual */
-  --background: #e8eef5;
+  --background: #edf2f7;
   --foreground: #0f172a;
-  --card: #f8fafc;
+  --card: #ffffff;
   --card-foreground: #0f172a;
-  --popover: #f8fafc;
+  --popover: #ffffff;
   --popover-foreground: #0f172a;
   --primary: #0284c7;
   --primary-foreground: #ffffff;
-  --secondary: #dce5ef;
+  --secondary: #e2e8f0;
   --secondary-foreground: #0f172a;
-  --muted: #dce5ef;
-  --muted-foreground: #334155;
+  --muted: #e2e8f0;
+  --muted-foreground: #475569;
   --accent: #6366f1;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
@@ -283,9 +293,9 @@
   --accent-violet: #6d28d9;
   --accent-magenta: #4f46e5;
   --accent-yellow: #b45309;
-  --primary-bg: #e8eef5;
+  --primary-bg: #edf2f7;
   --primary-text: #0f172a;
-  --primary-secondary: #334155;
+  --primary-secondary: #475569;
 
   /* Paleta Matrix por tema: verde profundo en claro (legible), neón en dark */
   --matrix-pal-0: #166534;
@@ -1758,10 +1768,10 @@
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.05);
 }
 
-/* Fade lateral del carrusel: máscara reducida al 8% por borde. */
+/* Fade lateral del carrusel: máscara suave al 3% por borde para evitar cortes bruscos de texto. */
 .marquee-edge-mask {
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3%, #000 97%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 3%, #000 97%, transparent 100%);
 }
 
 /* Contenedor del carrusel: reserva vertical para que el chip suba al hover

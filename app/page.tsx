@@ -9,13 +9,17 @@ import dynamic from 'next/dynamic'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import SiteHeader from '@/components/layout/SiteHeader'
-import Hero from '@/components/Hero/Hero'
+import OptimusScaleHero from '@/components/Hero/OptimusScaleHero'
 import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription'
 import PortfolioSection from '@/components/Portfolio/PortfolioSection'
 import ContactSection from '@/components/landing/ContactSection'
 
 const Footer = dynamic(() => import('@/components/layout/Footer'), {
   loading: () => <div className="h-20" />,
+})
+
+const AIChatWidget = dynamic(() => import('@/components/chat/AIChatWidget'), {
+  ssr: false,
 })
 
 export default function HomePage() {
@@ -31,12 +35,13 @@ export default function HomePage() {
         />
         <SiteHeader />
         <main>
-          <Hero />
+          <OptimusScaleHero />
           <OwnershipVsSubscription />
           <PortfolioSection featuredOnly />
           <ContactSection />
         </main>
         <Footer />
+        <AIChatWidget />
       </div>
     </ErrorBoundary>
   )

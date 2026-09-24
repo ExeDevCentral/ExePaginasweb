@@ -7,9 +7,11 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown, Scissors, Wheat, Shirt, Volleyball, Menu, X, ArrowRight } from 'lucide-react'
 import Logo from './Logo'
-import UtilityDock from './UtilityDock'
+import LanguageSwitcher from './LanguageSwitcher'
+import ThemeToggle from './ThemeToggle'
 import { MatrixWordmark } from '@/components/Effects/MatrixText'
 import { useTheme } from '@/core/theme/ThemeContext'
 
@@ -107,6 +109,7 @@ const linkClass =
   'rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-black/5 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white'
 
 export default function SiteHeader() {
+  const { t } = useTranslation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [solutionsOpen, setSolutionsOpen] = useState(false)
 
@@ -114,10 +117,10 @@ export default function SiteHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-foreground/10 bg-background/90 backdrop-blur-xl dark:border-white/10 dark:bg-[#050508]/90">
-      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        {/* Logo + wordmark separados — sin hover compartido que mueva el nav */}
+      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-6 lg:px-8">
+        {/* Logo + wordmark */}
         <div className="flex shrink-0 items-center gap-3">
-          <Link href="/" onClick={closeMobile} aria-label="Inicio">
+          <Link href="/" onClick={closeMobile} aria-label={t('nav.inicio') || 'Inicio'}>
             <HeaderLogo />
           </Link>
           <Link href="/" onClick={closeMobile} className="outline-none">
@@ -125,9 +128,10 @@ export default function SiteHeader() {
           </Link>
         </div>
 
+        {/* 4 links principales + Soluciones */}
         <nav aria-label="Navegación principal" className="hidden items-center gap-1 lg:flex">
           <Link href="/" className={linkClass}>
-            Inicio
+            {t('nav.inicio') || 'Inicio'}
           </Link>
           <div className="relative">
             <button
@@ -137,7 +141,7 @@ export default function SiteHeader() {
               aria-controls="solutions-menu"
               onClick={() => setSolutionsOpen((open) => !open)}
             >
-              Soluciones{' '}
+              {t('nav.soluciones') || 'Soluciones'}{' '}
               <ChevronDown
                 size={15}
                 className={
@@ -171,44 +175,52 @@ export default function SiteHeader() {
                 >
                   Ver los 4 rubros <ArrowRight size={14} />
                 </Link>
+                <div className="col-span-2 flex items-center justify-between gap-2 pt-2 border-t border-black/5 dark:border-white/5 text-xs">
+                  <Link
+                    href="/cotizador"
+                    className="flex-1 rounded-lg py-1.5 px-2.5 text-center font-semibold text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  >
+                    {t('nav.cotizador') || 'Cotizador Online'}
+                  </Link>
+                  <Link
+                    href="/tienda"
+                    className="flex-1 rounded-lg py-1.5 px-2.5 text-center font-semibold text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  >
+                    {t('nav.tienda_online') || 'Tienda Online'}
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
           <Link href="/portafolio" className={linkClass}>
-            Portafolio
+            {t('nav.casos') || 'Portafolio'}
           </Link>
           <Link href="/precios" className={linkClass}>
-            Precios
+            {t('nav.planes') || 'Precios'}
           </Link>
           <Link href="/#contact" className={linkClass}>
-            Contacto
+            {t('nav.contacto') || 'Contacto'}
           </Link>
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <UtilityDock />
-          <Link
-            href="/cotizador"
-            className="rounded-full border border-emerald-400/40 px-3 py-2 text-xs font-bold text-emerald-600 hover:bg-emerald-400/10 dark:text-emerald-300"
-          >
-            Cotizador
-          </Link>
-          <Link
-            href="/tienda"
-            className="rounded-full border border-cyan-400/40 px-3 py-2 text-xs font-bold text-cyan-600 hover:bg-cyan-400/10 dark:text-cyan-300"
-          >
-            Tienda
-          </Link>
+        {/* Toggles limpios sin cápsula + único botón (Hablemos) */}
+        <div className="hidden items-center gap-3 lg:flex">
+          <div className="flex items-center gap-1">
+            <LanguageSwitcher />
+            <ThemeToggle />
+          </div>
           <Link
             href="/#contact"
-            className="rounded-full bg-cyan-400 px-4 py-2 text-xs font-black text-slate-950 hover:bg-cyan-300"
+            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-5 py-2 text-xs transition-colors shadow-sm"
           >
-            Hablemos
+            {t('nav.contacto') || 'Hablemos'}
           </Link>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 lg:hidden">
-          <UtilityDock className="hidden rounded-xl sm:flex" />
+        {/* Mobile controls */}
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2 lg:hidden">
+          <LanguageSwitcher />
+          <ThemeToggle />
           <button
             type="button"
             onClick={() => setMobileOpen((open) => !open)}
@@ -231,7 +243,7 @@ export default function SiteHeader() {
           className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4"
         >
           <Link href="/" className={linkClass} onClick={closeMobile}>
-            Inicio
+            {t('nav.inicio') || 'Inicio'}
           </Link>
           <button
             type="button"
@@ -239,7 +251,7 @@ export default function SiteHeader() {
             aria-expanded={solutionsOpen}
             onClick={() => setSolutionsOpen((open) => !open)}
           >
-            Soluciones{' '}
+            {t('nav.soluciones') || 'Soluciones'}{' '}
             <ChevronDown
               size={16}
               className={solutionsOpen ? 'rotate-180 transition-transform' : 'transition-transform'}
@@ -261,13 +273,13 @@ export default function SiteHeader() {
             ))}
           </div>
           <Link href="/portafolio" className={linkClass} onClick={closeMobile}>
-            Portafolio
+            {t('nav.casos') || 'Portafolio'}
           </Link>
           <Link href="/precios" className={linkClass} onClick={closeMobile}>
-            Precios
+            {t('nav.planes') || 'Precios'}
           </Link>
           <Link href="/#contact" className={linkClass} onClick={closeMobile}>
-            Contacto
+            {t('nav.contacto') || 'Contacto'}
           </Link>
           <div className="mt-2 flex gap-2 border-t border-foreground/10 pt-3 dark:border-white/10">
             <Link

@@ -10,7 +10,7 @@ import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Check, X, Coins, MessageCircle } from 'lucide-react'
 import ROICalculator from './ROICalculator'
-import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '@/core/utils/whatsappUtils'
+import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
 
 interface PlanData {
   tKey: 'landing' | 'ecommerce'

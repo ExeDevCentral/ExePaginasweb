@@ -14,7 +14,6 @@ import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport, type UIMessage } from 'ai'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  MessageSquare,
   Send,
   X,
   User,
@@ -27,6 +26,7 @@ import {
   RotateCcw,
 } from 'lucide-react'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
+import Logo from '../layout/Logo'
 
 const WELCOME_TEXT =
   'Hola. Soy el asistente de ExePaginasWeb. ¿En qué proyecto o sistema web te puedo asesorar hoy?'
@@ -318,13 +318,9 @@ export const AIChatWidget: React.FC = () => {
           aria-label={isOpen ? 'Cerrar asistente' : 'Abrir asistente virtual'}
           className="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#111113] hover:bg-[#18181c] dark:bg-[#111113] dark:hover:bg-[#18181c] text-[#f7f5ee] border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer"
         >
-          {/* Icono minimalista */}
-          <div className="w-6 h-6 rounded-full bg-[#1a1a1e] border border-[#333338] flex items-center justify-center text-[#f7f5ee] shrink-0">
-            {isOpen ? (
-              <X className="w-3.5 h-3.5" />
-            ) : (
-              <MessageSquare className="w-3.5 h-3.5 text-cyan-400" />
-            )}
+          {/* Icono de marca oficial ExePaginasWeb */}
+          <div className="w-7 h-7 rounded-full bg-[#1a1a1e] border border-amber-400/40 flex items-center justify-center text-[#f7f5ee] shrink-0 overflow-hidden shadow-inner">
+            {isOpen ? <X className="w-3.5 h-3.5" /> : <Logo size={22} variant="dark" />}
           </div>
 
           {/* Texto unificado */}
@@ -356,18 +352,18 @@ export const AIChatWidget: React.FC = () => {
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
             className="fixed bottom-20 sm:bottom-24 left-3 right-3 sm:left-auto sm:right-7 z-50 sm:w-[410px] max-h-[calc(100dvh-6rem)] sm:max-h-[600px] h-[80dvh] sm:h-[560px] rounded-2xl bg-[#fcfbf8] dark:bg-[#0e0e11] border border-[#e8e4d8] dark:border-[#242429] shadow-2xl backdrop-blur-2xl flex flex-col overflow-hidden text-slate-900 dark:text-[#f7f5ee]"
           >
-            {/* CABECERA EDITORIAL MINIMALISTA */}
+            {/* CABECERA EDITORIAL MINIMALISTA CON LOGO DE MARCA */}
             <div className="px-5 py-4 bg-[#f6f4eb] dark:bg-[#131317] border-b border-[#e8e4d8] dark:border-[#222226] flex items-center justify-between select-none">
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-[#111113] dark:bg-[#f7f5ee] text-[#f7f5ee] dark:text-[#111113] flex items-center justify-center font-mono text-xs font-bold shrink-0">
-                  E
+              <div className="flex items-center gap-3">
+                <div className="relative w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 border border-amber-400/40 flex items-center justify-center shrink-0 shadow-sm p-0.5">
+                  <Logo size={26} variant="auto" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-[#f6f4eb] dark:border-[#131317]" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-xs font-semibold tracking-tight text-neutral-900 dark:text-[#f7f5ee]">
-                      {t('chat.header_title') || 'Exe Asistente'}
+                      {t('chat.header_title') || 'ExePaginasWeb Asistente'}
                     </h3>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#111113] dark:bg-[#ede9dc] opacity-75" />
                   </div>
                   <p className="text-[10px] text-neutral-500 dark:text-[#9c9a92] font-mono">
                     {t('chat.header_status') || 'Desarrollo Web & Sistemas'}
@@ -432,10 +428,10 @@ export const AIChatWidget: React.FC = () => {
                       className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-mono ${
                         isUser
                           ? 'bg-[#111113] text-[#f7f5ee] dark:bg-[#f7f5ee] dark:text-[#111113]'
-                          : 'bg-[#edeae0] dark:bg-[#1a1a1f] text-neutral-700 dark:text-[#ede9dc] border border-[#ded9cc] dark:border-[#29292e]'
+                          : 'bg-black/5 dark:bg-white/5 border border-amber-400/30 p-0.5'
                       }`}
                     >
-                      {isUser ? <User className="w-3 h-3" /> : 'E'}
+                      {isUser ? <User className="w-3 h-3" /> : <Logo size={20} variant="auto" />}
                     </div>
 
                     {/* Burbuja de mensaje */}

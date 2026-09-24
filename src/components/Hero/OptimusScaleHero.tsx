@@ -219,16 +219,23 @@ export const OptimusScaleHero: React.FC = () => {
                 </a>
 
                 <a
-                  href="#demo"
+                  href="#portafolio"
                   onClick={(e) => {
                     e.preventDefault()
-                    const el = document.getElementById('demo')
-                    if (el) el.scrollIntoView({ behavior: 'smooth' })
+                    trackEvent('hero_cta_portfolio_clicked', { source: 'optimus_hero' })
+                    const el = document.getElementById('portafolio')
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' })
+                    } else {
+                      window.location.href = '/portafolio'
+                    }
                   }}
                   className="group inline-flex items-center justify-center gap-2.5 h-[52px] px-8 rounded-full border border-slate-300 dark:border-white/20 hover:border-slate-400 dark:hover:border-white/40 text-slate-800 dark:text-white font-medium text-sm transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 shrink-0"
                 >
                   <PlayIcon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 group-hover:scale-110 transition-transform" />
-                  <span>{t('hero.cta_ver_demo') || 'Ver demostración'}</span>
+                  <span>
+                    {t('hero.cta_ver_portafolio') || t('hero.cta_ver_demo') || 'Ver portafolio'}
+                  </span>
                 </a>
               </motion.div>
 

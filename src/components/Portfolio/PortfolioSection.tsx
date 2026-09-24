@@ -396,6 +396,16 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                   <Zap className="w-4 h-4 text-slate-950" />
                   <span>{t('portfolio.cta_cotizar', 'Cotizar Mi Proyecto a Medida')}</span>
                 </a>
+
+                {featuredOnly && (
+                  <a
+                    href="/portafolio"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl border border-foreground/20 hover:border-accent-cyan/60 text-foreground font-bold text-sm tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+                  >
+                    <ArrowUpRight className="w-4 h-4 text-accent-cyan" />
+                    <span>{t('portfolio.ver_todos', 'Ver todos los proyectos')}</span>
+                  </a>
+                )}
               </div>
             </div>
           </motion.div>

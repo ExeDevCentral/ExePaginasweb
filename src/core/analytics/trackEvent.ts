@@ -9,6 +9,7 @@ import { track } from '@vercel/analytics'
 
 export type AnalyticsEventName =
   | 'hero_cta_demo_clicked'
+  | 'hero_cta_portfolio_clicked'
   | 'hero_cta_contact_clicked'
   | 'contact_form_submitted'
   | 'contact_whatsapp_clicked'

@@ -397,7 +397,7 @@ export const OptimusScaleHero: React.FC = () => {
             </p>
           </SpotlightBorderCard>
 
-          <SpotlightBorderCard activeBeam={true} colorVariant="fuchsia" animationDelay="-1.2s">
+          <SpotlightBorderCard activeBeam={true} colorVariant="fuchsia" animationDelay="-2.75s">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-mono font-bold text-fuchsia-600 dark:text-fuchsia-400">
                 02 // GESTIÓN
@@ -413,7 +413,7 @@ export const OptimusScaleHero: React.FC = () => {
             </p>
           </SpotlightBorderCard>
 
-          <SpotlightBorderCard activeBeam={true} colorVariant="amber" animationDelay="-2.4s">
+          <SpotlightBorderCard activeBeam={true} colorVariant="amber" animationDelay="-5.5s">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
                 03 // AUTOMATIZACIÓN
@@ -429,7 +429,7 @@ export const OptimusScaleHero: React.FC = () => {
             </p>
           </SpotlightBorderCard>
 
-          <SpotlightBorderCard activeBeam={true} colorVariant="emerald" animationDelay="-3.6s">
+          <SpotlightBorderCard activeBeam={true} colorVariant="emerald" animationDelay="-8.25s">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
                 04 // LIBERTAD

@@ -173,6 +173,16 @@
   }
 }
 
+/* Global keyframes for border beam rotating animations */
+@keyframes borderSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Colores y tipografías: se inlinean en las utilities para que respeten el
    cambio de tema `.dark` (que re-define las variables CSS fuente). */
 @theme inline {

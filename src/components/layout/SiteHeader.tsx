@@ -117,7 +117,7 @@ export default function SiteHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-foreground/10 bg-background/90 backdrop-blur-xl dark:border-white/10 dark:bg-[#050508]/90">
-      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-6 lg:px-8">
+      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Logo + wordmark */}
         <div className="flex shrink-0 items-center gap-3">
           <Link href="/" onClick={closeMobile} aria-label={t('nav.inicio') || 'Inicio'}>

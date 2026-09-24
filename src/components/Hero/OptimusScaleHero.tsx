@@ -141,9 +141,9 @@ export const OptimusScaleHero: React.FC = () => {
           }}
         />
 
-        {/* CONTENEDOR EXACTO ALINEADO CON NAVBAR: max-w-7xl mx-auto px-6 lg:px-8 */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full flex-1 flex flex-col justify-center my-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full my-auto">
+        {/* CONTENEDOR EXACTO ALINEADO CON NAVBAR: max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center my-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center w-full my-auto">
             {/* COLUMNA IZQUIERDA: CONTENIDO EDITORIAL LIMPIO (lg:col-span-6) */}
             <div className="lg:col-span-6 flex flex-col items-start text-left z-20">
               {/* 1. EYEBROW MONO, 1 LÍNEA, SIN CAJA */}
@@ -157,8 +157,8 @@ export const OptimusScaleHero: React.FC = () => {
                 <span>{t('hero.eyebrow_plataforma') || 'Plataforma web & sistemas SaaS'}</span>
               </motion.div>
 
-              {/* 2. TÍTULO: text-6xl xl:text-7xl leading-[1.05] tracking-tight SIN CAJA */}
-              <h1 className="mt-4 text-5xl sm:text-6xl xl:text-7xl font-sans font-medium tracking-tight leading-[1.05] text-slate-950 dark:text-white">
+              {/* 2. TÍTULO: text-4xl sm:text-6xl xl:text-7xl leading-[1.1] sm:leading-[1.05] tracking-tight SIN CAJA */}
+              <h1 className="mt-4 text-4xl sm:text-6xl xl:text-7xl font-sans font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-slate-950 dark:text-white">
                 <motion.span
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -172,7 +172,7 @@ export const OptimusScaleHero: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="inline-flex items-center gap-3 sm:gap-4 flex-wrap mt-1"
+                  className="inline-flex items-center gap-2 sm:gap-4 flex-wrap mt-1"
                 >
                   <span className="text-slate-500 dark:text-slate-400 font-light">para</span>
                   <span className="relative inline-block text-cyan-500 dark:text-cyan-400 font-bold">
@@ -197,17 +197,17 @@ export const OptimusScaleHero: React.FC = () => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="mt-6 max-w-2xl min-h-[5.5rem] sm:min-h-[4.5rem]"
+                className="mt-5 sm:mt-6 max-w-2xl min-h-[6.5rem] sm:min-h-[4.5rem]"
               >
                 <ConvergentTypewriterSubtitle />
               </motion.div>
 
-              {/* 4. BOTONES: ALTO 52PX, MISMO RADIO, 1 RELLENO Y 1 OUTLINE, mt-10 */}
+              {/* 4. BOTONES: ALTO 52PX, MISMO RADIO, 1 RELLENO Y 1 OUTLINE, mt-8 sm:mt-10 */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto"
+                className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto"
               >
                 <a
                   href="#contact"
@@ -267,7 +267,7 @@ export const OptimusScaleHero: React.FC = () => {
 
             {/* COLUMNA DERECHA: ESFERA SIN MARCO, CENTRADA VERTICALMENTE (lg:col-span-6) */}
             <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end w-full py-4 lg:py-0">
-              <OptimusGlyphSphere className="w-full max-w-[560px] ml-auto" />
+              <OptimusGlyphSphere className="w-full max-w-[340px] sm:max-w-[460px] lg:max-w-[560px] ml-auto" />
             </div>
           </div>
 

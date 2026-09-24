@@ -321,7 +321,7 @@ export const InteractiveAnimatedTabs: React.FC<{ className?: string }> = ({ clas
       </div>
 
       {/* 2. VENTANA DE LA CONSOLA (CON ALTO FIJO Y EFECTO ESPACIAL) */}
-      <div className="relative z-10 w-full min-h-[350px] sm:min-h-[340px] p-5 sm:p-7 font-mono text-xs sm:text-[13px] leading-relaxed overflow-x-auto">
+      <div className="relative z-10 w-full min-h-[350px] sm:min-h-[340px] p-4 sm:p-7 font-mono text-xs sm:text-[13px] leading-relaxed overflow-x-auto">
         {/* Telemetría superior de estado */}
         <div className="flex items-center justify-between gap-2 mb-4 pb-2.5 border-b border-slate-200/60 dark:border-white/5">
           <div className="flex items-center gap-2">

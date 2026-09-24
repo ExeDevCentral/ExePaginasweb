@@ -180,7 +180,7 @@ export const ConvergentTypewriterSubtitle: React.FC<ConvergentTypewriterSubtitle
         <span
           onMouseEnter={() => isComplete && setHoverScan1(true)}
           onMouseLeave={() => setHoverScan1(false)}
-          className={`relative inline-block px-2.5 py-0.5 rounded-xl transition-all duration-500 cursor-default align-baseline ${
+          className={`relative inline-block max-w-full px-2 sm:px-2.5 py-0.5 rounded-xl transition-all duration-500 cursor-default align-baseline ${
             isP1Scanned
               ? 'border border-cyan-400/80 dark:border-cyan-400/80 bg-cyan-500/[0.12] dark:bg-cyan-500/[0.14] shadow-[0_0_20px_rgba(6,182,212,0.30)]'
               : 'border border-transparent bg-transparent'
@@ -272,7 +272,7 @@ export const ConvergentTypewriterSubtitle: React.FC<ConvergentTypewriterSubtitle
         <span
           onMouseEnter={() => isComplete && setHoverScan2(true)}
           onMouseLeave={() => setHoverScan2(false)}
-          className={`relative inline-block px-2.5 py-0.5 rounded-xl transition-all duration-500 cursor-default align-baseline ${
+          className={`relative inline-block max-w-full px-2 sm:px-2.5 py-0.5 rounded-xl transition-all duration-500 cursor-default align-baseline ${
             isP2Scanned
               ? 'border border-fuchsia-400/80 dark:border-fuchsia-400/80 bg-fuchsia-500/[0.12] dark:bg-fuchsia-500/[0.14] shadow-[0_0_20px_rgba(217,70,239,0.30)]'
               : 'border border-transparent bg-transparent'

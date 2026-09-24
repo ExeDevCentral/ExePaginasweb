@@ -52,8 +52,8 @@ export const OptimusGlyphSphere: React.FC<{
     if (!ctx) return
 
     let animationFrameId: number
-    let width = (canvas.width = canvas.parentElement?.clientWidth || 640)
-    let height = (canvas.height = canvas.parentElement?.clientHeight || 640)
+    let width = (canvas.width = canvas.parentElement?.clientWidth || 360)
+    let height = (canvas.height = canvas.parentElement?.clientHeight || width || 360)
 
     // Retina display support
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -192,11 +192,36 @@ export const OptimusGlyphSphere: React.FC<{
 
     const handleResize = () => {
       if (!canvas.parentElement) return
-      width = canvas.parentElement.clientWidth
-      height = canvas.parentElement.clientHeight
+      width = canvas.parentElement.clientWidth || 360
+      height = canvas.parentElement.clientHeight || width || 360
       canvas.width = width * dpr
       canvas.height = height * dpr
       ctx.scale(dpr, dpr)
+    }
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1 && e.touches[0]) {
+        isDragging = true
+        lastMouseX = e.touches[0].clientX
+        lastMouseY = e.touches[0].clientY
+      }
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDragging && e.touches.length === 1 && e.touches[0]) {
+        const touch = e.touches[0]
+        const dx = touch.clientX - lastMouseX
+        const dy = touch.clientY - lastMouseY
+        yaw += dx * 0.005
+        targetPitch = Math.max(-0.35, Math.min(0.45, targetPitch - dy * 0.0035))
+        lastMouseX = touch.clientX
+        lastMouseY = touch.clientY
+      }
+    }
+
+    const handleTouchEnd = () => {
+      isDragging = false
+      targetPitch = CENTER_PITCH
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -207,6 +232,9 @@ export const OptimusGlyphSphere: React.FC<{
     canvas.addEventListener('mousemove', handleMouseMove)
     canvas.addEventListener('mousedown', handleMouseDown)
     window.addEventListener('mouseup', handleMouseUp)
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: true })
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: true })
+    canvas.addEventListener('touchend', handleTouchEnd, { passive: true })
 
     // Bucle de renderizado continuo (60-120 FPS)
     const render = () => {
@@ -456,6 +484,9 @@ export const OptimusGlyphSphere: React.FC<{
       canvas.removeEventListener('mousemove', handleMouseMove)
       canvas.removeEventListener('mousedown', handleMouseDown)
       window.removeEventListener('mouseup', handleMouseUp)
+      canvas.removeEventListener('touchstart', handleTouchStart)
+      canvas.removeEventListener('touchmove', handleTouchMove)
+      canvas.removeEventListener('touchend', handleTouchEnd)
     }
   }, [sphereRadius])
 
@@ -469,10 +500,11 @@ export const OptimusGlyphSphere: React.FC<{
       {/* Sutil órbita concéntrica tenue de fondo */}
       <div className="absolute inset-8 rounded-full border border-dashed border-cyan-500/10 dark:border-cyan-400/10 pointer-events-none animate-spin-slower" />
 
-      {/* CANVAS 3D INTERACTIVO */}
+      {/* CANVAS 3D INTERACTIVO CON TOUCH-ACTION PAN-Y */}
       <canvas
         ref={canvasRef}
-        className="relative w-full h-full cursor-grab active:cursor-grabbing z-10"
+        style={{ touchAction: 'pan-y' }}
+        className="relative w-full h-full cursor-grab active:cursor-grabbing z-10 touch-pan-y"
       />
     </div>
   )

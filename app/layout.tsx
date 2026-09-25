@@ -36,34 +36,49 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://exepaginasweb.com'),
   title: {
-    default: 'ExePaginasWeb | Desarrollo Web a Medida y Sistemas SaaS',
-    template: '%s | ExePaginasWeb',
+    default: 'Exe Páginas Web | Desarrollo Web a Medida y Sistemas SaaS',
+    template: '%s | Exe Páginas Web',
   },
   description:
-    'Exe Paginas Web crea páginas web, tiendas online y sistemas SaaS a medida con código propio para negocios de Rosario, Argentina y todo el mundo.',
+    'Exe Páginas Web — Creación de páginas web profesionales, tiendas online e-commerce y sistemas SaaS a medida con 100% código propio en Rosario, Argentina y todo el mundo.',
   keywords: [
+    'exe paginas web',
+    'exe páginas web',
+    'exepaginasweb',
+    'exepaginasweb.com',
+    'Exe Paginas Web Rosario',
+    'páginas web rosario',
+    'desarrollo web rosario',
+    'creacion de paginas web',
+    'diseño de paginas web',
+    'programador web rosario',
     'desarrollo web a medida',
     'sistemas saas',
-    'páginas web',
     'tiendas online',
     'e-commerce',
     'aplicaciones web',
     'código propio',
-    'ExePaginasWeb',
-    'Exe Paginas Web',
     'ExeSistemasWEB',
+    'Exequiel Echevarria',
     'Rosario',
     'Argentina',
   ],
   alternates: {
     canonical: '/',
   },
-  authors: [{ name: 'ExeSistemasWEB' }],
-  creator: 'ExeSistemasWEB',
-  publisher: 'ExeSistemasWEB',
+  authors: [{ name: 'Exe Páginas Web' }, { name: 'Exequiel Echevarria' }],
+  creator: 'Exe Páginas Web',
+  publisher: 'Exe Páginas Web',
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   icons: {
     icon: [
@@ -77,16 +92,16 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'es_AR',
     url: 'https://exepaginasweb.com/',
-    siteName: 'ExePaginasWeb',
-    title: 'ExePaginasWeb | Desarrollo Web a Medida y Sistemas SaaS',
+    siteName: 'Exe Páginas Web',
+    title: 'Exe Páginas Web | Desarrollo Web a Medida y Sistemas SaaS',
     description:
-      'Creamos páginas web, tiendas online y sistemas de software SaaS a medida con código propio.',
+      'Exe Páginas Web — Creamos páginas web profesionales, tiendas online y sistemas SaaS a medida con código propio.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ExePaginasWeb | Desarrollo Web a Medida',
+    title: 'Exe Páginas Web | Desarrollo Web a Medida',
     description:
-      'Creamos páginas web, tiendas online y sistemas de software SaaS a medida con código propio.',
+      'Exe Páginas Web — Creamos páginas web profesionales, tiendas online y sistemas SaaS a medida con código propio.',
   },
 }
 
@@ -97,37 +112,74 @@ export default function RootLayout({
 }>) {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': ['ProfessionalService', 'Organization'],
-    '@id': 'https://exepaginasweb.com/#organization',
-    name: 'Exe Paginas Web',
-    alternateName: ['ExePaginasWeb', 'ExeSistemasWEB'],
-    url: 'https://exepaginasweb.com/',
-    logo: 'https://exepaginasweb.com/logo.png',
-    image: 'https://exepaginasweb.com/og-image.png',
-    email: 'Contacto@exepaginasweb.com',
-    description:
-      'Desarrollo de páginas web, tiendas online y aplicaciones web a medida con código propio.',
-    serviceType: ['Desarrollo Web', 'Diseño Web', 'E-commerce', 'Aplicaciones Web', 'SaaS'],
-    areaServed: {
-      '@type': 'City',
-      name: 'Rosario',
-      containedInPlace: {
-        '@type': 'Country',
-        name: 'Argentina',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': 'https://exepaginasweb.com/#website',
+        url: 'https://exepaginasweb.com/',
+        name: 'Exe Páginas Web',
+        alternateName: [
+          'ExePaginasWeb',
+          'Exe Paginas Web',
+          'ExeSistemasWEB',
+          'exepaginasweb.com',
+          'Exe Páginas Web Rosario',
+        ],
+        description:
+          'Estudio de desarrollo de páginas web, tiendas online y aplicaciones SaaS a medida con código propio.',
+        inLanguage: 'es',
+        publisher: {
+          '@id': 'https://exepaginasweb.com/#organization',
+        },
       },
-    },
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Rosario',
-      addressRegion: 'Santa Fe',
-      addressCountry: 'AR',
-    },
-    priceRange: '$$',
-    knowsAbout: [
-      'Desarrollo web a medida',
-      'Sistemas SaaS',
-      'Tiendas online',
-      'Automatización de negocios',
+      {
+        '@type': ['ProfessionalService', 'Organization'],
+        '@id': 'https://exepaginasweb.com/#organization',
+        name: 'Exe Páginas Web',
+        alternateName: ['ExePaginasWeb', 'ExeSistemasWEB', 'Exe Páginas Web'],
+        url: 'https://exepaginasweb.com/',
+        logo: 'https://exepaginasweb.com/logo.png',
+        image: 'https://exepaginasweb.com/og-image.png',
+        email: 'Contacto@exepaginasweb.com',
+        description:
+          'Exe Páginas Web ofrece desarrollo de páginas web, tiendas online y aplicaciones SaaS a medida con 100% código propio en Rosario, Santa Fe, Argentina y a nivel internacional.',
+        serviceType: [
+          'Desarrollo de Páginas Web',
+          'Diseño Web',
+          'E-commerce y Tiendas Online',
+          'Aplicaciones Web',
+          'Sistemas SaaS',
+        ],
+        areaServed: [
+          {
+            '@type': 'City',
+            name: 'Rosario',
+            containedInPlace: {
+              '@type': 'Country',
+              name: 'Argentina',
+            },
+          },
+          {
+            '@type': 'Country',
+            name: 'Argentina',
+          },
+        ],
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Rosario',
+          addressRegion: 'Santa Fe',
+          addressCountry: 'AR',
+        },
+        priceRange: '$$',
+        sameAs: ['https://github.com/ExeDevCentral'],
+        knowsAbout: [
+          'Desarrollo web a medida',
+          'Páginas web',
+          'Sistemas SaaS',
+          'Tiendas online',
+          'Automatización de negocios',
+        ],
+      },
     ],
   }
 

@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, Scissors, Wheat, Shirt, Volleyball, Menu, X, ArrowRight } from 'lucide-react'
 import Logo from './Logo'
@@ -110,10 +111,20 @@ const linkClass =
 
 export default function SiteHeader() {
   const { t } = useTranslation()
+  const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [solutionsOpen, setSolutionsOpen] = useState(false)
 
   const closeMobile = () => setMobileOpen(false)
+
+  // Redirección y scroll fluido al inicio garantizado en cualquier página
+  const handleHomeClick = () => {
+    closeMobile()
+    setSolutionsOpen(false)
+    if (pathname === '/' || pathname === '') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
+  }
 
   // Previene fugas de keys crudas si i18n no cargó o no encuentra la traducción
   const getNavLabel = (key: string, fallback: string) => {
@@ -128,7 +139,7 @@ export default function SiteHeader() {
         <div className="flex shrink-0 items-center gap-3">
           <Link
             href="/"
-            onClick={closeMobile}
+            onClick={handleHomeClick}
             aria-label={getNavLabel('nav.inicio', 'Inicio')}
             className="origin-center transition-transform duration-[180ms] ease-out hover:scale-105 active:scale-95"
           >
@@ -136,7 +147,7 @@ export default function SiteHeader() {
           </Link>
           <Link
             href="/"
-            onClick={closeMobile}
+            onClick={handleHomeClick}
             className="outline-none origin-center transition-transform duration-[180ms] ease-out hover:scale-[1.02] active:scale-[0.98]"
           >
             <HeaderWordmark />
@@ -145,7 +156,7 @@ export default function SiteHeader() {
 
         {/* 4 links principales + Soluciones con scale up suave en hover */}
         <nav aria-label="Navegación principal" className="hidden items-center gap-1 lg:flex">
-          <Link href="/" className={linkClass}>
+          <Link href="/" onClick={handleHomeClick} className={linkClass}>
             {getNavLabel('nav.inicio', 'Inicio')}
           </Link>
           <div className="relative">
@@ -179,6 +190,7 @@ export default function SiteHeader() {
                   <Link
                     key={href}
                     href={href}
+                    onClick={() => setSolutionsOpen(false)}
                     className="group rounded-xl border border-black/5 p-3 hover:border-cyan-400/40 hover:bg-black/5 dark:border-white/5 dark:hover:bg-white/5 origin-center transition-all duration-[180ms] ease-out hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <Icon size={19} className="mb-2 text-cyan-500 dark:text-cyan-400" />
@@ -190,24 +202,11 @@ export default function SiteHeader() {
                 ))}
                 <Link
                   href="/soluciones"
+                  onClick={() => setSolutionsOpen(false)}
                   className="col-span-2 flex items-center justify-between rounded-xl border border-cyan-400/20 bg-cyan-400/5 px-3 py-2 text-xs font-bold text-cyan-600 dark:text-cyan-300 origin-center transition-all duration-[180ms] ease-out hover:scale-[1.02]"
                 >
                   Ver los 4 rubros <ArrowRight size={14} />
                 </Link>
-                <div className="col-span-2 flex items-center justify-between gap-2 pt-2 border-t border-black/5 dark:border-white/5 text-xs">
-                  <Link
-                    href="/cotizador"
-                    className="flex-1 rounded-lg py-1.5 px-2.5 text-center font-semibold text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-black/5 dark:hover:bg-white/5 origin-center transition-all duration-[180ms] ease-out hover:scale-105"
-                  >
-                    {getNavLabel('nav.cotizador', 'Cotizador Online')}
-                  </Link>
-                  <Link
-                    href="/tienda"
-                    className="flex-1 rounded-lg py-1.5 px-2.5 text-center font-semibold text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-black/5 dark:hover:bg-white/5 origin-center transition-all duration-[180ms] ease-out hover:scale-105"
-                  >
-                    {getNavLabel('nav.tienda_online', 'Tienda Online')}
-                  </Link>
-                </div>
               </div>
             </div>
           </div>
@@ -222,15 +221,27 @@ export default function SiteHeader() {
           </Link>
         </nav>
 
-        {/* Toggles limpios sin cápsula + único botón (Hablemos) */}
-        <div className="hidden items-center gap-3 lg:flex">
-          <div className="flex items-center gap-1">
+        {/* Botones de acción derecha: Cotizador + Tienda + Hablemos + Toggles */}
+        <div className="hidden items-center gap-2 lg:flex">
+          <Link
+            href="/cotizador"
+            className="rounded-full border border-emerald-400/40 px-3.5 py-1.5 text-xs font-bold text-emerald-600 hover:bg-emerald-400/10 dark:text-emerald-300 origin-center transition-all duration-[180ms] ease-out hover:scale-105 active:scale-95"
+          >
+            {getNavLabel('nav.cotizador', 'Cotizador')}
+          </Link>
+          <Link
+            href="/tienda"
+            className="rounded-full border border-cyan-400/40 px-3.5 py-1.5 text-xs font-bold text-cyan-600 hover:bg-cyan-400/10 dark:text-cyan-300 origin-center transition-all duration-[180ms] ease-out hover:scale-105 active:scale-95"
+          >
+            {getNavLabel('nav.tienda_online', 'Tienda')}
+          </Link>
+          <div className="flex items-center gap-1 mx-1">
             <LanguageSwitcher />
             <ThemeToggle />
           </div>
           <Link
             href="/#contact"
-            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-5 py-2 text-xs origin-center transition-all duration-[180ms] ease-out hover:scale-105 active:scale-95 shadow-sm"
+            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-4 py-1.5 text-xs origin-center transition-all duration-[180ms] ease-out hover:scale-105 active:scale-95 shadow-sm"
           >
             {getNavLabel('nav.contacto', 'Hablemos')}
           </Link>
@@ -261,7 +272,7 @@ export default function SiteHeader() {
           aria-label="Navegación móvil"
           className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4"
         >
-          <Link href="/" className={linkClass} onClick={closeMobile}>
+          <Link href="/" className={linkClass} onClick={handleHomeClick}>
             {getNavLabel('nav.inicio', 'Inicio')}
           </Link>
           <button

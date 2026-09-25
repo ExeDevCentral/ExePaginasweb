@@ -377,11 +377,11 @@ export default function StorePage() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <motion.a
-                href="/#contact"
+                href="/login"
                 onClick={(e) => {
                   e.preventDefault()
                   storeAudio.playHover()
-                  navigate('/#contact')
+                  navigate('/login')
                 }}
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}

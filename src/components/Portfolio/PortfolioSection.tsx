@@ -22,7 +22,7 @@ import {
   Zap,
   FileText,
 } from 'lucide-react'
-import { scrollToElement } from '../shared/scrollUtils'
+import Link from 'next/link'
 import { INITIAL_PROJECTS, type Project } from '@/data/projects'
 
 export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
@@ -283,17 +283,13 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                     </p>
                   </div>
 
-                  <a
-                    href="#contact"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      scrollToElement('#contact')
-                    }}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-cyan text-background font-bold text-xs uppercase tracking-wider hover:bg-accent-cyan/90 transition-all shadow-md cursor-pointer"
+                  <Link
+                    href="/cotizador"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-cyan text-background font-bold text-xs uppercase tracking-wider hover:bg-accent-cyan/90 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
                   >
                     <Zap className="w-3.5 h-3.5" />
                     {t('portfolio.pedir_presupuesto', 'Pedir Presupuesto')}
-                  </a>
+                  </Link>
                 </motion.div>
               </AnimatePresence>
             </motion.div>
@@ -385,17 +381,13 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
 
               {/* Botón CTA */}
               <div className="pt-6 flex flex-wrap items-center justify-center gap-4">
-                <a
-                  href="#contact"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    scrollToElement('#contact')
-                  }}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl btn-gradient-cta text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-accent-cyan/20 hover:scale-105 transition-all cursor-pointer"
+                <Link
+                  href="/cotizador"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl btn-gradient-cta text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-accent-cyan/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
                 >
                   <Zap className="w-4 h-4 text-slate-950" />
                   <span>{t('portfolio.cta_cotizar', 'Cotizar Mi Proyecto a Medida')}</span>
-                </a>
+                </Link>
 
                 {featuredOnly && (
                   <a

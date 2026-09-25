@@ -6,7 +6,12 @@
 import type { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://exepaginasweb.com'
+  const isProd = process.env.NODE_ENV === 'production'
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL
+  const baseUrl =
+    isProd && (!envUrl || envUrl.includes('localhost'))
+      ? 'https://exepaginasweb.com'
+      : envUrl || 'https://exepaginasweb.com'
 
   const routes = [
     '',

@@ -42,7 +42,8 @@ const PULSE_COLORS_LIGHT = ['#0284c7', '#0369a1', '#1d4ed8', '#0284c7', '#2563eb
 export const OptimusGlyphSphere: React.FC<{
   className?: string
   sphereRadius?: number
-}> = ({ className = '', sphereRadius = 260 }) => {
+  radiusRatio?: number
+}> = ({ className = '', sphereRadius = 260, radiusRatio = 0.34 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   useEffect(() => {
@@ -82,7 +83,7 @@ export const OptimusGlyphSphere: React.FC<{
         baseY: y,
         baseZ: z,
         char: GLYPHS[i % GLYPHS.length] ?? '+',
-        size: 8.5 + (i % 4) * 1.5,
+        size: 6.0 + (i % 4) * 1.0,
         energy: 0.04 + Math.random() * 0.08,
         energySpeed: 0.01 + Math.random() * 0.015,
         pulseColor: PULSE_COLORS_DARK[i % PULSE_COLORS_DARK.length] ?? '#06b6d4',
@@ -258,8 +259,8 @@ export const OptimusGlyphSphere: React.FC<{
       // Centro fijo y contenido
       const centerX = width / 2
       const centerY = height / 2
-      // Radio monumental ocupando casi la mitad de la pantalla con margen de seguridad
-      const radius = Math.min(width, height) * 0.42
+      // Radio refinado y equilibrado con la escena
+      const radius = Math.min(width, height) * radiusRatio
       const isDark =
         typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
 

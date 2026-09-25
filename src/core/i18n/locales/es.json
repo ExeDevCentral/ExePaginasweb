@@ -38,9 +38,9 @@
     "compare_stat_carga": "carga",
     "compare_stat_tuyo": "tuyo",
     "compare_stat_duracion": "duración",
-    "compare_fast": "tecnología 2026",
-    "eyebrow_plataforma": "Plataforma web & sistemas SaaS",
-    "titulo_prefijo": "La plataforma para",
+    "eyebrow_plataforma": "Desarrollo Web & Sistemas SaaS · Rosario & Global",
+    "titulo_prefijo": "Páginas web y sistemas a medida",
+    "titulo_conector": "para",
     "palabras_rotativas": [
       "automatizar",
       "escalar",
@@ -1153,3 +1153,4 @@
     "clear": "Limpiar chat"
   }
 }
+

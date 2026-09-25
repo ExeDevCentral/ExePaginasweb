@@ -75,10 +75,12 @@ const PricingCard = ({
       const message = `¡Hola ExeSistemasWEB! Me interesa el plan ${plan.tKey === 'landing' ? 'Landing' : 'E-commerce'}. Setup: ${plan.setupFee.ARS}, Mantenimiento: ${plan.monthlyFee.ARS}/mes. Quisiera más información. 👋`
       window.open(getWhatsAppUrl(message), '_blank')
     } else {
-      // Para USD, ir a la sección de contacto
+      // Para USD, ir a la sección de contacto si existe, o redirigir al cotizador
       const contactSection = document.getElementById('contact')
       if (contactSection) {
         contactSection.scrollIntoView({ behavior: 'smooth' })
+      } else {
+        window.location.href = `/cotizador?plan=${plan.tKey}&currency=USD`
       }
     }
   }

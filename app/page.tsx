@@ -34,7 +34,7 @@ export default function HomePage() {
           style={{ scaleX }}
         />
         <SiteHeader />
-        <main>
+        <main id="inicio">
           <OptimusScaleHero />
           <OwnershipVsSubscription />
           <PortfolioSection featuredOnly />

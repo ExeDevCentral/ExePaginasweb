@@ -53,7 +53,9 @@ import {
   LockKeyhole,
   ChartLine,
   ShieldAlert,
+  ArrowRight,
 } from 'lucide-react'
+import Link from 'next/link'
 
 const YEARS = 5
 
@@ -1561,6 +1563,20 @@ function CostCard() {
               </p>
             )}
           </div>
+
+          {/* Botón CTA de Acción Inmediata hacia Cotizador */}
+          <Link
+            href="/cotizador"
+            className="mt-1 flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-accent-cyan/15 to-accent-magenta/15 border border-emerald-500/30 hover:border-emerald-400 text-foreground font-bold text-xs sm:text-sm shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 transition-all group/cta cursor-pointer hover:scale-[1.01] active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-foreground group-hover/cta:text-emerald-400 transition-colors">
+                Cotizar mi software con código 100% propio
+              </span>
+            </div>
+            <ArrowRight className="w-4 h-4 text-emerald-400 group-hover/cta:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
     </motion.div>

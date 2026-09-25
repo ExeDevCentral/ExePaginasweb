@@ -8,22 +8,20 @@
 import { useEffect, useRef } from 'react'
 import Delaunator from 'delaunator'
 
-const DARK_COLORS = ['#38bdf8', '#818cf8', '#34d399']
-const LIGHT_COLORS = ['#0284c7', '#6366f1', '#10b981']
+const DARK_COLORS = ['#38bdf8', '#818cf8', '#34d399', '#f472b6']
+const LIGHT_COLORS = ['#0284c7', '#4f46e5', '#059669', '#d946ef']
 
 // ── Density-aware constants ───────────────────────────────────────────────────
-// More points → smaller link radius so visual density stays constant.
-// Formula: LINK_DIST_BASE / sqrt(nodeCount / BASE_COUNT)
-const BASE_COUNT = 20 // original reference
-const LINK_DIST_BASE = 140 // px at BASE_COUNT nodes
-const NODE_COUNT = 63 // desktop (+15% over previous 55)
-const MOBILE_NODE_COUNT = 21 // mobile (+15% over previous 18)
+const BASE_COUNT = 20
+const LINK_DIST_BASE = 145
+const NODE_COUNT = 65
+const MOBILE_NODE_COUNT = 24
 
 function linkDist(count: number): number {
   return LINK_DIST_BASE * Math.sqrt(BASE_COUNT / count)
 }
 
-const MOUSE_RADIUS = 150
+const MOUSE_RADIUS = 160
 
 class Node {
   x: number
@@ -38,9 +36,9 @@ class Node {
   constructor(w: number, h: number, isMobile = false) {
     this.x = Math.random() * w
     this.y = Math.random() * h
-    this.vx = (Math.random() - 0.5) * 0.3
-    this.vy = (Math.random() - 0.5) * 0.3
-    this.r = Math.random() * 1.5 + 1.0
+    this.vx = (Math.random() - 0.5) * 0.4
+    this.vy = (Math.random() - 0.5) * 0.4
+    this.r = Math.random() * 1.5 + (isMobile ? 1.6 : 2.2)
     this.colorIdx = Math.floor(Math.random() * DARK_COLORS.length)
     this.baseR = this.r
     this.isMobile = isMobile
@@ -58,10 +56,10 @@ class Node {
       const dy = this.y - mouse.y
       const dist = Math.hypot(dx, dy)
       if (dist < MOUSE_RADIUS && dist > 0) {
-        const force = (1 - dist / MOUSE_RADIUS) * 0.5
+        const force = (1 - dist / MOUSE_RADIUS) * 0.6
         this.vx += (dx / dist) * force
         this.vy += (dy / dist) * force
-        this.r = this.baseR + (1 - dist / MOUSE_RADIUS) * 2
+        this.r = this.baseR + (1 - dist / MOUSE_RADIUS) * 2.2
       } else {
         this.r += (this.baseR - this.r) * 0.05
       }
@@ -73,11 +71,11 @@ class Node {
     this.vx *= 0.985
     this.vy *= 0.985
 
-    // Movimiento base constante muy relajado
+    // Movimiento base constante relajado
     const speed = Math.hypot(this.vx, this.vy)
-    if (speed < 0.08) {
-      this.vx += (Math.random() - 0.5) * 0.02
-      this.vy += (Math.random() - 0.5) * 0.02
+    if (speed < 0.1) {
+      this.vx += (Math.random() - 0.5) * 0.03
+      this.vy += (Math.random() - 0.5) * 0.03
     }
   }
 
@@ -85,10 +83,14 @@ class Node {
     const palette = isDark ? DARK_COLORS : LIGHT_COLORS
     const color = palette[this.colorIdx]!
 
+    ctx.save()
     ctx.beginPath()
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2)
+    ctx.arc(this.x, this.y, isDark ? this.r : Math.max(2.0, this.r * 1.1), 0, Math.PI * 2)
     ctx.fillStyle = color
+    ctx.shadowColor = isDark ? color : 'rgba(2, 132, 199, 0.45)'
+    ctx.shadowBlur = isDark ? 6 : 4
     ctx.fill()
+    ctx.restore()
   }
 }
 
@@ -101,7 +103,6 @@ const PremiumBackground = () => {
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
-    // Si el usuario prefiere movimiento reducido, dibujamos un frame sutil estático y no ejecutamos el loop
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const isMobile = window.innerWidth < 768
 
@@ -114,36 +115,22 @@ const PremiumBackground = () => {
     const nodes = Array.from({ length: nodeCount }, () => new Node(w, h, isMobile))
 
     let isDocumentVisible = true
-    let isSleeping = false
-    let lastActivityTime = performance.now()
     let animId: number | null = null
-
-    const wakeUp = () => {
-      lastActivityTime = performance.now()
-      if (isSleeping) {
-        isSleeping = false
-        if (!animId) {
-          loop()
-        }
-      }
-    }
 
     const handleResize = () => {
       if (!canvas) return
       w = canvas.width = window.innerWidth
       h = canvas.height = window.innerHeight
-      wakeUp()
     }
     window.addEventListener('resize', handleResize, { passive: true })
 
     const burst = () => {
-      wakeUp()
       nodes.forEach((n) => {
         const dx = n.x - mouse.x
         const dy = n.y - mouse.y
         const dist = Math.hypot(dx, dy) || 1
-        if (dist < 200) {
-          const force = (1 - dist / 200) * 4
+        if (dist < 220) {
+          const force = (1 - dist / 220) * 4.5
           n.vx += (dx / dist) * force
           n.vy += (dy / dist) * force
         }
@@ -154,7 +141,6 @@ const PremiumBackground = () => {
       mouse.x = e.clientX
       mouse.y = e.clientY
       mouse.active = true
-      wakeUp()
     }
 
     const handleMouseLeave = () => {
@@ -166,7 +152,6 @@ const PremiumBackground = () => {
         mouse.x = e.touches[0]!.clientX
         mouse.y = e.touches[0]!.clientY
         mouse.active = true
-        wakeUp()
       }
     }
 
@@ -178,19 +163,24 @@ const PremiumBackground = () => {
 
     const handleVisibilityChange = () => {
       isDocumentVisible = document.visibilityState === 'visible'
-      if (isDocumentVisible) {
-        wakeUp()
+      if (isDocumentVisible && !animId && !prefersReducedMotion) {
+        loop()
       }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
+    // Observar cambio de tema claro/oscuro para redibujar de inmediato
+    const observer = new MutationObserver(() => {
+      if (prefersReducedMotion) {
+        renderFrame()
+      }
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+
     // ── Delaunay triangulation mesh ───────────────────────────────────────────
-    // Builds a triangulation each frame, then draws only the edges whose
-    // endpoint distance ≤ maxDist — giving a clean low-poly faceted network.
     const drawDelaunay = () => {
       const darkTheme = document.documentElement.classList.contains('dark')
 
-      // Flat [x0,y0, x1,y1, ...] coords for delaunator
       const coords = new Float64Array(nodes.length * 2)
       for (let i = 0; i < nodes.length; i++) {
         coords[i * 2] = nodes[i]!.x
@@ -198,10 +188,8 @@ const PremiumBackground = () => {
       }
 
       const del = new Delaunator(coords)
-      const tris = del.triangles // indices: every 3 entries = one triangle
+      const tris = del.triangles
 
-      // Collect unique edges from the triangulation
-      // Use a Set<string> to skip duplicates (each interior edge appears twice)
       const drawn = new Set<string>()
 
       for (let t = 0; t < tris.length; t += 3) {
@@ -223,21 +211,41 @@ const PremiumBackground = () => {
           const dy = na.y - nb.y
           const dist = Math.sqrt(dx * dx + dy * dy)
 
-          // Skip long edges — keeps the mesh local and avoids crossing diagonals
           if (dist > maxDist) continue
 
           const factor = 1 - dist / maxDist
-          const opacity = darkTheme ? factor * 0.22 : factor * 0.1
+          const opacity = darkTheme ? factor * 0.28 : factor * 0.42
 
-          // Cyan/teal tint for edges — matches site accent palette
           ctx.beginPath()
           ctx.moveTo(na.x, na.y)
           ctx.lineTo(nb.x, nb.y)
           ctx.strokeStyle = darkTheme
-            ? `rgba(56, 189, 248, ${opacity})` // sky-400 (cyan)
-            : `rgba(14, 116, 144, ${opacity})` // teal-700
-          ctx.lineWidth = 0.55
+            ? `rgba(56, 189, 248, ${opacity})`
+            : `rgba(2, 132, 199, ${opacity})`
+          ctx.lineWidth = darkTheme ? 0.75 : 1.15
           ctx.stroke()
+        }
+      }
+
+      // Conectar el cursor con las partículas cercanas al mover el mouse
+      if (mouse.active) {
+        for (let i = 0; i < nodes.length; i++) {
+          const n = nodes[i]!
+          const dx = n.x - mouse.x
+          const dy = n.y - mouse.y
+          const dist = Math.hypot(dx, dy)
+          if (dist < MOUSE_RADIUS) {
+            const factor = 1 - dist / MOUSE_RADIUS
+            const opacity = darkTheme ? factor * 0.6 : factor * 0.75
+            ctx.beginPath()
+            ctx.moveTo(mouse.x, mouse.y)
+            ctx.lineTo(n.x, n.y)
+            ctx.strokeStyle = darkTheme
+              ? `rgba(56, 189, 248, ${opacity})`
+              : `rgba(2, 132, 199, ${opacity})`
+            ctx.lineWidth = darkTheme ? 1.2 : 1.6
+            ctx.stroke()
+          }
         }
       }
     }
@@ -254,6 +262,7 @@ const PremiumBackground = () => {
     if (prefersReducedMotion) {
       renderFrame()
       return () => {
+        observer.disconnect()
         window.removeEventListener('resize', handleResize)
         window.removeEventListener('mousemove', handleMouseMove)
         window.removeEventListener('mouseleave', handleMouseLeave)
@@ -266,14 +275,6 @@ const PremiumBackground = () => {
 
     const loop = () => {
       if (!isDocumentVisible) {
-        animId = null
-        return
-      }
-
-      // Si el usuario no ha interactuado en más de 2.5s y el ratón no está activo, suspender el RAF
-      const now = performance.now()
-      if (!mouse.active && now - lastActivityTime > 2500) {
-        isSleeping = true
         animId = null
         return
       }
@@ -293,6 +294,7 @@ const PremiumBackground = () => {
 
     return () => {
       if (animId) cancelAnimationFrame(animId)
+      observer.disconnect()
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseleave', handleMouseLeave)

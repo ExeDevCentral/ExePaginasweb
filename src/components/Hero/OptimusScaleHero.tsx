@@ -12,6 +12,7 @@
 'use client'
 
 import React, { useState, useEffect, useMemo } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 // Íconos SVG puros para máxima velocidad y cero problemas de bundling
@@ -122,7 +123,7 @@ export const OptimusScaleHero: React.FC = () => {
   }
 
   return (
-    <div className="relative w-full bg-background dark:bg-[#030308] text-slate-900 dark:text-white transition-colors duration-300">
+    <div className="relative w-full bg-transparent text-slate-900 dark:text-white transition-colors duration-300">
       {/* ========================================================
           1. HERO PRINCIPAL (ESTRUCTURA EXACTA OPTIMUS DESAHOGADA)
          ======================================================== */}
@@ -147,49 +148,42 @@ export const OptimusScaleHero: React.FC = () => {
             {/* COLUMNA IZQUIERDA: CONTENIDO EDITORIAL LIMPIO (lg:col-span-6) */}
             <div className="lg:col-span-6 flex flex-col items-start text-left z-20">
               {/* 1. EYEBROW MONO, 1 LÍNEA, SIN CAJA */}
-              <motion.div
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 select-none"
-              >
+              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 select-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                <span>{t('hero.eyebrow_plataforma') || 'Plataforma web & sistemas SaaS'}</span>
-              </motion.div>
+                <span>
+                  {t('hero.eyebrow_plataforma') ||
+                    'Desarrollo Web & Sistemas SaaS · Rosario & Global'}
+                </span>
+              </div>
 
-              {/* 2. TÍTULO: text-4xl sm:text-6xl xl:text-7xl leading-[1.1] sm:leading-[1.05] tracking-tight SIN CAJA */}
+              {/* 2. TÍTULO H1: 100% SEO FRIENDLY PARA BUSCADORES (BRAVE, GOOGLE, BING) */}
               <h1 className="mt-4 text-4xl sm:text-6xl xl:text-7xl font-sans font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-slate-950 dark:text-white">
-                <motion.span
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  className="block"
-                >
-                  {t('hero.titulo_prefijo') || 'La plataforma'}
-                </motion.span>
+                <span className="block text-2xl sm:text-3xl xl:text-4xl font-mono font-bold tracking-tight text-cyan-600 dark:text-cyan-400 mb-2">
+                  Exe Páginas Web
+                </span>
+                <span className="block font-semibold">
+                  {t('hero.titulo_prefijo') || 'Páginas web y sistemas a medida'}
+                </span>
 
-                <motion.span
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="inline-flex items-center gap-2 sm:gap-4 flex-wrap mt-1"
-                >
-                  <span className="text-slate-500 dark:text-slate-400 font-light">para</span>
+                <span className="inline-flex items-center gap-2 sm:gap-4 flex-wrap mt-1">
+                  <span className="text-slate-500 dark:text-slate-400 font-light">
+                    {t('hero.titulo_conector') || 'para'}
+                  </span>
                   <span className="relative inline-block text-cyan-500 dark:text-cyan-400 font-bold">
                     <AnimatePresence mode="wait">
                       <motion.span
                         key={wordIndex}
-                        initial={{ y: 20, opacity: 0, filter: 'blur(6px)' }}
+                        initial={false}
                         animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
                         exit={{ y: -20, opacity: 0, filter: 'blur(6px)' }}
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                         className="inline-block"
                       >
-                        {ROTATING_WORDS[wordIndex]}
+                        {rotatingWords[wordIndex] || ROTATING_WORDS[wordIndex]}
                       </motion.span>
                     </AnimatePresence>
                   </span>
-                </motion.span>
+                </span>
               </h1>
 
               {/* 3. SUBTÍTULO CON EFECTO MÁQUINA DE ESCRIBIR CONVERGENTE (DE ADELANTE Y DE ATRÁS SE JUNTAN EN EL MEDIO) */}
@@ -202,41 +196,34 @@ export const OptimusScaleHero: React.FC = () => {
                 <ConvergentTypewriterSubtitle />
               </motion.div>
 
-              {/* 4. BOTONES: ALTO 52PX, MISMO RADIO, 1 RELLENO Y 1 OUTLINE, mt-8 sm:mt-10 */}
+              {/* 4. BOTONES PRINCIPALES DE ACCIÓN DIRECTA */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto"
               >
-                <a
-                  href="#contact"
+                <Link
+                  href="/cotizador"
                   onClick={() => trackEvent('hero_cta_contact_clicked', { source: 'optimus_hero' })}
                   className="group relative inline-flex items-center justify-center gap-2.5 h-[52px] px-8 rounded-full font-bold text-sm bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md hover:shadow-lg hover:shadow-cyan-400/25 transition-all duration-300 transform-gpu active:scale-95 shrink-0"
                 >
                   <span>{t('hero.cta_comenzar') || 'Comenzar mi proyecto'}</span>
                   <ArrowRightIcon className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
+                </Link>
 
-                <a
-                  href="#portafolio"
-                  onClick={(e) => {
-                    e.preventDefault()
+                <Link
+                  href="/portafolio"
+                  onClick={() =>
                     trackEvent('hero_cta_portfolio_clicked', { source: 'optimus_hero' })
-                    const el = document.getElementById('portafolio')
-                    if (el) {
-                      el.scrollIntoView({ behavior: 'smooth' })
-                    } else {
-                      window.location.href = '/portafolio'
-                    }
-                  }}
+                  }
                   className="group inline-flex items-center justify-center gap-2.5 h-[52px] px-8 rounded-full border border-slate-300 dark:border-white/20 hover:border-slate-400 dark:hover:border-white/40 text-slate-800 dark:text-white font-medium text-sm transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 shrink-0"
                 >
                   <PlayIcon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 group-hover:scale-110 transition-transform" />
                   <span>
                     {t('hero.cta_ver_portafolio') || t('hero.cta_ver_demo') || 'Ver portafolio'}
                   </span>
-                </a>
+                </Link>
               </motion.div>
 
               {/* 5. CONFIANZA: mt-8 */}
@@ -272,7 +259,7 @@ export const OptimusScaleHero: React.FC = () => {
               </motion.div>
             </div>
 
-            {/* COLUMNA DERECHA: ESFERA SIN MARCO, CENTRADA VERTICALMENTE (lg:col-span-6) */}
+            {/* COLUMNA DERECHA: ESFERA 3D VIBRANTE */}
             <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end w-full py-4 lg:py-0">
               <OptimusGlyphSphere className="w-full max-w-[340px] sm:max-w-[460px] lg:max-w-[560px] ml-auto" />
             </div>
@@ -381,69 +368,93 @@ export const OptimusScaleHero: React.FC = () => {
 
         {/* 4 FILAS / TARJETAS CON HAZ DE LUZ QUE RECORRE EL BORDE Y SPOTLIGHT */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <SpotlightBorderCard activeBeam={true} colorVariant="cyan" animationDelay="0s">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400">
-                01 // DESPLIEGUE
-              </span>
-              <GaugeIcon className="w-4 h-4 text-cyan-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.6)] transition-all duration-300" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5">
-              {t('hero.card_1_titulo') || 'Páginas de Alta Conversión'}
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              {t('hero.card_1_desc') ||
-                'Carga instantánea en 0.38s con Edge CDN global, diseño responsivo y posicionamiento SEO 100/100 en Google.'}
-            </p>
-          </SpotlightBorderCard>
+          <Link href="/soluciones" className="block cursor-pointer group">
+            <SpotlightBorderCard activeBeam={true} colorVariant="cyan" animationDelay="0s">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400">
+                  01 // DESPLIEGUE
+                </span>
+                <GaugeIcon className="w-4 h-4 text-cyan-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.6)] transition-all duration-300" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-colors">
+                {t('hero.card_1_titulo') || 'Páginas de Alta Conversión'}
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+                {t('hero.card_1_desc') ||
+                  'Carga instantánea en 0.38s con Edge CDN global, diseño responsivo y posicionamiento SEO 100/100 en Google.'}
+              </p>
+              <div className="flex items-center gap-1 text-[11px] font-mono font-bold text-cyan-500 group-hover:translate-x-1 transition-transform">
+                <span>Ver soluciones web</span>
+                <ArrowRightIcon className="w-3.5 h-3.5" />
+              </div>
+            </SpotlightBorderCard>
+          </Link>
 
-          <SpotlightBorderCard activeBeam={true} colorVariant="fuchsia" animationDelay="-2.75s">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-mono font-bold text-fuchsia-600 dark:text-fuchsia-400">
-                02 // GESTIÓN
-              </span>
-              <CpuIcon className="w-4 h-4 text-fuchsia-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(217,70,239,0.6)] transition-all duration-300" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5">
-              {t('hero.card_2_titulo') || 'Sistemas Cloud & Paneles'}
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              {t('hero.card_2_desc') ||
-                'Control total de ventas, inventario, clientes y facturación electrónica a medida de tu operación diaria.'}
-            </p>
-          </SpotlightBorderCard>
+          <Link href="/soluciones" className="block cursor-pointer group">
+            <SpotlightBorderCard activeBeam={true} colorVariant="fuchsia" animationDelay="-2.75s">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-mono font-bold text-fuchsia-600 dark:text-fuchsia-400">
+                  02 // GESTIÓN
+                </span>
+                <CpuIcon className="w-4 h-4 text-fuchsia-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(217,70,239,0.6)] transition-all duration-300" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-fuchsia-500 dark:group-hover:text-fuchsia-300 transition-colors">
+                {t('hero.card_2_titulo') || 'Sistemas Cloud & Paneles'}
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+                {t('hero.card_2_desc') ||
+                  'Control total de ventas, inventario, clientes y facturación electrónica a medida de tu operación diaria.'}
+              </p>
+              <div className="flex items-center gap-1 text-[11px] font-mono font-bold text-fuchsia-500 group-hover:translate-x-1 transition-transform">
+                <span>Ver paneles SaaS</span>
+                <ArrowRightIcon className="w-3.5 h-3.5" />
+              </div>
+            </SpotlightBorderCard>
+          </Link>
 
-          <SpotlightBorderCard activeBeam={true} colorVariant="amber" animationDelay="-5.5s">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
-                03 // AUTOMATIZACIÓN
-              </span>
-              <ZapIcon className="w-4 h-4 text-amber-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] transition-all duration-300" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5">
-              {t('hero.card_3_titulo') || 'WhatsApp & Cobros 24/7'}
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              {t('hero.card_3_desc') ||
-                'Conexión directa con webhooks para notificar pedidos, cobrar con tarjetas y emitir comprobantes sin intervención humana.'}
-            </p>
-          </SpotlightBorderCard>
+          <Link href="/cotizador" className="block cursor-pointer group">
+            <SpotlightBorderCard activeBeam={true} colorVariant="amber" animationDelay="-5.5s">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
+                  03 // AUTOMATIZACIÓN
+                </span>
+                <ZapIcon className="w-4 h-4 text-amber-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] transition-all duration-300" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-amber-500 dark:group-hover:text-amber-300 transition-colors">
+                {t('hero.card_3_titulo') || 'WhatsApp & Cobros 24/7'}
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+                {t('hero.card_3_desc') ||
+                  'Conexión directa con webhooks para notificar pedidos, cobrar con tarjetas y emitir comprobantes sin intervención humana.'}
+              </p>
+              <div className="flex items-center gap-1 text-[11px] font-mono font-bold text-amber-500 group-hover:translate-x-1 transition-transform">
+                <span>Calcular automatización</span>
+                <ArrowRightIcon className="w-3.5 h-3.5" />
+              </div>
+            </SpotlightBorderCard>
+          </Link>
 
-          <SpotlightBorderCard activeBeam={true} colorVariant="emerald" animationDelay="-8.25s">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                04 // LIBERTAD
-              </span>
-              <ShieldCheckIcon className="w-4 h-4 text-emerald-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.6)] transition-all duration-300" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5">
-              {t('hero.card_4_titulo') || '100% Código Propio'}
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              {t('hero.card_4_desc') ||
-                'El software y la base de datos te pertenecen para siempre. Cero comisiones por venta y cero cuotas mensuales obligatorias.'}
-            </p>
-          </SpotlightBorderCard>
+          <Link href="/precios" className="block cursor-pointer group">
+            <SpotlightBorderCard activeBeam={true} colorVariant="emerald" animationDelay="-8.25s">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                  04 // LIBERTAD
+                </span>
+                <ShieldCheckIcon className="w-4 h-4 text-emerald-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.6)] transition-all duration-300" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-500 dark:group-hover:text-emerald-300 transition-colors">
+                {t('hero.card_4_titulo') || '100% Código Propio'}
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+                {t('hero.card_4_desc') ||
+                  'El software y la base de datos te pertenecen para siempre. Cero comisiones por venta y cero cuotas mensuales obligatorias.'}
+              </p>
+              <div className="flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-500 group-hover:translate-x-1 transition-transform">
+                <span>Comparar planes y precios</span>
+                <ArrowRightIcon className="w-3.5 h-3.5" />
+              </div>
+            </SpotlightBorderCard>
+          </Link>
         </div>
       </section>
 

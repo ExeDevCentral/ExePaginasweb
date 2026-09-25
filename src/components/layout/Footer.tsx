@@ -27,7 +27,7 @@ const Footer = () => {
   const { t } = useTranslation()
 
   return (
-    <footer className="relative border-t border-foreground/10 bg-background/95 backdrop-blur-xl pt-16 pb-12 sm:pb-16 z-10 overflow-hidden dark:bg-[#050508]/95 dark:border-white/10">
+    <footer className="relative border-t border-foreground/10 bg-background/80 backdrop-blur-xl pt-16 pb-12 sm:pb-16 z-10 overflow-hidden dark:bg-[#050508]/85 dark:border-white/10">
       {/* Ambient background glow */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden opacity-30">
         <div className="absolute top-1/2 left-1/4 h-64 w-64 rounded-full bg-accent-cyan/10 blur-[130px]" />
@@ -56,9 +56,7 @@ const Footer = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span>
-                {t('footer.cupos_disponibles') || 'Cupos abiertos para desarrollo Q4 2025'}
-              </span>
+              <span>{t('footer.cupos_disponibles') || 'Cupos abiertos para desarrollo 2026'}</span>
             </div>
 
             {/* Social Channels */}
@@ -360,7 +358,7 @@ const Footer = () => {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-4 text-xs">
             {/* Left: Copyright */}
             <p className="text-muted-foreground text-[11px] font-mono tracking-wide text-center lg:text-left">
-              © 2025 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
+              © 2026 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
               {' · '}
               {t('footer.derechos') || 'Todos los derechos reservados.'}
             </p>

@@ -259,7 +259,7 @@ const PremiumBackground = () => {
       })
     }
 
-    if (prefersReducedMotion) {
+    if (prefersReducedMotion || isMobile) {
       renderFrame()
       return () => {
         observer.disconnect()

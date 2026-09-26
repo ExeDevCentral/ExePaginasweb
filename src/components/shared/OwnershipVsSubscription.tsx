@@ -541,11 +541,10 @@ function DeedCard({
                   e.more ? (
                     <span
                       key={e.label}
-                      className="chip-brand relative shrink-0 rounded-full p-px select-none cursor-default"
+                      className="chip-brand relative shrink-0 rounded-full p-px select-none cursor-default sm:animate-gradient-shift"
                       style={{
                         backgroundImage: 'var(--own-accent)',
                         backgroundSize: '200% auto',
-                        animation: 'gradientShift 6s linear infinite',
                       }}
                     >
                       <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-own-500 via-accent-brand to-own-600 opacity-30 blur-md" />

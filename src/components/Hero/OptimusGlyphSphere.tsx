@@ -134,7 +134,7 @@ export const OptimusGlyphSphere: React.FC<{
     // ========================================================
     // 1. GENERAR PUNTOS DE FIBONACCI (DISTRIBUCIÓN UNIFORME 3D)
     // ========================================================
-    const NUM_POINTS = isMobile ? 130 : 230
+    const NUM_POINTS = isMobile ? 85 : 230
     const points: Point3D[] = []
     const phi = Math.PI * (3 - Math.sqrt(5)) // Golden angle
 
@@ -209,7 +209,7 @@ export const OptimusGlyphSphere: React.FC<{
     // ========================================================
     // 3. MINI LEDS LARGOS DINÁMICOS (NEO PULSOS VIAJEROS)
     // ========================================================
-    const NUM_PULSES = isMobile ? 22 : 40
+    const NUM_PULSES = isMobile ? 12 : 40
     const pulses: EnergyPulse[] = []
     for (let i = 0; i < NUM_PULSES; i++) {
       if (edges.length === 0) break
@@ -439,14 +439,15 @@ export const OptimusGlyphSphere: React.FC<{
       ctx.fill()
 
       // Borde / Aro Perimetral Fresnel de alta definición
+      const enableGlow = !isMobile
       if (isDark) {
         ctx.strokeStyle = 'rgba(34, 211, 238, 0.65)'
         ctx.shadowColor = '#06b6d4'
-        ctx.shadowBlur = 10
+        ctx.shadowBlur = enableGlow ? 10 : 0
       } else {
         ctx.strokeStyle = 'rgba(2, 132, 199, 0.6)'
         ctx.shadowColor = 'rgba(2, 132, 199, 0.25)'
-        ctx.shadowBlur = 6
+        ctx.shadowBlur = enableGlow ? 6 : 0
       }
       ctx.lineWidth = 1.5
       ctx.stroke()
@@ -456,7 +457,7 @@ export const OptimusGlyphSphere: React.FC<{
       // CAPA 2: CUADRÍCULA HOLOGRÁFICA 3D (PARALELOS & MERIDIANOS)
       // ========================================================
       const drawGridLines = (drawFrontPass: boolean) => {
-        const segments = isMobile ? 32 : 44
+        const segments = isMobile ? 20 : 44
         ctx.save()
 
         // 2A. Paralelos (Latitudes)
@@ -494,7 +495,7 @@ export const OptimusGlyphSphere: React.FC<{
             if (isDark) {
               ctx.strokeStyle = isEquator ? 'rgba(34, 211, 238, 0.75)' : 'rgba(56, 189, 248, 0.45)'
               ctx.shadowColor = '#06b6d4'
-              ctx.shadowBlur = isEquator ? 6 : 0
+              ctx.shadowBlur = enableGlow && isEquator ? 6 : 0
             } else {
               ctx.strokeStyle = isEquator ? 'rgba(2, 132, 199, 0.65)' : 'rgba(2, 132, 199, 0.38)'
               ctx.shadowBlur = 0
@@ -623,13 +624,13 @@ export const OptimusGlyphSphere: React.FC<{
               const alpha = Math.min(1, 0.4 + avgDepth * 0.35 + maxEnergy * 0.45)
               ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`
               ctx.shadowColor = colorConfig.hex
-              ctx.shadowBlur = maxEnergy > 0.3 ? 7 : 2
+              ctx.shadowBlur = enableGlow && maxEnergy > 0.3 ? 7 : enableGlow ? 2 : 0
             } else {
               // Modo Claro: Líneas cromáticas de alta saturación y contraste
               const alpha = Math.min(1, 0.45 + avgDepth * 0.3 + maxEnergy * 0.35)
               ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`
               ctx.shadowColor = colorConfig.lightHex
-              ctx.shadowBlur = maxEnergy > 0.3 ? 4 : 0
+              ctx.shadowBlur = enableGlow && maxEnergy > 0.3 ? 4 : 0
             }
             ctx.lineWidth = (isDark ? 1.2 : 1.35) * avgScale
           } else {
@@ -720,10 +721,10 @@ export const OptimusGlyphSphere: React.FC<{
 
           if (isDark) {
             ctx.shadowColor = color.hex
-            ctx.shadowBlur = 10 * scale
+            ctx.shadowBlur = enableGlow ? 10 * scale : 0
           } else {
             ctx.shadowColor = color.lightHex
-            ctx.shadowBlur = 5 * scale
+            ctx.shadowBlur = enableGlow ? 5 * scale : 0
           }
           ctx.stroke()
 
@@ -733,7 +734,7 @@ export const OptimusGlyphSphere: React.FC<{
             ctx.arc(headX, headY, (isDark ? 2.5 : 2.2) * scale, 0, Math.PI * 2)
             ctx.fillStyle = isDark ? '#ffffff' : color.lightHex
             ctx.shadowColor = isDark ? color.hex : color.lightHex
-            ctx.shadowBlur = isDark ? 12 : 6
+            ctx.shadowBlur = enableGlow ? (isDark ? 12 : 6) : 0
             ctx.fill()
           }
         }
@@ -766,18 +767,18 @@ export const OptimusGlyphSphere: React.FC<{
           if (point.energy > 0.3) {
             ctx.fillStyle = '#ffffff'
             ctx.shadowColor = colorConfig.hex
-            ctx.shadowBlur = 12 * point.energy
+            ctx.shadowBlur = enableGlow ? 12 * point.energy : 0
           } else if (isFront) {
             ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.85 + normZ * 0.15})`
             ctx.shadowColor = colorConfig.hex
-            ctx.shadowBlur = 4
+            ctx.shadowBlur = enableGlow ? 4 : 0
           } else {
             ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.35)`
           }
         } else if (point.energy > 0.3) {
           ctx.fillStyle = colorConfig.lightHex
           ctx.shadowColor = colorConfig.lightHex
-          ctx.shadowBlur = 6
+          ctx.shadowBlur = enableGlow ? 6 : 0
         } else if (isFront) {
           ctx.fillStyle =
             point.colorIdx % 3 === 0
@@ -796,7 +797,7 @@ export const OptimusGlyphSphere: React.FC<{
           let glyphFillColor: string
           if (point.energy > 0.28) {
             ctx.shadowColor = isDark ? colorConfig.hex : colorConfig.lightHex
-            ctx.shadowBlur = (isDark ? 12 : 6) * point.energy
+            ctx.shadowBlur = enableGlow ? (isDark ? 12 : 6) * point.energy : 0
             if (isDark) {
               glyphFillColor = point.energy > 0.6 ? '#ffffff' : colorConfig.hex
             } else {
@@ -808,7 +809,7 @@ export const OptimusGlyphSphere: React.FC<{
                 ? `rgba(240, 249, 255, ${0.8 + normZ * 0.2})`
                 : `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.85 + normZ * 0.15})`
             ctx.shadowColor = colorConfig.hex
-            ctx.shadowBlur = 3 * normZ
+            ctx.shadowBlur = enableGlow ? 3 * normZ : 0
           } else if (isDark) {
             glyphFillColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.35 + normZ * 0.25})`
           } else if (isFront) {
@@ -870,7 +871,7 @@ export const OptimusGlyphSphere: React.FC<{
           ctx.strokeStyle = isDark ? 'rgba(34, 211, 238, 0.55)' : 'rgba(2, 132, 199, 0.5)'
           if (isDark) {
             ctx.shadowColor = '#06b6d4'
-            ctx.shadowBlur = 6
+            ctx.shadowBlur = enableGlow ? 6 : 0
           }
         } else {
           ctx.strokeStyle = isDark ? 'rgba(59, 130, 246, 0.16)' : 'rgba(2, 132, 199, 0.18)'
@@ -892,7 +893,7 @@ export const OptimusGlyphSphere: React.FC<{
         ctx.arc(satProj.sx, satProj.sy, 3.5 * satProj.scale, 0, Math.PI * 2)
         ctx.fillStyle = isDark ? '#ffffff' : '#0284c7'
         ctx.shadowColor = isDark ? '#38bdf8' : '#0284c7'
-        ctx.shadowBlur = 8
+        ctx.shadowBlur = enableGlow ? 8 : 0
         ctx.fill()
 
         // Micro-etiqueta técnica de telemetría junto a la baliza

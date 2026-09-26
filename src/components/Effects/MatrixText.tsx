@@ -133,7 +133,13 @@ function MatrixLetter({
   }
 
   useEffect(() => {
-    const delay = cascadeMs > 0 ? index * cascadeMs + Math.random() * 100 : 0
+    if (cascadeMs <= 0) return
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+    const prefersReduced =
+      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (isMobile || prefersReduced) return
+
+    const delay = index * cascadeMs + Math.random() * 100
     tvRef.current = setTimeout(scramble, delay)
     return () => {
       clearTimeout(tvRef.current!)
@@ -172,7 +178,7 @@ function MatrixLetter({
         width: '0.62em', // fixed width — no layout shift with wider katakana
         textAlign: 'center',
         overflow: 'hidden',
-        transition: 'text-shadow 0.15s, color 0.06s',
+        transition: glowing ? 'text-shadow 0.15s, color 0.06s' : 'none',
       }}
       className={`font-mono cursor-default select-none ${className}`}
     >

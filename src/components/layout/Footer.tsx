@@ -352,7 +352,7 @@ const Footer = () => {
         <div className="pt-6 border-t border-foreground/10 dark:border-white/10">
           {/* Gradient accent scanline */}
           <div className="relative mb-5 h-px w-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-cyan/40 to-transparent animate-[gradientX_4s_ease_infinite]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-cyan/40 to-transparent sm:animate-[gradientX_4s_ease_infinite]" />
           </div>
 
           <div className="flex flex-col lg:flex-row items-center justify-between gap-4 text-xs">

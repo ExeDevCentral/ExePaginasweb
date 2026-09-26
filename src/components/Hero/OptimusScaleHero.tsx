@@ -275,23 +275,13 @@ export const OptimusScaleHero: React.FC = () => {
                 </span>
               </h1>
 
-              {/* 3. SUBTÍTULO CON EFECTO MÁQUINA DE ESCRIBIR CONVERGENTE (DE ADELANTE Y DE ATRÁS SE JUNTAN EN EL MEDIO) */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="mt-5 sm:mt-6 max-w-2xl min-h-[6.5rem] sm:min-h-[4.5rem]"
-              >
+              {/* 3. SUBTÍTULO HERO CON RENDERIZADO INMEDIATO PARA MÁXIMO LCP */}
+              <div className="mt-5 sm:mt-6 max-w-2xl min-h-[6.5rem] sm:min-h-[4.5rem]">
                 <ConvergentTypewriterSubtitle />
-              </motion.div>
+              </div>
 
               {/* 4. BOTONES PRINCIPALES DE ACCIÓN DIRECTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto"
-              >
+              <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
                 <Link
                   href="/cotizador"
                   onClick={() => trackEvent('hero_cta_contact_clicked', { source: 'optimus_hero' })}
@@ -313,15 +303,10 @@ export const OptimusScaleHero: React.FC = () => {
                     {t('hero.cta_ver_portafolio') || t('hero.cta_ver_demo') || 'Ver portafolio'}
                   </span>
                 </Link>
-              </motion.div>
+              </div>
 
               {/* 5. CONFIANZA: mt-8 */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-slate-600 dark:text-slate-400"
-              >
+              <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-slate-600 dark:text-slate-400">
                 <div className="flex items-center gap-1.5">
                   <div className="flex text-amber-500">
                     <StarIcon className="w-3.5 h-3.5" />
@@ -345,7 +330,7 @@ export const OptimusScaleHero: React.FC = () => {
                   <CheckCircleIcon className="w-3.5 h-3.5 text-cyan-500" />
                   <span>{t('hero.trust_entrega') || 'Entrega en 7-15 días'}</span>
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             {/* COLUMNA DERECHA: ESFERA 3D VIBRANTE */}

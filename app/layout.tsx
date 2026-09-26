@@ -190,11 +190,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link
-          rel="preconnect"
-          href="https://bksonxnxshxinqffswqc.supabase.co"
-          crossOrigin="anonymous"
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

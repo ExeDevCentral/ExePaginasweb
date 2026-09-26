@@ -16,7 +16,7 @@ import ThemedToaster from '@/components/shared/ThemedToaster'
 import PremiumBackground from '@/components/Effects/PremiumBackground'
 import '@/core/i18n/config'
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({ children }: { readonly children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -34,6 +34,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       })
   )
   const enableVercelTelemetry = process.env.NEXT_PUBLIC_ENABLE_VERCEL_TELEMETRY === 'true'
+  const enableVercelAnalytics =
+    process.env.NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS !== 'false' &&
+    (process.env.NODE_ENV === 'production' || enableVercelTelemetry)
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -47,7 +50,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         </ThemeProvider>
       </AuthSessionProvider>
       {enableVercelTelemetry && <SpeedInsights />}
-      {enableVercelTelemetry && <Analytics />}
+      {enableVercelAnalytics && <Analytics />}
     </QueryClientProvider>
   )
 }

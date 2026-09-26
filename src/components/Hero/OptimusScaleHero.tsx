@@ -82,6 +82,24 @@ const CheckCircleIcon = ({ className = 'w-3.5 h-3.5' }: { className?: string }) 
     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
   </svg>
 )
+const Grid2x2Icon = ({ className = 'w-4 h-4' }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+  </svg>
+)
+
+const Columns4Icon = ({ className = 'w-4 h-4' }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <rect x="2" y="4" width="3.5" height="16" rx="1" />
+    <rect x="8" y="4" width="3.5" height="16" rx="1" />
+    <rect x="14" y="4" width="3.5" height="16" rx="1" />
+    <rect x="20" y="4" width="3.5" height="16" rx="1" />
+  </svg>
+)
+
 import OptimusGlyphSphere from './OptimusGlyphSphere'
 import SpotlightBorderCard from '../shared/SpotlightBorderCard'
 import InteractiveAnimatedTabs from './InteractiveAnimatedTabs'
@@ -99,10 +117,81 @@ const TICKER_ITEMS = [
   { value: '7 a 15', label: 'días puesta en marcha', tag: 'ENTREGA LLAVE EN MANO' },
 ]
 
+const CAPABILITIES = [
+  {
+    id: '01',
+    code: '01 // DESPLIEGUE',
+    titleKey: 'hero.card_1_titulo',
+    defaultTitle: 'Páginas de Alta Conversión',
+    descKey: 'hero.card_1_desc',
+    defaultDesc:
+      'Carga instantánea en 0.38s con Edge CDN global, diseño responsivo y posicionamiento SEO 100/100 en Google.',
+    cta: 'Ver soluciones web',
+    href: '/soluciones',
+    color: 'cyan' as const,
+    delay: '0s',
+    icon: GaugeIcon,
+    badge: '0.38s Edge CDN',
+    tech: ['Google SEO 100/100', 'Edge CDN Global', 'Responsive Ultra-Fast'],
+  },
+  {
+    id: '02',
+    code: '02 // GESTIÓN',
+    titleKey: 'hero.card_2_titulo',
+    defaultTitle: 'Sistemas Cloud & Paneles',
+    descKey: 'hero.card_2_desc',
+    defaultDesc:
+      'Control total de ventas, inventario, clientes y facturación electrónica a medida de tu operación diaria.',
+    cta: 'Ver paneles SaaS',
+    href: '/soluciones',
+    color: 'fuchsia' as const,
+    delay: '-2.75s',
+    icon: CpuIcon,
+    badge: 'Cloud & SaaS',
+    tech: ['Postgres + Supabase', 'Facturación AFIP', 'Multi-Rol & Auditoría'],
+  },
+  {
+    id: '03',
+    code: '03 // AUTOMATIZACIÓN',
+    titleKey: 'hero.card_3_titulo',
+    defaultTitle: 'WhatsApp & Cobros 24/7',
+    descKey: 'hero.card_3_desc',
+    defaultDesc:
+      'Conexión directa con webhooks para notificar pedidos, cobrar con tarjetas y emitir comprobantes sin intervención humana.',
+    cta: 'Calcular automatización',
+    href: '/cotizador',
+    color: 'amber' as const,
+    delay: '-5.5s',
+    icon: ZapIcon,
+    badge: 'Flujos Autónomos',
+    tech: ['WhatsApp Business API', 'MercadoPago Webhooks', 'Alertas en Tiempo Real'],
+  },
+  {
+    id: '04',
+    code: '04 // LIBERTAD',
+    titleKey: 'hero.card_4_titulo',
+    defaultTitle: '100% Código Propio',
+    descKey: 'hero.card_4_desc',
+    defaultDesc:
+      'El software y la base de datos te pertenecen para siempre. Cero comisiones por venta y cero cuotas mensuales obligatorias.',
+    cta: 'Comparar planes y precios',
+    href: '/precios',
+    color: 'emerald' as const,
+    delay: '-8.25s',
+    icon: ShieldCheckIcon,
+    badge: 'Sin Ataduras',
+    tech: ['Código 100% Tuyo', '0% Comisiones', 'Hosting Independiente'],
+  },
+]
+
 export const OptimusScaleHero: React.FC = () => {
   const { t } = useTranslation()
   const [wordIndex, setWordIndex] = useState(0)
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 })
+  const [desktopView, setDesktopView] = useState<'grid2x2' | 'row4'>('grid2x2')
+  const [activeMobileFilter, setActiveMobileFilter] = useState<'all' | '01' | '02' | '03' | '04'>(
+    'all'
+  )
 
   const rotatingWords = useMemo(() => {
     const list = t('hero.palabras_rotativas', { returnObjects: true })
@@ -349,112 +438,314 @@ export const OptimusScaleHero: React.FC = () => {
       </section>
 
       {/* ========================================================
-          3. SECCIÓN CAPACIDADES (ESTILO OPTIMUS ROWS CON BORDER BEAM)
+          3. SECCIÓN CAPACIDADES (DUAL: MODO CELULAR + MODO PC)
          ======================================================== */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20 border-t border-slate-200/80 dark:border-white/10">
-        <div className="mb-14 text-left">
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 mb-3">
-            {t('hero.capacidades_eyebrow') || '— Capacidades'}
-          </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold tracking-tight leading-tight">
-            <span className="block text-slate-950 dark:text-white">
-              {t('hero.capacidades_titulo') || 'Todo lo que tu empresa necesita.'}
-            </span>
-            <span className="block text-slate-400 dark:text-slate-500">
-              {t('hero.capacidades_subtitulo') || 'Nada de plantillas genéricas.'}
-            </span>
-          </h2>
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-20 border-t border-slate-200/80 dark:border-white/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
+          <div className="text-left">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 mb-3">
+              {t('hero.capacidades_eyebrow') || '— Capacidades'}
+            </p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold tracking-tight leading-tight">
+              <span className="block text-slate-950 dark:text-white">
+                {t('hero.capacidades_titulo') || 'Todo lo que tu empresa necesita.'}
+              </span>
+              <span className="block text-slate-400 dark:text-slate-500">
+                {t('hero.capacidades_subtitulo') || 'Nada de plantillas genéricas.'}
+              </span>
+            </h2>
+          </div>
+
+          {/* SELECTOR DE VISTA EN ESCRITORIO (PC) */}
+          <div className="hidden lg:flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-mono">
+            <button
+              type="button"
+              onClick={() => setDesktopView('grid2x2')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                desktopView === 'grid2x2'
+                  ? 'bg-white dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 font-bold shadow-xs border border-slate-200/80 dark:border-cyan-500/40'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Grid2x2Icon className="w-3.5 h-3.5" />
+              <span>Cuadrícula 2x2 Amplia</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setDesktopView('row4')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                desktopView === 'row4'
+                  ? 'bg-white dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 font-bold shadow-xs border border-slate-200/80 dark:border-cyan-500/40'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Columns4Icon className="w-3.5 h-3.5" />
+              <span>Panorámica 4x1</span>
+            </button>
+          </div>
         </div>
 
-        {/* 4 FILAS / TARJETAS CON HAZ DE LUZ QUE RECORRE EL BORDE Y SPOTLIGHT */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <Link href="/soluciones" className="block cursor-pointer group">
-            <SpotlightBorderCard activeBeam={true} colorVariant="cyan" animationDelay="0s">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400">
-                  01 // DESPLIEGUE
-                </span>
-                <GaugeIcon className="w-4 h-4 text-cyan-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.6)] transition-all duration-300" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-colors">
-                {t('hero.card_1_titulo') || 'Páginas de Alta Conversión'}
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
-                {t('hero.card_1_desc') ||
-                  'Carga instantánea en 0.38s con Edge CDN global, diseño responsivo y posicionamiento SEO 100/100 en Google.'}
-              </p>
-              <div className="flex items-center gap-1 text-[11px] font-mono font-bold text-cyan-500 group-hover:translate-x-1 transition-transform">
-                <span>Ver soluciones web</span>
-                <ArrowRightIcon className="w-3.5 h-3.5" />
-              </div>
-            </SpotlightBorderCard>
-          </Link>
+        {/* ========================================================
+            A. VERSIÓN PARA CELULARES (MÓVIL PRÁCTICA, ÁGIL Y ELEGANTE)
+           ======================================================== */}
+        <div className="block lg:hidden space-y-6">
+          {/* BARRA TÁCTIL RÁPIDA DE FILTRO PARA MÓVILES */}
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-2 pt-1 select-none">
+            <button
+              type="button"
+              onClick={() => setActiveMobileFilter('all')}
+              className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-mono transition-all touch-manipulation cursor-pointer ${
+                activeMobileFilter === 'all'
+                  ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/30'
+                  : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400'
+              }`}
+            >
+              Todas (4)
+            </button>
+            {CAPABILITIES.map((cap) => (
+              <button
+                key={'mob-btn-' + cap.id}
+                type="button"
+                onClick={() => setActiveMobileFilter(cap.id as '01' | '02' | '03' | '04')}
+                className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-mono transition-all touch-manipulation cursor-pointer ${
+                  activeMobileFilter === cap.id
+                    ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/30'
+                    : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400'
+                }`}
+              >
+                {cap.code}
+              </button>
+            ))}
+          </div>
 
-          <Link href="/soluciones" className="block cursor-pointer group">
-            <SpotlightBorderCard activeBeam={true} colorVariant="fuchsia" animationDelay="-2.75s">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono font-bold text-fuchsia-600 dark:text-fuchsia-400">
-                  02 // GESTIÓN
-                </span>
-                <CpuIcon className="w-4 h-4 text-fuchsia-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(217,70,239,0.6)] transition-all duration-300" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-fuchsia-500 dark:group-hover:text-fuchsia-300 transition-colors">
-                {t('hero.card_2_titulo') || 'Sistemas Cloud & Paneles'}
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
-                {t('hero.card_2_desc') ||
-                  'Control total de ventas, inventario, clientes y facturación electrónica a medida de tu operación diaria.'}
-              </p>
-              <div className="flex items-center gap-1 text-[11px] font-mono font-bold text-fuchsia-500 group-hover:translate-x-1 transition-transform">
-                <span>Ver paneles SaaS</span>
-                <ArrowRightIcon className="w-3.5 h-3.5" />
-              </div>
-            </SpotlightBorderCard>
-          </Link>
+          {/* LISTA DE TARJETAS EN MODO CELULAR (AMPLIAS, CÓMODAS, CON EFECTO LUMINOSO) */}
+          <div className="grid grid-cols-1 gap-5">
+            {CAPABILITIES.filter(
+              (cap) => activeMobileFilter === 'all' || activeMobileFilter === cap.id
+            ).map((cap) => {
+              const Icon = cap.icon
+              const colorTextClass =
+                cap.color === 'cyan'
+                  ? 'text-cyan-600 dark:text-cyan-400'
+                  : cap.color === 'fuchsia'
+                    ? 'text-fuchsia-600 dark:text-fuchsia-400'
+                    : cap.color === 'amber'
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
 
-          <Link href="/cotizador" className="block cursor-pointer group">
-            <SpotlightBorderCard activeBeam={true} colorVariant="amber" animationDelay="-5.5s">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
-                  03 // AUTOMATIZACIÓN
-                </span>
-                <ZapIcon className="w-4 h-4 text-amber-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] transition-all duration-300" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-amber-500 dark:group-hover:text-amber-300 transition-colors">
-                {t('hero.card_3_titulo') || 'WhatsApp & Cobros 24/7'}
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
-                {t('hero.card_3_desc') ||
-                  'Conexión directa con webhooks para notificar pedidos, cobrar con tarjetas y emitir comprobantes sin intervención humana.'}
-              </p>
-              <div className="flex items-center gap-1 text-[11px] font-mono font-bold text-amber-500 group-hover:translate-x-1 transition-transform">
-                <span>Calcular automatización</span>
-                <ArrowRightIcon className="w-3.5 h-3.5" />
-              </div>
-            </SpotlightBorderCard>
-          </Link>
+              const colorBorderClass =
+                cap.color === 'cyan'
+                  ? 'hover:border-cyan-500/50'
+                  : cap.color === 'fuchsia'
+                    ? 'hover:border-fuchsia-500/50'
+                    : cap.color === 'amber'
+                      ? 'hover:border-amber-500/50'
+                      : 'hover:border-emerald-500/50'
 
-          <Link href="/precios" className="block cursor-pointer group">
-            <SpotlightBorderCard activeBeam={true} colorVariant="emerald" animationDelay="-8.25s">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                  04 // LIBERTAD
-                </span>
-                <ShieldCheckIcon className="w-4 h-4 text-emerald-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.6)] transition-all duration-300" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-500 dark:group-hover:text-emerald-300 transition-colors">
-                {t('hero.card_4_titulo') || '100% Código Propio'}
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
-                {t('hero.card_4_desc') ||
-                  'El software y la base de datos te pertenecen para siempre. Cero comisiones por venta y cero cuotas mensuales obligatorias.'}
-              </p>
-              <div className="flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-500 group-hover:translate-x-1 transition-transform">
-                <span>Comparar planes y precios</span>
-                <ArrowRightIcon className="w-3.5 h-3.5" />
-              </div>
-            </SpotlightBorderCard>
-          </Link>
+              return (
+                <Link
+                  key={'mob-card-' + cap.id}
+                  href={cap.href}
+                  className="block cursor-pointer active:scale-[0.98] transition-transform touch-manipulation"
+                >
+                  <SpotlightBorderCard
+                    activeBeam={true}
+                    colorVariant={cap.color}
+                    animationDelay={cap.delay}
+                    className={`w-full ${colorBorderClass}`}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className={`text-xs font-mono font-bold ${colorTextClass}`}>
+                        {cap.code}
+                      </span>
+                      <Icon className={`w-4 h-4 ${colorTextClass}`} />
+                    </div>
+
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-snug">
+                      {t(cap.titleKey) || cap.defaultTitle}
+                    </h3>
+
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                      {t(cap.descKey) || cap.defaultDesc}
+                    </p>
+
+                    {/* Micro-tags tecnológicos en móvil */}
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {cap.tech.map((techItem) => (
+                        <span
+                          key={'mob-tech-' + cap.id + '-' + techItem}
+                          className="px-2 py-0.5 rounded-md bg-slate-200/60 dark:bg-white/5 border border-slate-300/60 dark:border-white/10 text-[10px] font-mono text-slate-600 dark:text-slate-400"
+                        >
+                          {techItem}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div
+                      className={`flex items-center gap-1.5 text-xs font-mono font-bold ${colorTextClass}`}
+                    >
+                      <span>{cap.cta}</span>
+                      <ArrowRightIcon className="w-3.5 h-3.5" />
+                    </div>
+                  </SpotlightBorderCard>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* ========================================================
+            B. VERSIÓN PARA ESCRITORIO / PC (ESPACIOSA, MAJESTUOSA Y RICA)
+           ======================================================== */}
+        <div className="hidden lg:block">
+          {desktopView === 'grid2x2' ? (
+            /* VISTA 1: CUADRÍCULA 2X2 AMPLIA (ESPACIO CÓMODO Y MAJESTUOSO) */
+            <div className="grid grid-cols-2 gap-7 xl:gap-8">
+              {CAPABILITIES.map((cap) => {
+                const Icon = cap.icon
+                const colorTextClass =
+                  cap.color === 'cyan'
+                    ? 'text-cyan-600 dark:text-cyan-400'
+                    : cap.color === 'fuchsia'
+                      ? 'text-fuchsia-600 dark:text-fuchsia-400'
+                      : cap.color === 'amber'
+                        ? 'text-amber-600 dark:text-amber-400'
+                        : 'text-emerald-600 dark:text-emerald-400'
+
+                const colorHoverText =
+                  cap.color === 'cyan'
+                    ? 'group-hover:text-cyan-500 dark:group-hover:text-cyan-300'
+                    : cap.color === 'fuchsia'
+                      ? 'group-hover:text-fuchsia-500 dark:group-hover:text-fuchsia-300'
+                      : cap.color === 'amber'
+                        ? 'group-hover:text-amber-500 dark:group-hover:text-amber-300'
+                        : 'group-hover:text-emerald-500 dark:group-hover:text-emerald-300'
+
+                return (
+                  <Link
+                    key={'pc-grid-' + cap.id}
+                    href={cap.href}
+                    className="block cursor-pointer group"
+                  >
+                    <SpotlightBorderCard
+                      activeBeam={true}
+                      colorVariant={cap.color}
+                      animationDelay={cap.delay}
+                      className="h-full"
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <span className={`text-xs font-mono font-bold ${colorTextClass}`}>
+                            {cap.code}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400">
+                            {cap.badge}
+                          </span>
+                        </div>
+                        <Icon
+                          className={`w-5 h-5 ${colorTextClass} group-hover:scale-110 transition-transform duration-300`}
+                        />
+                      </div>
+
+                      <h3
+                        className={`text-xl xl:text-2xl font-bold text-slate-900 dark:text-white mb-2.5 transition-colors ${colorHoverText}`}
+                      >
+                        {t(cap.titleKey) || cap.defaultTitle}
+                      </h3>
+
+                      <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+                        {t(cap.descKey) || cap.defaultDesc}
+                      </p>
+
+                      {/* Micro-tags tecnológicos en desktop */}
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {cap.tech.map((techItem) => (
+                          <span
+                            key={'pc-tech-' + cap.id + '-' + techItem}
+                            className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[11px] font-mono text-slate-600 dark:text-slate-400 group-hover:border-slate-300 dark:group-hover:border-white/20 transition-colors"
+                          >
+                            {techItem}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div
+                        className={`flex items-center gap-1.5 text-xs font-mono font-bold ${colorTextClass} group-hover:translate-x-1.5 transition-transform duration-300`}
+                      >
+                        <span>{cap.cta}</span>
+                        <ArrowRightIcon className="w-4 h-4" />
+                      </div>
+                    </SpotlightBorderCard>
+                  </Link>
+                )
+              })}
+            </div>
+          ) : (
+            /* VISTA 2: PANORÁMICA 4X1 (4 COLUMNAS TRADICIONAL) */
+            <div className="grid grid-cols-4 gap-5">
+              {CAPABILITIES.map((cap) => {
+                const Icon = cap.icon
+                const colorTextClass =
+                  cap.color === 'cyan'
+                    ? 'text-cyan-600 dark:text-cyan-400'
+                    : cap.color === 'fuchsia'
+                      ? 'text-fuchsia-600 dark:text-fuchsia-400'
+                      : cap.color === 'amber'
+                        ? 'text-amber-600 dark:text-amber-400'
+                        : 'text-emerald-600 dark:text-emerald-400'
+
+                const colorHoverText =
+                  cap.color === 'cyan'
+                    ? 'group-hover:text-cyan-500 dark:group-hover:text-cyan-300'
+                    : cap.color === 'fuchsia'
+                      ? 'group-hover:text-fuchsia-500 dark:group-hover:text-fuchsia-300'
+                      : cap.color === 'amber'
+                        ? 'group-hover:text-amber-500 dark:group-hover:text-amber-300'
+                        : 'group-hover:text-emerald-500 dark:group-hover:text-emerald-300'
+
+                return (
+                  <Link
+                    key={'pc-row-' + cap.id}
+                    href={cap.href}
+                    className="block cursor-pointer group"
+                  >
+                    <SpotlightBorderCard
+                      activeBeam={true}
+                      colorVariant={cap.color}
+                      animationDelay={cap.delay}
+                      className="h-full"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <span className={`text-xs font-mono font-bold ${colorTextClass}`}>
+                          {cap.code}
+                        </span>
+                        <Icon
+                          className={`w-4 h-4 ${colorTextClass} group-hover:scale-110 transition-transform duration-300`}
+                        />
+                      </div>
+
+                      <h3
+                        className={`text-lg font-bold text-slate-900 dark:text-white mb-1.5 transition-colors ${colorHoverText}`}
+                      >
+                        {t(cap.titleKey) || cap.defaultTitle}
+                      </h3>
+
+                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+                        {t(cap.descKey) || cap.defaultDesc}
+                      </p>
+
+                      <div
+                        className={`flex items-center gap-1 text-[11px] font-mono font-bold ${colorTextClass} group-hover:translate-x-1 transition-transform`}
+                      >
+                        <span>{cap.cta}</span>
+                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                      </div>
+                    </SpotlightBorderCard>
+                  </Link>
+                )
+              })}
+            </div>
+          )}
         </div>
       </section>
 

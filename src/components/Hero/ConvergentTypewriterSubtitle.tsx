@@ -122,21 +122,23 @@ export const ConvergentTypewriterSubtitle: React.FC<ConvergentTypewriterSubtitle
   const isP2Scanning = hoverScan2 || (scan2 && !isComplete)
 
   const [isMounted, setIsMounted] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
+    setIsMobile(window.innerWidth < 640)
   }, [])
 
-  if (!isMounted) {
+  if (!isMounted || isMobile) {
     return (
       <div className={`group/typewriter relative ${className}`}>
         <p className="text-base sm:text-lg text-slate-700 dark:text-slate-300 max-w-2xl leading-relaxed font-normal select-text relative">
           <span>{PART_1}</span>
-          <span className="font-semibold px-2 py-0.5 rounded-xl border border-cyan-400/80 bg-cyan-500/[0.12] dark:bg-cyan-500/[0.14] text-cyan-600 dark:text-cyan-300">
+          <span className="font-semibold px-2 py-0.5 rounded-xl border border-cyan-400/80 bg-cyan-500/[0.12] dark:bg-cyan-500/[0.14] text-cyan-600 dark:text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.25)]">
             {PHRASE_1}
           </span>
           <span>{PART_2}</span>
-          <span className="font-semibold px-2 py-0.5 rounded-xl border border-fuchsia-400/80 bg-fuchsia-500/[0.12] dark:bg-fuchsia-500/[0.14] text-fuchsia-600 dark:text-fuchsia-300">
+          <span className="font-semibold px-2 py-0.5 rounded-xl border border-fuchsia-400/80 bg-fuchsia-500/[0.12] dark:bg-fuchsia-500/[0.14] text-fuchsia-600 dark:text-fuchsia-300 shadow-[0_0_12px_rgba(217,70,239,0.25)]">
             {PHRASE_2}
           </span>
           <span>{PART_3}</span>

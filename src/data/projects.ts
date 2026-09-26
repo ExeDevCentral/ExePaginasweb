@@ -29,7 +29,7 @@ export const INITIAL_PROJECTS: Project[] = [
     client: 'Chispa32 · Rosario, Argentina',
     description:
       'Landing de alta conversión para taller especializado en reparación y reflasheo de placas ESP32. Diseño técnico premium con propuesta de valor clara, servicios y contacto directo.',
-    image: '/portfolio/chispa32.png',
+    image: '/portfolio/chispa32.webp',
     tags: ['Next.js', 'Tailwind', 'SEO', 'Landing'],
     metrics: [
       { label: 'Stack', value: 'Next.js' },
@@ -53,7 +53,7 @@ export const INITIAL_PROJECTS: Project[] = [
     client: 'GAM · Restauración de Máquinas de Escribir',
     description:
       'Web dedicada a la restauración artesanal de máquinas de escribir. Estética vintage-premium que posiciona el oficio, muestra el taller y facilita el contacto para trabajos de restauración.',
-    image: '/portfolio/gam.png',
+    image: '/portfolio/gam.webp',
     tags: ['Vite', 'Tailwind', 'Vintage', 'Landing'],
     metrics: [
       { label: 'Stack', value: 'Vite' },
@@ -78,7 +78,7 @@ export const INITIAL_PROJECTS: Project[] = [
     client: 'Noema Consultora · Asunción, Paraguay',
     description:
       'Sitio corporativo ejecutivo para consultora de investigación de mercado cualitativa y cuantitativa. Calculadora interactiva de diagnóstico metodológico, dashboard de Data Insights con Chart.js, formulario de contacto vía serverless y diseño glassmorphism con tema oscuro.',
-    image: '/portfolio/noema.png',
+    image: '/portfolio/noema.webp',
     tags: ['React', 'TypeScript', 'Vite', 'Chart.js', 'SEO'],
     metrics: [
       { label: 'Stack', value: 'React + Vite' },
@@ -180,7 +180,7 @@ export const INITIAL_PROJECTS: Project[] = [
     client: 'OwlEyeEngine · Motor de Seguridad',
     description:
       'Plataforma de ciberseguridad de monitoreo en tiempo real: inspección de procesos y red de bajo nivel (psutil), motor heurístico de puntuación de amenazas (0-100), mitigación activa (auto-kill de procesos y bloqueo de IPs en firewall) y dashboard web glassmorphic con stream en vivo vía WebSocket.',
-    image: '/portfolio/owleye.png',
+    image: '/portfolio/owleye.webp',
     tags: ['Python', 'FastAPI', 'WebSocket', 'psutil', 'Active Defense'],
     metrics: [
       { label: 'Stack', value: 'Python + FastAPI' },
@@ -206,7 +206,7 @@ export const INITIAL_PROJECTS: Project[] = [
     client: 'FIXI · Rosario y Región',
     description:
       'Plataforma inteligente que conecta profesionales de oficio (jardinería, electricidad, fletes, plomería, pintura y más) con clientes de Rosario y la región. Contacto directo por WhatsApp, sistema de alertas con geolocalización en tiempo real, tablero de trabajos solicitados, perfiles con valoraciones y experiencia inmersiva con 3D.',
-    image: '/portfolio/fixi.jpg',
+    image: '/portfolio/fixi.webp',
     tags: ['React', 'Vite', 'Three.js', 'Supabase', 'Marketplace'],
     metrics: [
       { label: 'Stack', value: 'React + Vite' },
@@ -232,7 +232,7 @@ export const INITIAL_PROJECTS: Project[] = [
     client: 'SportManager · Centros Deportivos',
     description:
       'Plataforma SaaS completa de gestión para complejos deportivos: reservas multi-espacio con calendario visual, pagos por webhook Mercado Pago, CRM de clientes, importación masiva desde Excel, notificaciones email/WhatsApp y analítica en tiempo real. Arquitectura multi-tenant con Supabase, anti doble-reserva con EXCLUDE GiST y roles por complejo.',
-    image: '/portfolio/sportmanager.jpg',
+    image: '/portfolio/sportmanager.webp',
     tags: ['Next.js 16', 'Supabase', 'Mercado Pago', 'SaaS', 'Multi-Tenant'],
     metrics: [
       { label: 'Stack', value: 'Next.js + Supabase' },

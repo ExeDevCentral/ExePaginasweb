@@ -28,6 +28,10 @@ export const Logo: React.FC<LogoProps> = ({
   const sizeStyle = { width: `${size}px`, height: `${size}px` }
 
   const renderLogoImage = () => {
+    const isSmall = size <= 64
+    const darkSrc = isSmall ? '/logo-dark-sm.webp' : '/logo-dark.webp'
+    const lightSrc = isSmall ? '/logo-light-sm.webp' : '/logo-light.webp'
+
     const commonImgStyle: React.CSSProperties = {
       maxWidth: size ? `${size}px` : '100%',
       maxHeight: size ? `${size}px` : '100%',
@@ -38,7 +42,7 @@ export const Logo: React.FC<LogoProps> = ({
     if (variant === 'dark') {
       return (
         <img
-          src="/logo-dark.webp"
+          src={darkSrc}
           alt={alt}
           loading="eager"
           fetchPriority="high"
@@ -53,7 +57,7 @@ export const Logo: React.FC<LogoProps> = ({
     if (variant === 'light') {
       return (
         <img
-          src="/logo-light.webp"
+          src={lightSrc}
           alt={alt}
           loading="eager"
           fetchPriority="high"
@@ -68,7 +72,7 @@ export const Logo: React.FC<LogoProps> = ({
     return (
       <>
         <img
-          src="/logo-light.webp"
+          src={lightSrc}
           alt={alt}
           loading="eager"
           fetchPriority="high"
@@ -78,7 +82,7 @@ export const Logo: React.FC<LogoProps> = ({
           className="object-contain dark:hidden filter drop-shadow-[0_0_10px_rgba(250,204,21,0.4)] transition-all duration-300 group-hover:scale-110 relative z-10 shrink-0"
         />
         <img
-          src="/logo-dark.webp"
+          src={darkSrc}
           alt={alt}
           loading="eager"
           fetchPriority="high"

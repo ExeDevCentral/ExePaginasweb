@@ -395,35 +395,25 @@ export const InteractiveAnimatedTabs: React.FC<{ className?: string }> = ({ clas
         </div>
       </div>
 
-      {/* ESTILOS CSS PARA DIFUMINADO + MÁQUINA DE ESCRIBIR ESPACIAL LENTA */}
+      {/* ESTILOS CSS PARA DIFUMINADO + MÁQUINA DE ESCRIBIR ESPACIAL LENTA (100% GPU COMPOSITED) */}
       <style jsx>{`
         .spatial-typewriter-char {
           display: inline-block;
           white-space: pre;
           opacity: 0;
-          filter: blur(8px);
-          transform: translateY(3px) scale(0.96);
-          animation: spatialTypewriter 340ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          will-change: opacity, filter, transform;
+          transform: translate3d(0, 2px, 0);
+          animation: spatialTypewriter 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          will-change: opacity, transform;
         }
 
         @keyframes spatialTypewriter {
           0% {
             opacity: 0;
-            filter: blur(8px);
-            transform: translateY(3px) scale(0.96);
-            text-shadow: 0 0 12px rgba(6, 182, 212, 0.85);
-          }
-          40% {
-            opacity: 0.85;
-            filter: blur(2.5px);
-            text-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+            transform: translate3d(0, 2px, 0);
           }
           100% {
             opacity: 1;
-            filter: blur(0px);
-            transform: translateY(0) scale(1);
-            text-shadow: none;
+            transform: translate3d(0, 0, 0);
           }
         }
 

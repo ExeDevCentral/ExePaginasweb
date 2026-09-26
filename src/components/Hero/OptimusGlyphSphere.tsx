@@ -53,17 +53,19 @@ export const OptimusGlyphSphere: React.FC<{
     if (!ctx) return
 
     let animationFrameId: number
+    let isVisibleOnScreen = true
     let width = (canvas.width = canvas.parentElement?.clientWidth || 360)
     let height = (canvas.height = canvas.parentElement?.clientHeight || width || 360)
 
-    // Retina display support
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const isMobile = width < 640
+    // Retina display support optimizada para móviles (evita sobregiro de GPU)
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2)
     canvas.width = width * dpr
     canvas.height = height * dpr
     ctx.scale(dpr, dpr)
 
-    // 480 puntos distribuidos uniformemente con espiral áurea de Fibonacci (densidad balanceada)
-    const NUM_POINTS = 480
+    // Densidad balanceada: 120 puntos en móvil (ultra-ligero, 60fps) y 480 en PC
+    const NUM_POINTS = isMobile ? 120 : 480
     const points: Point3D[] = []
     const phi = Math.PI * (3 - Math.sqrt(5)) // Golden angle
 
@@ -470,12 +472,29 @@ export const OptimusGlyphSphere: React.FC<{
         ctx.restore()
       }
 
-      animationFrameId = requestAnimationFrame(render)
+      if (isVisibleOnScreen) {
+        animationFrameId = requestAnimationFrame(render)
+      }
     }
 
-    render()
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        const wasVisible = isVisibleOnScreen
+        isVisibleOnScreen = entry ? entry.isIntersecting : true
+        if (isVisibleOnScreen && !wasVisible) {
+          cancelAnimationFrame(animationFrameId)
+          animationFrameId = requestAnimationFrame(render)
+        }
+      },
+      { threshold: 0.05 }
+    )
+    observer.observe(canvas)
+
+    animationFrameId = requestAnimationFrame(render)
 
     return () => {
+      observer.disconnect()
       cancelAnimationFrame(animationFrameId)
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('wheel', handleWheel)
@@ -489,7 +508,7 @@ export const OptimusGlyphSphere: React.FC<{
       canvas.removeEventListener('touchmove', handleTouchMove)
       canvas.removeEventListener('touchend', handleTouchEnd)
     }
-  }, [sphereRadius])
+  }, [sphereRadius, radiusRatio])
 
   return (
     <div

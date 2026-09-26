@@ -349,8 +349,8 @@ export const OptimusScaleHero: React.FC = () => {
             </div>
 
             {/* COLUMNA DERECHA: ESFERA 3D VIBRANTE */}
-            <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end w-full py-4 lg:py-0">
-              <OptimusGlyphSphere className="w-full max-w-[340px] sm:max-w-[460px] lg:max-w-[560px] ml-auto" />
+            <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end w-full py-2 lg:py-0">
+              <OptimusGlyphSphere className="w-full max-w-[380px] sm:max-w-[500px] md:max-w-[560px] lg:max-w-[620px] xl:max-w-[680px] mx-auto lg:ml-auto" />
             </div>
           </div>
 

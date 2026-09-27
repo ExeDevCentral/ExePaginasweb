@@ -6,7 +6,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
 import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
-import { sendWhatsAppAdminAlert } from '@/lib/notifications/whatsappAdmin'
 import {
   contactNotification,
   contactAutoReply,
@@ -131,19 +130,6 @@ export async function POST(req: NextRequest) {
         firstName: name,
       }).catch((err) => {
         console.warn(`[contact] No se pudo sincronizar con Resend Audience:`, err)
-      })
-
-      // Enviar alerta instantánea por WhatsApp al admin (gratis vía CallMeBot)
-      void sendWhatsAppAdminAlert({
-        title: isAiDiag ? 'Nuevo Diagnóstico IA' : 'Nuevo Contacto Web',
-        name,
-        email,
-        message,
-        ticketId,
-        plan: projectType || undefined,
-        amount: total ?? undefined,
-      }).catch((err) => {
-        console.warn('[contact] No se pudo enviar alerta WhatsApp:', err)
       })
 
       const results = await Promise.allSettled(emailTasks)

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * © 2026 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
@@ -44,8 +44,11 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
     activeCategory === 'all'
       ? INITIAL_PROJECTS
       : INITIAL_PROJECTS.filter((p) => p.category === activeCategory)
+  const FEATURED_IDS = ['sportmanager', 'celstore', 'noema']
   const visibleProjects = featuredOnly
-    ? INITIAL_PROJECTS.filter((project) => ['sportmanager', 'fixi', 'noema'].includes(project.id))
+    ? FEATURED_IDS.map((id) => INITIAL_PROJECTS.find((p) => p.id === id)).filter(
+        (p): p is Project => Boolean(p)
+      )
     : filteredProjects
 
   return (

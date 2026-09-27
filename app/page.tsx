@@ -10,6 +10,11 @@ import { motion, useScroll, useSpring } from 'framer-motion'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import SiteHeader from '@/components/layout/SiteHeader'
 import OptimusScaleHero from '@/components/Hero/OptimusScaleHero'
+
+const HowWeWorkSection = dynamic(() => import('@/components/landing/HowWeWorkSection'), {
+  loading: () => <div className="min-h-125 w-full" />,
+})
+
 const OwnershipVsSubscription = dynamic(
   () => import('@/components/shared/OwnershipVsSubscription'),
   {
@@ -27,6 +32,10 @@ const ContactSection = dynamic(() => import('@/components/landing/ContactSection
 
 const Footer = dynamic(() => import('@/components/layout/Footer'), {
   loading: () => <div className="h-20" />,
+})
+
+const FloatingWhatsApp = dynamic(() => import('@/components/layout/FloatingWhatsApp'), {
+  ssr: false,
 })
 
 const AIChatWidget = dynamic(() => import('@/components/chat/AIChatWidget'), {
@@ -47,11 +56,13 @@ export default function HomePage() {
         <SiteHeader />
         <main id="inicio">
           <OptimusScaleHero />
+          <HowWeWorkSection />
           <OwnershipVsSubscription />
           <PortfolioSection featuredOnly />
           <ContactSection />
         </main>
         <Footer />
+        <FloatingWhatsApp />
         <AIChatWidget />
       </div>
     </ErrorBoundary>

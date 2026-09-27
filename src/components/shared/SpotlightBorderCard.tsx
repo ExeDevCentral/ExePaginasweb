@@ -37,44 +37,44 @@ const COLOR_CONFIGS: Record<
   }
 > = {
   cyan: {
-    // Arco cometa de 190°: de 170° a 360° con cola cian difusa, cuerpo vibrante y cabeza blanca
+    // Arco cometa de alta intensidad con destello blanco láser en la cabeza
     gradient:
-      'conic-gradient(from 0deg, transparent 0 170deg, rgba(6, 182, 212, 0.08) 200deg, rgba(6, 182, 212, 0.45) 265deg, #06b6d4 330deg, #67e8f9 352deg, #ffffff 360deg)',
-    spotlight: 'rgba(6, 182, 212, 0.4)',
-    innerSpotlight: 'rgba(6, 182, 212, 0.08)',
-    glowClass: 'dark:hover:shadow-[0_14px_44px_rgba(6,182,212,0.28)] hover:shadow-cyan-500/18',
+      'conic-gradient(from 0deg, transparent 0 150deg, rgba(6, 182, 212, 0.15) 190deg, rgba(6, 182, 212, 0.75) 280deg, #06b6d4 335deg, #67e8f9 352deg, #ffffff 359deg, transparent 360deg)',
+    spotlight: 'rgba(6, 182, 212, 0.45)',
+    innerSpotlight: 'rgba(6, 182, 212, 0.1)',
+    glowClass: 'dark:hover:shadow-[0_14px_44px_rgba(6,182,212,0.32)] hover:shadow-cyan-500/25',
     dotColor: 'bg-cyan-400',
   },
   fuchsia: {
     gradient:
-      'conic-gradient(from 0deg, transparent 0 170deg, rgba(217, 70, 239, 0.08) 200deg, rgba(217, 70, 239, 0.45) 265deg, #d946ef 330deg, #f472b6 352deg, #ffffff 360deg)',
-    spotlight: 'rgba(217, 70, 239, 0.4)',
-    innerSpotlight: 'rgba(217, 70, 239, 0.08)',
-    glowClass: 'dark:hover:shadow-[0_14px_44px_rgba(217,70,239,0.28)] hover:shadow-fuchsia-500/18',
+      'conic-gradient(from 0deg, transparent 0 150deg, rgba(217, 70, 239, 0.15) 190deg, rgba(217, 70, 239, 0.75) 280deg, #d946ef 335deg, #f472b6 352deg, #ffffff 359deg, transparent 360deg)',
+    spotlight: 'rgba(217, 70, 239, 0.45)',
+    innerSpotlight: 'rgba(217, 70, 239, 0.1)',
+    glowClass: 'dark:hover:shadow-[0_14px_44px_rgba(217,70,239,0.32)] hover:shadow-fuchsia-500/25',
     dotColor: 'bg-fuchsia-400',
   },
   amber: {
     gradient:
-      'conic-gradient(from 0deg, transparent 0 170deg, rgba(245, 158, 11, 0.08) 200deg, rgba(245, 158, 11, 0.45) 265deg, #f59e0b 330deg, #fbbf24 352deg, #ffffff 360deg)',
-    spotlight: 'rgba(245, 158, 11, 0.4)',
-    innerSpotlight: 'rgba(245, 158, 11, 0.08)',
-    glowClass: 'dark:hover:shadow-[0_14px_44px_rgba(245,158,11,0.28)] hover:shadow-amber-500/18',
+      'conic-gradient(from 0deg, transparent 0 150deg, rgba(245, 158, 11, 0.15) 190deg, rgba(245, 158, 11, 0.75) 280deg, #f59e0b 335deg, #fbbf24 352deg, #ffffff 359deg, transparent 360deg)',
+    spotlight: 'rgba(245, 158, 11, 0.45)',
+    innerSpotlight: 'rgba(245, 158, 11, 0.1)',
+    glowClass: 'dark:hover:shadow-[0_14px_44px_rgba(245,158,11,0.32)] hover:shadow-amber-500/25',
     dotColor: 'bg-amber-400',
   },
   emerald: {
     gradient:
-      'conic-gradient(from 0deg, transparent 0 170deg, rgba(16, 185, 129, 0.08) 200deg, rgba(16, 185, 129, 0.45) 265deg, #10b981 330deg, #34d399 352deg, #ffffff 360deg)',
-    spotlight: 'rgba(16, 185, 129, 0.4)',
-    innerSpotlight: 'rgba(16, 185, 129, 0.08)',
-    glowClass: 'dark:hover:shadow-[0_14px_44px_rgba(16,185,129,0.28)] hover:shadow-emerald-500/18',
+      'conic-gradient(from 0deg, transparent 0 150deg, rgba(16, 185, 129, 0.15) 190deg, rgba(16, 185, 129, 0.75) 280deg, #10b981 335deg, #34d399 352deg, #ffffff 359deg, transparent 360deg)',
+    spotlight: 'rgba(16, 185, 129, 0.45)',
+    innerSpotlight: 'rgba(16, 185, 129, 0.1)',
+    glowClass: 'dark:hover:shadow-[0_14px_44px_rgba(16,185,129,0.32)] hover:shadow-emerald-500/25',
     dotColor: 'bg-emerald-400',
   },
   blue: {
     gradient:
-      'conic-gradient(from 0deg, transparent 0 170deg, rgba(59, 130, 246, 0.08) 200deg, rgba(59, 130, 246, 0.45) 265deg, #3b82f6 330deg, #60a5fa 352deg, #ffffff 360deg)',
-    spotlight: 'rgba(59, 130, 246, 0.4)',
-    innerSpotlight: 'rgba(59, 130, 246, 0.08)',
-    glowClass: 'dark:hover:shadow-[0_14px_44px_rgba(59,130,246,0.28)] hover:shadow-blue-500/18',
+      'conic-gradient(from 0deg, transparent 0 150deg, rgba(59, 130, 246, 0.15) 190deg, rgba(59, 130, 246, 0.75) 280deg, #3b82f6 335deg, #60a5fa 352deg, #ffffff 359deg, transparent 360deg)',
+    spotlight: 'rgba(59, 130, 246, 0.45)',
+    innerSpotlight: 'rgba(59, 130, 246, 0.1)',
+    glowClass: 'dark:hover:shadow-[0_14px_44px_rgba(59,130,246,0.32)] hover:shadow-blue-500/25',
     dotColor: 'bg-blue-400',
   },
 }
@@ -136,12 +136,12 @@ export const SpotlightBorderCard: React.FC<SpotlightBorderCardProps> = ({
         </div>
       )}
 
-      {/* 2. CONTENEDOR DEL BORDE ULTRA NÍTIDO (p-[1.5px]) */}
-      <div className="relative h-full w-full rounded-2xl p-[1.5px] overflow-hidden">
-        {/* HAZ DE LUZ COMETA GIRATORIO NÍTIDO */}
+      {/* 2. CONTENEDOR DEL BORDE ULTRA NÍTIDO (Bordes visibles de alto contraste en dark mode) */}
+      <div className="relative h-full w-full rounded-2xl p-[2px] overflow-hidden border border-slate-300 dark:border-white/20 bg-slate-200/60 dark:bg-white/10 shadow-lg dark:shadow-2xl">
+        {/* HAZ DE LUZ COMETA GIRATORIO NÍTIDO CON MINI DESTELLOS */}
         {activeBeam && (
           <div
-            className="border-beam-spin absolute top-1/2 left-1/2 w-[350%] aspect-square pointer-events-none"
+            className="border-beam-spin absolute top-1/2 left-1/2 w-[350%] aspect-square pointer-events-none drop-shadow-[0_0_6px_rgba(255,255,255,0.7)]"
             style={{
               background: activeGradient,
               animationDelay,
@@ -159,8 +159,8 @@ export const SpotlightBorderCard: React.FC<SpotlightBorderCardProps> = ({
           }}
         />
 
-        {/* 4. CUERPO INTERIOR DE CRISTAL TRANSLÚCIDO / OBSIDIANA */}
-        <div className="relative h-full w-full rounded-[14.5px] bg-[#fcfbf9]/95 dark:bg-[#070914]/96 p-5 sm:p-6 backdrop-blur-xl transition-all duration-300 group-hover:bg-white dark:group-hover:bg-[#0c0f1f]">
+        {/* 4. CUERPO INTERIOR DE ALTO CONTRASTE (Nunca se pierde en el fondo) */}
+        <div className="relative h-full w-full rounded-[14.5px] bg-[#fcfbf9]/98 dark:bg-[#0c0f1d] border border-transparent dark:border-white/10 p-5 sm:p-6 backdrop-blur-xl transition-all duration-300 group-hover:bg-white dark:group-hover:bg-[#12162a]">
           {/* Spotlight interior suave al posar el mouse */}
           <div
             className="pointer-events-none absolute inset-0 rounded-[14.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"

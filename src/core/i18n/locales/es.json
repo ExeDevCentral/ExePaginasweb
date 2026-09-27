@@ -41,12 +41,7 @@
     "eyebrow_plataforma": "Desarrollo Web & Sistemas SaaS · Rosario & Global",
     "titulo_prefijo": "Páginas web y sistemas a medida",
     "titulo_conector": "para",
-    "palabras_rotativas": [
-      "automatizar",
-      "escalar",
-      "vender más",
-      "crecer"
-    ],
+    "palabras_rotativas": ["automatizar", "escalar", "vender más", "crecer"],
     "sub_part_1": "Tu solución integral para dejar de improvisar con plantillas lentas y comisiones cautivas. Diseñamos ",
     "sub_phrase_1": "sitios web de máxima conversión",
     "sub_part_2": " y ",
@@ -82,13 +77,13 @@
     "capacidades_titulo": "Todo lo que tu empresa necesita.",
     "capacidades_subtitulo": "Nada de plantillas genéricas.",
     "card_1_titulo": "Páginas de Alta Conversión",
-    "card_1_desc": "Carga instantánea en 0.38s con Edge CDN global, diseño responsivo y posicionamiento SEO 100/100 en Google.",
-    "card_2_titulo": "Sistemas Cloud & Paneles",
-    "card_2_desc": "Control total de ventas, inventario, clientes y facturación electrónica a medida de tu operación diaria.",
+    "card_1_desc": "Carga instantánea en 0.38s con Edge CDN global, diseño responsivo y posicionamiento en Google para que te encuentren primero.",
+    "card_2_titulo": "Catálogo y Gestión Móvil",
+    "card_2_desc": "Tu catálogo y pedidos actualizados al instante desde tu celular. Control total de ventas, clientes y stock sin complicaciones.",
     "card_3_titulo": "WhatsApp & Cobros 24/7",
-    "card_3_desc": "Conexión directa con webhooks para notificar pedidos, cobrar con tarjetas y emitir comprobantes sin intervención humana.",
-    "card_4_titulo": "100% Código Propio",
-    "card_4_desc": "El software y la base de datos te pertenecen para siempre. Cero comisiones por venta y cero cuotas mensuales obligatorias."
+    "card_3_desc": "Dejá de responder precios manualmente: cobros y reservas automáticas 24/7 con tarjetas y comprobantes sin intervención humana.",
+    "card_4_titulo": "100% Código Tuyo (0% Comisiones)",
+    "card_4_desc": "Sin pagar comisiones del 15% a plataformas terceras. El sitio, la base de clientes y los datos son 100% tuyos para siempre."
   },
   "features": {
     "seccion_titulo": "PILARES DE TECNOLOGÍA 2026",
@@ -1153,4 +1148,3 @@
     "clear": "Limpiar chat"
   }
 }
-

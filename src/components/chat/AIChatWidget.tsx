@@ -25,7 +25,7 @@ import {
   VolumeX,
   RotateCcw,
 } from 'lucide-react'
-import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
+import { getWhatsAppUrl } from '../../core/utils/whatsappUtils'
 import Logo from '../layout/Logo'
 
 const WELCOME_TEXT =
@@ -62,9 +62,9 @@ export const INITIAL_TOPICS: ChatTopic[] = [
   },
   {
     id: 'whatsapp',
-    title: 'Hablar por WhatsApp',
-    desc: 'Atención personalizada directa',
-    prompt: 'Quisiera hablar directamente con un especialista por WhatsApp.',
+    title: 'Hablar con Exequiel',
+    desc: 'WhatsApp directo sin intermediarios',
+    prompt: 'Hola Exequiel, vi tu web y quiero consultar por una página para mi negocio',
     action: 'whatsapp',
   },
 ]
@@ -284,9 +284,10 @@ export const AIChatWidget: React.FC = () => {
 
   const getWhatsAppHandoffUrl = () => {
     const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user') ?? null
-    const lastUserText = lastUserMsg ? getMessageText(lastUserMsg) : 'Consulta desde la web'
     const ticketStr = currentTicket ? ` [Ticket: ${currentTicket}]` : ''
-    const fullText = `Hola ExePaginasWeb. Estaba consultando en el chat sobre: "${lastUserText}"${ticketStr}. Quisiera hablar con un especialista.`
+    const fullText = lastUserMsg
+      ? `Hola Exequiel, vi tu web y quiero consultar por una página para mi negocio (estaba viendo sobre: "${getMessageText(lastUserMsg)}"${ticketStr}).`
+      : 'Hola Exequiel, vi tu web y quiero consultar por una página para mi negocio'
     return getWhatsAppUrl(fullText)
   }
 
@@ -301,14 +302,13 @@ export const AIChatWidget: React.FC = () => {
   return (
     <>
       {/* ========================================================
-      {/* ========================================================
-          1. BOTÓN FLOTANTE ÚNICO Y MINIMALISTA (UNIFICADO)
+          1. BOTÓN FLOTANTE ASISTENTE IA (ANCLADO A LA IZQUIERDA)
          ======================================================== */}
       <motion.div
         initial={{ scale: 0, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="fixed bottom-6 right-5 sm:bottom-7 sm:right-7 z-50 select-none"
+        className="fixed bottom-6 left-5 sm:bottom-7 sm:left-7 z-50 select-none"
       >
         <motion.button
           type="button"
@@ -350,7 +350,7 @@ export const AIChatWidget: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 25, scale: 0.96 }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="fixed bottom-20 sm:bottom-24 left-3 right-3 sm:left-auto sm:right-7 z-50 sm:w-[410px] max-h-[calc(100dvh-6rem)] sm:max-h-[600px] h-[80dvh] sm:h-[560px] rounded-2xl bg-[#fcfbf8] dark:bg-[#0e0e11] border border-[#e8e4d8] dark:border-[#242429] shadow-2xl backdrop-blur-2xl flex flex-col overflow-hidden text-slate-900 dark:text-[#f7f5ee]"
+            className="fixed bottom-20 sm:bottom-24 left-3 right-3 sm:left-7 sm:right-auto z-50 sm:w-[410px] max-h-[calc(100dvh-6rem)] sm:max-h-[600px] h-[80dvh] sm:h-[560px] rounded-2xl bg-[#fcfbf8] dark:bg-[#0e0e11] border border-[#e8e4d8] dark:border-[#242429] shadow-2xl backdrop-blur-2xl flex flex-col overflow-hidden text-slate-900 dark:text-[#f7f5ee]"
           >
             {/* CABECERA EDITORIAL MINIMALISTA CON LOGO DE MARCA */}
             <div className="px-5 py-4 bg-[#f6f4eb] dark:bg-[#131317] border-b border-[#e8e4d8] dark:border-[#222226] flex items-center justify-between select-none">
@@ -539,21 +539,21 @@ export const AIChatWidget: React.FC = () => {
               </div>
             )}
 
-            {/* TRASPASO A WHATSAPP MINIMALISTA */}
-            <div className="px-4 py-2.5 bg-[#f6f4eb] dark:bg-[#121216] border-t border-[#e8e4d8] dark:border-[#222226] flex items-center justify-between gap-2">
-              <div className="text-[11px] text-neutral-600 dark:text-[#aba79c] truncate font-mono">
-                WhatsApp:{' '}
-                <span className="font-semibold text-neutral-900 dark:text-[#f7f5ee]">
-                  {DISPLAY_WHATSAPP_NUMBER}
+            {/* TRASPASO DIRECTO A WHATSAPP (FRICCIÓN CERO CON EXEQUIEL) */}
+            <div className="px-3.5 py-2.5 bg-emerald-50 dark:bg-emerald-950/40 border-t border-emerald-200/60 dark:border-emerald-800/40 flex items-center justify-between gap-2">
+              <div className="text-[11px] text-emerald-900 dark:text-emerald-300 font-sans">
+                ¿Querés hablar con una persona?{' '}
+                <span className="font-bold block sm:inline text-emerald-950 dark:text-emerald-200">
+                  Exequiel en WhatsApp
                 </span>
               </div>
               <a
                 href={getWhatsAppHandoffUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#111113] hover:bg-[#202025] dark:bg-[#f7f5ee] dark:hover:bg-white text-[#f7f5ee] dark:text-[#111113] font-medium text-[10px] transition-colors cursor-pointer shrink-0"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-[10.5px] transition-all shadow-sm hover:shadow-md cursor-pointer shrink-0"
               >
-                <span>WhatsApp</span>
+                <span>Chatear</span>
                 <ArrowUpRight className="w-3 h-3" />
               </a>
             </div>

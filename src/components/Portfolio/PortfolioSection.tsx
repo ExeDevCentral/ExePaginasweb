@@ -1,4 +1,4 @@
-﻿/**
+/**
  * © 2026 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
@@ -34,6 +34,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
 
   const CATEGORIES = [
     { id: 'all', label: t('portfolio.cat_todos', 'Todos los Proyectos'), icon: Layers },
+    { id: 'saas', label: 'SaaS & Seguridad', icon: Zap },
     { id: 'turnos', label: t('portfolio.cat_turnos', 'Turnos & Reservas'), icon: Calendar },
     { id: 'ecommerce', label: t('portfolio.cat_ecommerce', 'E-Commerce'), icon: ShoppingBag },
     { id: 'web', label: t('portfolio.cat_web', 'Landings & Web'), icon: Globe },
@@ -44,7 +45,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
     activeCategory === 'all'
       ? INITIAL_PROJECTS
       : INITIAL_PROJECTS.filter((p) => p.category === activeCategory)
-  const FEATURED_IDS = ['sportmanager', 'celstore', 'noema']
+  const FEATURED_IDS = ['sportmanager', 'owleye', 'noema']
   const visibleProjects = featuredOnly
     ? FEATURED_IDS.map((id) => INITIAL_PROJECTS.find((p) => p.id === id)).filter(
         (p): p is Project => Boolean(p)
@@ -154,7 +155,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.35, delay: idx * 0.08 }}
-                    className="group rounded-3xl border border-border bg-card/80 backdrop-blur-xl overflow-hidden shadow-xl hover:shadow-2xl hover:border-accent-cyan/40 transition-all duration-500 flex flex-col justify-between"
+                    className="group rounded-3xl border border-slate-300 dark:border-white/20 bg-slate-50/90 dark:bg-[#0c0f1c] backdrop-blur-xl overflow-hidden shadow-xl dark:shadow-[0_12px_36px_rgba(0,0,0,0.7)] hover:shadow-2xl hover:border-accent-cyan/60 dark:hover:border-cyan-400/60 transition-all duration-500 flex flex-col justify-between"
                   >
                     {/* Imagen del proyecto + Overlay interactivo */}
                     <div className="relative h-56 sm:h-64 overflow-hidden bg-muted">

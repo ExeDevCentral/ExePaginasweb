@@ -1,10 +1,11 @@
 /**
  * © 2026 Exequiel Echevarria — ExePaginasWeb
- * AIChatWidget:
- * - Diseño minimalista editorial
- * - Paleta cromática blanco marfil / crema (#f7f5ee / #fcfbf8) y negro mate (#0e0e11 / #121215)
- * - Tipografía limpia, bordes sutiles y micro-interacciones de alta gama
- * - Asistente inteligente con fallbacks técnicos, tickets de cotización y traspaso a WhatsApp
+ * UnifiedSupportHub (AIChatWidget unificado):
+ * - Un solo botón flotante expandible en esquina inferior derecha (estilo SaaS "Ciudad de Servidores")
+ * - Al hacer clic despliega dos canales limpios:
+ *   1. Hablar con Exequiel por WhatsApp (Humano · Respuesta en < 5 min)
+ *   2. Preguntarle al Asistente IA (Técnico · 24/7 autónomo)
+ * - Paleta cian, ámbar, esmeralda y obsidiana con tipografía JetBrains Mono / Space Grotesk
  */
 'use client'
 
@@ -18,19 +19,26 @@ import {
   X,
   User,
   ArrowUpRight,
-  RefreshCw,
-  Copy,
-  Check,
+  ChevronLeft,
+  Bot,
   Volume2,
   VolumeX,
   RotateCcw,
+  ShieldCheck,
 } from 'lucide-react'
-import { getWhatsAppUrl } from '../../core/utils/whatsappUtils'
+import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
+import { trackEvent } from '@/core/analytics/trackEvent'
 import Logo from '../layout/Logo'
+
+// Ícono SVG oficial de WhatsApp
+const WhatsAppIcon = ({ className = 'w-5 h-5' }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12.031 2C6.495 2 2 6.484 2 12.018c0 1.907.534 3.69 1.464 5.215L2 22l4.914-1.424A9.972 9.972 0 0012.031 22c5.536 0 10.031-4.484 10.031-10.018C22.062 6.484 17.567 2 12.031 2zm0 18.286c-1.636 0-3.18-.45-4.524-1.233l-.324-.19-2.923.848.868-2.846-.21-.334a8.23 8.23 0 01-1.282-4.513c0-4.568 3.717-8.284 8.29-8.284 4.572 0 8.289 3.716 8.289 8.284 0 4.569-3.717 8.286-8.29 8.286zm4.545-6.208c-.249-.125-1.472-.726-1.7-.809-.228-.083-.394-.125-.56.125-.166.249-.643.809-.788.975-.145.166-.29.187-.539.062-.249-.124-1.052-.388-2.003-1.237-.741-.66-1.241-1.476-1.386-1.725-.145-.249-.015-.383.109-.507.112-.112.249-.29.373-.435.124-.145.166-.249.249-.415.083-.166.041-.311-.021-.435-.062-.125-.56-1.349-.767-1.847-.202-.486-.407-.42-.56-.428l-.477-.008c-.166 0-.436.062-.664.311-.228.249-.871.851-.871 2.075 0 1.224.892 2.407 1.016 2.573.125.166 1.756 2.68 4.254 3.759.594.257 1.058.41 1.42.525.597.19 1.14.163 1.569.099.479-.071 1.472-.602 1.68-1.183.207-.581.207-1.079.145-1.183-.062-.104-.228-.166-.477-.291z" />
+  </svg>
+)
 
 const WELCOME_TEXT =
   'Hola. Soy el asistente de ExePaginasWeb. ¿En qué proyecto o sistema web te puedo asesorar hoy?'
-
 const RESET_TEXT = 'Conversación reiniciada. ¿En qué proyecto o desarrollo te podemos ayudar ahora?'
 
 export interface ChatTopic {
@@ -99,190 +107,86 @@ function buildClientFallback(text: string): string {
   const ticket = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
 
   if (
-    lowerText.includes('abogad') ||
-    lowerText.includes('abogada') ||
-    lowerText.includes('legal') ||
-    lowerText.includes('estudio') ||
-    lowerText.includes('juridic')
-  ) {
-    return `Para estudios jurídicos y abogados desarrollamos sitios institucionales de alto impacto, plataformas de reserva de consultas legales y recepción segura de documentación.\n\nPara enviarte una propuesta técnica a medida con el Ticket [${ticket}], ¿nos dejas tu correo aquí o prefieres continuar por WhatsApp?`
-  }
-  if (
-    lowerText.includes('padel') ||
-    lowerText.includes('pádel') ||
-    lowerText.includes('cancha') ||
-    lowerText.includes('deport') ||
-    lowerText.includes('futbol') ||
-    lowerText.includes('fútbol') ||
-    lowerText.includes('gimnasio')
-  ) {
-    return `Para complejos deportivos y canchas de pádel construimos sistemas de reservas en tiempo real con cobro online de señas y confirmaciones automáticas por WhatsApp.\n\nPara coordinar una propuesta técnica bajo el Ticket [${ticket}], ¿nos dejas tu email o nos consultas directo por WhatsApp?`
-  }
-  if (
-    lowerText.includes('medic') ||
-    lowerText.includes('salud') ||
-    lowerText.includes('doct') ||
-    lowerText.includes('clinic') ||
-    lowerText.includes('dentist') ||
-    lowerText.includes('psicolog')
-  ) {
-    return `Para clínicas y profesionales de la salud desarrollamos sistemas con agenda de turnos, recordatorios automáticos por WhatsApp y portal para pacientes.\n\n¿Te gustaría recibir un presupuesto formal bajo el Ticket [${ticket}]? Déjanos tu email aquí o escríbenos por WhatsApp.`
-  }
-  if (lowerText.includes('turno') || lowerText.includes('reserva') || lowerText.includes('cita')) {
-    return 'Desarrollamos motores de reservas y turnos 24/7 con integración a WhatsApp, cobros por tarjeta y recordatorios sin intervención manual. ¿Te gustaría coordinar una cotización a medida?'
-  }
-  if (
     lowerText.includes('precio') ||
     lowerText.includes('cuanto') ||
-    lowerText.includes('costo') ||
-    lowerText.includes('cotiz')
+    lowerText.includes('cotiz') ||
+    lowerText.includes('costo')
   ) {
-    return `Cada desarrollo se realiza con código 100% propio sin plantillas ni cuotas mensuales obligatorias. Para prepararte un presupuesto detallado con el Ticket [${ticket}], déjanos tu email o contáctanos por WhatsApp.`
+    return `Nuestros valores base de referencia 2026 son:\n\n• Landing Page de Alta Conversión: desde $450.000 ARS\n• Tienda Online E-Commerce: desde $750.000 ARS\n• Sistemas y Paneles SaaS a medida: presupuesto personalizado.\n\nTodo con 100% código propio, sin comisiones por venta. ¿Querés que te preparemos una propuesta formal? Tu ticket asignado es [${ticket}].`
   }
-  if (
-    lowerText.includes('dashboard') ||
-    lowerText.includes('saas') ||
-    lowerText.includes('panel')
-  ) {
-    return 'Diseñamos dashboards y sistemas SaaS a medida con control de usuarios, métricas en tiempo real y exportación de datos. ¿Qué funcionalidades principales requiere tu operación?'
-  }
-  if (
-    lowerText.trim() === 'hola' ||
-    lowerText.trim() === 'buenas' ||
-    lowerText.trim() === 'hey' ||
-    text.length < 8
-  ) {
-    return 'Hola. Soy el asistente inteligente de ExePaginasWeb. ¿En qué proyecto o sistema web te gustaría que te asesoremos hoy?'
-  }
-  return `Desarrollamos páginas web y sistemas a medida adaptados a tu negocio. Para coordinar una propuesta técnica con el Ticket [${ticket}], déjanos tu email por aquí o escríbenos por WhatsApp.`
-}
 
-const playSubtleChime = () => {
-  try {
-    const AudioCtx =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
-    if (!AudioCtx) return
-    const ctx = new AudioCtx()
-    const osc = ctx.createOscillator()
-    const gain = ctx.createGain()
-    osc.type = 'sine'
-    osc.frequency.setValueAtTime(440, ctx.currentTime)
-    osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.08)
-    gain.gain.setValueAtTime(0.025, ctx.currentTime)
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15)
-    osc.connect(gain)
-    gain.connect(ctx.destination)
-    osc.start()
-    osc.stop(ctx.currentTime + 0.16)
-  } catch {
-    // Silencio si el audio está bloqueado por el navegador
+  if (
+    lowerText.includes('turno') ||
+    lowerText.includes('reserva') ||
+    lowerText.includes('agenda')
+  ) {
+    return `Nuestro sistema de reservas y cobros automáticos permite gestionar turnos las 24 horas con seña obligatoria vía MercadoPago, sincronización con Google Calendar y recordatorios automáticos por WhatsApp. Ticket de consulta: [${ticket}].`
   }
+
+  return `Gracias por tu consulta. Diseñamos páginas web de alta conversión y sistemas cloud a medida sin mensualidades obligatorias ni comisiones. Podés coordinar una llamada o chatear directo por WhatsApp con Exequiel. Tu ticket de seguimiento es [${ticket}].`
 }
 
 export const AIChatWidget: React.FC = () => {
-  const { t } = useTranslation()
+  const { i18n } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
-  const [input, setInput] = useState('')
+  const [hubView, setHubView] = useState<'menu' | 'chat'>('menu')
+  const [hasUnread, setHasUnread] = useState(true)
   const [soundEnabled, setSoundEnabled] = useState(true)
-  const [copiedTicket, setCopiedTicket] = useState<string | null>(null)
+  const [input, setInput] = useState('')
   const [currentTicket, setCurrentTicket] = useState<string | null>(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const { messages, setMessages, sendMessage, status, error, stop, clearError } = useChat({
-    transport: new DefaultChatTransport({ api: '/api/chat' }),
+  const {
+    messages,
+    sendMessage: aiSendMessage,
+    status,
+    setMessages,
+  } = useChat({
+    transport: new DefaultChatTransport({
+      api: '/api/chat',
+      body: {
+        lang: i18n.language || 'es',
+      },
+    }),
     messages: [welcomeMessage()],
+    onError: (err) => {
+      console.warn('[AIChatWidget] Fallback local activado:', err?.message)
+      const lastUser = [...messages].reverse().find((m) => m.role === 'user')
+      const userTxt = lastUser ? getMessageText(lastUser) : 'consulta'
+      const fallbackTxt = buildClientFallback(userTxt)
+      setMessages((prev) => [...prev, makeMessage('assistant', fallbackTxt)])
+    },
   })
 
-  const isLoading = status === 'submitted' || status === 'streaming'
-
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const lastMessageRef = useRef<{ text: string; time: number } | null>(null)
-  const timestampsRef = useRef<Map<string, string>>(new Map())
-  const handledErrorsRef = useRef<Set<string>>(new Set())
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+  const isLoading = status === 'streaming' || status === 'submitted'
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages, isLoading])
-
-  // Sonido suave y registro de tickets
-  useEffect(() => {
-    if (messages.length > 0) {
-      const lastMsg = messages[messages.length - 1]
-      if (lastMsg && !timestampsRef.current.has(lastMsg.id)) {
-        const now = new Date()
-        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        timestampsRef.current.set(lastMsg.id, timeStr)
-      }
-
-      if (lastMsg && lastMsg.role === 'assistant') {
-        const text = getMessageText(lastMsg)
-        const t = extractTicket(text)
-        if (t) setCurrentTicket(t)
-
-        if (soundEnabled && isOpen) {
-          playSubtleChime()
-        }
-      }
+    if (isOpen && hubView === 'chat') {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [messages, soundEnabled, isOpen])
-
-  // Fallback elegante en caso de error de red
-  useEffect(() => {
-    if (error) {
-      const errorKey = `${error.message || 'error'}-${Date.now().toString().slice(0, -3)}`
-      if (handledErrorsRef.current.has(errorKey)) return
-      handledErrorsRef.current.add(errorKey)
-
-      if (lastMessageRef.current) {
-        const userPrompt = lastMessageRef.current.text
-        const clientText = buildClientFallback(userPrompt)
-        setMessages((prev) => [...prev, makeMessage('assistant', clientText)])
-      }
-      clearError()
+    const lastAsst = [...messages].reverse().find((m) => m.role === 'assistant')
+    if (lastAsst) {
+      const ticket = extractTicket(getMessageText(lastAsst))
+      if (ticket) setCurrentTicket(ticket)
     }
-  }, [error, clearError, setMessages])
+  }, [messages, isOpen, hubView])
 
-  const handleSendMessage = async (textToSend?: string) => {
-    const text = (textToSend ?? input).trim()
-    if (!text || isLoading) return
-
-    lastMessageRef.current = { text, time: Date.now() }
+  const handleSendMessage = (customText?: string) => {
+    const textToSend = customText ?? input
+    if (!textToSend.trim() || isLoading) return
+    aiSendMessage({ text: textToSend })
     setInput('')
-
-    try {
-      await sendMessage({ text })
-    } catch {
-      const fallbackText = buildClientFallback(text)
-      setMessages((prev) => [
-        ...prev,
-        makeMessage('user', text),
-        makeMessage('assistant', fallbackText),
-      ])
-    }
-  }
-
-  const copyToClipboard = async (ticket: string) => {
-    try {
-      await navigator.clipboard.writeText(ticket)
-      setCopiedTicket(ticket)
-      setTimeout(() => setCopiedTicket(null), 2500)
-    } catch {
-      // Ignorar fallo de portapapeles
-    }
+    trackEvent('chat_message_sent', { source: 'unified_hub' })
   }
 
   const resetChat = () => {
-    if (isLoading) stop()
     setMessages([welcomeMessage(RESET_TEXT)])
     setCurrentTicket(null)
     setInput('')
   }
 
-  const getWhatsAppHandoffUrl = () => {
+  const getWhatsAppHandoffUrl = (customMsg?: string) => {
+    if (customMsg) return getWhatsAppUrl(customMsg)
     const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user') ?? null
     const ticketStr = currentTicket ? ` [Ticket: ${currentTicket}]` : ''
     const fullText = lastUserMsg
@@ -291,54 +195,83 @@ export const AIChatWidget: React.FC = () => {
     return getWhatsAppUrl(fullText)
   }
 
-  const handleTopicClick = (topic: ChatTopic) => {
-    if (topic.action === 'whatsapp') {
-      window.open(getWhatsAppHandoffUrl(), '_blank')
-      return
-    }
-    handleSendMessage(topic.prompt)
+  const handleOpenWhatsAppDirect = (msg: string) => {
+    trackEvent('contact_whatsapp_clicked', { source: 'unified_hub_menu', message: msg })
+    setHasUnread(false)
+    window.open(getWhatsAppUrl(msg), '_blank')
   }
 
   return (
     <>
       {/* ========================================================
-          1. BOTÓN FLOTANTE ASISTENTE IA (ANCLADO A LA IZQUIERDA)
+          1. BOTÓN FLOTANTE UNIFICADO (DOCK EXPANDIBLE CIUDAD DE SERVIDORES)
          ======================================================== */}
-      <motion.div
-        initial={{ scale: 0, opacity: 0, y: 20 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="fixed bottom-6 left-5 sm:bottom-7 sm:left-7 z-50 select-none"
-      >
+      <div className="fixed bottom-6 right-5 sm:bottom-7 sm:right-7 z-50 select-none">
         <motion.button
           type="button"
-          onClick={() => setIsOpen((prev) => !prev)}
-          whileHover={{ scale: 1.03, y: -1 }}
-          whileTap={{ scale: 0.97 }}
-          aria-label={isOpen ? 'Cerrar asistente' : 'Abrir asistente virtual'}
-          className="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#111113] hover:bg-[#18181c] dark:bg-[#111113] dark:hover:bg-[#18181c] text-[#f7f5ee] border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer"
+          onClick={() => {
+            if (isOpen) {
+              setIsOpen(false)
+            } else {
+              setIsOpen(true)
+              setHubView('menu')
+            }
+            setHasUnread(false)
+          }}
+          whileHover={{ scale: 1.04, y: -2 }}
+          whileTap={{ scale: 0.96 }}
+          aria-label={isOpen ? 'Cerrar canales de atención' : 'Abrir canales de atención'}
+          className="group relative flex items-center gap-3 px-4 py-3 rounded-full bg-[#0a0d14]/95 text-white border-2 border-cyan-500/40 hover:border-cyan-400 shadow-2xl backdrop-blur-2xl transition-all duration-300 shadow-cyan-500/20 cursor-pointer"
         >
-          {/* Icono de marca oficial ExePaginasWeb */}
-          <div className="w-7 h-7 rounded-full bg-[#1a1a1e] border border-amber-400/40 flex items-center justify-center text-[#f7f5ee] shrink-0 overflow-hidden shadow-inner">
-            {isOpen ? <X className="w-3.5 h-3.5" /> : <Logo size={22} variant="dark" />}
+          {/* Aura perimetral cian */}
+          <span className="absolute -inset-0.5 rounded-full bg-linear-to-r from-cyan-500 via-sky-400 to-emerald-400 opacity-20 group-hover:opacity-60 blur-xs transition-opacity duration-300" />
+
+          {/* Icono Dual / Logo Dinámico ExePaginasWeb */}
+          <div className="relative w-9 h-9 rounded-full bg-[#0a0f1d] border border-cyan-400/50 flex items-center justify-center shrink-0 shadow-inner">
+            {isOpen ? (
+              <X className="w-4 h-4 text-white" />
+            ) : (
+              <div className="flex items-center justify-center">
+                <Logo size={26} variant="dark" />
+              </div>
+            )}
           </div>
 
-          {/* Texto unificado */}
-          <span className="text-xs font-medium tracking-tight text-[#f7f5ee]">
-            {isOpen
-              ? t('common.cerrar') || 'Cerrar'
-              : t('chat.launcher_label') || '¿Dudas? Asistente'}
-          </span>
+          {/* Píldora de texto en Desktop / Tablet */}
+          <div className="text-left hidden sm:block pr-1">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
+              <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">
+                {isOpen ? 'CERRAR PANEL' : 'SYS // CANALES EN VIVO'}
+              </span>
+            </div>
+            <span className="text-xs font-bold tracking-tight text-white block">
+              {isOpen ? 'Opciones de Contacto' : 'WhatsApp & Asistente IA'}
+            </span>
+          </div>
 
-          {/* Indicador de estado activo */}
-          {!isOpen && (
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981] shrink-0" />
+          {/* Badge en móvil */}
+          <div className="sm:hidden flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs font-bold text-white">Canales</span>
+          </div>
+
+          {/* Notificación no leída '1' estilo WhatsApp */}
+          {!isOpen && hasUnread && (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: [1, 1.25, 1] }}
+              transition={{ repeat: Infinity, duration: 2.2 }}
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-slate-950 shadow-md"
+            >
+              1
+            </motion.span>
           )}
         </motion.button>
-      </motion.div>
+      </div>
 
       {/* ========================================================
-          2. VENTANA DE CHAT MINIMALISTA (PALETA MARFIL & NEGRO MATE)
+          2. PANEL FLOTANTE EXPANDIBLE (MENU UNIFICADO O CHAT IA)
          ======================================================== */}
       <AnimatePresence>
         {isOpen && (
@@ -346,242 +279,349 @@ export const AIChatWidget: React.FC = () => {
             role="dialog"
             aria-modal="true"
             data-lenis-prevent
-            initial={{ opacity: 0, y: 25, scale: 0.96 }}
+            initial={{ opacity: 0, y: 25, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 25, scale: 0.96 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="fixed bottom-20 sm:bottom-24 left-3 right-3 sm:left-7 sm:right-auto z-50 sm:w-[410px] max-h-[calc(100dvh-6rem)] sm:max-h-[600px] h-[80dvh] sm:h-[560px] rounded-2xl bg-[#fcfbf8] dark:bg-[#0e0e11] border border-[#e8e4d8] dark:border-[#242429] shadow-2xl backdrop-blur-2xl flex flex-col overflow-hidden text-slate-900 dark:text-[#f7f5ee]"
+            className="fixed bottom-22 sm:bottom-24 right-4 sm:right-7 left-4 sm:left-auto z-50 sm:w-[410px] max-h-[calc(100dvh-7rem)] sm:max-h-[620px] rounded-3xl bg-[#090c15]/98 border-2 border-slate-700/60 dark:border-cyan-500/30 shadow-2xl backdrop-blur-2xl flex flex-col overflow-hidden text-white shadow-black/80"
           >
-            {/* CABECERA EDITORIAL MINIMALISTA CON LOGO DE MARCA */}
-            <div className="px-5 py-4 bg-[#f6f4eb] dark:bg-[#131317] border-b border-[#e8e4d8] dark:border-[#222226] flex items-center justify-between select-none">
-              <div className="flex items-center gap-3">
-                <div className="relative w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 border border-amber-400/40 flex items-center justify-center shrink-0 shadow-sm p-0.5">
-                  <Logo size={26} variant="auto" />
-                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-[#f6f4eb] dark:border-[#131317]" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-xs font-semibold tracking-tight text-neutral-900 dark:text-[#f7f5ee]">
-                      {t('chat.header_title') || 'ExePaginasWeb Asistente'}
-                    </h3>
+            {/* ====================================================
+                VISTA A: MENÚ DE ELECCIÓN DE CANAL (HUD CIUDAD DE SERVIDORES)
+               ==================================================== */}
+            {hubView === 'menu' ? (
+              <div className="flex flex-col h-full overflow-y-auto">
+                {/* Cabecera del Hub con Logo ExePaginasWeb */}
+                <div className="p-4 sm:p-5 bg-linear-to-b from-[#0f1424] to-[#090c15] border-b border-white/10 flex items-center justify-between select-none">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-[#0d1322] border border-cyan-400/40 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+                      <Logo size={28} variant="dark" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_6px_#06b6d4]" />
+                        <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 font-bold">
+                          EXEPAGINASWEB // SOPORTE
+                        </span>
+                      </div>
+                      <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">
+                        ¿Cómo preferís comunicarte hoy?
+                      </h3>
+                    </div>
                   </div>
-                  <p className="text-[10px] text-neutral-500 dark:text-[#9c9a92] font-mono">
-                    {t('chat.header_status') || 'Desarrollo Web & Sistemas'}
-                  </p>
-                </div>
-              </div>
 
-              {/* Controles de cabecera */}
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => setSoundEnabled((prev) => !prev)}
-                  title={soundEnabled ? 'Silenciar sonidos' : 'Activar sonidos'}
-                  aria-label="Silenciar o activar sonidos"
-                  className="w-7 h-7 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-neutral-500 dark:text-[#9c9a92] hover:text-neutral-900 dark:hover:text-[#f7f5ee] flex items-center justify-center transition-colors cursor-pointer"
-                >
-                  {soundEnabled ? (
-                    <Volume2 className="w-3.5 h-3.5" />
-                  ) : (
-                    <VolumeX className="w-3.5 h-3.5" />
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={resetChat}
-                  title={t('chat.clear') || 'Reiniciar conversación'}
-                  aria-label={t('chat.clear') || 'Reiniciar conversación'}
-                  className="w-7 h-7 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-neutral-500 dark:text-[#9c9a92] hover:text-neutral-900 dark:hover:text-[#f7f5ee] flex items-center justify-center transition-colors cursor-pointer"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  aria-label="Cerrar chat"
-                  className="w-7 h-7 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-neutral-500 dark:text-[#9c9a92] hover:text-neutral-900 dark:hover:text-[#f7f5ee] flex items-center justify-center transition-colors cursor-pointer ml-0.5"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* CUERPO DE MENSAJES */}
-            <div
-              data-lenis-prevent
-              className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs bg-[#faf8f4] dark:bg-[#0c0c0f]"
-            >
-              {messages.map((msg) => {
-                const isUser = msg.role === 'user'
-                const textContent = getMessageText(msg)
-                const extractedTicket = extractTicket(textContent)
-
-                return (
-                  <motion.div
-                    key={msg.id}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`flex items-start gap-2 ${isUser ? 'flex-row-reverse' : ''}`}
+                  <button
+                    type="button"
+                    onClick={() => setIsOpen(false)}
+                    aria-label="Cerrar panel"
+                    className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                   >
-                    {/* Avatar minimalista */}
-                    <div
-                      className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-mono ${
-                        isUser
-                          ? 'bg-[#111113] text-[#f7f5ee] dark:bg-[#f7f5ee] dark:text-[#111113]'
-                          : 'bg-black/5 dark:bg-white/5 border border-amber-400/30 p-0.5'
-                      }`}
-                    >
-                      {isUser ? <User className="w-3 h-3" /> : <Logo size={20} variant="auto" />}
-                    </div>
-
-                    {/* Burbuja de mensaje */}
-                    <div className="space-y-1.5 max-w-[88%]">
-                      <div
-                        className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
-                          isUser
-                            ? 'bg-[#111113] text-[#f7f5ee] dark:bg-[#f7f5ee] dark:text-[#0e0e11] font-medium rounded-tr-xs shadow-xs'
-                            : 'bg-[#f4f1e8] dark:bg-[#151519] border border-[#e5e0d3] dark:border-[#242429] text-neutral-800 dark:text-[#ece8dd] rounded-tl-xs shadow-xs whitespace-pre-line'
-                        }`}
-                      >
-                        {textContent}
-                        {isLoading &&
-                          isUser === false &&
-                          msg.id === messages[messages.length - 1]?.id && (
-                            <span className="inline-flex items-center gap-1 ml-1.5 opacity-60">
-                              <span className="w-1 h-1 rounded-full bg-current animate-bounce [animation-delay:0ms]" />
-                              <span className="w-1 h-1 rounded-full bg-current animate-bounce [animation-delay:120ms]" />
-                              <span className="w-1 h-1 rounded-full bg-current animate-bounce [animation-delay:240ms]" />
-                            </span>
-                          )}
-                      </div>
-
-                      {/* TARJETAS DE PREGUNTAS FRECUENTES ACCESIBLES EN EL MENSAJE INICIAL */}
-                      {!isUser && messages.length <= 1 && (
-                        <div className="pt-1.5 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          {INITIAL_TOPICS.map((topic) => (
-                            <button
-                              key={topic.id}
-                              type="button"
-                              onClick={() => handleTopicClick(topic)}
-                              className="group text-left p-2.5 rounded-xl bg-[#edeae0]/70 dark:bg-[#16161b] border border-[#ded9cc] dark:border-[#292930] hover:border-neutral-800 dark:hover:border-[#e0dad0] hover:bg-[#e6e2d4] dark:hover:bg-[#1e1e24] transition-all cursor-pointer flex flex-col justify-between"
-                            >
-                              <div className="flex items-start justify-between gap-1 w-full mb-1">
-                                <span className="text-[11px] font-semibold text-neutral-900 dark:text-[#f7f5ee] leading-tight">
-                                  {topic.title}
-                                </span>
-                                <ArrowUpRight className="w-3.5 h-3.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-[#f7f5ee] shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                              </div>
-                              <span className="text-[10px] text-neutral-500 dark:text-[#9e9a90] leading-snug">
-                                {topic.desc}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Ticket de cotización */}
-                      {extractedTicket && !isUser && (
-                        <div className="flex items-center gap-2 pt-1">
-                          <button
-                            type="button"
-                            onClick={() => copyToClipboard(extractedTicket)}
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#edeae0] dark:bg-[#1a1a1f] border border-[#ded9cc] dark:border-[#2a2a30] text-neutral-800 dark:text-[#e8e4d8] hover:bg-[#e4e0d4] dark:hover:bg-[#222228] text-[10px] font-mono transition-colors cursor-pointer"
-                          >
-                            {copiedTicket === extractedTicket ? (
-                              <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                            ) : (
-                              <Copy className="w-3 h-3 opacity-60" />
-                            )}
-                            <span>Ticket: {extractedTicket}</span>
-                          </button>
-                        </div>
-                      )}
-
-                      {/* Timestamp discreto */}
-                      <div
-                        className={`text-[9px] text-neutral-400 dark:text-[#7d7a72] font-mono px-1 ${
-                          isUser ? 'text-right' : 'text-left'
-                        }`}
-                      >
-                        {timestampsRef.current.get(msg.id) ?? ''}
-                      </div>
-                    </div>
-                  </motion.div>
-                )
-              })}
-
-              {isLoading && (
-                <div className="flex items-center gap-2 text-neutral-400 dark:text-[#88857d] text-xs p-1">
-                  <RefreshCw className="w-3 h-3 animate-spin" />
-                  <span className="text-[11px] font-mono">Escribiendo respuesta...</span>
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
-              )}
 
-              <div ref={messagesEndRef} />
-            </div>
+                {/* Opciones Principales de Contacto */}
+                <div className="p-5 space-y-4">
+                  {/* CANAL 1: WHATSAPP DIRECTO (HUMANO / EXEQUIEL) */}
+                  <div className="rounded-2xl p-4 bg-linear-to-br from-emerald-950/40 via-emerald-900/20 to-transparent border-2 border-emerald-500/40 hover:border-emerald-400/80 transition-all duration-300 shadow-lg shadow-emerald-950/50">
+                    <div className="flex items-start justify-between gap-3 mb-2.5">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-emerald-400 shrink-0">
+                          <WhatsAppIcon className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <h4 className="text-sm font-bold text-white">Hablar con Exequiel</h4>
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                          </div>
+                          <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping inline-block" />
+                            <span>En línea · Respuesta en &lt; 5 min</span>
+                          </span>
+                        </div>
+                      </div>
 
-            {/* PREGUNTAS SUGERIDAS (PILLS MARFIL / NEGRO MATE ENVUELTAS Y 100% ACCESIBLES) */}
-            {messages.length < 6 && (
-              <div className="px-3.5 py-2.5 bg-[#f4f1e8]/85 dark:bg-[#111114]/85 border-t border-[#e8e4d8] dark:border-[#222226] shrink-0">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {INITIAL_TOPICS.map((topic) => (
+                      <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-mono text-emerald-300 font-bold shrink-0">
+                        HUMANO
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-300 mb-3.5 leading-relaxed">
+                      Atención directa por WhatsApp para cotizaciones, dudas técnicas o acordar tu
+                      web sin esperas.
+                    </p>
+
+                    {/* Chips de 1 clic */}
+                    <div className="space-y-1.5 mb-3.5">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleOpenWhatsAppDirect(
+                            'Hola Exequiel, vi tu web y quiero cotizar el desarrollo de una página para mi negocio.'
+                          )
+                        }
+                        className="w-full text-left p-2 rounded-xl bg-black/40 hover:bg-emerald-900/40 border border-emerald-500/20 hover:border-emerald-400/50 text-[11px] font-medium text-slate-200 hover:text-white transition-all flex items-center justify-between group cursor-pointer"
+                      >
+                        <span>🚀 Cotizar mi web ($450k / $750k)</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleOpenWhatsAppDirect(
+                            'Hola Exequiel, quisiera pedir la auditoría gratuita de 5 minutos en video para mi web/Instagram.'
+                          )
+                        }
+                        className="w-full text-left p-2 rounded-xl bg-black/40 hover:bg-emerald-900/40 border border-emerald-500/20 hover:border-emerald-400/50 text-[11px] font-medium text-slate-200 hover:text-white transition-all flex items-center justify-between group cursor-pointer"
+                      >
+                        <span>🎁 Pedir auditoría en video gratis</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                      </button>
+                    </div>
+
                     <button
-                      key={topic.id}
                       type="button"
-                      onClick={() => handleTopicClick(topic)}
-                      className="px-2.5 py-1 rounded-full bg-[#fcfbf8] dark:bg-[#18181d] border border-[#ded9cc] dark:border-[#2c2c34] text-neutral-800 dark:text-[#dcd8cb] hover:text-neutral-900 dark:hover:text-white hover:border-neutral-700 dark:hover:border-[#666675] hover:bg-[#edeae0] dark:hover:bg-[#222228] text-[10.5px] font-medium transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                      onClick={() =>
+                        handleOpenWhatsAppDirect(
+                          'Hola Exequiel, vi tu web y quiero consultar por una página para mi negocio'
+                        )
+                      }
+                      className="w-full py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md shadow-emerald-500/30 flex items-center justify-center gap-2 transition-all cursor-pointer"
                     >
-                      <span>{topic.title}</span>
-                      <ArrowUpRight className="w-2.5 h-2.5 opacity-60" />
+                      <WhatsAppIcon className="w-4 h-4" />
+                      <span>Abrir WhatsApp con Exequiel</span>
                     </button>
-                  ))}
+                  </div>
+
+                  {/* CANAL 2: ASISTENTE IA (AUTÓNOMO 24/7) */}
+                  <div className="rounded-2xl p-4 bg-linear-to-br from-cyan-950/40 via-sky-900/20 to-transparent border-2 border-cyan-500/40 hover:border-cyan-400/80 transition-all duration-300 shadow-lg shadow-cyan-950/50">
+                    <div className="flex items-start justify-between gap-3 mb-2.5">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-2xl bg-[#0c1322] border border-cyan-400/50 flex items-center justify-center shrink-0 shadow-inner">
+                          <Logo size={26} variant="dark" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <h4 className="text-sm font-bold text-white">Asistente ExeBot IA</h4>
+                            <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-cyan-400/20 text-cyan-300 font-bold border border-cyan-400/30">
+                              EXE
+                            </span>
+                          </div>
+                          <span className="text-[11px] font-mono text-cyan-300 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block shadow-[0_0_6px_#06b6d4]" />
+                            <span>ExePaginasWeb · Asesor 24/7</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <span className="px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/30 text-[10px] font-mono text-cyan-300 font-bold shrink-0">
+                        IA 24/7
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-300 mb-3.5 leading-relaxed">
+                      Respuestas instantáneas sobre stack técnico, módulos disponibles, cotizaciones
+                      interactivas y soporte.
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={() => setHubView('chat')}
+                      className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-cyan-950/80 text-cyan-400 border border-cyan-500/40 hover:border-cyan-400 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+                    >
+                      <Bot className="w-4 h-4" />
+                      <span>Preguntarle al Asistente IA →</span>
+                    </button>
+                  </div>
                 </div>
+
+                <div className="px-5 py-2.5 bg-black/40 border-t border-white/5 text-[10px] font-mono text-slate-400 flex items-center justify-center gap-2">
+                  <Logo size={15} variant="dark" />
+                  <span>ExePaginasWeb · Rosario & Global · 2025 · {DISPLAY_WHATSAPP_NUMBER}</span>
+                </div>
+              </div>
+            ) : (
+              /* ====================================================
+                  VISTA B: CONSOLA DE CHAT IA CONVERSACIONAL
+                 ==================================================== */
+              <div className="flex flex-col h-[520px] sm:h-[560px]">
+                {/* Cabecera del Chat con botón volver y Logo ExePaginasWeb */}
+                <div className="px-4 py-3.5 bg-[#0e1220] border-b border-white/10 flex items-center justify-between select-none">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setHubView('menu')}
+                      title="Volver al menú de canales"
+                      aria-label="Volver al menú de canales"
+                      className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-cyan-400 hover:text-white transition-colors cursor-pointer flex items-center gap-1 text-xs font-mono"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      <span className="hidden sm:inline">Canales</span>
+                    </button>
+
+                    <div className="flex items-center gap-2 ml-1">
+                      <div className="w-7 h-7 rounded-full bg-[#0c1322] border border-cyan-400/50 flex items-center justify-center shrink-0">
+                        <Logo size={20} variant="dark" />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-white tracking-tight">ExeBot IA</h4>
+                        <span className="text-[10px] text-cyan-400 font-mono block leading-none">
+                          ExePaginasWeb · 24/7 En línea
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Acciones de cabecera */}
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setSoundEnabled((prev) => !prev)}
+                      title={soundEnabled ? 'Silenciar sonidos' : 'Activar sonidos'}
+                      aria-label="Silenciar o activar sonidos"
+                      className="w-7 h-7 rounded-full hover:bg-white/5 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      {soundEnabled ? (
+                        <Volume2 className="w-3.5 h-3.5" />
+                      ) : (
+                        <VolumeX className="w-3.5 h-3.5" />
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={resetChat}
+                      title="Reiniciar chat"
+                      aria-label="Reiniciar chat"
+                      className="w-7 h-7 rounded-full hover:bg-white/5 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsOpen(false)}
+                      aria-label="Cerrar chat"
+                      className="w-7 h-7 rounded-full hover:bg-white/5 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Mensajes */}
+                <div
+                  data-lenis-prevent
+                  className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs bg-[#080b12]"
+                >
+                  {messages.map((msg) => {
+                    const isUser = msg.role === 'user'
+                    const textContent = getMessageText(msg)
+
+                    return (
+                      <motion.div
+                        key={msg.id}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={`flex items-start gap-2 ${isUser ? 'flex-row-reverse' : ''}`}
+                      >
+                        <div
+                          className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-mono overflow-hidden ${
+                            isUser
+                              ? 'bg-cyan-500 text-slate-950 font-bold'
+                              : 'bg-[#0f172a] border border-cyan-400/40'
+                          }`}
+                        >
+                          {isUser ? (
+                            <User className="w-3 h-3" />
+                          ) : (
+                            <Logo size={16} variant="dark" />
+                          )}
+                        </div>
+
+                        <div className="space-y-1.5 max-w-[88%]">
+                          <div
+                            className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
+                              isUser
+                                ? 'bg-cyan-500 text-slate-950 font-medium rounded-tr-xs shadow-xs'
+                                : 'bg-[#101524] border border-cyan-500/20 text-slate-200 rounded-tl-xs shadow-xs whitespace-pre-line'
+                            }`}
+                          >
+                            {textContent}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )
+                  })}
+                  <div ref={messagesEndRef} />
+                </div>
+
+                {/* Sugerencias rápidas */}
+                {messages.length < 5 && (
+                  <div className="px-3 py-2 bg-[#0a0d17] border-t border-white/5 shrink-0 flex flex-wrap gap-1.5">
+                    {INITIAL_TOPICS.map((topic) => (
+                      <button
+                        key={topic.id}
+                        type="button"
+                        onClick={() => {
+                          if (topic.action === 'whatsapp') {
+                            handleOpenWhatsAppDirect(topic.prompt)
+                          } else {
+                            handleSendMessage(topic.prompt)
+                          }
+                        }}
+                        className="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700/60 hover:border-cyan-400/60 text-slate-300 hover:text-white text-[10px] font-mono transition-all flex items-center gap-1 cursor-pointer shrink-0"
+                      >
+                        <span>{topic.title}</span>
+                        <ArrowUpRight className="w-2.5 h-2.5 opacity-60" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Traspaso directo a WhatsApp */}
+                <div className="px-3.5 py-2 bg-emerald-950/40 border-t border-emerald-500/30 flex items-center justify-between gap-2 shrink-0">
+                  <div className="text-[11px] text-emerald-300 truncate font-sans">
+                    ¿Preferís hablar con una persona?{' '}
+                    <span className="font-bold block sm:inline text-white">
+                      Exequiel en WhatsApp
+                    </span>
+                  </div>
+                  <a
+                    href={getWhatsAppHandoffUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-[10.5px] transition-all shadow-sm shrink-0 cursor-pointer"
+                  >
+                    <span>Chatear</span>
+                    <ArrowUpRight className="w-3 h-3" />
+                  </a>
+                </div>
+
+                {/* Input de texto */}
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    handleSendMessage()
+                  }}
+                  className="p-3 bg-[#0a0d16] border-t border-white/10 flex items-center gap-2"
+                >
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Escribí tu consulta o proyecto..."
+                    className="flex-1 px-3.5 py-2.5 rounded-xl bg-black/40 border border-slate-700/60 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!input.trim() || isLoading}
+                    aria-label="Enviar mensaje"
+                    className="w-9 h-9 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center justify-center disabled:opacity-30 transition-all cursor-pointer font-bold shrink-0"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                  </button>
+                </form>
               </div>
             )}
-
-            {/* TRASPASO DIRECTO A WHATSAPP (FRICCIÓN CERO CON EXEQUIEL) */}
-            <div className="px-3.5 py-2.5 bg-emerald-50 dark:bg-emerald-950/40 border-t border-emerald-200/60 dark:border-emerald-800/40 flex items-center justify-between gap-2">
-              <div className="text-[11px] text-emerald-900 dark:text-emerald-300 font-sans">
-                ¿Querés hablar con una persona?{' '}
-                <span className="font-bold block sm:inline text-emerald-950 dark:text-emerald-200">
-                  Exequiel en WhatsApp
-                </span>
-              </div>
-              <a
-                href={getWhatsAppHandoffUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-[10.5px] transition-all shadow-sm hover:shadow-md cursor-pointer shrink-0"
-              >
-                <span>Chatear</span>
-                <ArrowUpRight className="w-3 h-3" />
-              </a>
-            </div>
-
-            {/* FORMULARIO DE ENTRADA */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-                handleSendMessage()
-              }}
-              className="p-3 bg-[#fcfbf8] dark:bg-[#0e0e11] border-t border-[#e8e4d8] dark:border-[#222226] flex items-center gap-2"
-            >
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={t('chat.placeholder') || 'Escribe tu consulta o email...'}
-                className="flex-1 px-3.5 py-2.5 rounded-xl bg-[#f4f1e8] dark:bg-[#141418] border border-[#e2ddd0] dark:border-[#25252a] text-xs text-neutral-900 dark:text-[#f7f5ee] placeholder:text-neutral-400 dark:placeholder:text-[#78756d] focus:outline-none focus:border-neutral-500 dark:focus:border-[#666670] transition-colors"
-              />
-              <button
-                type="submit"
-                disabled={!input.trim() || isLoading}
-                aria-label={t('chat.send') || 'Enviar mensaje'}
-                className="w-9 h-9 rounded-xl bg-[#111113] hover:bg-[#202025] dark:bg-[#f7f5ee] dark:hover:bg-white text-[#f7f5ee] dark:text-[#111113] flex items-center justify-center disabled:opacity-30 transition-all cursor-pointer"
-              >
-                <Send className="w-3.5 h-3.5" />
-              </button>
-            </form>
           </motion.div>
         )}
       </AnimatePresence>

@@ -34,10 +34,6 @@ const Footer = dynamic(() => import('@/components/layout/Footer'), {
   loading: () => <div className="h-20" />,
 })
 
-const FloatingWhatsApp = dynamic(() => import('@/components/layout/FloatingWhatsApp'), {
-  ssr: false,
-})
-
 const AIChatWidget = dynamic(() => import('@/components/chat/AIChatWidget'), {
   ssr: false,
 })
@@ -62,7 +58,6 @@ export default function HomePage() {
           <ContactSection />
         </main>
         <Footer />
-        <FloatingWhatsApp />
         <AIChatWidget />
       </div>
     </ErrorBoundary>

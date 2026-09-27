@@ -356,12 +356,15 @@ const Footer = () => {
           </div>
 
           <div className="flex flex-col lg:flex-row items-center justify-between gap-4 text-xs">
-            {/* Left: Copyright */}
-            <p className="text-muted-foreground text-[11px] font-mono tracking-wide text-center lg:text-left">
-              © 2026 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
-              {' · '}
-              {t('footer.derechos') || 'Todos los derechos reservados.'}
-            </p>
+            {/* Left: Copyright con ícono ExePaginasWeb */}
+            <div className="flex items-center justify-center lg:justify-start gap-2.5 text-muted-foreground text-[11px] font-mono tracking-wide">
+              <Logo size={20} variant="dark" />
+              <p>
+                © 2025 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
+                {' · '}
+                {t('footer.derechos') || 'Todos los derechos reservados.'}
+              </p>
+            </div>
 
             {/* Center: Crafted signature */}
             <div className="flex items-center justify-center">

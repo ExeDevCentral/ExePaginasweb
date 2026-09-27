@@ -127,7 +127,8 @@ const CAPABILITIES = [
     defaultDesc:
       'Carga instantánea en 0.38s, diseño que cautiva a tus clientes y posicionamiento en Google para que te encuentren primero.',
     cta: 'Ver soluciones web',
-    href: '/soluciones',
+    href: '/soluciones#paginas-web',
+    ariaLabel: 'Ver soluciones web: Páginas de alta conversión',
     color: 'cyan' as const,
     delay: '0s',
     icon: GaugeIcon,
@@ -143,7 +144,8 @@ const CAPABILITIES = [
     defaultDesc:
       'Tu catálogo y pedidos actualizados al instante desde tu celular. Control total de ventas, clientes y stock sin complicaciones.',
     cta: 'Ver paneles a medida',
-    href: '/soluciones',
+    href: '/soluciones#gestion-movil',
+    ariaLabel: 'Ver paneles a medida: Catálogo y gestión móvil',
     color: 'fuchsia' as const,
     delay: '-2.75s',
     icon: CpuIcon,
@@ -160,6 +162,7 @@ const CAPABILITIES = [
       'Dejá de responder precios manualmente: cobros y reservas automáticas 24/7 con tarjetas y comprobantes sin intervención humana.',
     cta: 'Calcular automatización',
     href: '/cotizador',
+    ariaLabel: 'Calcular automatización de WhatsApp y cobros 24/7',
     color: 'amber' as const,
     delay: '-5.5s',
     icon: ZapIcon,
@@ -176,6 +179,7 @@ const CAPABILITIES = [
       'Sin pagar comisiones del 15% a plataformas terceras. El sitio, la base de clientes y los datos son 100% tuyos para siempre.',
     cta: 'Comparar planes y precios',
     href: '/precios',
+    ariaLabel: 'Comparar planes y precios con 100% código propio',
     color: 'emerald' as const,
     delay: '-8.25s',
     icon: ShieldCheckIcon,
@@ -220,6 +224,7 @@ export const OptimusScaleHero: React.FC = () => {
           1. HERO PRINCIPAL (ESTRUCTURA ALINEADA CON EL NAVBAR)
          ======================================================== */}
       <section
+        aria-label="Hero principal"
         onMouseMove={handleHeroMouseMove}
         className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between pt-24 sm:pt-28 pb-4 overflow-hidden"
       >
@@ -276,7 +281,7 @@ export const OptimusScaleHero: React.FC = () => {
               </h1>
 
               {/* 3. SUBTÍTULO HERO CON RENDERIZADO INMEDIATO PARA MÁXIMO LCP */}
-              <div className="mt-5 sm:mt-6 max-w-2xl min-h-[6.5rem] sm:min-h-[4.5rem]">
+              <div className="mt-5 sm:mt-6 max-w-2xl min-h-26 sm:min-h-18">
                 <ConvergentTypewriterSubtitle />
               </div>
 
@@ -285,7 +290,7 @@ export const OptimusScaleHero: React.FC = () => {
                 <Link
                   href="/cotizador"
                   onClick={() => trackEvent('hero_cta_contact_clicked', { source: 'optimus_hero' })}
-                  className="group relative inline-flex items-center justify-center gap-2.5 h-[52px] px-8 rounded-full font-bold text-sm bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md hover:shadow-lg hover:shadow-cyan-400/25 transition-all duration-300 transform-gpu active:scale-95 shrink-0"
+                  className="group relative inline-flex items-center justify-center gap-2.5 h-13 px-8 rounded-full font-bold text-sm bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md hover:shadow-lg hover:shadow-cyan-400/25 transition-all duration-300 transform-gpu active:scale-95 shrink-0"
                 >
                   <span>{t('hero.cta_comenzar') || 'Comenzar mi proyecto'}</span>
                   <ArrowRightIcon className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -296,7 +301,7 @@ export const OptimusScaleHero: React.FC = () => {
                   onClick={() =>
                     trackEvent('hero_cta_portfolio_clicked', { source: 'optimus_hero' })
                   }
-                  className="group inline-flex items-center justify-center gap-2.5 h-[52px] px-8 rounded-full border border-slate-300 dark:border-white/20 hover:border-slate-400 dark:hover:border-white/40 text-slate-800 dark:text-white font-medium text-sm transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 shrink-0"
+                  className="group inline-flex items-center justify-center gap-2.5 h-13 px-8 rounded-full border border-slate-300 dark:border-white/20 hover:border-slate-400 dark:hover:border-white/40 text-slate-800 dark:text-white font-medium text-sm transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 shrink-0"
                 >
                   <PlayIcon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 group-hover:scale-110 transition-transform" />
                   <span>
@@ -335,7 +340,7 @@ export const OptimusScaleHero: React.FC = () => {
 
             {/* COLUMNA DERECHA: ESFERA 3D VIBRANTE */}
             <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end w-full py-2 lg:py-0">
-              <OptimusGlyphSphere className="w-full max-w-[380px] sm:max-w-[500px] md:max-w-[560px] lg:max-w-[620px] xl:max-w-[680px] mx-auto lg:ml-auto" />
+              <OptimusGlyphSphere className="w-full max-w-95 sm:max-w-125 md:max-w-140 lg:max-w-155 xl:max-w-170 mx-auto lg:ml-auto" />
             </div>
           </div>
 
@@ -470,267 +475,123 @@ export const OptimusScaleHero: React.FC = () => {
           </div>
         </div>
 
-        {/* ========================================================
-            A. VERSIÓN PARA CELULARES (MÓVIL PRÁCTICA, ÁGIL Y ELEGANTE)
-           ======================================================== */}
-        <div className="block lg:hidden space-y-6">
-          {/* BARRA TÁCTIL RÁPIDA DE FILTRO PARA MÓVILES */}
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-2 pt-1 select-none">
+        {/* Barra táctil rápida de filtro para móviles */}
+        <div className="flex lg:hidden items-center gap-2 overflow-x-auto scrollbar-none pb-2 pt-1 mb-6 select-none">
+          <button
+            type="button"
+            onClick={() => setActiveMobileFilter('all')}
+            className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-mono transition-all touch-manipulation cursor-pointer ${
+              activeMobileFilter === 'all'
+                ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/30'
+                : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400'
+            }`}
+          >
+            Todas (4)
+          </button>
+          {CAPABILITIES.map((cap) => (
             <button
+              key={'mob-btn-' + cap.id}
               type="button"
-              onClick={() => setActiveMobileFilter('all')}
+              onClick={() => setActiveMobileFilter(cap.id as '01' | '02' | '03' | '04')}
               className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-mono transition-all touch-manipulation cursor-pointer ${
-                activeMobileFilter === 'all'
+                activeMobileFilter === cap.id
                   ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/30'
                   : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400'
               }`}
             >
-              Todas (4)
+              {cap.code}
             </button>
-            {CAPABILITIES.map((cap) => (
-              <button
-                key={'mob-btn-' + cap.id}
-                type="button"
-                onClick={() => setActiveMobileFilter(cap.id as '01' | '02' | '03' | '04')}
-                className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-mono transition-all touch-manipulation cursor-pointer ${
-                  activeMobileFilter === cap.id
-                    ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/30'
-                    : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400'
-                }`}
+          ))}
+        </div>
+
+        {/* UN SOLO GRID RESPONSIVO PARA MÓVIL Y ESCRITORIO (CERO DUPLICACIÓN DOM) */}
+        <div
+          className={`grid gap-6 sm:gap-7 xl:gap-8 ${
+            desktopView === 'row4'
+              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+              : 'grid-cols-1 md:grid-cols-2'
+          }`}
+        >
+          {CAPABILITIES.filter(
+            (cap) => activeMobileFilter === 'all' || activeMobileFilter === cap.id
+          ).map((cap) => {
+            const Icon = cap.icon
+            const colorTextClass =
+              cap.color === 'cyan'
+                ? 'text-cyan-600 dark:text-cyan-400'
+                : cap.color === 'fuchsia'
+                  ? 'text-fuchsia-600 dark:text-fuchsia-400'
+                  : cap.color === 'amber'
+                    ? 'text-amber-600 dark:text-amber-400'
+                    : 'text-emerald-600 dark:text-emerald-400'
+
+            const colorHoverText =
+              cap.color === 'cyan'
+                ? 'group-hover:text-cyan-500 dark:group-hover:text-cyan-300'
+                : cap.color === 'fuchsia'
+                  ? 'group-hover:text-fuchsia-500 dark:group-hover:text-fuchsia-300'
+                  : cap.color === 'amber'
+                    ? 'group-hover:text-amber-500 dark:group-hover:text-amber-300'
+                    : 'group-hover:text-emerald-500 dark:group-hover:text-emerald-300'
+
+            return (
+              <Link
+                key={'cap-card-' + cap.id}
+                href={cap.href}
+                aria-label={cap.ariaLabel}
+                className="block cursor-pointer group active:scale-[0.99] transition-transform"
               >
-                {cap.code}
-              </button>
-            ))}
-          </div>
-
-          {/* LISTA DE TARJETAS EN MODO CELULAR (AMPLIAS, CÓMODAS, CON EFECTO LUMINOSO) */}
-          <div className="grid grid-cols-1 gap-5">
-            {CAPABILITIES.filter(
-              (cap) => activeMobileFilter === 'all' || activeMobileFilter === cap.id
-            ).map((cap) => {
-              const Icon = cap.icon
-              const colorTextClass =
-                cap.color === 'cyan'
-                  ? 'text-cyan-600 dark:text-cyan-400'
-                  : cap.color === 'fuchsia'
-                    ? 'text-fuchsia-600 dark:text-fuchsia-400'
-                    : cap.color === 'amber'
-                      ? 'text-amber-600 dark:text-amber-400'
-                      : 'text-emerald-600 dark:text-emerald-400'
-
-              const colorBorderClass =
-                cap.color === 'cyan'
-                  ? 'hover:border-cyan-500/50'
-                  : cap.color === 'fuchsia'
-                    ? 'hover:border-fuchsia-500/50'
-                    : cap.color === 'amber'
-                      ? 'hover:border-amber-500/50'
-                      : 'hover:border-emerald-500/50'
-
-              return (
-                <Link
-                  key={'mob-card-' + cap.id}
-                  href={cap.href}
-                  className="block cursor-pointer active:scale-[0.98] transition-transform touch-manipulation"
+                <SpotlightBorderCard
+                  activeBeam={true}
+                  colorVariant={cap.color}
+                  animationDelay={cap.delay}
+                  className="h-full"
                 >
-                  <SpotlightBorderCard
-                    activeBeam={true}
-                    colorVariant={cap.color}
-                    animationDelay={cap.delay}
-                    className={`w-full ${colorBorderClass}`}
-                  >
-                    <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
                       <span className={`text-xs font-mono font-bold ${colorTextClass}`}>
                         {cap.code}
                       </span>
-                      <Icon className={`w-4 h-4 ${colorTextClass}`} />
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400">
+                        {cap.badge}
+                      </span>
                     </div>
+                    <Icon
+                      className={`w-5 h-5 ${colorTextClass} group-hover:scale-110 transition-transform duration-300`}
+                    />
+                  </div>
 
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-snug">
-                      {t(cap.titleKey) || cap.defaultTitle}
-                    </h3>
-
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                      {t(cap.descKey) || cap.defaultDesc}
-                    </p>
-
-                    {/* Micro-tags tecnológicos en móvil */}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {cap.tech.map((techItem) => (
-                        <span
-                          key={'mob-tech-' + cap.id + '-' + techItem}
-                          className="px-2 py-0.5 rounded-md bg-slate-200/60 dark:bg-white/5 border border-slate-300/60 dark:border-white/10 text-[10px] font-mono text-slate-600 dark:text-slate-400"
-                        >
-                          {techItem}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div
-                      className={`flex items-center gap-1.5 text-xs font-mono font-bold ${colorTextClass}`}
-                    >
-                      <span>{cap.cta}</span>
-                      <ArrowRightIcon className="w-3.5 h-3.5" />
-                    </div>
-                  </SpotlightBorderCard>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* ========================================================
-            B. VERSIÓN PARA ESCRITORIO / PC (ESPACIOSA, MAJESTUOSA Y RICA)
-           ======================================================== */}
-        <div className="hidden lg:block">
-          {desktopView === 'grid2x2' ? (
-            /* VISTA 1: CUADRÍCULA 2X2 AMPLIA (ESPACIO CÓMODO Y MAJESTUOSO) */
-            <div className="grid grid-cols-2 gap-7 xl:gap-8">
-              {CAPABILITIES.map((cap) => {
-                const Icon = cap.icon
-                const colorTextClass =
-                  cap.color === 'cyan'
-                    ? 'text-cyan-600 dark:text-cyan-400'
-                    : cap.color === 'fuchsia'
-                      ? 'text-fuchsia-600 dark:text-fuchsia-400'
-                      : cap.color === 'amber'
-                        ? 'text-amber-600 dark:text-amber-400'
-                        : 'text-emerald-600 dark:text-emerald-400'
-
-                const colorHoverText =
-                  cap.color === 'cyan'
-                    ? 'group-hover:text-cyan-500 dark:group-hover:text-cyan-300'
-                    : cap.color === 'fuchsia'
-                      ? 'group-hover:text-fuchsia-500 dark:group-hover:text-fuchsia-300'
-                      : cap.color === 'amber'
-                        ? 'group-hover:text-amber-500 dark:group-hover:text-amber-300'
-                        : 'group-hover:text-emerald-500 dark:group-hover:text-emerald-300'
-
-                return (
-                  <Link
-                    key={'pc-grid-' + cap.id}
-                    href={cap.href}
-                    className="block cursor-pointer group"
+                  <h3
+                    className={`text-xl xl:text-2xl font-bold text-slate-900 dark:text-white mb-2.5 transition-colors ${colorHoverText}`}
                   >
-                    <SpotlightBorderCard
-                      activeBeam={true}
-                      colorVariant={cap.color}
-                      animationDelay={cap.delay}
-                      className="h-full"
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <span className={`text-xs font-mono font-bold ${colorTextClass}`}>
-                            {cap.code}
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400">
-                            {cap.badge}
-                          </span>
-                        </div>
-                        <Icon
-                          className={`w-5 h-5 ${colorTextClass} group-hover:scale-110 transition-transform duration-300`}
-                        />
-                      </div>
+                    {t(cap.titleKey) || cap.defaultTitle}
+                  </h3>
 
-                      <h3
-                        className={`text-xl xl:text-2xl font-bold text-slate-900 dark:text-white mb-2.5 transition-colors ${colorHoverText}`}
+                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-5">
+                    {t(cap.descKey) || cap.defaultDesc}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-5">
+                    {cap.tech.map((techItem) => (
+                      <span
+                        key={'cap-tech-' + cap.id + '-' + techItem}
+                        className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[11px] font-mono text-slate-600 dark:text-slate-400 group-hover:border-slate-300 dark:group-hover:border-white/20 transition-colors"
                       >
-                        {t(cap.titleKey) || cap.defaultTitle}
-                      </h3>
+                        {techItem}
+                      </span>
+                    ))}
+                  </div>
 
-                      <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                        {t(cap.descKey) || cap.defaultDesc}
-                      </p>
-
-                      {/* Micro-tags tecnológicos en desktop */}
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {cap.tech.map((techItem) => (
-                          <span
-                            key={'pc-tech-' + cap.id + '-' + techItem}
-                            className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[11px] font-mono text-slate-600 dark:text-slate-400 group-hover:border-slate-300 dark:group-hover:border-white/20 transition-colors"
-                          >
-                            {techItem}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div
-                        className={`flex items-center gap-1.5 text-xs font-mono font-bold ${colorTextClass} group-hover:translate-x-1.5 transition-transform duration-300`}
-                      >
-                        <span>{cap.cta}</span>
-                        <ArrowRightIcon className="w-4 h-4" />
-                      </div>
-                    </SpotlightBorderCard>
-                  </Link>
-                )
-              })}
-            </div>
-          ) : (
-            /* VISTA 2: PANORÁMICA 4X1 (4 COLUMNAS TRADICIONAL) */
-            <div className="grid grid-cols-4 gap-5">
-              {CAPABILITIES.map((cap) => {
-                const Icon = cap.icon
-                const colorTextClass =
-                  cap.color === 'cyan'
-                    ? 'text-cyan-600 dark:text-cyan-400'
-                    : cap.color === 'fuchsia'
-                      ? 'text-fuchsia-600 dark:text-fuchsia-400'
-                      : cap.color === 'amber'
-                        ? 'text-amber-600 dark:text-amber-400'
-                        : 'text-emerald-600 dark:text-emerald-400'
-
-                const colorHoverText =
-                  cap.color === 'cyan'
-                    ? 'group-hover:text-cyan-500 dark:group-hover:text-cyan-300'
-                    : cap.color === 'fuchsia'
-                      ? 'group-hover:text-fuchsia-500 dark:group-hover:text-fuchsia-300'
-                      : cap.color === 'amber'
-                        ? 'group-hover:text-amber-500 dark:group-hover:text-amber-300'
-                        : 'group-hover:text-emerald-500 dark:group-hover:text-emerald-300'
-
-                return (
-                  <Link
-                    key={'pc-row-' + cap.id}
-                    href={cap.href}
-                    className="block cursor-pointer group"
+                  <div
+                    className={`flex items-center gap-1.5 text-xs font-mono font-bold ${colorTextClass} group-hover:translate-x-1.5 transition-transform duration-300`}
                   >
-                    <SpotlightBorderCard
-                      activeBeam={true}
-                      colorVariant={cap.color}
-                      animationDelay={cap.delay}
-                      className="h-full"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-mono font-bold ${colorTextClass}`}>
-                          {cap.code}
-                        </span>
-                        <Icon
-                          className={`w-4 h-4 ${colorTextClass} group-hover:scale-110 transition-transform duration-300`}
-                        />
-                      </div>
-
-                      <h3
-                        className={`text-lg font-bold text-slate-900 dark:text-white mb-1.5 transition-colors ${colorHoverText}`}
-                      >
-                        {t(cap.titleKey) || cap.defaultTitle}
-                      </h3>
-
-                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
-                        {t(cap.descKey) || cap.defaultDesc}
-                      </p>
-
-                      <div
-                        className={`flex items-center gap-1 text-[11px] font-mono font-bold ${colorTextClass} group-hover:translate-x-1 transition-transform`}
-                      >
-                        <span>{cap.cta}</span>
-                        <ArrowRightIcon className="w-3.5 h-3.5" />
-                      </div>
-                    </SpotlightBorderCard>
-                  </Link>
-                )
-              })}
-            </div>
-          )}
+                    <span>{cap.cta}</span>
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </div>
+                </SpotlightBorderCard>
+              </Link>
+            )
+          })}
         </div>
       </section>
 

@@ -49,7 +49,7 @@ export const Logo: React.FC<LogoProps> = ({
           width={size}
           height={size}
           style={commonImgStyle}
-          className="object-contain filter drop-shadow-[0_0_15px_rgba(250,204,21,0.6)] transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_25px_rgba(250,204,21,0.8)] relative z-10 shrink-0"
+          className="object-contain filter drop-shadow-[0_0_15px_rgba(250,204,21,0.6)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
         />
       )
     }
@@ -64,7 +64,7 @@ export const Logo: React.FC<LogoProps> = ({
           width={size}
           height={size}
           style={commonImgStyle}
-          className="object-contain filter drop-shadow-[0_0_10px_rgba(250,204,21,0.4)] transition-all duration-300 group-hover:scale-110 relative z-10 shrink-0"
+          className="object-contain filter drop-shadow-[0_0_10px_rgba(250,204,21,0.4)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
         />
       )
     }
@@ -79,7 +79,7 @@ export const Logo: React.FC<LogoProps> = ({
           width={size}
           height={size}
           style={commonImgStyle}
-          className="object-contain dark:hidden filter drop-shadow-[0_0_10px_rgba(250,204,21,0.4)] transition-all duration-300 group-hover:scale-110 relative z-10 shrink-0"
+          className="object-contain dark:hidden filter drop-shadow-[0_0_10px_rgba(250,204,21,0.4)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
         />
         <img
           src={darkSrc}
@@ -89,7 +89,7 @@ export const Logo: React.FC<LogoProps> = ({
           width={size}
           height={size}
           style={commonImgStyle}
-          className="object-contain hidden dark:block filter drop-shadow-[0_0_15px_rgba(250,204,21,0.6)] transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_25px_rgba(250,204,21,0.8)] relative z-10 shrink-0"
+          className="object-contain hidden dark:block filter drop-shadow-[0_0_15px_rgba(250,204,21,0.6)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
         />
       </>
     )

@@ -106,10 +106,10 @@ const Footer = () => {
 
           {/* Col 2: Soluciones SaaS (3 cols) */}
           <div className="lg:col-span-3">
-            <h4 className="font-bold text-foreground mb-4 uppercase tracking-wider text-xs flex items-center gap-2">
+            <h3 className="font-bold text-foreground mb-4 uppercase tracking-wider text-xs flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
               {t('footer.soluciones_saas') || 'Soluciones SaaS'}
-            </h4>
+            </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
                 <Link
@@ -164,10 +164,10 @@ const Footer = () => {
 
           {/* Col 3: Plataforma (2 cols) */}
           <div className="lg:col-span-2">
-            <h4 className="font-bold text-foreground mb-4 uppercase tracking-wider text-xs flex items-center gap-2">
+            <h3 className="font-bold text-foreground mb-4 uppercase tracking-wider text-xs flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
               {t('footer.plataforma') || 'Plataforma'}
-            </h4>
+            </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
                 <Link
@@ -224,10 +224,10 @@ const Footer = () => {
 
           {/* Col 4: Canales & Legal (3 cols) */}
           <div className="lg:col-span-3">
-            <h4 className="font-bold text-foreground mb-4 uppercase tracking-wider text-xs flex items-center gap-2">
+            <h3 className="font-bold text-foreground mb-4 uppercase tracking-wider text-xs flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               {t('footer.canales_legal') || 'Canales & Legal'}
-            </h4>
+            </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a

@@ -34,7 +34,7 @@ const Footer = dynamic(() => import('@/components/layout/Footer'), {
   loading: () => <div className="h-20" />,
 })
 
-const AIChatWidget = dynamic(() => import('@/components/chat/AIChatWidget'), {
+const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatWidget'), {
   ssr: false,
 })
 
@@ -58,7 +58,7 @@ export default function HomePage() {
           <ContactSection />
         </main>
         <Footer />
-        <AIChatWidget />
+        <DeferredChatWidget />
       </div>
     </ErrorBoundary>
   )

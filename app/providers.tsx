@@ -12,9 +12,13 @@ import { Analytics } from '@vercel/analytics/react'
 import { AuthSessionProvider } from '@/core/auth/AuthSessionProvider'
 import { ThemeProvider } from '@/core/theme/ThemeContext'
 import { PostHogProvider } from '@/lib/posthog/PostHogProvider'
+import dynamic from 'next/dynamic'
 import ThemedToaster from '@/components/shared/ThemedToaster'
-import PremiumBackground from '@/components/Effects/PremiumBackground'
 import '@/core/i18n/config'
+
+const PremiumBackground = dynamic(() => import('@/components/Effects/PremiumBackground'), {
+  ssr: false,
+})
 
 export default function Providers({ children }: { readonly children: React.ReactNode }) {
   const [queryClient] = useState(

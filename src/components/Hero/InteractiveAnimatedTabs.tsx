@@ -148,9 +148,8 @@ function tokenizeLine(line: string): Array<{ text: string; colorClass: string }>
     : [{ text: line, colorClass: 'text-slate-800 dark:text-slate-200' }]
 }
 
-interface AnimatedChar {
-  char: string
-  delay: number
+interface AnimatedToken {
+  text: string
   colorClass: string
   key: string
 }
@@ -158,7 +157,7 @@ interface AnimatedChar {
 interface AnimatedLine {
   lineIndex: number
   isEmpty: boolean
-  chars: AnimatedChar[]
+  tokens: AnimatedToken[]
 }
 
 export const InteractiveAnimatedTabs: React.FC<{ className?: string }> = ({ className = '' }) => {
@@ -195,40 +194,22 @@ export const InteractiveAnimatedTabs: React.FC<{ className?: string }> = ({ clas
     setTimeout(() => setCopied(false), 2000)
   }
 
-  // Precomputar la secuencia secuencial genuina de máquina de escribir espacial
-  const { animatedLines, totalDurationMs: _totalDurationMs } = useMemo(() => {
-    let cumulativeDelay = 120 // delay inicial tras seleccionar o entrar
-    const CHAR_DELAY = 26 // 26ms por carácter: cadencia lenta, espacial y rítmica
-    const LINE_PAUSE = 130 // 130ms de pausa al finalizar cada línea (salto de carro espacial)
-
-    const lines: AnimatedLine[] = currentTab.code.map((lineText, li) => {
+  // Precomputar tokens sintácticos por línea (óptimo para DOM y alto rendimiento)
+  const animatedLines: AnimatedLine[] = useMemo(() => {
+    return currentTab.code.map((lineText, li) => {
       if (!lineText.trim()) {
-        cumulativeDelay += 90
-        return { lineIndex: li, isEmpty: true, chars: [] }
+        return { lineIndex: li, isEmpty: true, tokens: [] }
       }
 
-      const tokens = tokenizeLine(lineText)
-      const chars: AnimatedChar[] = []
+      const rawTokens = tokenizeLine(lineText)
+      const tokens: AnimatedToken[] = rawTokens.map((tok, ti) => ({
+        text: tok.text,
+        colorClass: tok.colorClass,
+        key: `tok-${li}-${ti}-${tok.text.slice(0, 4)}`,
+      }))
 
-      let charIndex = 0
-      for (const token of tokens) {
-        for (const ch of token.text) {
-          chars.push({
-            char: ch,
-            delay: cumulativeDelay,
-            colorClass: token.colorClass,
-            key: `char-${li}-${charIndex}-${ch}`,
-          })
-          cumulativeDelay += CHAR_DELAY
-          charIndex++
-        }
-      }
-
-      cumulativeDelay += LINE_PAUSE
-      return { lineIndex: li, isEmpty: false, chars }
+      return { lineIndex: li, isEmpty: false, tokens }
     })
-
-    return { animatedLines: lines, totalDurationMs: cumulativeDelay }
   }, [currentTab])
 
   return (
@@ -321,7 +302,7 @@ export const InteractiveAnimatedTabs: React.FC<{ className?: string }> = ({ clas
       </div>
 
       {/* 2. VENTANA DE LA CONSOLA (CON ALTO FIJO Y EFECTO ESPACIAL) */}
-      <div className="relative z-10 w-full min-h-[350px] sm:min-h-[340px] p-4 sm:p-7 font-mono text-xs sm:text-[13px] leading-relaxed overflow-x-auto">
+      <div className="relative z-10 w-full min-h-87.5 sm:min-h-85 p-4 sm:p-7 font-mono text-xs sm:text-[13px] leading-relaxed overflow-x-auto">
         {/* Telemetría superior de estado */}
         <div className="flex items-center justify-between gap-2 mb-4 pb-2.5 border-b border-slate-200/60 dark:border-white/5">
           <div className="flex items-center gap-2">
@@ -346,7 +327,7 @@ export const InteractiveAnimatedTabs: React.FC<{ className?: string }> = ({ clas
           className="flex flex-col gap-1 select-text"
         >
           {animatedLines.map((lineData) => {
-            const { lineIndex, isEmpty, chars } = lineData
+            const { lineIndex, isEmpty, tokens } = lineData
 
             if (isEmpty) {
               return (
@@ -371,13 +352,9 @@ export const InteractiveAnimatedTabs: React.FC<{ className?: string }> = ({ clas
                 </span>
 
                 <div className="flex-1 break-all">
-                  {chars.map((item) => (
-                    <span
-                      key={item.key}
-                      className={`spatial-typewriter-char ${item.colorClass}`}
-                      style={{ animationDelay: `${item.delay}ms` }}
-                    >
-                      {item.char}
+                  {tokens.map((token) => (
+                    <span key={token.key} className={token.colorClass}>
+                      {token.text}
                     </span>
                   ))}
                 </div>
@@ -394,38 +371,6 @@ export const InteractiveAnimatedTabs: React.FC<{ className?: string }> = ({ clas
           </span>
         </div>
       </div>
-
-      {/* ESTILOS CSS PARA DIFUMINADO + MÁQUINA DE ESCRIBIR ESPACIAL LENTA (100% GPU COMPOSITED) */}
-      <style jsx>{`
-        .spatial-typewriter-char {
-          display: inline-block;
-          white-space: pre;
-          opacity: 0;
-          transform: translate3d(0, 2px, 0);
-          animation: spatialTypewriter 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          will-change: opacity, transform;
-        }
-
-        @keyframes spatialTypewriter {
-          0% {
-            opacity: 0;
-            transform: translate3d(0, 2px, 0);
-          }
-          100% {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .spatial-typewriter-char {
-            opacity: 1;
-            filter: blur(0px);
-            transform: none;
-            animation: none;
-          }
-        }
-      `}</style>
     </div>
   )
 }

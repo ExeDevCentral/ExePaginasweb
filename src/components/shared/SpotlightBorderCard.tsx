@@ -1,16 +1,17 @@
 /**
  * © 2026 Exequiel Echevarria — ExePaginasWeb
  * SpotlightBorderCard:
- * 1. Haz de luz cometa ultra-largo (190° de arco perimetral con núcleo blanco láser intenso)
- * 2. Órbita cadenciosa y majestuosa en reposo (11s) y aceleración reactiva con el cursor (2.4s)
+ * 1. Haz de luz cometa ultra-nítido con cabeza blanca láser y cola difusa
+ * 2. Rotación permanente fluida y continua con Framer Motion (cero bloqueos por CSS/estado)
  * 3. Doble halo: halo ambiental exterior difuminado (glow) + haz perimetral ultra-nítido
- * 4. Geometría perfectamente centrada (aspect-square 350%) que recorre armónicamente los 4 bordes
+ * 4. Geometría perfectamente centrada que recorre armónicamente los 4 bordes
  * 5. Desfase temporal armónico para que cada tarjeta tenga su propio cuadrante activo
  * 6. Spotlight radial interactivo que sigue las coordenadas exactas del mouse
  */
 'use client'
 
 import React, { useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 
 export type SpotlightCardVariant = 'cyan' | 'fuchsia' | 'amber' | 'emerald' | 'blue'
 
@@ -21,8 +22,8 @@ interface SpotlightBorderCardProps {
   customGradient?: string
   spotlightColor?: string
   activeBeam?: boolean
-  slowDuration?: string // Por defecto 11s (cadencioso, elegante, contemplativo)
-  fastDuration?: string // Por defecto 2.4s (aceleración reactiva al posar el cursor)
+  slowDuration?: string // Por defecto 11s (cadencioso, elegante)
+  fastDuration?: string // Por defecto 2.4s (aceleración reactiva)
   animationDelay?: string // Desfase temporal armónico (0s, -2.75s, -5.5s, -8.25s)
 }
 
@@ -37,7 +38,6 @@ const COLOR_CONFIGS: Record<
   }
 > = {
   cyan: {
-    // Arco cometa de alta intensidad con destello blanco láser en la cabeza
     gradient:
       'conic-gradient(from 0deg, transparent 0 150deg, rgba(6, 182, 212, 0.15) 190deg, rgba(6, 182, 212, 0.75) 280deg, #06b6d4 335deg, #67e8f9 352deg, #ffffff 359deg, transparent 360deg)',
     spotlight: 'rgba(6, 182, 212, 0.45)',
@@ -98,6 +98,15 @@ export const SpotlightBorderCard: React.FC<SpotlightBorderCardProps> = ({
   const activeGradient = customGradient || config.gradient
   const activeSpotlight = spotlightColor || config.spotlight
 
+  // Desfase en grados para que cada tarjeta tenga su propio cuadrante activo de forma instantánea
+  const parsedDelay = parseFloat(animationDelay.replace('s', '')) || 0
+  const startDeg = (parsedDelay / 11) * 360
+
+  // Duración reactiva al posar el cursor
+  const duration = isHovered
+    ? parseFloat(fastDuration.replace('s', '')) || 2.4
+    : parseFloat(slowDuration.replace('s', '')) || 11
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return
     const rect = cardRef.current.getBoundingClientRect()
@@ -115,22 +124,20 @@ export const SpotlightBorderCard: React.FC<SpotlightBorderCardProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`group relative rounded-2xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl ${config.glowClass} ${className}`}
-      style={
-        {
-          '--slow-beam-speed': slowDuration,
-          '--fast-beam-speed': fastDuration,
-          '--beam-delay': animationDelay,
-        } as React.CSSProperties
-      }
     >
       {/* 1. HALO AMBIENTAL EXTERIOR (Proyecta aura luminosa difusa detrás de la tarjeta) */}
       {activeBeam && (
-        <div className="absolute -inset-1.5 rounded-2xl pointer-events-none opacity-35 group-hover:opacity-85 transition-opacity duration-500 blur-xl overflow-hidden -z-10">
-          <div
-            className="border-beam-spin absolute top-1/2 left-1/2 w-[350%] aspect-square"
+        <div className="absolute -inset-1.5 rounded-2xl pointer-events-none opacity-40 group-hover:opacity-90 transition-opacity duration-500 blur-xl overflow-hidden -z-10">
+          <motion.div
+            animate={{ rotate: [startDeg, startDeg + 360] }}
+            transition={{
+              duration,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350%] aspect-square pointer-events-none"
             style={{
               background: activeGradient,
-              animationDelay,
             }}
           />
         </div>
@@ -140,11 +147,16 @@ export const SpotlightBorderCard: React.FC<SpotlightBorderCardProps> = ({
       <div className="relative h-full w-full rounded-2xl p-[2px] overflow-hidden border border-slate-300 dark:border-white/20 bg-slate-200/60 dark:bg-white/10 shadow-lg dark:shadow-2xl">
         {/* HAZ DE LUZ COMETA GIRATORIO NÍTIDO CON MINI DESTELLOS */}
         {activeBeam && (
-          <div
-            className="border-beam-spin absolute top-1/2 left-1/2 w-[350%] aspect-square pointer-events-none drop-shadow-[0_0_6px_rgba(255,255,255,0.7)]"
+          <motion.div
+            animate={{ rotate: [startDeg, startDeg + 360] }}
+            transition={{
+              duration,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350%] aspect-square pointer-events-none drop-shadow-[0_0_8px_rgba(255,255,255,0.85)]"
             style={{
               background: activeGradient,
-              animationDelay,
             }}
           />
         )}
@@ -182,29 +194,6 @@ export const SpotlightBorderCard: React.FC<SpotlightBorderCardProps> = ({
           <div className="relative z-10">{children}</div>
         </div>
       </div>
-
-      {/* ESTILOS DE ANIMACIÓN CON CENTRADO EXACTO Y ACELERACIÓN FLUIDA EN HOVER */}
-      <style jsx>{`
-        @keyframes borderSpin {
-          from {
-            transform: translate(-50%, -50%) rotate(0deg);
-          }
-          to {
-            transform: translate(-50%, -50%) rotate(360deg);
-          }
-        }
-        .border-beam-spin {
-          animation-name: borderSpin;
-          animation-duration: var(--slow-beam-speed, 11s);
-          animation-timing-function: linear;
-          animation-iteration-count: infinite;
-          transform-origin: center center;
-          will-change: transform;
-        }
-        .group:hover .border-beam-spin {
-          animation-duration: var(--fast-beam-speed, 2.4s);
-        }
-      `}</style>
     </section>
   )
 }

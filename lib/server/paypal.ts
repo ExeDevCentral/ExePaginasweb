@@ -5,6 +5,7 @@
  */
 import { isSupabaseAdminConfigured, supabaseAdmin as db } from '@/lib/supabase/admin'
 import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
+import { sendWhatsAppAdminAlert } from '@/lib/notifications/whatsappAdmin'
 import { paymentConfirmation, paymentNotification } from '@/lib/email/templates.js'
 import { catalogEntryById, PLAN_CATALOG } from '@/core/domain/planCatalog'
 
@@ -392,6 +393,18 @@ export async function processPayPalCapture(
         firstName: payerName || 'Cliente',
       }).catch((err) => {
         console.warn('[paypal] Error sincronizando cliente con Resend Audience:', err)
+      })
+
+      // Alerta instantánea a WhatsApp del admin por venta concretada
+      void sendWhatsAppAdminAlert({
+        title: '🎉 ¡VENTA APROBADA EN PAYPAL!',
+        name: payerName || 'Cliente',
+        email,
+        plan: plan.nombre,
+        amount,
+        ticketId: orderId || undefined,
+      }).catch((err) => {
+        console.warn('[paypal] Error enviando alerta WhatsApp de venta:', err)
       })
 
       await sendEmail({

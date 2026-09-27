@@ -22,6 +22,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createGroq } from '@ai-sdk/groq'
 import { isSupabaseAdminConfigured, supabaseAdmin as supabase } from '@/lib/supabase/admin'
 import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
+import { sendWhatsAppAdminAlert } from '@/lib/notifications/whatsappAdmin'
 import { contactNotification, contactAutoReply } from '@/lib/email/templates.js'
 import { detectLanguage } from '../contact/route'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
@@ -268,6 +269,17 @@ export async function POST(req: NextRequest) {
         firstName: capturedEmail.split('@')[0],
       }).catch((err) => {
         console.warn('[chat] No se pudo sincronizar lead con Resend Audience:', err)
+      })
+
+      // Alerta instantánea a WhatsApp del admin
+      void sendWhatsAppAdminAlert({
+        title: 'Nuevo Lead desde Chatbot',
+        name: 'Visitante Chat',
+        email: capturedEmail,
+        message: userMessage,
+        ticketId,
+      }).catch((err) => {
+        console.warn('[chat] No se pudo enviar alerta WhatsApp:', err)
       })
 
       const emailResults = await Promise.allSettled([

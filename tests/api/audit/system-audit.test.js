@@ -36,16 +36,19 @@ vi.mock('@/lib/supabase/admin', () => ({
 
 vi.mock('../../../lib/email/send.js', () => ({
   sendEmail: vi.fn().mockResolvedValue({ id: 'mock_send_audit_999' }),
+  syncContactToAudience: vi.fn().mockResolvedValue({ id: 'mock_contact_999' }),
   ADMIN_EMAIL: 'Exemetal@hotmail.com',
 }))
 
 vi.mock('@/lib/email/send.js', () => ({
   sendEmail: vi.fn().mockResolvedValue({ id: 'mock_send_audit_999' }),
+  syncContactToAudience: vi.fn().mockResolvedValue({ id: 'mock_contact_999' }),
   ADMIN_EMAIL: 'Exemetal@hotmail.com',
 }))
 
 vi.mock('@/lib/email/send', () => ({
   sendEmail: vi.fn().mockResolvedValue({ id: 'mock_send_audit_999' }),
+  syncContactToAudience: vi.fn().mockResolvedValue({ id: 'mock_contact_999' }),
   ADMIN_EMAIL: 'Exemetal@hotmail.com',
 }))
 

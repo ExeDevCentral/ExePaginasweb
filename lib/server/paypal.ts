@@ -4,7 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import { isSupabaseAdminConfigured, supabaseAdmin as db } from '@/lib/supabase/admin'
-import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'
+import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
 import { paymentConfirmation, paymentNotification } from '@/lib/email/templates.js'
 import { catalogEntryById, PLAN_CATALOG } from '@/core/domain/planCatalog'
 
@@ -386,6 +386,14 @@ export async function processPayPalCapture(
       const dashboardUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://exepaginasweb.com'}/dashboard`
       const payerName = captured.payer?.name?.given_name || ''
 
+      // Sincronizar comprador con la audiencia de clientes en Resend
+      void syncContactToAudience({
+        email,
+        firstName: payerName || 'Cliente',
+      }).catch((err) => {
+        console.warn('[paypal] Error sincronizando cliente con Resend Audience:', err)
+      })
+
       await sendEmail({
         to: [email],
         subject: `Pago aprobado - ${plan.nombre}`,
@@ -397,6 +405,11 @@ export async function processPayPalCapture(
           orderId: orderId || '',
           dashboardUrl,
         }),
+        tags: [
+          { name: 'category', value: 'payment_approved_client' },
+          { name: 'plan', value: plan.slug },
+          { name: 'order_id', value: orderId || '' },
+        ],
       })
 
       await sendEmail({
@@ -411,6 +424,11 @@ export async function processPayPalCapture(
           tipoProyecto: customTipo,
           orderId: orderId || '',
         }),
+        tags: [
+          { name: 'category', value: 'payment_approved_admin' },
+          { name: 'plan', value: plan.slug },
+          { name: 'order_id', value: orderId || '' },
+        ],
       })
     } catch (e) {
       console.error('[paypal] Email error:', e)

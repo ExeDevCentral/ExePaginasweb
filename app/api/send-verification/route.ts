@@ -123,6 +123,7 @@ export async function POST(req: NextRequest) {
       to: [email],
       subject: '🔒 Confirma tu cuenta de correo electrónico — ExeSistemasWEB',
       html,
+      tags: [{ name: 'category', value: 'auth_verification' }],
     })
 
     return NextResponse.json({

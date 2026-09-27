@@ -5,7 +5,7 @@
  */
 import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
-import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'
+import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
 import {
   contactNotification,
   contactAutoReply,
@@ -107,13 +107,30 @@ export async function POST(req: NextRequest) {
           subject: `[${ticketId}] ${isAiDiag ? '🤖 Nuevo Diagnóstico IA' : 'Nuevo contacto'} de ${name} <${email}>`,
           html: contactNotification({ name, email, message, ticketId }),
           replyTo: email,
+          tags: [
+            { name: 'category', value: isAiDiag ? 'ai_diagnostic_admin' : 'contact_admin' },
+            { name: 'ticket_id', value: ticketId },
+          ],
         }),
         sendEmail({
           to: [email],
           subject: autoReplySubject,
           html: clientHtmlTemplate,
+          tags: [
+            { name: 'category', value: isAiDiag ? 'ai_diagnostic_client' : 'contact_client' },
+            { name: 'ticket_id', value: ticketId },
+            { name: 'lang', value: detectedLang },
+          ],
         }),
       ]
+
+      // Sincronizar lead con audiencia de Resend en segundo plano
+      void syncContactToAudience({
+        email,
+        firstName: name,
+      }).catch((err) => {
+        console.warn(`[contact] No se pudo sincronizar con Resend Audience:`, err)
+      })
 
       const results = await Promise.allSettled(emailTasks)
       results.forEach((res, index) => {

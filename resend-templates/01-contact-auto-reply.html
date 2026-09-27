@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Confirmación de Contacto [{{{ticketId}}}] - ExeSistemasWEB</title>
+  <style>
+    .btn {
+      display:inline-block;padding:14px 32px;border-radius:12px;
+      font-weight:700;font-size:15px;text-decoration:none;
+      background:linear-gradient(135deg,#00d4ff,#ff00ff);
+      color:#000;margin:16px 0;
+    }
+    h1 {color:#fff;font-size:24px;margin:0 0 16px}
+    h2 {color:#fff;font-size:18px;margin:24px 0 8px}
+    p {color:#aaa;font-size:14px;line-height:1.6;margin:0 0 12px}
+    .label {color:#666;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin:0 0 2px}
+    .value {color:#fff;font-size:15px;font-weight:600;margin:0 0 12px}
+    .badge {
+      display:inline-block;padding:4px 12px;border-radius:20px;
+      font-size:12px;font-weight:600;
+    }
+    .badge-green {background:#065f4620;color:#22c55e;border:1px solid #22c55e40}
+    .badge-blue {background:#00d4ff10;color:#00d4ff;border:1px solid #00d4ff30}
+    .badge-magenta {background:#ec489915;color:#ec4899;border:1px solid #ec489940}
+    .divider {border:none;border-top:1px solid #1e1e2e;margin:24px 0}
+  </style>
+</head>
+<body style="margin:0;padding:0;background:#0a0a0f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0f">
+    <tr><td align="center" style="padding:40px 16px">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%">
+        <tr>
+          <td style="text-align:center;padding-bottom:32px">
+            <img src="https://exepaginasweb.com/logo.webp" alt="ExeSistemasWEB" width="48" height="48" style="border-radius:12px">
+            <p style="margin:8px 0 0;font-size:13px;color:#888;letter-spacing:2px;text-transform:uppercase">ExeSistemasWEB</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#12121a;border-radius:16px;border:1px solid #1e1e2e;padding:32px">
+            
+    <div style="text-align:center;padding-bottom:12px;">
+      <div class="badge badge-blue" style="font-family:monospace;font-size:12px;letter-spacing:1px;margin-bottom:12px;">TICKET DE ATENCIÓN: {{{ticketId}}}</div>
+      <h1 style="font-size:26px;color:#fff;margin:8px 0;">¡Hola {{{name}}}! Recibimos tu mensaje ✨</h1>
+      <p style="color:#94a3b8;font-size:15px;max-width:480px;margin:0 auto 20px;line-height:1.6;">
+        Gracias por contactar a <strong>ExeSistemasWEB</strong>. Tu consulta ha sido registrada exitosamente y nuestro equipo técnico y comercial la está revisando.
+      </p>
+    </div>
+
+    <div style="background:#0d0d14;border-radius:14px;padding:24px;margin:20px 0;border:1px solid #00d4ff30;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span class="label" style="color:#00d4ff;">Estado de la Petición</span>
+        <span class="badge badge-green">En Revisión</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <span class="label">Tiempo Estimado de Respuesta</span>
+        <span class="badge badge-blue">Menos de 2 Horas</span>
+      </div>
+
+      <hr class="divider" style="margin:16px 0;">
+
+      <div class="label" style="margin-bottom:8px;">Resumen de tu mensaje enviado</div>
+      <div style="color:#cbd5e1;background:#0a0a0f;padding:14px 16px;border-radius:10px;font-size:13px;line-height:1.5;border:1px solid #1e1e2e;font-style:italic;">
+        "{{{message}}}"
+      </div>
+    </div>
+
+    <div style="text-align:center;margin:28px 0 16px;">
+      <p style="color:#fff;font-size:14px;font-weight:600;margin-bottom:12px;">¿Necesitás respuesta inmediata?</p>
+      <a href="https://wa.me/5493416874786?text=¡Hola!%20Tengo%20el%20ticket%20{{{ticketId}}}%20y%20quisiera%20consultar..." class="btn" style="background:linear-gradient(135deg,#22c55e,#00d4ff);color:#000;padding:14px 28px;font-size:14px;box-shadow:0 0 15px rgba(34,197,94,0.3);">
+        💬 Chatear por WhatsApp Directo
+      </a>
+    </div>
+
+    <div style="background:#0d0d14;border-radius:10px;padding:16px;margin-top:24px;border:1px solid #1e1e2e;text-align:center;">
+      <p style="font-size:12px;color:#64748b;margin:0;">
+        💡 Un especialista asignado a tu ticket <strong>{{{ticketId}}}</strong> responderá directamente a este correo.
+      </p>
+    </div>
+  
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align:center;padding:24px 0 0;font-size:12px;color:#555">
+            <p>ExeSistemasWEB — Estudio Premium de Sistemas y Automatización</p>
+            <p style="margin:4px 0">
+              <a href="https://exepaginasweb.com" style="color:#00d4ff;text-decoration:none">exepaginasweb.com</a>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

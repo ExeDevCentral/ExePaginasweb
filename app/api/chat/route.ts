@@ -21,7 +21,7 @@ import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createGroq } from '@ai-sdk/groq'
 import { isSupabaseAdminConfigured, supabaseAdmin as supabase } from '@/lib/supabase/admin'
-import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send.js'
+import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
 import { contactNotification, contactAutoReply } from '@/lib/email/templates.js'
 import { detectLanguage } from '../contact/route'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
@@ -262,6 +262,14 @@ export async function POST(req: NextRequest) {
     )
 
     if (process.env.RESEND_API_KEY) {
+      // Sincronizar lead capturado desde el chat con la audiencia de Resend
+      void syncContactToAudience({
+        email: capturedEmail,
+        firstName: capturedEmail.split('@')[0],
+      }).catch((err) => {
+        console.warn('[chat] No se pudo sincronizar lead con Resend Audience:', err)
+      })
+
       const emailResults = await Promise.allSettled([
         sendEmail({
           to: [ADMIN_EMAIL],
@@ -273,6 +281,10 @@ export async function POST(req: NextRequest) {
             ticketId,
           }),
           replyTo: capturedEmail,
+          tags: [
+            { name: 'category', value: 'chat_lead_admin' },
+            { name: 'ticket_id', value: ticketId },
+          ],
         }),
         sendEmail({
           to: [capturedEmail],
@@ -286,6 +298,11 @@ export async function POST(req: NextRequest) {
             ticketId,
             lang: detectedLang,
           }),
+          tags: [
+            { name: 'category', value: 'chat_lead_client' },
+            { name: 'ticket_id', value: ticketId },
+            { name: 'lang', value: detectedLang },
+          ],
         }),
       ])
       if (emailResults.some((result) => result.status === 'rejected')) {

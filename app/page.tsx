@@ -38,10 +38,6 @@ const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatW
   ssr: false,
 })
 
-const WhatsAppFloatingWidget = dynamic(() => import('@/components/shared/WhatsAppFloatingWidget'), {
-  ssr: false,
-})
-
 export default function HomePage() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 })
@@ -62,7 +58,6 @@ export default function HomePage() {
           <ContactSection />
         </main>
         <Footer />
-        <WhatsAppFloatingWidget />
         <DeferredChatWidget />
       </div>
     </ErrorBoundary>

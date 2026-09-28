@@ -178,7 +178,6 @@ function MatrixLetter({
         width: '0.62em', // fixed width — no layout shift with wider katakana
         textAlign: 'center',
         overflow: 'hidden',
-        transition: glowing ? 'text-shadow 0.15s, color 0.06s' : 'none',
       }}
       className={`font-mono cursor-default select-none ${className}`}
     >

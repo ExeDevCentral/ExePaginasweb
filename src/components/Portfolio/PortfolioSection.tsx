@@ -202,8 +202,9 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={`Ver sitio web de ${project.title} en producción`}
                             className="absolute top-4 right-4 p-2.5 rounded-full bg-background/90 backdrop-blur-md border border-accent-cyan/40 text-accent-cyan hover:bg-accent-cyan hover:text-background transition-all duration-300 shadow-lg flex items-center justify-center"
-                            title="Abrir enlace directo en producción"
+                            title={`Ver sitio web de ${project.title} en producción`}
                           >
                             <ArrowUpRight className="w-4 h-4" />
                           </a>
@@ -268,6 +269,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                               href={project.link}
                               target="_blank"
                               rel="noopener noreferrer"
+                              aria-label={`Ver sitio web de ${project.title} en producción`}
                               className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:scale-105 transition-all"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
@@ -515,6 +517,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                     href={selectedProject.link}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={`Ver sitio web de ${selectedProject.title} en producción`}
                     className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all"
                   >
                     <ExternalLink className="w-4 h-4" />

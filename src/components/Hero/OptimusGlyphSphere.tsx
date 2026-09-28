@@ -921,13 +921,24 @@ export const OptimusGlyphSphere: React.FC<{
       },
       { threshold: 0.05 }
     )
-    observer.observe(canvas)
+    const handleVisibilityChange = () => {
+      const isDocVisible = document.visibilityState === 'visible'
+      if (!isDocVisible) {
+        cancelAnimationFrame(animationFrameId)
+      } else if (isVisibleOnScreen) {
+        cancelAnimationFrame(animationFrameId)
+        animationFrameId = requestAnimationFrame(render)
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
 
+    observer.observe(canvas)
     animationFrameId = requestAnimationFrame(render)
 
     return () => {
       observer.disconnect()
       cancelAnimationFrame(animationFrameId)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('wheel', handleWheel)
       window.removeEventListener('resize', handleResize)

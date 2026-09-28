@@ -311,32 +311,52 @@ const ContactSection = () => {
                   href={ch.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex flex-1 flex-col justify-between rounded-3xl border border-border bg-muted p-6 backdrop-blur-sm transition-all hover:border-border hover:bg-muted"
+                  className="group relative flex flex-1 flex-col justify-between rounded-3xl border border-slate-300/80 dark:border-white/10 bg-slate-50/90 dark:bg-[#0a0d18] p-6 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 shadow-lg hover:shadow-2xl overflow-hidden"
+                  style={{
+                    borderColor: undefined,
+                  }}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08 + 0.2 }}
-                  whileHover={{ y: -2 }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = `${ch.color}60`
+                    e.currentTarget.style.boxShadow = `0 14px 38px -10px ${ch.color}25`
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = ''
+                    e.currentTarget.style.boxShadow = ''
+                  }}
                 >
+                  {/* Subtle ambient light corner glow */}
                   <div
-                    className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl"
-                    style={{ backgroundColor: `${ch.color}15`, color: ch.color }}
+                    className="pointer-events-none absolute -top-12 -right-12 w-28 h-28 rounded-full blur-2xl opacity-20 group-hover:opacity-60 transition-opacity duration-300"
+                    style={{ backgroundColor: ch.color }}
+                  />
+
+                  <div
+                    className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl border transition-all duration-300 group-hover:scale-110 shadow-sm"
+                    style={{
+                      backgroundColor: `${ch.color}15`,
+                      color: ch.color,
+                      borderColor: `${ch.color}30`,
+                    }}
                   >
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground mb-1">
+                    <p className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-muted-foreground mb-1">
                       {ch.tag}
                     </p>
-                    <p className="text-sm font-semibold text-foreground leading-snug break-all">
+                    <p className="text-sm font-bold text-foreground leading-snug break-all group-hover:text-white transition-colors">
                       {ch.value}
                     </p>
                   </div>
                   <div
-                    className="mt-4 flex items-center gap-1.5 text-xs font-medium opacity-0 transition-all group-hover:opacity-100"
+                    className="mt-4 flex items-center gap-1.5 text-xs font-bold transition-all duration-200 group-hover:translate-x-1"
                     style={{ color: ch.color }}
                   >
-                    {t('contact.abrir')} <ArrowRight className="h-3 w-3" />
+                    {t('contact.abrir')} <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </motion.a>
               )

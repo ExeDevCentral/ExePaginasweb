@@ -122,12 +122,25 @@ export default function HowWeWorkSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.4, delay: idx * 0.1 }}
-              className={`group relative rounded-3xl p-6 sm:p-7 bg-white dark:bg-[#0c0f1d] border-2 border-slate-300/80 dark:border-white/20 shadow-xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.7)] ${colorStyles.border} transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between`}
+              className={`group relative rounded-3xl p-6 sm:p-7 bg-white dark:bg-[#0c0f1d] border-2 border-slate-300/80 dark:border-white/20 shadow-xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.7)] ${colorStyles.border} transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden`}
             >
+              {/* Resplandor sutil reactivo en esquina */}
+              <div
+                className="pointer-events-none absolute -top-12 -right-12 w-36 h-36 rounded-full blur-2xl opacity-0 group-hover:opacity-35 transition-opacity duration-500"
+                style={{
+                  backgroundColor:
+                    item.color === 'cyan'
+                      ? '#06b6d4'
+                      : item.color === 'fuchsia'
+                        ? '#d946ef'
+                        : '#10b981',
+                }}
+              />
+
               <div>
                 {/* Paso número y Badge con alto contraste */}
                 <div className="flex items-center justify-between gap-2 mb-5">
-                  <span className="font-mono text-3xl font-black text-slate-400 dark:text-white/30 select-none">
+                  <span className="font-mono text-3xl font-black text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/60 transition-colors select-none">
                     {item.step}
                   </span>
                   <span
@@ -137,9 +150,9 @@ export default function HowWeWorkSection() {
                   </span>
                 </div>
 
-                {/* Ícono */}
+                {/* Ícono con micro-animación en hover */}
                 <div
-                  className={`w-11 h-11 rounded-2xl ${colorStyles.iconBg} flex items-center justify-center mb-4`}
+                  className={`w-11 h-11 rounded-2xl ${colorStyles.iconBg} flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 shadow-sm`}
                 >
                   <Icon className="w-5 h-5" />
                 </div>

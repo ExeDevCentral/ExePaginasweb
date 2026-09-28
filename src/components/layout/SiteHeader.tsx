@@ -5,10 +5,11 @@
  */
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Scissors, Wheat, Shirt, Volleyball, Menu, X, ArrowRight } from 'lucide-react'
 import Logo from './Logo'
 import LanguageSwitcher from './LanguageSwitcher'
@@ -114,8 +115,42 @@ export default function SiteHeader() {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [solutionsOpen, setSolutionsOpen] = useState(false)
+  const solutionsRef = useRef<HTMLDivElement>(null)
 
   const closeMobile = () => setMobileOpen(false)
+
+  // Cerrar al hacer clic afuera o presionar tecla Escape
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      if (solutionsRef.current && !solutionsRef.current.contains(event.target as Node)) {
+        setSolutionsOpen(false)
+      }
+    }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setSolutionsOpen(false)
+        setMobileOpen(false)
+      }
+    }
+
+    if (solutionsOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('touchstart', handleClickOutside)
+      document.addEventListener('keydown', handleKeyDown)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [solutionsOpen])
+
+  // Cerrar menús al cambiar de ruta
+  useEffect(() => {
+    setSolutionsOpen(false)
+    setMobileOpen(false)
+  }, [pathname])
 
   // Redirección y scroll fluido al inicio garantizado en cualquier página
   const handleHomeClick = () => {
@@ -159,10 +194,12 @@ export default function SiteHeader() {
           <Link href="/" onClick={handleHomeClick} className={linkClass}>
             {getNavLabel('nav.inicio', 'Inicio')}
           </Link>
-          <div className="relative">
+          <div ref={solutionsRef} className="relative">
             <button
               type="button"
-              className={`${linkClass} gap-1 cursor-pointer`}
+              className={`${linkClass} gap-1.5 cursor-pointer ${
+                solutionsOpen ? 'text-cyan-500 dark:text-cyan-400 bg-black/5 dark:bg-white/10' : ''
+              }`}
               aria-expanded={solutionsOpen}
               aria-controls="solutions-menu"
               onClick={() => setSolutionsOpen((open) => !open)}
@@ -170,45 +207,66 @@ export default function SiteHeader() {
               {getNavLabel('nav.soluciones', 'Soluciones')}{' '}
               <ChevronDown
                 size={15}
-                className={
-                  solutionsOpen
-                    ? 'rotate-180 transition-transform duration-200'
-                    : 'transition-transform duration-200'
-                }
+                className={`transition-transform duration-300 ease-out ${
+                  solutionsOpen ? 'rotate-180 text-cyan-500 dark:text-cyan-400' : ''
+                }`}
               />
             </button>
-            <div
-              id="solutions-menu"
-              className={`absolute left-1/2 top-full w-[420px] -translate-x-1/2 pt-3 transition-all duration-200 ${
-                solutionsOpen
-                  ? 'visible opacity-100 translate-y-0'
-                  : 'invisible opacity-0 -translate-y-1 pointer-events-none'
-              }`}
-            >
-              <div className="grid grid-cols-2 gap-2 rounded-2xl border border-foreground/10 bg-card p-3 shadow-2xl dark:border-white/10 dark:bg-[#0c0e18]">
-                {solutions.map(({ href, label, detail, icon: Icon }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={() => setSolutionsOpen(false)}
-                    className="group rounded-xl border border-black/5 p-3 hover:border-cyan-400/40 hover:bg-black/5 dark:border-white/5 dark:hover:bg-white/5 origin-center transition-all duration-[180ms] ease-out hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    <Icon size={19} className="mb-2 text-cyan-500 dark:text-cyan-400" />
-                    <span className="block text-sm font-bold text-slate-900 dark:text-white">
-                      {label}
-                    </span>
-                    <span className="text-xs text-slate-500 dark:text-slate-400">{detail}</span>
-                  </Link>
-                ))}
-                <Link
-                  href="/soluciones"
-                  onClick={() => setSolutionsOpen(false)}
-                  className="col-span-2 flex items-center justify-between rounded-xl border border-cyan-400/20 bg-cyan-400/5 px-3 py-2 text-xs font-bold text-cyan-600 dark:text-cyan-300 origin-center transition-all duration-[180ms] ease-out hover:scale-[1.02]"
+            <AnimatePresence>
+              {solutionsOpen && (
+                <motion.div
+                  id="solutions-menu"
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  className="absolute left-1/2 top-full w-[440px] -translate-x-1/2 pt-2.5 z-50 select-none"
                 >
-                  Ver los 4 rubros <ArrowRight size={14} />
-                </Link>
-              </div>
-            </div>
+                  <div className="relative rounded-3xl border border-cyan-500/25 dark:border-cyan-400/20 bg-white/95 dark:bg-[#070914]/95 p-3.5 shadow-2xl backdrop-blur-2xl dark:shadow-[0_24px_60px_-12px_rgba(0,0,0,0.9),0_0_35px_rgba(6,182,212,0.18)] overflow-hidden">
+                    {/* Glow ambiental superior */}
+                    <div className="pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-24 bg-cyan-500/15 rounded-full blur-2xl" />
+
+                    <div className="relative grid grid-cols-2 gap-2.5 mb-2.5">
+                      {solutions.map(({ href, label, detail, icon: Icon }) => (
+                        <Link
+                          key={href}
+                          href={href}
+                          onClick={() => setSolutionsOpen(false)}
+                          className="group relative flex flex-col p-3 rounded-2xl border border-slate-200/80 dark:border-white/5 bg-slate-50/60 dark:bg-white/[0.02] hover:bg-cyan-500/[0.08] hover:border-cyan-500/40 dark:hover:border-cyan-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+                        >
+                          <div className="flex items-center gap-2.5 mb-1.5">
+                            <div className="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 group-hover:bg-cyan-500 group-hover:text-slate-950 group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(6,182,212,0.5)] transition-all duration-300">
+                              <Icon size={16} />
+                            </div>
+                            <span className="block text-sm font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+                              {label}
+                            </span>
+                          </div>
+                          <span className="text-xs text-slate-500 dark:text-slate-400 pl-0.5 leading-snug">
+                            {detail}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+
+                    <Link
+                      href="/soluciones"
+                      onClick={() => setSolutionsOpen(false)}
+                      className="group relative flex items-center justify-between rounded-xl border border-cyan-500/30 bg-gradient-to-r from-cyan-500/15 via-sky-500/10 to-emerald-500/15 px-3.5 py-2.5 text-xs font-bold text-cyan-600 dark:text-cyan-300 hover:border-cyan-400 hover:from-cyan-500/25 hover:to-emerald-500/25 transition-all duration-200 shadow-sm"
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                        <span>Ver los 4 rubros y sistemas</span>
+                      </span>
+                      <ArrowRight
+                        size={14}
+                        className="group-hover:translate-x-1 transition-transform duration-200"
+                      />
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           <Link href="/portafolio" className={linkClass}>
             {getNavLabel('nav.casos', 'Portafolio')}

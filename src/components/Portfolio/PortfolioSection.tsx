@@ -24,6 +24,15 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { INITIAL_PROJECTS, type Project } from '@/data/projects'
+import SpotlightBorderCard, { type SpotlightCardVariant } from '../shared/SpotlightBorderCard'
+
+const PORTFOLIO_COLOR_VARIANTS: SpotlightCardVariant[] = [
+  'cyan',
+  'fuchsia',
+  'emerald',
+  'amber',
+  'blue',
+]
 
 export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
   featuredOnly = false,
@@ -155,110 +164,119 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.35, delay: idx * 0.08 }}
-                    className="group rounded-3xl border border-slate-300 dark:border-white/20 bg-slate-50/90 dark:bg-[#0c0f1c] backdrop-blur-xl overflow-hidden shadow-xl dark:shadow-[0_12px_36px_rgba(0,0,0,0.7)] hover:shadow-2xl hover:border-accent-cyan/60 dark:hover:border-cyan-400/60 transition-all duration-500 flex flex-col justify-between"
+                    className="h-full"
                   >
-                    {/* Imagen del proyecto + Overlay interactivo */}
-                    <div className="relative h-56 sm:h-64 overflow-hidden bg-muted">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
+                    <SpotlightBorderCard
+                      colorVariant={
+                        PORTFOLIO_COLOR_VARIANTS[idx % PORTFOLIO_COLOR_VARIANTS.length] ?? 'cyan'
+                      }
+                      activeBeam={true}
+                      animationDelay={`${(idx * -2.2) % 10}s`}
+                      className="group rounded-3xl border border-slate-300 dark:border-white/10 bg-slate-50/90 dark:bg-[#0c0f1c] backdrop-blur-xl overflow-hidden shadow-xl dark:shadow-[0_12px_36px_rgba(0,0,0,0.7)] hover:shadow-2xl transition-all duration-500 flex flex-col justify-between h-full"
+                    >
+                      {/* Imagen del proyecto + Overlay interactivo */}
+                      <div className="relative h-56 sm:h-64 overflow-hidden bg-muted">
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
 
-                      {/* Estado / Badge de proyecto */}
-                      <div className="absolute top-4 left-4 flex flex-col gap-1.5 items-start">
-                        <span className="px-3 py-1 rounded-full bg-emerald-950/80 backdrop-blur-md border border-emerald-500/40 text-[11px] font-black text-emerald-400 flex items-center gap-1.5 shadow-md">
-                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                          {project.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')}
-                        </span>
-                        <span className="px-2.5 py-0.5 rounded-full bg-background/80 backdrop-blur-md border border-border text-[10px] font-bold text-accent-cyan">
-                          {project.categoryLabel}
-                        </span>
-                      </div>
-
-                      {/* Acceso rápido a link */}
-                      {project.link && (
-                        <a
-                          href={project.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="absolute top-4 right-4 p-2.5 rounded-full bg-background/90 backdrop-blur-md border border-accent-cyan/40 text-accent-cyan hover:bg-accent-cyan hover:text-background transition-all duration-300 shadow-lg flex items-center justify-center"
-                          title="Abrir enlace directo en producción"
-                        >
-                          <ArrowUpRight className="w-4 h-4" />
-                        </a>
-                      )}
-
-                      {/* Título en tarjeta */}
-                      <div className="absolute bottom-3 left-4 right-4">
-                        <span className="text-[11px] font-semibold text-accent-cyan uppercase tracking-wider block mb-0.5">
-                          {project.client}
-                        </span>
-                        <h3 className="text-lg sm:text-xl font-bold text-foreground font-montserrat leading-tight group-hover:text-accent-cyan transition-colors">
-                          {project.title}
-                        </h3>
-                      </div>
-                    </div>
-
-                    {/* Contenido & Detalles */}
-                    <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
-                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                        {project.description}
-                      </p>
-
-                      {/* Métricas destacadas */}
-                      <div className="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-muted/40 border border-border/60 text-center">
-                        {project.metrics.map((m) => (
-                          <div key={m.label}>
-                            <div className="text-sm sm:text-base font-black text-foreground font-montserrat">
-                              {m.value}
-                            </div>
-                            <div className="text-[10px] text-muted-foreground font-medium">
-                              {m.label}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Tags tecnológicos */}
-                      <div className="flex flex-wrap gap-1.5">
-                        {project.tags.map((tTag) => (
-                          <span
-                            key={tTag}
-                            className="px-2 py-0.5 rounded-md bg-accent-cyan/10 border border-accent-cyan/20 text-[10px] font-semibold text-accent-cyan"
-                          >
-                            {tTag}
+                        {/* Estado / Badge de proyecto */}
+                        <div className="absolute top-4 left-4 flex flex-col gap-1.5 items-start">
+                          <span className="px-3 py-1 rounded-full bg-emerald-950/80 backdrop-blur-md border border-emerald-500/40 text-[11px] font-black text-emerald-400 flex items-center gap-1.5 shadow-md">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            {project.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')}
                           </span>
-                        ))}
-                      </div>
+                          <span className="px-2.5 py-0.5 rounded-full bg-background/80 backdrop-blur-md border border-border text-[10px] font-bold text-accent-cyan">
+                            {project.categoryLabel}
+                          </span>
+                        </div>
 
-                      {/* Acciones principales */}
-                      <div className="pt-3 border-t border-border/50 flex items-center justify-between gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedProject(project)}
-                          className="text-[11px] font-bold text-foreground hover:text-accent-cyan flex items-center gap-1 transition-colors"
-                        >
-                          <Maximize2 className="w-3 h-3" />
-                          {t('portfolio.detalles', 'Detalles')}
-                        </button>
-
+                        {/* Acceso rápido a link */}
                         {project.link && (
                           <a
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:scale-105 transition-all"
+                            className="absolute top-4 right-4 p-2.5 rounded-full bg-background/90 backdrop-blur-md border border-accent-cyan/40 text-accent-cyan hover:bg-accent-cyan hover:text-background transition-all duration-300 shadow-lg flex items-center justify-center"
+                            title="Abrir enlace directo en producción"
                           >
-                            <ExternalLink className="w-3.5 h-3.5" />
-                            {t('portfolio.ver_en_vivo', 'Ver en Vivo')}
+                            <ArrowUpRight className="w-4 h-4" />
                           </a>
                         )}
+
+                        {/* Título en tarjeta */}
+                        <div className="absolute bottom-3 left-4 right-4">
+                          <span className="text-[11px] font-semibold text-accent-cyan uppercase tracking-wider block mb-0.5">
+                            {project.client}
+                          </span>
+                          <h3 className="text-lg sm:text-xl font-bold text-foreground font-montserrat leading-tight group-hover:text-accent-cyan transition-colors">
+                            {project.title}
+                          </h3>
+                        </div>
                       </div>
-                    </div>
+
+                      {/* Contenido & Detalles */}
+                      <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                          {project.description}
+                        </p>
+
+                        {/* Métricas destacadas */}
+                        <div className="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-muted/40 border border-border/60 text-center">
+                          {project.metrics.map((m) => (
+                            <div key={m.label}>
+                              <div className="text-sm sm:text-base font-black text-foreground font-montserrat">
+                                {m.value}
+                              </div>
+                              <div className="text-[10px] text-muted-foreground font-medium">
+                                {m.label}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Tags tecnológicos */}
+                        <div className="flex flex-wrap gap-1.5">
+                          {project.tags.map((tTag) => (
+                            <span
+                              key={tTag}
+                              className="px-2 py-0.5 rounded-md bg-accent-cyan/10 border border-accent-cyan/20 text-[10px] font-semibold text-accent-cyan"
+                            >
+                              {tTag}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Acciones principales */}
+                        <div className="pt-3 border-t border-border/50 flex items-center justify-between gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedProject(project)}
+                            className="text-[11px] font-bold text-foreground hover:text-accent-cyan flex items-center gap-1 transition-colors"
+                          >
+                            <Maximize2 className="w-3 h-3" />
+                            {t('portfolio.detalles', 'Detalles')}
+                          </button>
+
+                          {project.link && (
+                            <a
+                              href={project.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:scale-105 transition-all"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" />
+                              {t('portfolio.ver_en_vivo', 'Ver en Vivo')}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </SpotlightBorderCard>
                   </motion.div>
                 ))}
 

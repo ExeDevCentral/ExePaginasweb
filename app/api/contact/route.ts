@@ -6,6 +6,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
 import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
+import { dispatchN8nEvent } from '@/lib/server/n8n'
 import {
   contactNotification,
   contactAutoReply,
@@ -130,6 +131,21 @@ export async function POST(req: NextRequest) {
         firstName: name,
       }).catch((err) => {
         console.warn(`[contact] No se pudo sincronizar con Resend Audience:`, err)
+      })
+
+      // Despachar evento a n8n en segundo plano si N8N_WEBHOOK_URL está configurado
+      void dispatchN8nEvent({
+        event: 'lead.contact',
+        ticketId,
+        name,
+        email,
+        message,
+        lang: detectedLang,
+        metadata: {
+          projectType: parseResult.data.projectType,
+          total: parseResult.data.total,
+          isDiagnostic: Boolean(parseResult.data.isDiagnostic),
+        },
       })
 
       const results = await Promise.allSettled(emailTasks)

@@ -20,6 +20,14 @@ const PremiumBackground = dynamic(() => import('@/components/Effects/PremiumBack
   ssr: false,
 })
 
+const ScrollProvider = dynamic(() => import('@/components/shared/ScrollProvider'), {
+  ssr: false,
+})
+
+const MouseSpotlight = dynamic(() => import('@/components/shared/MouseSpotlight'), {
+  ssr: false,
+})
+
 export default function Providers({ children }: { readonly children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
@@ -47,9 +55,12 @@ export default function Providers({ children }: { readonly children: React.React
       <AuthSessionProvider>
         <ThemeProvider>
           <PostHogProvider>
-            <PremiumBackground />
-            <ThemedToaster />
-            {children}
+            <ScrollProvider>
+              <PremiumBackground />
+              <MouseSpotlight />
+              <ThemedToaster />
+              {children}
+            </ScrollProvider>
           </PostHogProvider>
         </ThemeProvider>
       </AuthSessionProvider>

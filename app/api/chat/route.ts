@@ -22,6 +22,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createGroq } from '@ai-sdk/groq'
 import { isSupabaseAdminConfigured, supabaseAdmin as supabase } from '@/lib/supabase/admin'
 import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
+import { dispatchN8nEvent } from '@/lib/server/n8n'
 import { contactNotification, contactAutoReply } from '@/lib/email/templates.js'
 import { detectLanguage } from '../contact/route'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
@@ -268,6 +269,18 @@ export async function POST(req: NextRequest) {
         firstName: capturedEmail.split('@')[0],
       }).catch((err) => {
         console.warn('[chat] No se pudo sincronizar lead con Resend Audience:', err)
+      })
+
+      // Despachar evento a n8n en segundo plano si N8N_WEBHOOK_URL está configurado
+      void dispatchN8nEvent({
+        event: 'lead.chat',
+        ticketId,
+        email: capturedEmail,
+        message: userMessage,
+        lang: detectedLang,
+        metadata: {
+          conversationId,
+        },
       })
 
       const emailResults = await Promise.allSettled([

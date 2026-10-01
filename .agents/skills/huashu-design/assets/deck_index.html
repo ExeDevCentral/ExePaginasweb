@@ -1,20 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Deck · Multi-file Slide Index</title>
     <!--
   deck_index.html — 多文件 slide deck 拼接器 · 双概览模式
-
-  概览（默认进入，两种模式按 getSeconds()%5 随机：20% 画廊 / 80% 网格）：
-   · grid  自适应网格墙：列数随页数+视口自适应，行多则倾斜变平，scale-to-fit 居中铺满（任意页数都不溢出/不失真）
-   · gallery 无限画廊：固定卡片大小，无缝无限平铺 + 缓慢漂移 + 轻微呼吸；一个 tile 含全部页（洗牌），看完所有页才重复
-  演示 present：单页 fit 缩放翻页。ESC / ⊞ 回概览。
-  性能：manifest 每项可带 thumb（预渲染缩略图），概览即用 <img> 平铺，避免 N 个 iframe 同时加载。
-
-  用法：复制为 index.html；建 slides/ 放每页独立 HTML；编辑 MANIFEST。
-  可选覆盖：window.DECK_OVERVIEW = 'grid' | 'gallery'（不写则随机）；URL ?ov=grid|gallery 临时强制。
-  键盘（演示）：← / → / Space / PgUp / PgDown / Home / End / 1-9 / P 打印 / ESC 回概览
+  概览模式：grid 自适应网格墙 / gallery 无限画廊
+  演示 present：单页 fit 缩放翻页。ESC 回概览。
 -->
     <script>
       window.DECK_MANIFEST = [
@@ -84,8 +76,6 @@
         overflow-x: hidden;
         align-items: flex-start;
         padding: 74px 0 110px;
-      }
-      .wall-wrap {
       }
       body[data-grid='fit'] .wall-wrap {
         transform: translateY(-3vh);
@@ -385,7 +375,7 @@
         height: 44px;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.08);
-        color: rgba(255, 255, 255, 0.6);
+        color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -456,11 +446,11 @@
       <div class="overview-title">Infinite Gallery · 悬停暂停 · 点击任意页进入演示</div>
     </div>
 
-    <button class="start-btn" id="startBtn">▶ 开始演示</button>
+    <button type="button" class="start-btn" id="startBtn">▶ 开始演示</button>
 
     <div id="present-ui">
-      <div id="stage"><iframe id="frame" src="about:blank"></iframe></div>
-      <button class="overview-btn" id="overviewBtn">⊞ 概览</button>
+      <div id="stage"><iframe id="frame" src="about:blank" title="Slide Frame"></iframe></div>
+      <button type="button" class="overview-btn" id="overviewBtn">⊞ 概览</button>
       <div class="nav-zone left" id="navL"><div class="nav-hint">‹</div></div>
       <div class="nav-zone right" id="navR"><div class="nav-hint">›</div></div>
       <div class="counter" id="counter">1 / 1</div>
@@ -494,10 +484,10 @@
         // 用户未指定时按秒数随机：网格(iframe 真页面) 60% / 无限画廊(图片缩略图) 40%。可用 ?ov=grid|gallery 或 window.DECK_OVERVIEW 固定。
         const OVERVIEW =
           qp || window.DECK_OVERVIEW || (new Date().getSeconds() % 5 < 2 ? 'gallery' : 'grid')
-        document.body.setAttribute('data-ov', OVERVIEW === 'gallery' ? 'gallery' : 'grid')
+        document.body.dataset.ov = OVERVIEW === 'gallery' ? 'gallery' : 'grid'
 
         function setMode(mode) {
-          document.body.setAttribute('data-mode', mode)
+          document.body.dataset.mode = mode
           if (mode === 'present') {
             fit()
             show(current)
@@ -542,7 +532,7 @@
         }
 
         function buildOverview() {
-          if (document.body.getAttribute('data-mode') !== 'overview') return
+          if (document.body.dataset.mode !== 'overview') return
           if (OVERVIEW === 'gallery') buildGallery()
           else buildGrid()
         }
@@ -576,7 +566,7 @@
           wall.style.width = baseW + 'px'
           // 单平面(无 preserve-3d)→任意角度都不重叠、可点；fit 与 scroll 都给强对角倾斜
           if (wallH <= vh * 0.8) {
-            document.body.setAttribute('data-grid', 'fit')
+            document.body.dataset.grid = 'fit'
             const rx = Math.max(11, Math.min(15, 15 - (rows - 2) * 1.1))
             const rz = Math.max(8, Math.min(11, 11 - (rows - 2) * 0.7))
             wall.style.setProperty('--rx', rx)
@@ -590,7 +580,7 @@
             wall.style.transform = 'scale(' + s + ') ' + tilt
           } else {
             // 多页：舒适大小竖向滚动 + 强对角倾斜；transform-origin 跟随滚动→消除高墙 rotateZ 把远端行甩出屏幕
-            document.body.setAttribute('data-grid', 'scroll')
+            document.body.dataset.grid = 'scroll'
             wall.style.setProperty('--rx', 14)
             wall.style.setProperty('--rz', 7)
             wall.style.transform = 'rotateX(14deg) rotateZ(-7deg)'
@@ -602,7 +592,7 @@
           })
         }
         function updateScrollOrigin() {
-          if (document.body.getAttribute('data-grid') !== 'scroll') return
+          if (document.body.dataset.grid !== 'scroll') return
           const ovg = document.getElementById('ov-grid')
           wall.style.transformOrigin =
             '50% ' + (ovg.scrollTop + window.innerHeight / 2 - GRID_PAD) + 'px'
@@ -611,8 +601,8 @@
         /* ════════ 无限画廊（洗牌不重复） ════════ */
         function mulberry32(a) {
           return function () {
-            a |= 0
-            a = (a + 0x6d2b79f5) | 0
+            a = Math.trunc(a)
+            a = Math.trunc(a + 0x6d2b79f5)
             let t = Math.imul(a ^ (a >>> 15), 1 | a)
             t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
             return ((t ^ (t >>> 14)) >>> 0) / 4294967296
@@ -708,7 +698,7 @@
         document.addEventListener('keydown', (e) => {
           if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
           if (e.key === 'Escape') {
-            if (document.body.getAttribute('data-mode') === 'present') {
+            if (document.body.dataset.mode === 'present') {
               e.preventDefault()
               setMode('overview')
             }
@@ -718,7 +708,7 @@
             window.print()
             return
           }
-          if (document.body.getAttribute('data-mode') !== 'present') return
+          if (document.body.dataset.mode !== 'present') return
           switch (e.key) {
             case 'ArrowRight':
             case ' ':
@@ -741,7 +731,7 @@
               break
             default:
               if (e.key >= '1' && e.key <= '9') {
-                const i = parseInt(e.key, 10) - 1
+                const i = Number.parseInt(e.key, 10) - 1
                 if (i < deck.length) {
                   e.preventDefault()
                   show(i)
@@ -765,18 +755,20 @@
         window.addEventListener('hashchange', () => {
           const m = location.hash.match(/^#(\d+)$/)
           if (m) {
-            current = parseInt(m[1], 10) - 1
+            current = Number.parseInt(m[1], 10) - 1
             setMode('present')
           }
         })
 
         const hashMatch = location.hash.match(/^#(\d+)$/)
-        if (hashMatch) current = Math.min(parseInt(hashMatch[1], 10) - 1, deck.length - 1)
+        if (hashMatch) current = Math.min(Number.parseInt(hashMatch[1], 10) - 1, deck.length - 1)
         else {
           try {
-            const v = parseInt(localStorage.getItem(storageKey), 10)
-            if (!isNaN(v) && v >= 0 && v < deck.length) current = v
-          } catch (_) {}
+            const v = Number.parseInt(localStorage.getItem(storageKey) || '', 10)
+            if (!Number.isNaN(v) && v >= 0 && v < deck.length) current = v
+          } catch {
+            /* Ignorar errores de acceso a localStorage */
+          }
         }
 
         fit()

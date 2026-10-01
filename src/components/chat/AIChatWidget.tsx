@@ -495,7 +495,7 @@ export const AIChatWidget: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="fixed bottom-22 sm:bottom-24 right-4 sm:right-7 left-4 sm:left-auto z-50 sm:w-[410px] max-h-[calc(100dvh-7rem)] sm:max-h-[620px] rounded-3xl bg-[#090c15]/98 border-2 border-slate-700/60 dark:border-cyan-500/30 shadow-2xl backdrop-blur-2xl flex flex-col overflow-hidden text-white shadow-black/80"
+            className="fixed bottom-22 sm:bottom-24 right-4 sm:right-7 left-4 sm:left-auto z-50 sm:w-102.5 max-h-[calc(100dvh-7rem)] sm:max-h-155 rounded-3xl bg-[#090c15]/98 border-2 border-slate-700/60 dark:border-cyan-500/30 shadow-2xl backdrop-blur-2xl flex flex-col overflow-hidden text-white shadow-black/80"
           >
             {/* ====================================================
                 VISTA A: MENÚ DE ELECCIÓN DE CANAL (HUD CIUDAD DE SERVIDORES)
@@ -670,7 +670,7 @@ export const AIChatWidget: React.FC = () => {
               /* ====================================================
                   VISTA B: CONSOLA DE CHAT IA CONVERSACIONAL
                  ==================================================== */
-              <div className="flex flex-col h-[520px] sm:h-[560px]">
+              <div className="flex flex-col h-130 sm:h-140">
                 {/* Cabecera del Chat con botón volver y Logo ExePaginasWeb */}
                 <div className="px-4 py-3.5 bg-[#0e1220] border-b border-white/10 flex items-center justify-between select-none">
                   <div className="flex items-center gap-2">

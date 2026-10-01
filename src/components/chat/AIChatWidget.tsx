@@ -9,7 +9,7 @@
  */
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport, type UIMessage } from 'ai'
@@ -25,6 +25,10 @@ import {
   VolumeX,
   RotateCcw,
   ShieldCheck,
+  Zap,
+  CheckCircle2,
+  Edit3,
+  Sparkles,
 } from 'lucide-react'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
@@ -57,16 +61,16 @@ export const INITIAL_TOPICS: ChatTopic[] = [
     prompt: 'Hola, quisiera cotizar un desarrollo web para mi negocio.',
   },
   {
+    id: 'n8n_demo',
+    title: '⚡ Probar Automatización n8n',
+    desc: 'Dispara un flujo real en n8n Cloud',
+    prompt: 'Quiero probar una automatización en tiempo real con n8n Cloud a mi nombre.',
+  },
+  {
     id: 'turnos',
     title: 'Sistema de turnos y cobros',
     desc: 'Reservas 24/7 con seña online',
     prompt: '¿Cómo funciona el sistema de reservas y cobros automáticos?',
-  },
-  {
-    id: 'saas',
-    title: 'Dashboard o panel a medida',
-    desc: 'Software cloud con roles y métricas',
-    prompt: 'Me interesa desarrollar un dashboard o software cloud a medida.',
   },
   {
     id: 'whatsapp',
@@ -90,8 +94,13 @@ function welcomeMessage(text = WELCOME_TEXT): UIMessage {
 }
 
 function extractTicket(text: string): string | null {
-  const match = text.match(/\[(EXE-CHT-[A-Z0-9]+)\]/)
+  const match = /\[(EXE-(?:CHT|N8N|CNT)-[A-Z0-9]+)\]/.exec(text)
   return match?.[1] ?? null
+}
+
+function extractN8nTicket(text: string): string | null {
+  const match = /(?:\[)?(EXE-N8N-[A-Z0-9_-]+)(?:\])?/i.exec(text)
+  return match?.[1] ? match[1].toUpperCase() : null
 }
 
 function getMessageText(msg: { parts?: Array<{ type?: string; text?: string }> }): string {
@@ -102,8 +111,156 @@ function getMessageText(msg: { parts?: Array<{ type?: string; text?: string }> }
     .join('')
 }
 
-function buildClientFallback(text: string): string {
+const N8nExecutionCard: React.FC<{
+  ticketId: string
+  clientName: string
+  automationType?: string
+  status?: string
+}> = ({
+  ticketId,
+  clientName,
+  automationType = 'Cotización / Flujo n8n',
+  status = 'EJECUTADO',
+}) => (
+  <div className="mt-2.5 p-3.5 rounded-2xl bg-linear-to-br from-[#0b1622] via-[#08101a] to-[#03060c] border border-cyan-400/40 shadow-xl shadow-cyan-950/50 select-none">
+    <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-white/10">
+      <span className="flex items-center gap-1.5 text-[10px] font-mono text-cyan-300 font-bold uppercase tracking-wider">
+        <Zap className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+        n8n Cloud Workflow Live
+      </span>
+      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-[9px] font-mono text-emerald-300 font-bold tracking-wider flex items-center gap-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        {status}
+      </span>
+    </div>
+    <div className="space-y-1.5 text-[11px] text-slate-300 font-sans">
+      <div className="flex items-center justify-between">
+        <span className="text-slate-400">Solicitante:</span>
+        <span className="font-bold text-white flex items-center gap-1">
+          <User className="w-3 h-3 text-cyan-400" />
+          {clientName}
+        </span>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="text-slate-400">Acción:</span>
+        <span className="text-cyan-300 font-mono text-[10px]">{automationType}</span>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="text-slate-400">Ticket n8n:</span>
+        <span className="font-mono text-cyan-300 font-bold text-xs">{ticketId}</span>
+      </div>
+    </div>
+    <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono">
+      <span className="flex items-center gap-1 text-emerald-400">
+        <CheckCircle2 className="w-3 h-3" /> Webhook
+      </span>
+      <span className="text-cyan-500/60">➔</span>
+      <span className="flex items-center gap-1 text-cyan-400">
+        <CheckCircle2 className="w-3 h-3" /> Switch
+      </span>
+      <span className="text-cyan-500/60">➔</span>
+      <span className="flex items-center gap-1 text-emerald-400">
+        <CheckCircle2 className="w-3 h-3" /> Despacho
+      </span>
+    </div>
+  </div>
+)
+
+const VisitorIdentityBar: React.FC<{
+  visitorName: string
+  isEditing: boolean
+  nameInput: string
+  onNameInputChange: (val: string) => void
+  onSave: (val: string) => void
+  onStartEditing: () => void
+  onCancelEditing: () => void
+}> = ({
+  visitorName,
+  isEditing,
+  nameInput,
+  onNameInputChange,
+  onSave,
+  onStartEditing,
+  onCancelEditing,
+}) => {
+  if (isEditing || !visitorName) {
+    return (
+      <div className="p-3 bg-linear-to-r from-[#0c1829] via-[#09111c] to-[#0d1c24] border-b border-cyan-500/30">
+        <label
+          htmlFor="visitor-name-field"
+          className="flex items-center gap-1.5 text-[10px] font-mono text-cyan-300 mb-1.5 font-bold uppercase tracking-wider"
+        >
+          <Sparkles className="w-3 h-3 text-cyan-400 animate-pulse" />
+          ¿Cómo te llamás? (Personaliza atención & automatizaciones n8n)
+        </label>
+        <div className="flex items-center gap-1.5">
+          <input
+            id="visitor-name-field"
+            type="text"
+            value={nameInput}
+            onChange={(e) => onNameInputChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && nameInput.trim()) {
+                onSave(nameInput)
+              }
+            }}
+            placeholder="Tu nombre (ej: Carlos, Lucía)"
+            className="flex-1 px-3 py-1.5 rounded-xl bg-black/60 border border-cyan-500/40 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 font-sans"
+          />
+          <button
+            type="button"
+            onClick={() => onSave(nameInput)}
+            disabled={!nameInput.trim()}
+            className="px-3 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-50 text-slate-950 font-bold text-xs cursor-pointer transition-colors"
+          >
+            Guardar
+          </button>
+          {visitorName && (
+            <button
+              type="button"
+              onClick={onCancelEditing}
+              className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 text-xs cursor-pointer"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="px-4 py-2 bg-[#0c1424]/90 border-b border-cyan-500/20 flex items-center justify-between text-xs select-none">
+      <div className="flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#10b981]" />
+        <span className="text-slate-400 text-[11px]">Conectado:</span>
+        <span className="font-bold text-cyan-300 font-sans text-xs flex items-center gap-1">
+          <User className="w-3 h-3 text-cyan-400" />
+          {visitorName}
+        </span>
+      </div>
+      <button
+        type="button"
+        onClick={onStartEditing}
+        className="flex items-center gap-1 text-[10px] font-mono text-cyan-400 hover:text-cyan-300 cursor-pointer px-2 py-0.5 rounded-md hover:bg-white/5 transition-colors"
+      >
+        <Edit3 className="w-3 h-3" />
+        <span>Cambiar</span>
+      </button>
+    </div>
+  )
+}
+
+function buildClientFallback(text: string, visitorName?: string): string {
   const lowerText = text.toLowerCase()
+  const namePrefix = visitorName ? `¡Hola ${visitorName}! ` : ''
+  const isN8n = lowerText.includes('n8n') || lowerText.includes('automatiz')
+
+  if (isN8n) {
+    const ticket = `EXE-N8N-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
+    return `${namePrefix}¡Excelente! Tu automatización con n8n Cloud ha sido registrada con el ticket [${ticket}]. Puedes solicitar cotizaciones express, envío de emails automáticos o sincronizaciones con CRM sin costo adicional.`
+  }
+
   const ticket = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
 
   if (
@@ -112,7 +269,7 @@ function buildClientFallback(text: string): string {
     lowerText.includes('cotiz') ||
     lowerText.includes('costo')
   ) {
-    return `Nuestros valores base de referencia 2026 son:\n\n• Landing Page de Alta Conversión: desde $450.000 ARS\n• Tienda Online E-Commerce: desde $750.000 ARS\n• Sistemas y Paneles SaaS a medida: presupuesto personalizado.\n\nTodo con 100% código propio, sin comisiones por venta. ¿Querés que te preparemos una propuesta formal? Tu ticket asignado es [${ticket}].`
+    return `${namePrefix}Nuestros valores base de referencia 2026 son:\n\n• Landing Page de Alta Conversión: desde $450.000 ARS\n• Tienda Online E-Commerce: desde $750.000 ARS\n• Sistemas y Paneles SaaS a medida: presupuesto personalizado.\n\nTodo con 100% código propio y automatizaciones n8n disponibles. ¿Querés que te preparemos una propuesta formal? Tu ticket asignado es [${ticket}].`
   }
 
   if (
@@ -120,10 +277,10 @@ function buildClientFallback(text: string): string {
     lowerText.includes('reserva') ||
     lowerText.includes('agenda')
   ) {
-    return `Nuestro sistema de reservas y cobros automáticos permite gestionar turnos las 24 horas con seña obligatoria vía MercadoPago, sincronización con Google Calendar y recordatorios automáticos por WhatsApp. Ticket de consulta: [${ticket}].`
+    return `${namePrefix}Nuestro sistema de reservas y cobros automáticos permite gestionar turnos las 24 horas con seña obligatoria vía MercadoPago, sincronización con Google Calendar y recordatorios automáticos por WhatsApp/n8n. Ticket de consulta: [${ticket}].`
   }
 
-  return `Gracias por tu consulta. Diseñamos páginas web de alta conversión y sistemas cloud a medida sin mensualidades obligatorias ni comisiones. Podés coordinar una llamada o chatear directo por WhatsApp con Exequiel. Tu ticket de seguimiento es [${ticket}].`
+  return `${namePrefix}Gracias por tu consulta. Diseñamos páginas web de alta conversión y sistemas cloud a medida con automatización de procesos n8n. Podés coordinar una llamada o chatear directo por WhatsApp con Exequiel. Tu ticket de seguimiento es [${ticket}].`
 }
 
 export const AIChatWidget: React.FC = () => {
@@ -134,7 +291,59 @@ export const AIChatWidget: React.FC = () => {
   const [soundEnabled, setSoundEnabled] = useState(true)
   const [input, setInput] = useState('')
   const [currentTicket, setCurrentTicket] = useState<string | null>(null)
+  const [visitorName, setVisitorName] = useState('')
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [nameInput, setNameInput] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('exe_visitor_name')
+      if (stored) {
+        setVisitorName(stored)
+        setNameInput(stored)
+      }
+    } catch {
+      // Ignorar errores de localStorage en navegación privada
+    }
+  }, [])
+
+  const handleSaveName = (newName: string) => {
+    const trimmed = newName.trim()
+    setVisitorName(trimmed)
+    setIsEditingName(false)
+    try {
+      if (trimmed) {
+        localStorage.setItem('exe_visitor_name', trimmed)
+      } else {
+        localStorage.removeItem('exe_visitor_name')
+      }
+    } catch {
+      // Ignorar errores de localStorage
+    }
+
+    if (trimmed) {
+      setMessages((prev) => [
+        ...prev,
+        makeMessage(
+          'assistant',
+          `¡Excelente, ${trimmed}! He registrado tu nombre. Nuestro motor de automatizaciones n8n Cloud y desarrollo web a medida están listos. ¿Qué proyecto o flujo querés cotizar hoy?`
+        ),
+      ])
+    }
+  }
+
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        api: '/api/chat',
+        body: {
+          lang: i18n.language || 'es',
+          visitorName: visitorName || undefined,
+        },
+      }),
+    [i18n.language, visitorName]
+  )
 
   const {
     messages,
@@ -142,18 +351,13 @@ export const AIChatWidget: React.FC = () => {
     status,
     setMessages,
   } = useChat({
-    transport: new DefaultChatTransport({
-      api: '/api/chat',
-      body: {
-        lang: i18n.language || 'es',
-      },
-    }),
+    transport,
     messages: [welcomeMessage()],
     onError: (err) => {
       console.warn('[AIChatWidget] Fallback local activado:', err?.message)
       const lastUser = [...messages].reverse().find((m) => m.role === 'user')
       const userTxt = lastUser ? getMessageText(lastUser) : 'consulta'
-      const fallbackTxt = buildClientFallback(userTxt)
+      const fallbackTxt = buildClientFallback(userTxt, visitorName)
       setMessages((prev) => [...prev, makeMessage('assistant', fallbackTxt)])
     },
   })
@@ -174,13 +378,16 @@ export const AIChatWidget: React.FC = () => {
   const handleSendMessage = (customText?: string) => {
     const textToSend = customText ?? input
     if (!textToSend.trim() || isLoading) return
-    aiSendMessage({ text: textToSend })
+    void aiSendMessage({ text: textToSend })
     setInput('')
     trackEvent('chat_message_sent', { source: 'unified_hub' })
   }
 
   const resetChat = () => {
-    setMessages([welcomeMessage(RESET_TEXT)])
+    const resetGreeting = visitorName
+      ? `Conversación reiniciada. ¿En qué proyecto o desarrollo te podemos ayudar ahora, ${visitorName}?`
+      : RESET_TEXT
+    setMessages([welcomeMessage(resetGreeting)])
     setCurrentTicket(null)
     setInput('')
   }
@@ -189,16 +396,21 @@ export const AIChatWidget: React.FC = () => {
     if (customMsg) return getWhatsAppUrl(customMsg)
     const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user') ?? null
     const ticketStr = currentTicket ? ` [Ticket: ${currentTicket}]` : ''
+    const greeting = visitorName ? `Hola Exequiel, soy ${visitorName}. ` : 'Hola Exequiel, '
     const fullText = lastUserMsg
-      ? `Hola Exequiel, vi tu web y quiero consultar por una página para mi negocio (estaba viendo sobre: "${getMessageText(lastUserMsg)}"${ticketStr}).`
-      : 'Hola Exequiel, vi tu web y quiero consultar por una página para mi negocio'
+      ? `${greeting}vi tu web y quiero consultar por una página para mi negocio (estaba viendo sobre: "${getMessageText(lastUserMsg)}"${ticketStr}).`
+      : `${greeting}vi tu web y quiero consultar por una página para mi negocio.`
     return getWhatsAppUrl(fullText)
   }
 
   const handleOpenWhatsAppDirect = (msg: string) => {
-    trackEvent('contact_whatsapp_clicked', { source: 'unified_hub_menu', message: msg })
+    const personalized =
+      visitorName && !msg.includes(`soy ${visitorName}`)
+        ? msg.replace(/^Hola Exequiel,/, `Hola Exequiel, soy ${visitorName},`)
+        : msg
+    trackEvent('contact_whatsapp_clicked', { source: 'unified_hub_menu', message: personalized })
     setHasUnread(false)
-    window.open(getWhatsAppUrl(msg), '_blank')
+    window.open(getWhatsAppUrl(personalized), '_blank')
   }
 
   return (
@@ -318,6 +530,20 @@ export const AIChatWidget: React.FC = () => {
                     <X className="w-4 h-4" />
                   </button>
                 </div>
+
+                {/* Barra de Identidad del Visitante (Personalización & n8n) */}
+                <VisitorIdentityBar
+                  visitorName={visitorName}
+                  isEditing={isEditingName}
+                  nameInput={nameInput}
+                  onNameInputChange={setNameInput}
+                  onSave={handleSaveName}
+                  onStartEditing={() => {
+                    setNameInput(visitorName)
+                    setIsEditingName(true)
+                  }}
+                  onCancelEditing={() => setIsEditingName(false)}
+                />
 
                 {/* Opciones Principales de Contacto */}
                 <div className="p-5 space-y-4">
@@ -507,6 +733,20 @@ export const AIChatWidget: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Barra de Identidad del Visitante (Personalización & n8n) */}
+                <VisitorIdentityBar
+                  visitorName={visitorName}
+                  isEditing={isEditingName}
+                  nameInput={nameInput}
+                  onNameInputChange={setNameInput}
+                  onSave={handleSaveName}
+                  onStartEditing={() => {
+                    setNameInput(visitorName)
+                    setIsEditingName(true)
+                  }}
+                  onCancelEditing={() => setIsEditingName(false)}
+                />
+
                 {/* Mensajes */}
                 <div
                   data-lenis-prevent
@@ -515,6 +755,7 @@ export const AIChatWidget: React.FC = () => {
                   {messages.map((msg) => {
                     const isUser = msg.role === 'user'
                     const textContent = getMessageText(msg)
+                    const n8nTicket = !isUser ? extractN8nTicket(textContent) : null
 
                     return (
                       <motion.div
@@ -547,6 +788,15 @@ export const AIChatWidget: React.FC = () => {
                           >
                             {textContent}
                           </div>
+
+                          {n8nTicket && (
+                            <N8nExecutionCard
+                              ticketId={n8nTicket}
+                              clientName={visitorName || 'Visitante'}
+                              automationType="Disparador Webhook Directo"
+                              status="Activo en n8n Cloud"
+                            />
+                          )}
                         </div>
                       </motion.div>
                     )

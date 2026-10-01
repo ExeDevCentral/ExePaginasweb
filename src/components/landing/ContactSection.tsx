@@ -6,7 +6,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MessageCircle, ArrowRight, CheckCircle, Mail, Send } from 'lucide-react'
 import { supabase } from '../../core/infra/supabase/client'
@@ -22,6 +22,17 @@ const ContactSection = () => {
   const [message, setMessage] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [feedback, setFeedback] = useState('')
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('exe_visitor_name')
+      if (stored) {
+        setName((curr) => curr || stored)
+      }
+    } catch {
+      // Ignorar errores de localStorage
+    }
+  }, [])
 
   const channels = [
     {
@@ -56,6 +67,14 @@ const ContactSection = () => {
     setStatus('sending')
     setFeedback('')
     setTicketId('')
+
+    if (name.trim()) {
+      try {
+        localStorage.setItem('exe_visitor_name', name.trim())
+      } catch {
+        // Ignorar errores de localStorage
+      }
+    }
 
     const apiUrl = '/api/contact'
 

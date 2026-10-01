@@ -96,6 +96,18 @@ export const AI_TOOL_REGISTRY: Record<string, AiToolDefinition> = {
     requiresConfirmation: true,
     timeoutMs: 15_000,
   },
+  triggerN8nAutomation: {
+    name: 'triggerN8nAutomation',
+    description:
+      'Dispara una automatización en tiempo real vía n8n Cloud para cotización express, auditoría o demo con el nombre del cliente.',
+    level: 'write',
+    requiresAuth: false,
+    minRole: 'anonymous',
+    rolesAllowed: [],
+    tenantScoped: false,
+    requiresConfirmation: false,
+    timeoutMs: 10_000,
+  },
 }
 
 export function getToolDefinition(name: string): AiToolDefinition | null {

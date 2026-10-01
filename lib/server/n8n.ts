@@ -5,14 +5,20 @@
  */
 
 export interface N8nEventPayload {
-  event: 'lead.contact' | 'lead.chat' | 'payment.captured' | 'transfer.registered'
-  ticketId?: string
-  name?: string
-  email?: string
-  message?: string
-  lang?: string
-  metadata?: Record<string, unknown>
-  timestamp?: string
+  event:
+    | 'lead.contact'
+    | 'lead.chat'
+    | 'payment.captured'
+    | 'transfer.registered'
+    | 'automation.trigger'
+    | (string & {})
+  ticketId?: string | undefined
+  name?: string | undefined
+  email?: string | undefined
+  message?: string | undefined
+  lang?: string | undefined
+  metadata?: Record<string, unknown> | undefined
+  timestamp?: string | undefined
 }
 
 export interface N8nDispatchResult {

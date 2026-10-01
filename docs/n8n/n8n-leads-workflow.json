@@ -37,6 +37,10 @@
             {
               "value2": "transfer.registered",
               "outputKey": "transferencia"
+            },
+            {
+              "value2": "automation.trigger",
+              "outputKey": "automatizacion"
             }
           ]
         }
@@ -79,7 +83,7 @@
             },
             {
               "name": "mensaje_formateado",
-              "value": "=Email: {{ $json.body.email }}\nTicket: {{ $json.body.ticketId }}\nIdioma: {{ $json.body.lang }}\nFecha: {{ $json.body.timestamp }}"
+              "value": "=Nombre: {{ $json.body.name || 'Visitante' }}\nEmail: {{ $json.body.email }}\nTicket: {{ $json.body.ticketId }}\nIdioma: {{ $json.body.lang }}\nFecha: {{ $json.body.timestamp }}"
             }
           ]
         },
@@ -112,6 +116,28 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.2,
       "position": [760, 460]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "titulo",
+              "value": "=⚡ AUTOMATIZACIÓN n8n EN VIVO ({{ $json.body.ticketId }})"
+            },
+            {
+              "name": "mensaje_formateado",
+              "value": "=Solicitante: {{ $json.body.name }}\nAcción: {{ $json.body.metadata.automationType }}\nEmail: {{ $json.body.email || 'N/A' }}\nTicket: {{ $json.body.ticketId }}\nDetalles: {{ $json.body.message }}\nFecha: {{ $json.body.timestamp }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1b2c3d4-68ff-45a7-89fa-9876543210ff",
+      "name": "Formatear Automatizacion n8n",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [760, 600]
     }
   ],
   "connections": {
@@ -152,6 +178,13 @@
         [
           {
             "node": "Formatear Pago/Transferencia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Formatear Automatizacion n8n",
             "type": "main",
             "index": 0
           }

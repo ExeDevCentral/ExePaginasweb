@@ -46,6 +46,7 @@ const ChatMessageSchema = z
 const ChatRequestBodySchema = z.object({
   messages: z.array(ChatMessageSchema).min(1).max(30),
   id: z.string().nullish(),
+  visitorName: z.string().max(100).nullish(),
 })
 
 const DEV_FALLBACK_RESPONSES = [
@@ -79,12 +80,19 @@ const DEV_FALLBACK_RESPONSES = [
 const FALLBACK_FALLBACK =
   '¡Entendido! Soy el asistente de ExeSistemasWEB. Para asesorarte mejor, anotá tu email en el chat o escribinos por WhatsApp al +54 9 341 6874786.'
 
-function getDevFallbackResponse(message: string): string {
+function getDevFallbackResponse(message: string, visitorName?: string | null): string {
   const lowerMsg = message.toLowerCase()
+  const greeting = visitorName ? `¡Hola ${visitorName}! ` : '¡Hola! '
   for (const item of DEV_FALLBACK_RESPONSES) {
-    if (item.keywords.some((kw) => lowerMsg.includes(kw))) return item.response
+    if (item.keywords.some((kw) => lowerMsg.includes(kw))) {
+      return item.keywords.some((kw) =>
+        ['hola', 'buenas', 'hey', 'saludos', 'hello', 'hi'].includes(kw)
+      )
+        ? `${greeting}Soy el asistente de ExeSistemasWEB. Te ayudo a automatizar las operaciones de tu negocio con software y sistemas web a medida.`
+        : item.response
+    }
   }
-  return `Entiendo que preguntaste sobre: "${message}". Te asignamos atención rápida vía WhatsApp al +54 9 341 6874786 o por email.`
+  return `${greeting}Entiendo que preguntaste sobre: "${message}". Te asignamos atención rápida vía WhatsApp al +54 9 341 6874786 o por email.`
 }
 
 function getLastUserText(
@@ -237,6 +245,7 @@ export async function POST(req: NextRequest) {
   const messages = validation.data.messages as UIMessage[]
   const userMessage = getLastUserText(messages)
   const conversationId = validation.data.id ?? null
+  const visitorName = validation.data.visitorName?.trim() || null
 
   const userContext = await resolveAiUserContext(req)
   const auditRepo = new SupabaseAiAuditRepository()
@@ -275,11 +284,13 @@ export async function POST(req: NextRequest) {
       void dispatchN8nEvent({
         event: 'lead.chat',
         ticketId,
+        name: visitorName || capturedEmail.split('@')[0],
         email: capturedEmail,
         message: userMessage,
         lang: detectedLang,
         metadata: {
           conversationId,
+          visitorName,
         },
       })
 
@@ -288,7 +299,7 @@ export async function POST(req: NextRequest) {
           to: [ADMIN_EMAIL],
           subject: `[${ticketId}] Consulta desde Chat WEB (${capturedEmail})`,
           html: contactNotification({
-            name: 'Visitante Chat',
+            name: visitorName || 'Visitante Chat',
             email: capturedEmail,
             message: userMessage,
             ticketId,
@@ -306,7 +317,7 @@ export async function POST(req: NextRequest) {
               ? `✨ We received your inquiry [Ticket: ${ticketId}] - ExeSistemasWEB`
               : `✨ Recibimos tu consulta del Chat [Ticket: ${ticketId}] - ExeSistemasWEB`,
           html: contactAutoReply({
-            name: capturedEmail.split('@')[0],
+            name: visitorName || capturedEmail.split('@')[0],
             message: userMessage,
             ticketId,
             lang: detectedLang,
@@ -324,9 +335,12 @@ export async function POST(req: NextRequest) {
     }
 
     if (isSupabaseAdminConfigured()) {
-      const { error: leadError } = await supabase
-        .from('leads')
-        .insert({ email: capturedEmail, lead_type: 'chat', message: userMessage })
+      const { error: leadError } = await supabase.from('leads').insert({
+        email: capturedEmail,
+        lead_type: 'chat',
+        message: userMessage,
+        name: visitorName || undefined,
+      })
       if (leadError) console.error('[chat] Error guardando lead:', leadError)
     } else {
       console.error('[chat] Supabase admin is not configured; lead was not persisted')
@@ -366,7 +380,9 @@ export async function POST(req: NextRequest) {
   })
 
   const commonSettings = {
-    system: preparedRun.systemPrompt,
+    system: visitorName
+      ? `${preparedRun.systemPrompt}\n\nNombre del usuario/visitante conectado: "${visitorName}". Salúdalo o dirígete a él de manera personalizada.`
+      : preparedRun.systemPrompt,
     messages: modelMessages,
     temperature: 0.6,
     maxTokens: 450,
@@ -449,7 +465,8 @@ export async function POST(req: NextRequest) {
   }
 
   // --- Motor Local Inteligente Exe (100% Sin Costo / Offline Safe) ---
-  const fallbackReply = getDevFallbackResponse(userMessage || 'hola') || FALLBACK_FALLBACK
+  const fallbackReply =
+    getDevFallbackResponse(userMessage || 'hola', visitorName) || FALLBACK_FALLBACK
   finalizeRun({ model: 'local-fallback', provider: 'local' })
   return streamLocalFallback(fallbackReply)
 }

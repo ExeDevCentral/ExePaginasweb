@@ -5,7 +5,7 @@
  */
 import { zodSchema } from 'ai'
 import { AiUserContext } from '@/core/ai/types'
-import { IAiAuditRepository } from '@/core/ai/audit'
+import { IAiAuditRepository, safeToolError } from '@/core/ai/audit'
 import { AiToolInputSchemas } from '@/core/ai/schemas'
 import { getToolDefinition, toolRequiresConfirmation } from '@/core/ai/toolRegistry'
 import {
@@ -16,7 +16,7 @@ import {
   getClientOrders,
   createTicketRecord,
 } from './aiToolImplementations'
-import { safeToolError } from '@/core/ai/audit'
+import { dispatchN8nEvent } from '@/lib/server/n8n'
 
 export interface ToolRuntime {
   userContext: AiUserContext
@@ -75,6 +75,43 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
             contactEmail: contactEmail ?? null,
             projectType: projectType ?? null,
           })
+          break
+        }
+        case 'triggerN8nAutomation': {
+          const automationType =
+            typeof input['automationType'] === 'string'
+              ? input['automationType']
+              : 'cotizacion_express'
+          const clientName =
+            typeof input['clientName'] === 'string' ? input['clientName'] : 'Cliente'
+          const clientEmail =
+            typeof input['clientEmail'] === 'string' ? input['clientEmail'] : undefined
+          const details = typeof input['details'] === 'string' ? input['details'] : ''
+          const ticketId = `EXE-N8N-${Date.now().toString(36).toUpperCase().slice(-5)}`
+
+          const dispatchResult = await dispatchN8nEvent({
+            event: 'automation.trigger',
+            ticketId,
+            name: clientName,
+            email: clientEmail,
+            message: `[${automationType}] ${details}`,
+            metadata: {
+              automationType,
+              source: 'ai_assistant_tool',
+              conversationId: runtime.conversationId,
+            },
+          })
+
+          output = {
+            ok: true,
+            ticketId,
+            automationType,
+            clientName,
+            status: 'workflow_triggered',
+            dispatchedToN8n: dispatchResult.sent,
+            timestamp: new Date().toISOString(),
+            message: `¡Automatización n8n activada con éxito para ${clientName}! Ticket de seguimiento: [${ticketId}].`,
+          }
           break
         }
         default:
@@ -168,6 +205,13 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
       inputSchema: zodSchema(AiToolInputSchemas.createReservation),
       execute: (input: never) =>
         executeWithAudit('createReservation', input as unknown as Record<string, unknown>),
+    },
+    triggerN8nAutomation: {
+      description:
+        'Dispara una automatización en tiempo real vía n8n Cloud para cotización express, auditoría o demo con el nombre del cliente.',
+      inputSchema: zodSchema(AiToolInputSchemas.triggerN8nAutomation),
+      execute: (input: never) =>
+        executeWithAudit('triggerN8nAutomation', input as unknown as Record<string, unknown>),
     },
   }
 }

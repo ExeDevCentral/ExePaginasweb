@@ -125,6 +125,15 @@ export const AiToolInputSchemas = {
   getOrders: z.object({
     limit: z.number().int().min(1).max(50).default(10),
   }),
+
+  triggerN8nAutomation: z.object({
+    automationType: z
+      .enum(['cotizacion_express', 'auditoria_gratis', 'demo_sistema', 'notificacion_directa'])
+      .describe('Tipo de automatización n8n a ejecutar'),
+    clientName: z.string().min(1).max(100).describe('Nombre de la persona que solicita'),
+    clientEmail: z.string().email().max(255).nullish().describe('Correo del cliente (opcional)'),
+    details: z.string().max(500).describe('Detalles breves de la solicitud'),
+  }),
 } as const
 
 export type AiToolName = keyof typeof AiToolInputSchemas

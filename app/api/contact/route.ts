@@ -14,6 +14,8 @@ import {
 } from '@/lib/email/templates.js'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 
+import { detectLanguage } from '@/lib/server/language'
+
 const ContactSchema = z.object({
   name: z.string().trim().min(1, 'El nombre es requerido').max(100, 'Nombre demasiado largo'),
   email: z.string().trim().email('Email inválido').max(255),
@@ -24,18 +26,6 @@ const ContactSchema = z.object({
   projectType: z.string().max(100).nullish(),
   total: z.union([z.number(), z.string()]).nullish(),
 })
-
-export function detectLanguage(text: string, clientLang?: string | null): 'en' | 'es' {
-  if (clientLang && typeof clientLang === 'string') {
-    const normalized = clientLang.toLowerCase().trim()
-    if (normalized.startsWith('en')) return 'en'
-    if (normalized.startsWith('es')) return 'es'
-  }
-  if (!text || typeof text !== 'string') return 'es'
-  const englishPattern =
-    /\b(hello|hi|dear|thanks|thank|please|website|project|build|pricing|price|quote|business|inquiry|looking|would like|can you|how much)\b/i
-  return englishPattern.test(text) ? 'en' : 'es'
-}
 
 export async function POST(req: NextRequest) {
   try {

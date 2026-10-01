@@ -152,7 +152,7 @@ describe('Resend Webhook Handler (app/api/webhooks/resend/route.ts)', () => {
   })
 
   it('debe detectar correctamente el idioma (Español vs Inglés) y generar la plantilla en Inglés', async () => {
-    const { detectLanguage } = await import('../../../app/api/contact/route')
+    const { detectLanguage } = await import('../../../lib/server/language')
     const { contactAutoReply } = await import('../../../lib/email/templates.js')
 
     expect(detectLanguage('Hello, I need a website for my business', '')).toBe('en')

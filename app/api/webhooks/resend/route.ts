@@ -8,7 +8,7 @@ import { Webhook } from 'svix'
 import { z } from 'zod'
 import { sendEmail } from '@/lib/email/send'
 import { inboundEmailNotification, contactAutoReply } from '@/lib/email/templates.js'
-import { detectLanguage } from '../../contact/route'
+import { detectLanguage } from '@/lib/server/language'
 import {
   claimWebhookEvent,
   markWebhookFailed,

@@ -24,7 +24,7 @@ import { isSupabaseAdminConfigured, supabaseAdmin as supabase } from '@/lib/supa
 import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
 import { dispatchN8nEvent } from '@/lib/server/n8n'
 import { contactNotification, contactAutoReply } from '@/lib/email/templates.js'
-import { detectLanguage } from '../contact/route'
+import { detectLanguage } from '@/lib/server/language'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 import { AiService } from '@/core/ai/aiService'
 import { SupabaseAiAuditRepository } from '@/core/infra/ai/SupabaseAiAuditRepository'

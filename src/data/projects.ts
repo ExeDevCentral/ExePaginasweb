@@ -22,6 +22,32 @@ export interface Project {
 // Proyectos reales desplegados en producción Vercel
 export const INITIAL_PROJECTS: Project[] = [
   {
+    id: 'restoai',
+    title: 'RESTOia — Suite Gastronómica Inteligente & Motor KOBE',
+    category: 'saas',
+    categoryLabel: 'SaaS Gastronómico',
+    client: 'RESTOia · Gastronomía de Alta Precisión',
+    description:
+      'Suite de misión crítica para restaurantes y bistrós de alta cocina: mapa de salón interactivo (POS), KDS de cocina en vivo con tiempos de preparación, comandas 100% offline con sincronización automática ante caídas de red, arqueo ciego de caja blindado por PIN, sommelier con IA y auditoría criptográfica inmutable SHA-256.',
+    image: '/portfolio/restoai.webp',
+    tags: ['Next.js', 'KDS', 'POS', '100% Offline', 'Copilot IA', 'SHA-256'],
+    metrics: [
+      { label: 'Resiliencia', value: '100% Offline' },
+      { label: 'Auditoría', value: 'SHA-256' },
+    ],
+    highlights: [
+      'Mapa interactivo de salón y plano arquitectónico en tiempo real',
+      'Cocina KDS en vivo multi-estación con alertas automáticas de demoras',
+      'Toma de pedidos resiliente 100% offline (sin pérdida de comandas ante microcortes)',
+      'Arqueo ciego Z con supervisión por PIN y partida doble contable',
+      'Copilot IA gastronómico: maridaje sommelier, alérgenos y dictado por voz',
+      'Motor KOBE: integridad financiera con cero floats (BigInt) y hash chain inmutable',
+    ],
+    link: 'https://kobe-sand.vercel.app/',
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
+  },
+  {
     id: 'chispa32',
     title: 'Chispa32 — Taller ESP32',
     category: 'web',

@@ -102,7 +102,6 @@ const Columns4Icon = ({ className = 'w-4 h-4' }: { className?: string }) => (
 
 import OptimusGlyphSphere from './OptimusGlyphSphere'
 import SpotlightBorderCard from '../shared/SpotlightBorderCard'
-import InteractiveAnimatedTabs from './InteractiveAnimatedTabs'
 import ConvergentTypewriterSubtitle from './ConvergentTypewriterSubtitle'
 import { trackEvent } from '@/core/analytics/trackEvent'
 
@@ -406,25 +405,6 @@ export const OptimusScaleHero: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* ========================================================
-          2. CONSOLA INTERACTIVA: ANIMATED TABS (DEMO EN VIVO)
-         ======================================================== */}
-      <section
-        id="demo"
-        className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 w-full py-16 scroll-mt-20"
-      >
-        <div className="text-center mb-8">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-cyan-600 dark:text-cyan-400 font-semibold">
-            {t('hero.console_eyebrow') || '— Consola de Desarrollo & Arquitectura'}
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-1">
-            {t('hero.console_title') || 'Mira cómo construimos cada sistema'}
-          </h2>
-        </div>
-
-        <InteractiveAnimatedTabs />
       </section>
 
       {/* ========================================================

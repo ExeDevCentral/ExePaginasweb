@@ -11,28 +11,11 @@ import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import SiteHeader from '@/components/layout/SiteHeader'
 import OptimusScaleHero from '@/components/Hero/OptimusScaleHero'
 
-const HowWeWorkSection = dynamic(() => import('@/components/landing/HowWeWorkSection'), {
-  loading: () => <div className="min-h-125 w-full" />,
-})
-
-const OwnershipVsSubscription = dynamic(
-  () => import('@/components/shared/OwnershipVsSubscription'),
-  {
-    loading: () => <div className="min-h-125 w-full" />,
-  }
-)
-
-const PortfolioSection = dynamic(() => import('@/components/Portfolio/PortfolioSection'), {
-  loading: () => <div className="min-h-125 w-full" />,
-})
-
-const ContactSection = dynamic(() => import('@/components/landing/ContactSection'), {
-  loading: () => <div className="min-h-125 w-full" />,
-})
-
-const Footer = dynamic(() => import('@/components/layout/Footer'), {
-  loading: () => <div className="h-20" />,
-})
+import HowWeWorkSection from '@/components/landing/HowWeWorkSection'
+import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription'
+import PortfolioSection from '@/components/Portfolio/PortfolioSection'
+import ContactSection from '@/components/landing/ContactSection'
+import Footer from '@/components/layout/Footer'
 
 const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatWidget'), {
   ssr: false,

@@ -1,28 +1,31 @@
 /**
  * © 2026 Exequiel Echevarria — ExePaginasWeb
- * SpotlightBorderCard — Optimizado para GPU y Cero Layout Thrashing
- * 1. Haz de luz cometa ultra-nítido con cabeza blanca láser y cola difusa
- * 2. Rotación permanente fluida y continua acelerada 100% por CSS/GPU (cero bucles JS)
- * 3. Doble halo: halo ambiental exterior difuminado (glow) + haz perimetral ultra-nítido
- * 4. Cacheo de bounding rect en mouseenter: CERO forced reflow / layout thrashing
- * 5. Spotlight radial interactivo con aceleración por hardware
+ * SpotlightBorderCard — Optimizado para GPU, Cero Re-renders y Cero Layout Thrashing
+ * 1. Haz de luz cometa ultra-nítido acelerado por hardware con translate3d
+ * 2. Pausado automático cuando está fuera de la pantalla (IntersectionObserver)
+ * 3. Spotlight radial manejado 100% por variables CSS (--mouse-x, --mouse-y), cero React state en mousemove
+ * 4. Soporte para noPadding (imágenes edge-to-edge perfectas) y showHudDot configurable
+ * 5. content-visibility: auto para saltar renderizado de tarjetas fuera de viewport
  */
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 
 export type SpotlightCardVariant = 'cyan' | 'fuchsia' | 'amber' | 'emerald' | 'blue'
 
 interface SpotlightBorderCardProps {
   children: React.ReactNode
   className?: string
+  bodyClassName?: string
+  noPadding?: boolean
+  showHudDot?: boolean
   colorVariant?: SpotlightCardVariant
   customGradient?: string
   spotlightColor?: string
   activeBeam?: boolean
   slowDuration?: string // Por defecto 11s (cadencioso, elegante)
   fastDuration?: string // Por defecto 2.4s (aceleración reactiva)
-  animationDelay?: string // Desfase temporal armónico (0s, -2.75s, -5.5s, -8.25s)
+  animationDelay?: string // Desfase temporal armónico
 }
 
 const COLOR_CONFIGS: Record<
@@ -80,6 +83,9 @@ const COLOR_CONFIGS: Record<
 export const SpotlightBorderCard: React.FC<SpotlightBorderCardProps> = ({
   children,
   className = '',
+  bodyClassName = '',
+  noPadding = false,
+  showHudDot = true,
   colorVariant = 'cyan',
   customGradient,
   spotlightColor,
@@ -90,14 +96,33 @@ export const SpotlightBorderCard: React.FC<SpotlightBorderCardProps> = ({
 }) => {
   const cardRef = useRef<HTMLDivElement>(null)
   const rectRef = useRef<{ left: number; top: number } | null>(null)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [isHovered, setIsHovered] = useState(false)
+  const [isInView, setIsInView] = useState(true)
 
   const config = COLOR_CONFIGS[colorVariant] || COLOR_CONFIGS.cyan
   const activeGradient = customGradient || config.gradient
   const activeSpotlight = spotlightColor || config.spotlight
 
   const currentDuration = isHovered ? fastDuration : slowDuration
+
+  // Pausar animación de rotación si la tarjeta no está en el viewport
+  useEffect(() => {
+    const el = cardRef.current
+    if (!el || typeof IntersectionObserver === 'undefined') return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (entry) {
+          setIsInView(entry.isIntersecting)
+        }
+      },
+      { rootMargin: '120px' }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   const handleMouseEnter = () => {
     setIsHovered(true)
@@ -112,45 +137,54 @@ export const SpotlightBorderCard: React.FC<SpotlightBorderCardProps> = ({
       const rect = cardRef.current.getBoundingClientRect()
       rectRef.current = { left: rect.left, top: rect.top }
     }
-    if (rectRef.current) {
-      setMousePos({
-        x: e.clientX - rectRef.current.left,
-        y: e.clientY - rectRef.current.top,
-      })
+    if (rectRef.current && cardRef.current) {
+      const x = e.clientX - rectRef.current.left
+      const y = e.clientY - rectRef.current.top
+      cardRef.current.style.setProperty('--mouse-x', `${x}px`)
+      cardRef.current.style.setProperty('--mouse-y', `${y}px`)
     }
   }
 
   const handleMouseLeave = () => {
     setIsHovered(false)
     rectRef.current = null
+    if (cardRef.current) {
+      cardRef.current.style.setProperty('--mouse-x', '-999px')
+      cardRef.current.style.setProperty('--mouse-y', '-999px')
+    }
   }
 
   return (
     <section
       ref={cardRef}
-      aria-label="Tarjeta de capacidad"
+      aria-label="Tarjeta interactiva"
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`group relative rounded-2xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl ${config.glowClass} ${className}`}
+      style={{
+        contentVisibility: 'auto',
+        containIntrinsicSize: '0 450px',
+      }}
+      className={`group relative rounded-2xl transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-xl ${config.glowClass} ${className}`}
     >
-      {/* 1. HALO AMBIENTAL EXTERIOR (Proyecta aura luminosa difusa detrás de la tarjeta) */}
+      {/* 1. HALO AMBIENTAL EXTERIOR (Ligero, optimizado, solo visible al hover) */}
       {activeBeam && (
-        <div className="absolute -inset-1.5 rounded-2xl pointer-events-none opacity-40 group-hover:opacity-90 transition-opacity duration-500 blur-xl overflow-hidden -z-10">
+        <div className="absolute -inset-1 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-70 transition-opacity duration-500 blur-lg overflow-hidden -z-10">
           <div
             className="card-beam-spinner absolute top-1/2 left-1/2 w-[350%] aspect-square pointer-events-none"
             style={{
               background: activeGradient,
               animationDuration: currentDuration,
               animationDelay,
+              animationPlayState: isInView ? 'running' : 'paused',
             }}
           />
         </div>
       )}
 
-      {/* 2. CONTENEDOR DEL BORDE ULTRA NÍTIDO (Bordes visibles de alto contraste en dark mode) */}
+      {/* 2. CONTENEDOR DEL BORDE ULTRA NÍTIDO */}
       <div className="relative h-full w-full rounded-2xl p-[2px] overflow-hidden border border-slate-300 dark:border-white/20 bg-slate-200/60 dark:bg-white/10 shadow-lg dark:shadow-2xl">
-        {/* HAZ DE LUZ COMETA GIRATORIO NÍTIDO CON MINI DESTELLOS */}
+        {/* HAZ DE LUZ COMETA GIRATORIO NÍTIDO */}
         {activeBeam && (
           <div
             className="card-beam-spinner absolute top-1/2 left-1/2 w-[350%] aspect-square pointer-events-none drop-shadow-[0_0_8px_rgba(255,255,255,0.85)]"
@@ -158,66 +192,70 @@ export const SpotlightBorderCard: React.FC<SpotlightBorderCardProps> = ({
               background: activeGradient,
               animationDuration: currentDuration,
               animationDelay,
+              animationPlayState: isInView ? 'running' : 'paused',
             }}
           />
         )}
 
-        {/* 3. SPOTLIGHT RADIAL DINÁMICO EN EL BORDE (Sigue el cursor sin layout thrashing) */}
+        {/* 3. SPOTLIGHT RADIAL DINÁMICO EN EL BORDE (100% vía CSS variables, cero React state) */}
         <div
           className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           style={{
-            background: isHovered
-              ? `radial-gradient(320px circle at ${mousePos.x}px ${mousePos.y}px, ${activeSpotlight}, transparent 70%)`
-              : undefined,
+            background: `radial-gradient(320px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), ${activeSpotlight}, transparent 70%)`,
           }}
         />
 
-        {/* 4. CUERPO INTERIOR DE ALTO CONTRASTE (Nunca se pierde en el fondo) */}
-        <div className="relative h-full w-full rounded-[14.5px] bg-[#fcfbf9]/98 dark:bg-[#0c0f1d] border border-transparent dark:border-white/10 p-5 sm:p-6 backdrop-blur-xl transition-all duration-300 group-hover:bg-white dark:group-hover:bg-[#12162a]">
-          {/* Spotlight interior suave al posar el mouse */}
+        {/* 4. CUERPO INTERIOR DE ALTO CONTRASTE */}
+        <div
+          className={`relative h-full w-full rounded-[14.5px] bg-[#fcfbf9]/98 dark:bg-[#0c0f1d] border border-transparent dark:border-white/10 ${
+            noPadding ? 'p-0 overflow-hidden' : 'p-5 sm:p-6'
+          } backdrop-blur-xl transition-colors duration-300 group-hover:bg-white dark:group-hover:bg-[#12162a] flex flex-col ${bodyClassName}`}
+        >
+          {/* Spotlight interior suave al posar el cursor */}
           <div
             className="pointer-events-none absolute inset-0 rounded-[14.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             style={{
-              background: isHovered
-                ? `radial-gradient(280px circle at ${mousePos.x}px ${mousePos.y}px, ${config.innerSpotlight}, transparent 80%)`
-                : undefined,
+              background: `radial-gradient(280px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), ${config.innerSpotlight}, transparent 80%)`,
             }}
           />
 
-          {/* Micro-indicador HUD de estado en esquina superior con luz activa */}
-          <div className="pointer-events-none absolute top-3.5 right-3.5 flex items-center gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${config.dotColor} shadow-[0_0_8px_currentColor] animate-pulse`}
-            />
-          </div>
+          {/* Micro-indicador HUD de estado opcional */}
+          {showHudDot && (
+            <div className="pointer-events-none absolute top-3.5 right-3.5 flex items-center gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity duration-300 z-20">
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${config.dotColor} shadow-[0_0_8px_currentColor] animate-pulse`}
+              />
+            </div>
+          )}
 
           {/* Contenido de la tarjeta */}
-          <div className="relative z-10">{children}</div>
+          <div className="relative z-10 flex-1 flex flex-col">{children}</div>
         </div>
       </div>
 
       <style jsx>{`
         .card-beam-spinner {
-          transform: translate(-50%, -50%);
+          transform: translate3d(-50%, -50%, 0);
           animation-name: cardBorderSpin;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
           will-change: transform;
+          contain: strict;
         }
 
         @keyframes cardBorderSpin {
           from {
-            transform: translate(-50%, -50%) rotate(0deg);
+            transform: translate3d(-50%, -50%, 0) rotate(0deg);
           }
           to {
-            transform: translate(-50%, -50%) rotate(360deg);
+            transform: translate3d(-50%, -50%, 0) rotate(360deg);
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .card-beam-spinner {
             animation: none;
-            transform: translate(-50%, -50%) rotate(45deg);
+            transform: translate3d(-50%, -50%, 0) rotate(45deg);
           }
         }
       `}</style>

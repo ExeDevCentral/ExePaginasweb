@@ -1,0 +1,165 @@
+{
+  "name": "ExePaginasWeb — Leads & Eventos Automáticos",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "exepaginasweb-leads",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "e8179248-2fa4-469b-980b-1175653b4991",
+      "name": "Webhook ExePaginasWeb",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "exepaginasweb-leads"
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.body.event }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "lead.contact",
+              "outputKey": "contacto"
+            },
+            {
+              "value2": "lead.chat",
+              "outputKey": "chat"
+            },
+            {
+              "value2": "payment.captured",
+              "outputKey": "pago"
+            },
+            {
+              "value2": "transfer.registered",
+              "outputKey": "transferencia"
+            }
+          ]
+        }
+      },
+      "id": "c1f79590-b1a8-4444-9382-749e7552aa52",
+      "name": "Clasificador de Evento",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "titulo",
+              "value": "=🚨 NUEVO LEAD DE CONTACTO ({{ $json.body.ticketId }})"
+            },
+            {
+              "name": "mensaje_formateado",
+              "value": "=Nombre: {{ $json.body.name }}\nEmail: {{ $json.body.email }}\nIdioma: {{ $json.body.lang }}\nTicket: {{ $json.body.ticketId }}\nMensaje: {{ $json.body.message }}\nFecha: {{ $json.body.timestamp }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "76e33055-68ff-45a7-89fa-1234567890ab",
+      "name": "Formatear Contacto",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [760, 160]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "titulo",
+              "value": "=💬 EMAIL CAPTURADO EN CHATBOT ({{ $json.body.ticketId }})"
+            },
+            {
+              "name": "mensaje_formateado",
+              "value": "=Email: {{ $json.body.email }}\nTicket: {{ $json.body.ticketId }}\nIdioma: {{ $json.body.lang }}\nFecha: {{ $json.body.timestamp }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "89e33055-68ff-45a7-89fa-1234567890cd",
+      "name": "Formatear Chat",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [760, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "titulo",
+              "value": "=💰 PAGO O RESERVA CAPTURADA ({{ $json.body.ticketId }})"
+            },
+            {
+              "name": "mensaje_formateado",
+              "value": "=Tipo: {{ $json.body.event }}\nTicket: {{ $json.body.ticketId }}\nCliente: {{ $json.body.email }}\nFecha: {{ $json.body.timestamp }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "90e33055-68ff-45a7-89fa-1234567890ef",
+      "name": "Formatear Pago/Transferencia",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [760, 460]
+    }
+  ],
+  "connections": {
+    "Webhook ExePaginasWeb": {
+      "main": [
+        [
+          {
+            "node": "Clasificador de Evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clasificador de Evento": {
+      "main": [
+        [
+          {
+            "node": "Formatear Contacto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Formatear Chat",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Formatear Pago/Transferencia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Formatear Pago/Transferencia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

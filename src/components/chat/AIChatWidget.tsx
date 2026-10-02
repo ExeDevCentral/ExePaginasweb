@@ -53,7 +53,7 @@ export interface ChatTopic {
   action?: 'whatsapp'
 }
 
-export const INITIAL_TOPICS: ChatTopic[] = [
+const INITIAL_TOPICS: ChatTopic[] = [
   {
     id: 'cotizar',
     title: 'Cotizar desarrollo web',

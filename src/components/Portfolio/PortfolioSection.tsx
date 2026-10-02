@@ -64,7 +64,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
   return (
     <section id="portafolio" className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
       {/* Glows de fondo */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-r from-accent-cyan/10 to-accent-magenta/10 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-150 h-87.5 bg-linear-to-r from-accent-cyan/10 to-accent-magenta/10 rounded-full blur-[130px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Encabezado Profesional */}
@@ -168,7 +168,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                     className="h-full flex flex-col justify-between"
                   >
                     {/* Imagen del proyecto + Overlay interactivo */}
-                    <div className="relative aspect-[16/10] overflow-hidden bg-slate-900 rounded-t-[14px]">
+                    <div className="relative aspect-16/10 overflow-hidden bg-slate-900 rounded-t-[14px]">
                       <img
                         src={project.image}
                         alt={project.title}
@@ -176,7 +176,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                         decoding="async"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
+                      <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/30 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
 
                       {/* Estado / Badge de proyecto */}
                       <div className="absolute top-3.5 left-3.5 flex flex-col gap-1.5 items-start">
@@ -235,7 +235,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                       </div>
 
                       {/* Tags tecnológicos */}
-                      <div className="flex flex-wrap gap-1.5 min-h-[1.75rem]">
+                      <div className="flex flex-wrap gap-1.5 min-h-7">
                         {project.tags.map((tTag) => (
                           <span
                             key={tTag}
@@ -263,7 +263,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`Ver sitio web de ${project.title} en producción`}
-                            className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:scale-105 transition-all"
+                            className="px-3.5 py-1.5 rounded-xl bg-linear-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:scale-105 transition-all"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
                             {t('portfolio.ver_en_vivo', 'Ver en Vivo')}
@@ -275,7 +275,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                 </div>
               ))}
               {/* Tarjeta dinámica de "+ Tu Proyecto Custom" */}
-              <div className="rounded-3xl border-2 border-dashed border-accent-cyan/40 bg-card/40 backdrop-blur-xl p-6 flex flex-col items-center justify-center text-center space-y-4 hover:border-accent-cyan hover:bg-card/70 transition-all duration-300 group min-h-[380px]">
+              <div className="rounded-3xl border-2 border-dashed border-accent-cyan/40 bg-card/40 backdrop-blur-xl p-6 flex flex-col items-center justify-center text-center space-y-4 hover:border-accent-cyan hover:bg-card/70 transition-all duration-300 group min-h-95">
                 <div className="w-12 h-12 rounded-2xl bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center text-accent-cyan group-hover:scale-110 transition-transform">
                   <PlusCircle className="w-6 h-6" />
                 </div>
@@ -437,7 +437,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                 <div className="flex items-center gap-2">
                   <span className="px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 font-black text-xs uppercase tracking-wider flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    EN PRODUCCIÓN
+                    <span>EN PRODUCCIÓN</span>
                   </span>
                   <span className="px-3 py-1 rounded-full bg-accent-cyan/20 text-accent-cyan font-bold text-xs uppercase tracking-wider">
                     {selectedProject.categoryLabel}
@@ -500,7 +500,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Ver sitio web de ${selectedProject.title} en producción`}
-                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all"
+                    className="px-5 py-2.5 rounded-xl bg-linear-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all"
                   >
                     <ExternalLink className="w-4 h-4" />
                     Abrir Sitio en Producción

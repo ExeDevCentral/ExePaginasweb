@@ -73,7 +73,7 @@ function HeaderLogo() {
   }, [])
 
   return (
-    <span className="relative flex-shrink-0 group" style={{ width: 38, height: 38 }}>
+    <span className="relative shrink-0 group" style={{ width: 38, height: 38 }}>
       <span className="absolute inset-0 rounded-full bg-yellow-400/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none scale-125" />
       <span
         className="relative z-10 block group-hover:scale-110 transition-transform duration-300"
@@ -169,21 +169,21 @@ export default function SiteHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-foreground/10 bg-background/90 backdrop-blur-xl dark:border-white/10 dark:bg-[#050508]/90">
-      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-17 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Logo + wordmark */}
         <div className="flex shrink-0 items-center gap-3">
           <Link
             href="/"
             onClick={handleHomeClick}
             aria-label={getNavLabel('nav.inicio', 'Inicio')}
-            className="origin-center transition-transform duration-[180ms] ease-out hover:scale-105 active:scale-95"
+            className="origin-center transition-transform duration-180 ease-out hover:scale-105 active:scale-95"
           >
             <HeaderLogo />
           </Link>
           <Link
             href="/"
             onClick={handleHomeClick}
-            className="outline-none origin-center transition-transform duration-[180ms] ease-out hover:scale-[1.02] active:scale-[0.98]"
+            className="outline-none origin-center transition-transform duration-180 ease-out hover:scale-[1.02] active:scale-[0.98]"
           >
             <HeaderWordmark />
           </Link>
@@ -220,7 +220,7 @@ export default function SiteHeader() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.96 }}
                   transition={{ duration: 0.18, ease: 'easeOut' }}
-                  className="absolute left-1/2 top-full w-[440px] -translate-x-1/2 pt-2.5 z-50 select-none"
+                  className="absolute left-1/2 top-full w-110 -translate-x-1/2 pt-2.5 z-50 select-none"
                 >
                   <div className="relative rounded-3xl border border-cyan-500/25 dark:border-cyan-400/20 bg-white/95 dark:bg-[#070914]/95 p-3.5 shadow-2xl backdrop-blur-2xl dark:shadow-[0_24px_60px_-12px_rgba(0,0,0,0.9),0_0_35px_rgba(6,182,212,0.18)] overflow-hidden">
                     {/* Glow ambiental superior */}
@@ -232,7 +232,7 @@ export default function SiteHeader() {
                           key={href}
                           href={href}
                           onClick={() => setSolutionsOpen(false)}
-                          className="group relative flex flex-col p-3 rounded-2xl border border-slate-200/80 dark:border-white/5 bg-slate-50/60 dark:bg-white/[0.02] hover:bg-cyan-500/[0.08] hover:border-cyan-500/40 dark:hover:border-cyan-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+                          className="group relative flex flex-col p-3 rounded-2xl border border-slate-200/80 dark:border-white/5 bg-slate-50/60 dark:bg-white/2 hover:bg-cyan-500/8 hover:border-cyan-500/40 dark:hover:border-cyan-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
                         >
                           <div className="flex items-center gap-2.5 mb-1.5">
                             <div className="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 group-hover:bg-cyan-500 group-hover:text-slate-950 group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(6,182,212,0.5)] transition-all duration-300">
@@ -252,7 +252,7 @@ export default function SiteHeader() {
                     <Link
                       href="/soluciones"
                       onClick={() => setSolutionsOpen(false)}
-                      className="group relative flex items-center justify-between rounded-xl border border-cyan-500/30 bg-gradient-to-r from-cyan-500/15 via-sky-500/10 to-emerald-500/15 px-3.5 py-2.5 text-xs font-bold text-cyan-600 dark:text-cyan-300 hover:border-cyan-400 hover:from-cyan-500/25 hover:to-emerald-500/25 transition-all duration-200 shadow-sm"
+                      className="group relative flex items-center justify-between rounded-xl border border-cyan-500/30 bg-linear-to-r from-cyan-500/15 via-sky-500/10 to-emerald-500/15 px-3.5 py-2.5 text-xs font-bold text-cyan-600 dark:text-cyan-300 hover:border-cyan-400 hover:from-cyan-500/25 hover:to-emerald-500/25 transition-all duration-200 shadow-sm"
                     >
                       <span className="flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
@@ -283,13 +283,13 @@ export default function SiteHeader() {
         <div className="hidden items-center gap-2 lg:flex">
           <Link
             href="/cotizador"
-            className="rounded-full border border-emerald-400/40 px-3.5 py-1.5 text-xs font-bold text-emerald-600 hover:bg-emerald-400/10 dark:text-emerald-300 origin-center transition-all duration-[180ms] ease-out hover:scale-105 active:scale-95"
+            className="rounded-full border border-emerald-400/40 px-3.5 py-1.5 text-xs font-bold text-emerald-600 hover:bg-emerald-400/10 dark:text-emerald-300 origin-center transition-all duration-180 ease-out hover:scale-105 active:scale-95"
           >
             {getNavLabel('nav.cotizador', 'Cotizador')}
           </Link>
           <Link
             href="/tienda"
-            className="rounded-full border border-cyan-400/40 px-3.5 py-1.5 text-xs font-bold text-cyan-600 hover:bg-cyan-400/10 dark:text-cyan-300 origin-center transition-all duration-[180ms] ease-out hover:scale-105 active:scale-95"
+            className="rounded-full border border-cyan-400/40 px-3.5 py-1.5 text-xs font-bold text-cyan-600 hover:bg-cyan-400/10 dark:text-cyan-300 origin-center transition-all duration-180 ease-out hover:scale-105 active:scale-95"
           >
             {getNavLabel('nav.tienda_online', 'Tienda')}
           </Link>
@@ -299,7 +299,7 @@ export default function SiteHeader() {
           </div>
           <Link
             href="/#contact"
-            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-4 py-1.5 text-xs origin-center transition-all duration-[180ms] ease-out hover:scale-105 active:scale-95 shadow-sm"
+            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-4 py-1.5 text-xs origin-center transition-all duration-180 ease-out hover:scale-105 active:scale-95 shadow-sm"
           >
             {getNavLabel('nav.contacto', 'Hablemos')}
           </Link>

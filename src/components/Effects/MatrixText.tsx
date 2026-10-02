@@ -166,6 +166,7 @@ function MatrixLetter({
         : `0 0 4px ${glowMix(20)}`
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <span
       onMouseEnter={(e) => {
         e.stopPropagation()

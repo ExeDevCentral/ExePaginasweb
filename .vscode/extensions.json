@@ -21,6 +21,7 @@
     "supabase.supabase-vscode",
     "mikestead.dotenv",
     "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-spanish",
 
     "wix.vscode-import-cost",
     "lokalise.i18n-ally",

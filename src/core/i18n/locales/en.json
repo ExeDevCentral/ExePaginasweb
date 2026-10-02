@@ -617,6 +617,8 @@
     "success_otro": "Send another message",
     "form_exito": "Message sent successfully! We'll get back to you shortly.",
     "form_error": "Error sending. Try again or message us on WhatsApp.",
+    "form_error_conexion": "Connection error. Please try again or reach out directly.",
+    "form_error_prefix": "Error:",
     "whatsapp_label": "WhatsApp",
     "web_label": "Web",
     "abrir": "Open"

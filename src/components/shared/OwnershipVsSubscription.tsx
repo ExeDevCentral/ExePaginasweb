@@ -386,7 +386,7 @@ function DeedCard({
           }}
         >
           <div className="h-px w-full bg-own-400/90 shadow-[0_0_12px_var(--own-400),0_0_30px_var(--own-glow)]" />
-          <div className="h-10 w-full -mt-5 bg-gradient-to-b from-transparent via-own-400/10 to-transparent" />
+          <div className="h-10 w-full -mt-5 bg-linear-to-b from-transparent via-own-400/10 to-transparent" />
         </motion.div>
 
         {/* Sello de verificación */}
@@ -432,7 +432,7 @@ function DeedCard({
               key={i}
               className={`flex items-baseline gap-2 ${i % 2 === 1 ? 'sm:pl-6 sm:border-l sm:border-own-500/20' : ''}`}
             >
-              <span className="uppercase tracking-wider text-[10px] text-own-400/80 shrink-0 min-w-[92px]">
+              <span className="uppercase tracking-wider text-[10px] text-own-400/80 shrink-0 min-w-23">
                 {f.label}
               </span>
               <span
@@ -528,7 +528,7 @@ function DeedCard({
           className="marquee-edge-mask marquee-ticker relative rounded-2xl border border-own-border bg-own-tint dark:bg-own-500/10"
         >
           <div className="absolute -inset-10 bg-own-500/10 blur-3xl rounded-full pointer-events-none animate-pulse" />
-          <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(rgba(16,185,129,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.07)_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
+          <div className="absolute inset-0 opacity-50 bg-[linear-gradient(rgba(16,185,129,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.07)_1px,transparent_1px)] bg-size-[20px_20px] pointer-events-none" />
 
           <div ref={trackRef} className="relative w-max flex will-change-transform pl-4">
             {[0, 1].map((track) => (
@@ -547,7 +547,7 @@ function DeedCard({
                         backgroundSize: '200% auto',
                       }}
                     >
-                      <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-own-500 via-accent-brand to-own-600 opacity-30 blur-md" />
+                      <span className="absolute -inset-1 rounded-full bg-linear-to-r from-own-500 via-accent-brand to-own-600 opacity-30 blur-md" />
                       <span className="relative flex items-center gap-2 pl-3 pr-4 py-2 rounded-full bg-surface-1">
                         <Sparkles className="w-4 h-4 text-own-400 animate-pulse" />
                         <span className="text-[13px] font-bold whitespace-nowrap text-transparent bg-clip-text bg-[linear-gradient(90deg,var(--accent-brand),var(--own-400))]">
@@ -643,6 +643,7 @@ function RentalCard({
     } else if (simulatedCut === false && phase !== 'idle') {
       resetDemo()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [simulatedCut])
 
   const brokenList = [
@@ -1452,7 +1453,7 @@ function CostCard() {
         </div>
 
         {/* TARJETAS DE NÚMEROS SUAVIZADAS Y CONECTADAS A LA REALIDAD */}
-        <div className="lg:min-w-[300px] flex flex-col gap-3">
+        <div className="lg:min-w-75 flex flex-col gap-3">
           {/* Card Alquiler */}
           <div
             ref={liveRef}
@@ -1566,7 +1567,7 @@ function CostCard() {
           {/* Botón CTA de Acción Inmediata hacia Cotizador */}
           <Link
             href="/cotizador"
-            className="mt-1 flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-accent-cyan/15 to-accent-magenta/15 border border-emerald-500/30 hover:border-emerald-400 text-foreground font-bold text-xs sm:text-sm shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 transition-all group/cta cursor-pointer hover:scale-[1.01] active:scale-[0.98]"
+            className="mt-1 flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-linear-to-r from-emerald-500/15 via-accent-cyan/15 to-accent-magenta/15 border border-emerald-500/30 hover:border-emerald-400 text-foreground font-bold text-xs sm:text-sm shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 transition-all group/cta cursor-pointer hover:scale-[1.01] active:scale-[0.98]"
           >
             <div className="flex items-center gap-2.5">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -1640,7 +1641,7 @@ function NeonDuel({
 }) {
   return (
     <div className="relative flex flex-wrap items-center justify-center gap-x-10 sm:gap-x-16 gap-y-4 py-10">
-      <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[min(90%,560px)] h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[min(90%,560px)] h-px bg-linear-to-r from-transparent via-border to-transparent" />
       <NeonSign
         color="emerald"
         text={t('versus.extra_neon_status_a', '100% TUYO')}

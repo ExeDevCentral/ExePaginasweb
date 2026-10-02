@@ -612,6 +612,8 @@
     "success_otro": "Enviar otro mensaje",
     "form_exito": "¡Mensaje enviado con éxito! Te responderemos a la brevedad.",
     "form_error": "Error al enviar. Intenta de nuevo o escríbenos por WhatsApp.",
+    "form_error_conexion": "Error de conexión. Intenta nuevamente.",
+    "form_error_prefix": "Error:",
     "whatsapp_label": "WhatsApp",
     "web_label": "Web",
     "abrir": "Abrir"

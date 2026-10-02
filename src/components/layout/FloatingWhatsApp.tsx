@@ -81,7 +81,7 @@ export default function FloatingWhatsApp() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 15, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="mb-4 w-[330px] sm:w-[360px] rounded-3xl bg-[#0c1017]/95 dark:bg-[#0c1017]/95 border-2 border-emerald-500/40 shadow-2xl backdrop-blur-2xl overflow-hidden text-white shadow-emerald-500/20"
+            className="mb-4 w-82.5 sm:w-90 rounded-3xl bg-[#0c1017]/95 dark:bg-[#0c1017]/95 border-2 border-emerald-500/40 shadow-2xl backdrop-blur-2xl overflow-hidden text-white shadow-emerald-500/20"
           >
             {/* CABECERA ESTILO WHATSAPP PREMIUM */}
             <div className="p-4 bg-linear-to-r from-emerald-900/90 via-emerald-800/90 to-teal-900/90 border-b border-emerald-500/30 flex items-center justify-between">

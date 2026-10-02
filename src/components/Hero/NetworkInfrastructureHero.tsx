@@ -100,10 +100,10 @@ export const NetworkInfrastructureHero: React.FC = () => {
           backgroundSize: '24px 24px',
         }}
       />
-      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-to-b from-cyan-500/20 via-fuchsia-500/10 to-transparent blur-[110px] pointer-events-none" />
+      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-linear-to-b from-cyan-500/20 via-fuchsia-500/10 to-transparent blur-[110px] pointer-events-none" />
 
       {/* 1. BARRA DE TELEMETRÍA EN VIVO (ESTILO COMPUTE) */}
-      <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 pb-6 mb-6 border-b border-white/[0.08] text-xs font-mono text-slate-400">
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 pb-6 mb-6 border-b border-white/8 text-xs font-mono text-slate-400">
         <div className="flex items-center gap-2.5">
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -126,7 +126,7 @@ export const NetworkInfrastructureHero: React.FC = () => {
             <Zap className="w-3.5 h-3.5" />
             <span>PULSOS: ACTIVOS</span>
           </div>
-          <div className="px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] text-slate-300">
+          <div className="px-2.5 py-1 rounded-md bg-white/3 border border-white/6 text-slate-300">
             {utcTime || '2026-09-24 15:00:00 UTC'}
           </div>
         </div>
@@ -140,11 +140,11 @@ export const NetworkInfrastructureHero: React.FC = () => {
           </span>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mt-2">
             De tu{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-fuchsia-400 to-pink-500">
               Comercio Físico
             </span>{' '}
             a la{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-sky-300">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-sky-300">
               Nube Mundial
             </span>
           </h2>
@@ -277,7 +277,7 @@ export const NetworkInfrastructureHero: React.FC = () => {
                         isSelected ? 'scale-110' : 'group-hover:scale-105'
                       }`}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent opacity-80" />
 
                     {/* Halo de luz al centro en selección */}
                     {isSelected && (
@@ -295,7 +295,7 @@ export const NetworkInfrastructureHero: React.FC = () => {
                       <p className="text-[11px] text-slate-400 mt-1 leading-snug">{node.role}</p>
                     </div>
 
-                    <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono text-slate-400">
+                    <div className="mt-3 pt-2.5 border-t border-white/6 flex items-center justify-between text-[10px] font-mono text-slate-400">
                       <span>MÉTRICA</span>
                       <span className="text-emerald-400 font-semibold">{node.stats}</span>
                     </div>
@@ -307,25 +307,25 @@ export const NetworkInfrastructureHero: React.FC = () => {
         </div>
 
         {/* 3. MÉTRICAS 3-COLUMNAS ESTILO COMPUTE */}
-        <div className="mt-8 pt-6 border-t border-white/[0.08] grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-          <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.06]">
-            <p className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-sky-200">
+        <div className="mt-8 pt-6 border-t border-white/8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+          <div className="p-3 rounded-lg bg-white/2 border border-white/6">
+            <p className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-sky-200">
               0.4s
             </p>
             <p className="text-[11px] font-mono text-slate-400 uppercase mt-0.5">
               Carga Ultrarrápida
             </p>
           </div>
-          <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.06]">
-            <p className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-400">
+          <div className="p-3 rounded-lg bg-white/2 border border-white/6">
+            <p className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-fuchsia-400 to-pink-400">
               100%
             </p>
             <p className="text-[11px] font-mono text-slate-400 uppercase mt-0.5">
               Código Propio Sin Ataduras
             </p>
           </div>
-          <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.06]">
-            <p className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+          <div className="p-3 rounded-lg bg-white/2 border border-white/6">
+            <p className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-teal-300">
               99.98%
             </p>
             <p className="text-[11px] font-mono text-slate-400 uppercase mt-0.5">

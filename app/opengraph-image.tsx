@@ -3,6 +3,7 @@
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
+/* eslint-disable react-refresh/only-export-components */
 import { ImageResponse } from 'next/og'
 import { OgCard } from '@/components/og/OgCard'
 
@@ -10,7 +11,7 @@ export const alt = 'ExePaginasWeb - Estudio de Desarrollo Web & Sistemas SaaS'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
-export default async function OGImage() {
+export default function OGImage() {
   return new ImageResponse(
     <OgCard
       eyebrow="Estudio de Desarrollo Web"

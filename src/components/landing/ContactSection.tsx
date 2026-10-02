@@ -6,7 +6,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { FormEvent, useState, useEffect } from 'react'
+import { useState, useEffect, type SyntheticEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MessageCircle, ArrowRight, CheckCircle, Mail, Send } from 'lucide-react'
 import { supabase } from '../../core/infra/supabase/client'
@@ -62,7 +62,7 @@ const ContactSection = () => {
 
   const [ticketId, setTicketId] = useState('')
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault()
     setStatus('sending')
     setFeedback('')
@@ -155,7 +155,7 @@ const ContactSection = () => {
             <br />
             <span className="relative inline-block">
               {t('contact.heading_2')}
-              <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-gradient-to-r from-accent-cyan via-accent-violet to-accent-magenta rounded-full" />
+              <span className="absolute -bottom-1 left-0 h-0.75 w-full bg-linear-to-r from-accent-cyan via-accent-violet to-accent-magenta rounded-full" />
             </span>
           </h2>
         </motion.div>

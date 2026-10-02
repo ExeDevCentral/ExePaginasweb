@@ -48,6 +48,7 @@ export const ConvergentTypewriterSubtitle: React.FC<ConvergentTypewriterSubtitle
         <span>{PART_1}</span>
 
         {/* Cápsula 1: Sitios web de máxima conversión */}
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <span
           onMouseEnter={triggerScan1}
           className="relative inline-block max-w-full px-2 sm:px-2.5 py-0.5 rounded-xl border border-cyan-400/80 bg-cyan-500/12 dark:bg-cyan-500/14 text-cyan-600 dark:text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.25)] hover:shadow-[0_0_20px_rgba(6,182,212,0.45)] transition-all duration-300 align-baseline font-semibold mx-1"
@@ -68,6 +69,7 @@ export const ConvergentTypewriterSubtitle: React.FC<ConvergentTypewriterSubtitle
         <span>{PART_2}</span>
 
         {/* Cápsula 2: Sistemas cloud a medida */}
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <span
           onMouseEnter={triggerScan2}
           className="relative inline-block max-w-full px-2 sm:px-2.5 py-0.5 rounded-xl border border-fuchsia-400/80 bg-fuchsia-500/12 dark:bg-fuchsia-500/14 text-fuchsia-600 dark:text-fuchsia-300 shadow-[0_0_12px_rgba(217,70,239,0.25)] hover:shadow-[0_0_20px_rgba(217,70,239,0.45)] transition-all duration-300 align-baseline font-semibold mx-1"

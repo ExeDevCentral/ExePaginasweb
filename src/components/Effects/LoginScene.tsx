@@ -158,11 +158,11 @@ export const LoginScene = memo(function LoginScene() {
     window.addEventListener('resize', handleResize)
 
     let animId: number
-    const clock = new THREE.Clock()
+    const startTime = performance.now()
 
     const animate = () => {
       animId = requestAnimationFrame(animate)
-      const t = clock.getElapsedTime()
+      const t = (performance.now() - startTime) * 0.001
 
       centerMesh.rotation.y = t * 0.15
       centerMesh.rotation.x = Math.sin(t * 0.1) * 0.1
@@ -196,7 +196,7 @@ export const LoginScene = memo(function LoginScene() {
   }, [])
 
   return (
-    <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 z-2 pointer-events-none overflow-hidden">
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   )

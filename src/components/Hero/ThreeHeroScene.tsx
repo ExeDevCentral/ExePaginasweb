@@ -17,8 +17,8 @@ if (typeof window !== 'undefined') {
 
 const FallbackCSSBackground: React.FC = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-accent-cyan/5 via-transparent to-accent-magenta/10" />
-    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-accent-cyan/10 blur-[120px] animate-pulse" />
+    <div className="absolute inset-0 bg-linear-to-br from-accent-cyan/5 via-transparent to-accent-magenta/10" />
+    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-125 h-125 rounded-full bg-accent-cyan/10 blur-[120px] animate-pulse" />
   </div>
 )
 
@@ -174,13 +174,13 @@ export const ThreeHeroScene: React.FC = () => {
 
     // Animation Loop
     let animId: number
-    const clock = new THREE.Clock()
+    const startTime = performance.now()
 
     const animate = () => {
       animId = requestAnimationFrame(animate)
       if (!isVisible) return
 
-      const t = clock.getElapsedTime()
+      const t = (performance.now() - startTime) * 0.001
       const p = progressRef.current
 
       // Interpolate positions between Chaos and System

@@ -229,12 +229,12 @@ export const CoffeePortal3D = ({
     window.addEventListener('resize', handleResize)
 
     let animId: number
-    const clock = new THREE.Clock()
+    const startTime = performance.now()
     let explodeStartTime: number | null = null
 
     const animate = () => {
       animId = requestAnimationFrame(animate)
-      const t = clock.getElapsedTime()
+      const t = (performance.now() - startTime) * 0.001
 
       cupGroup.rotation.y = t * 0.5
       cupGroup.position.y = Math.sin(t * 2.2) * 0.15
@@ -304,12 +304,12 @@ export const CoffeePortal3D = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
-          className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md cursor-pointer flex items-center justify-center overflow-hidden"
+          className="fixed inset-0 z-100 bg-black/85 backdrop-blur-md cursor-pointer flex items-center justify-center overflow-hidden"
           onClick={onDismiss}
         >
           {/* Background Atmospheric Amber Aura */}
-          <div className="absolute w-[600px] h-[600px] rounded-full bg-amber-600/20 blur-[140px] pointer-events-none" />
-          <div className="absolute w-[400px] h-[400px] rounded-full bg-orange-500/15 blur-[100px] pointer-events-none" />
+          <div className="absolute w-150 h-150 rounded-full bg-amber-600/20 blur-[140px] pointer-events-none" />
+          <div className="absolute w-100 h-100 rounded-full bg-orange-500/15 blur-[100px] pointer-events-none" />
 
           {/* 3D WebGL Canvas */}
           <canvas ref={canvasRef} className="w-full h-full block absolute inset-0 z-0" />
@@ -350,7 +350,7 @@ export const CoffeePortal3D = ({
                   e.stopPropagation()
                   if (onDismiss) onDismiss()
                 }}
-                className="px-7 py-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-[0_0_35px_rgba(245,158,11,0.6)] flex items-center gap-2.5 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto"
+                className="px-7 py-3.5 bg-linear-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-[0_0_35px_rgba(245,158,11,0.6)] flex items-center gap-2.5 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto"
               >
                 <span>Entrar a la tienda</span>
                 <ArrowRight className="w-4 h-4" />

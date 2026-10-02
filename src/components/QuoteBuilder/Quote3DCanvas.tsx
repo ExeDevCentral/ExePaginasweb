@@ -86,11 +86,11 @@ export default function Quote3DCanvas() {
     window.addEventListener('resize', handleResize)
 
     let animId: number
-    const clock = new THREE.Clock()
+    const startTime = performance.now()
 
     const animate = () => {
       animId = requestAnimationFrame(animate)
-      const t = clock.getElapsedTime()
+      const t = (performance.now() - startTime) * 0.001
       group.rotation.y = t * 0.025
       group.rotation.x = Math.sin(t * 0.015) * 0.05
       renderer?.render(scene, camera)
@@ -107,7 +107,7 @@ export default function Quote3DCanvas() {
   }, [])
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1] opacity-60">
+    <div className="fixed inset-0 pointer-events-none z-1 opacity-60">
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   )

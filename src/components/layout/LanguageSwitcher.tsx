@@ -21,9 +21,13 @@ const LANGUAGES = [
 
 interface LanguageSwitcherProps {
   className?: string
+  direction?: 'down' | 'up'
 }
 
-export default function LanguageSwitcher({ className = '' }: Readonly<LanguageSwitcherProps>) {
+export default function LanguageSwitcher({
+  className = '',
+  direction = 'down',
+}: Readonly<LanguageSwitcherProps>) {
   const { i18n } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -44,7 +48,7 @@ export default function LanguageSwitcher({ className = '' }: Readonly<LanguageSw
   }, [])
 
   const change = (code: string) => {
-    i18n.changeLanguage(code)
+    void i18n.changeLanguage(code)
     setIsOpen(false)
     try {
       localStorage.setItem('lang', code)
@@ -55,6 +59,11 @@ export default function LanguageSwitcher({ className = '' }: Readonly<LanguageSw
 
   const currentLang =
     LANGUAGES.find((l) => l.code === current || current.startsWith(l.code)) ?? LANGUAGES[0]
+
+  const hiddenTransform = direction === 'up' ? 'translate-y-1' : '-translate-y-1'
+  const visibilityClass = isOpen
+    ? 'opacity-100 visible translate-y-0'
+    : `opacity-0 invisible ${hiddenTransform} group-hover:opacity-100 group-hover:visible group-hover:translate-y-0`
 
   return (
     <div ref={containerRef} className={`relative group ${className}`}>
@@ -73,11 +82,9 @@ export default function LanguageSwitcher({ className = '' }: Readonly<LanguageSw
 
       {/* 100% Solid Opaque Dropdown Container (Zero Transparency / Zero Bleed-through) */}
       <div
-        className={`absolute right-0 top-full mt-2 bg-white dark:bg-[#0c0d14] border border-slate-200 dark:border-white/15 rounded-xl shadow-2xl transition-all duration-200 z-50 min-w-[170px] p-1.5 ${
-          isOpen
-            ? 'opacity-100 visible translate-y-0'
-            : 'opacity-0 invisible -translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0'
-        }`}
+        className={`absolute right-0 ${
+          direction === 'up' ? 'bottom-full mb-2' : 'top-full mt-2'
+        } bg-white dark:bg-[#0c0d14] border border-slate-200 dark:border-white/15 rounded-xl shadow-2xl transition-all duration-200 z-50 min-w-42.5 p-1.5 ${visibilityClass}`}
       >
         <div className="px-2.5 py-1 mb-1 border-b border-slate-100 dark:border-white/10 text-[10px] font-sans font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
           Idioma / Language

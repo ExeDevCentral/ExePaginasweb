@@ -28,6 +28,7 @@ import { useRouter } from 'next/navigation'
 import { useTypewriter } from '../../hooks/useTypewriter'
 import { PLAN_CATALOG } from '../../core/domain/planCatalog'
 import { useTheme } from '../../core/theme/ThemeContext'
+import LanguageSwitcher from '../layout/LanguageSwitcher'
 import type { PlanData } from './PlanCard'
 import PlanGrid from './PlanGrid'
 import CheckoutModal from './CheckoutModal'
@@ -168,7 +169,7 @@ export default function StorePage() {
 
       <div className="relative max-w-7xl mx-auto z-10 space-y-10">
         {/* NAVEGACIÓN SUPERIOR ELEGANTE */}
-        <header className="flex items-center justify-between max-w-6xl mx-auto pt-2">
+        <header className="relative z-30 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 max-w-6xl mx-auto pt-2">
           <button
             type="button"
             onClick={() => {
@@ -181,7 +182,12 @@ export default function StorePage() {
             <span>Volver al Inicio</span>
           </button>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Language Switcher */}
+            <div className="p-1 rounded-2xl bg-card/80 backdrop-blur-xl border border-border text-foreground hover:border-accent-cyan transition-all shadow-md flex items-center">
+              <LanguageSwitcher />
+            </div>
+
             {/* Audio Toggle */}
             <button
               type="button"
@@ -234,7 +240,7 @@ export default function StorePage() {
 
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold leading-tight text-slate-900 dark:text-white mb-6 tracking-tight">
               Abonos de{' '}
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Mantenimiento
               </span>
             </h1>
@@ -346,7 +352,7 @@ export default function StorePage() {
               whileInView={{ scale: 1, rotate: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1, type: 'spring', damping: 15 }}
-              className="mx-auto w-20 h-20 mb-6 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-3xl flex items-center justify-center shadow-xl shadow-purple-500/30"
+              className="mx-auto w-20 h-20 mb-6 bg-linear-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-3xl flex items-center justify-center shadow-xl shadow-purple-500/30"
             >
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
@@ -357,7 +363,7 @@ export default function StorePage() {
             </motion.div>
 
             <div className="mb-8">
-              <p className="text-lg sm:text-xl text-foreground mb-3 font-medium min-h-[3rem]">
+              <p className="text-lg sm:text-xl text-foreground mb-3 font-medium min-h-12">
                 {displayedText}
                 <motion.span
                   animate={{ opacity: [1, 0] }}
@@ -368,7 +374,7 @@ export default function StorePage() {
 
               <div className="flex items-center justify-center gap-2">
                 <Sparkles className="w-5 h-5 text-accent-cyan" />
-                <span className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500 bg-clip-text text-transparent font-montserrat">
+                <span className="text-3xl sm:text-4xl font-black bg-linear-to-r from-cyan-400 via-purple-400 to-pink-500 bg-clip-text text-transparent font-montserrat">
                   ExeSistemasWEB
                 </span>
                 <Sparkles className="w-5 h-5 text-accent-magenta" />

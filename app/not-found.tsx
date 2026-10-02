@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Home } from 'lucide-react'
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 
 const floatingShapes = [
   {
@@ -68,6 +69,12 @@ export default function NotFound() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
+      <div className="absolute top-6 right-6 z-30">
+        <div className="rounded-2xl bg-card/80 backdrop-blur-xl border border-border p-1 shadow-md flex items-center">
+          <LanguageSwitcher />
+        </div>
+      </div>
+
       {floatingShapes.map((shape, i) => (
         <motion.div
           key={i}
@@ -86,8 +93,8 @@ export default function NotFound() {
         />
       ))}
 
-      <div className="absolute w-[500px] h-[500px] bg-accent-cyan/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute w-[400px] h-[400px] bg-accent-magenta/5 rounded-full blur-[100px] pointer-events-none translate-x-40 translate-y-40" />
+      <div className="absolute w-125 h-125 bg-accent-cyan/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute w-100 h-100 bg-accent-magenta/5 rounded-full blur-[100px] pointer-events-none translate-x-40 translate-y-40" />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}

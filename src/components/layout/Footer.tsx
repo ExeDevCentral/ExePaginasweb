@@ -10,6 +10,7 @@ import { Code2, Mail, Zap, Shield, Send, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
 
 import Logo from './Logo'
+import LanguageSwitcher from './LanguageSwitcher'
 import { MatrixScramble } from '@/components/Effects/MatrixText'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '@/core/utils/whatsappUtils'
 
@@ -406,7 +407,7 @@ const Footer = () => {
         <div className="pt-6 border-t border-foreground/10 dark:border-white/10">
           {/* Gradient accent scanline */}
           <div className="relative mb-5 h-px w-full overflow-hidden">
-            <div className="absolute inset-0 bg-linear-to-r from-transparent via-accent-cyan/40 to-transparent sm:animate-[gradientX_4s_ease_infinite]" />
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-accent-cyan/40 to-transparent sm:animate-gradient-x" />
           </div>
 
           <div className="flex flex-col lg:flex-row items-center justify-between gap-4 text-xs">
@@ -414,7 +415,7 @@ const Footer = () => {
             <div className="flex items-center justify-center lg:justify-start gap-2.5 text-muted-foreground text-[11px] font-mono tracking-wide">
               <Logo size={20} variant="dark" />
               <p>
-                © 2025 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
+                © 2026 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
                 {' · '}
                 {t('footer.derechos') || 'Todos los derechos reservados.'}
               </p>
@@ -443,8 +444,12 @@ const Footer = () => {
               </a>
             </div>
 
-            {/* Right: GitHub profile with clearance from the floating chat assistant */}
-            <div className="flex items-center gap-2 lg:pr-28">
+            {/* Right: Language Switcher + GitHub profile with clearance from the floating chat assistant */}
+            <div className="flex items-center gap-3 lg:pr-28">
+              <div className="rounded-full bg-card/80 border border-foreground/10 px-1.5 py-0.5 shadow-sm flex items-center">
+                <LanguageSwitcher direction="up" />
+              </div>
+
               <span className="text-muted-foreground font-mono text-[11px]">
                 {t('footer.built_by') || 'Built & maintained by'}
               </span>

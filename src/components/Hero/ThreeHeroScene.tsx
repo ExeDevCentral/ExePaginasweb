@@ -22,6 +22,74 @@ const FallbackCSSBackground: React.FC = () => (
   </div>
 )
 
+interface ParticleBuffers {
+  init: Float32Array
+  target: Float32Array
+  current: Float32Array
+  colors: Float32Array
+}
+
+function getParticleColor(
+  mixRatio: number,
+  cyan: THREE.Color,
+  magenta: THREE.Color,
+  white: THREE.Color
+): THREE.Color {
+  if (mixRatio < 0.4) return cyan
+  if (mixRatio < 0.8) return magenta
+  return white
+}
+
+function createParticleBuffers(count: number): ParticleBuffers {
+  const init = new Float32Array(count * 3)
+  const target = new Float32Array(count * 3)
+  const current = new Float32Array(count * 3)
+  const colors = new Float32Array(count * 3)
+
+  const cyanColor = new THREE.Color('#00f0ff')
+  const magentaColor = new THREE.Color('#ff007f')
+  const whiteColor = new THREE.Color('#ffffff')
+
+  const side = Math.cbrt(count)
+  const gridSize = Math.ceil(side)
+  const spacing = 0.45
+
+  for (let i = 0; i < count; i++) {
+    const i3 = i * 3
+
+    // Chaos
+    const u = Math.random()
+    const v = Math.random()
+    const theta = u * 2.0 * Math.PI
+    const phi = Math.acos(2.0 * v - 1.0)
+    const r = Math.cbrt(Math.random()) * 4.5
+
+    init[i3] = r * Math.sin(phi) * Math.cos(theta)
+    init[i3 + 1] = r * Math.sin(phi) * Math.sin(theta)
+    init[i3 + 2] = (Math.random() - 0.5) * 4
+
+    // Target Matrix
+    const xIndex = i % gridSize
+    const yIndex = Math.floor(i / gridSize) % gridSize
+    const zIndex = Math.floor(i / (gridSize * gridSize))
+
+    target[i3] = (xIndex - gridSize / 2) * spacing
+    target[i3 + 1] = (yIndex - gridSize / 2) * spacing
+    target[i3 + 2] = (zIndex - gridSize / 2) * spacing
+
+    current[i3] = init[i3]!
+    current[i3 + 1] = init[i3 + 1]!
+    current[i3 + 2] = init[i3 + 2]!
+
+    const particleColor = getParticleColor(Math.random(), cyanColor, magentaColor, whiteColor)
+    colors[i3] = particleColor.r
+    colors[i3 + 1] = particleColor.g
+    colors[i3 + 2] = particleColor.b
+  }
+
+  return { init, target, current, colors }
+}
+
 export const ThreeHeroScene: React.FC = () => {
   const { hasWebGL, isLowTier, prefersReducedMotion } = useDeviceCapabilities()
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -65,52 +133,7 @@ export const ThreeHeroScene: React.FC = () => {
 
     // Particles Generation
     const count = isLowTier ? 250 : 800
-    const init = new Float32Array(count * 3)
-    const target = new Float32Array(count * 3)
-    const current = new Float32Array(count * 3)
-    const colors = new Float32Array(count * 3)
-
-    const cyanColor = new THREE.Color('#00f0ff')
-    const magentaColor = new THREE.Color('#ff007f')
-    const whiteColor = new THREE.Color('#ffffff')
-
-    const side = Math.cbrt(count)
-    const gridSize = Math.ceil(side)
-    const spacing = 0.45
-
-    for (let i = 0; i < count; i++) {
-      const i3 = i * 3
-
-      // Chaos
-      const u = Math.random()
-      const v = Math.random()
-      const theta = u * 2.0 * Math.PI
-      const phi = Math.acos(2.0 * v - 1.0)
-      const r = Math.cbrt(Math.random()) * 4.5
-
-      init[i3] = r * Math.sin(phi) * Math.cos(theta)
-      init[i3 + 1] = r * Math.sin(phi) * Math.sin(theta)
-      init[i3 + 2] = (Math.random() - 0.5) * 4
-
-      // Target Matrix
-      const xIndex = i % gridSize
-      const yIndex = Math.floor(i / gridSize) % gridSize
-      const zIndex = Math.floor(i / (gridSize * gridSize))
-
-      target[i3] = (xIndex - gridSize / 2) * spacing
-      target[i3 + 1] = (yIndex - gridSize / 2) * spacing
-      target[i3 + 2] = (zIndex - gridSize / 2) * spacing
-
-      current[i3] = init[i3]!
-      current[i3 + 1] = init[i3 + 1]!
-      current[i3 + 2] = init[i3 + 2]!
-
-      const mixRatio = Math.random()
-      const particleColor = mixRatio < 0.4 ? cyanColor : mixRatio < 0.8 ? magentaColor : whiteColor
-      colors[i3] = particleColor.r
-      colors[i3 + 1] = particleColor.g
-      colors[i3 + 2] = particleColor.b
-    }
+    const { init, target, current, colors } = createParticleBuffers(count)
 
     const geometry = new THREE.BufferGeometry()
     const posAttr = new THREE.BufferAttribute(current, 3)

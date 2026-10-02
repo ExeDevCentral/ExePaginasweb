@@ -11,9 +11,9 @@
  */
 'use client'
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 // Íconos SVG puros para máxima velocidad y cero problemas de bundling
 const ArrowRightIcon = ({ className = 'w-4 h-4' }: { className?: string }) => (
@@ -103,6 +103,7 @@ const Columns4Icon = ({ className = 'w-4 h-4' }: { className?: string }) => (
 import OptimusGlyphSphere from './OptimusGlyphSphere'
 import SpotlightBorderCard from '../shared/SpotlightBorderCard'
 import ConvergentTypewriterSubtitle from './ConvergentTypewriterSubtitle'
+import HeroNeonSignboard from './HeroNeonSignboard'
 import { trackEvent } from '@/core/analytics/trackEvent'
 
 const ROTATING_WORDS = ['escalar', 'vender 24/7', 'automatizar', 'innovar']
@@ -196,6 +197,18 @@ export const OptimusScaleHero: React.FC = () => {
     'all'
   )
 
+  const heroRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  })
+
+  // Opción 2: Dolly-Out Phosphor Decay del Banner (sin anclar / sin trabar el scroll)
+  const heroDollyScale = useTransform(scrollYProgress, [0, 0.75], [1, 0.95])
+  const heroDollyOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.85])
+  const auraIntensity = useTransform(scrollYProgress, [0, 0.5], [0.6, 0.15])
+  const heroDollyY = useTransform(scrollYProgress, [0, 0.75], [0, 28])
+
   const rotatingWords = useMemo(() => {
     const list = t('hero.palabras_rotativas', { returnObjects: true })
     if (Array.isArray(list) && list.length > 0) return list as string[]
@@ -223,20 +236,30 @@ export const OptimusScaleHero: React.FC = () => {
           1. HERO PRINCIPAL (ESTRUCTURA ALINEADA CON EL NAVBAR)
          ======================================================== */}
       <section
+        ref={heroRef}
         aria-label="Hero principal"
         onMouseMove={handleHeroMouseMove}
         className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between pt-24 sm:pt-28 pb-4 overflow-hidden"
       >
-        {/* Aura radial interactiva suave */}
-        <div
-          className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 opacity-40 dark:opacity-60"
+        {/* Aura radial interactiva suave con decaimiento lumínico en scroll (Opción 2) */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300"
           style={{
+            opacity: auraIntensity,
             background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(6, 182, 212, 0.05), transparent 70%)`,
           }}
         />
 
-        {/* CONTENEDOR EXACTO ALINEADO CON NAVBAR: max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center my-auto">
+        {/* CONTENEDOR CON DOLLY-OUT (OPCIÓN 2: RETROCESO SUAVE DE PERSPECTIVA SIN TRABAR SCROLL) */}
+        <motion.div
+          style={{
+            scale: heroDollyScale,
+            opacity: heroDollyOpacity,
+            y: heroDollyY,
+            transformOrigin: 'top center',
+          }}
+          className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center my-auto"
+        >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center w-full my-auto">
             {/* COLUMNA IZQUIERDA: CONTENIDO EDITORIAL LIMPIO (lg:col-span-6) */}
             <div className="lg:col-span-6 flex flex-col items-start text-left z-20">
@@ -249,11 +272,12 @@ export const OptimusScaleHero: React.FC = () => {
                 </span>
               </div>
 
+              {/* CARTEL LUMINOSO NEÓN DEL LOGO (ALTO IMPACTO: SE ACHICA Y APAGA AL BAJAR) */}
+              <HeroNeonSignboard className="mt-4 mb-2" />
+
               {/* 2. TÍTULO H1: 100% SEO FRIENDLY PARA BUSCADORES (BRAVE, GOOGLE, BING) */}
-              <h1 className="mt-4 text-4xl sm:text-6xl xl:text-7xl font-sans font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-slate-950 dark:text-white">
-                <span className="block text-2xl sm:text-3xl xl:text-4xl font-mono font-bold tracking-tight text-cyan-600 dark:text-cyan-400 mb-2">
-                  Exe Páginas Web
-                </span>
+              <h1 className="mt-2 text-3xl sm:text-5xl xl:text-6xl font-sans font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-slate-950 dark:text-white">
+                <span className="sr-only">Exe Páginas Web - </span>
                 <span className="block font-semibold">
                   {t('hero.titulo_prefijo') || 'Páginas web y sistemas a medida'}
                 </span>
@@ -343,11 +367,13 @@ export const OptimusScaleHero: React.FC = () => {
             </div>
           </div>
 
-          {/* TIRA DEBAJO DEL HERO: 3 CARDS SEPARADAS POR LÍNEAS VERTICALES FINAS */}
+          {/* TIRA DEBAJO DEL HERO: 3 CARDS SEPARADAS POR LÍNEAS VERTICALES FINAS CON ÍCONOS SERIOS */}
           <div className="w-full border-t border-slate-200/80 dark:border-white/10 pt-6 mt-12 sm:mt-16">
             <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200/80 dark:divide-white/10 gap-4 md:gap-0">
-              <div className="flex items-center gap-3 md:px-6 first:pl-0 py-2 md:py-0">
-                <ZapIcon className="w-4 h-4 text-cyan-500 shrink-0" />
+              <div className="flex items-center gap-3.5 md:px-6 first:pl-0 py-2 md:py-0">
+                <div className="relative w-8 h-8 rounded-lg bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] shrink-0">
+                  <ZapIcon className="w-4 h-4" />
+                </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-sm font-bold text-slate-900 dark:text-white">
                     {t('hero.metric_carga') || '0.38s Carga'}
@@ -357,8 +383,10 @@ export const OptimusScaleHero: React.FC = () => {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-3 md:px-6 py-2 md:py-0">
-                <ShieldCheckIcon className="w-4 h-4 text-cyan-500 shrink-0" />
+              <div className="flex items-center gap-3.5 md:px-6 py-2 md:py-0">
+                <div className="relative w-8 h-8 rounded-lg bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] shrink-0">
+                  <ShieldCheckIcon className="w-4 h-4" />
+                </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-sm font-bold text-slate-900 dark:text-white">
                     {t('hero.metric_tuyo') || '100% Tuyo'}
@@ -368,8 +396,10 @@ export const OptimusScaleHero: React.FC = () => {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-3 md:px-6 last:pr-0 py-2 md:py-0">
-                <CpuIcon className="w-4 h-4 text-cyan-500 shrink-0" />
+              <div className="flex items-center gap-3.5 md:px-6 last:pr-0 py-2 md:py-0">
+                <div className="relative w-8 h-8 rounded-lg bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] shrink-0">
+                  <CpuIcon className="w-4 h-4" />
+                </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-sm font-bold text-slate-900 dark:text-white">
                     {t('hero.metric_autonomo') || 'Autónomo 24/7'}
@@ -381,7 +411,7 @@ export const OptimusScaleHero: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* TICKER / MARQUEE DE MÉTRICAS EN LA BASE DEL HERO (ESTILO EXACTO OPTIMUS) */}
         <div className="relative z-10 w-full mt-8 sm:mt-10 py-4.5 border-t border-slate-200/80 dark:border-white/10 overflow-hidden bg-slate-100/60 dark:bg-black/40 backdrop-blur-xs select-none">
@@ -536,9 +566,11 @@ export const OptimusScaleHero: React.FC = () => {
                         {cap.badge}
                       </span>
                     </div>
-                    <Icon
-                      className={`w-5 h-5 ${colorTextClass} group-hover:scale-110 transition-transform duration-300`}
-                    />
+                    <div className="relative w-9 h-9 rounded-xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center shadow-xs dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] group-hover:scale-105 transition-all duration-300 shrink-0">
+                      <Icon
+                        className={`w-4.5 h-4.5 ${colorTextClass} transition-transform duration-300`}
+                      />
+                    </div>
                   </div>
 
                   <h3

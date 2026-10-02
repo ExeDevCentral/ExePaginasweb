@@ -9,8 +9,17 @@ import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Scissors, Wheat, Shirt, Volleyball, Menu, X, ArrowRight } from 'lucide-react'
+import { motion, AnimatePresence, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import {
+  ChevronDown,
+  CalendarCheck,
+  ReceiptText,
+  Layers,
+  CalendarClock,
+  Menu,
+  X,
+  ArrowRight,
+} from 'lucide-react'
 import Logo from './Logo'
 import LanguageSwitcher from './LanguageSwitcher'
 import ThemeToggle from './ThemeToggle'
@@ -18,54 +27,60 @@ import { MatrixWordmark } from '@/components/Effects/MatrixText'
 import { useTheme } from '@/core/theme/ThemeContext'
 
 /** Renders EXE//PAGINASWEB.COM with per-letter matrix scramble */
-function HeaderWordmark() {
+function HeaderWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
   const { theme } = useTheme()
   const light = theme === 'light'
+  const scale = useTransform(scrollY, [0, 380], [1, 0.88])
+
   return (
-    <MatrixWordmark
-      parts={[
-        { text: 'EXE', color: light ? '#0f172a' : '#ffffff' },
-        { text: '//', color: light ? '#b45309' : '#facc15' },
-        { text: 'PAGINASWEB', color: light ? '#0f172a' : '#ffffff' },
-        { text: '.', color: light ? '#0e7490' : '#22d3ee' },
-        { text: 'COM', color: light ? '#0e7490' : '#22d3ee' },
-      ]}
-      className="text-xs font-black tracking-tight sm:text-sm"
-    />
+    <motion.div style={{ scale, transformOrigin: 'left center' }} className="flex items-center">
+      <MatrixWordmark
+        parts={[
+          { text: 'EXE', color: light ? '#0f172a' : '#ffffff' },
+          { text: '//', color: light ? '#b45309' : '#facc15' },
+          { text: 'PAGINASWEB', color: light ? '#0f172a' : '#ffffff' },
+          { text: '.', color: light ? '#0e7490' : '#22d3ee' },
+          { text: 'COM', color: light ? '#0e7490' : '#22d3ee' },
+        ]}
+        className="text-xs font-black tracking-tight sm:text-sm"
+      />
+    </motion.div>
   )
 }
 
-/** Logo with neon flicker on mount */
-function HeaderLogo() {
-  const [style, setStyle] = useState<React.CSSProperties>({ opacity: 0 })
+/** Logo with neon flicker on mount + Opción 2: Dolly-Out Phosphor Decay & Scroll Shrink */
+function HeaderLogo({ scrollY }: { scrollY: MotionValue<number> }) {
+  const [flickerStyle, setFlickerStyle] = useState<React.CSSProperties>({ opacity: 0 })
+
+  // Opción 2: El cartel luminoso se achica suavemente hacia la barra (de 46px a 33px)
+  const scale = useTransform(scrollY, [0, 380], [1, 0.72])
+  // Opción 2: Decaimiento del fósforo (el resplandor de neón se apaga con el scroll)
+  const phosphorGlow = useTransform(scrollY, [0, 240], [1, 0])
+  const haloOpacity = useTransform(scrollY, [0, 180], [0.85, 0])
 
   useEffect(() => {
     const glow = (size: number, alpha: string, bright: number) =>
-      `drop-shadow(0 0 ${size}px #facc15) drop-shadow(0 0 ${size * 2}px #facc15${alpha}) brightness(${bright})`
+      `drop-shadow(0 0 ${size}px #facc15) drop-shadow(0 0 ${size * 2}px #facc15${alpha}) drop-shadow(0 0 ${size * 3}px rgba(6,182,212,0.45)) brightness(${bright})`
 
-    // Fast, aggressive bar-sign flicker — ~2s total, snappy transitions
+    // Fast, aggressive bar-sign flicker — secuencia realista de encendido de cartel
     const seq: [number, number, string][] = [
-      [150, 1, glow(20, 'ff', 2.8)], // FLASH on
-      [250, 0, 'none'], // hard off
-      [350, 1, glow(18, 'cc', 2.5)], // on
-      [420, 0, 'none'], // off
-      [500, 1, glow(16, 'aa', 2.2)], // on
-      [560, 0, 'none'], // off
-      [620, 1, glow(14, '88', 2.0)], // on
-      [680, 0, 'none'], // off
-      [740, 0.9, glow(12, '77', 1.8)], // partial
-      [800, 0, 'none'], // off
-      [860, 1, glow(14, '88', 2.0)], // strong back
-      [950, 0.2, glow(4, '22', 1.1)], // dim flicker
-      [1020, 1, glow(12, '77', 1.8)], // recover
-      [1100, 0.6, glow(8, '44', 1.3)], // dip
-      [1180, 1, glow(10, '66', 1.5)], // stabilise
-      [1400, 1, glow(7, '44', 1.1)], // resting glow
+      [100, 1, glow(22, 'ff', 2.8)], // FLASH on
+      [180, 0, 'none'], // hard off
+      [260, 1, glow(20, 'cc', 2.5)], // on
+      [320, 0, 'none'], // off
+      [380, 1, glow(18, 'aa', 2.2)], // on
+      [440, 0, 'none'], // off
+      [500, 1, glow(16, '88', 2.0)], // on
+      [600, 0.3, glow(4, '22', 1.1)], // dim flicker
+      [680, 1, glow(14, '77', 1.8)], // recover
+      [760, 0.7, glow(8, '44', 1.3)], // dip
+      [840, 1, glow(12, '66', 1.5)], // stabilise
+      [1100, 1, glow(10, '55', 1.3)], // resting glow estable
     ]
 
     const timers = seq.map(([delay, opacity, filter]) =>
       setTimeout(
-        () => setStyle({ opacity, filter, transition: 'opacity 0.03s, filter 0.04s' }),
+        () => setFlickerStyle({ opacity, filter, transition: 'opacity 0.03s, filter 0.04s' }),
         delay
       )
     )
@@ -73,37 +88,62 @@ function HeaderLogo() {
   }, [])
 
   return (
-    <span className="relative shrink-0 group" style={{ width: 38, height: 38 }}>
-      <span className="absolute inset-0 rounded-full bg-yellow-400/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none scale-125" />
+    <motion.span
+      className="relative shrink-0 group flex items-center justify-center origin-left"
+      style={{ width: 46, height: 46, scale }}
+    >
+      {/* Halo de luz ambiental que baña el fondo y se disipa con el scroll */}
+      <motion.span
+        className="absolute inset-0 rounded-full bg-yellow-400/25 blur-lg pointer-events-none scale-150"
+        style={{ opacity: haloOpacity }}
+      />
+
+      {/* Capa 1: Silueta base nítida y seria (permanece impecable al apagarse el neón) */}
       <span
-        className="relative z-10 block group-hover:scale-110 transition-transform duration-300"
-        style={{ width: 38, height: 38, ...style }}
+        className="relative z-10 block transition-transform duration-300 group-hover:scale-105"
+        style={{ width: 46, height: 46, opacity: flickerStyle.opacity }}
       >
-        <Logo size={38} />
+        <Logo size={46} />
       </span>
-    </span>
+
+      {/* Capa 2: Emisión luminosa del neón (se apaga suavemente con el scroll: Phosphor Decay) */}
+      <motion.span
+        className="absolute inset-0 z-20 pointer-events-none"
+        style={{
+          opacity: phosphorGlow,
+          filter: flickerStyle.filter,
+        }}
+      >
+        <Logo size={46} />
+      </motion.span>
+    </motion.span>
   )
 }
 
 const solutions = [
   {
     href: '/soluciones#peluqueria',
-    label: 'Peluquerías',
-    detail: 'Turnos y fidelización',
-    icon: Scissors,
+    label: 'Peluquerías & Salones',
+    detail: 'Gestión de turnos & CRM',
+    icon: CalendarCheck,
   },
-  { href: '/soluciones#panaderia', label: 'Panaderías', detail: 'Pedidos y catálogo', icon: Wheat },
+  {
+    href: '/soluciones#panaderia',
+    label: 'Panaderías & Gastro',
+    detail: 'Terminal de pedidos & catálogo',
+    icon: ReceiptText,
+  },
   {
     href: '/soluciones#indumentaria',
-    label: 'Indumentaria',
-    detail: 'E-commerce a medida',
-    icon: Shirt,
+    label: 'Indumentaria & Moda',
+    detail: 'E-commerce a medida & stock',
+    icon: Layers,
   },
   {
     href: '/soluciones#canchas',
-    label: 'Canchas',
-    detail: 'Reservas y ocupación',
-    icon: Volleyball,
+    label: 'Canchas & Clubes',
+    detail: 'Disponibilidad en vivo & domótica',
+    icon: CalendarClock,
   },
 ]
 
@@ -116,6 +156,19 @@ export default function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [solutionsOpen, setSolutionsOpen] = useState(false)
   const solutionsRef = useRef<HTMLDivElement>(null)
+
+  // Opción 2: Monitoreo de scroll fluido sin anclajes ni bloqueo
+  const { scrollY } = useScroll()
+  const [isAnchored, setIsAnchored] = useState(false)
+  const isHomePage = pathname === '/' || pathname === ''
+
+  useEffect(() => {
+    // En la página principal no se ancla hasta llegar al primer div (~420px de scroll)
+    const threshold = isHomePage ? 420 : 60
+    return scrollY.on('change', (latest) => {
+      setIsAnchored(latest >= threshold)
+    })
+  }, [scrollY, isHomePage])
 
   const closeMobile = () => setMobileOpen(false)
 
@@ -167,10 +220,21 @@ export default function SiteHeader() {
     return !text || text === key ? fallback : text
   }
 
+  const headerHasBackground = isAnchored || mobileOpen
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-foreground/10 bg-background/90 backdrop-blur-xl dark:border-white/10 dark:bg-[#050508]/90">
-      <div className="mx-auto flex h-17 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        {/* Logo + wordmark */}
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        headerHasBackground
+          ? 'border-b border-foreground/10 bg-background/90 backdrop-blur-xl dark:border-white/10 dark:bg-[#050508]/90 shadow-xs'
+          : 'border-b border-transparent bg-transparent backdrop-blur-none shadow-none'
+      }`}
+    >
+      <div
+        className={`mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${
+          isAnchored ? 'h-16' : 'h-18 sm:h-20'
+        }`}
+      >
+        {/* Logo + wordmark con Opción 2: Phosphor Decay y Scroll Shrink fluido */}
         <div className="flex shrink-0 items-center gap-3">
           <Link
             href="/"
@@ -178,14 +242,14 @@ export default function SiteHeader() {
             aria-label={getNavLabel('nav.inicio', 'Inicio')}
             className="origin-center transition-transform duration-180 ease-out hover:scale-105 active:scale-95"
           >
-            <HeaderLogo />
+            <HeaderLogo scrollY={scrollY} />
           </Link>
           <Link
             href="/"
             onClick={handleHomeClick}
             className="outline-none origin-center transition-transform duration-180 ease-out hover:scale-[1.02] active:scale-[0.98]"
           >
-            <HeaderWordmark />
+            <HeaderWordmark scrollY={scrollY} />
           </Link>
         </div>
 
@@ -235,8 +299,10 @@ export default function SiteHeader() {
                           className="group relative flex flex-col p-3 rounded-2xl border border-slate-200/80 dark:border-white/5 bg-slate-50/60 dark:bg-white/2 hover:bg-cyan-500/8 hover:border-cyan-500/40 dark:hover:border-cyan-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
                         >
                           <div className="flex items-center gap-2.5 mb-1.5">
-                            <div className="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 group-hover:bg-cyan-500 group-hover:text-slate-950 group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(6,182,212,0.5)] transition-all duration-300">
-                              <Icon size={16} />
+                            {/* Chasis de hardware pulido con bisel mecanizado y micro-led */}
+                            <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-sm dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_2px_4px_rgba(0,0,0,0.4)] group-hover:border-cyan-500/50 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-all duration-300 shrink-0">
+                              <Icon size={17} strokeWidth={1.8} className="relative z-10" />
+                              <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-cyan-400 ring-2 ring-white dark:ring-slate-950 opacity-70 group-hover:opacity-100" />
                             </div>
                             <span className="block text-sm font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
                               {label}
@@ -353,10 +419,12 @@ export default function SiteHeader() {
                 key={href}
                 href={href}
                 onClick={closeMobile}
-                className="rounded-lg bg-black/5 p-3 text-xs font-bold text-slate-800 dark:bg-white/5 dark:text-slate-200"
+                className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 dark:border-white/10 bg-slate-100/70 dark:bg-white/5 p-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 active:scale-95 transition-all"
               >
-                <Icon size={16} className="mb-1 text-cyan-500 dark:text-cyan-400" />
-                {label}
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shrink-0">
+                  <Icon size={15} strokeWidth={1.8} />
+                </div>
+                <span>{label}</span>
               </Link>
             ))}
           </div>

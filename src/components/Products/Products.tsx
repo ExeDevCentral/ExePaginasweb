@@ -6,7 +6,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Scissors, Coffee, ShoppingBag, Calendar, ArrowRight } from 'lucide-react'
+import { CalendarCheck, ReceiptText, Layers, CalendarClock, ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ProductDemo from './ProductDemo'
@@ -26,7 +26,7 @@ const Products = () => {
 
   const products = [
     {
-      icon: Scissors,
+      icon: CalendarCheck,
       features: ['', '', '', '', ''],
       price: '$250-450 USD',
       color: 'from-pink-500 via-rose-500 to-purple-600',
@@ -35,7 +35,7 @@ const Products = () => {
       anchorId: 'peluqueria',
     },
     {
-      icon: Coffee,
+      icon: ReceiptText,
       features: ['', '', '', '', ''],
       price: '$200-400 USD',
       color: 'from-amber-500 via-orange-500 to-yellow-600',
@@ -44,7 +44,7 @@ const Products = () => {
       anchorId: 'panaderia',
     },
     {
-      icon: ShoppingBag,
+      icon: Layers,
       features: ['', '', '', '', ''],
       price: '$300-500 USD',
       color: 'from-emerald-400 via-teal-500 to-cyan-600',
@@ -53,7 +53,7 @@ const Products = () => {
       anchorId: 'indumentaria',
     },
     {
-      icon: Calendar,
+      icon: CalendarClock,
       features: ['', '', '', '', ''],
       price: '$350-550 USD',
       color: 'from-cyan-400 via-blue-500 to-indigo-600',

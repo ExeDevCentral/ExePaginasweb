@@ -18,7 +18,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 type Product = {
-  icon: React.ComponentType<{ className?: string }>
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>
   features: string[]
   price: string
   color: string
@@ -27,22 +27,26 @@ type Product = {
   anchorId: string
 }
 
-const ROI_BADGES: Record<string, { label: string; color: string }> = {
+const ROI_BADGES: Record<string, { label: string; color: string; dotColor: string }> = {
   peluqueria: {
-    label: '💇 Agenda Llena 24/7',
-    color: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
+    label: 'Agenda Llena 24/7',
+    color: 'bg-rose-500/10 text-rose-500 dark:text-rose-300 border-rose-500/20',
+    dotColor: 'bg-rose-400',
   },
   panaderia: {
-    label: '🥐 +40% Ventas Mostrador',
-    color: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+    label: '+40% Ventas Mostrador',
+    color: 'bg-amber-500/10 text-amber-500 dark:text-amber-300 border-amber-500/20',
+    dotColor: 'bg-amber-400',
   },
   ropa: {
-    label: '👗 Control de Talles & Stock',
-    color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+    label: 'Control de Talles & Stock',
+    color: 'bg-emerald-500/10 text-emerald-500 dark:text-emerald-300 border-emerald-500/20',
+    dotColor: 'bg-emerald-400',
   },
   padel: {
-    label: '⚡ +45% Ocupación Canchas',
-    color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+    label: '+45% Ocupación Canchas',
+    color: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 border-cyan-500/20',
+    dotColor: 'bg-cyan-400',
   },
 }
 
@@ -73,8 +77,9 @@ export default function ProductCard({
   const [includeWhatsAppBot, setIncludeWhatsAppBot] = useState(true)
 
   const roi = ROI_BADGES[product.tKey] || {
-    label: '✨ Máximo Rendimiento',
-    color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+    label: 'Máximo Rendimiento',
+    color: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20',
+    dotColor: 'bg-cyan-400',
   }
 
   const match = /(\d+)/.exec(product.price)
@@ -88,16 +93,16 @@ export default function ProductCard({
         <div className="absolute -inset-4 rounded-[28px] bg-black/40 dark:bg-black/70 blur-[25px] -z-10 pointer-events-none transition-opacity duration-300 group-hover:opacity-100 opacity-60" />
 
         {/* Cuerpo Principal de la Tarjeta */}
-        <div className="h-full p-4.5 sm:p-7 md:p-8 bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-[#171729] dark:via-[#111122] dark:to-[#0c0c15] backdrop-blur-xl border border-border rounded-2xl transition-all duration-300 relative shadow-xl overflow-hidden dark:border-white/10 dark:shadow-[0_0_60px_rgba(14,165,233,0.07)]">
+        <div className="h-full p-4.5 sm:p-7 md:p-8 bg-linear-to-br from-white via-slate-50 to-slate-100 dark:from-[#171729] dark:via-[#111122] dark:to-[#0c0c15] backdrop-blur-xl border border-border rounded-2xl transition-all duration-300 relative shadow-xl overflow-hidden dark:border-white/10 dark:shadow-[0_0_60px_rgba(14,165,233,0.07)]">
           {/* Línea de acento superior */}
-          <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${product.color}`} />
+          <div className={`absolute inset-x-0 top-0 h-px bg-linear-to-r ${product.color}`} />
 
           {/* Brillo superior */}
-          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/40 to-transparent dark:from-white/5 dark:to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-white/40 to-transparent dark:from-white/5 dark:to-transparent pointer-events-none" />
 
           {/* Filo holográfico */}
           <div
-            className="absolute inset-0 rounded-2xl p-[2px] opacity-0 group-hover:opacity-100 dark:opacity-30 dark:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            className="absolute inset-0 rounded-2xl p-0.5 opacity-0 group-hover:opacity-100 dark:opacity-30 dark:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
             style={{
               background:
                 'conic-gradient(from 45deg, transparent, rgba(236,72,153,0.8), rgba(56,189,248,0.8), transparent 40%)',
@@ -110,22 +115,31 @@ export default function ProductCard({
           {/* Top Bar with Icon & ROI Badge */}
           <div className="flex items-start justify-between mb-5 sm:mb-6">
             <div className="relative">
+              {/* Resplandor sutil de fondo adaptado a la tonalidad del rubro */}
               <div
-                className={`absolute -inset-3 bg-gradient-to-br ${product.color} opacity-30 blur-xl rounded-full group-hover:opacity-60 transition-opacity duration-300`}
+                className={`absolute -inset-2 bg-linear-to-br ${product.color} opacity-20 blur-xl rounded-2xl group-hover:opacity-40 transition-opacity duration-300`}
               />
-              <motion.div
-                className={`relative inline-flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${product.color} p-2.5 sm:p-3 shadow-lg group-hover:scale-105 transition-all duration-300 ring-1 ring-white/20`}
-                animate={{ y: [0, -4, 0] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <Icon className="h-full w-full text-white transition-colors duration-300" />
-              </motion.div>
+              {/* Micro-chasis de hardware con bisel superior e indicador de telemetría en vivo */}
+              <div className="relative inline-flex h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-linear-to-b from-slate-900/95 via-[#0e111d] to-[#070912] border border-white/10 border-t-white/25 p-3 shadow-xl dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_12px_24px_-6px_rgba(0,0,0,0.8)] group-hover:scale-105 group-hover:border-cyan-400/50 transition-all duration-300">
+                <Icon
+                  className="h-6 w-6 text-white group-hover:text-cyan-300 transition-colors duration-300"
+                  strokeWidth={1.8}
+                />
+                {/* Micro status led para dar sensación seria de software activo en tiempo real */}
+                <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-60" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500 ring-1 ring-slate-950" />
+                </span>
+              </div>
             </div>
 
-            {/* ROI Badge */}
+            {/* ROI Badge serio con indicador de pulso (sin emojis informales) */}
             <span
-              className={`text-[10px] sm:text-[11px] font-bold px-2.5 sm:px-3 py-1 rounded-full border backdrop-blur-md shadow-sm ${roi.color}`}
+              className={`inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono font-bold px-2.5 sm:px-3 py-1 rounded-full border backdrop-blur-md shadow-xs ${roi.color}`}
             >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${roi.dotColor || 'bg-cyan-400'} animate-pulse`}
+              />
               {t(`products.${product.tKey}_roi`, roi.label)}
             </span>
           </div>
@@ -295,7 +309,7 @@ export default function ProductCard({
                   key={idx}
                   className="flex items-start gap-2.5 text-xs text-slate-600 dark:text-slate-300 font-medium"
                 >
-                  <CheckCircle className="w-4 h-4 text-accent-cyan mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-accent-cyan mt-0.5 shrink-0" />
                   <span>{t(`products.${product.tKey}_feat_${idx + 1}`)}</span>
                 </li>
               ))}
@@ -392,7 +406,7 @@ export default function ProductCard({
                     e.stopPropagation()
                     onOpenDemo()
                   }}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r ${product.color} text-white text-xs font-bold shadow-md hover:opacity-90 transition-all cursor-pointer`}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r ${product.color} text-white text-xs font-bold shadow-md hover:opacity-90 transition-all cursor-pointer`}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >

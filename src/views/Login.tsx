@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import LoginBackground from '../components/Effects/LoginBackground'
 import Logo from '../components/layout/Logo'
+import LanguageSwitcher from '../components/layout/LanguageSwitcher'
 import { getErrorMessage } from '../core/utils/errorUtils'
 import {
   PASSWORD_RULES,
@@ -292,16 +293,22 @@ export default function Login() {
           <span>{t('login.volver_inicio')}</span>
         </motion.a>
 
-        <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-emerald-400 bg-emerald-950/50 backdrop-blur-xl px-4 py-1.5 rounded-full border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span className="font-bold tracking-wider">CONEXIÓN CIFRADA SSL 256-BIT</span>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-emerald-400 bg-emerald-950/50 backdrop-blur-xl px-4 py-1.5 rounded-full border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span className="font-bold tracking-wider">CONEXIÓN CIFRADA SSL 256-BIT</span>
+          </div>
+
+          <div className="rounded-full bg-slate-900/80 border border-white/15 backdrop-blur-xl px-2 py-0.5 shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex items-center">
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
 
       {/* Center Auth Card Container with Animated Gradient Border */}
       <main className="relative z-10 w-full max-w-md mx-auto my-auto py-4">
         {/* Outer Glowing Aura */}
-        <div className="relative p-[1px] rounded-[32px] bg-gradient-to-b from-cyan-500/40 via-purple-500/20 to-pink-500/40 shadow-[0_0_60px_-15px_rgba(14,165,233,0.3)]">
+        <div className="relative p-px rounded-4xl bg-linear-to-b from-cyan-500/40 via-purple-500/20 to-pink-500/40 shadow-[0_0_60px_-15px_rgba(14,165,233,0.3)]">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -309,7 +316,7 @@ export default function Login() {
             className="relative rounded-[31px] bg-[#090a12]/90 border border-white/10 backdrop-blur-3xl p-7 sm:p-9 shadow-2xl overflow-hidden"
           >
             {/* Top Ambient Glow Spot inside Card */}
-            <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-36 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 blur-3xl rounded-full pointer-events-none" />
+            <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-36 bg-linear-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 blur-3xl rounded-full pointer-events-none" />
 
             {/* Header Tech Line */}
             <div className="flex items-center justify-between text-[11px] font-mono tracking-widest uppercase text-slate-400 mb-6 border-b border-white/10 pb-3.5">
@@ -340,7 +347,7 @@ export default function Login() {
                 />
               </motion.div>
 
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-linear-to-r from-white via-slate-100 to-slate-300">
                 {mode === 'login'
                   ? 'Bienvenido de nuevo'
                   : mode === 'register'
@@ -476,7 +483,7 @@ export default function Login() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => switchMode('login')}
-                    className="w-full py-3 rounded-xl font-bold text-xs bg-gradient-to-r from-cyan-500 to-blue-600 text-white transition-all shadow-lg"
+                    className="w-full py-3 rounded-xl font-bold text-xs bg-linear-to-r from-cyan-500 to-blue-600 text-white transition-all shadow-lg"
                   >
                     Volver a iniciar sesión
                   </motion.button>
@@ -779,15 +786,15 @@ export default function Login() {
 
             {/* Trust Features Footer Grid */}
             <div className="mt-6 pt-4 border-t border-white/10 grid grid-cols-3 gap-2 text-center text-[10px] font-mono text-slate-400">
-              <div className="flex flex-col items-center gap-1 p-1.5 rounded-xl bg-white/[0.02] border border-white/5">
+              <div className="flex flex-col items-center gap-1 p-1.5 rounded-xl bg-white/2 border border-white/5">
                 <Shield className="w-3.5 h-3.5 text-cyan-400" />
                 <span>Cifrado E2E</span>
               </div>
-              <div className="flex flex-col items-center gap-1 p-1.5 rounded-xl bg-white/[0.02] border border-white/5">
+              <div className="flex flex-col items-center gap-1 p-1.5 rounded-xl bg-white/2 border border-white/5">
                 <Zap className="w-3.5 h-3.5 text-purple-400" />
                 <span>Uptime 99.9%</span>
               </div>
-              <div className="flex flex-col items-center gap-1 p-1.5 rounded-xl bg-white/[0.02] border border-white/5">
+              <div className="flex flex-col items-center gap-1 p-1.5 rounded-xl bg-white/2 border border-white/5">
                 <Lock className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Auth Supabase</span>
               </div>

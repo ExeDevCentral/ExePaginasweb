@@ -82,7 +82,7 @@ const Footer = () => {
   const { t } = useTranslation()
 
   return (
-    <footer className="relative border-t border-foreground/10 bg-background/80 backdrop-blur-xl pt-16 pb-12 sm:pb-16 z-10 overflow-hidden dark:bg-[#050508]/85 dark:border-white/10">
+    <footer className="relative border-t border-foreground/10 bg-background/80 backdrop-blur-xl pt-16 pb-28 sm:pb-28 lg:pb-24 z-10 overflow-hidden dark:bg-[#050508]/85 dark:border-white/10">
       {/* Ambient background glow */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden opacity-30">
         <div className="absolute top-1/2 left-1/4 h-64 w-64 rounded-full bg-accent-cyan/10 blur-[130px]" />
@@ -410,14 +410,17 @@ const Footer = () => {
             <div className="absolute inset-0 bg-linear-to-r from-transparent via-accent-cyan/40 to-transparent sm:animate-gradient-x" />
           </div>
 
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 text-xs">
-            {/* Left: Copyright con ícono ExePaginasWeb */}
-            <div className="flex items-center justify-center lg:justify-start gap-2.5 text-muted-foreground text-[11px] font-mono tracking-wide">
-              <Logo size={20} variant="dark" />
-              <p>
+          {/* 3-Column Balanced Bottom Bar: No awkward wrapping, clean alignment */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-4 text-xs">
+            {/* Left: Copyright con ícono ExePaginasWeb en una sola línea prolija */}
+            <div className="flex items-center justify-center lg:justify-start gap-2.5 text-muted-foreground text-[11px] font-mono tracking-wide shrink-0">
+              <Logo size={18} variant="dark" />
+              <p className="whitespace-nowrap select-none">
                 © 2026 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
-                {' · '}
-                {t('footer.derechos') || 'Todos los derechos reservados.'}
+                <span className="hidden sm:inline">
+                  {' · '}
+                  {t('footer.derechos') || 'Todos los derechos reservados.'}
+                </span>
               </p>
             </div>
 
@@ -428,12 +431,15 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Diseño & Desarrollo por Exepaginasweb.com"
-                className="group relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-accent-cyan/30 dark:border-accent-cyan/20 bg-accent-cyan/6 dark:bg-white/3 hover:border-accent-cyan/60 dark:hover:border-accent-cyan/50 hover:bg-accent-cyan/10 dark:hover:bg-accent-cyan/7 transition-all duration-300"
+                className="group relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-accent-cyan/30 dark:border-accent-cyan/20 bg-accent-cyan/6 dark:bg-white/3 hover:border-accent-cyan/60 dark:hover:border-accent-cyan/50 hover:bg-accent-cyan/10 dark:hover:bg-accent-cyan/7 transition-all duration-300 shadow-xs whitespace-nowrap"
               >
-                <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  {t('footer.crafted_by') || 'Crafted with precision by'}
+                <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground whitespace-nowrap">
+                  <span className="hidden sm:inline">
+                    {t('footer.crafted_by') || 'Crafted with precision by'}{' '}
+                  </span>
+                  <span className="sm:hidden">Crafted by </span>
                 </span>
-                <span className="text-[10px] uppercase tracking-[0.18em]">
+                <span className="text-[10px] uppercase tracking-[0.16em] whitespace-nowrap">
                   <MatrixScramble
                     text="Exepaginasweb.com"
                     palette="matrix"
@@ -444,25 +450,25 @@ const Footer = () => {
               </a>
             </div>
 
-            {/* Right: Language Switcher + GitHub profile with clearance from the floating chat assistant */}
-            <div className="flex items-center gap-3 lg:pr-28">
-              <div className="rounded-full bg-card/80 border border-foreground/10 px-1.5 py-0.5 shadow-sm flex items-center">
-                <LanguageSwitcher direction="up" />
-              </div>
-
-              <span className="text-muted-foreground font-mono text-[11px]">
-                {t('footer.built_by') || 'Built & maintained by'}
-              </span>
+            {/* Right: GitHub profile + Language Switcher */}
+            <div className="flex items-center justify-center lg:justify-end gap-3 lg:pr-12 xl:pr-0">
               <a
                 href="https://github.com/ExeDevCentral"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold text-accent-cyan hover:text-foreground transition-colors group/gh"
+                title="ExeDevCentral en GitHub"
+                className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-muted-foreground hover:text-accent-cyan transition-colors group/gh whitespace-nowrap"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]" />
                 <span>ExeDevCentral</span>
                 <GithubIcon className="w-3.5 h-3.5 opacity-70 group-hover/gh:opacity-100 transition-opacity" />
               </a>
+
+              <span className="text-foreground/20 dark:text-white/20 select-none">|</span>
+
+              <div className="rounded-full bg-card/90 dark:bg-slate-900/90 border border-foreground/15 dark:border-white/10 px-2 py-0.5 shadow-xs hover:border-accent-cyan/40 transition-colors flex items-center shrink-0">
+                <LanguageSwitcher direction="up" />
+              </div>
             </div>
           </div>
         </div>

@@ -15,7 +15,8 @@
     "area_cliente": "Client Area",
     "sistemas_web_medida": "Custom Web Systems",
     "tienda_online": "Online Store",
-    "cotizador": "Quote Calculator"
+    "cotizador": "Quote Calculator",
+    "cotiza_tu_web": "Quote Your Web"
   },
   "hero": {
     "badge": "2026 — COMPETE FOR ATTENTION",
@@ -667,7 +668,7 @@
     "contacto_form": "Contact Form",
     "derechos": "All rights reserved.",
     "hecho_por": "Made with ♥ by",
-    "cupos_disponibles": "Open slots for development 2026",
+    "cupos_disponibles": "Open slots for development Q4 2025",
     "soluciones_saas": "SaaS Solutions",
     "nav_tienda": "Online Store & E-Commerce",
     "nav_turnos": "Appointments & Booking 24/7",

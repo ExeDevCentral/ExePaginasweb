@@ -62,11 +62,11 @@ export default function LanguageSwitcher({
 
   const hiddenTransform = direction === 'up' ? 'translate-y-1' : '-translate-y-1'
   const visibilityClass = isOpen
-    ? 'opacity-100 visible translate-y-0'
-    : `opacity-0 invisible ${hiddenTransform} group-hover:opacity-100 group-hover:visible group-hover:translate-y-0`
+    ? 'opacity-100 visible translate-y-0 pointer-events-auto'
+    : `opacity-0 invisible ${hiddenTransform} pointer-events-none`
 
   return (
-    <div ref={containerRef} className={`relative group ${className}`}>
+    <div ref={containerRef} className={`relative z-50 ${className}`}>
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -84,7 +84,7 @@ export default function LanguageSwitcher({
       <div
         className={`absolute right-0 ${
           direction === 'up' ? 'bottom-full mb-2' : 'top-full mt-2'
-        } bg-white dark:bg-[#0c0d14] border border-slate-200 dark:border-white/15 rounded-xl shadow-2xl transition-all duration-200 z-50 min-w-42.5 p-1.5 ${visibilityClass}`}
+        } bg-white dark:bg-[#0c0d14] border border-slate-200 dark:border-white/15 rounded-xl shadow-2xl transition-all duration-200 z-100 min-w-42.5 p-1.5 ${visibilityClass}`}
       >
         <div className="px-2.5 py-1 mb-1 border-b border-slate-100 dark:border-white/10 text-[10px] font-sans font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
           Idioma / Language

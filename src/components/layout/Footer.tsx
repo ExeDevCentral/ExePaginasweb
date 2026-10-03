@@ -111,7 +111,9 @@ const Footer = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span>{t('footer.cupos_disponibles') || 'Cupos abiertos para desarrollo 2026'}</span>
+              <span>
+                {t('footer.cupos_disponibles') || 'Cupos abiertos para desarrollo Q4 2025'}
+              </span>
             </div>
 
             {/* Social Channels */}
@@ -414,9 +416,9 @@ const Footer = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-4 text-xs">
             {/* Left: Copyright con ícono ExePaginasWeb en una sola línea prolija */}
             <div className="flex items-center justify-center lg:justify-start gap-2.5 text-muted-foreground text-[11px] font-mono tracking-wide shrink-0">
-              <Logo size={18} variant="dark" />
+              <Logo size={20} variant="auto" />
               <p className="whitespace-nowrap select-none">
-                © 2026 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
+                © 2025 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
                 <span className="hidden sm:inline">
                   {' · '}
                   {t('footer.derechos') || 'Todos los derechos reservados.'}

@@ -1131,8 +1131,12 @@ function CostCard() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8 }}
-      className="rounded-2xl sm:rounded-3xl border border-border bg-card/60 backdrop-blur-2xl p-4 sm:p-8 relative overflow-hidden"
+      className="rounded-2xl sm:rounded-3xl border border-border dark:border-emerald-500/40 bg-card/90 dark:bg-[#060b13] dark:shadow-[0_0_40px_rgba(16,185,129,0.12)] backdrop-blur-2xl p-4 sm:p-8 relative overflow-hidden"
     >
+      {/* Bordes verdes neón finos y alargados (superior e inferior) */}
+      <div className="absolute top-0 inset-x-12 sm:inset-x-20 h-[2px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-16 sm:inset-x-24 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
+
       {/* Resplandor ambiental */}
       <div className="absolute -top-24 right-10 w-80 h-80 bg-accent-cyan/10 rounded-full blur-[140px] pointer-events-none" />
 
@@ -1176,7 +1180,7 @@ function CostCard() {
       {/* SELECTOR DE TIER REAL Y SELECTOR DE MONEDA (ARS / USD) */}
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 mb-6">
         {/* Selector de Planes de la Web */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-2xl bg-muted/70 border border-border/80">
+        <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-2xl bg-muted/70 border border-border/80 dark:border-emerald-500/25">
           {REAL_COST_TIERS.map((tier) => {
             const isActive = tier.id === selectedTierId
             return (
@@ -1200,13 +1204,13 @@ function CostCard() {
         </div>
 
         {/* Selector de Moneda */}
-        <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/60 border border-border/70 text-xs font-mono font-bold">
+        <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/60 border border-border/70 dark:border-emerald-500/30 text-xs font-mono font-bold">
           <button
             type="button"
             onClick={() => setCurrency('ARS')}
             className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
               currency === 'ARS'
-                ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/30'
+                ? 'bg-emerald-500 text-slate-950 font-bold shadow-sm shadow-emerald-500/30'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -1217,7 +1221,7 @@ function CostCard() {
             onClick={() => setCurrency('USD')}
             className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
               currency === 'USD'
-                ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/30'
+                ? 'bg-emerald-500 text-slate-950 font-bold shadow-sm shadow-emerald-500/30'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -1240,7 +1244,7 @@ function CostCard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 lg:gap-10 items-center">
         {/* GRÁFICO SVG SUAVIZADO CON LA LÍNEA VERDE VIBRANTE */}
-        <div className="relative bg-surface-1/40 dark:bg-black/20 p-3 sm:p-5 rounded-2xl border border-border/60">
+        <div className="relative bg-card dark:bg-black/35 p-3 sm:p-5 rounded-2xl border border-border/80 dark:border-emerald-500/30 shadow-inner">
           <svg
             viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
             className="w-full h-auto block select-none overflow-visible"

@@ -16,7 +16,7 @@ Single-context repo (one `CONTEXT.md` + `GLOSSARY.md` + `docs/adr/` at the root)
 
 ### 4 Principios de Ingeniería Real (Matt Pocock)
 
-1. **Identidad & Alineación**: Autoría directa de Exequiel Echevarría (Software & Web Architect). Sin agencias intermediarias ni código adivinado.
+1. **Identidad & Alineación**: Autoría directa de Exequiel Echevarría (Software & Web Architect). Sin agencias intermediarias ni código adivinado. **ExePaginasWeb nace en 2025**; su año de origen, fundación y copyright oficial es estrictamente 2025.
 2. **Vocabulario Ubicuo**: Adherencia estricta a `GLOSSARY.md` y `CONTEXT.md`.
 3. **Calidad & Robustez**: TDD, BigInt monetario, cero errores de tipo y tests pasando.
 4. **Módulos Profundos**: Interfaces compactas y simples hacia afuera con alta potencia interna (Deep Modules).

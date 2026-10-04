@@ -272,26 +272,26 @@
 
 :root {
   color-scheme: light;
-  /* Paleta Light Mode Descansada y Premium (Estilo Linear / Apple / Stripe) — Fondo suave, cero fatiga visual */
-  --background: #edf2f7;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --popover: #ffffff;
-  --popover-foreground: #0f172a;
+  /* Paleta Light Mode Crema Marfil (Warm Ivory Cream) — Máximo confort visual, contraste editorial y cero fatiga */
+  --background: #FAF7F2;
+  --foreground: #18181B;
+  --card: #FFFDF9;
+  --card-foreground: #18181B;
+  --popover: #FFFDF9;
+  --popover-foreground: #18181B;
   --primary: #0284c7;
   --primary-foreground: #ffffff;
-  --secondary: #e2e8f0;
-  --secondary-foreground: #0f172a;
-  --muted: #e2e8f0;
-  --muted-foreground: #475569;
-  --accent: #6366f1;
+  --secondary: #EFE9DE;
+  --secondary-foreground: #18181B;
+  --muted: #EDE5D8;
+  --muted-foreground: #524F48;
+  --accent: #059669;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #cbd5e1;
-  --input: #cbd5e1;
-  --ring: #0284c7;
+  --border: #DFD7CA;
+  --input: #DFD7CA;
+  --ring: #10b981;
   --radius: 0.75rem;
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
@@ -300,13 +300,13 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Colores corporativos amables a la vista humana */
-  --accent-cyan: #075985;
+  --accent-cyan: #0284c7;
   --accent-violet: #6d28d9;
-  --accent-magenta: #4f46e5;
+  --accent-magenta: #be185d;
   --accent-yellow: #b45309;
-  --primary-bg: #edf2f7;
-  --primary-text: #0f172a;
-  --primary-secondary: #475569;
+  --primary-bg: #FAF7F2;
+  --primary-text: #18181B;
+  --primary-secondary: #524F48;
 
   /* Paleta Matrix por tema: verde profundo en claro (legible), neón en dark */
   --matrix-pal-0: #166534;
@@ -329,14 +329,14 @@
   --chart-rose: #e11d48;
   --chart-dot-ring: #ffffff;
 
-  /* Comparativa — superficies oscuras de tarjetas internas */
-  --surface-0: #070b14;
-  --surface-1: #0b1220;
-  --surface-2: #111a2e;
-  --border-dark: rgba(148, 163, 184, 0.16);
-  --text-hi: #e6edf7;
-  --text-mid: #9aa7b8;
-  --text-lo: #758496;
+  /* Comparativa — superficies adaptativas en tema claro crema marfil */
+  --surface-0: #F3ECE1;
+  --surface-1: #EBE2D4;
+  --surface-2: #E2D7C5;
+  --border-dark: rgba(120, 113, 108, 0.25);
+  --text-hi: #18181B;
+  --text-mid: #524F48;
+  --text-lo: #78716C;
 
   /* Comparativa — lado Propiedad (emerald) */
   --own-300: #6ee7b7;
@@ -368,33 +368,34 @@
 
 .dark {
   color-scheme: dark;
-  --background: #050508;
+  --background: #03060a;
   --foreground: #f8fafc;
-  --card: #0f0f16;
+  --card: #060b13;
   --card-foreground: #f8fafc;
-  --popover: #0f0f16;
+  --popover: #060b13;
   --popover-foreground: #f8fafc;
-  --primary: #0ea5e9;
-  --primary-foreground: #050508;
-  --secondary: #12121a;
+  --primary: #00ff88;
+  --primary-foreground: #03060a;
+  --secondary: #0a1322;
   --secondary-foreground: #f8fafc;
-  --muted: #12121a;
-  --muted-foreground: #8899aa;
-  --accent: #6366f1;
+  --muted: #0a1322;
+  --muted-foreground: #94a3b8;
+  --accent: #10b981;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #1e1e2e;
-  --input: #1e1e2e;
-  --ring: #0ea5e9;
+  /* Bordes verdes neón finos en modo oscuro: delimitan nítidamente cada módulo */
+  --border: rgba(16, 185, 129, 0.32);
+  --input: rgba(16, 185, 129, 0.28);
+  --ring: #10b981;
 
-  --accent-cyan: #0ea5e9;
-  --accent-violet: #8b5cf6;
-  --accent-magenta: #6366f1;
-  --accent-yellow: #ffd700;
-  --primary-bg: #050508;
+  --accent-cyan: #22d3ee;
+  --accent-violet: #a855f7;
+  --accent-magenta: #ec4899;
+  --accent-yellow: #facc15;
+  --primary-bg: #03060a;
   --primary-text: #f8fafc;
-  --primary-secondary: #8899aa;
+  --primary-secondary: #94a3b8;
 
   /* Paleta Matrix por tema: neón clásico en dark */
   --matrix-pal-0: #00ff41;
@@ -415,16 +416,16 @@
   /* Gráfico de costo: series neón sobre fondo oscuro */
   --chart-emerald: #34d399;
   --chart-rose: #fb7185;
-  --chart-dot-ring: #0f0f16;
+  --chart-dot-ring: #060b13;
 
-  /* Comparativa — superficies oscuras (idénticas en ambos temas) */
-  --surface-0: #070b14;
-  --surface-1: #0b1220;
-  --surface-2: #111a2e;
-  --border-dark: rgba(148, 163, 184, 0.16);
-  --text-hi: #e6edf7;
-  --text-mid: #9aa7b8;
-  --text-lo: #758496;
+  /* Comparativa — superficies oscuras */
+  --surface-0: #060b14;
+  --surface-1: #0a111f;
+  --surface-2: #0f192d;
+  --border-dark: rgba(16, 185, 129, 0.35);
+  --text-hi: #f8fafc;
+  --text-mid: #94a3b8;
+  --text-lo: #64748b;
 
   /* Comparativa — lado Propiedad (emerald) */
   --own-300: #a7f3d0;
@@ -435,7 +436,7 @@
   --own-800: #065f46;
   --own-900: #022c22;
   --own-tint: rgba(6, 78, 59, 0.35);
-  --own-border: rgba(52, 211, 153, 0.3);
+  --own-border: rgba(52, 211, 153, 0.35);
   --own-glow: rgba(16, 185, 129, 0.5);
 
   /* Comparativa — lado Alquiler (rose) */
@@ -1825,3 +1826,48 @@
     inset 0 1px 0 rgb(255 255 255 / 0.06),
     0 8px 20px -8px rgb(2 6 23 / 0.5);
 }
+
+/* ============================================================
+   Bordes Verdes Neón Finos y Alargados (Identidad Cyberpunk Dark)
+   Permite discernir nítidamente dónde empieza y termina cada bloque
+   ============================================================ */
+.neon-border-emerald {
+  position: relative;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.dark .neon-border-emerald {
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.08);
+}
+.dark .neon-border-emerald:hover {
+  border-color: rgba(52, 211, 153, 0.65) !important;
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.18);
+}
+
+/* Líneas finas y alargadas en verde neón para cajas y tarjetas */
+.neon-line-accent {
+  position: relative;
+}
+.dark .neon-line-accent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 6%;
+  right: 6%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.95), transparent);
+  pointer-events: none;
+  z-index: 20;
+}
+.dark .neon-line-accent::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+  pointer-events: none;
+  z-index: 20;
+}
+

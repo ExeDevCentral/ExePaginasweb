@@ -139,7 +139,11 @@ export default function BookingDemo() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Panel Izquierdo: Interfaz de Calendario o Formulario */}
-          <div className="lg:col-span-7 rounded-[2.5rem] bg-card border border-border p-8 flex flex-col justify-between relative overflow-hidden min-h-[480px] shadow-2xl">
+          <div className="lg:col-span-7 rounded-[2.5rem] bg-card border border-border dark:border-emerald-500/40 p-8 flex flex-col justify-between relative overflow-hidden min-h-[480px] shadow-2xl dark:shadow-[0_0_35px_rgba(16,185,129,0.1)]">
+            {/* Bordes verdes neón finos y alargados (superior e inferior) */}
+            <div className="absolute top-0 inset-x-10 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+            <div className="absolute bottom-0 inset-x-14 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
+
             <div className="absolute top-0 left-0 w-40 h-40 rounded-full bg-accent-magenta/5 blur-3xl pointer-events-none" />
 
             <AnimatePresence mode="wait">
@@ -277,7 +281,7 @@ export default function BookingDemo() {
                         placeholder={t('bookingdemo.nombre_placeholder')}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-foreground focus:outline-none focus:border-accent-magenta text-sm transition-all"
+                        className="w-full px-4 py-3 rounded-xl bg-muted/60 dark:bg-slate-950/70 border border-border dark:border-emerald-500/30 text-foreground focus:outline-none focus:border-accent-magenta dark:focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40 text-sm transition-all placeholder:text-muted-foreground"
                       />
                     </div>
 
@@ -291,7 +295,7 @@ export default function BookingDemo() {
                         placeholder={t('bookingdemo.email_placeholder')}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-foreground focus:outline-none focus:border-accent-magenta text-sm transition-all"
+                        className="w-full px-4 py-3 rounded-xl bg-muted/60 dark:bg-slate-950/70 border border-border dark:border-emerald-500/30 text-foreground focus:outline-none focus:border-accent-magenta dark:focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40 text-sm transition-all placeholder:text-muted-foreground"
                       />
                     </div>
 
@@ -359,8 +363,11 @@ export default function BookingDemo() {
           </div>
 
           {/* Panel Derecho: Consola de ejecución de logs */}
-          <div className="lg:col-span-5 rounded-[2.5rem] bg-background border border-border p-6 flex flex-col justify-between overflow-hidden shadow-2xl relative min-h-[380px] font-mono">
-            <div className="flex items-center gap-2 pb-4 border-b border-border mb-4 text-xs text-muted-foreground">
+          <div className="lg:col-span-5 rounded-[2.5rem] bg-muted/40 dark:bg-[#060b13] border border-border dark:border-emerald-500/40 p-6 flex flex-col justify-between overflow-hidden shadow-2xl dark:shadow-[0_0_30px_rgba(16,185,129,0.08)] relative min-h-[380px] font-mono">
+            {/* Borde verde neón fino y alargado superior */}
+            <div className="absolute top-0 inset-x-8 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+
+            <div className="flex items-center gap-2 pb-4 border-b border-border dark:border-emerald-500/20 mb-4 text-xs text-muted-foreground">
               <Terminal size={14} className="text-accent-cyan" />
               <span>{t('bookingdemo.log_titulo')}</span>
             </div>

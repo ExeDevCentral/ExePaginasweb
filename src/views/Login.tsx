@@ -803,7 +803,7 @@ export default function Login() {
 
       {/* Page Footer */}
       <footer className="relative z-10 w-full max-w-6xl mx-auto text-center text-[11px] text-slate-400 py-2 font-mono">
-        © 2026 ExePaginasWEB.com — Todos los derechos reservados.
+        © 2025 ExePaginasWEB.com — Todos los derechos reservados.
       </footer>
     </div>
   )

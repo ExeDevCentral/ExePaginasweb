@@ -114,10 +114,13 @@ export default function EnhancedFeatureCard({
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="relative h-full overflow-hidden rounded-3xl border border-border bg-card/40 p-0"
+        className="relative h-full overflow-hidden rounded-3xl border border-border dark:border-emerald-500/35 bg-card/60 dark:bg-card/30 p-0 dark:shadow-[0_0_20px_rgba(16,185,129,0.06)] hover:dark:border-emerald-400/60 transition-all"
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.25 }}
       >
+        {/* Borde verde neón fino y alargado superior */}
+        <div className="absolute top-0 inset-x-8 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/80 to-transparent pointer-events-none z-10" />
+
         <div className="relative">
           <LaserBeam side="top" />
           <LaserBeam side="right" />

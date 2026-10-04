@@ -130,7 +130,7 @@ export default function MobileLandingView() {
           {/* Eyebrow de Arquitectura */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-cyan/10 border border-accent-cyan/30 text-[11px] font-mono font-bold text-accent-cyan mb-4">
             <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
-            <span>SOFTWARE &amp; WEB ARCHITECT · 2026</span>
+            <span>SOFTWARE &amp; WEB ARCHITECT · 2025</span>
           </div>
 
           {/* Título Principal */}
@@ -231,8 +231,11 @@ export default function MobileLandingView() {
             return (
               <div
                 key={item.id}
-                className="relative p-5 rounded-2xl bg-card border border-border hover:border-accent-cyan/60 transition-all shadow-md"
+                className="relative p-5 rounded-2xl bg-card border border-border dark:border-emerald-500/35 dark:shadow-[0_0_20px_rgba(16,185,129,0.08)] hover:border-accent-cyan/60 dark:hover:border-emerald-400/60 transition-all shadow-md overflow-hidden"
               >
+                {/* Borde verde neón fino y alargado superior */}
+                <div className="absolute top-0 inset-x-6 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+
                 <div className="flex items-start justify-between gap-3 mb-2.5">
                   <div className="flex items-center gap-2.5">
                     <div className="w-9 h-9 rounded-xl bg-accent-cyan/10 border border-accent-cyan/25 flex items-center justify-center text-accent-cyan shrink-0">
@@ -271,32 +274,35 @@ export default function MobileLandingView() {
         </div>
 
         {/* 2. Tarjeta Holográfica de Comparativa: 1 Solo Pago vs Cuota Eterna */}
-        <div className="max-w-sm mx-auto p-5 rounded-2xl bg-linear-to-br from-cyan-950/30 via-slate-900/50 to-purple-950/20 border border-cyan-500/30 shadow-xl">
+        <div className="relative max-w-sm mx-auto p-5 rounded-2xl bg-card dark:bg-linear-to-br dark:from-cyan-950/30 dark:via-slate-900/50 dark:to-purple-950/20 border border-border dark:border-emerald-500/40 shadow-xl overflow-hidden">
+          {/* Borde verde neón fino y alargado superior */}
+          <div className="absolute top-0 inset-x-8 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+
           <div className="flex items-center gap-2 mb-3">
-            <ShieldCheck className="w-5 h-5 text-cyan-400" />
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+            <ShieldCheck className="w-5 h-5 text-emerald-500 dark:text-cyan-400" />
+            <h3 className="text-sm font-bold text-foreground dark:text-white uppercase tracking-wider font-mono">
               La Diferencia Decisiva
             </h3>
           </div>
 
           <div className="space-y-3 text-xs">
-            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-200">
-              <div className="flex items-center gap-1.5 font-bold mb-1 text-emerald-400">
+            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-800 dark:text-emerald-200">
+              <div className="flex items-center gap-1.5 font-bold mb-1 text-emerald-600 dark:text-emerald-400">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Con ExePaginasWeb (1 Solo Pago)</span>
               </div>
-              <p className="text-[11px] leading-relaxed text-emerald-100/80">
+              <p className="text-[11px] leading-relaxed text-emerald-700 dark:text-emerald-100/80">
                 El servidor y el código están a tu nombre. Tu web es tuya para siempre sin pagar
                 cuotas eternas ni comisiones.
               </p>
             </div>
 
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-200">
-              <div className="flex items-center gap-1.5 font-bold mb-1 text-rose-400">
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-800 dark:text-rose-200">
+              <div className="flex items-center gap-1.5 font-bold mb-1 text-rose-600 dark:text-rose-400">
                 <XCircle className="w-4 h-4" />
                 <span>Otras agencias / Tiendanube / Shopify</span>
               </div>
-              <p className="text-[11px] leading-relaxed text-rose-100/80">
+              <p className="text-[11px] leading-relaxed text-rose-700 dark:text-rose-100/80">
                 Pagás alquiler mensual y comisiones de por vida. Si dejás de pagar, te apagan el
                 sitio y perdés tus clientes.
               </p>
@@ -305,7 +311,10 @@ export default function MobileLandingView() {
         </div>
 
         {/* 3. Contacto Rápido Móvil (WhatsApp 1-Tap + Formulario Ágil) */}
-        <div className="max-w-sm mx-auto p-5 rounded-2xl bg-card border border-border shadow-lg">
+        <div className="relative max-w-sm mx-auto p-5 rounded-2xl bg-card border border-border dark:border-emerald-500/40 shadow-lg overflow-hidden">
+          {/* Borde verde neón fino y alargado superior */}
+          <div className="absolute top-0 inset-x-8 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+
           <div className="text-center mb-4">
             <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto mb-2">
               <MessageSquare className="w-5 h-5" />
@@ -451,7 +460,7 @@ export default function MobileLandingView() {
             </a>
           </div>
           <p className="text-[10px] text-muted-foreground/60 font-mono">
-            © 2026 Exequiel Echevarria. Todos los derechos reservados.
+            © 2025 Exequiel Echevarria. Todos los derechos reservados.
           </p>
         </div>
       </section>

@@ -84,11 +84,14 @@ export default function LanguageSwitcher({
       <div
         className={`absolute right-0 ${
           direction === 'up' ? 'bottom-full mb-2' : 'top-full mt-2'
-        } bg-white dark:bg-[#0c0d14] border border-slate-200 dark:border-white/15 rounded-xl shadow-2xl transition-all duration-200 z-100 min-w-44 p-1.5 ${visibilityClass}`}
+        } bg-[#FFFDF9] dark:bg-[#060b13] border border-[#DFD7CA] dark:border-emerald-500/40 rounded-xl shadow-2xl dark:shadow-[0_0_25px_rgba(16,185,129,0.18)] transition-all duration-200 z-100 min-w-44 p-1.5 overflow-hidden ${visibilityClass}`}
       >
-        <div className="px-2.5 py-1 mb-1 border-b border-slate-100 dark:border-white/10 text-[10px] font-sans font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center justify-between">
+        {/* Borde verde neón fino y alargado superior */}
+        <div className="absolute top-0 inset-x-3 h-[1px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent pointer-events-none" />
+
+        <div className="px-2.5 py-1 mb-1 border-b border-[#DFD7CA] dark:border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center justify-between">
           <span>Idioma / Language</span>
-          <CyberGlobeIcon size={12} className="text-cyan-500 dark:text-cyan-400" />
+          <CyberGlobeIcon size={12} className="text-emerald-600 dark:text-emerald-400" />
         </div>
         {LANGUAGES.map((lang) => {
           const isSelected =
@@ -100,8 +103,8 @@ export default function LanguageSwitcher({
               onClick={() => change(lang.code)}
               className={`w-full px-2.5 py-2 rounded-lg text-left text-xs font-semibold tracking-wide transition-all flex items-center justify-between gap-2.5 cursor-pointer ${
                 isSelected
-                  ? 'bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 font-bold border border-cyan-500/30'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-950 dark:hover:text-white border border-transparent'
+                  ? 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-500/35'
+                  : 'text-slate-800 dark:text-slate-200 hover:bg-[#F3ECE1] dark:hover:bg-emerald-950/20 hover:text-slate-950 dark:hover:text-emerald-300 border border-transparent'
               }`}
             >
               <span className="flex items-center gap-2.5">
@@ -109,7 +112,10 @@ export default function LanguageSwitcher({
                 <span>{lang.name}</span>
               </span>
               {isSelected && (
-                <CyberCheckMark size={14} className="text-cyan-600 dark:text-cyan-400 shrink-0" />
+                <CyberCheckMark
+                  size={14}
+                  className="text-emerald-600 dark:text-emerald-400 shrink-0"
+                />
               )}
             </button>
           )

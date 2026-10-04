@@ -102,17 +102,21 @@ const PricingCard = ({
       onMouseLeave={handleMouseLeave}
       className={`group relative rounded-2xl sm:rounded-[2.5rem] bg-card backdrop-blur-xl border overflow-hidden transition-all duration-500 hover:-translate-y-2 p-5 sm:p-8 md:p-10 flex flex-col ${
         plan.popular
-          ? 'border-accent-magenta/50 shadow-2xl shadow-accent-magenta/10 hover:shadow-accent-magenta/20'
-          : 'border-border hover:border-border'
+          ? 'border-accent-magenta/60 dark:border-emerald-400/60 shadow-2xl shadow-accent-magenta/10 dark:shadow-[0_0_35px_rgba(16,185,129,0.18)] hover:shadow-accent-magenta/20 dark:hover:border-emerald-300'
+          : 'border-border dark:border-emerald-500/35 dark:shadow-[0_0_20px_rgba(16,185,129,0.08)] hover:border-border dark:hover:border-emerald-400/60 dark:hover:shadow-[0_0_30px_rgba(16,185,129,0.18)]'
       }`}
     >
+      {/* Bordes verdes neón finos y alargados (superior e inferior) */}
+      <div className="absolute top-0 inset-x-8 sm:inset-x-14 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-12 sm:inset-x-20 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
+
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl sm:rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
           background: useMotionTemplate`
             radial-gradient(
               600px circle at ${mouseX}px ${mouseY}px,
-              ${plan.popular ? 'rgba(236,72,153, 0.15)' : 'rgba(255,255,255, 0.05)'},
+              ${plan.popular ? 'rgba(236,72,153, 0.15)' : 'rgba(16,185,129, 0.08)'},
               transparent 80%
             )
           `,
@@ -121,8 +125,8 @@ const PricingCard = ({
 
       {plan.popular && (
         <>
-          <div className="absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-accent-magenta to-transparent" />
-          <div className="absolute -top-3.5 sm:-top-4 left-1/2 -translate-x-1/2 px-3.5 sm:px-4 py-0.5 sm:py-1 btn-soft-violet border border-violet-soft rounded-full text-[10px] sm:text-xs font-black text-accent-violet uppercase tracking-wider shadow-sm">
+          <div className="absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-emerald-400 to-transparent" />
+          <div className="absolute -top-3.5 sm:-top-4 left-1/2 -translate-x-1/2 px-3.5 sm:px-4 py-0.5 sm:py-1 btn-soft-violet border border-violet-soft dark:border-emerald-500/40 rounded-full text-[10px] sm:text-xs font-black text-accent-violet dark:text-emerald-300 uppercase tracking-wider shadow-sm">
             {t('pricing.popular')}
           </div>
         </>
@@ -136,8 +140,8 @@ const PricingCard = ({
           {t(`pricing.${plan.tKey}_desc`)}
         </p>
 
-        <div className="mb-6 sm:mb-8 p-4 sm:p-6 rounded-2xl bg-muted border border-border">
-          <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-border">
+        <div className="mb-6 sm:mb-8 p-4 sm:p-6 rounded-2xl bg-muted/60 dark:bg-emerald-950/20 border border-border dark:border-emerald-500/30">
+          <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-border dark:border-emerald-500/20">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">
               {t('pricing.setup_label')}
             </p>
@@ -155,7 +159,7 @@ const PricingCard = ({
               </span>
             </div>
             <div className="flex items-end gap-1">
-              <p className="text-2xl font-outfit font-bold text-accent-cyan">
+              <p className="text-2xl font-outfit font-bold text-accent-cyan dark:text-emerald-400">
                 {plan.monthlyFee[currency]}
               </p>
               <span className="text-xs text-muted-foreground mb-1">{t('pricing.per_month')}</span>

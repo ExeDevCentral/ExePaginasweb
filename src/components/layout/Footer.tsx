@@ -114,7 +114,7 @@ const Footer = () => {
                 </span>
                 <span>
                   {t('footer.cupos_disponibles') ||
-                    'Cupos exclusivos abiertos · Arquitectura & Desarrollo Q4 2026'}
+                    'Cupos exclusivos abiertos · Arquitectura & Desarrollo Q4 2025'}
                 </span>
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-400 text-[11px] font-mono w-fit">
@@ -428,7 +428,7 @@ const Footer = () => {
             <div className="flex items-center justify-center lg:justify-start gap-2.5 text-muted-foreground text-[11px] font-mono tracking-wide shrink-0">
               <Logo size={20} variant="auto" />
               <p className="whitespace-nowrap select-none">
-                © 2026 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
+                © 2025 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
                 <span className="hidden sm:inline">
                   {' · '}
                   {t('footer.derechos') || 'Todos los derechos reservados.'}

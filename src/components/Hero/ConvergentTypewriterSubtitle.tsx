@@ -27,11 +27,11 @@ export const ConvergentTypewriterSubtitle: React.FC<ConvergentTypewriterSubtitle
 
   const PART_1 =
     t('hero.sub_part_1') ||
-    'Tu solución integral para dejar de improvisar con plantillas lentas y comisiones cautivas. Diseñamos '
-  const PHRASE_1 = t('hero.sub_phrase_1') || 'sitios web de máxima conversión'
-  const PART_2 = t('hero.sub_part_2') || ' y '
-  const PHRASE_2 = t('hero.sub_phrase_2') || 'sistemas cloud a medida'
-  const PART_3 = t('hero.sub_part_3') || ' con 100% código propio para multiplicar tus ventas.'
+    'Construimos software a medida, plataformas cloud y sistemas web para empresas que no pueden permitirse fallar. Seguridad máxima, privacidad blindada y código 100% tuyo: '
+  const PHRASE_1 = t('hero.sub_phrase_1') || 'control total'
+  const PART_2 = t('hero.sub_part_2') || ', '
+  const PHRASE_2 = t('hero.sub_phrase_2') || 'cero dependencias'
+  const PART_3 = t('hero.sub_part_3') || '.'
 
   const fullText = `${PART_1}${PHRASE_1}${PART_2}${PHRASE_2}${PART_3}`
 

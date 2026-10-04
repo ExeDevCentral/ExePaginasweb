@@ -123,6 +123,20 @@ const nextConfig = {
       },
     ]
   },
+  async redirects() {
+    return [
+      {
+        source: '/:path(blog.*)',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/blog/:path*',
+        destination: '/',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default nextConfig

@@ -39,7 +39,7 @@
     "compare_stat_tuyo": "seu",
     "compare_stat_duracion": "duração",
     "compare_fast": "online agora mesmo",
-    "eyebrow_plataforma": "Plataforma web & sistemas SaaS",
+    "eyebrow_plataforma": "Arquitetura Web & Sistemas Cloud · Europa · EUA · América do Sul · China · Austrália",
     "titulo_prefijo": "A plataforma para",
     "palabras_rotativas": [
       "automatizar",
@@ -533,7 +533,8 @@
     "abrir": "Abrir"
   },
   "footer": {
-    "descripcion": "Sistemas web boutique, software sob medida e plataformas cloud de alta conversão. Desenvolvido com 100% código próprio para empresas escalarem sem mensalidades de aluguel.",
+    "descripcion": "Arquitetura de software de alto perfil, plataformas cloud e sistemas web sob medida. Desenvolvemos com máxima segurança, privacidade blindada e código 100% próprio para empresas na Europa, EUA, América do Sul, China e Austrália que exigem performance soberana sem mensalidades de aluguel.",
+    "cobertura_global": "Construção Global · Europa · EUA · América do Sul · China · Austrália",
     "navegacion": "Navegação",
     "nav_sistemas": "Sistemas Web Sob Medida",
     "nav_caracteristicas": "Recursos",
@@ -545,7 +546,7 @@
     "contacto_form": "Formulário de Contato",
     "derechos": "Todos os direitos reservados.",
     "hecho_por": "Feito com ♥ por",
-    "cupos_disponibles": "Vagas abertas para desenvolvimento Q4 2025",
+    "cupos_disponibles": "Vagas exclusivas abertas · Arquitetura e Desenvolvimento Q4 2026",
     "soluciones_saas": "Soluções SaaS",
     "nav_tienda": "Loja Online & E-Commerce",
     "nav_turnos": "Agendamentos & Reservas 24/7",
@@ -1048,5 +1049,11 @@
     "quick_q3": "Qual o prazo de entrega?",
     "send": "Enviar",
     "clear": "Limpar chat"
+  },
+  "notfound": {
+    "meta_title": "Página não encontrada | Exe Páginas Web",
+    "titulo": "Página não encontrada",
+    "descripcion": "A página que você procura não existe ou foi movida.",
+    "boton": "Voltar ao início"
   }
 }

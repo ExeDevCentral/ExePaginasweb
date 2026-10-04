@@ -40,7 +40,7 @@
     "compare_stat_tuyo": "yours",
     "compare_stat_duracion": "ownership",
     "compare_fast": "2026 tech stack",
-    "eyebrow_plataforma": "Web platform & SaaS systems",
+    "eyebrow_plataforma": "Software Architecture & Cloud Systems · Global Scale",
     "titulo_prefijo": "The platform to",
     "palabras_rotativas": [
       "automate",
@@ -48,14 +48,14 @@
       "sell more",
       "grow"
     ],
-    "sub_part_1": "Your comprehensive solution to stop improvising with slow templates and lock-in fees. We design ",
-    "sub_phrase_1": "high-conversion websites",
-    "sub_part_2": " and ",
-    "sub_phrase_2": "custom cloud systems",
-    "sub_part_3": " with 100% owned code to multiply your sales.",
+    "sub_part_1": "We build bespoke software, cloud platforms, and web systems for enterprises that cannot afford to fail. Maximum security, hardened privacy, and 100% code ownership: ",
+    "sub_phrase_1": "total control",
+    "sub_part_2": ", ",
+    "sub_phrase_2": "zero dependencies",
+    "sub_part_3": ".",
     "sub_replay": "Replay animation & scanner",
     "sub_hover_hint": "Hover over capsules to re-scan",
-    "cta_comenzar": "Start my project",
+    "cta_comenzar": "Let's talk about your project",
     "cta_ver_demo": "View portfolio",
     "cta_ver_portafolio": "View portfolio",
     "trust_proyectos": "(+50 projects)",
@@ -656,7 +656,8 @@
     "boton_volver": "← Back to home"
   },
   "footer": {
-    "descripcion": "Boutique web systems, custom software, and high-conversion cloud platforms. Built with 100% owned code for businesses scaling without lock-in rentals.",
+    "descripcion": "We build bespoke software, cloud platforms, and web systems for enterprises that cannot afford to fail. Maximum security, hardened privacy, and 100% code ownership: total control, zero dependencies.",
+    "cobertura_global": "Software Architecture & Cloud Platforms · Global Scale",
     "navegacion": "Navigation",
     "nav_sistemas": "Custom Web Systems",
     "nav_caracteristicas": "Features",
@@ -668,7 +669,7 @@
     "contacto_form": "Contact Form",
     "derechos": "All rights reserved.",
     "hecho_por": "Made with ♥ by",
-    "cupos_disponibles": "Open slots for development Q4 2025",
+    "cupos_disponibles": "Exclusive slots open · Architecture & Development Q4 2026",
     "soluciones_saas": "SaaS Solutions",
     "nav_tienda": "Online Store & E-Commerce",
     "nav_turnos": "Appointments & Booking 24/7",
@@ -1154,5 +1155,11 @@
     "quick_q3": "How long does delivery take?",
     "send": "Send",
     "clear": "Clear chat"
+  },
+  "notfound": {
+    "meta_title": "Page Not Found | Exe Páginas Web",
+    "titulo": "Page Not Found",
+    "descripcion": "The page you are looking for does not exist or has been moved.",
+    "boton": "Back to Home"
   }
 }

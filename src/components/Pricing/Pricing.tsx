@@ -8,9 +8,15 @@
 import React, { useState } from 'react'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { Check, X, Coins, MessageCircle } from 'lucide-react'
+import {
+  CyberCheckMark,
+  CyberCrossMark,
+  CyberCoinCurrency,
+  WhatsAppLiveIcon,
+} from '@/components/ui/MagnificentIcons'
 import ROICalculator from './ROICalculator'
 import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
+import HudButton from '@/components/HudButton'
 
 interface PlanData {
   tKey: 'landing' | 'ecommerce'
@@ -115,7 +121,7 @@ const PricingCard = ({
 
       {plan.popular && (
         <>
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-magenta to-transparent" />
+          <div className="absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-accent-magenta to-transparent" />
           <div className="absolute -top-3.5 sm:-top-4 left-1/2 -translate-x-1/2 px-3.5 sm:px-4 py-0.5 sm:py-1 btn-soft-violet border border-violet-soft rounded-full text-[10px] sm:text-xs font-black text-accent-violet uppercase tracking-wider shadow-sm">
             {t('pricing.popular')}
           </div>
@@ -126,7 +132,7 @@ const PricingCard = ({
         <h3 className="text-2xl sm:text-3xl font-outfit font-black text-foreground mb-2 sm:mb-3">
           {t(`pricing.${plan.tKey}_nombre`)}
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground mb-5 sm:mb-8 min-h-0 sm:min-h-[40px]">
+        <p className="text-xs sm:text-sm text-muted-foreground mb-5 sm:mb-8 min-h-0 sm:min-h-10">
           {t(`pricing.${plan.tKey}_desc`)}
         </p>
 
@@ -160,10 +166,8 @@ const PricingCard = ({
         <ul className="space-y-4 mb-10 flex-1">
           {plan.includedFeatures.map((included, i) => (
             <li key={i} className="flex items-center gap-3">
-              <div
-                className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${included ? 'bg-emerald-500/20 text-emerald-400' : 'bg-muted text-muted-foreground'}`}
-              >
-                {included ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
+              <div className="shrink-0 flex items-center justify-center">
+                {included ? <CyberCheckMark size={18} /> : <CyberCrossMark size={18} />}
               </div>
               <span
                 className={`text-sm ${included ? 'text-muted-foreground' : 'text-muted-foreground line-through decoration-slate-600/50'}`}
@@ -174,28 +178,20 @@ const PricingCard = ({
           ))}
         </ul>
 
-        <button
-          onClick={handleRequestClick}
-          className={`block w-full py-4 rounded-xl text-center font-bold transition-all duration-300 relative overflow-hidden group cursor-pointer ${
-            plan.popular
-              ? 'btn-gradient-cta text-foreground hover:opacity-90 hover:shadow-lg hover:shadow-accent-magenta/20'
-              : 'border border-border bg-card/50 text-foreground hover:border-accent-cyan/30 hover:bg-card hover:shadow-sm hover:shadow-accent-cyan/5'
-          }`}
-        >
-          <span className="relative z-10 flex items-center justify-center gap-2">
-            {currency === 'ARS' ? (
-              <>
-                <MessageCircle className="w-4 h-4" />
-                {t('pricing.solicitar_pesos')}
-              </>
-            ) : (
-              t('pricing.request_quotation')
-            )}
-          </span>
-          {!plan.popular && (
-            <div className="absolute inset-0 bg-gradient-to-r from-accent-cyan/0 via-accent-cyan/5 to-accent-cyan/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          )}
-        </button>
+        <div className="w-full flex justify-center">
+          <HudButton
+            label={
+              currency === 'ARS'
+                ? t('pricing.solicitar_pesos', 'Solicitar Cotización')
+                : t('pricing.request_quotation', 'Solicitar Cotización')
+            }
+            variant={plan.popular ? 'primary' : 'secondary'}
+            onClick={handleRequestClick}
+            className="w-full justify-center"
+            icon={currency === 'ARS' ? <WhatsAppLiveIcon size={16} /> : undefined}
+            iconPosition="left"
+          />
+        </div>
       </div>
     </motion.div>
   )
@@ -210,7 +206,7 @@ const Pricing = () => {
       id="pricing"
       className="py-32 px-4 relative overflow-hidden bg-transparent z-10 border-y border-border/30"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent-cyan/5 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-accent-cyan/5 via-transparent to-transparent pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-16">
@@ -251,22 +247,22 @@ const Pricing = () => {
               onClick={() => setCurrency('ARS')}
               className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
                 currency === 'ARS'
-                  ? 'bg-gradient-to-r from-accent-cyan to-accent-cyan/80 text-black shadow-lg shadow-accent-cyan/25'
+                  ? 'bg-linear-to-r from-accent-cyan to-accent-cyan/80 text-black shadow-lg shadow-accent-cyan/25'
                   : 'text-foreground/60 hover:text-foreground'
               }`}
             >
-              <Coins size={14} />
+              <CyberCoinCurrency size={18} />
               ARS ($)
             </button>
             <button
               onClick={() => setCurrency('USD')}
               className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
                 currency === 'USD'
-                  ? 'bg-gradient-to-r from-accent-magenta to-accent-magenta/80 text-foreground shadow-lg shadow-accent-magenta/25'
+                  ? 'bg-linear-to-r from-accent-magenta to-accent-magenta/80 text-foreground shadow-lg shadow-accent-magenta/25'
                   : 'text-foreground/60 hover:text-foreground'
               }`}
             >
-              <Coins size={14} />
+              <CyberCoinCurrency size={18} />
               USD (u$s)
             </button>
           </motion.div>
@@ -282,7 +278,7 @@ const Pricing = () => {
         {/* Aclaración Mantenimiento Opcional */}
         <div className="text-center max-w-2xl mx-auto mb-20">
           <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs md:text-sm font-semibold shadow-lg shadow-emerald-500/5">
-            <Check className="w-4 h-4 shrink-0 text-emerald-400" />
+            <CyberCheckMark size={18} />
             <span>{t('pricing.opcional_nota')}</span>
           </div>
         </div>

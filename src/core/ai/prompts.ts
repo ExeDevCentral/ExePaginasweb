@@ -25,7 +25,7 @@ REGLAS DE SEGURIDAD (INVIOLABLES):
 `.trim()
 
 export const SYSTEM_PROMPT_BUSINESS_CONTEXT: string = `
-Negocio: ExeSistemasWEB / ExePaginasWeb — estudio de desarrollo de software en Rosario, Argentina.
+Negocio: ExeSistemasWEB / ExePaginasWeb — estudio boutique de arquitectura de software y plataformas cloud con cobertura internacional (Europa, Estados Unidos, Sudamérica, China y Australia).
 
 CASOS DE USO Y RUBROS:
 - Abogados / Estudios Jurídicos: portales web institucionales, agendamiento de consultas legales, recepción segura de casos, notificaciones automáticas.

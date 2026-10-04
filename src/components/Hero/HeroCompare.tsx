@@ -90,13 +90,18 @@ export default function HeroCompare() {
     resize()
     window.addEventListener('resize', resize)
 
-    let lastDraw = 0
-    const fpsInterval = 1000 / 30
+    let lastTime = performance.now()
+    let stepAccumulator = 0
 
     const draw = (now: number) => {
       animId = requestAnimationFrame(draw)
-      if (now - lastDraw < fpsInterval) return
-      lastDraw = now
+      const dt = Math.min(64, now - lastTime)
+      lastTime = now
+
+      // Acumulador temporal para fluidez cinematográfica a 60-120 FPS
+      stepAccumulator += dt
+      if (stepAccumulator < 16) return // ~60-120 FPS smooth render interval
+      stepAccumulator = 0
 
       ctx.fillStyle = 'rgba(10, 6, 20, 0.15)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)

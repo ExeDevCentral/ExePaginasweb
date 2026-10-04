@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuthSession } from '../../core/auth/AuthSessionProvider'
 import TransferInstructions from './TransferInstructions'
 import type { PlanData } from './PlanCard'
+import HudButton from '@/components/HudButton'
 
 declare global {
   interface Window {
@@ -314,13 +315,16 @@ export default function CheckoutModal({
                 <p className="text-sm text-muted-foreground mt-1">
                   Tu abono quedó activado. Ya podés ingresar a tu panel.
                 </p>
-                <button
-                  type="button"
-                  onClick={() => router.push('/dashboard')}
-                  className="w-full mt-4 py-3.5 rounded-xl font-black text-white bg-gradient-to-r from-emerald-500 to-emerald-400 hover:opacity-90 transition-all shadow-lg shadow-emerald-500/25"
-                >
-                  Ir al Dashboard
-                </button>
+                <div className="mt-4">
+                  <HudButton
+                    type="button"
+                    onClick={() => router.push('/dashboard')}
+                    variant="primary"
+                    size="md"
+                    className="w-full justify-center"
+                    label="Ir al Dashboard"
+                  />
+                </div>
               </motion.div>
             ) : paypalStatus === 'login' ? (
               <div className="space-y-3 text-center">
@@ -328,13 +332,14 @@ export default function CheckoutModal({
                 <p className="text-sm text-muted-foreground">
                   Iniciá sesión para pagar con PayPal.
                 </p>
-                <button
+                <HudButton
                   type="button"
                   onClick={() => router.push('/login')}
-                  className="w-full py-3.5 rounded-xl font-black text-white bg-gradient-to-r from-accent-magenta to-accent-magenta/80 hover:opacity-90 transition-all shadow-lg shadow-accent-magenta/25"
-                >
-                  Iniciar sesión
-                </button>
+                  variant="primary"
+                  size="md"
+                  className="w-full justify-center"
+                  label="Iniciar sesión"
+                />
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('transfer')}

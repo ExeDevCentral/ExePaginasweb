@@ -1,3 +1,5 @@
+# AGENTS
+
 ## Agent skills
 
 ### Issue tracker
@@ -10,7 +12,14 @@ Five canonical roles mapped to GitHub labels. See `docs/agents/triage-labels.md`
 
 ### Domain docs
 
-Single-context repo (one `CONTEXT.md` + `docs/adr/` at the root). See `docs/agents/domain.md`.
+Single-context repo (one `CONTEXT.md` + `GLOSSARY.md` + `docs/adr/` at the root). See `docs/agents/domain.md`.
+
+### 4 Principios de Ingeniería Real (Matt Pocock)
+
+1. **Identidad & Alineación**: Autoría directa de Exequiel Echevarría (Software & Web Architect). Sin agencias intermediarias ni código adivinado.
+2. **Vocabulario Ubicuo**: Adherencia estricta a `GLOSSARY.md` y `CONTEXT.md`.
+3. **Calidad & Robustez**: TDD, BigInt monetario, cero errores de tipo y tests pasando.
+4. **Módulos Profundos**: Interfaces compactas y simples hacia afuera con alta potencia interna (Deep Modules).
 
 <!-- BEGIN:nextjs-agent-rules -->
 

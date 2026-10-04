@@ -9,6 +9,7 @@ import { Calendar as CalendarIcon, Clock, Terminal, User, Mail, CheckCircle } fr
 import { supabase } from '../../core/infra/supabase/client'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import HudButton from '@/components/HudButton'
 
 export default function BookingDemo() {
   const { t, i18n } = useTranslation()
@@ -237,12 +238,12 @@ export default function BookingDemo() {
 
                   {selectedDate && selectedTime && (
                     <div className="pt-6 flex justify-end">
-                      <button
+                      <HudButton
                         onClick={() => setStep('form')}
-                        className="px-6 py-3 rounded-xl bg-white text-black font-bold text-sm hover:bg-slate-200 transition-colors shadow-lg"
-                      >
-                        {t('bookingdemo.continuar')}
-                      </button>
+                        label={t('bookingdemo.continuar')}
+                        variant="primary"
+                        size="md"
+                      />
                     </div>
                   )}
                 </motion.div>
@@ -294,20 +295,21 @@ export default function BookingDemo() {
                       />
                     </div>
 
-                    <div className="flex gap-3 pt-6">
-                      <button
+                    <div className="flex gap-3 pt-6 items-center">
+                      <HudButton
                         type="button"
                         onClick={() => setStep('calendar')}
-                        className="px-5 py-3 rounded-xl border border-border text-foreground/80 hover:bg-muted transition-colors text-sm font-bold"
-                      >
-                        {t('bookingdemo.atras')}
-                      </button>
-                      <button
+                        label={t('bookingdemo.atras')}
+                        variant="secondary"
+                        size="sm"
+                      />
+                      <HudButton
                         type="submit"
-                        className="px-6 py-3 rounded-xl btn-gradient-cta text-foreground font-bold text-sm hover:opacity-95 transition-all flex-1 shadow-lg"
-                      >
-                        {t('bookingdemo.confirmar')}
-                      </button>
+                        label={t('bookingdemo.confirmar')}
+                        variant="primary"
+                        size="md"
+                        className="flex-1 justify-center"
+                      />
                     </div>
                   </form>
                 </motion.div>
@@ -331,12 +333,14 @@ export default function BookingDemo() {
                       <p className="text-muted-foreground text-sm max-w-sm">
                         {t('bookingdemo.success_desc')}
                       </p>
-                      <button
-                        onClick={resetDemo}
-                        className="px-6 py-3 rounded-xl bg-white text-black text-xs font-bold hover:bg-slate-200 transition-all mt-4"
-                      >
-                        {t('bookingdemo.volver')}
-                      </button>
+                      <div className="mt-4">
+                        <HudButton
+                          onClick={resetDemo}
+                          label={t('bookingdemo.volver')}
+                          variant="secondary"
+                          size="sm"
+                        />
+                      </div>
                     </>
                   ) : (
                     <>

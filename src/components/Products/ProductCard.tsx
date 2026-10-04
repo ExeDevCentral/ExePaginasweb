@@ -5,20 +5,21 @@
  */
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Coffee } from 'lucide-react'
 import {
-  ExternalLink,
-  CheckCircle,
-  Clock,
-  Calculator,
-  Plus,
-  ArrowRight,
-  Coffee,
-  MessageCircle,
-} from 'lucide-react'
+  CyberCheckMark,
+  CyberCalculatorIcon,
+  CyberPlusIcon,
+  CyberClockIcon,
+  CyberExternalLinkIcon,
+  CyberArrowRight,
+  WhatsAppLiveIcon,
+} from '@/components/ui/MagnificentIcons'
 import { useTranslation } from 'react-i18next'
+import HudButton from '@/components/HudButton'
 
 type Product = {
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number; size?: number }>
   features: string[]
   price: string
   color: string
@@ -215,7 +216,7 @@ export default function ProductCard({
                       }}
                       className="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-400 text-xs font-bold hover:bg-amber-500/30 transition-colors flex items-center gap-1"
                     >
-                      <Plus className="w-3 h-3" /> Sumar Docena
+                      <CyberPlusIcon size={12} className="text-amber-400" /> Sumar Docena
                     </button>
                   </div>
                 </div>
@@ -293,7 +294,7 @@ export default function ProductCard({
                             : 'bg-muted/40 border-border text-muted-foreground'
                         }`}
                       >
-                        <Clock className="w-3 h-3 inline mr-1" />
+                        <CyberClockIcon size={13} className="inline mr-1 text-cyan-400" />
                         {slot}
                       </button>
                     ))}
@@ -309,7 +310,7 @@ export default function ProductCard({
                   key={idx}
                   className="flex items-start gap-2.5 text-xs text-slate-600 dark:text-slate-300 font-medium"
                 >
-                  <CheckCircle className="w-4 h-4 text-accent-cyan mt-0.5 shrink-0" />
+                  <CyberCheckMark size={16} className="mt-0.5 shrink-0" />
                   <span>{t(`products.${product.tKey}_feat_${idx + 1}`)}</span>
                 </li>
               ))}
@@ -327,7 +328,7 @@ export default function ProductCard({
                 >
                   <div className="flex items-center justify-between text-xs font-bold text-accent-cyan">
                     <span className="flex items-center gap-1.5">
-                      <Calculator className="w-4 h-4" /> Cotizador para{' '}
+                      <CyberCalculatorIcon size={16} className="text-accent-cyan" /> Cotizador para{' '}
                       {t(`products.${product.tKey}_titulo`)}
                     </span>
                     <span>Estimado: ${estimatedTotal} USD</span>
@@ -371,8 +372,8 @@ export default function ProductCard({
                     rel="noreferrer"
                     className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-extrabold text-xs hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-500/20"
                   >
-                    <MessageCircle className="w-4 h-4 fill-slate-950 stroke-emerald-500" />
-                    Enviar Consulta Directa por WhatsApp <ArrowRight className="w-3.5 h-3.5" />
+                    <WhatsAppLiveIcon size={16} />
+                    Enviar Consulta Directa por WhatsApp <CyberArrowRight size={14} />
                   </a>
                 </motion.div>
               )}
@@ -397,21 +398,20 @@ export default function ProductCard({
                   className="p-2.5 rounded-xl border border-border bg-card/60 hover:bg-accent-cyan/10 text-muted-foreground hover:text-accent-cyan transition-colors"
                   title="Calcular presupuesto a medida"
                 >
-                  <Calculator className="w-4 h-4" />
+                  <CyberCalculatorIcon size={16} />
                 </button>
 
-                <motion.button
-                  type="button"
+                <HudButton
+                  size="sm"
+                  variant="primary"
+                  label={t('products.ver_demo')}
                   onClick={(e) => {
                     e.stopPropagation()
                     onOpenDemo()
                   }}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r ${product.color} text-white text-xs font-bold shadow-md hover:opacity-90 transition-all cursor-pointer`}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  {t('products.ver_demo')} <ExternalLink size={13} />
-                </motion.button>
+                  icon={<CyberExternalLinkIcon size={14} />}
+                  iconPosition="right"
+                />
               </div>
             </div>
           </div>

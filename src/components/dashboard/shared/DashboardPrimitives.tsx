@@ -28,6 +28,7 @@ import {
   ChevronDown,
 } from 'lucide-react'
 import type { ActivityItem, Metric, PlanDashboardTheme } from '../planDashboardConfig'
+import HudButton from '../../HudButton'
 
 // 1. Live Badge
 export function LiveBadge({ label }: Readonly<{ label: string }>) {
@@ -681,13 +682,15 @@ export function SupportCard({
           {openCount} {t('dashboard.tickets_abiertos_badge', 'ticket(s) activos')}
         </p>
       )}
-      <button
+      <HudButton
         type="button"
+        variant="secondary"
+        size="sm"
         onClick={onOpenTicket}
-        className="mt-4 w-full rounded-xl bg-[#151B28] hover:bg-[#1C2438] border border-[#1E2638] py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors cursor-pointer"
+        className="mt-4 w-full justify-center"
       >
         {t('tickets.nuevo_ticket', 'Nuevo Ticket')}
-      </button>
+      </HudButton>
     </div>
   )
 }

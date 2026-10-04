@@ -17,14 +17,16 @@ import {
   Calendar,
   MessageCircle,
   ShieldCheck,
-  Monitor,
-  Building,
-  Building2,
-  type LucideIcon,
 } from 'lucide-react'
+import {
+  CyberPlanBasic,
+  CyberPlanAdvanced,
+  CyberPlanPremium,
+} from '@/components/ui/MagnificentIcons'
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/navigation'
+import HudButton from '@/components/HudButton'
 import { useTypewriter } from '../../hooks/useTypewriter'
 import { PLAN_CATALOG } from '../../core/domain/planCatalog'
 import { useTheme } from '../../core/theme/ThemeContext'
@@ -46,7 +48,7 @@ const basePlans: Omit<PlanData, 'price' | 'priceUSD' | 'period' | 'rawPriceARS' 
       id: 'mantenimiento-basico',
       title: 'Abono Básico',
       description: 'Mantenimiento mensual para Landing Pages y sitios institucionales.',
-      icon: Monitor as LucideIcon,
+      icon: CyberPlanBasic,
       color: 'from-blue-400 to-cyan-400',
       shadow: 'shadow-cyan-500/20',
       border: 'border-cyan-500/30',
@@ -63,7 +65,7 @@ const basePlans: Omit<PlanData, 'price' | 'priceUSD' | 'period' | 'rawPriceARS' 
       id: 'mantenimiento-avanzado',
       title: 'Abono Avanzado',
       description: 'Mantenimiento integral para Sistemas Web, Reservas y E-Commerce.',
-      icon: Building as LucideIcon,
+      icon: CyberPlanAdvanced,
       color: 'from-cyan-400 to-purple-500',
       shadow: 'shadow-purple-500/30',
       border: 'border-purple-500/50',
@@ -81,7 +83,7 @@ const basePlans: Omit<PlanData, 'price' | 'priceUSD' | 'period' | 'rawPriceARS' 
       id: 'mantenimiento-premium',
       title: 'Abono Premium',
       description: 'Evolución continua, nuevas funcionalidades y bolsa de horas de desarrollo.',
-      icon: Building2 as LucideIcon,
+      icon: CyberPlanPremium,
       color: 'from-purple-500 to-pink-500',
       shadow: 'shadow-pink-500/20',
       border: 'border-pink-500/30',
@@ -170,17 +172,17 @@ export default function StorePage() {
       <div className="relative max-w-7xl mx-auto z-10 space-y-10">
         {/* NAVEGACIÓN SUPERIOR ELEGANTE */}
         <header className="relative z-30 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 max-w-6xl mx-auto pt-2">
-          <button
-            type="button"
+          <HudButton
+            label="Volver al Inicio"
+            variant="secondary"
+            size="sm"
             onClick={() => {
               storeAudio.playHover()
               navigate('/')
             }}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-card/80 backdrop-blur-xl border border-border text-foreground font-bold text-xs hover:border-accent-cyan transition-all hover:scale-105 shadow-md cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4 text-accent-cyan" />
-            <span>Volver al Inicio</span>
-          </button>
+            icon={<ArrowLeft className="w-4 h-4 text-accent-cyan" />}
+            iconPosition="left"
+          />
 
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Language Switcher */}

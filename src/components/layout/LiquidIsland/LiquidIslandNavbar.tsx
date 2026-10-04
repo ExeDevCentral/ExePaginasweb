@@ -10,8 +10,8 @@ import React, { useState, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
-import { motion, useMotionValue, useReducedMotion } from 'framer-motion'
-import { ChevronDown, Menu, X } from 'lucide-react'
+import { motion, AnimatePresence, useMotionValue, useReducedMotion } from 'framer-motion'
+import { CyberChevron, CyberBurgerIcon, CyberRadarBeacon } from '@/components/ui/MagnificentIcons'
 
 import { useNavScroll } from './useNavScroll'
 import NavLogo from './NavLogo'
@@ -83,9 +83,21 @@ export default function LiquidIslandNavbar({
 
       {/* 2. Header fijo con stacking coordinado (z-50) y libre paso de clics en márgenes */}
       <header
-        className="fixed top-3 inset-x-0 z-50 flex justify-center px-3 sm:px-4 pointer-events-none select-none"
+        className="fixed top-3 inset-x-0 z-50 flex flex-col items-center px-3 sm:px-4 pointer-events-none select-none"
         style={{ top: 12 }}
       >
+        {/* AURA PERIMETRAL DOBLE DE ALTO CONTRASTE (DESPEGA EL CRISTAL DEL NEGRO ABSOLUTO A 120 FPS) */}
+        <div
+          className="pointer-events-none absolute -inset-2 rounded-full bg-linear-to-r from-cyan-500/40 via-sky-400/25 to-emerald-400/35 blur-2xl -z-20 opacity-80 dark:opacity-95 transition-opacity duration-300"
+          style={{
+            maxWidth: isCompact ? 440 : 1120,
+            margin: '0 auto',
+            left: 0,
+            right: 0,
+            transform: 'translateZ(0)',
+          }}
+        />
+
         <motion.nav
           ref={navRef}
           role="navigation"
@@ -96,11 +108,12 @@ export default function LiquidIslandNavbar({
             skewX: reduceMotion ? 0 : skewX,
             scaleY: reduceMotion ? 1 : scaleY,
           }}
+          initial={{ maxWidth: 1100 }}
           animate={{
-            maxWidth: isCompact ? 460 : 1100,
+            maxWidth: isCompact ? 420 : 1100,
           }}
           transition={springTransition}
-          className="relative pointer-events-auto w-full mx-auto h-14 sm:h-14.5 rounded-full border border-foreground/10 dark:border-white/10 bg-white/80 dark:bg-[#070914]/85 backdrop-blur-xl sm:backdrop-blur-2xl shadow-lg dark:shadow-[0_12px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(6,182,212,0.14)] flex items-center justify-between px-3 sm:px-4 gap-2 transition-[box-shadow,border-color] duration-300 hover:border-cyan-500/40"
+          className="relative pointer-events-auto w-full mx-auto h-14 sm:h-14.5 rounded-full border border-slate-300/90 dark:border-cyan-400/45 bg-linear-to-b from-white/95 via-slate-50/90 to-slate-100/95 dark:from-[#151e34]/95 dark:via-[#0c1224]/95 dark:to-[#070914]/98 backdrop-blur-2xl sm:backdrop-blur-3xl shadow-[inset_0_1.5px_1px_0_rgba(255,255,255,0.55),inset_0_-1px_1px_0_rgba(6,182,212,0.4),0_16px_48px_-8px_rgba(0,0,0,0.7),0_0_28px_rgba(6,182,212,0.24)] flex items-center justify-between px-3 sm:px-4 gap-2 transition-[box-shadow,border-color] duration-300 hover:border-cyan-400/70 hover:shadow-[inset_0_1.5px_1px_0_rgba(255,255,255,0.7),inset_0_-1px_1px_0_rgba(6,182,212,0.6),0_20px_54px_-8px_rgba(0,0,0,0.85),0_0_36px_rgba(6,182,212,0.35)]"
         >
           {/* Spotlight dinámico sobre el cristal */}
           {!reduceMotion && <SpotlightGlass mouseX={mouseX} mouseY={mouseY} />}
@@ -165,25 +178,44 @@ export default function LiquidIslandNavbar({
                   <span className="whitespace-nowrap">
                     {getNavLabel('nav.soluciones', 'Soluciones')}
                   </span>
-                  <ChevronDown
-                    size={14}
-                    className={`transition-transform duration-200 ${
-                      megaPanelOpen ? 'rotate-180 text-cyan-400' : 'text-slate-400'
-                    }`}
-                  />
+                  <CyberChevron isOpen={megaPanelOpen} size={14} className="text-cyan-400" />
                 </button>
               </div>
 
-              {/* Casos / Portafolio */}
-              <NavLink
-                href="/portafolio"
-                label={getNavLabel('nav.casos', 'Casos de Éxito')}
-                isActive={pathname === '/portafolio'}
-                isHovered={hoveredLink === 'casos'}
-                onHover={() => setHoveredLink('casos')}
-                onLeave={() => setHoveredLink(null)}
-                onClick={() => setMegaPanelOpen(false)}
-              />
+              {/* Casos / Portafolio con floating preview de caso real */}
+              <div className="relative">
+                <NavLink
+                  href="/portafolio"
+                  label={getNavLabel('nav.casos', 'Casos de Éxito')}
+                  isActive={pathname === '/portafolio'}
+                  isHovered={hoveredLink === 'casos'}
+                  onHover={() => setHoveredLink('casos')}
+                  onLeave={() => setHoveredLink(null)}
+                  onClick={() => setMegaPanelOpen(false)}
+                />
+                <AnimatePresence>
+                  {hoveredLink === 'casos' && !isCompact && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 6, scale: 0.95 }}
+                      transition={{ duration: 0.16 }}
+                      className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 w-72 p-3.5 rounded-2xl border border-cyan-500/30 bg-[#070914]/95 backdrop-blur-xl shadow-2xl z-50 text-left select-none"
+                    >
+                      <div className="flex items-center justify-between gap-1 mb-1.5">
+                        <span className="font-bold text-xs text-white">RESTOia Engine</span>
+                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                          EN PRODUCCIÓN
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                        Suite gastronómica inteligente con facturación fiscal ARCA/AFIP, KDS en
+                        vivo, motor offline y protocolo MCP.
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               {/* Planes / Precios */}
               <NavLink
@@ -209,9 +241,17 @@ export default function LiquidIslandNavbar({
             </motion.div>
           </motion.div>
 
-          {/* DERECHA: Selector de Idioma + Tema + Botón de Menú (en Compact/Mobile) + CTA Dominante */}
+          {/* DERECHA: Badge de Disponibilidad + Idioma + Tema + Menú + CTA Dominante */}
           <motion.div layout="position" className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-            {/* Selector de idioma: SIEMPRE accesible en expanded y compact, sin overflow-hidden para no recortar el dropdown */}
+            {/* Disponibilidad en tiempo real: SOLO en modo expandido para no sobrecargar el Island compacto */}
+            {!isCompact && (
+              <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/40 dark:border-cyan-400/40 text-[10px] font-mono font-extrabold tracking-wider text-cyan-900 dark:text-cyan-300 select-none shadow-[0_0_12px_rgba(6,182,212,0.25)] shrink-0">
+                <CyberRadarBeacon size={9} />
+                <span>ABRIL // DISPONIBLE</span>
+              </div>
+            )}
+
+            {/* Selector de idioma: SIEMPRE accesible en expanded y compact */}
             <motion.div layout="position" className="flex items-center">
               <LanguageSwitcher />
             </motion.div>
@@ -221,7 +261,7 @@ export default function LiquidIslandNavbar({
               <ThemeToggle />
             </motion.div>
 
-            {/* Botón de Menú rápido en modo compact o mobile para desplegar MegaPanel */}
+            {/* Botón de Menú rápido en modo compact o mobile para desplegar MegaPanel con icono cinético */}
             <motion.button
               type="button"
               layout="position"
@@ -229,17 +269,21 @@ export default function LiquidIslandNavbar({
               aria-expanded={megaPanelOpen}
               aria-controls="mega-panel-menu"
               aria-label={megaPanelOpen ? 'Cerrar menú' : 'Abrir menú de navegación'}
-              className={`p-1.5 sm:p-2 rounded-full border border-foreground/15 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-cyan-400 hover:border-cyan-400/40 transition-colors cursor-pointer ${
+              className={`p-2 rounded-full border border-cyan-500/30 dark:border-cyan-400/35 bg-cyan-500/5 hover:bg-cyan-500/15 hover:border-cyan-400/60 transition-colors cursor-pointer ${
                 isCompact ? 'flex' : 'flex lg:hidden'
               }`}
             >
-              {megaPanelOpen ? <X size={17} /> : <Menu size={17} />}
+              <CyberBurgerIcon isOpen={megaPanelOpen} size={17} />
             </motion.button>
 
-            {/* CTA único dominante: "Cotizá tu web" con atracción magnética hacia el cursor */}
+            {/* CTA único dominante: perfectamente proporcionado (en compact "Cotizar", en expanded "Cotizá tu web") */}
             <motion.div layout="position">
               <MagneticCTA
-                label={getNavLabel('nav.cotiza_tu_web', 'Cotizá tu web')}
+                label={
+                  isCompact
+                    ? getNavLabel('nav.cotizar', 'Cotizar')
+                    : getNavLabel('nav.cotiza_tu_web', 'Cotizá tu web')
+                }
                 href="/cotizador"
                 onClick={() => setMegaPanelOpen(false)}
               />

@@ -7,15 +7,22 @@
 
 import React, { useRef, useState, useEffect } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { Check, ArrowRight, Sparkles, Shield, Zap, type LucideIcon } from 'lucide-react'
+import { ArrowRight, type LucideIcon } from 'lucide-react'
+import {
+  CyberCheckMark,
+  CyberRealPropertyShield,
+  CyberMetricLightning,
+  CyberSparkleIcon,
+} from '@/components/ui/MagnificentIcons'
 import { useTranslation } from 'react-i18next'
 import { storeAudio } from '../../core/utils/storeAudio'
+import HudButton from '@/components/HudButton'
 
 export interface PlanData {
   id: string
   title: string
   description: string
-  icon: LucideIcon
+  icon: React.ComponentType<{ className?: string; size?: number }> | LucideIcon
   color: string
   shadow: string
   border: string
@@ -129,10 +136,10 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
           className={`absolute -inset-4 rounded-[36px] blur-[36px] -z-10 pointer-events-none transition-all duration-500 ${
             plan.popular
               ? isButtonHovered
-                ? 'bg-gradient-to-r from-cyan-400/60 via-purple-500/70 to-pink-500/60 opacity-100 scale-110'
-                : 'bg-gradient-to-r from-cyan-500/30 via-purple-500/40 to-pink-500/30 opacity-90 group-hover:opacity-100 group-hover:scale-105'
+                ? 'bg-linear-to-r from-cyan-400/60 via-purple-500/70 to-pink-500/60 opacity-100 scale-110'
+                : 'bg-linear-to-r from-cyan-500/30 via-purple-500/40 to-pink-500/30 opacity-90 group-hover:opacity-100 group-hover:scale-105'
               : isButtonHovered
-                ? 'bg-gradient-to-r from-cyan-500/50 via-indigo-500/40 to-fuchsia-500/50 opacity-100 scale-110'
+                ? 'bg-linear-to-r from-cyan-500/50 via-indigo-500/40 to-fuchsia-500/50 opacity-100 scale-110'
                 : 'bg-black/40 dark:bg-accent-cyan/10 opacity-40 group-hover:opacity-80 group-hover:scale-105'
           }`}
         />
@@ -141,9 +148,9 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
         {plan.popular && (
           <div className="absolute -top-5 left-0 right-0 flex justify-center z-30 pointer-events-none">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 blur-md opacity-90 rounded-full animate-pulse" />
-              <div className="relative bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 text-white text-[11px] font-black px-6 py-2 rounded-full shadow-2xl border border-white/50 tracking-widest uppercase flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-yellow-300 animate-spin" />
+              <div className="absolute inset-0 bg-linear-to-r from-cyan-500 via-purple-500 to-pink-500 blur-md opacity-90 rounded-full animate-pulse" />
+              <div className="relative bg-linear-to-r from-cyan-500 via-purple-600 to-pink-500 text-white text-[11px] font-black px-6 py-2 rounded-full shadow-2xl border border-white/50 tracking-widest uppercase flex items-center gap-1.5">
+                <CyberSparkleIcon size={14} className="text-yellow-300 animate-spin" />
                 <span>{t('store.mas_elegido')}</span>
               </div>
             </div>
@@ -176,7 +183,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
 
           {/* Borde animado de plasma en el plan popular */}
           {plan.popular && (
-            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500">
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500">
               <motion.div
                 className="w-full h-full bg-white/60"
                 animate={{ x: ['-100%', '100%'] }}
@@ -187,9 +194,9 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
 
           {/* Encabezado con Icono */}
           <div className="flex items-start justify-between mb-5 relative z-20">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br p-0.5 shadow-lg">
+            <div className="w-14 h-14 rounded-2xl bg-linear-to-br p-0.5 shadow-lg">
               <div
-                className={`w-full h-full bg-gradient-to-br ${plan.color} rounded-[14px] flex items-center justify-center shadow-inner`}
+                className={`w-full h-full bg-linear-to-br ${plan.color} rounded-[14px] flex items-center justify-center shadow-inner`}
               >
                 <plan.icon className="w-7 h-7 text-white" />
               </div>
@@ -197,7 +204,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
 
             {/* Badge de Garantía en la esquina */}
             <div className="flex items-center gap-1 text-[10px] font-mono font-bold uppercase px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-muted-foreground">
-              <Shield className="w-3 h-3 text-accent-cyan" />
+              <CyberRealPropertyShield size={14} />
               <span>SLA Activo</span>
             </div>
           </div>
@@ -226,7 +233,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
             {isAnnual ? (
               <div className="mt-2 flex items-center gap-2">
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-500 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                  <Zap className="w-3 h-3" />
+                  <CyberMetricLightning size={14} />
                   Ahorrás {currency === 'ARS' ? `$${savingsARS}` : `$${savingsUSD}`}/año
                 </span>
                 <span className="text-[11px] text-muted-foreground line-through font-mono">
@@ -249,9 +256,9 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
               {plan.features.map((feature, i) => (
                 <li key={i} className="flex items-start gap-3 group/feat">
                   <div
-                    className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-gradient-to-br ${plan.color} flex items-center justify-center shadow-sm group-hover/feat:scale-110 transition-transform`}
+                    className={`mt-0.5 shrink-0 w-4 h-4 rounded-full bg-linear-to-br ${plan.color} flex items-center justify-center shadow-sm group-hover/feat:scale-110 transition-transform`}
                   >
-                    <Check className="w-3 h-3 text-white stroke-[3]" />
+                    <CyberCheckMark size={14} className="text-white" />
                   </div>
                   <span className="text-sm text-slate-800 dark:text-slate-200 font-medium group-hover/feat:text-foreground transition-colors">
                     {feature}
@@ -261,73 +268,22 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
             </ul>
           </div>
 
-          {/* Botón de Suscripción con Efecto de Destello y Latido */}
+          {/* Botón de Suscripción HUD Cyber */}
           <div className="relative z-30 mt-auto pt-2">
-            <motion.button
-              type="button"
+            <HudButton
+              label={t('store.suscribirme')}
+              variant={plan.popular ? 'primary' : 'secondary'}
+              size="lg"
+              className="w-full justify-center"
+              onMouseEnter={() => setIsButtonHovered(true)}
+              onMouseLeave={() => setIsButtonHovered(false)}
               onClick={() => {
                 storeAudio.playSelect()
                 onSelect(plan)
               }}
-              onMouseEnter={(e) => {
-                e.stopPropagation()
-                setIsButtonHovered(true)
-                x.set(0)
-                y.set(0)
-              }}
-              onMouseMove={(e) => {
-                e.stopPropagation()
-                if (!isButtonHovered) setIsButtonHovered(true)
-                x.set(0)
-                y.set(0)
-              }}
-              onMouseLeave={(e) => {
-                e.stopPropagation()
-                setIsButtonHovered(false)
-              }}
-              animate={
-                isButtonHovered
-                  ? {
-                      scale: [1.02, 1.05, 1.02],
-                      boxShadow: [
-                        '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
-                        '0 20px 35px -5px rgba(0, 0, 0, 0.45)',
-                        '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
-                      ],
-                    }
-                  : {
-                      scale: 1,
-                      boxShadow: '0 10px 20px -5px rgba(0, 0, 0, 0.25)',
-                    }
-              }
-              transition={
-                isButtonHovered
-                  ? {
-                      duration: 1.15,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }
-                  : { duration: 0.22, ease: 'easeOut' }
-              }
-              whileTap={{ scale: 0.96 }}
-              className="relative w-full py-4 rounded-2xl font-black text-white flex items-center justify-center gap-2 overflow-hidden group/btn cursor-pointer shadow-xl will-change-transform"
-            >
-              <div className={`absolute inset-0 bg-gradient-to-r ${plan.color}`} />
-              <motion.div
-                className="absolute -inset-full top-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg]"
-                animate={{ left: ['-100%', '200%'] }}
-                transition={{
-                  duration: 2.8,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  repeatDelay: 1.5,
-                }}
-              />
-              <span className="relative z-10 flex items-center gap-2 text-sm sm:text-base tracking-wide uppercase font-montserrat">
-                <span>{t('store.suscribirme')}</span>
-                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-              </span>
-            </motion.button>
+              icon={<ArrowRight className="w-4 h-4" />}
+              iconPosition="right"
+            />
           </div>
         </div>
       </motion.div>

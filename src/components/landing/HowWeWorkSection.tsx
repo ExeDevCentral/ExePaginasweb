@@ -6,7 +6,6 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   PhoneCall,
@@ -19,6 +18,8 @@ import {
 } from 'lucide-react'
 import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
+import { CyberKineticArrowIcon } from '@/components/ui/MagnificentIcons'
+import HudButton from '@/components/HudButton'
 
 const STEPS = [
   {
@@ -236,31 +237,31 @@ export default function HowWeWorkSection() {
               </h4>
             </div>
           </div>
-          <Link
+          <HudButton
+            label="Cotizar"
             href="/cotizador"
+            variant="secondary"
+            size="sm"
+            icon={<ArrowRight className="w-3.5 h-3.5" />}
             onClick={() =>
               trackEvent('cotizador_plan_selected', { source: 'how_we_work_cotizador_bar' })
             }
-            className="px-4 py-2 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold text-xs shadow-md transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
-          >
-            <span>Cotizar</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          />
         </div>
       </div>
 
-      {/* Botón principal centrado */}
-      <div className="mt-8 text-center">
-        <a
+      {/* Botón principal centrado de alta fidelidad (HUD Chaflanado) */}
+      <div className="mt-8 text-center flex justify-center">
+        <HudButton
+          label="Coordinar mi charla de 15 minutos"
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
+          variant="primary"
+          size="lg"
+          icon={<CyberKineticArrowIcon size={15} />}
           onClick={handleCtaClick}
-          className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-bold text-sm bg-slate-900 text-white dark:bg-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 shadow-xl transition-all duration-200 hover:scale-102 active:scale-95 cursor-pointer"
-        >
-          <span>Coordinar mi charla de 15 minutos</span>
-          <ArrowRight className="w-4 h-4" />
-        </a>
+        />
       </div>
     </section>
   )

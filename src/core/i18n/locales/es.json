@@ -39,18 +39,18 @@
     "compare_stat_carga": "carga",
     "compare_stat_tuyo": "tuyo",
     "compare_stat_duracion": "duración",
-    "eyebrow_plataforma": "Desarrollo Web & Sistemas SaaS · Rosario & Global",
+    "eyebrow_plataforma": "Arquitectura de Software & Sistemas Cloud · Escala Global",
     "titulo_prefijo": "Páginas web y sistemas a medida",
     "titulo_conector": "para",
     "palabras_rotativas": ["automatizar", "escalar", "vender más", "crecer"],
-    "sub_part_1": "Tu solución integral para dejar de improvisar con plantillas lentas y comisiones cautivas. Diseñamos ",
-    "sub_phrase_1": "sitios web de máxima conversión",
-    "sub_part_2": " y ",
-    "sub_phrase_2": "sistemas cloud a medida",
-    "sub_part_3": " con 100% código propio para multiplicar tus ventas.",
+    "sub_part_1": "Construimos software a medida, plataformas cloud y sistemas web para empresas que no pueden permitirse fallar. Seguridad máxima, privacidad blindada y código 100% tuyo: ",
+    "sub_phrase_1": "control total",
+    "sub_part_2": ", ",
+    "sub_phrase_2": "cero dependencias",
+    "sub_part_3": ".",
     "sub_replay": "Repetir animación & escáner",
     "sub_hover_hint": "Pasa el mouse sobre las cápsulas para re-escanear",
-    "cta_comenzar": "Comenzar mi proyecto",
+    "cta_comenzar": "Hablemos de tu proyecto",
     "cta_ver_demo": "Ver portafolio",
     "cta_ver_portafolio": "Ver portafolio",
     "trust_proyectos": "(+50 proyectos)",
@@ -651,7 +651,8 @@
     "boton_volver": "← Volver al inicio"
   },
   "footer": {
-    "descripcion": "Sistemas web boutique, software a medida y plataformas cloud de alta conversión. Desarrollamos con 100% código propio para negocios que quieren escalar sin alquileres cautivos.",
+    "descripcion": "Construimos software a medida, plataformas cloud y sistemas web para empresas que no pueden permitirse fallar. Seguridad máxima, privacidad blindada y código 100% tuyo: control total, cero dependencias.",
+    "cobertura_global": "Arquitectura & Plataformas Cloud · Escala Global",
     "navegacion": "Navegación",
     "nav_sistemas": "Sistemas Web a Medida",
     "nav_caracteristicas": "Características",
@@ -663,7 +664,7 @@
     "contacto_form": "Formulario de Contacto",
     "derechos": "Todos los derechos reservados.",
     "hecho_por": "Hecho con ♥ por",
-    "cupos_disponibles": "Cupos abiertos para desarrollo Q4 2025",
+    "cupos_disponibles": "Cupos exclusivos abiertos · Arquitectura & Desarrollo Q4 2026",
     "soluciones_saas": "Soluciones SaaS",
     "nav_tienda": "Tienda Online & E-Commerce",
     "nav_turnos": "Turnos & Reservas 24/7",
@@ -1149,5 +1150,11 @@
     "quick_q3": "¿Cuánto demora la entrega?",
     "send": "Enviar",
     "clear": "Limpiar chat"
+  },
+  "notfound": {
+    "meta_title": "Página no encontrada | Exe Páginas Web",
+    "titulo": "Página no encontrada",
+    "descripcion": "La página que buscás no existe o fue movida.",
+    "boton": "Volver al inicio"
   }
 }

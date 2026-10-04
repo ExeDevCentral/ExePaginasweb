@@ -1,7 +1,7 @@
 {
-  "name": "ExeSistemasWEB",
-  "short_name": "ExeSistemas",
-  "description": "Sistemas web a medida para negocios locales",
+  "name": "Exe Páginas Web",
+  "short_name": "ExePaginas",
+  "description": "Arquitectura de software de alto perfil, plataformas cloud y sistemas web a medida.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",

@@ -105,7 +105,7 @@ export function OgCard({
               color: '#9fb3c8',
             }}
           >
-            Rosario · Argentina
+            Global Software Architecture
           </span>
         </div>
       </div>

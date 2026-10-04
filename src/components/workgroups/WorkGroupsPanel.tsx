@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { DataTable } from '../shared/DataTable'
 import type { ColumnDef } from '@tanstack/react-table'
+import HudButton from '../HudButton'
 
 const ROL_COLORS: Record<WorkMemberRol, string> = {
   owner: 'bg-amber-500/10 text-amber-400 border-amber-500/20 font-bold',
@@ -245,22 +246,24 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
           </p>
         </div>
         <div className="flex gap-2.5 flex-wrap">
-          <button
+          <HudButton
             type="button"
+            variant="secondary"
+            size="sm"
             onClick={() => setShowNewMember((prev) => !prev)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#1E2638] bg-[#151B28] hover:bg-[#1C2438] text-white text-xs sm:text-sm font-semibold transition-all shadow-sm cursor-pointer"
+            icon={<UserPlus className="w-4 h-4 text-[#38BDF8]" />}
           >
-            <UserPlus className="w-4 h-4 text-[#38BDF8]" />
-            <span>Invitar Miembro</span>
-          </button>
-          <button
+            Invitar Miembro
+          </HudButton>
+          <HudButton
             type="button"
+            variant="primary"
+            size="sm"
             onClick={() => setShowNewGroup((prev) => !prev)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white text-xs sm:text-sm font-semibold transition-all shadow-sm cursor-pointer"
+            icon={<Plus className="w-4 h-4" />}
           >
-            <Plus className="w-4 h-4" />
-            <span>Nueva Sede / Grupo</span>
-          </button>
+            Nueva Sede / Grupo
+          </HudButton>
         </div>
       </div>
 
@@ -431,21 +434,18 @@ function NewMemberForm({
         )}
       </div>
       <div className="flex justify-end gap-2">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 rounded-xl text-xs text-[#8C9BB0] hover:text-white"
-        >
+        <HudButton type="button" variant="secondary" size="sm" onClick={onCancel}>
           Cancelar
-        </button>
-        <button
+        </HudButton>
+        <HudButton
           type="button"
+          variant="primary"
+          size="sm"
           onClick={handleSubmit}
           disabled={!nombre.trim() || !email.trim()}
-          className="px-4 py-2 rounded-xl bg-[#4361EE] text-white text-xs font-semibold disabled:opacity-50"
         >
           Enviar Invitación
-        </button>
+        </HudButton>
       </div>
     </div>
   )

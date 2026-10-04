@@ -7,26 +7,29 @@ import React from 'react'
 import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import {
-  CheckCircle2,
-  XCircle,
-  ShieldCheck,
-  Lock,
-  Landmark,
-  MousePointerClick,
-  Power,
-  RotateCcw,
-  TrendingDown,
-  Activity,
-  FileSignature,
+  CyberRealPropertyShield,
+  CyberPlatformTrapLock,
+  CyberCheckMark,
+  CyberCrossMark,
+  CyberInsignia,
+  CyberPowerSwitch,
+  CyberWarningHazard,
+  CyberRefreshIcon,
+  CyberMetricLightning,
+  CyberRoiTrend,
+  CyberMetricProcessor,
+  CyberTechCode,
+  CyberSparkleIcon,
+  CyberLanguageTranslate,
+  CyberDatabaseCore,
+} from '@/components/ui/MagnificentIcons'
+import {
   Bot,
   Mail,
   MessageCircle,
   MessageSquare,
   Plus,
   Sparkles,
-  BadgeCheck,
-  Terminal,
-  RefreshCw,
   Workflow,
   Globe,
   Database,
@@ -47,12 +50,10 @@ import {
   Users,
   Headphones,
   Video,
-  Languages,
   Coins,
   PenLine,
   LockKeyhole,
   ChartLine,
-  ShieldAlert,
   ArrowRight,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -305,12 +306,19 @@ function DeedCard({
     t('versus.propiedad_step6', 'El negocio es dueño de su software'),
   ]
 
-  const extras: { label: string; Icon: typeof Bot; more?: boolean }[] = [
+  const extras: {
+    label: string
+    Icon: React.ComponentType<{ className?: string; size?: number }>
+    more?: boolean
+  }[] = [
     { label: t('versus.extra_ai', 'Agentes de IA'), Icon: Bot, more: true },
     { label: t('versus.extra_n8n', 'n8n · Automatizaciones'), Icon: Workflow, more: true },
     { label: t('versus.extra_apis', 'APIs externas de todo el mundo'), Icon: Globe, more: true },
-    { label: t('versus.extra_tributario', 'Servicio tributario de capa país'), Icon: Landmark },
-    { label: t('versus.extra_bd', 'Base de datos propia'), Icon: Database },
+    {
+      label: t('versus.extra_tributario', 'Servicio tributario de capa país'),
+      Icon: CyberInsignia,
+    },
+    { label: t('versus.extra_bd', 'Base de datos propia'), Icon: CyberDatabaseCore },
     { label: t('versus.extra_pagos', 'Pagos y facturación'), Icon: CreditCard },
     { label: t('versus.extra_recibos', 'Recibos electrónicos'), Icon: Receipt },
     { label: t('versus.extra_dashboard', 'Dashboard de analítica'), Icon: BarChart3 },
@@ -328,12 +336,12 @@ function DeedCard({
     { label: t('versus.extra_crm', 'CRM de clientes'), Icon: Users },
     { label: t('versus.extra_soporte', 'Soporte y tickets'), Icon: Headphones },
     { label: t('versus.extra_videollamada', 'Video llamadas'), Icon: Video },
-    { label: t('versus.extra_idiomas', 'Multi-idioma'), Icon: Languages },
+    { label: t('versus.extra_idiomas', 'Multi-idioma'), Icon: CyberLanguageTranslate },
     { label: t('versus.extra_planes', 'Planes y suscripciones'), Icon: Coins },
     { label: t('versus.extra_blog', 'Blog / contenidos'), Icon: PenLine },
     { label: t('versus.extra_seguridad', 'Seguridad reforzada'), Icon: LockKeyhole },
     { label: t('versus.extra_reportes', 'Reportes automáticos'), Icon: ChartLine },
-    { label: t('versus.extra_proteccion', 'Protección anti-DDoS'), Icon: ShieldAlert },
+    { label: t('versus.extra_proteccion', 'Protección anti-DDoS'), Icon: CyberRealPropertyShield },
     { label: t('versus.extra_mail', 'Email corporativo'), Icon: Mail },
     { label: t('versus.extra_whatsapp', 'WhatsApp'), Icon: MessageCircle },
     { label: t('versus.extra_chat', 'Chat propio'), Icon: MessageSquare },
@@ -350,20 +358,27 @@ function DeedCard({
     >
       {/* Encabezado de la card */}
       <div className="flex flex-wrap items-center justify-between pb-4 sm:pb-5 mb-4 sm:mb-5 border-b border-border/80 gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 sm:p-3 rounded-2xl bg-own-500/15 text-own-700 dark:text-own-400 border border-own-border">
-            <ShieldCheck className="w-6 h-6 sm:w-7 sm:h-7" />
+        <div className="flex items-center gap-3.5">
+          <div className="relative flex h-14 w-14 sm:h-15 sm:w-15 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500/20 via-teal-500/10 to-slate-950/80 border border-emerald-400/40 shadow-[0_0_24px_rgba(16,185,129,0.35)] ring-1 ring-white/10 group-hover:scale-105 transition-all duration-300">
+            <div className="absolute inset-0 rounded-2xl bg-emerald-500/10 blur-sm pointer-events-none" />
+            <CyberRealPropertyShield size={34} />
+            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-3 w-3 rounded-full border-2 border-slate-950 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+            </span>
           </div>
           <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-own-700 dark:text-own-400">
+            <span className="text-[10px] font-extrabold uppercase tracking-[0.22em] text-emerald-400 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]" />
               {t('versus.propiedad_brand', 'EXEPAGINASWEB')}
             </span>
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground">
+            <h3 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
               {t('versus.propiedad_titulo', 'Modelo de Propiedad Real')}
             </h3>
           </div>
         </div>
-        <span className="px-2.5 py-1 text-[11px] sm:text-xs font-black rounded-full border border-own-border text-own-700 dark:text-own-400 uppercase tracking-wider">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-black rounded-full bg-linear-to-r from-emerald-500/20 to-teal-500/15 border border-emerald-400/50 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.25)] uppercase tracking-wider">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
           {t('versus.propiedad_tag', '100% Tuyo')}
         </span>
       </div>
@@ -396,7 +411,7 @@ function DeedCard({
           transition={{ type: 'spring', stiffness: 320, damping: 18 }}
           className="absolute bottom-2 left-1/2 -translate-x-1/2 z-40 pointer-events-none flex items-center gap-1.5 rounded-md border border-own-400/70 bg-surface-2/90 px-2.5 py-1 shadow-[0_0_18px_var(--own-glow)]"
         >
-          <BadgeCheck className="w-3.5 h-3.5 text-own-400" />
+          <CyberCheckMark size={14} />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-hi">
             {t('versus.extra_verificado', 'Documento Verificado')}
           </span>
@@ -417,7 +432,7 @@ function DeedCard({
         </motion.div>
 
         <div className="relative z-30 flex items-center justify-center gap-2 text-own-400/90 mb-3">
-          <Landmark className="w-4 h-4" />
+          <CyberInsignia size={16} />
           <span className="text-[10px] font-extrabold uppercase tracking-[0.28em]">
             {t('versus.escritura_thumb', 'REPÚBLICA DE EXEPAGINASWEB')}
           </span>
@@ -463,7 +478,7 @@ function DeedCard({
                 </div>
               </motion.div>
               <div className="mt-3 flex items-start gap-2 text-own-300/90 text-xs sm:text-sm font-medium">
-                <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-own-400" />
+                <CyberCheckMark size={16} className="shrink-0 mt-0.5 text-own-400" />
                 <span>
                   {t(
                     'versus.sigue_vivo_desc',
@@ -491,7 +506,10 @@ function DeedCard({
               : 'btn-own-primary active:scale-[0.98]'
           }`}
         >
-          <Power className="w-4 h-4" />
+          <CyberPowerSwitch
+            size={16}
+            className={alive ? 'text-emerald-300' : 'text-slate-950 dark:text-emerald-400'}
+          />
           <span>
             {alive
               ? '✓ Servidor Autónomo: Tu sitio sigue activo'
@@ -507,7 +525,7 @@ function DeedCard({
             key={idx}
             className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground font-medium"
           >
-            <CheckCircle2 className="w-4 h-4 text-own-700 dark:text-own-400 shrink-0" />
+            <CyberCheckMark size={16} className="shrink-0" />
             <span>{s}</span>
           </div>
         ))}
@@ -582,7 +600,10 @@ function DeedCard({
       </div>
 
       <div className="mt-5 p-3.5 sm:p-4 rounded-xl bg-own-tint border border-own-border flex items-start gap-3">
-        <FileSignature className="w-5 h-5 sm:w-6 sm:h-6 text-own-700 dark:text-own-400 shrink-0 mt-0.5" />
+        <CyberRealPropertyShield
+          size={24}
+          className="text-own-700 dark:text-own-400 shrink-0 mt-0.5"
+        />
         <p className="text-xs sm:text-sm font-semibold text-own-900 dark:text-own-300">
           {t(
             'versus.propiedad_footer',
@@ -662,20 +683,27 @@ function RentalCard({
     >
       <div>
         <div className="flex flex-wrap items-center justify-between pb-4 sm:pb-5 mb-4 sm:mb-5 border-b border-border/80 gap-3">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 sm:p-3 rounded-2xl bg-rent-500/15 text-rent-700 dark:text-rent-400 border border-rent-border">
-              <Lock className="w-6 h-6 sm:w-7 sm:h-7" />
+          <div className="flex items-center gap-3.5">
+            <div className="relative flex h-14 w-14 sm:h-15 sm:w-15 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-rose-500/20 via-red-950/40 to-slate-950/80 border border-rose-500/40 shadow-[0_0_24px_rgba(244,63,94,0.35)] ring-1 ring-white/10 group-hover:scale-105 transition-all duration-300">
+              <div className="absolute inset-0 rounded-2xl bg-rose-500/10 blur-sm pointer-events-none" />
+              <CyberPlatformTrapLock size={34} />
+              <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-500 opacity-75" />
+                <span className="relative inline-flex h-3 w-3 rounded-full border-2 border-slate-950 bg-rose-500 shadow-[0_0_8px_#f43f5e]" />
+              </span>
             </div>
             <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-rent-700 dark:text-rent-400">
+              <span className="text-[10px] font-extrabold uppercase tracking-[0.22em] text-rose-400 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]" />
                 {t('versus.alquiler_brand', 'PLATAFORMAS TRADICIONALES')}
               </span>
-              <h3 className="text-xl sm:text-2xl font-bold text-foreground">
+              <h3 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
                 {t('versus.alquiler_titulo', 'Modelo de Alquiler / Plantilla')}
               </h3>
             </div>
           </div>
-          <span className="px-2.5 py-1 text-[11px] sm:text-xs font-bold rounded-full bg-rent-500/15 text-rent-700 dark:text-rent-400 border border-rent-border uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-black rounded-full bg-linear-to-r from-rose-500/20 to-red-950/40 border border-rose-500/50 text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.25)] uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_#f43f5e]" />
             {t('versus.alquiler_tag', 'Rehén Mensual')}
           </span>
         </div>
@@ -687,7 +715,7 @@ function RentalCard({
               {t('versus.alquiler_plantilla', 'PLANTILLA #312 — IDÉNTICA A MILES')}
             </span>
             <span className="flex items-center gap-1.5 text-[10px] font-bold text-rent-400/80">
-              <MousePointerClick className="w-3.5 h-3.5" />
+              <CyberSparkleIcon size={13} className="text-rent-400" />
               {t('versus.demo_label', 'DEMO')}
             </span>
           </div>
@@ -716,7 +744,7 @@ function RentalCard({
                 onClick={resetDemo}
                 className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rent-border text-rent-300 text-xs font-bold transition-all hover:bg-rent-500/20 cursor-pointer"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <CyberRefreshIcon size={14} />
                 {t('versus.reintentar_demo', 'Volver a activar demo')}
               </button>
             </motion.div>
@@ -784,7 +812,7 @@ function RentalCard({
                 : 'btn-rent-blocked active:scale-[0.98] hover:bg-rose-500/20'
             }`}
           >
-            <Power className="w-4 h-4" />
+            <CyberWarningHazard size={16} className="text-rose-400" />
             <span>
               {phase === 'dead'
                 ? '✗ Acceso suspendido por falta de pago'
@@ -800,7 +828,7 @@ function RentalCard({
               key={idx}
               className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground font-medium"
             >
-              <XCircle className="w-4 h-4 text-rent-700 dark:text-rent-400 shrink-0" />
+              <CyberCrossMark size={16} className="shrink-0" />
               <span>{s}</span>
             </div>
           ))}
@@ -817,28 +845,28 @@ function RentalCard({
 
           <div className="p-3.5 rounded-2xl border border-rent-border bg-rent-tint dark:bg-rent-500/10 space-y-2">
             <div className="flex items-start gap-2 text-xs text-rent-900/80 dark:text-rent-300">
-              <span className="text-rose-500 font-bold shrink-0">✕</span>
+              <CyberCrossMark size={14} className="shrink-0 mt-0.5" />
               <span>
                 <strong>Comisión obligatoria:</strong> te cobran del 2% al 5% de cada venta que
                 hacés.
               </span>
             </div>
             <div className="flex items-start gap-2 text-xs text-rent-900/80 dark:text-rent-300">
-              <span className="text-rose-500 font-bold shrink-0">✕</span>
+              <CyberCrossMark size={14} className="shrink-0 mt-0.5" />
               <span>
                 <strong>Aumentos arbitrarios:</strong> de $35k a $55k+ anuales sin posibilidad de
                 congelar.
               </span>
             </div>
             <div className="flex items-start gap-2 text-xs text-rent-900/80 dark:text-rent-300">
-              <span className="text-rose-500 font-bold shrink-0">✕</span>
+              <CyberCrossMark size={14} className="shrink-0 mt-0.5" />
               <span>
                 <strong>Código cerrado:</strong> no podés descargar el código ni migrarte a otro
                 servidor.
               </span>
             </div>
             <div className="flex items-start gap-2 text-xs text-rent-900/80 dark:text-rent-300">
-              <span className="text-rose-500 font-bold shrink-0">✕</span>
+              <CyberCrossMark size={14} className="shrink-0 mt-0.5" />
               <span>
                 <strong>Rehén digital:</strong> si dejás de pagar, tu catálogo y base de clientes
                 desaparecen.
@@ -856,7 +884,10 @@ function RentalCard({
       </div>
 
       <div className="mt-5 p-3.5 sm:p-4 rounded-xl bg-rent-tint border border-rent-border flex items-start gap-3">
-        <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-rent-700 dark:text-rent-400 shrink-0 mt-0.5" />
+        <CyberPlatformTrapLock
+          size={22}
+          className="text-rent-700 dark:text-rent-400 shrink-0 mt-0.5"
+        />
         <p className="text-xs sm:text-sm font-semibold text-rent-900 dark:text-rent-300">
           {t(
             'versus.alquiler_cierre_footer',
@@ -1109,7 +1140,7 @@ function CostCard() {
       <div className="relative z-10 flex flex-wrap items-end justify-between gap-4 mb-6">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 mb-3">
-            <TrendingDown className="w-3.5 h-3.5 text-accent-cyan" />
+            <CyberRoiTrend size={14} className="text-accent-cyan" />
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent-cyan">
               {t('versus.costo_badge', 'LOS NÚMEROS')}
             </span>
@@ -1197,7 +1228,7 @@ function CostCard() {
 
       {/* AVISO REAL DE SERVIDORES Y PLATAFORMAS */}
       <div className="relative z-10 mb-6 flex items-center gap-2.5 p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs text-amber-800 dark:text-amber-200">
-        <ShieldAlert className="w-4 h-4 shrink-0 text-amber-500" />
+        <CyberWarningHazard size={16} className="shrink-0 text-amber-500" />
         <p className="leading-relaxed">
           <strong className="font-semibold text-amber-900 dark:text-amber-100">
             Dinámica real de servidores y hosting:
@@ -1442,7 +1473,7 @@ function CostCard() {
             />
             <div className="flex items-center justify-between text-[11px] text-muted-foreground mt-2">
               <span className="flex items-center gap-1.5">
-                <MousePointerClick className="w-3.5 h-3.5 text-accent-cyan" />
+                <CyberSparkleIcon size={13} className="text-accent-cyan" />
                 <span>Deslizá para proyectar la rentabilidad en el tiempo</span>
               </span>
               <span className="font-mono text-cyan-600 dark:text-cyan-400 font-semibold">
@@ -1533,8 +1564,9 @@ function CostCard() {
           >
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-foreground/80">
-                <Activity
-                  className={`w-3.5 h-3.5 ${crossed ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}
+                <CyberMetricProcessor
+                  size={14}
+                  className={`shrink-0 ${crossed ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}
                 />
                 <span>Ahorro neto acumulado</span> · <span>Año {year}</span>
               </div>
@@ -1883,7 +1915,7 @@ function CodeLiberationTerminal({ mode }: { mode: TermMode }) {
           <span className="w-2.5 h-2.5 rounded-full bg-rent-400/70" />
           <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
           <span className="w-2.5 h-2.5 rounded-full bg-own-400/70" />
-          <Terminal className="w-3.5 h-3.5 text-own-400/80" />
+          <CyberTechCode size={14} className="text-own-400/80" />
           <span className="ml-1 text-[10px] font-mono text-own-400/80 tracking-widest uppercase">
             {t('versus.extra_terminal_titulo', 'Terminal de Liberación')}
           </span>
@@ -1965,7 +1997,10 @@ function CodeLiberationTerminal({ mode }: { mode: TermMode }) {
                       'Liberación completada ✓ — hacé click para repetir'
                     )}
               </span>
-              <RefreshCw className="w-3.5 h-3.5 text-own-400/80 animate-[spin_3s_linear_infinite]" />
+              <CyberRefreshIcon
+                size={14}
+                className="text-own-400/80 animate-[spin_3s_linear_infinite]"
+              />
             </div>
           )}
         </div>
@@ -2001,7 +2036,7 @@ export const OwnershipVsSubscription: React.FC = () => {
           transition={{ duration: 0.8 }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 backdrop-blur-md mb-4">
-            <Landmark className="w-4 h-4 text-accent-cyan" />
+            <CyberInsignia size={16} className="text-accent-cyan" />
             <span className="text-xs font-bold uppercase tracking-[0.25em] text-accent-cyan">
               {t('versus.badge', 'MODELO DE NEGOCIO 2026')}
             </span>
@@ -2031,8 +2066,9 @@ export const OwnershipVsSubscription: React.FC = () => {
         >
           <div className="p-3.5 sm:p-4 rounded-2xl bg-surface-1/90 dark:bg-[#121217] border border-border/80 dark:border-white/10 shadow-2xl backdrop-blur-md">
             <div className="flex items-center justify-center gap-2 mb-2.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-              <Power
-                className={`w-3.5 h-3.5 ${simulationCut ? 'text-rose-500 animate-pulse' : 'text-emerald-400'}`}
+              <CyberPowerSwitch
+                size={14}
+                className={simulationCut ? 'text-rose-500 animate-pulse' : 'text-emerald-400'}
               />
               <span className="font-semibold text-text-hi">
                 Simulador Maestro: ¿Qué pasa si dejás de pagar?
@@ -2062,7 +2098,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                     : 'text-muted-foreground hover:text-rose-400'
                 }`}
               >
-                <Power className="w-3.5 h-3.5" />
+                <CyberWarningHazard size={14} className="text-white" />
                 <span>Cortar cuota mensual</span>
               </button>
             </div>

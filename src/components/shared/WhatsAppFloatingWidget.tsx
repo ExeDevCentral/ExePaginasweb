@@ -6,7 +6,15 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send, Sparkles, ShoppingBag, Globe, Cpu, CreditCard } from 'lucide-react'
+import {
+  WhatsAppLiveIcon,
+  CyberShopBagIcon,
+  CyberGlobeIcon,
+  CyberMetricProcessor,
+  CyberPaymentCard,
+  CyberSparkleIcon,
+} from '@/components/ui/MagnificentIcons'
+import { X, Send } from 'lucide-react'
 
 const WHATSAPP_PHONE = '5493416874786'
 
@@ -14,25 +22,25 @@ const QUICK_TOPICS = [
   {
     id: 'store',
     label: 'Tienda Online',
-    icon: ShoppingBag,
+    icon: CyberShopBagIcon,
     text: '¡Hola Exequiel! Quisiera cotizar una Tienda Online con catálogo y cobros integrados.',
   },
   {
     id: 'landing',
     label: 'Página Web / Landing',
-    icon: Globe,
+    icon: CyberGlobeIcon,
     text: '¡Hola Exequiel! Me interesa desarrollar una Página Web profesional de alta velocidad.',
   },
   {
     id: 'saas',
     label: 'Sistema a Medida / SaaS',
-    icon: Cpu,
+    icon: CyberMetricProcessor,
     text: '¡Hola Exequiel! Tengo un proyecto para automatizar procesos con un Sistema a medida.',
   },
   {
     id: 'payment',
     label: 'Medios de Pago / Alias',
-    icon: CreditCard,
+    icon: CyberPaymentCard,
     text: '¡Hola! Quisiera consultar los medios de pago disponibles y datos de transferencia.',
   },
 ]
@@ -92,8 +100,8 @@ export default function WhatsAppFloatingWidget() {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-emerald-500/20 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-emerald-400 to-teal-600 text-slate-950 shadow-md">
-                  <MessageCircle className="h-5 w-5" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/30 text-emerald-400 shadow-md">
+                  <WhatsAppLiveIcon size={20} />
                   <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
@@ -173,7 +181,7 @@ export default function WhatsAppFloatingWidget() {
             </form>
 
             <div className="mt-2.5 flex items-center justify-center gap-1.5 text-[10px] text-slate-400">
-              <Sparkles className="h-3 w-3 text-emerald-400" />
+              <CyberSparkleIcon size={12} className="text-emerald-400" />
               <span>Atención técnica directa por Exequiel</span>
             </div>
           </motion.div>
@@ -193,7 +201,10 @@ export default function WhatsAppFloatingWidget() {
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
           <span className="relative inline-flex h-3.5 w-3.5 rounded-full border-2 border-slate-950 bg-emerald-400"></span>
         </span>
-        <MessageCircle className="h-6 w-6 transition-transform duration-300 group-hover:rotate-12" />
+        <WhatsAppLiveIcon
+          size={26}
+          className="transition-transform duration-300 group-hover:scale-110"
+        />
       </motion.button>
     </div>
   )

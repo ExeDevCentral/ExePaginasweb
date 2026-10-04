@@ -6,7 +6,12 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { Calculator, Hourglass, TrendingUp, Sparkles } from 'lucide-react'
+import {
+  CyberCalculatorIcon,
+  CyberHourglass,
+  CyberRoiTrend,
+  CyberSparkleIcon,
+} from '@/components/ui/MagnificentIcons'
 
 interface ROICalculatorProps {
   currency: 'ARS' | 'USD'
@@ -56,7 +61,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pb-8 border-b border-border">
         <div className="space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent-cyan/20 bg-accent-cyan/5 text-accent-cyan text-xs font-bold uppercase tracking-wider">
-            <Calculator size={12} />
+            <CyberCalculatorIcon size={14} />
             {t('calculador.badge')}
           </div>
           <h3 className="text-2xl md:text-3xl font-outfit font-black text-foreground">
@@ -78,7 +83,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
                 htmlFor="roi-slider-hours"
                 className="text-sm font-bold text-foreground flex items-center gap-2"
               >
-                <Hourglass className="w-4 h-4 text-accent-cyan animate-pulse" />
+                <CyberHourglass size={18} className="text-accent-cyan animate-pulse" />
                 {t('calculador.horas_label')}
               </label>
               <span className="text-xl font-mono font-black text-foreground bg-muted px-3 py-1 rounded-lg border border-border">
@@ -105,7 +110,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
                 htmlFor="roi-slider-cost"
                 className="text-sm font-bold text-foreground flex items-center gap-2"
               >
-                <TrendingUp className="w-4 h-4 text-accent-magenta" />
+                <CyberRoiTrend size={18} className="text-accent-magenta" />
                 {t('calculador.valor_label')}
               </label>
               <span className="text-xl font-mono font-black text-foreground bg-muted px-3 py-1 rounded-lg border border-border">
@@ -135,7 +140,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
                 {t('calculador.resultado_horas')}
               </p>
               <div className="flex items-baseline gap-2">
-                <h4 className="text-4xl font-outfit font-black text-accent-cyan font-mono">
+                <h4 className="text-4xl font-mono font-black text-accent-cyan">
                   {yearlyHoursSaved}
                 </h4>
                 <span className="text-sm font-bold text-muted-foreground">
@@ -150,7 +155,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
                 {t('calculador.resultado_ahorro')}
               </p>
               <div className="flex items-baseline gap-2">
-                <h4 className="text-4xl md:text-5xl font-outfit font-black text-emerald-400 font-mono">
+                <h4 className="text-4xl md:text-5xl font-mono font-black text-emerald-400">
                   {currency === 'ARS' ? '$' : 'u$s'} {yearlyMoneySaved.toLocaleString('es-AR')}
                 </h4>
               </div>
@@ -160,7 +165,7 @@ export default function ROICalculator({ currency }: ROICalculatorProps) {
             {netSavings > 0 && (
               <div className="pt-4 border-t border-border flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-accent-magenta/15 border border-accent-magenta/20 flex items-center justify-center text-accent-magenta">
-                  <Sparkles size={18} />
+                  <CyberSparkleIcon size={18} />
                 </div>
                 <div>
                   <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">

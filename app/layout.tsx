@@ -40,18 +40,13 @@ export const metadata: Metadata = {
     template: '%s | Exe Páginas Web',
   },
   description:
-    'Exe Páginas Web — Creación de páginas web profesionales, tiendas online e-commerce y sistemas SaaS a medida con 100% código propio en Rosario, Argentina y todo el mundo.',
+    'Exe Páginas Web — Arquitectura de software de alto perfil, plataformas cloud y sistemas web a medida con 100% código propio para empresas que no pueden permitirse fallar a escala global.',
   keywords: [
     'exe paginas web',
     'exe páginas web',
     'exepaginasweb',
     'exepaginasweb.com',
-    'Exe Paginas Web Rosario',
-    'páginas web rosario',
-    'desarrollo web rosario',
-    'creacion de paginas web',
-    'diseño de paginas web',
-    'programador web rosario',
+    'arquitectura de software',
     'desarrollo web a medida',
     'sistemas saas',
     'tiendas online',
@@ -60,8 +55,8 @@ export const metadata: Metadata = {
     'código propio',
     'ExeSistemasWEB',
     'Exequiel Echevarria',
-    'Rosario',
-    'Argentina',
+    'desarrollo web internacional',
+    'software boutique',
   ],
   alternates: {
     canonical: '/',
@@ -95,13 +90,13 @@ export const metadata: Metadata = {
     siteName: 'Exe Páginas Web',
     title: 'Exe Páginas Web | Desarrollo Web a Medida y Sistemas SaaS',
     description:
-      'Exe Páginas Web — Creamos páginas web profesionales, tiendas online y sistemas SaaS a medida con código propio.',
+      'Exe Páginas Web — Construimos software a medida, plataformas cloud y sistemas web para empresas que no pueden permitirse fallar. Control total, cero dependencias.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Exe Páginas Web | Desarrollo Web a Medida',
     description:
-      'Exe Páginas Web — Creamos páginas web profesionales, tiendas online y sistemas SaaS a medida con código propio.',
+      'Exe Páginas Web — Construimos software a medida, plataformas cloud y sistemas web para empresas que no pueden permitirse fallar. Control total, cero dependencias.',
   },
 }
 
@@ -123,10 +118,10 @@ export default function RootLayout({
           'Exe Paginas Web',
           'ExeSistemasWEB',
           'exepaginasweb.com',
-          'Exe Páginas Web Rosario',
+          'Exe Sistemas Web Global',
         ],
         description:
-          'Estudio de desarrollo de páginas web, tiendas online y aplicaciones SaaS a medida con código propio.',
+          'Estudio boutique de arquitectura de software, plataformas cloud y desarrollo web a medida con 100% código propio y alcance global.',
         inLanguage: 'es',
         publisher: {
           '@id': 'https://exepaginasweb.com/#organization',
@@ -142,33 +137,18 @@ export default function RootLayout({
         image: 'https://exepaginasweb.com/og-image.png',
         email: 'Contacto@exepaginasweb.com',
         description:
-          'Exe Páginas Web ofrece desarrollo de páginas web, tiendas online y aplicaciones SaaS a medida con 100% código propio en Rosario, Santa Fe, Argentina y a nivel internacional.',
+          'Exe Páginas Web ofrece arquitectura de software, plataformas cloud y aplicaciones a medida con 100% código propio para empresas y organizaciones a escala global.',
         serviceType: [
+          'Arquitectura de Software',
           'Desarrollo de Páginas Web',
-          'Diseño Web',
-          'E-commerce y Tiendas Online',
-          'Aplicaciones Web',
+          'Diseño Web de Alta Gama',
+          'E-commerce y Plataformas Cloud',
+          'Aplicaciones Web a Medida',
           'Sistemas SaaS',
         ],
-        areaServed: [
-          {
-            '@type': 'City',
-            name: 'Rosario',
-            containedInPlace: {
-              '@type': 'Country',
-              name: 'Argentina',
-            },
-          },
-          {
-            '@type': 'Country',
-            name: 'Argentina',
-          },
-        ],
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: 'Rosario',
-          addressRegion: 'Santa Fe',
-          addressCountry: 'AR',
+        areaServed: {
+          '@type': 'AdministrativeArea',
+          name: 'Global',
         },
         priceRange: '$$',
         sameAs: ['https://github.com/ExeDevCentral'],

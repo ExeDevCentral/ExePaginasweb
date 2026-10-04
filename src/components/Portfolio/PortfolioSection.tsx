@@ -22,7 +22,7 @@ import {
   Zap,
   FileText,
 } from 'lucide-react'
-import Link from 'next/link'
+import HudButton from '@/components/HudButton'
 import { INITIAL_PROJECTS, type Project } from '@/data/projects'
 import SpotlightBorderCard, { type SpotlightCardVariant } from '../shared/SpotlightBorderCard'
 
@@ -112,16 +112,16 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
             transition={{ delay: 0.3 }}
             className="mt-6 flex flex-wrap items-center justify-center gap-3"
           >
-            <a
+            <HudButton
               href="https://cv-xi-swart.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl btn-gradient-cta text-white font-extrabold text-xs sm:text-sm hover:scale-105 transition-all shadow-xl shadow-purple-500/25 border border-white/25 cursor-pointer"
-            >
-              <FileText className="w-4 h-4 text-cyan-200 group-hover:rotate-12 transition-transform" />
-              <span>📄 {t('portfolio.ver_cv', 'Ver Mi CV Profesional Completo')}</span>
-              <ExternalLink className="w-3.5 h-3.5 opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </a>
+              variant="secondary"
+              size="sm"
+              label={t('portfolio.ver_cv', 'Ver Mi CV Profesional Completo')}
+              icon={<FileText className="w-3.5 h-3.5 text-cyan-200" />}
+              iconPosition="left"
+            />
           </motion.div>
         </div>
 
@@ -292,13 +292,14 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                   </p>
                 </div>
 
-                <Link
+                <HudButton
                   href="/cotizador"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-cyan text-background font-bold text-xs uppercase tracking-wider hover:bg-accent-cyan/90 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
-                >
-                  <Zap className="w-3.5 h-3.5" />
-                  {t('portfolio.pedir_presupuesto', 'Pedir Presupuesto')}
-                </Link>
+                  size="sm"
+                  variant="primary"
+                  label={t('portfolio.pedir_presupuesto', 'Pedir Presupuesto')}
+                  icon={<Zap className="w-3.5 h-3.5" />}
+                  iconPosition="left"
+                />
               </div>
             </div>
           </>
@@ -389,22 +390,24 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
 
               {/* Botón CTA */}
               <div className="pt-6 flex flex-wrap items-center justify-center gap-4">
-                <Link
+                <HudButton
                   href="/cotizador"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl btn-gradient-cta text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-accent-cyan/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                >
-                  <Zap className="w-4 h-4 text-slate-950" />
-                  <span>{t('portfolio.cta_cotizar', 'Cotizar Mi Proyecto a Medida')}</span>
-                </Link>
+                  variant="primary"
+                  size="md"
+                  label={t('portfolio.cta_cotizar', 'Cotizar Mi Proyecto a Medida')}
+                  icon={<Zap className="w-4 h-4" />}
+                  iconPosition="left"
+                />
 
                 {featuredOnly && (
-                  <a
+                  <HudButton
                     href="/portafolio"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl border border-foreground/20 hover:border-accent-cyan/60 text-foreground font-bold text-sm tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition-all"
-                  >
-                    <ArrowUpRight className="w-4 h-4 text-accent-cyan" />
-                    <span>{t('portfolio.ver_todos', 'Ver todos los proyectos')}</span>
-                  </a>
+                    variant="secondary"
+                    size="md"
+                    label={t('portfolio.ver_todos', 'Ver todos los proyectos')}
+                    icon={<ArrowUpRight className="w-4 h-4 text-accent-cyan" />}
+                    iconPosition="right"
+                  />
                 )}
               </div>
             </div>

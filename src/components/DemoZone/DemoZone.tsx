@@ -19,8 +19,8 @@ import {
   ArrowRight,
   LucideIcon,
   CheckCircle2,
-  Zap,
 } from 'lucide-react'
+import HudButton from '@/components/HudButton'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
@@ -395,22 +395,18 @@ const TiltCard = ({
 
       {/* Action Button */}
       <div className="pt-5 mt-4 border-t border-border/50 relative z-10">
-        <motion.button
-          type="button"
-          className={`w-full rounded-2xl px-5 py-3 text-xs sm:text-sm font-black transition-all duration-300 flex items-center justify-between group/btn cursor-pointer ${project.buttonClasses}`}
+        <HudButton
+          label={t('demozone.ver_subpagina')}
+          variant="primary"
+          size="md"
+          className="w-full justify-between"
           onClick={(e) => {
             e.stopPropagation()
             onOpen()
           }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <span className="flex items-center gap-2">
-            <Zap className="w-4 h-4" />
-            <span>{t('demozone.ver_subpagina')}</span>
-          </span>
-          <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1.5" />
-        </motion.button>
+          icon={<ArrowRight className="w-4 h-4" />}
+          iconPosition="right"
+        />
       </div>
     </motion.article>
   )

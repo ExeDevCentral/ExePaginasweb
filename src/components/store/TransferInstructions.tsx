@@ -8,6 +8,7 @@ import { Wallet, Mail, Loader2 } from 'lucide-react'
 import { MorphIcon } from 'morphicons/react'
 import { Copy as CopyData, Check as CheckData } from 'lucide'
 import { useAuthSession } from '../../core/auth/AuthSessionProvider'
+import HudButton from '../HudButton'
 
 interface TransferInstructionsProps {
   planSlug: string
@@ -155,24 +156,26 @@ export default function TransferInstructions({
         </div>
       )}
 
-      <button
+      <HudButton
         type="button"
+        variant="primary"
         onClick={handleRegisterAndWhatsApp}
         disabled={registering}
-        className="w-full py-4 rounded-xl font-black text-white bg-gradient-to-r from-accent-cyan to-accent-cyan/80 hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-accent-cyan/25 disabled:opacity-60"
-      >
-        {registering ? (
-          <>
+        className="w-full justify-center"
+        icon={
+          registering ? (
             <Loader2 className="w-4 h-4 animate-spin" />
-            Registrando...
-          </>
-        ) : (
-          <>
+          ) : (
             <Wallet className="w-4 h-4" />
-            {registered ? 'Volver a abrir WhatsApp' : 'Registrar y enviar comprobante por WhatsApp'}
-          </>
-        )}
-      </button>
+          )
+        }
+      >
+        {registering
+          ? 'Registrando...'
+          : registered
+            ? 'Volver a abrir WhatsApp'
+            : 'Registrar y enviar por WhatsApp'}
+      </HudButton>
 
       {registered && (
         <p className="text-xs text-green-500 font-medium text-center">

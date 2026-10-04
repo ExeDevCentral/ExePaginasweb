@@ -102,18 +102,28 @@ const Footer = () => {
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed mb-5 max-w-sm">
               {t('footer.descripcion') ||
-                'Sistemas web boutique, software a medida y plataformas cloud de alta conversión. Desarrollamos con 100% código propio para negocios que quieren escalar sin alquileres cautivos.'}
+                'Construimos software a medida, plataformas cloud y sistemas web para empresas que no pueden permitirse fallar. Seguridad máxima, privacidad blindada y código 100% tuyo: control total, cero dependencias.'}
             </p>
 
-            {/* Live studio status chip */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-medium mb-6">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-              </span>
-              <span>
-                {t('footer.cupos_disponibles') || 'Cupos abiertos para desarrollo Q4 2025'}
-              </span>
+            {/* Live studio status chip & Global reach */}
+            <div className="flex flex-col gap-2 mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-medium w-fit">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span>
+                  {t('footer.cupos_disponibles') ||
+                    'Cupos exclusivos abiertos · Arquitectura & Desarrollo Q4 2026'}
+                </span>
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-400 text-[11px] font-mono w-fit">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                <span>
+                  {t('footer.cobertura_global') ||
+                    'Arquitectura & Plataformas Cloud · Escala Global'}
+                </span>
+              </div>
             </div>
 
             {/* Social Channels */}
@@ -418,7 +428,7 @@ const Footer = () => {
             <div className="flex items-center justify-center lg:justify-start gap-2.5 text-muted-foreground text-[11px] font-mono tracking-wide shrink-0">
               <Logo size={20} variant="auto" />
               <p className="whitespace-nowrap select-none">
-                © 2025 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
+                © 2026 <span className="text-foreground font-semibold">ExePaginasWEB.com</span>
                 <span className="hidden sm:inline">
                   {' · '}
                   {t('footer.derechos') || 'Todos los derechos reservados.'}

@@ -8,19 +8,19 @@
 import React, { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import {
-  CalendarCheck,
-  ReceiptText,
-  Layers,
-  CalendarClock,
-  Calculator,
-  ShoppingBag,
-  ArrowRight,
-  Sparkles,
-  X,
-} from 'lucide-react'
+import { ArrowRight, Sparkles, X } from 'lucide-react'
 import LanguageSwitcher from '../LanguageSwitcher'
 import ThemeToggle from '../ThemeToggle'
+import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
+import {
+  CyberAppointmentIcon,
+  CyberComandaIcon,
+  CyberCatalogIcon,
+  CyberPitchRadarIcon,
+  CyberCalculatorIcon,
+  CyberShopBagIcon,
+  WhatsAppLiveIcon,
+} from '@/components/ui/MagnificentIcons'
 
 export interface MegaPanelProps {
   isOpen: boolean
@@ -33,28 +33,28 @@ const solutionItems = [
     href: '/soluciones#peluqueria',
     label: 'Peluquerías & Salones',
     detail: 'Turnos online 24/7, recordatorios WhatsApp y CRM de fidelización.',
-    icon: CalendarCheck,
+    icon: CyberAppointmentIcon,
     tag: 'TURNO ONLINE',
   },
   {
     href: '/soluciones#panaderia',
     label: 'Panaderías & Gastronomía',
     detail: 'Terminal de pedidos rápidos, combos, delivery y stock por kilo.',
-    icon: ReceiptText,
+    icon: CyberComandaIcon,
     tag: 'COMANDAS',
   },
   {
     href: '/soluciones#indumentaria',
     label: 'Indumentaria & Calzado',
     detail: 'Catálogo con talles, variantes en vivo y sincronización de stock.',
-    icon: Layers,
+    icon: CyberCatalogIcon,
     tag: 'CATÁLOGO VIVO',
   },
   {
     href: '/soluciones#canchas',
     label: 'Canchas & Complejos',
     detail: 'Grilla de ocupación en tiempo real y bloqueo anti-solapamiento.',
-    icon: CalendarClock,
+    icon: CyberPitchRadarIcon,
     tag: 'OCUPACIÓN 24/7',
   },
 ]
@@ -169,6 +169,47 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
               </div>
             </div>
 
+            {/* Ficha de Autor & WhatsApp Directo con Exe en vivo */}
+            <motion.div
+              variants={itemVariants}
+              className="mb-4 p-3 rounded-2xl border border-cyan-500/20 bg-linear-to-r from-cyan-500/10 via-slate-900/60 to-slate-950/80 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner"
+            >
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-cyan-400 to-sky-600 font-mono font-black text-xs text-slate-950 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.4)] shrink-0">
+                  EXE
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-bold text-xs sm:text-sm text-foreground">
+                      Exequiel Echevarría
+                    </h4>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-cyan-300">
+                      Software &amp; Web Architect
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground truncate">
+                    Arquitectura de Software &amp; Sistemas Cloud · Escala Global · Ingeniería
+                    Directa
+                  </p>
+                </div>
+              </div>
+
+              <a
+                href={getWhatsAppUrl(
+                  '¡Hola Exequiel! Me interesa consultar por un desarrollo de software / web a medida.'
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/35 hover:bg-emerald-500/25 text-emerald-400 text-xs font-semibold transition-all group shrink-0"
+              >
+                <WhatsAppLiveIcon size={18} />
+                <span>Hablar por WhatsApp con Exe</span>
+                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                  EN VIVO
+                </span>
+              </a>
+            </motion.div>
+
             {/* Grid de 4 Soluciones Principales */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
               {solutionItems.map(({ href, label, detail, icon: Icon, tag }) => (
@@ -179,7 +220,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                     className="group relative flex items-start gap-3 p-3.5 rounded-2xl border border-slate-200/80 dark:border-white/5 bg-slate-50/60 dark:bg-white/2 hover:bg-cyan-500/8 hover:border-cyan-500/40 dark:hover:border-cyan-400/40 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
                   >
                     <div className="relative w-10 h-10 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-sm shrink-0 group-hover:border-cyan-500/50 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-all">
-                      <Icon size={19} strokeWidth={1.8} />
+                      <Icon size={22} />
                       <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-cyan-400 opacity-70 group-hover:opacity-100" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -212,7 +253,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
               >
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 flex items-center justify-center shrink-0">
-                    <Calculator size={18} />
+                    <CyberCalculatorIcon size={20} />
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
@@ -239,7 +280,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
               >
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-cyan-500/25 flex items-center justify-center shrink-0">
-                    <ShoppingBag size={18} />
+                    <CyberShopBagIcon size={20} />
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">

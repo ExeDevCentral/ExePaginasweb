@@ -13,6 +13,7 @@ import type { Invoice, InvoiceEstado } from '../../core/domain/entities/Invoice'
 import type { Pago } from '../../hooks/useDashboard'
 import { DataTable } from '../shared/DataTable'
 import type { ColumnDef } from '@tanstack/react-table'
+import HudButton from '../HudButton'
 
 interface Props {
   tenantId: string
@@ -167,14 +168,15 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
         </div>
 
         {onOpenTicket && (
-          <button
+          <HudButton
             type="button"
+            variant="primary"
+            size="sm"
             onClick={onOpenTicket}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white text-xs font-semibold transition-all shadow-sm cursor-pointer w-fit"
+            icon={<Plus className="w-4 h-4" />}
           >
-            <Plus className="w-4 h-4" />
-            <span>Consultar Facturación</span>
-          </button>
+            Consultar Facturación
+          </HudButton>
         )}
       </div>
 

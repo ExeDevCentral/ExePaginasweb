@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { useTheme } from '../../core/theme/ThemeContext'
 import { useTranslation } from 'react-i18next'
+import HudButton from '../HudButton'
 import type { Cliente } from '../../core/domain/entities/Cliente'
 import { toast } from 'sonner'
 import type { ITenantRepository } from '../../core/domain/repositories/ITenantRepository'
@@ -400,44 +401,39 @@ export default function OnboardingWizard({ cliente, planTier, onComplete, tenant
           {/* Wizard Navigation */}
           <div className="flex items-center justify-between mt-10 pt-6 border-t border-border/60">
             {step > 1 ? (
-              <button
+              <HudButton
                 type="button"
+                variant="secondary"
                 onClick={handleBack}
                 disabled={submitting}
-                className="px-6 py-3 rounded-xl border border-border text-sm font-bold text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
               >
                 Atrás
-              </button>
+              </HudButton>
             ) : (
               <div />
             )}
 
             {step < 3 ? (
-              <button
+              <HudButton
                 type="button"
+                variant="primary"
                 onClick={handleNext}
                 disabled={submitting}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-muted hover:bg-muted-foreground/10 text-sm font-bold text-foreground transition-all"
+                icon={<ChevronRight className="w-4 h-4" />}
+                iconPosition="right"
               >
                 Continuar
-                <ChevronRight className="w-4 h-4" />
-              </button>
+              </HudButton>
             ) : (
-              <button
+              <HudButton
                 type="button"
+                variant="primary"
                 onClick={handleFinish}
                 disabled={submitting}
-                className="flex items-center gap-2 px-8 py-3.5 rounded-xl btn-gradient-cta text-white font-black hover:opacity-90 transition-opacity disabled:opacity-50 shadow-lg"
+                icon={submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
               >
-                {submitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Creando Espacio...
-                  </>
-                ) : (
-                  'Crear Workspace'
-                )}
-              </button>
+                {submitting ? 'Creando Espacio...' : 'Crear Workspace'}
+              </HudButton>
             )}
           </div>
         </div>

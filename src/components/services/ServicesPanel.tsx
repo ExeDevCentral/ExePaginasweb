@@ -23,6 +23,7 @@ import type {
   TenantServiceEstado,
 } from '../../core/domain/entities/TenantService'
 import type { ServiceCatalog } from '../../core/domain/entities/ServiceCatalog'
+import HudButton from '../HudButton'
 import { DataTable } from '../shared/DataTable'
 import type { ColumnDef } from '@tanstack/react-table'
 
@@ -249,13 +250,9 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
         </div>
 
         {onOpenTicket ? (
-          <button
-            type="button"
-            onClick={onOpenTicket}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white text-xs font-semibold transition-all shadow-sm cursor-pointer w-fit"
-          >
-            <span>Consultar Soporte</span>
-          </button>
+          <HudButton type="button" variant="primary" size="sm" onClick={onOpenTicket}>
+            Consultar Soporte
+          </HudButton>
         ) : (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />

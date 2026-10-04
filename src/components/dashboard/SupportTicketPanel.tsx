@@ -11,6 +11,7 @@ import { X, LifeBuoy, CheckCircle2 } from 'lucide-react'
 import { MorphIcon } from 'morphicons/react'
 import { Send as SendData, CheckCircle2 as CheckCircle2Data } from 'lucide'
 import { useTranslation } from 'react-i18next'
+import HudButton from '../HudButton'
 import type { PlanTier } from '../../core/domain/planCatalog'
 import { TICKET_CATEGORIES, SLA_BY_TIER } from '../../core/domain/ticketConfig'
 import type { Ticket } from '../../core/domain/entities/Ticket'
@@ -200,24 +201,25 @@ export default function SupportTicketPanel({
                   />
                 </div>
 
-                <button
+                <HudButton
                   type="submit"
+                  variant="primary"
                   disabled={submitting}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl py-3 font-semibold text-sm text-white bg-[#4361EE] hover:bg-[#3854E0] transition-colors disabled:opacity-50 cursor-pointer shadow-sm active:scale-95"
-                >
-                  {submitting ? (
-                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <>
+                  className="w-full justify-center"
+                  icon={
+                    submitting ? (
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
                       <MorphIcon
                         icon={success ? CheckCircle2Data : SendData}
                         size={16}
                         spring="snappy"
                       />
-                      {success ? '¡Ticket enviado!' : 'Enviar ticket'}
-                    </>
-                  )}
-                </button>
+                    )
+                  }
+                >
+                  {submitting ? 'Enviando...' : success ? '¡Ticket enviado!' : 'Enviar ticket'}
+                </HudButton>
               </form>
 
               {tickets.length > 0 && (

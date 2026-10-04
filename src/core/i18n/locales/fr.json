@@ -39,7 +39,7 @@
     "compare_stat_tuyo": "à vous",
     "compare_stat_duracion": "durée",
     "compare_fast": "en ligne maintenant",
-    "eyebrow_plataforma": "Plateforme web & systèmes SaaS",
+    "eyebrow_plataforma": "Architecture Web & Systèmes Cloud · Europe · États-Unis · Amérique du Sud · Chine · Australie",
     "titulo_prefijo": "La plateforme pour",
     "palabras_rotativas": [
       "automatiser",
@@ -533,7 +533,8 @@
     "abrir": "Ouvrir"
   },
   "footer": {
-    "descripcion": "Systèmes web boutique, logiciels sur mesure et plateformes cloud à haute conversion. Développé avec 100% de code propriétaire pour les entreprises sans abonnements captifs.",
+    "descripcion": "Architecture logicielle haut de gamme, plateformes cloud et systèmes web sur mesure. Développés avec sécurité maximale, confidentialité blindée et 100% code propriétaire pour les entreprises en Europe, aux États-Unis, en Amérique du Sud, en Chine et en Australie sans abonnements captifs.",
+    "cobertura_global": "Déploiement Global · Europe · États-Unis · Amérique du Sud · Chine · Australie",
     "navegacion": "Navigation",
     "nav_sistemas": "Systèmes Web sur Mesure",
     "nav_caracteristicas": "Fonctionnalités",
@@ -545,7 +546,7 @@
     "contacto_form": "Formulaire de Contact",
     "derechos": "Tous droits réservés.",
     "hecho_por": "Fait avec ♥ par",
-    "cupos_disponibles": "Places ouvertes pour développement Q4 2025",
+    "cupos_disponibles": "Places exclusives ouvertes · Architecture & Développement Q4 2026",
     "soluciones_saas": "Solutions SaaS",
     "nav_tienda": "Boutique en Ligne & E-Commerce",
     "nav_turnos": "Rendez-vous & Réservations 24/7",
@@ -1048,5 +1049,11 @@
     "quick_q3": "Quel est le délai de livraison ?",
     "send": "Envoyer",
     "clear": "Effacer le chat"
+  },
+  "notfound": {
+    "meta_title": "Page non trouvée | Exe Páginas Web",
+    "titulo": "Page non trouvée",
+    "descripcion": "La page que vous recherchez n'existe pas ou a été déplacée.",
+    "boton": "Retour à l'accueil"
   }
 }

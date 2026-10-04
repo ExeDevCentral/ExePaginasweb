@@ -6,13 +6,18 @@
 import { motion, useScroll } from 'framer-motion'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PhoneCall, Code2, Rocket, Headphones } from 'lucide-react'
+import {
+  CyberProcessDiscovery,
+  CyberProcessCode,
+  CyberProcessRocket,
+  CyberProcessHypercare,
+} from '@/components/ui/MagnificentIcons'
 
 const STEPS = [
-  { icon: PhoneCall, color: 'from-blue-500 to-accent-cyan' },
-  { icon: Code2, color: 'from-accent-cyan to-accent-magenta' },
-  { icon: Rocket, color: 'from-accent-magenta to-accent-yellow' },
-  { icon: Headphones, color: 'from-accent-yellow to-orange-500' },
+  { icon: CyberProcessDiscovery, color: 'from-blue-500 to-accent-cyan' },
+  { icon: CyberProcessCode, color: 'from-accent-cyan to-accent-magenta' },
+  { icon: CyberProcessRocket, color: 'from-accent-magenta to-accent-yellow' },
+  { icon: CyberProcessHypercare, color: 'from-accent-yellow to-orange-500' },
 ]
 
 const Process = () => {
@@ -45,7 +50,7 @@ const Process = () => {
           {/* Línea conectora (solo en desktop) — se llena con scroll vía GPU scaleX */}
           <div className="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-1 bg-muted rounded-full z-0 overflow-hidden">
             <motion.div
-              className="w-full h-full bg-gradient-to-r from-accent-cyan via-accent-magenta to-accent-yellow origin-left will-change-transform transform-gpu"
+              className="w-full h-full bg-linear-to-r from-accent-cyan via-accent-magenta to-accent-yellow origin-left will-change-transform transform-gpu"
               style={{ scaleX: scrollYProgress }}
             />
           </div>
@@ -63,10 +68,13 @@ const Process = () => {
                 transition={{ delay: i * 0.15 }}
               >
                 <div
-                  className={`w-24 h-24 rounded-3xl bg-gradient-to-br ${step.color} p-[2px] mb-6 shadow-lg shadow-accent-magenta/5 group-hover:-translate-y-2 transition-transform duration-300`}
+                  className={`w-24 h-24 rounded-3xl bg-linear-to-br ${step.color} p-0.5 mb-6 shadow-lg shadow-accent-magenta/5 group-hover:-translate-y-2 transition-transform duration-300`}
                 >
                   <div className="w-full h-full bg-background rounded-[22px] flex items-center justify-center">
-                    <Icon className="w-10 h-10 text-foreground group-hover:scale-110 transition-transform duration-300" />
+                    <Icon
+                      size={42}
+                      className="group-hover:scale-110 transition-transform duration-300"
+                    />
                   </div>
                 </div>
                 <h3 className="text-xl font-bold mb-3 font-montserrat">{stepT('titulo')}</h3>

@@ -12,16 +12,14 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Sparkles, Send, ShieldCheck, ArrowRight } from 'lucide-react'
+import { X, Send, ArrowRight } from 'lucide-react'
+import {
+  WhatsAppLiveIcon,
+  CyberSparkleIcon,
+  CyberRealPropertyShield,
+} from '@/components/ui/MagnificentIcons'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
-
-// Ícono SVG oficial WhatsApp
-const WhatsAppIcon = ({ className = 'w-7 h-7' }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M12.031 2C6.495 2 2 6.484 2 12.018c0 1.907.534 3.69 1.464 5.215L2 22l4.914-1.424A9.972 9.972 0 0012.031 22c5.536 0 10.031-4.484 10.031-10.018C22.062 6.484 17.567 2 12.031 2zm0 18.286c-1.636 0-3.18-.45-4.524-1.233l-.324-.19-2.923.848.868-2.846-.21-.334a8.23 8.23 0 01-1.282-4.513c0-4.568 3.717-8.284 8.29-8.284 4.572 0 8.289 3.716 8.289 8.284 0 4.569-3.717 8.286-8.29 8.286zm4.545-6.208c-.249-.125-1.472-.726-1.7-.809-.228-.083-.394-.125-.56.125-.166.249-.643.809-.788.975-.145.166-.29.187-.539.062-.249-.124-1.052-.388-2.003-1.237-.741-.66-1.241-1.476-1.386-1.725-.145-.249-.015-.383.109-.507.112-.112.249-.29.373-.435.124-.145.166-.249.249-.415.083-.166.041-.311-.021-.435-.062-.125-.56-1.349-.767-1.847-.202-.486-.407-.42-.56-.428l-.477-.008c-.166 0-.436.062-.664.311-.228.249-.871.851-.871 2.075 0 1.224.892 2.407 1.016 2.573.125.166 1.756 2.68 4.254 3.759.594.257 1.058.41 1.42.525.597.19 1.14.163 1.569.099.479-.071 1.472-.602 1.68-1.183.207-.581.207-1.079.145-1.183-.062-.104-.228-.166-.477-.291z" />
-  </svg>
-)
 
 const QUICK_ACTIONS = [
   {
@@ -99,7 +97,7 @@ export default function FloatingWhatsApp() {
                     <h4 className="text-sm font-bold tracking-tight text-white">
                       Exequiel Echevarria
                     </h4>
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    <CyberRealPropertyShield size={16} />
                   </div>
                   <p className="text-[11px] text-emerald-300 font-mono flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping inline-block" />
@@ -157,7 +155,7 @@ export default function FloatingWhatsApp() {
               </button>
 
               <p className="text-[10px] text-center text-slate-500 font-mono">
-                {DISPLAY_WHATSAPP_NUMBER} · Rosario & Remoto
+                {DISPLAY_WHATSAPP_NUMBER} · Atención Global 24/7
               </p>
             </div>
           </motion.div>
@@ -188,7 +186,7 @@ export default function FloatingWhatsApp() {
               🟢 En línea · WhatsApp
             </span>
           </div>
-          <Sparkles className="w-3.5 h-3.5 text-emerald-400 ml-1" />
+          <CyberSparkleIcon size={14} className="text-emerald-400 ml-1" />
         </motion.button>
 
         {/* BOTÓN CIRCULAR CON DOBLE ONDA EXPANSIVA Y RADAR */}
@@ -216,7 +214,7 @@ export default function FloatingWhatsApp() {
           <span className="absolute -inset-2.5 rounded-full bg-teal-400 animate-pulse opacity-25 pointer-events-none" />
 
           {/* Ícono de WhatsApp */}
-          <WhatsAppIcon className="w-8 h-8 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]" />
+          <WhatsAppLiveIcon size={32} className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]" />
 
           {/* Badge con animación de notificación "1" sin leer */}
           {hasUnread && (

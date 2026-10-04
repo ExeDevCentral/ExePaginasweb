@@ -8,15 +8,14 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Check,
-  Minus,
-  ChevronDown,
-  ChevronUp,
-  Layers,
-  ShieldCheck,
-  Zap,
-  Database,
-} from 'lucide-react'
+  CyberCheckMark,
+  CyberMinusIcon,
+  CyberChevron,
+  CyberMetricLightning,
+  CyberRealPropertyShield,
+  CyberDatabaseCore,
+  CyberStackLayers,
+} from '@/components/ui/MagnificentIcons'
 import { storeAudio } from '../../core/utils/storeAudio'
 
 interface FeatureRow {
@@ -36,7 +35,7 @@ interface FeatureCategory {
 const COMPARISON_CATEGORIES: FeatureCategory[] = [
   {
     title: 'Infraestructura Cloud & Velocidad',
-    icon: Zap,
+    icon: CyberMetricLightning,
     rows: [
       {
         name: 'Hosting Serverless Vercel Edge',
@@ -71,7 +70,7 @@ const COMPARISON_CATEGORIES: FeatureCategory[] = [
   },
   {
     title: 'Seguridad, Respaldos & Monitoreo',
-    icon: ShieldCheck,
+    icon: CyberRealPropertyShield,
     rows: [
       {
         name: 'Actualizaciones de Seguridad y Parches',
@@ -105,7 +104,7 @@ const COMPARISON_CATEGORIES: FeatureCategory[] = [
   },
   {
     title: 'Base de Datos & Arquitectura',
-    icon: Database,
+    icon: CyberDatabaseCore,
     rows: [
       {
         name: 'Gestión y Monitoreo de Base de Datos',
@@ -132,7 +131,7 @@ const COMPARISON_CATEGORIES: FeatureCategory[] = [
   },
   {
     title: 'Soporte, Evolución & Horas de Desarrollo',
-    icon: Layers,
+    icon: CyberStackLayers,
     rows: [
       {
         name: 'Canal de Soporte Técnico',
@@ -177,15 +176,15 @@ export const PlanComparisonMatrix: React.FC = () => {
   const renderValue = (val: boolean | string) => {
     if (val === true) {
       return (
-        <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
-          <Check className="w-3.5 h-3.5" />
+        <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-xs">
+          <CyberCheckMark size={14} className="text-emerald-400" />
         </div>
       )
     }
     if (val === false) {
       return (
         <div className="w-6 h-6 rounded-full bg-muted/60 text-muted-foreground/40 flex items-center justify-center mx-auto">
-          <Minus className="w-3.5 h-3.5" />
+          <CyberMinusIcon size={14} />
         </div>
       )
     }
@@ -203,17 +202,16 @@ export const PlanComparisonMatrix: React.FC = () => {
           whileTap={{ scale: 0.98 }}
           className="group flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-card/80 backdrop-blur-xl border border-border hover:border-accent-cyan/60 text-foreground font-bold text-sm shadow-xl transition-all cursor-pointer"
         >
-          <Layers className="w-4 h-4 text-accent-cyan group-hover:rotate-12 transition-transform" />
+          <CyberStackLayers
+            size={16}
+            className="text-accent-cyan group-hover:rotate-12 transition-transform"
+          />
           <span>
             {isOpen
               ? 'Ocultar Tabla Comparativa Completa'
               : 'Comparar Todos los Beneficios Detallados'}
           </span>
-          {isOpen ? (
-            <ChevronUp className="w-4 h-4 text-accent-cyan" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-accent-cyan" />
-          )}
+          <CyberChevron isOpen={isOpen} size={15} className="text-accent-cyan" />
         </motion.button>
       </div>
 
@@ -227,7 +225,7 @@ export const PlanComparisonMatrix: React.FC = () => {
             className="overflow-hidden mt-8"
           >
             <div className="rounded-3xl bg-card/90 backdrop-blur-2xl border border-border shadow-2xl p-4 sm:p-8 overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[640px]">
+              <table className="w-full text-left border-collapse min-w-160">
                 <thead>
                   <tr className="border-b border-border/80 pb-4">
                     <th className="py-4 px-4 text-sm font-bold uppercase tracking-wider text-muted-foreground w-2/5">
@@ -285,7 +283,7 @@ export const PlanComparisonMatrix: React.FC = () => {
                   ))}
                 </tbody>
               </table>
-              <div className="p-3.5 sm:p-4 border-t border-border/40 bg-slate-100/50 dark:bg-white/[0.02] text-xs text-slate-500 dark:text-slate-400">
+              <div className="p-3.5 sm:p-4 border-t border-border/40 bg-slate-100/50 dark:bg-white/2 text-xs text-slate-500 dark:text-slate-400">
                 <p>
                   <span className="text-cyan-500 font-bold">*</span>{' '}
                   <strong>Renovación de Dominio:</strong> La bonificación del costo de renovación

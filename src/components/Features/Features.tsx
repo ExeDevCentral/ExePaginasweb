@@ -8,6 +8,7 @@ import { useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FEATURES_LIST, DASHBOARD_STATS } from './constants'
 import EnhancedFeatureCard from './EnhancedFeatureCard'
+import HudButton from '@/components/HudButton'
 
 function rand(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -125,25 +126,23 @@ const Features = () => {
 
         {/* Call to Action */}
         <motion.div
-          className="text-center mt-16"
+          className="text-center mt-16 flex justify-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <motion.a
+          <HudButton
             href="#contact"
+            label={t('features.cta')}
+            variant="primary"
+            size="lg"
             onClick={(e) => {
               e.preventDefault()
               const el = document.getElementById('contact')
               if (el) el.scrollIntoView({ behavior: 'smooth' })
             }}
-            className="px-8 py-4 btn-gradient-cta rounded-full font-semibold text-lg hover:shadow-lg hover:shadow-accent-cyan/25 transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {t('features.cta')}
-          </motion.a>
+          />
         </motion.div>
       </motion.div>
     </section>

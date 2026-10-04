@@ -15,6 +15,7 @@ import HowWeWorkSection from '@/components/landing/HowWeWorkSection'
 import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription'
 import PortfolioSection from '@/components/Portfolio/PortfolioSection'
 import ContactSection from '@/components/landing/ContactSection'
+import MobileLandingView from '@/components/landing/MobileLandingView'
 import Footer from '@/components/layout/Footer'
 
 const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatWidget'), {
@@ -33,14 +34,28 @@ export default function HomePage() {
           style={{ scaleX }}
         />
         <SiteHeader />
-        <main id="inicio">
-          <OptimusScaleHero />
-          <HowWeWorkSection />
-          <OwnershipVsSubscription />
-          <PortfolioSection featuredOnly />
-          <ContactSection />
-        </main>
-        <Footer />
+
+        {/* ==============================================================
+            VERSIÓN MOBILE RESUMIDA (EXACTAMENTE 2 SECCIONES CON EL GLOBO 3D)
+           ============================================================== */}
+        <div className="block md:hidden">
+          <MobileLandingView />
+        </div>
+
+        {/* ==============================================================
+            VERSIÓN DESKTOP COMPLETA Y PROFUNDA (ARQUITECTURA + COMPARATIVAS)
+           ============================================================== */}
+        <div className="hidden md:block">
+          <main id="inicio">
+            <OptimusScaleHero />
+            <HowWeWorkSection />
+            <OwnershipVsSubscription />
+            <PortfolioSection featuredOnly />
+            <ContactSection />
+          </main>
+          <Footer />
+        </div>
+
         <DeferredChatWidget />
       </div>
     </ErrorBoundary>

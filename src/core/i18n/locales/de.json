@@ -39,7 +39,7 @@
     "compare_stat_tuyo": "deins",
     "compare_stat_duracion": "Dauer",
     "compare_fast": "jetzt online",
-    "eyebrow_plataforma": "Webplattform & SaaS-Systeme",
+    "eyebrow_plataforma": "Webarchitektur & Cloud-Systeme · Europa · USA · Südamerika · China · Australien",
     "titulo_prefijo": "Die Plattform zum",
     "palabras_rotativas": [
       "automatisieren",
@@ -533,7 +533,8 @@
     "abrir": "Öffnen"
   },
   "footer": {
-    "descripcion": "Boutique-Websysteme, individuelle Software und hochkonvertierende Cloud-Plattformen. Zu 100% mit eigenem Code entwickelt für Unternehmen ohne Abhängigkeiten.",
+    "descripcion": "High-End-Softwarearchitektur, Cloud-Plattformen und maßgeschneiderte Websysteme. Entwickelt mit maximaler Sicherheit, kompromisslosem Datenschutz und 100% eigenem Quellcode für Unternehmen in Europa, den USA, Südamerika, China und Australien ohne Mietgebühren.",
+    "cobertura_global": "Weltweite Entwicklung · Europa · USA · Südamerika · China · Australien",
     "navegacion": "Navigation",
     "nav_sistemas": "Individuelle Websysteme",
     "nav_caracteristicas": "Funktionen",
@@ -545,7 +546,7 @@
     "contacto_form": "Kontaktformular",
     "derechos": "Alle Rechte vorbehalten.",
     "hecho_por": "Mit ♥ gemacht von",
-    "cupos_disponibles": "Offene Plätze für Entwicklung Q4 2025",
+    "cupos_disponibles": "Exklusive Plätze offen · Architektur & Entwicklung Q4 2026",
     "soluciones_saas": "SaaS-Lösungen",
     "nav_tienda": "Online-Shop & E-Commerce",
     "nav_turnos": "Termine & Buchungen 24/7",
@@ -1048,5 +1049,11 @@
     "quick_q3": "Wie lange dauert die Fertigstellung?",
     "send": "Senden",
     "clear": "Chat leeren"
+  },
+  "notfound": {
+    "meta_title": "Seite nicht gefunden | Exe Páginas Web",
+    "titulo": "Seite nicht gefunden",
+    "descripcion": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
+    "boton": "Zurück zur Startseite"
   }
 }

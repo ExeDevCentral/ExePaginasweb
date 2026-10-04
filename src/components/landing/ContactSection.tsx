@@ -13,6 +13,7 @@ import { supabase } from '../../core/infra/supabase/client'
 import { toast } from 'sonner'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
+import HudButton from '@/components/HudButton'
 
 const ContactSection = () => {
   const { t, i18n } = useTranslation()
@@ -221,13 +222,13 @@ const ContactSection = () => {
                   <span>Abrir Chat Directo en WhatsApp ({DISPLAY_WHATSAPP_NUMBER})</span>
                 </a>
 
-                <button
+                <HudButton
                   type="button"
+                  variant="secondary"
+                  size="sm"
                   onClick={() => setStatus('idle')}
-                  className="mt-2 rounded-full border border-border px-8 py-3 text-sm font-semibold hover:border-accent-cyan hover:bg-accent-cyan/10 transition-all shadow-lg"
-                >
-                  {t('contact.success_otro')}
-                </button>
+                  label={t('contact.success_otro')}
+                />
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
@@ -291,25 +292,24 @@ const ContactSection = () => {
 
                 {status === 'error' && <p className="text-sm text-accent-magenta">{feedback}</p>}
 
-                <motion.button
+                <HudButton
                   type="submit"
                   disabled={status === 'sending'}
-                  className="group flex w-full items-center justify-center gap-3 rounded-2xl btn-gradient-cta hover:shadow-xl hover:shadow-purple-500/40 px-6 py-4 font-extrabold text-sm uppercase tracking-wider transition-all shadow-xl shadow-purple-500/25 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  {status === 'sending' ? (
-                    <>
+                  variant="primary"
+                  size="lg"
+                  className="w-full justify-center"
+                  label={
+                    status === 'sending' ? t('contact.form_enviando') : t('contact.form_submit')
+                  }
+                  icon={
+                    status === 'sending' ? (
                       <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                      {t('contact.form_enviando')}
-                    </>
-                  ) : (
-                    <>
-                      {t('contact.form_submit')}
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </>
-                  )}
-                </motion.button>
+                    ) : (
+                      <ArrowRight className="h-4 w-4" />
+                    )
+                  }
+                  iconPosition="right"
+                />
               </form>
             )}
           </motion.div>

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Sparkles, Lock } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import HudButton from '@/components/HudButton'
 
 interface PaywallModalProps {
   isOpen: boolean
@@ -147,19 +148,18 @@ export default function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                   </motion.div>
                 </div>
 
-                {/* CTA Button */}
-                <motion.a
-                  href="#contact"
-                  onClick={onClose}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 2 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="block w-full py-4 px-6 btn-gradient-cta rounded-2xl text-white font-semibold text-center transition-all shadow-lg shadow-purple-500/50"
-                >
-                  Contactar 🚀
-                </motion.a>
+                <div className="w-full flex justify-center">
+                  <HudButton
+                    href="#contact"
+                    onClick={onClose}
+                    label="Contactar"
+                    variant="primary"
+                    size="lg"
+                    className="w-full justify-center"
+                    icon={<span>🚀</span>}
+                    iconPosition="right"
+                  />
+                </div>
 
                 {/* Texto adicional */}
                 <motion.p

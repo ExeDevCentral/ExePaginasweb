@@ -52,7 +52,7 @@ export const INITIAL_PROJECTS: Project[] = [
     title: 'Chispa32 — Taller ESP32',
     category: 'web',
     categoryLabel: 'Landing & Web',
-    client: 'Chispa32 · Rosario, Argentina',
+    client: 'Chispa32 · Hardware & IoT',
     description:
       'Landing de alta conversión para taller especializado en reparación y reflasheo de placas ESP32. Diseño técnico premium con propuesta de valor clara, servicios y contacto directo.',
     image: '/portfolio/chispa32.webp',
@@ -229,9 +229,9 @@ export const INITIAL_PROJECTS: Project[] = [
     title: 'FIXI — Marketplace de Servicios Locales',
     category: 'ecommerce',
     categoryLabel: 'Marketplace',
-    client: 'FIXI · Rosario y Región',
+    client: 'FIXI · Marketplace On-Demand',
     description:
-      'Plataforma inteligente que conecta profesionales de oficio (jardinería, electricidad, fletes, plomería, pintura y más) con clientes de Rosario y la región. Contacto directo por WhatsApp, sistema de alertas con geolocalización en tiempo real, tablero de trabajos solicitados, perfiles con valoraciones y experiencia inmersiva con 3D.',
+      'Plataforma inteligente que conecta profesionales de oficio (jardinería, electricidad, fletes, plomería, pintura y más) con clientes en tiempo real. Contacto directo por WhatsApp, sistema de alertas con geolocalización, tablero de trabajos solicitados, perfiles con valoraciones y experiencia inmersiva con 3D.',
     image: '/portfolio/fixi.webp',
     tags: ['React', 'Vite', 'Three.js', 'Supabase', 'Marketplace'],
     metrics: [
@@ -244,7 +244,7 @@ export const INITIAL_PROJECTS: Project[] = [
       'Alertas de solicitudes y trabajos con geolocalización',
       'Tablero de trabajos solicitados y perfiles con valoraciones',
       'Backend con Supabase (auth + datos) y modo demo offline',
-      'Zonas de cobertura: Rosario, Funes, Roldán, Baigorria',
+      'Zonas de cobertura: Hub metropolitano y despliegue regional',
     ],
     link: 'https://fixi-phi.vercel.app/',
     status: 'live',

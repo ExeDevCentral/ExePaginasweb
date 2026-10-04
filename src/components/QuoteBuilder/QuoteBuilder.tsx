@@ -30,6 +30,7 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import Header from '../layout/Header'
+import HudButton from '@/components/HudButton'
 import dynamic from 'next/dynamic'
 
 const Quote3DCanvas = dynamic(() => import('./Quote3DCanvas'), { ssr: false })
@@ -870,15 +871,14 @@ export default function QuoteBuilder() {
                     })}
                   </div>
                   <div className="flex justify-center mt-10">
-                    <button
+                    <HudButton
                       disabled={!selectedType}
                       onClick={() => changeStep(1)}
-                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-4 rounded-2xl btn-gradient-cta text-foreground font-bold disabled:opacity-30 transition-all hover:shadow-lg hover:shadow-accent-magenta/20"
-                    >
-                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
-                      <span className="relative z-10">{t('cotizador.siguiente')}</span>{' '}
-                      <ArrowRight className="w-4 h-4 relative z-10" />
-                    </button>
+                      label={t('cotizador.siguiente')}
+                      icon={<ArrowRight className="w-4 h-4" />}
+                      iconPosition="right"
+                      size="lg"
+                    />
                   </div>
                 </motion.div>
               )}
@@ -971,21 +971,23 @@ export default function QuoteBuilder() {
                     </div>
                   </div>
 
-                  <div className="flex justify-between">
-                    <button
+                  <div className="flex justify-between items-center">
+                    <HudButton
+                      variant="secondary"
+                      size="sm"
                       onClick={() => changeStep(0)}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
-                    >
-                      <ArrowLeft className="w-4 h-4" /> {t('cotizador.atras')}
-                    </button>
-                    <button
+                      label={t('cotizador.atras')}
+                      icon={<ArrowLeft className="w-4 h-4" />}
+                      iconPosition="left"
+                    />
+                    <HudButton
+                      variant="primary"
+                      size="md"
                       onClick={() => changeStep(2)}
-                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-3 rounded-2xl btn-gradient-cta text-foreground font-bold transition-all hover:shadow-lg hover:shadow-accent-magenta/20"
-                    >
-                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
-                      <span className="relative z-10">{t('cotizador.siguiente')}</span>{' '}
-                      <ArrowRight className="w-4 h-4 relative z-10" />
-                    </button>
+                      label={t('cotizador.siguiente')}
+                      icon={<ArrowRight className="w-4 h-4" />}
+                      iconPosition="right"
+                    />
                   </div>
                 </motion.div>
               )}
@@ -1027,21 +1029,23 @@ export default function QuoteBuilder() {
                       )
                     })}
                   </div>
-                  <div className="flex justify-between">
-                    <button
+                  <div className="flex justify-between items-center">
+                    <HudButton
+                      variant="secondary"
+                      size="sm"
                       onClick={() => changeStep(1)}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
-                    >
-                      <ArrowLeft className="w-4 h-4" /> {t('cotizador.atras')}
-                    </button>
-                    <button
+                      label={t('cotizador.atras')}
+                      icon={<ArrowLeft className="w-4 h-4" />}
+                      iconPosition="left"
+                    />
+                    <HudButton
+                      variant="primary"
+                      size="md"
                       onClick={() => changeStep(3)}
-                      className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-3 rounded-2xl btn-gradient-cta text-foreground font-bold transition-all hover:shadow-lg hover:shadow-accent-magenta/20"
-                    >
-                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
-                      <span className="relative z-10">{t('cotizador.ver_cotizacion')}</span>{' '}
-                      <ArrowRight className="w-4 h-4 relative z-10" />
-                    </button>
+                      label={t('cotizador.ver_cotizacion')}
+                      icon={<ArrowRight className="w-4 h-4" />}
+                      iconPosition="right"
+                    />
                   </div>
                 </motion.div>
               )}
@@ -1171,20 +1175,24 @@ export default function QuoteBuilder() {
                             />
                           </div>
 
-                          <button
+                          <HudButton
                             onClick={handleSendQuote}
                             disabled={sending || !name || !email}
-                            className="relative overflow-hidden w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl btn-gradient-cta text-foreground font-bold disabled:opacity-30 transition-all hover:shadow-lg hover:shadow-accent-magenta/20"
-                          >
-                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_ease-in-out_infinite]" />
-                            {sending ? (
-                              <span className="relative z-10">{t('cotizador.enviando')}</span>
-                            ) : (
-                              <span className="relative z-10 flex items-center gap-3">
-                                <Send className="w-4 h-4" /> {t('cotizador.enviar_cotizacion')}
-                              </span>
-                            )}
-                          </button>
+                            variant="primary"
+                            size="lg"
+                            className="w-full justify-center"
+                            label={
+                              sending ? t('cotizador.enviando') : t('cotizador.enviar_cotizacion')
+                            }
+                            icon={
+                              sending ? (
+                                <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                              ) : (
+                                <Send className="w-4 h-4" />
+                              )
+                            }
+                            iconPosition="right"
+                          />
 
                           <a
                             href={`https://wa.me/${WHAATSAPP_NUMBER}?text=${buildWhatsAppMessage()}`}
@@ -1201,12 +1209,14 @@ export default function QuoteBuilder() {
                   </div>
 
                   <div className="flex justify-start mt-8">
-                    <button
+                    <HudButton
+                      variant="secondary"
+                      size="sm"
                       onClick={() => changeStep(2)}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-colors"
-                    >
-                      <ArrowLeft className="w-4 h-4" /> {t('cotizador.atras')}
-                    </button>
+                      label={t('cotizador.atras')}
+                      icon={<ArrowLeft className="w-4 h-4" />}
+                      iconPosition="left"
+                    />
                   </div>
                 </motion.div>
               )}

@@ -125,11 +125,13 @@ export const OptimusGlyphSphere: React.FC<{
     let height = (canvas.height = canvas.parentElement?.clientHeight || width || 400)
 
     const isMobile = width < 640
-    // Soporte Retina display optimizado (tope 2 para balance óptimo nitidez/GPU)
-    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2)
+    // Soporte Retina / Ultra-HD (hasta 3.0 en desktop, 2.0 en mobile para nitidez absoluta sin pérdida de FPS)
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 2.0 : 3.0)
     canvas.width = width * dpr
     canvas.height = height * dpr
     ctx.scale(dpr, dpr)
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
 
     // ========================================================
     // 1. GENERAR PUNTOS DE FIBONACCI (DISTRIBUCIÓN UNIFORME 3D)
@@ -223,20 +225,29 @@ export const OptimusGlyphSphere: React.FC<{
     }
 
     // ========================================================
-    // 4. FÍSICA DE ROTACIÓN SUAVE E INTERACCIÓN
+    // 4. FÍSICA DE ROTACIÓN SUAVE E INTERACCIÓN (PARALLAX + INERCIA)
     // ========================================================
     const CENTER_PITCH = 0.12
     let pitch = CENTER_PITCH
     let targetPitch = CENTER_PITCH
     let yaw = 0
+    let targetYawTilt = 0
+    let yawTilt = 0
     const BASE_SPIN_SPEED = 0.002
     let extraSpinSpeed = 0
     let scrollEnergy = 0
 
+    // Fling / Throw inertia al arrastrar y soltar
+    let spinInertiaYaw = 0
+    let spinInertiaPitch = 0
+    let dragVelocityX = 0
+    let dragVelocityY = 0
+    let lastDragX = 0
+    let lastDragY = 0
+    let lastDragTime = performance.now()
+
     let isHovering = false
     let isDragging = false
-    let lastMouseX = 0
-    let lastMouseY = 0
     let mouseCanvasX = -9999
     let mouseCanvasY = -9999
 
@@ -274,40 +285,78 @@ export const OptimusGlyphSphere: React.FC<{
 
     const handleMouseLeave = () => {
       isHovering = false
-      isDragging = false
-      mouseCanvasX = -9999
-      mouseCanvasY = -9999
-      targetPitch = CENTER_PITCH
-    }
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect()
-      mouseCanvasX = e.clientX - rect.left
-      mouseCanvasY = e.clientY - rect.top
-
-      if (isDragging) {
-        const dx = e.clientX - lastMouseX
-        const dy = e.clientY - lastMouseY
-        yaw += dx * 0.004
-        targetPitch = Math.max(-0.35, Math.min(0.45, targetPitch - dy * 0.0035))
-        lastMouseX = e.clientX
-        lastMouseY = e.clientY
-      } else {
-        const offsetY = mouseCanvasY - height / 2
-        targetPitch = CENTER_PITCH - (offsetY / height) * 0.18
+      if (!isDragging) {
+        mouseCanvasX = -9999
+        mouseCanvasY = -9999
+        targetPitch = CENTER_PITCH
+        targetYawTilt = 0
       }
     }
 
-    const handleMouseDown = (e: MouseEvent) => {
+    const handlePointerDown = (e: PointerEvent) => {
       isDragging = true
-      lastMouseX = e.clientX
-      lastMouseY = e.clientY
+      spinInertiaYaw = 0
+      spinInertiaPitch = 0
+      lastDragX = e.clientX
+      lastDragY = e.clientY
+      lastDragTime = performance.now()
+      dragVelocityX = 0
+      dragVelocityY = 0
+      if (canvas.setPointerCapture) {
+        try {
+          canvas.setPointerCapture(e.pointerId)
+        } catch {
+          // pointer capture opcional
+        }
+      }
     }
 
-    const handleMouseUp = () => {
-      isDragging = false
+    const handlePointerMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      mouseCanvasX = e.clientX - rect.left
+      mouseCanvasY = e.clientY - rect.top
+      const now = performance.now()
+      const dt = Math.max(1, now - lastDragTime)
+
+      if (isDragging) {
+        const dx = e.clientX - lastDragX
+        const dy = e.clientY - lastDragY
+
+        yaw += dx * 0.0036
+        targetPitch = Math.max(-0.45, Math.min(0.55, targetPitch - dy * 0.003))
+
+        dragVelocityX = dx / (dt / 16.667)
+        dragVelocityY = dy / (dt / 16.667)
+
+        lastDragX = e.clientX
+        lastDragY = e.clientY
+        lastDragTime = now
+      } else {
+        // Inclinación magnética 3D continua de alta precisión (X e Y simultáneos)
+        const normX = Math.max(-1.4, Math.min(1.4, (mouseCanvasX - width / 2) / (width / 2)))
+        const normY = Math.max(-1.4, Math.min(1.4, (mouseCanvasY - height / 2) / (height / 2)))
+        targetYawTilt = normX * 0.3
+        targetPitch = CENTER_PITCH - normY * 0.22
+      }
+    }
+
+    const handlePointerUp = (e: PointerEvent) => {
+      if (isDragging) {
+        isDragging = false
+        // Transferir velocidad de arrastre a inercia de giro
+        spinInertiaYaw = Math.max(-0.045, Math.min(0.045, dragVelocityX * 0.0028))
+        spinInertiaPitch = Math.max(-0.035, Math.min(0.035, -dragVelocityY * 0.0022))
+        if (canvas.releasePointerCapture) {
+          try {
+            canvas.releasePointerCapture(e.pointerId)
+          } catch {
+            // pointer capture opcional
+          }
+        }
+      }
       if (!isHovering) {
         targetPitch = CENTER_PITCH
+        targetYawTilt = 0
       }
     }
 
@@ -318,31 +367,8 @@ export const OptimusGlyphSphere: React.FC<{
       canvas.width = width * dpr
       canvas.height = height * dpr
       ctx.scale(dpr, dpr)
-    }
-
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 1 && e.touches[0]) {
-        isDragging = true
-        lastMouseX = e.touches[0].clientX
-        lastMouseY = e.touches[0].clientY
-      }
-    }
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isDragging && e.touches.length === 1 && e.touches[0]) {
-        const touch = e.touches[0]
-        const dx = touch.clientX - lastMouseX
-        const dy = touch.clientY - lastMouseY
-        yaw += dx * 0.005
-        targetPitch = Math.max(-0.35, Math.min(0.45, targetPitch - dy * 0.0035))
-        lastMouseX = touch.clientX
-        lastMouseY = touch.clientY
-      }
-    }
-
-    const handleTouchEnd = () => {
-      isDragging = false
-      targetPitch = CENTER_PITCH
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = 'high'
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -350,28 +376,51 @@ export const OptimusGlyphSphere: React.FC<{
     window.addEventListener('resize', handleResize)
     canvas.addEventListener('mouseenter', handleMouseEnter)
     canvas.addEventListener('mouseleave', handleMouseLeave)
-    canvas.addEventListener('mousemove', handleMouseMove)
-    canvas.addEventListener('mousedown', handleMouseDown)
-    window.addEventListener('mouseup', handleMouseUp)
-    canvas.addEventListener('touchstart', handleTouchStart, { passive: true })
-    canvas.addEventListener('touchmove', handleTouchMove, { passive: true })
-    canvas.addEventListener('touchend', handleTouchEnd, { passive: true })
+    canvas.addEventListener('pointerdown', handlePointerDown)
+    window.addEventListener('pointermove', handlePointerMove, { passive: true })
+    window.addEventListener('pointerup', handlePointerUp)
+    window.addEventListener('pointercancel', handlePointerUp)
 
     // ========================================================
-    // BUCLE DE RENDERIZADO PRINCIPAL (60 - 120 FPS)
+    // BUCLE DE RENDERIZADO PRINCIPAL (60 - 120+ FPS ADAPTATIVO CON DELTA TIME)
     // ========================================================
+    let lastRenderTime = performance.now()
+
     const render = () => {
+      const now = performance.now()
+      const rawDelta = now - lastRenderTime
+      lastRenderTime = now
+      // Calibrado a baseline 60 FPS (16.67ms) con clamp para fluidez sedosa
+      const dtRatio = Math.max(0.15, Math.min(2.2, rawDelta / 16.667))
+
       if (extraSpinSpeed > 0) {
-        extraSpinSpeed *= 0.95
+        extraSpinSpeed *= Math.pow(0.95, dtRatio)
         if (extraSpinSpeed < 0.00004) extraSpinSpeed = 0
       }
       if (scrollEnergy > 0) {
-        scrollEnergy *= 0.95
+        scrollEnergy *= Math.pow(0.95, dtRatio)
         if (scrollEnergy < 0.02) scrollEnergy = 0
       }
 
-      pitch += (targetPitch - pitch) * 0.045
-      yaw += BASE_SPIN_SPEED + extraSpinSpeed
+      // Inercia amortiguada de giro al soltar (friction damping)
+      if (Math.abs(spinInertiaYaw) > 0.00002) {
+        yaw += spinInertiaYaw * dtRatio
+        spinInertiaYaw *= Math.pow(0.955, dtRatio)
+      }
+      if (Math.abs(spinInertiaPitch) > 0.00002) {
+        targetPitch += spinInertiaPitch * dtRatio
+        targetPitch = Math.max(-0.45, Math.min(0.55, targetPitch))
+        spinInertiaPitch *= Math.pow(0.935, dtRatio)
+      }
+
+      // Suavizado exponencial continuo sin importar la tasa de refresco (60Hz, 120Hz, 144Hz, 240Hz)
+      const lerpPitchFactor = 1 - Math.pow(0.0015, Math.max(0.008, rawDelta / 1000))
+      pitch += (targetPitch - pitch) * Math.min(1, Math.max(0.02, lerpPitchFactor))
+
+      const lerpYawTiltFactor = 1 - Math.pow(0.0025, Math.max(0.008, rawDelta / 1000))
+      yawTilt += (targetYawTilt - yawTilt) * Math.min(1, Math.max(0.02, lerpYawTiltFactor))
+
+      yaw += (BASE_SPIN_SPEED + extraSpinSpeed) * dtRatio
 
       ctx.clearRect(0, 0, width, height)
 
@@ -383,11 +432,12 @@ export const OptimusGlyphSphere: React.FC<{
       const isDark =
         typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
 
-      // Matrices de rotación 3D
+      // Matrices de rotación 3D con inclinación magnética integrada
+      const totalYaw = yaw + yawTilt
       const cosP = Math.cos(pitch)
       const sinP = Math.sin(pitch)
-      const cosY = Math.cos(yaw)
-      const sinY = Math.sin(yaw)
+      const cosY = Math.cos(totalYaw)
+      const sinY = Math.sin(totalYaw)
       const fov = 2.6
 
       // Función helper para rotar y proyectar cualquier punto unitario 3D
@@ -404,7 +454,7 @@ export const OptimusGlyphSphere: React.FC<{
       }
 
       // ========================================================
-      // CAPA 1: VOLUMEN ESFÉRICO 3D TANGIBLE (SOMBREO & ARO FRESNEL)
+      // CAPA 1: VOLUMEN ESFÉRICO 3D TANGIBLE (SOMBREO, ESPECULAR & ARO FRESNEL)
       // ========================================================
       ctx.save()
       const lightOffsetX = -radius * 0.28
@@ -436,6 +486,26 @@ export const OptimusGlyphSphere: React.FC<{
       ctx.beginPath()
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
       ctx.fillStyle = bodyGrad
+      ctx.fill()
+
+      // Capa 1B: Brillo especular volumétrico (crescent sheen highlight)
+      const specX = centerX - radius * 0.32
+      const specY = centerY - radius * 0.32
+      const specGrad = ctx.createRadialGradient(
+        specX,
+        specY,
+        radius * 0.02,
+        specX,
+        specY,
+        radius * 0.48
+      )
+      specGrad.addColorStop(0, isDark ? 'rgba(255, 255, 255, 0.35)' : 'rgba(255, 255, 255, 0.65)')
+      specGrad.addColorStop(0.4, isDark ? 'rgba(34, 211, 238, 0.12)' : 'rgba(186, 230, 253, 0.25)')
+      specGrad.addColorStop(1, 'rgba(255, 255, 255, 0)')
+
+      ctx.beginPath()
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
+      ctx.fillStyle = specGrad
       ctx.fill()
 
       // Borde / Aro Perimetral Fresnel de alta definición
@@ -567,7 +637,7 @@ export const OptimusGlyphSphere: React.FC<{
         p.z = proj.z2
 
         if (p.energy > 0.05) {
-          p.energy -= p.energySpeed
+          p.energy -= p.energySpeed * dtRatio
         } else {
           p.energy = 0.05
         }
@@ -661,7 +731,7 @@ export const OptimusGlyphSphere: React.FC<{
       // ========================================================
       ctx.save()
       for (const pulse of pulses) {
-        pulse.progress += pulse.speed + extraSpinSpeed * 2.2
+        pulse.progress += (pulse.speed + extraSpinSpeed * 2.2) * dtRatio
         if (pulse.progress >= 1 + pulse.lengthRatio) {
           pulse.progress = 0
           pulse.edgeIdx = Math.floor(Math.random() * edges.length)
@@ -944,12 +1014,10 @@ export const OptimusGlyphSphere: React.FC<{
       window.removeEventListener('resize', handleResize)
       canvas.removeEventListener('mouseenter', handleMouseEnter)
       canvas.removeEventListener('mouseleave', handleMouseLeave)
-      canvas.removeEventListener('mousemove', handleMouseMove)
-      canvas.removeEventListener('mousedown', handleMouseDown)
-      window.removeEventListener('mouseup', handleMouseUp)
-      canvas.removeEventListener('touchstart', handleTouchStart)
-      canvas.removeEventListener('touchmove', handleTouchMove)
-      canvas.removeEventListener('touchend', handleTouchEnd)
+      canvas.removeEventListener('pointerdown', handlePointerDown)
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', handlePointerUp)
+      window.removeEventListener('pointercancel', handlePointerUp)
     }
   }, [sphereRadius, radiusRatio])
 

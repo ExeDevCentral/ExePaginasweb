@@ -33,6 +33,7 @@ import LoginBackground from '../components/Effects/LoginBackground'
 import Logo from '../components/layout/Logo'
 import LanguageSwitcher from '../components/layout/LanguageSwitcher'
 import { getErrorMessage } from '../core/utils/errorUtils'
+import HudButton from '@/components/HudButton'
 import {
   PASSWORD_RULES,
   PASSWORD_MIN_LENGTH,
@@ -720,40 +721,37 @@ export default function Login() {
                   )}
 
                   {/* Primary Submit Button */}
-                  <div className="pt-2">
-                    <motion.button
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.98 }}
+                  <div className="pt-2 flex justify-center">
+                    <HudButton
                       disabled={loading}
                       onClick={validateAndSubmit}
-                      className="w-full py-3.5 rounded-2xl font-black text-xs sm:text-sm tracking-wide uppercase transition-all btn-gradient-cta text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.6)] disabled:opacity-50 flex items-center justify-center gap-2"
-                    >
-                      {loading ? (
-                        <div className="flex items-center justify-center gap-2">
+                      variant="primary"
+                      size="lg"
+                      className="w-full justify-center"
+                      label={
+                        loading
+                          ? mode === 'login'
+                            ? 'Ingresando...'
+                            : mode === 'register'
+                              ? 'Creando cuenta...'
+                              : 'Enviando email...'
+                          : mode === 'login'
+                            ? t('login.iniciar_sesion')
+                            : mode === 'register'
+                              ? 'Crear cuenta'
+                              : mode === 'forgot'
+                                ? 'Enviar instrucciones'
+                                : 'Guardar nueva contraseña'
+                      }
+                      icon={
+                        loading ? (
                           <div className="w-4 h-4 border-2 rounded-full animate-spin border-white border-t-transparent" />
-                          <span>
-                            {mode === 'login'
-                              ? 'Ingresando...'
-                              : mode === 'register'
-                                ? 'Creando cuenta...'
-                                : 'Enviando email...'}
-                          </span>
-                        </div>
-                      ) : (
-                        <>
-                          <span>
-                            {mode === 'login'
-                              ? t('login.iniciar_sesion')
-                              : mode === 'register'
-                                ? 'Crear cuenta'
-                                : mode === 'forgot'
-                                  ? 'Enviar instrucciones'
-                                  : 'Guardar nueva contraseña'}
-                          </span>
+                        ) : (
                           <ArrowRight size={16} />
-                        </>
-                      )}
-                    </motion.button>
+                        )
+                      }
+                      iconPosition="right"
+                    />
                   </div>
 
                   {/* Toggle Back */}
@@ -805,7 +803,7 @@ export default function Login() {
 
       {/* Page Footer */}
       <footer className="relative z-10 w-full max-w-6xl mx-auto text-center text-[11px] text-slate-400 py-2 font-mono">
-        © 2025 ExeSistemasWEB — Todos los derechos reservados.
+        © 2026 ExePaginasWEB.com — Todos los derechos reservados.
       </footer>
     </div>
   )

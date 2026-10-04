@@ -4,6 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 @import 'tailwindcss';
+@import './components/HudButton.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 

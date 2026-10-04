@@ -5,55 +5,64 @@
  */
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { Code2, Zap, Shield, Search, Database, Bot, Box, Globe } from 'lucide-react'
+import {
+  CyberMetricLightning,
+  CyberTechCode,
+  CyberMetricShield,
+  CyberTechDatabase,
+  CyberTechBot,
+  CyberGlobeIcon,
+  CyberSeoRadar,
+  Cyber3dCube,
+} from '@/components/ui/MagnificentIcons'
 
 const STACK = [
   {
-    icon: Zap,
+    icon: CyberMetricLightning,
     tIdx: 1,
-    color: 'text-yellow-400',
+    color: 'text-amber-400',
     bgLight: 'rgba(250, 204, 21, 0.15)',
   },
   {
-    icon: Code2,
+    icon: CyberTechCode,
     tIdx: 2,
-    color: 'text-blue-400',
+    color: 'text-cyan-400',
     bgLight: 'rgba(96, 165, 250, 0.15)',
   },
   {
-    icon: Shield,
+    icon: CyberMetricShield,
     tIdx: 3,
     color: 'text-emerald-400',
     bgLight: 'rgba(52, 211, 153, 0.15)',
   },
   {
-    icon: Search,
+    icon: CyberSeoRadar,
     tIdx: 4,
     color: 'text-purple-400',
     bgLight: 'rgba(192, 132, 252, 0.15)',
   },
   {
-    icon: Database,
+    icon: CyberTechDatabase,
     tIdx: 5,
-    color: 'text-cyan-400',
+    color: 'text-sky-400',
     bgLight: 'rgba(34, 211, 238, 0.15)',
   },
   {
-    icon: Bot,
+    icon: CyberTechBot,
     tIdx: 6,
     color: 'text-pink-400',
     bgLight: 'rgba(244, 114, 182, 0.15)',
   },
   {
-    icon: Box,
+    icon: Cyber3dCube,
     tIdx: 7,
     color: 'text-amber-400',
     bgLight: 'rgba(251, 191, 36, 0.15)',
   },
   {
-    icon: Globe,
+    icon: CyberGlobeIcon,
     tIdx: 8,
-    color: 'text-indigo-400',
+    color: 'text-cyan-400',
     bgLight: 'rgba(129, 140, 248, 0.15)',
   },
 ]
@@ -112,7 +121,7 @@ const TechStack = () => {
   const { t } = useTranslation()
   return (
     <section className="py-32 px-4 bg-transparent relative overflow-hidden border-y border-border">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-accent-cyan/5 via-background to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-accent-cyan/5 via-background to-background pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-20">

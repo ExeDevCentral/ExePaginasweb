@@ -6,7 +6,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import type { LucideIcon } from 'lucide-react'
 
 type LaserBeamSide = 'top' | 'right' | 'bottom' | 'left'
 
@@ -60,7 +59,7 @@ function LaserBeam({ side }: { side: LaserBeamSide }) {
 }
 
 export type EnhancedFeatureCardProps = {
-  icon: LucideIcon
+  icon: React.ComponentType<{ size?: number; className?: string }>
   title: string
   description: string
   colorClass: string
@@ -129,7 +128,7 @@ export default function EnhancedFeatureCard({
         <div className="relative p-6">
           <div className="flex items-center justify-between gap-4">
             <motion.div
-              className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${colorClass} p-3 shadow-2xl`}
+              className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br ${colorClass} p-3 shadow-2xl`}
               animate={{ y: [0, -6, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
             >
@@ -144,12 +143,12 @@ export default function EnhancedFeatureCard({
           <p className="text-base leading-relaxed text-muted-foreground">{description}</p>
 
           <div className="mt-6 flex items-center gap-3">
-            <div className={`h-1.5 flex-1 rounded-full bg-gradient-to-r ${colorClass}`} />
+            <div className={`h-1.5 flex-1 rounded-full bg-linear-to-r ${colorClass}`} />
             <div className="w-2 h-2 rounded-full bg-accent-cyan/80 shadow-[0_0_18px_rgba(0,212,255,0.45)]" />
           </div>
 
           <div className="mt-6 h-10 rounded-2xl border border-border bg-muted/50 relative overflow-hidden">
-            <div className={`absolute inset-0 bg-gradient-to-r ${colorClass} opacity-20`} />
+            <div className={`absolute inset-0 bg-linear-to-r ${colorClass} opacity-20`} />
             <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-20 bg-accent-cyan/20 blur-2xl" />
           </div>
         </div>

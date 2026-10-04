@@ -33,6 +33,7 @@ import {
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
 import Logo from '../layout/Logo'
+import HudButton from '../HudButton'
 
 // Ícono SVG oficial de WhatsApp
 const WhatsAppIcon = ({ className = 'w-5 h-5' }: { className?: string }) => (
@@ -650,20 +651,25 @@ export const AIChatWidget: React.FC = () => {
                       interactivas y soporte.
                     </p>
 
-                    <button
+                    <HudButton
                       type="button"
+                      variant="primary"
                       onClick={() => setHubView('chat')}
-                      className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-cyan-950/80 text-cyan-400 border border-cyan-500/40 hover:border-cyan-400 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+                      className="w-full justify-center"
+                      icon={<Bot className="w-4 h-4" />}
+                      iconPosition="left"
                     >
-                      <Bot className="w-4 h-4" />
-                      <span>Preguntarle al Asistente IA →</span>
-                    </button>
+                      Preguntarle al Asistente IA
+                    </HudButton>
                   </div>
                 </div>
 
                 <div className="px-5 py-2.5 bg-black/40 border-t border-white/5 text-[10px] font-mono text-slate-400 flex items-center justify-center gap-2">
                   <Logo size={15} variant="dark" />
-                  <span>ExePaginasWeb · Rosario & Global · 2025 · {DISPLAY_WHATSAPP_NUMBER}</span>
+                  <span>
+                    ExePaginasWeb · Arquitectura Cloud &amp; Sistemas a Escala Global · 2026 ·{' '}
+                    {DISPLAY_WHATSAPP_NUMBER}
+                  </span>
                 </div>
               </div>
             ) : (

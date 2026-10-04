@@ -6,6 +6,7 @@
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Calendar, Clock, User, Mail, CheckCircle, ChevronLeft } from 'lucide-react'
+import HudButton from '@/components/HudButton'
 
 interface BookingModalProps {
   isOpen: boolean
@@ -160,12 +161,15 @@ export default function BookingModal({ isOpen, onClose, service }: BookingModalP
                           </div>
                         </div>
 
-                        <button
-                          onClick={() => setStep('calendar')}
-                          className="w-full py-3.5 rounded-2xl btn-gradient-cta text-white font-bold text-sm hover:brightness-110 transition-all"
-                        >
-                          Elegir fecha y horario
-                        </button>
+                        <div className="pt-2 flex justify-center">
+                          <HudButton
+                            onClick={() => setStep('calendar')}
+                            label="Elegir fecha y horario"
+                            variant="primary"
+                            size="md"
+                            className="w-full justify-center"
+                          />
+                        </div>
                       </motion.div>
                     )}
 
@@ -259,17 +263,16 @@ export default function BookingModal({ isOpen, onClose, service }: BookingModalP
                           </motion.div>
                         )}
 
-                        <button
-                          disabled={!canProceedCalendar}
-                          onClick={() => setStep('form')}
-                          className={`w-full py-3.5 rounded-2xl font-bold text-sm transition-all ${
-                            canProceedCalendar
-                              ? 'btn-gradient-cta text-white hover:brightness-110'
-                              : 'bg-white/5 text-white/20 cursor-not-allowed'
-                          }`}
-                        >
-                          Continuar
-                        </button>
+                        <div className="pt-2 flex justify-center">
+                          <HudButton
+                            disabled={!canProceedCalendar}
+                            onClick={() => setStep('form')}
+                            label="Continuar"
+                            variant="primary"
+                            size="md"
+                            className="w-full justify-center"
+                          />
+                        </div>
                       </motion.div>
                     )}
 
@@ -328,17 +331,16 @@ export default function BookingModal({ isOpen, onClose, service }: BookingModalP
                           </div>
                         </div>
 
-                        <button
-                          disabled={!canSubmitForm}
-                          onClick={handleSubmit}
-                          className={`w-full py-3.5 rounded-2xl font-bold text-sm transition-all ${
-                            canSubmitForm
-                              ? 'btn-gradient-cta text-white hover:brightness-110'
-                              : 'bg-white/5 text-white/20 cursor-not-allowed'
-                          }`}
-                        >
-                          Confirmar reserva
-                        </button>
+                        <div className="pt-2 flex justify-center">
+                          <HudButton
+                            disabled={!canSubmitForm}
+                            onClick={handleSubmit}
+                            label="Confirmar reserva"
+                            variant="primary"
+                            size="md"
+                            className="w-full justify-center"
+                          />
+                        </div>
                       </motion.div>
                     )}
 
@@ -409,12 +411,14 @@ export default function BookingModal({ isOpen, onClose, service }: BookingModalP
                             Recibirás un email de confirmación en {email}
                           </p>
                         </div>
-                        <button
-                          onClick={handleClose}
-                          className="px-8 py-3 rounded-2xl bg-white/10 text-white font-bold text-sm hover:bg-white/15 transition-colors"
-                        >
-                          Cerrar
-                        </button>
+                        <div className="pt-2 flex justify-center">
+                          <HudButton
+                            onClick={handleClose}
+                            label="Cerrar"
+                            variant="secondary"
+                            size="md"
+                          />
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>

@@ -86,7 +86,7 @@ export default function BookingModal({ isOpen, onClose, service }: BookingModalP
                 role="dialog"
                 aria-modal="true"
                 data-lenis-prevent
-                className="relative bg-gradient-to-br from-[#0a0a1a] to-[#12122a] border border-white/10 rounded-3xl overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.8)]"
+                className="relative bg-linear-to-br from-[#0a0a1a] to-[#12122a] border border-white/10 rounded-3xl overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.8)]"
               >
                 {/* Header */}
                 <div className="relative px-6 pt-6 pb-4 border-b border-white/5">
@@ -127,7 +127,7 @@ export default function BookingModal({ isOpen, onClose, service }: BookingModalP
                 </div>
 
                 {/* Content */}
-                <div className="px-6 py-6 min-h-[320px]">
+                <div className="px-6 py-6 min-h-80">
                   <AnimatePresence mode="wait">
                     {/* STEP 1: Details */}
                     {step === 'details' && (

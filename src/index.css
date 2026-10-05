@@ -467,10 +467,13 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased transition-colors duration-300;
     font-size: 1rem;
     line-height: 1.6;
     font-family: var(--font-sans);
+    overscroll-behavior-y: auto;
+    -webkit-overflow-scrolling: touch;
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1,
@@ -604,12 +607,7 @@
     }
   }
 
-  body {
-    @apply bg-background text-foreground font-sans antialiased transition-colors duration-300;
-    overscroll-behavior-y: auto;
-    -webkit-overflow-scrolling: touch;
-    -webkit-tap-highlight-color: transparent;
-  }
+
 
   h1,
   h2,
@@ -670,7 +668,7 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent;
+    @apply bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent;
   }
 
   .glass {
@@ -1221,7 +1219,7 @@
 .hc-after .hc-badge.hc-badge-after {
   display: inline-block;
   padding: 4px 12px;
-  background: rgba(246, 166, 35, 0.18);
+  background: #1a150c;
   border: 1px solid #f6a623;
   border-radius: 4px;
   font-size: 0.68rem;
@@ -1401,7 +1399,7 @@
   font-size: 0.58rem;
   font-weight: 700;
   color: #38bdf8;
-  background: rgba(56, 189, 248, 0.15);
+  background: #081a2e;
   border: 1px solid rgba(56, 189, 248, 0.3);
   padding: 1px 6px;
   border-radius: 4px;

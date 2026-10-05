@@ -54,10 +54,10 @@ const ROI_BADGES: Record<string, { label: string; color: string; dotColor: strin
 export default function ProductCard({
   product,
   onOpenDemo,
-}: {
+}: Readonly<{
   product: Product
   onOpenDemo: () => void
-}) {
+}>) {
   const { t } = useTranslation()
   const Icon = product.icon
 
@@ -305,9 +305,9 @@ export default function ProductCard({
 
             {/* Feature Bullet points */}
             <ul className="space-y-2.5 mb-6">
-              {product.features.map((_feature, idx) => (
+              {product.features.map((feature, idx) => (
                 <li
-                  key={idx}
+                  key={`${product.anchorId}-${feature}`}
                   className="flex items-start gap-2.5 text-xs text-slate-600 dark:text-slate-300 font-medium"
                 >
                   <CyberCheckMark size={16} className="mt-0.5 shrink-0" />
@@ -366,7 +366,13 @@ export default function ProductCard({
                   </div>
                   <a
                     href={`https://wa.me/5493416874786?text=${encodeURIComponent(
-                      `Hola ExePaginasWeb! Quiero consultar para mi rubro por ${t(`products.${product.tKey}_titulo`)} para ${sucursales} sucursal(es). Presupuesto estimado: $${estimatedTotal} USD.`
+                      'Hola ExePaginasWeb! Quiero consultar para mi rubro por ' +
+                        t(`products.${product.tKey}_titulo`) +
+                        ' para ' +
+                        sucursales +
+                        ' sucursal(es). Presupuesto estimado: $' +
+                        estimatedTotal +
+                        ' USD.'
                     )}`}
                     target="_blank"
                     rel="noreferrer"

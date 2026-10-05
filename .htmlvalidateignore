@@ -1,0 +1,9 @@
+# HTML email templates and signatures (require table layout and inline styles)
+email-logos/**
+resend-templates/**
+
+# Build outputs and dependencies
+node_modules/**
+.next/**
+dist/**
+.vercel/**

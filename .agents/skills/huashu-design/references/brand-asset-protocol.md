@@ -94,7 +94,7 @@ curl -o logo.svg "https://cdn.simpleicons.org/<slug>/<hexcolor>"
    ```
 3. **Google favicon 服务（站点真实 mark 兜底，几乎不失败）**：
    ```bash
-   curl -o logo.png "https://www.google.com/s2/favicons?domain=<brand-domain>&sz=256"   # 256px 官方站点图标
+   curl -o logo.webp "https://www.google.com/s2/favicons?domain=<brand-domain>&sz=256"   # 256px 官方站点图标
    ```
 4. 官方社交媒体 avatar（最后手段）：GitHub/Twitter/LinkedIn 的公司头像通常是 400×400 或 800×800 透明底 PNG
 

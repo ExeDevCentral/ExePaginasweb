@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 
 type LaserBeamSide = 'top' | 'right' | 'bottom' | 'left'
 
-function LaserBeam({ side }: { side: LaserBeamSide }) {
+function LaserBeam({ side }: Readonly<{ side: LaserBeamSide }>) {
   const beamRef = useRef<HTMLDivElement>(null)
   const [beamLength, setBeamLength] = useState(0)
 
@@ -70,7 +70,7 @@ export default function EnhancedFeatureCard({
   title,
   description,
   colorClass,
-}: EnhancedFeatureCardProps) {
+}: Readonly<EnhancedFeatureCardProps>) {
   const { t } = useTranslation()
   const ref = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
@@ -119,7 +119,7 @@ export default function EnhancedFeatureCard({
         transition={{ duration: 0.25 }}
       >
         {/* Borde verde neón fino y alargado superior */}
-        <div className="absolute top-0 inset-x-8 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/80 to-transparent pointer-events-none z-10" />
+        <div className="absolute top-0 inset-x-8 h-[1.5px] bg-linear-to-r from-transparent via-emerald-400/80 to-transparent pointer-events-none z-10" />
 
         <div className="relative">
           <LaserBeam side="top" />

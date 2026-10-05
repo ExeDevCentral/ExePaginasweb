@@ -15,7 +15,6 @@ import {
   CyberPowerSwitch,
   CyberWarningHazard,
   CyberRefreshIcon,
-  CyberMetricLightning,
   CyberRoiTrend,
   CyberMetricProcessor,
   CyberTechCode,
@@ -32,7 +31,6 @@ import {
   Sparkles,
   Workflow,
   Globe,
-  Database,
   CreditCard,
   Receipt,
   BarChart3,
@@ -1134,8 +1132,8 @@ function CostCard() {
       className="rounded-2xl sm:rounded-3xl border border-border dark:border-emerald-500/40 bg-card/90 dark:bg-[#060b13] dark:shadow-[0_0_40px_rgba(16,185,129,0.12)] backdrop-blur-2xl p-4 sm:p-8 relative overflow-hidden"
     >
       {/* Bordes verdes neón finos y alargados (superior e inferior) */}
-      <div className="absolute top-0 inset-x-12 sm:inset-x-20 h-[2px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
-      <div className="absolute bottom-0 inset-x-16 sm:inset-x-24 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
+      <div className="absolute top-0 inset-x-12 sm:inset-x-20 h-0.5 bg-linear-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-16 sm:inset-x-24 h-px bg-linear-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
 
       {/* Resplandor ambiental */}
       <div className="absolute -top-24 right-10 w-80 h-80 bg-accent-cyan/10 rounded-full blur-[140px] pointer-events-none" />

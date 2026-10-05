@@ -87,7 +87,7 @@ export default function LanguageSwitcher({
         } bg-[#FFFDF9] dark:bg-[#060b13] border border-[#DFD7CA] dark:border-emerald-500/40 rounded-xl shadow-2xl dark:shadow-[0_0_25px_rgba(16,185,129,0.18)] transition-all duration-200 z-100 min-w-44 p-1.5 overflow-hidden ${visibilityClass}`}
       >
         {/* Borde verde neón fino y alargado superior */}
-        <div className="absolute top-0 inset-x-3 h-[1px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent pointer-events-none" />
+        <div className="absolute top-0 inset-x-3 h-px bg-linear-to-r from-transparent via-emerald-400 to-transparent pointer-events-none" />
 
         <div className="px-2.5 py-1 mb-1 border-b border-[#DFD7CA] dark:border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center justify-between">
           <span>Idioma / Language</span>

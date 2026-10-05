@@ -256,29 +256,82 @@ function formatPrice(n: number): string {
 }
 
 interface Particle {
+  id: number
   x: number
   y: number
   color: string
   size: number
   rotation: number
   shape: number
+  duration: number
+  delay: number
 }
 
-function ConfettiBurst({ trigger, intensity = 24 }: { trigger: number; intensity?: number }) {
+function getParticleBorderRadius(shape: number): string {
+  if (shape === 0) return '50%'
+  if (shape === 1) return '2px'
+  return '30% 70% 70% 30% / 30% 30% 70% 70%'
+}
+
+function useCardTilt(maxRotate: number) {
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const rotateX = useMotionValue(0)
+  const rotateY = useMotionValue(0)
+
+  function handleMouseMove(e: React.MouseEvent) {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - left
+    const y = e.clientY - top
+    mouseX.set(x)
+    mouseY.set(y)
+    rotateX.set(((y - height / 2) / height) * -maxRotate)
+    rotateY.set(((x - width / 2) / width) * maxRotate)
+  }
+
+  function handleMouseLeave() {
+    mouseX.set(0)
+    mouseY.set(0)
+    rotateX.set(0)
+    rotateY.set(0)
+  }
+
+  return { mouseX, mouseY, rotateX, rotateY, handleMouseMove, handleMouseLeave }
+}
+
+function createPrng(seed: number) {
+  let s = (seed ^ 0x9e3779b9) >>> 0
+  return () => {
+    s = (s + 0x6d2b79f5) >>> 0
+    let z = s
+    z = Math.imul(z ^ (z >>> 15), z | 1)
+    z ^= z + Math.imul(z ^ (z >>> 7), z | 61)
+    return ((z ^ (z >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+function ConfettiBurst({
+  trigger,
+  intensity = 24,
+}: Readonly<{ trigger: number; intensity?: number }>) {
   const [particles, setParticles] = useState<Particle[]>([])
   useEffect(() => {
+    const nextRand = createPrng(trigger * 10007 + 37)
     setParticles(
       Array.from({ length: intensity }).map((_, i) => {
-        const angle = (i / intensity) * Math.PI * 2 + (Math.random() - 0.5) * 0.5
-        const distance = 60 + Math.random() * (intensity <= 24 ? 120 : 200)
+        const angle = (i / intensity) * Math.PI * 2 + (nextRand() - 0.5) * 0.5
+        const distance = 60 + nextRand() * (intensity <= 24 ? 120 : 200)
         const colors = ['#22d3ee', '#ec4899', '#f59e0b', '#10b981', '#8b5cf6', '#f97316']
         return {
+          id: i,
           x: Math.cos(angle) * distance,
           y: Math.sin(angle) * distance - 30,
           color: colors[i % colors.length]!,
-          size: 3 + Math.random() * 7,
-          rotation: Math.random() * 720,
+          size: 3 + nextRand() * 7,
+          rotation: nextRand() * 720,
           shape: i % 3,
+          duration: 0.5 + nextRand() * 0.6,
+          delay: nextRand() * 0.12,
         }
       })
     )
@@ -286,9 +339,9 @@ function ConfettiBurst({ trigger, intensity = 24 }: { trigger: number; intensity
 
   return (
     <div className="absolute inset-0 pointer-events-none z-50" key={trigger}>
-      {particles.map((p, i) => (
+      {particles.map((p) => (
         <motion.div
-          key={i}
+          key={p.id}
           initial={{ x: 0, y: 0, opacity: 1, scale: 0, rotate: 0 }}
           animate={{
             x: p.x,
@@ -298,17 +351,16 @@ function ConfettiBurst({ trigger, intensity = 24 }: { trigger: number; intensity
             rotate: p.rotation,
           }}
           transition={{
-            duration: 0.5 + Math.random() * 0.6,
+            duration: p.duration,
             ease: 'easeOut',
-            delay: Math.random() * 0.12,
+            delay: p.delay,
           }}
           className="absolute left-1/2 top-1/2"
           style={{
             width: p.size,
             height: p.size,
             backgroundColor: p.color,
-            borderRadius:
-              p.shape === 0 ? '50%' : p.shape === 1 ? '2px' : '30% 70% 70% 30% / 30% 30% 70% 70%',
+            borderRadius: getParticleBorderRadius(p.shape),
           }}
         />
       ))}
@@ -321,33 +373,13 @@ function GlowCard({
   className = '',
   popular = false,
   onClick,
-}: {
+}: Readonly<{
   children: React.ReactNode
   className?: string
   popular?: boolean
   onClick?: () => void
-}) {
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-  const rotateX = useMotionValue(0)
-  const rotateY = useMotionValue(0)
-
-  function handleMouseMove(e: React.MouseEvent) {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - left
-    const y = e.clientY - top
-    mouseX.set(x)
-    mouseY.set(y)
-    rotateX.set(((y - height / 2) / height) * -8)
-    rotateY.set(((x - width / 2) / width) * 8)
-  }
-
-  function handleMouseLeave() {
-    mouseX.set(0)
-    mouseY.set(0)
-    rotateX.set(0)
-    rotateY.set(0)
-  }
+}>) {
+  const { mouseX, mouseY, rotateX, rotateY, handleMouseMove, handleMouseLeave } = useCardTilt(8)
 
   return (
     <motion.div
@@ -359,12 +391,12 @@ function GlowCard({
       whileTap={{ scale: 0.985 }}
       className={`group relative rounded-2xl border overflow-hidden transition-all duration-300 backdrop-blur-xl ${
         popular
-          ? 'border-accent-cyan/80 bg-accent-cyan/[0.05] shadow-[0_0_30px_rgba(34,211,238,0.18)] ring-1 ring-accent-cyan/30'
+          ? 'border-accent-cyan/80 bg-accent-cyan/5 shadow-[0_0_30px_rgba(34,211,238,0.18)] ring-1 ring-accent-cyan/30'
           : 'border-border/80 bg-card/60 hover:border-accent-cyan/40 hover:bg-card/80 hover:shadow-xl hover:shadow-accent-cyan/5'
       } ${className}`}
     >
       {popular && (
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-cyan to-transparent pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-accent-cyan to-transparent pointer-events-none" />
       )}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100"
@@ -382,35 +414,15 @@ function PlanCard({
   currency,
   onSelect,
   index,
-}: {
+}: Readonly<{
   plan: PlanData
   currency: 'ARS' | 'USD'
   onSelect: () => void
   index: number
-}) {
+}>) {
   const { t } = useTranslation()
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-  const rotateX = useMotionValue(0)
-  const rotateY = useMotionValue(0)
+  const { mouseX, mouseY, rotateX, rotateY, handleMouseMove, handleMouseLeave } = useCardTilt(6)
   const Icon = plan.icon
-
-  function handleMouseMove(e: React.MouseEvent) {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - left
-    const y = e.clientY - top
-    mouseX.set(x)
-    mouseY.set(y)
-    rotateX.set(((y - height / 2) / height) * -6)
-    rotateY.set(((x - width / 2) / width) * 6)
-  }
-
-  function handleMouseLeave() {
-    mouseX.set(0)
-    mouseY.set(0)
-    rotateX.set(0)
-    rotateY.set(0)
-  }
 
   return (
     <motion.div
@@ -425,7 +437,7 @@ function PlanCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ rotateX, rotateY, transformStyle: 'preserve-3d' as const, perspective: 1000 }}
-      className={`group relative rounded-[2.5rem] bg-gradient-to-b from-card/90 to-card/50 backdrop-blur-xl border overflow-hidden transition-shadow duration-500 hover:-translate-y-2 p-8 flex flex-col ${
+      className={`group relative rounded-[2.5rem] bg-linear-to-b from-card/90 to-card/50 backdrop-blur-xl border overflow-hidden transition-shadow duration-500 hover:-translate-y-2 p-8 flex flex-col ${
         plan.popular
           ? 'border-accent-magenta/50 shadow-2xl shadow-accent-magenta/10 hover:shadow-accent-magenta/20'
           : 'border-border hover:border-accent-cyan/30 hover:shadow-lg hover:shadow-accent-cyan/5'
@@ -440,7 +452,7 @@ function PlanCard({
 
       {plan.popular && (
         <>
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-magenta to-transparent" />
+          <div className="absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-accent-magenta to-transparent" />
           <motion.div
             animate={{ scale: [1, 1.05, 1], opacity: [1, 0.8, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -453,11 +465,11 @@ function PlanCard({
 
       <div className="relative z-10 flex-1 flex flex-col" style={{ transform: 'translateZ(32px)' }}>
         <motion.div
-          className="w-14 h-14 rounded-xl bg-gradient-to-br from-accent-cyan/20 to-accent-magenta/20 flex items-center justify-center mb-4 relative overflow-hidden"
+          className="w-14 h-14 rounded-xl bg-linear-to-br from-accent-cyan/20 to-accent-magenta/20 flex items-center justify-center mb-4 relative overflow-hidden"
           whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-accent-cyan/10 via-accent-magenta/10 to-accent-cyan/10 bg-[length:200%_200%] animate-gradient-shift" />
+          <div className="absolute inset-0 bg-linear-to-r from-accent-cyan/10 via-accent-magenta/10 to-accent-cyan/10 bg-size-[200%_200%] animate-gradient-shift" />
           <Icon className="w-7 h-7 text-accent-cyan relative z-10" />
         </motion.div>
 
@@ -465,7 +477,7 @@ function PlanCard({
         <p className="text-sm text-muted-foreground mb-6">{plan.description}</p>
 
         <div className="mb-6 p-5 rounded-2xl bg-muted/80 border border-border relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-accent-cyan/[0.03] to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-br from-accent-cyan/3 to-transparent" />
           <div className="relative z-10">
             <div className="mb-3 pb-3 border-b border-border/50">
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">
@@ -496,7 +508,7 @@ function PlanCard({
         <ul className="space-y-3 mb-8 flex-1">
           {plan.features.map((feat, i) => (
             <motion.li
-              key={i}
+              key={`${plan.id}-${feat}`}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.15 + i * 0.05 }}
@@ -527,7 +539,7 @@ function PlanCard({
               animate={{ x: ['-100%', '200%'] }}
               transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent w-1/2" />
+              <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent w-1/2" />
             </motion.div>
           )}
         </motion.button>
@@ -708,7 +720,7 @@ export default function QuoteBuilder() {
                   onClick={() => setCurrency('ARS')}
                   className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
                     currency === 'ARS'
-                      ? 'bg-gradient-to-r from-accent-cyan to-accent-cyan/80 text-black shadow-lg shadow-accent-cyan/25 bg-[length:200%_200%] animate-gradient-shift'
+                      ? 'bg-linear-to-r from-accent-cyan to-accent-cyan/80 text-black shadow-lg shadow-accent-cyan/25 bg-size-[200%_200%] animate-gradient-shift'
                       : 'text-foreground/60 hover:text-foreground'
                   }`}
                 >
@@ -719,7 +731,7 @@ export default function QuoteBuilder() {
                   onClick={() => setCurrency('USD')}
                   className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
                     currency === 'USD'
-                      ? 'bg-gradient-to-r from-accent-magenta to-accent-magenta/80 text-foreground shadow-lg shadow-accent-magenta/25 bg-[length:200%_200%] animate-gradient-shift'
+                      ? 'bg-linear-to-r from-accent-magenta to-accent-magenta/80 text-foreground shadow-lg shadow-accent-magenta/25 bg-size-[200%_200%] animate-gradient-shift'
                       : 'text-foreground/60 hover:text-foreground'
                   }`}
                 >
@@ -771,9 +783,9 @@ export default function QuoteBuilder() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={goToCustom}
-                className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan/20 via-accent-cyan/15 to-accent-magenta/20 border border-accent-cyan/30 text-foreground font-bold transition-all bg-[length:200%_200%] animate-gradient-shift hover:from-accent-cyan/30 hover:to-accent-magenta/30 hover:shadow-lg hover:shadow-accent-cyan/10"
+                className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-linear-to-r from-accent-cyan/20 via-accent-cyan/15 to-accent-magenta/20 border border-accent-cyan/30 text-foreground font-bold transition-all bg-size-[200%_200%] animate-gradient-shift hover:from-accent-cyan/30 hover:to-accent-magenta/30 hover:shadow-lg hover:shadow-accent-cyan/10"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_4s_ease-in-out_infinite]" />
+                <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_4s_ease-in-out_infinite]" />
                 <Star className="w-5 h-5 text-accent-cyan relative z-10" />
                 <span className="relative z-10">{t('cotizador.arma_proyecto_medida')}</span>
                 <ArrowRight className="w-4 h-4 relative z-10" />
@@ -1065,7 +1077,7 @@ export default function QuoteBuilder() {
                   </div>
 
                   {selectedPlan && (
-                    <div className="max-w-lg mx-auto mb-8 p-4 rounded-2xl bg-gradient-to-r from-accent-cyan/10 to-accent-magenta/10 border border-accent-cyan/20 text-center">
+                    <div className="max-w-lg mx-auto mb-8 p-4 rounded-2xl bg-linear-to-r from-accent-cyan/10 to-accent-magenta/10 border border-accent-cyan/20 text-center">
                       <p className="text-xs font-bold uppercase tracking-widest text-accent-cyan mb-1">
                         {t('cotizador.plan_seleccionado')}
                       </p>

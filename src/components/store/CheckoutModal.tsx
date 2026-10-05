@@ -269,7 +269,7 @@ export default function CheckoutModal({
                 onClick={() => setPaymentMethod('transfer')}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all ${
                   paymentMethod === 'transfer'
-                    ? 'bg-gradient-to-r from-accent-cyan to-accent-cyan/80 text-white shadow-lg shadow-accent-cyan/15'
+                    ? 'bg-linear-to-r from-accent-cyan to-accent-cyan/80 text-white shadow-lg shadow-accent-cyan/15'
                     : 'text-muted-foreground hover:text-foreground hover:bg-zinc-800/5 dark:hover:bg-white/5'
                 }`}
               >
@@ -283,7 +283,7 @@ export default function CheckoutModal({
                 }}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all ${
                   paymentMethod === 'paypal'
-                    ? 'bg-gradient-to-r from-accent-magenta to-accent-magenta/80 text-white shadow-lg shadow-accent-magenta/15'
+                    ? 'bg-linear-to-r from-accent-magenta to-accent-magenta/80 text-white shadow-lg shadow-accent-magenta/15'
                     : 'text-muted-foreground hover:text-foreground hover:bg-zinc-800/5 dark:hover:bg-white/5'
                 }`}
               >
@@ -351,13 +351,13 @@ export default function CheckoutModal({
             ) : (
               <div className="space-y-4">
                 {paypalStatus === 'loading' && (
-                  <div className="flex items-center justify-center min-h-[50px]">
+                  <div className="flex items-center justify-center min-h-12.5">
                     <div className="w-6 h-6 border-2 border-accent-magenta border-t-transparent rounded-full animate-spin" />
                     <span className="ml-3 text-sm text-muted-foreground">Cargando PayPal...</span>
                   </div>
                 )}
                 {paypalStatus === 'error' && (
-                  <div className="text-center min-h-[50px] flex flex-col items-center justify-center gap-2">
+                  <div className="text-center min-h-12.5 flex flex-col items-center justify-center gap-2">
                     <p className="text-sm text-accent-magenta">No se pudo cargar PayPal</p>
                     <button
                       type="button"
@@ -377,7 +377,7 @@ export default function CheckoutModal({
                   </div>
                 )}
                 {paypalStatus === 'approval-error' && (
-                  <div className="text-center min-h-[50px] flex flex-col items-center justify-center gap-2">
+                  <div className="text-center min-h-12.5 flex flex-col items-center justify-center gap-2">
                     <p className="text-sm text-accent-magenta">{paypalError}</p>
                     <button
                       type="button"
@@ -393,7 +393,7 @@ export default function CheckoutModal({
                   paypalStatus === 'loading' ||
                   paypalStatus === 'error' ||
                   paypalStatus === 'approval-error') && (
-                  <div id="paypal-container" className="min-h-[50px]" />
+                  <div id="paypal-container" className="min-h-12.5" />
                 )}
               </div>
             )}

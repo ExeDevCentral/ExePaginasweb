@@ -107,8 +107,8 @@ const PricingCard = ({
       }`}
     >
       {/* Bordes verdes neón finos y alargados (superior e inferior) */}
-      <div className="absolute top-0 inset-x-8 sm:inset-x-14 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
-      <div className="absolute bottom-0 inset-x-12 sm:inset-x-20 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
+      <div className="absolute top-0 inset-x-8 sm:inset-x-14 h-[1.5px] bg-linear-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-12 sm:inset-x-20 h-px bg-linear-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
 
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl sm:rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100"

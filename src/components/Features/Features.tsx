@@ -44,8 +44,8 @@ const Features = () => {
     >
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent-cyan/10 rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-accent-magenta/10 rounded-full blur-[140px]"></div>
+        <div className="absolute top-0 left-1/4 w-125 h-125 bg-accent-cyan/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-0 right-1/4 w-150 h-150 bg-accent-magenta/10 rounded-full blur-[140px]"></div>
       </div>
 
       <motion.div className="max-w-7xl mx-auto relative z-10">

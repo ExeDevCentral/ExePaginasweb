@@ -71,7 +71,7 @@ export default function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                 {particles.map((particle) => (
                   <motion.div
                     key={particle.id}
-                    className="absolute w-2 h-2 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full opacity-30"
+                    className="absolute w-2 h-2 bg-linear-to-br from-cyan-400 to-purple-500 rounded-full opacity-30"
                     style={{
                       left: `${particle.x}%`,
                       top: `${particle.y}%`,
@@ -92,11 +92,11 @@ export default function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
               </div>
 
               {/* Card glassmorphism */}
-              <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
+              <div className="relative bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
                 {/* Botón cerrar */}
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 min-w-[44px] min-h-[44px] flex items-center justify-center bg-black/40 hover:bg-black/60 border border-white/20 hover:border-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-10"
+                  className="absolute top-4 right-4 min-w-11 min-h-11 flex items-center justify-center bg-black/40 hover:bg-black/60 border border-white/20 hover:border-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-10"
                   aria-label="Cerrar"
                 >
                   <X className="w-6 h-6 text-white" />
@@ -107,7 +107,7 @@ export default function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ delay: 0.2, type: 'spring', damping: 15 }}
-                  className="mx-auto w-20 h-20 mb-6 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-2xl flex items-center justify-center"
+                  className="mx-auto w-20 h-20 mb-6 bg-linear-to-br from-cyan-500 to-purple-600 rounded-2xl flex items-center justify-center"
                 >
                   <motion.div
                     animate={{
@@ -125,7 +125,7 @@ export default function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
 
                 {/* Texto con efecto typewriter */}
                 <div className="text-center mb-6">
-                  <motion.p className="text-xl text-white mb-2 min-h-[3rem]">
+                  <motion.p className="text-xl text-white mb-2 min-h-12">
                     {displayedText}
                     <motion.span
                       animate={{ opacity: [1, 0] }}
@@ -141,7 +141,7 @@ export default function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                     className="flex items-center justify-center gap-2"
                   >
                     <Sparkles className="w-5 h-5 text-cyan-400" />
-                    <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                    <span className="text-2xl font-bold bg-linear-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                       Exesistemas
                     </span>
                     <Sparkles className="w-5 h-5 text-purple-400" />
@@ -174,7 +174,7 @@ export default function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
 
               {/* Efecto de brillo */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-3xl blur-xl -z-10"
+                className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-purple-500/20 rounded-3xl blur-xl -z-10"
                 animate={{
                   opacity: [0.5, 0.8, 0.5],
                 }}

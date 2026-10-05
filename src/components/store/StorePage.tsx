@@ -98,7 +98,7 @@ const basePlans: Omit<PlanData, 'price' | 'priceUSD' | 'period' | 'rawPriceARS' 
     },
   ]
 
-const formatARS = (n: number) => '$' + n.toLocaleString('es-AR').replace(/,/g, '.')
+const formatARS = (n: number) => '$' + n.toLocaleString('es-AR').replaceAll(',', '.')
 const formatUSD = (n: number) => '$' + n
 
 const PLANS: PlanData[] = basePlans.map((p) => {

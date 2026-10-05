@@ -75,7 +75,7 @@ export default function BookingDemo() {
     return () => clearTimeout(timeout)
   }, [step, logIndex, AUTOMATION_LOGS])
 
-  const handleBookingSubmit = async (e: React.FormEvent) => {
+  const handleBookingSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!selectedDate || !selectedTime || !name || !email) return
 
@@ -107,7 +107,7 @@ export default function BookingDemo() {
 
   return (
     <section id="booking-demo" className="py-32 px-4 relative overflow-hidden bg-transparent z-10">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,_var(--tw-gradient-stops))] from-accent-magenta/5 via-background to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,var(--tw-gradient-stops))] from-accent-magenta/5 via-background to-background pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16">
@@ -139,10 +139,10 @@ export default function BookingDemo() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Panel Izquierdo: Interfaz de Calendario o Formulario */}
-          <div className="lg:col-span-7 rounded-[2.5rem] bg-card border border-border dark:border-emerald-500/40 p-8 flex flex-col justify-between relative overflow-hidden min-h-[480px] shadow-2xl dark:shadow-[0_0_35px_rgba(16,185,129,0.1)]">
+          <div className="lg:col-span-7 rounded-[2.5rem] bg-card border border-border dark:border-emerald-500/40 p-8 flex flex-col justify-between relative overflow-hidden min-h-120 shadow-2xl dark:shadow-[0_0_35px_rgba(16,185,129,0.1)]">
             {/* Bordes verdes neón finos y alargados (superior e inferior) */}
-            <div className="absolute top-0 inset-x-10 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
-            <div className="absolute bottom-0 inset-x-14 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
+            <div className="absolute top-0 inset-x-10 h-[1.5px] bg-linear-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+            <div className="absolute bottom-0 inset-x-14 h-px bg-linear-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
 
             <div className="absolute top-0 left-0 w-40 h-40 rounded-full bg-accent-magenta/5 blur-3xl pointer-events-none" />
 
@@ -179,28 +179,29 @@ export default function BookingDemo() {
                     {Array.from({
                       length: new Date(today.getFullYear(), today.getMonth(), 1).getDay(),
                     }).map((_, i) => (
-                      <div key={`empty-${i}`} />
+                      <div key={`cal-pad-${today.getFullYear()}-${today.getMonth()}-${i}`} />
                     ))}
 
                     {daysArray.map((day) => {
                       const isPast = day < currentDayNum
                       const isSelected = selectedDate === day
+                      let dayClass = 'text-foreground hover:bg-muted hover:text-foreground'
+                      if (isSelected) {
+                        dayClass =
+                          'bg-accent-magenta text-foreground shadow-lg shadow-accent-magenta/20 scale-105'
+                      } else if (isPast) {
+                        dayClass = 'text-foreground cursor-not-allowed opacity-20'
+                      }
 
                       return (
                         <button
-                          key={`day-${day}`}
+                          key={`cal-day-${day}`}
                           disabled={isPast}
                           onClick={() => {
                             setSelectedDate(day)
                             setSelectedTime(null)
                           }}
-                          className={`aspect-square rounded-xl flex items-center justify-center text-sm font-mono transition-all font-bold ${
-                            isSelected
-                              ? 'bg-accent-magenta text-foreground shadow-lg shadow-accent-magenta/20 scale-105'
-                              : isPast
-                                ? 'text-foreground cursor-not-allowed opacity-20'
-                                : 'text-foreground hover:bg-muted hover:text-foreground'
-                          }`}
+                          className={`aspect-square rounded-xl flex items-center justify-center text-sm font-mono transition-all font-bold ${dayClass}`}
                         >
                           {day}
                         </button>
@@ -363,9 +364,9 @@ export default function BookingDemo() {
           </div>
 
           {/* Panel Derecho: Consola de ejecución de logs */}
-          <div className="lg:col-span-5 rounded-[2.5rem] bg-muted/40 dark:bg-[#060b13] border border-border dark:border-emerald-500/40 p-6 flex flex-col justify-between overflow-hidden shadow-2xl dark:shadow-[0_0_30px_rgba(16,185,129,0.08)] relative min-h-[380px] font-mono">
+          <div className="lg:col-span-5 rounded-[2.5rem] bg-muted/40 dark:bg-[#060b13] border border-border dark:border-emerald-500/40 p-6 flex flex-col justify-between overflow-hidden shadow-2xl dark:shadow-[0_0_30px_rgba(16,185,129,0.08)] relative min-h-95 font-mono">
             {/* Borde verde neón fino y alargado superior */}
-            <div className="absolute top-0 inset-x-8 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
+            <div className="absolute top-0 inset-x-8 h-[1.5px] bg-linear-to-r from-transparent via-emerald-400/90 to-transparent pointer-events-none" />
 
             <div className="flex items-center gap-2 pb-4 border-b border-border dark:border-emerald-500/20 mb-4 text-xs text-muted-foreground">
               <Terminal size={14} className="text-accent-cyan" />
@@ -378,11 +379,11 @@ export default function BookingDemo() {
                   {t('bookingdemo.log_esperando')}
                 </div>
               )}
-              {logs.map((log, i) => {
+              {logs.map((log) => {
                 const isCompleted = log.startsWith('✨') || log.startsWith('🎉')
                 return (
                   <motion.div
-                    key={`log-${i}`}
+                    key={log}
                     initial={{ opacity: 0, x: -5 }}
                     animate={{ opacity: 1, x: 0 }}
                     className={isCompleted ? 'text-accent-cyan font-bold pt-2' : 'text-foreground'}
@@ -397,11 +398,11 @@ export default function BookingDemo() {
             <div className="border-t border-border pt-4 mt-4 text-[10px] text-muted-foreground flex justify-between">
               <span>
                 {t('bookingdemo.estado_label')}:{' '}
-                {step === 'console'
-                  ? t('bookingdemo.estado_procesando')
-                  : step === 'success'
-                    ? t('bookingdemo.estado_inactivo')
-                    : t('bookingdemo.estado_esperando')}
+                {(() => {
+                  if (step === 'console') return t('bookingdemo.estado_procesando')
+                  if (step === 'success') return t('bookingdemo.estado_inactivo')
+                  return t('bookingdemo.estado_esperando')
+                })()}
               </span>
               <span>
                 SEC: {logs.length} / {AUTOMATION_LOGS.length}

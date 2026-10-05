@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const rootDir = path.resolve(__dirname, '..')
 
-const uploadedLogoPath = path.join(rootDir, 'public', 'logo-source.jpg')
+const uploadedLogoPath = path.join(rootDir, 'public', 'logo-source.webp')
 const publicDir = path.join(rootDir, 'public')
 
 const possibleBrowserPaths = [
@@ -124,17 +124,17 @@ async function createDualLogos() {
     return await page.screenshot({ type: 'png', omitBackground: true })
   }
 
-  console.log('Generating logo-dark.png (for dark backgrounds)...')
+  console.log('Generating logo-dark.webp (for dark backgrounds)...')
   const darkLogo = await renderLogoVariant(600, 600, 'dark-bg')
-  fs.writeFileSync(path.join(publicDir, 'logo-dark.png'), darkLogo)
+  fs.writeFileSync(path.join(publicDir, 'logo-dark.webp'), darkLogo)
   fs.writeFileSync(path.join(publicDir, 'logo-dark.webp'), darkLogo)
   fs.writeFileSync(path.join(publicDir, 'logo-40.webp'), darkLogo)
   fs.writeFileSync(path.join(publicDir, 'logo.webp'), darkLogo)
-  fs.writeFileSync(path.join(publicDir, 'logo.png'), darkLogo)
+  fs.writeFileSync(path.join(publicDir, 'logo.webp'), darkLogo)
 
-  console.log('Generating logo-light.png (for light backgrounds)...')
+  console.log('Generating logo-light.webp (for light backgrounds)...')
   const lightLogo = await renderLogoVariant(600, 600, 'light-bg')
-  fs.writeFileSync(path.join(publicDir, 'logo-light.png'), lightLogo)
+  fs.writeFileSync(path.join(publicDir, 'logo-light.webp'), lightLogo)
   fs.writeFileSync(path.join(publicDir, 'logo-light.webp'), lightLogo)
 
   await browser.close()

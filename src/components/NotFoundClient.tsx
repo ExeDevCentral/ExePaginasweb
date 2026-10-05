@@ -75,9 +75,9 @@ export default function NotFoundClient() {
         </div>
       </div>
 
-      {floatingShapes.map((shape, i) => (
+      {floatingShapes.map((shape) => (
         <motion.div
-          key={i}
+          key={`shape-${shape.x}-${shape.y}`}
           className={`absolute ${shape.color} ${shape.border} border ${shape.shape}`}
           style={{ width: shape.size, height: shape.size, left: shape.x, top: shape.y }}
           animate={{

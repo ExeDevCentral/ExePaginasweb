@@ -44,6 +44,7 @@
     ".next/**",
     "package-lock.json",
     "*.log",
+    "*.txt",
     "src/core/i18n/locales/**",
     "email-logos/**",
     "resend-templates/**"
@@ -448,7 +449,16 @@
     "hibrido",
     "clarificacion",
     "cotizacion",
-    "unico"
+    "unico",
+    "deepscan",
+    "autofetch",
+    "snyk",
+    "sonarlint",
+    "ampscript",
+    "joernberkefeld",
+    "sfmc",
+    "ssjs",
+    "esnext"
   ],
 
   "snyk.features.snykCode": true,

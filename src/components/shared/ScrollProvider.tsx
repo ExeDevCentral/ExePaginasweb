@@ -7,13 +7,7 @@
 
 import React, { useEffect } from 'react'
 import Lenis from 'lenis'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { getGlobalLenis, setGlobalLenis } from './scrollUtils'
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
 
 export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
@@ -51,18 +45,15 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     setGlobalLenis(lenis)
 
-    // Sincronizar ScrollTrigger con Lenis
-    lenis.on('scroll', ScrollTrigger.update)
-
-    // Conectar el ticker de GSAP a Lenis para sincronización frame a frame y evitar tirones
-    const updateTicker = (time: number) => {
-      lenis.raf(time * 1000)
+    let rafId: number
+    function raf(time: number) {
+      lenis.raf(time)
+      rafId = requestAnimationFrame(raf)
     }
-    gsap.ticker.add(updateTicker)
-    gsap.ticker.lagSmoothing(0)
+    rafId = requestAnimationFrame(raf)
 
     return () => {
-      gsap.ticker.remove(updateTicker)
+      cancelAnimationFrame(rafId)
       lenis.destroy()
       if (getGlobalLenis() === lenis) {
         setGlobalLenis(null)

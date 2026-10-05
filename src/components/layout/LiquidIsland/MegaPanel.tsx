@@ -1,26 +1,30 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
- * MegaPanel: Nace de la píldora con clip-path animado, tarjetas escalonadas y accesibilidad completa.
+ * MegaPanel: Command Palette de ingeniería con navegación por teclado, búsqueda y estética de consola.
  */
 'use client'
 
-import React, { useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { ArrowRight, Sparkles, X } from 'lucide-react'
+import {
+  Calendar,
+  UtensilsCrossed,
+  Shirt,
+  Trophy,
+  Calculator,
+  ShoppingBag,
+  MessageCircle,
+  Search,
+  Layers,
+  X,
+  type LucideIcon,
+} from 'lucide-react'
 import LanguageSwitcher from '../LanguageSwitcher'
 import ThemeToggle from '../ThemeToggle'
 import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
-import {
-  CyberAppointmentIcon,
-  CyberComandaIcon,
-  CyberCatalogIcon,
-  CyberPitchRadarIcon,
-  CyberCalculatorIcon,
-  CyberShopBagIcon,
-  WhatsAppLiveIcon,
-} from '@/components/ui/MagnificentIcons'
 
 export interface MegaPanelProps {
   isOpen: boolean
@@ -28,107 +32,285 @@ export interface MegaPanelProps {
   anchorRef?: React.RefObject<HTMLElement | null>
 }
 
-const solutionItems = [
+interface PaletteItem {
+  id: string
+  shortcutNumber: number
+  href: string
+  label: string
+  detail: string
+  techFact: string
+  icon: LucideIcon
+  category: 'rubro' | 'action'
+  isPrimaryCta?: boolean
+}
+
+const paletteItems: PaletteItem[] = [
   {
+    id: 'peluqueria',
+    shortcutNumber: 1,
     href: '/soluciones#peluqueria',
-    label: 'Peluquerías & Salones',
-    detail: 'Turnos online 24/7, recordatorios WhatsApp y CRM de fidelización.',
-    icon: CyberAppointmentIcon,
-    tag: 'TURNO ONLINE',
+    label: 'Turnos online para peluquerías',
+    detail: 'Agenda automatizada 24/7, recordatorios por WhatsApp y fidelización.',
+    techFact: 'Event-Driven · WhatsApp Cloud API · Postgres RLS',
+    icon: Calendar,
+    category: 'rubro',
   },
   {
+    id: 'gastronomia',
+    shortcutNumber: 2,
     href: '/soluciones#panaderia',
-    label: 'Panaderías & Gastronomía',
-    detail: 'Terminal de pedidos rápidos, combos, delivery y stock por kilo.',
-    icon: CyberComandaIcon,
-    tag: 'COMANDAS',
+    label: 'Comandas y pedidos gastronómicos',
+    detail: 'Terminal de pedidos rápidos, combos, delivery y control de stock.',
+    techFact: 'Offline-First · Sync Local · WebSockets KDS',
+    icon: UtensilsCrossed,
+    category: 'rubro',
   },
   {
+    id: 'indumentaria',
+    shortcutNumber: 3,
     href: '/soluciones#indumentaria',
-    label: 'Indumentaria & Calzado',
-    detail: 'Catálogo con talles, variantes en vivo y sincronización de stock.',
-    icon: CyberCatalogIcon,
-    tag: 'CATÁLOGO VIVO',
+    label: 'Catálogo y stock para indumentaria',
+    detail: 'Gestión ágil de talles, variantes en vivo y sincronización de stock.',
+    techFact: 'Multi-Tenant · Stock Concurrente · Edge CDN',
+    icon: Shirt,
+    category: 'rubro',
   },
   {
+    id: 'canchas',
+    shortcutNumber: 4,
     href: '/soluciones#canchas',
-    label: 'Canchas & Complejos',
+    label: 'Reservas para canchas y complejos',
     detail: 'Grilla de ocupación en tiempo real y bloqueo anti-solapamiento.',
-    icon: CyberPitchRadarIcon,
-    tag: 'OCUPACIÓN 24/7',
+    techFact: 'Locking Anti-Solapamiento · Realtime · State Engine',
+    icon: Trophy,
+    category: 'rubro',
+  },
+  {
+    id: 'cotizador',
+    shortcutNumber: 5,
+    href: '/cotizador',
+    label: 'Cotizador Interactivo',
+    detail: 'Calculá tu presupuesto en 2 min con desglose transparente de arquitectura.',
+    techFact: 'Reactive State Engine · PDF Streaming · Zero Latency',
+    icon: Calculator,
+    category: 'action',
+    isPrimaryCta: true,
+  },
+  {
+    id: 'tienda',
+    shortcutNumber: 6,
+    href: '/tienda',
+    label: 'Tienda Online & E-Commerce',
+    detail: 'Tu tienda propia sin comisiones por venta con cobros directos.',
+    techFact: 'Server Components · 0% Fee Gateway · Direct Auth',
+    icon: ShoppingBag,
+    category: 'action',
   },
 ]
 
 export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaPanelProps>) {
+  const router = useRouter()
   const panelRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const reduceMotion = Boolean(useReducedMotion())
 
-  // Cierre por click afuera y por tecla Escape
-  useEffect(() => {
-    if (!isOpen) return
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [shortcutKey, setShortcutKey] = useState('Ctrl K')
 
-    function handleOutsideClick(event: MouseEvent | TouchEvent) {
-      const target = event.target as Node
-      if (panelRef.current && !panelRef.current.contains(target)) {
-        if (anchorRef?.current?.contains(target)) {
-          return // El toggle button maneja su propio click
+  // Detección honesta de disponibilidad según horario de Rosario (UTC-3)
+  const [availability, setAvailability] = useState<{
+    isAvailable: boolean
+    text: string
+    location: string
+  }>({
+    isAvailable: true,
+    text: 'Disponible · responde en ~1 h',
+    location: 'Rosario, AR',
+  })
+
+  // Detectar SO para ⌘K vs Ctrl K y horario laboral de Rosario (Lunes a Viernes 09:00 - 19:00)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isMac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform || navigator.userAgent)
+      setShortcutKey(isMac ? '⌘K' : 'Ctrl K')
+
+      try {
+        const now = new Date()
+        const formatter = new Intl.DateTimeFormat('es-AR', {
+          timeZone: 'America/Argentina/Buenos_Aires',
+          hour: 'numeric',
+          hour12: false,
+          weekday: 'short',
+        })
+        const parts = formatter.formatToParts(now)
+        const hourPart = parts.find((p) => p.type === 'hour')
+        const weekdayPart = parts.find((p) => p.type === 'weekday')
+        const hour = hourPart ? Number.parseInt(hourPart.value, 10) : 14
+        const weekday = weekdayPart?.value?.toLowerCase() || ''
+
+        const isWeekend =
+          weekday.startsWith('sáb') ||
+          weekday.startsWith('dom') ||
+          weekday.startsWith('sat') ||
+          weekday.startsWith('sun')
+        const isWorkingHour = hour >= 9 && hour < 19
+
+        if (!isWeekend && isWorkingHour) {
+          setAvailability({
+            isAvailable: true,
+            text: 'Disponible · responde en ~1 h',
+            location: 'Rosario, AR',
+          })
+        } else {
+          setAvailability({
+            isAvailable: false,
+            text: 'Fuera de horario · responde mañana',
+            location: 'Rosario, AR',
+          })
         }
-        onClose()
+      } catch {
+        // Fallback seguro
       }
     }
+  }, [])
+
+  // Filtrado reactivo tipo Command Palette
+  const filteredItems = useMemo(() => {
+    if (!searchQuery.trim()) return paletteItems
+    const q = searchQuery.toLowerCase().trim()
+    return paletteItems.filter(
+      (item) =>
+        item.label.toLowerCase().includes(q) ||
+        item.detail.toLowerCase().includes(q) ||
+        item.techFact.toLowerCase().includes(q)
+    )
+  }, [searchQuery])
+
+  // Reset del foco e índice al abrir
+  useEffect(() => {
+    if (isOpen) {
+      setSearchQuery('')
+      setSelectedIndex(0)
+      const timer = setTimeout(() => {
+        inputRef.current?.focus()
+      }, 50)
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen])
+
+  // Mantener selectedIndex en rango válido al filtrar
+  useEffect(() => {
+    setSelectedIndex(0)
+  }, [searchQuery])
+
+  // Navegación por teclado completa (↑↓, ↵, Esc, 1-6, ⌘K / Ctrl K)
+  useEffect(() => {
+    if (!isOpen) return
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         onClose()
+        return
+      }
+
+      // ⌘K o Ctrl+K: enfoca el buscador
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        inputRef.current?.focus()
+        return
+      }
+
+      // Flechas ↑ y ↓ para navegar entre ítems
+      if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        setSelectedIndex((prev) => (filteredItems.length ? (prev + 1) % filteredItems.length : 0))
+        return
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        setSelectedIndex((prev) =>
+          filteredItems.length ? (prev - 1 + filteredItems.length) % filteredItems.length : 0
+        )
+        return
+      }
+
+      // Enter ↵ para abrir ítem seleccionado
+      if (event.key === 'Enter') {
+        const item = filteredItems[selectedIndex]
+        if (item) {
+          event.preventDefault()
+          router.push(item.href)
+          onClose()
+          return
+        }
+      }
+
+      // Accesos directos numéricos 1–6 (cuando el input no tiene texto o no está enfocado)
+      const isInputActive = document.activeElement === inputRef.current
+      if (event.key >= '1' && event.key <= '6' && (!isInputActive || searchQuery === '')) {
+        const num = Number.parseInt(event.key, 10)
+        const target = paletteItems.find((item) => item.shortcutNumber === num)
+        if (target) {
+          event.preventDefault()
+          router.push(target.href)
+          onClose()
+        }
       }
     }
 
+    function handleOutsideClick(event: MouseEvent | TouchEvent) {
+      const target = event.target as Node
+      if (panelRef.current && !panelRef.current.contains(target)) {
+        if (anchorRef?.current?.contains(target)) return
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
     document.addEventListener('mousedown', handleOutsideClick)
     document.addEventListener('touchstart', handleOutsideClick)
-    document.addEventListener('keydown', handleKeyDown)
 
     return () => {
+      window.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('mousedown', handleOutsideClick)
       document.removeEventListener('touchstart', handleOutsideClick)
-      document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [isOpen, onClose, anchorRef])
+  }, [isOpen, onClose, router, filteredItems, selectedIndex, searchQuery, anchorRef])
+
+  // Mouse spotlight dinámico (estilo Linear / Vercel con variables --mx, --my)
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    e.currentTarget.style.setProperty('--mx', `${x}px`)
+    e.currentTarget.style.setProperty('--my', `${y}px`)
+  }
+
+  // Separación por categorías en vista normal
+  const rubroItems = filteredItems.filter((it) => it.category === 'rubro')
+  const actionItems = filteredItems.filter((it) => it.category === 'action')
 
   const containerVariants: import('framer-motion').Variants = {
     hidden: {
-      clipPath: reduceMotion ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0% round 24px)',
       opacity: 0,
-      y: -6,
-      scale: 0.98,
+      scale: reduceMotion ? 1 : 0.98,
+      y: reduceMotion ? 0 : -6,
     },
     visible: {
-      clipPath: 'inset(0% 0% 0% 0% round 24px)',
       opacity: 1,
-      y: 0,
       scale: 1,
+      y: 0,
       transition: {
-        type: 'spring' as const,
-        stiffness: 300,
-        damping: 28,
-        staggerChildren: 0.04,
-        delayChildren: 0.05,
+        duration: 0.16,
+        ease: [0.16, 1, 0.3, 1],
       },
     },
     exit: {
-      clipPath: reduceMotion ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0% round 24px)',
       opacity: 0,
-      y: -8,
-      scale: 0.98,
-      transition: { duration: 0.18, ease: 'easeInOut' as const },
-    },
-  }
-
-  const itemVariants: import('framer-motion').Variants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring' as const, stiffness: 350, damping: 26 },
+      scale: reduceMotion ? 1 : 0.98,
+      y: reduceMotion ? 0 : -6,
+      transition: { duration: 0.12, ease: 'easeIn' },
     },
   }
 
@@ -136,208 +318,377 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop desenfocado que aísla el menú del fondo y evita que se pierda */}
+          {/* Backdrop con blur de 12px que aisla la consola */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.15 }}
             onClick={onClose}
             aria-hidden="true"
-            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-45"
+            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-[12px] z-45"
           />
 
-          <div className="fixed inset-x-0 top-18 z-50 flex justify-center px-4 pointer-events-auto select-none sm:top-20">
+          <div className="fixed inset-x-0 top-16 z-50 flex justify-center px-4 pointer-events-auto select-none sm:top-20">
             <motion.div
               ref={panelRef}
-              id="mega-panel-menu"
-              role="region"
-              aria-label="Panel de Soluciones y Herramientas"
+              id="mega-panel-palette"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Command Palette de Soluciones y Herramientas"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="relative w-full max-w-4xl max-h-[85vh] overflow-y-auto rounded-3xl border border-[#DFD7CA] dark:border-emerald-500/50 bg-[#FFFDF9]/98 dark:bg-[#060b13]/98 p-4 sm:p-6 shadow-2xl backdrop-blur-2xl dark:shadow-[0_0_50px_rgba(16,185,129,0.18),0_30px_70px_rgba(0,0,0,0.95)]"
+              style={{
+                boxShadow:
+                  '0 24px 60px -12px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.06)',
+              }}
+              className="relative w-full max-w-3xl max-h-[85vh] overflow-hidden rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-[#FFFDF9] dark:bg-[#0B0F14] flex flex-col"
             >
-              {/* Bordes verdes neón finos y alargados (superior e inferior) */}
-              <div className="absolute top-0 inset-x-8 sm:inset-x-16 h-0.5 bg-linear-to-r from-transparent via-emerald-400 to-transparent pointer-events-none" />
-              <div className="absolute bottom-0 inset-x-12 sm:inset-x-24 h-px bg-linear-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
+              {/* Recurso visual sutil: Grilla de puntos con máscara radial (3-4% opacidad) */}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-[0.035] dark:opacity-[0.05]"
+                style={{
+                  backgroundImage: `radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)`,
+                  backgroundSize: '16px 16px',
+                  maskImage: 'radial-gradient(ellipse at 50% 25%, black 40%, transparent 85%)',
+                  WebkitMaskImage:
+                    'radial-gradient(ellipse at 50% 25%, black 40%, transparent 85%)',
+                }}
+              />
 
-              {/* Header del Mega Panel con botón de cierre accesible y toggles de idioma y tema */}
-              <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b border-[#DFD7CA] dark:border-emerald-500/25 gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981] shrink-0" />
-                  <span className="text-xs font-black uppercase tracking-widest text-foreground font-mono truncate">
-                    Sistemas &amp; Herramientas Web a Medida
-                  </span>
+              {/* Borde superior con highlight tenue de 1px */}
+              <div className="absolute top-0 inset-x-12 h-px bg-linear-to-r from-transparent via-emerald-500/35 to-transparent pointer-events-none" />
+
+              {/* Barra superior de Command Palette: Input de búsqueda + atajo de SO (⌘K o Ctrl K) + Controles */}
+              <div className="relative border-b border-black/[0.06] dark:border-white/[0.08] p-3 sm:px-4 flex items-center justify-between gap-3 bg-black/[0.015] dark:bg-white/[0.015]">
+                <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                  <Search
+                    size={16}
+                    className="text-slate-400 dark:text-[#8B95A5] shrink-0"
+                    aria-hidden="true"
+                  />
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Buscar solución o herramienta…"
+                    className="w-full bg-transparent text-xs sm:text-sm text-slate-900 dark:text-[#E6EAF0] placeholder:text-slate-400 dark:placeholder:text-[#8B95A5]/60 focus:outline-hidden font-sans"
+                    aria-label="Buscar en la consola"
+                  />
                 </div>
+
                 <div className="flex items-center gap-1.5 shrink-0">
+                  <kbd className="hidden sm:inline-flex items-center font-mono text-[10px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/[0.08] text-slate-600 dark:text-[#CBD5E1] border border-black/5 dark:border-white/[0.06]">
+                    {shortcutKey}
+                  </kbd>
                   <LanguageSwitcher />
                   <ThemeToggle />
                   <button
                     type="button"
                     onClick={onClose}
-                    aria-label="Cerrar panel"
-                    className="p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/10 transition-colors ml-1 cursor-pointer"
+                    aria-label="Cerrar consola"
+                    className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:text-[#8B95A5] dark:hover:text-[#E6EAF0] hover:bg-black/5 dark:hover:bg-white/[0.06] transition-colors ml-1 cursor-pointer"
                   >
-                    <X size={16} />
+                    <X size={15} />
                   </button>
                 </div>
               </div>
 
-              {/* Ficha de Autor & WhatsApp Directo con Exe en vivo */}
-              <motion.div
-                variants={itemVariants}
-                className="mb-4 p-3 rounded-2xl border border-emerald-500/30 bg-linear-to-r from-emerald-500/10 via-amber-500/5 to-cyan-500/10 dark:from-emerald-950/40 dark:via-slate-900/80 dark:to-slate-950 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner"
-              >
+              {/* Contenedor escrolleable de tarjetas */}
+              <div className="overflow-y-auto p-3.5 sm:p-4 flex-1 space-y-3">
+                {/* Categoría: Rubros */}
+                {rubroItems.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-mono text-[10px] font-semibold text-slate-400 dark:text-[#8B95A5] uppercase tracking-wider">
+                        // Soluciones por rubro
+                      </span>
+                      <span className="font-mono text-[10px] text-slate-400/60 dark:text-[#8B95A5]/50">
+                        {rubroItems.length} módulos
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+                      {rubroItems.map((item) => {
+                        const globalIdx = filteredItems.indexOf(item)
+                        const isSelected = selectedIndex === globalIdx
+                        const Icon = item.icon
+
+                        return (
+                          <Link
+                            key={item.id}
+                            href={item.href}
+                            onClick={onClose}
+                            onMouseEnter={() => setSelectedIndex(globalIdx)}
+                            onMouseMove={handleMouseMove}
+                            style={{
+                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
+                            }}
+                            className={`group relative flex flex-col justify-between p-3 rounded-xl border transition-all duration-150 ${
+                              isSelected
+                                ? 'border-emerald-500/60 dark:border-emerald-500/60 bg-emerald-500/[0.05] dark:bg-emerald-500/[0.07] -translate-y-0.5'
+                                : 'border-black/[0.07] dark:border-white/[0.08] bg-black/[0.02] dark:bg-[#11161D] hover:border-black/15 dark:hover:border-white/[0.18] hover:-translate-y-0.5'
+                            }`}
+                          >
+                            <div>
+                              <div className="flex items-center justify-between gap-2 mb-1.5">
+                                <div className="flex items-center gap-2">
+                                  <div
+                                    className={`w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                                      isSelected
+                                        ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
+                                        : 'bg-black/[0.03] dark:bg-white/[0.04] border-black/[0.06] dark:border-white/[0.06] text-slate-600 dark:text-[#CBD5E1]'
+                                    }`}
+                                  >
+                                    <Icon size={15} strokeWidth={1.8} />
+                                  </div>
+                                  <h4 className="font-semibold text-xs sm:text-[13px] text-slate-900 dark:text-[#E6EAF0] tracking-[-0.01em] leading-tight">
+                                    {item.label}
+                                  </h4>
+                                </div>
+
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                  <kbd className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/[0.08] text-slate-500 dark:text-[#CBD5E1] border border-black/5 dark:border-white/[0.06] group-hover:border-emerald-500/40 group-hover:text-emerald-400 transition-colors">
+                                    {item.shortcutNumber}
+                                  </kbd>
+                                </div>
+                              </div>
+
+                              <p className="text-xs text-slate-600 dark:text-[#CBD5E1] leading-snug line-clamp-2 pl-0.5">
+                                {item.detail}
+                              </p>
+                            </div>
+
+                            {/* Hecho arquitectónico en mono con luminosidad optimizada y ↵ condicional */}
+                            <div className="mt-2 pt-1.5 border-t border-black/[0.04] dark:border-white/[0.05] flex items-center justify-between text-[10px] font-mono text-slate-600 dark:text-[#CBD5E1]">
+                              <span className="truncate">{item.techFact}</span>
+                              <span
+                                className={`font-mono text-xs transition-opacity duration-150 ml-1 shrink-0 ${
+                                  isSelected
+                                    ? 'opacity-100 text-emerald-600 dark:text-emerald-400'
+                                    : 'opacity-0 group-hover:opacity-100 text-slate-400 dark:text-[#CBD5E1]'
+                                }`}
+                              >
+                                ↵
+                              </span>
+                            </div>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Categoría: Acciones Rápidas (Cotizador & Tienda) */}
+                {actionItems.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-mono text-[10px] font-semibold text-slate-400 dark:text-[#8B95A5] uppercase tracking-wider">
+                        // Herramientas directas
+                      </span>
+                      <span className="font-mono text-[10px] text-slate-400/60 dark:text-[#8B95A5]/50">
+                        Acceso interactivo
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+                      {actionItems.map((item) => {
+                        const globalIdx = filteredItems.indexOf(item)
+                        const isSelected = selectedIndex === globalIdx
+                        const Icon = item.icon
+
+                        // Un solo foco verde a la vez: Cotizador solo tiene verde si está seleccionado
+                        const borderAndBgClass = isSelected
+                          ? 'border-emerald-500/60 dark:border-emerald-500/60 bg-emerald-500/[0.05] dark:bg-emerald-500/[0.07] -translate-y-0.5'
+                          : item.isPrimaryCta
+                            ? 'border-black/[0.1] dark:border-white/[0.12] bg-black/[0.03] dark:bg-[#141b24] hover:border-black/20 dark:hover:border-white/[0.22] hover:-translate-y-0.5'
+                            : 'border-black/[0.07] dark:border-white/[0.08] bg-black/[0.02] dark:bg-[#11161D] hover:border-black/15 dark:hover:border-white/[0.18] hover:-translate-y-0.5'
+
+                        return (
+                          <Link
+                            key={item.id}
+                            href={item.href}
+                            onClick={onClose}
+                            onMouseEnter={() => setSelectedIndex(globalIdx)}
+                            onMouseMove={handleMouseMove}
+                            style={{
+                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
+                            }}
+                            className={`group relative flex flex-col justify-between p-3 rounded-xl border transition-all duration-150 ${borderAndBgClass}`}
+                          >
+                            <div>
+                              <div className="flex items-center justify-between gap-2 mb-2">
+                                <div className="flex items-center gap-2.5">
+                                  <div
+                                    className={`w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                                      isSelected
+                                        ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
+                                        : 'bg-black/[0.03] dark:bg-white/[0.04] border-black/[0.06] dark:border-white/[0.06] text-slate-600 dark:text-[#CBD5E1]'
+                                    }`}
+                                  >
+                                    <Icon size={15} strokeWidth={1.8} />
+                                  </div>
+                                  <h4 className="font-semibold text-xs sm:text-[13px] text-slate-900 dark:text-[#E6EAF0] tracking-[-0.01em] leading-tight">
+                                    {item.label}
+                                  </h4>
+                                </div>
+
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                  <kbd className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/[0.08] text-slate-500 dark:text-[#CBD5E1] border border-black/5 dark:border-white/[0.06] group-hover:border-emerald-500/40 group-hover:text-emerald-400 transition-colors">
+                                    {item.shortcutNumber}
+                                  </kbd>
+                                </div>
+                              </div>
+
+                              <p className="text-xs text-slate-600 dark:text-[#CBD5E1] leading-snug line-clamp-2 pl-0.5">
+                                {item.detail}
+                              </p>
+                            </div>
+
+                            <div className="mt-2 pt-1.5 border-t border-black/[0.04] dark:border-white/[0.05] flex items-center justify-between text-[10px] font-mono text-slate-600 dark:text-[#CBD5E1]">
+                              <span className="truncate">{item.techFact}</span>
+                              <span
+                                className={`font-mono text-xs transition-opacity duration-150 ml-1 shrink-0 ${
+                                  isSelected
+                                    ? 'opacity-100 text-emerald-600 dark:text-emerald-400'
+                                    : 'opacity-0 group-hover:opacity-100 text-slate-400 dark:text-[#CBD5E1]'
+                                }`}
+                              >
+                                ↵
+                              </span>
+                            </div>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Banner destacado: Arquitectura completa & casos reales de software (subido de jerarquía) */}
+                <div className="pt-0.5">
+                  <Link
+                    href="/soluciones"
+                    onClick={onClose}
+                    className="group flex items-center justify-between px-3 py-2 rounded-xl border border-black/[0.07] dark:border-white/[0.08] bg-black/[0.015] dark:bg-white/[0.02] hover:border-emerald-500/40 dark:hover:border-emerald-500/40 hover:bg-emerald-500/[0.03] transition-all"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                        <Layers size={13} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-semibold text-xs text-slate-900 dark:text-[#E6EAF0] tracking-[-0.01em] truncate">
+                          Arquitectura completa &amp; casos reales de software
+                        </div>
+                        <div className="font-mono text-[10px] text-slate-500 dark:text-[#CBD5E1] truncate">
+                          Documentación técnica · Diagramas de flujo · Benchmarks de rendimiento
+                        </div>
+                      </div>
+                    </div>
+                    <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform shrink-0 ml-2">
+                      Ver ingeniería ↗
+                    </span>
+                  </Link>
+                </div>
+
+                {/* Si no hay resultados de búsqueda */}
+                {filteredItems.length === 0 && (
+                  <div className="py-8 text-center">
+                    <p className="font-mono text-xs text-slate-400 dark:text-[#8B95A5]">
+                      No se encontraron resultados para &quot;{searchQuery}&quot;
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="mt-2 font-mono text-[11px] text-emerald-500 hover:underline cursor-pointer"
+                    >
+                      Limpiar búsqueda (Esc)
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Footer de Consola: Autoría + Disponibilidad honesta + WhatsApp CTA */}
+              <div className="border-t border-black/[0.06] dark:border-white/[0.08] bg-black/[0.02] dark:bg-[#11161D]/90 p-3 sm:px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div className="flex items-center gap-3 w-full sm:w-auto">
-                  <div className="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-400 to-cyan-600 font-mono font-black text-xs text-slate-950 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.4)] shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-white/[0.08] text-[11px] font-mono font-bold text-slate-800 dark:text-[#E6EAF0] flex items-center justify-center shrink-0">
                     EXE
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="font-bold text-xs sm:text-sm text-foreground">
+                      <span className="font-semibold text-xs text-slate-900 dark:text-[#E6EAF0]">
                         Exequiel Echevarría
-                      </h4>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/25 font-bold">
-                        Software &amp; Web Architect
+                      </span>
+                      <span className="font-mono text-[10px] text-slate-500 dark:text-[#CBD5E1] border border-black/10 dark:border-white/[0.08] px-1.5 py-0.2 rounded bg-black/[0.02] dark:bg-white/[0.04]">
+                        Full-Stack · React / TypeScript
                       </span>
                     </div>
-                    <p className="text-[11px] text-muted-foreground truncate">
-                      Arquitectura de Software &amp; Sistemas Cloud · Escala Global · Ingeniería
-                      Directa
-                    </p>
+                    {/* Disponibilidad honesta vinculada a horario real de Rosario */}
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-slate-500 dark:text-[#CBD5E1]">
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            availability.isAvailable
+                              ? 'bg-emerald-400 animate-pulse'
+                              : 'bg-amber-400/80'
+                          }`}
+                        />
+                        {availability.text} · {availability.location}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <a
-                  href={getWhatsAppUrl(
-                    '¡Hola Exequiel! Me interesa consultar por un desarrollo de software / web a medida.'
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold dark:bg-emerald-500/20 dark:text-emerald-300 dark:border dark:border-emerald-500/40 dark:hover:bg-emerald-500/30 text-xs transition-all group shrink-0 shadow-sm"
-                >
-                  <WhatsAppLiveIcon size={18} />
-                  <span>Hablar por WhatsApp con Exe</span>
-                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-black/20 text-slate-950 dark:bg-emerald-500/20 dark:text-emerald-300">
-                    EN VIVO
-                  </span>
-                </a>
-              </motion.div>
-
-              {/* Grid de 4 Soluciones Principales */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                {solutionItems.map(({ href, label, detail, icon: Icon, tag }) => (
-                  <motion.div key={href} variants={itemVariants}>
-                    <Link
-                      href={href}
-                      onClick={onClose}
-                      className="group relative flex items-start gap-3 p-3.5 rounded-2xl border border-[#DFD7CA] dark:border-emerald-500/25 bg-muted/40 dark:bg-emerald-950/15 hover:bg-emerald-500/10 hover:border-emerald-500/50 dark:hover:border-emerald-400/60 dark:hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
-                    >
-                      <div className="relative w-10 h-10 rounded-xl bg-linear-to-b from-[#F3ECE1] to-[#EBE2D4] dark:from-slate-800/90 dark:to-slate-950 border border-[#DFD7CA] dark:border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-sm shrink-0 group-hover:border-emerald-500/50 group-hover:text-emerald-500 dark:group-hover:text-emerald-300 transition-all">
-                        <Icon size={22} />
-                        <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-400 opacity-70 group-hover:opacity-100" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-1 mb-1">
-                          <span className="font-bold text-sm text-foreground group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors truncate">
-                            {label}
-                          </span>
-                          <span className="text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/25 shrink-0">
-                            {tag}
-                          </span>
-                        </div>
-                        <p className="text-xs text-muted-foreground leading-snug line-clamp-2">
-                          {detail}
-                        </p>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                  <a
+                    href={getWhatsAppUrl(
+                      '¡Hola Exequiel! Me interesa consultar por un desarrollo de software / web a medida.'
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs transition-colors shrink-0 shadow-xs active:scale-[0.98]"
+                  >
+                    <MessageCircle size={15} strokeWidth={2} />
+                    <span>Hablar por WhatsApp</span>
+                    <span className="font-mono text-[10px]">↗</span>
+                  </a>
+                </div>
               </div>
 
-              {/* Fila Especial: Cotizador y Tienda Online */}
-              <motion.div
-                variants={itemVariants}
-                className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-[#DFD7CA] dark:border-emerald-500/25"
-              >
-                <Link
-                  href="/cotizador"
-                  onClick={onClose}
-                  className="group relative flex items-center justify-between p-3.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/15 hover:border-emerald-400 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
-                      <CyberCalculatorIcon size={20} />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-bold text-xs text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
-                          Cotizador Interactivo
-                        </span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      </div>
-                      <span className="text-[11px] text-muted-foreground">
-                        Calculá tu presupuesto en 2 min
-                      </span>
-                    </div>
-                  </div>
-                  <ArrowRight
-                    size={15}
-                    className="text-emerald-500 group-hover:translate-x-1 transition-transform"
-                  />
-                </Link>
-
-                <Link
-                  href="/tienda"
-                  onClick={onClose}
-                  className="group relative flex items-center justify-between p-3.5 rounded-2xl border border-cyan-500/40 bg-cyan-500/10 hover:bg-cyan-500/15 hover:border-cyan-400 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 flex items-center justify-center shrink-0">
-                      <CyberShopBagIcon size={20} />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-bold text-xs text-foreground group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
-                          Tienda Online &amp; E-Commerce
-                        </span>
-                        <Sparkles size={11} className="text-cyan-400" />
-                      </div>
-                      <span className="text-[11px] text-muted-foreground">
-                        Demo sin comisiones cautivas
-                      </span>
-                    </div>
-                  </div>
-                  <ArrowRight
-                    size={15}
-                    className="text-cyan-500 group-hover:translate-x-1 transition-transform"
-                  />
-                </Link>
-              </motion.div>
-
-              {/* Footer con link general a /soluciones */}
-              <motion.div
-                variants={itemVariants}
-                className="mt-3.5 pt-3 flex items-center justify-between text-xs text-muted-foreground border-t border-[#DFD7CA] dark:border-emerald-500/20"
-              >
-                <Link
-                  href="/soluciones"
-                  onClick={onClose}
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-semibold flex items-center gap-1.5"
-                >
-                  <span>Ver arquitectura completa y casos reales de software</span>
-                  <ArrowRight size={13} />
-                </Link>
-                <span className="hidden sm:inline font-mono text-[10px] opacity-70">
-                  Presioná{' '}
-                  <kbd className="px-1.5 py-0.5 rounded bg-foreground/10 text-foreground font-mono">
-                    Esc
-                  </kbd>{' '}
-                  para cerrar
-                </span>
-              </motion.div>
+              {/* Barra de atajos de pie de consola (Keyboard hints puros) */}
+              <div className="px-3 sm:px-4 py-2 bg-black/[0.03] dark:bg-black/40 border-t border-black/[0.04] dark:border-white/[0.05] flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-[#CBD5E1]">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex items-center gap-1">
+                    <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
+                      ↑↓
+                    </kbd>{' '}
+                    navegar
+                  </span>
+                  <span>·</span>
+                  <span className="flex items-center gap-1">
+                    <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
+                      ↵
+                    </kbd>{' '}
+                    abrir
+                  </span>
+                  <span>·</span>
+                  <span className="flex items-center gap-1">
+                    <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
+                      1–6
+                    </kbd>{' '}
+                    acceso directo
+                  </span>
+                  <span>·</span>
+                  <span className="flex items-center gap-1">
+                    <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
+                      esc
+                    </kbd>{' '}
+                    cerrar
+                  </span>
+                </div>
+              </div>
             </motion.div>
           </div>
         </>

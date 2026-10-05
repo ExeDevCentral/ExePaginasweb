@@ -7,13 +7,7 @@
 
 import React, { useRef, useEffect } from 'react'
 import * as THREE from 'three'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useDeviceCapabilities } from '../../hooks/useDeviceCapabilities'
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
 
 const FallbackCSSBackground: React.FC = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -151,21 +145,17 @@ export const ThreeHeroScene: React.FC = () => {
     const points = new THREE.Points(geometry, material)
     scene.add(points)
 
-    // GSAP ScrollTrigger
-    let trigger: ScrollTrigger | null = null
-    if (!prefersReducedMotion) {
+    // Cálculo nativo del progreso de scroll sin GSAP ScrollTrigger
+    let targetProgress = prefersReducedMotion ? 1 : 0
+    let currentProgress = targetProgress
+
+    const calculateScrollProgress = () => {
+      if (prefersReducedMotion) return 1
       const heroEl = document.getElementById('home') || document.body
-      trigger = ScrollTrigger.create({
-        trigger: heroEl,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
-        onUpdate: (self) => {
-          progressRef.current = self.progress
-        },
-      })
-    } else {
-      progressRef.current = 1
+      const rect = heroEl.getBoundingClientRect()
+      const totalDist = rect.height || window.innerHeight
+      const scrollOffset = -rect.top
+      return Math.min(1, Math.max(0, scrollOffset / totalDist))
     }
 
     // Resize Handler
@@ -203,6 +193,15 @@ export const ThreeHeroScene: React.FC = () => {
       animId = requestAnimationFrame(animate)
       if (!isVisible) return
 
+      if (!prefersReducedMotion) {
+        targetProgress = calculateScrollProgress()
+        // Interpolación suave tipo lerp (equivalente a scrub: 1)
+        currentProgress += (targetProgress - currentProgress) * 0.08
+        progressRef.current = currentProgress
+      } else {
+        progressRef.current = 1
+      }
+
       const t = (performance.now() - startTime) * 0.001
       const p = progressRef.current
 
@@ -229,7 +228,6 @@ export const ThreeHeroScene: React.FC = () => {
       cancelAnimationFrame(animId)
       window.removeEventListener('resize', handleResize)
       observer?.disconnect()
-      trigger?.kill()
       geometry.dispose()
       material.dispose()
       renderer?.dispose()

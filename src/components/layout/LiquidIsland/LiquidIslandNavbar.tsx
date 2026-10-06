@@ -36,7 +36,7 @@ export default function LiquidIslandNavbar({
   const pathname = usePathname()
   const reduceMotion = Boolean(useReducedMotion())
 
-  const { isCompact, scrollY, skewX, scaleY } = useNavScroll({ expandOnScrollUp })
+  const { isCompact, scrollY } = useNavScroll({ expandOnScrollUp })
 
   // Estados interactivos
   const [megaPanelOpen, setMegaPanelOpen] = useState(false)
@@ -69,14 +69,6 @@ export default function LiquidIslandNavbar({
     return !text || text === key ? fallback : text
   }
 
-  // Transición spring para ancho y layout sin deformaciones
-  const springTransition = {
-    type: 'spring' as const,
-    stiffness: 260,
-    damping: 26,
-    mass: 0.9,
-  }
-
   return (
     <>
       {/* 1. Inyección del filtro SVG de refracción líquida en el DOM */}
@@ -87,11 +79,11 @@ export default function LiquidIslandNavbar({
         className="fixed top-3 inset-x-0 z-50 flex flex-col items-center px-3 sm:px-4 pointer-events-none select-none"
         style={{ top: 12 }}
       >
-        {/* AURA PERIMETRAL DOBLE DE ALTO CONTRASTE (DESPEGA EL CRISTAL DEL NEGRO ABSOLUTO A 120 FPS) */}
+        {/* MICRO-AURA PERIMETRAL SOBRIA DE ALTA INGENIERIA */}
         <div
-          className="pointer-events-none absolute -inset-2 rounded-full bg-linear-to-r from-cyan-500/40 via-sky-400/25 to-emerald-400/35 blur-2xl -z-20 opacity-80 dark:opacity-95 transition-opacity duration-300"
+          className="pointer-events-none absolute -inset-1 rounded-full bg-linear-to-r from-cyan-500/20 via-sky-400/15 to-emerald-400/20 blur-lg -z-20 opacity-30 dark:opacity-40 transition-opacity duration-300"
           style={{
-            maxWidth: isCompact ? 440 : 1120,
+            maxWidth: 1100,
             margin: '0 auto',
             left: 0,
             right: 0,
@@ -105,16 +97,7 @@ export default function LiquidIslandNavbar({
           aria-label="Navegación principal"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          style={{
-            skewX: reduceMotion ? 0 : skewX,
-            scaleY: reduceMotion ? 1 : scaleY,
-          }}
-          initial={{ maxWidth: 1100 }}
-          animate={{
-            maxWidth: isCompact ? 420 : 1100,
-          }}
-          transition={springTransition}
-          className="relative pointer-events-auto w-full mx-auto h-14 sm:h-14.5 rounded-full border border-slate-300/90 dark:border-cyan-400/45 bg-linear-to-b from-white/95 via-slate-50/90 to-slate-100/95 dark:from-[#151e34]/95 dark:via-[#0c1224]/95 dark:to-[#070914]/98 backdrop-blur-2xl sm:backdrop-blur-3xl shadow-[inset_0_1.5px_1px_0_rgba(255,255,255,0.55),inset_0_-1px_1px_0_rgba(6,182,212,0.4),0_16px_48px_-8px_rgba(0,0,0,0.7),0_0_28px_rgba(6,182,212,0.24)] flex items-center justify-between px-3 sm:px-4 gap-2 transition-[box-shadow,border-color] duration-300 hover:border-cyan-400/70 hover:shadow-[inset_0_1.5px_1px_0_rgba(255,255,255,0.7),inset_0_-1px_1px_0_rgba(6,182,212,0.6),0_20px_54px_-8px_rgba(0,0,0,0.85),0_0_36px_rgba(6,182,212,0.35)]"
+          className="relative pointer-events-auto w-full max-w-[1100px] mx-auto h-14 sm:h-14.5 rounded-full border border-slate-300/80 dark:border-cyan-400/35 bg-white/90 dark:bg-[#0c1224]/90 backdrop-blur-xl shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.4),0_12px_32px_-8px_rgba(0,0,0,0.5),0_0_16px_rgba(6,182,212,0.15)] flex items-center justify-between px-3 sm:px-4 gap-2 transition-[box-shadow,border-color,background-color] duration-300 hover:border-cyan-400/60"
         >
           {/* Spotlight dinámico sobre el cristal */}
           {!reduceMotion && <SpotlightGlass mouseX={mouseX} mouseY={mouseY} />}
@@ -122,7 +105,7 @@ export default function LiquidIslandNavbar({
           {/* Border beam animado con gradiente cian a amarillo */}
           <BorderBeam duration={7} />
 
-          {/* IZQUIERDA: Logo interactivo con Phosphor Decay & scroll shrink */}
+          {/* IZQUIERDA: Logo interactivo con Phosphor Decay */}
           <motion.div layout="position" className="flex items-center shrink-0">
             <Link
               href="/"
@@ -141,23 +124,13 @@ export default function LiquidIslandNavbar({
               aria-label={getNavLabel('nav.inicio', 'Inicio')}
               className="outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-full min-w-11 min-h-11 flex items-center justify-center p-1 -m-1 active:scale-95 transition-transform"
             >
-              <NavLogo scrollY={scrollY} isCompact={isCompact} reduceMotion={reduceMotion} />
+              <NavLogo scrollY={scrollY} isCompact={false} reduceMotion={reduceMotion} />
             </Link>
           </motion.div>
 
-          {/* CENTRO: Links de navegación (visibles en desktop lg:flex, colapsan suavemente en compact) */}
-          <motion.div
-            layout="position"
-            className="hidden lg:flex items-center justify-center shrink-0 overflow-hidden"
-          >
-            <motion.div
-              animate={{
-                width: isCompact ? 0 : 'auto',
-                opacity: isCompact ? 0 : 1,
-              }}
-              transition={springTransition}
-              className="overflow-hidden flex items-center gap-1 sm:gap-1.5"
-            >
+          {/* CENTRO: Links de navegación (estables y continuos en desktop lg:flex) */}
+          <div className="hidden lg:flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5">
               {/* Botón trigger del Mega Panel de Soluciones */}
               <div className="relative">
                 <button
@@ -245,30 +218,28 @@ export default function LiquidIslandNavbar({
                 onLeave={() => setHoveredLink(null)}
                 onClick={() => setMegaPanelOpen(false)}
               />
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* DERECHA: Badge de Disponibilidad + Idioma + Tema + Menú + CTA Dominante */}
           <motion.div layout="position" className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-            {/* Disponibilidad en tiempo real: SOLO en modo expandido para no sobrecargar el Island compacto */}
-            {!isCompact && (
-              <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/40 dark:border-cyan-400/40 text-[10px] font-mono font-extrabold tracking-wider text-cyan-900 dark:text-cyan-300 select-none shadow-[0_0_12px_rgba(6,182,212,0.25)] shrink-0">
-                <CyberRadarBeacon size={9} />
-                <span>ABRIL // DISPONIBLE</span>
-              </div>
-            )}
+            {/* Disponibilidad en tiempo real */}
+            <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 dark:border-cyan-400/30 text-[10px] font-mono font-bold tracking-wider text-cyan-800 dark:text-cyan-300 select-none shrink-0">
+              <CyberRadarBeacon size={9} />
+              <span>ABRIL // DISPONIBLE</span>
+            </div>
 
-            {/* Selector de idioma: SIEMPRE accesible en expanded y compact */}
+            {/* Selector de idioma */}
             <motion.div layout="position" className="flex items-center">
               <LanguageSwitcher />
             </motion.div>
 
-            {/* Selector de tema: accesible en desktop y tablet */}
+            {/* Selector de tema */}
             <motion.div layout="position" className="hidden sm:flex items-center">
               <ThemeToggle />
             </motion.div>
 
-            {/* Botón de Menú rápido en modo compact o mobile para desplegar MegaPanel con icono cinético */}
+            {/* Botón de Menú rápido en mobile/tablet para desplegar MegaPanel */}
             <motion.button
               type="button"
               layout="position"
@@ -276,21 +247,15 @@ export default function LiquidIslandNavbar({
               aria-expanded={megaPanelOpen}
               aria-controls="mega-panel-menu"
               aria-label={megaPanelOpen ? 'Cerrar menú' : 'Abrir menú de navegación'}
-              className={`p-2 rounded-full border border-cyan-500/30 dark:border-cyan-400/35 bg-cyan-500/5 hover:bg-cyan-500/15 hover:border-cyan-400/60 transition-colors cursor-pointer ${
-                isCompact ? 'flex' : 'flex lg:hidden'
-              }`}
+              className="p-2 rounded-full border border-cyan-500/30 dark:border-cyan-400/35 bg-cyan-500/5 hover:bg-cyan-500/15 hover:border-cyan-400/60 transition-colors cursor-pointer flex lg:hidden"
             >
               <CyberBurgerIcon isOpen={megaPanelOpen} size={17} />
             </motion.button>
 
-            {/* CTA único dominante: perfectamente proporcionado (en compact "Cotizar", en expanded "Cotizá tu web") */}
+            {/* CTA único dominante */}
             <motion.div layout="position">
               <MagneticCTA
-                label={
-                  isCompact
-                    ? getNavLabel('nav.cotizar', 'Cotizar')
-                    : getNavLabel('nav.cotiza_tu_web', 'Cotizá tu web')
-                }
+                label={getNavLabel('nav.cotiza_tu_web', 'Cotizá tu web')}
                 href="/cotizador"
                 onClick={() => setMegaPanelOpen(false)}
               />

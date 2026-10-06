@@ -9,7 +9,6 @@ import { useState, useRef, useEffect } from 'react'
 import {
   useScroll,
   useVelocity,
-  useSpring,
   useTransform,
   useMotionValueEvent,
   useReducedMotion,
@@ -55,22 +54,10 @@ export function useNavScroll({
   // Progreso continuo de 0 a 1 en el tramo inicial de scroll (0 a 300px)
   const scrollProgress = useTransform(scrollY, [0, 300], [0, 1], { clamp: true })
 
-  // Estiramiento sutil por velocidad de scroll (máx ±2° skewX y 1.02 scaleY)
-  // Al frenar, el spring devuelve suavemente los valores al reposo (0 y 1)
-  const rawSkew = useTransform(scrollVelocity, [-2500, 2500], [2, -2], { clamp: true })
-  const springSkew = useSpring(rawSkew, { stiffness: 350, damping: 28, mass: 0.5 })
-
-  const rawScaleY = useTransform(scrollVelocity, [-3000, 0, 3000], [1.025, 1, 1.025], {
-    clamp: true,
-  })
-  const springScaleY = useSpring(rawScaleY, { stiffness: 350, damping: 28, mass: 0.5 })
-
-  // Valores inertes si el usuario activó reduced motion
-  const zeroMotion = useTransform(scrollY, () => 0)
-  const oneMotion = useTransform(scrollY, () => 1)
-
-  const finalSkewX = reduceMotion ? zeroMotion : springSkew
-  const finalScaleY = reduceMotion ? oneMotion : springScaleY
+  // Enfoque de alta ingeniería (estilo Linear/Vercel):
+  // Cero deformaciones elásticas de gelatina para máxima solidez arquitectónica
+  const finalSkewX = useTransform(scrollY, () => 0)
+  const finalScaleY = useTransform(scrollY, () => 1)
 
   const lastScrollYRef = useRef(0)
 

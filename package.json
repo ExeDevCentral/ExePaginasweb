@@ -34,6 +34,7 @@
     "deploy": "vercel --prod",
     "prepare": "husky",
     "audit:sec": "npm audit --audit-level=high",
+    "audit:keys": "node scripts/audit-apikeys.mjs",
     "check:deps": "npx npm-check-updates"
   },
   "dependencies": {

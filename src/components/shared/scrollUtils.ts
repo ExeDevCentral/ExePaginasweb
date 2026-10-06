@@ -59,3 +59,45 @@ export function scrollToElement(
     el?.scrollIntoView({ behavior: 'smooth' })
   }
 }
+
+/**
+ * Obtiene todas las secciones principales identificables en la página
+ */
+export function getLandingSections(): HTMLElement[] {
+  if (typeof document === 'undefined') return []
+  return Array.from(document.querySelectorAll<HTMLElement>('main section[id], section[id]'))
+}
+
+/**
+ * Navega suavemente a la siguiente o anterior sección usando Lenis o scroll nativo
+ */
+export function navigateSection(direction: 1 | -1, offset = 80) {
+  const sections = getLandingSections()
+  if (sections.length === 0) return
+
+  const currentScrollY = window.scrollY
+  let currentIndex = 0
+  let minDistance = Infinity
+
+  for (let i = 0; i < sections.length; i++) {
+    const sec = sections[i]
+    if (!sec) continue
+    const top = sec.offsetTop - offset
+    const dist = Math.abs(currentScrollY - top)
+    if (dist < minDistance) {
+      minDistance = dist
+      currentIndex = i
+    }
+  }
+
+  const nextIndex = Math.min(Math.max(currentIndex + direction, 0), sections.length - 1)
+  const targetSection = sections[nextIndex]
+  if (targetSection) {
+    const targetTop = Math.max(0, targetSection.offsetTop - offset)
+    if (globalLenis) {
+      globalLenis.scrollTo(targetTop, { duration: 0.75 })
+    } else {
+      window.scrollTo({ top: targetTop, behavior: 'smooth' })
+    }
+  }
+}

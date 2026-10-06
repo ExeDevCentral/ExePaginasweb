@@ -21,6 +21,7 @@ Single-context repo (one `CONTEXT.md` + `GLOSSARY.md` + `docs/adr/` at the root)
 3. **Calidad & Robustez**: TDD, BigInt monetario, cero errores de tipo y tests pasando.
 4. **Módulos Profundos**: Interfaces compactas y simples hacia afuera con alta potencia interna (Deep Modules).
 
+<!-- markdownlint-disable MD025 -->
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

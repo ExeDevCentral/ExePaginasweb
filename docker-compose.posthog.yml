@@ -17,7 +17,7 @@ services:
     environment:
       POSTGRES_DB: posthog
       POSTGRES_USER: posthog
-      POSTGRES_PASSWORD: posthog
+      POSTGRES_PASSWORD: ${POSTHOG_POSTGRES_PASSWORD:-posthog}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -74,7 +74,7 @@ services:
         condition: service_started
     environment:
       SECRET_KEY: ${POSTHOG_SECRET_KEY:?Debes definir POSTHOG_SECRET_KEY (>=32 chars)}
-      DATABASE_URL: postgres://posthog:posthog@postgres:5432/posthog
+      DATABASE_URL: postgres://posthog:${POSTHOG_POSTGRES_PASSWORD:-posthog}@postgres:5432/posthog
       REDIS_URL: redis://redis:6379/
       CLICKHOUSE_HOST: clickhouse
       KAFKA_HOST: kafka
@@ -96,7 +96,7 @@ services:
       kafka:
         condition: service_started
     environment:
-      DATABASE_URL: postgres://posthog:posthog@postgres:5432/posthog
+      DATABASE_URL: postgres://posthog:${POSTHOG_POSTGRES_PASSWORD:-posthog}@postgres:5432/posthog
       REDIS_URL: redis://redis:6379/
       CLICKHOUSE_HOST: clickhouse
       KAFKA_HOST: kafka

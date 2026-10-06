@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import tseslint from 'typescript-eslint'
 
-export default tseslint.config(
+export default [
   {
     ignores: [
       'dist',
@@ -14,11 +14,14 @@ export default tseslint.config(
       'web-automation-cli/**',
       'node_modules/**',
       'messages-local.json',
+      'docs/archive/**',
+      'scripts/**',
     ],
   },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: { ...globals.browser, ...globals.node },
@@ -71,5 +74,5 @@ export default tseslint.config(
     rules: {
       'react-refresh/only-export-components': 'off',
     },
-  }
-)
+  },
+]

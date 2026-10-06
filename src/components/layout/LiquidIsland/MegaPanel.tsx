@@ -108,6 +108,16 @@ const paletteItems: PaletteItem[] = [
   },
 ]
 
+function getActionCardStyle(isSelected: boolean, isPrimaryCta?: boolean) {
+  if (isSelected) {
+    return 'border-emerald-500/60 dark:border-emerald-500/60 bg-emerald-500/5 dark:bg-emerald-500/7 -translate-y-0.5'
+  }
+  if (isPrimaryCta) {
+    return 'border-black/10 dark:border-white/12 bg-black/3 dark:bg-[#141b24] hover:border-black/20 dark:hover:border-white/22 hover:-translate-y-0.5'
+  }
+  return 'border-black/7 dark:border-white/8 bg-black/2 dark:bg-[#11161D] hover:border-black/15 dark:hover:border-white/18 hover:-translate-y-0.5'
+}
+
 export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaPanelProps>) {
   const router = useRouter()
   const panelRef = useRef<HTMLDivElement>(null)
@@ -187,15 +197,17 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
     )
   }, [searchQuery])
 
-  // Reset del foco e índice al abrir
+  // Reset del foco e índice al abrir (solo auto-enfoca en desktop para no tapar la pantalla con el teclado virtual móvil)
   useEffect(() => {
     if (isOpen) {
       setSearchQuery('')
       setSelectedIndex(0)
-      const timer = setTimeout(() => {
-        inputRef.current?.focus()
-      }, 50)
-      return () => clearTimeout(timer)
+      if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+        const timer = setTimeout(() => {
+          inputRef.current?.focus()
+        }, 50)
+        return () => clearTimeout(timer)
+      }
     }
   }, [isOpen])
 
@@ -318,7 +330,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop con blur de 12px que aisla la consola */}
+          {/* Backdrop con blur que aisla la consola */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -326,7 +338,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
             transition={{ duration: 0.15 }}
             onClick={onClose}
             aria-hidden="true"
-            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-[12px] z-45"
+            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-45"
           />
 
           <div className="fixed inset-x-0 top-16 z-50 flex justify-center px-4 pointer-events-auto select-none sm:top-20">
@@ -344,7 +356,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                 boxShadow:
                   '0 24px 60px -12px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.06)',
               }}
-              className="relative w-full max-w-3xl max-h-[85vh] overflow-hidden rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-[#FFFDF9] dark:bg-[#0B0F14] flex flex-col"
+              className="relative w-full max-w-3xl max-h-[85vh] overflow-hidden rounded-2xl border border-black/8 dark:border-white/8 bg-[#FFFDF9] dark:bg-[#0B0F14] flex flex-col"
             >
               {/* Recurso visual sutil: Grilla de puntos con máscara radial (3-4% opacidad) */}
               <div
@@ -362,7 +374,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
               <div className="absolute top-0 inset-x-12 h-px bg-linear-to-r from-transparent via-emerald-500/35 to-transparent pointer-events-none" />
 
               {/* Barra superior de Command Palette: Input de búsqueda + atajo de SO (⌘K o Ctrl K) + Controles */}
-              <div className="relative border-b border-black/[0.06] dark:border-white/[0.08] p-3 sm:px-4 flex items-center justify-between gap-3 bg-black/[0.015] dark:bg-white/[0.015]">
+              <div className="relative border-b border-black/6 dark:border-white/8 p-3 sm:px-4 flex items-center justify-between gap-3 bg-black/1.5 dark:bg-white/1.5">
                 <div className="flex items-center gap-2.5 flex-1 min-w-0">
                   <Search
                     size={16}
@@ -381,7 +393,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                 </div>
 
                 <div className="flex items-center gap-1.5 shrink-0">
-                  <kbd className="hidden sm:inline-flex items-center font-mono text-[10px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/[0.08] text-slate-600 dark:text-[#CBD5E1] border border-black/5 dark:border-white/[0.06]">
+                  <kbd className="hidden sm:inline-flex items-center font-mono text-[10px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/8 text-slate-600 dark:text-[#CBD5E1] border border-black/5 dark:border-white/6">
                     {shortcutKey}
                   </kbd>
                   <LanguageSwitcher />
@@ -390,7 +402,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                     type="button"
                     onClick={onClose}
                     aria-label="Cerrar consola"
-                    className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:text-[#8B95A5] dark:hover:text-[#E6EAF0] hover:bg-black/5 dark:hover:bg-white/[0.06] transition-colors ml-1 cursor-pointer"
+                    className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:text-[#8B95A5] dark:hover:text-[#E6EAF0] hover:bg-black/5 dark:hover:bg-white/6 transition-colors ml-1 cursor-pointer"
                   >
                     <X size={15} />
                   </button>
@@ -404,7 +416,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="font-mono text-[10px] font-semibold text-slate-400 dark:text-[#8B95A5] uppercase tracking-wider">
-                        // Soluciones por rubro
+                        {`// Soluciones por rubro`}
                       </span>
                       <span className="font-mono text-[10px] text-slate-400/60 dark:text-[#8B95A5]/50">
                         {rubroItems.length} módulos
@@ -429,8 +441,8 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                             }}
                             className={`group relative flex flex-col justify-between p-3 rounded-xl border transition-all duration-150 ${
                               isSelected
-                                ? 'border-emerald-500/60 dark:border-emerald-500/60 bg-emerald-500/[0.05] dark:bg-emerald-500/[0.07] -translate-y-0.5'
-                                : 'border-black/[0.07] dark:border-white/[0.08] bg-black/[0.02] dark:bg-[#11161D] hover:border-black/15 dark:hover:border-white/[0.18] hover:-translate-y-0.5'
+                                ? 'border-emerald-500/60 dark:border-emerald-500/60 bg-emerald-500/5 dark:bg-emerald-500/7 -translate-y-0.5'
+                                : 'border-black/7 dark:border-white/8 bg-black/2 dark:bg-[#11161D] hover:border-black/15 dark:hover:border-white/18 hover:-translate-y-0.5'
                             }`}
                           >
                             <div>
@@ -440,7 +452,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                                     className={`w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
                                       isSelected
                                         ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
-                                        : 'bg-black/[0.03] dark:bg-white/[0.04] border-black/[0.06] dark:border-white/[0.06] text-slate-600 dark:text-[#CBD5E1]'
+                                        : 'bg-black/3 dark:bg-white/4 border-black/6 dark:border-white/6 text-slate-600 dark:text-[#CBD5E1]'
                                     }`}
                                   >
                                     <Icon size={15} strokeWidth={1.8} />
@@ -451,7 +463,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                                 </div>
 
                                 <div className="flex items-center gap-1.5 shrink-0">
-                                  <kbd className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/[0.08] text-slate-500 dark:text-[#CBD5E1] border border-black/5 dark:border-white/[0.06] group-hover:border-emerald-500/40 group-hover:text-emerald-400 transition-colors">
+                                  <kbd className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/8 text-slate-500 dark:text-[#CBD5E1] border border-black/5 dark:border-white/6 group-hover:border-emerald-500/40 group-hover:text-emerald-400 transition-colors">
                                     {item.shortcutNumber}
                                   </kbd>
                                 </div>
@@ -463,7 +475,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                             </div>
 
                             {/* Hecho arquitectónico en mono con luminosidad optimizada y ↵ condicional */}
-                            <div className="mt-2 pt-1.5 border-t border-black/[0.04] dark:border-white/[0.05] flex items-center justify-between text-[10px] font-mono text-slate-600 dark:text-[#CBD5E1]">
+                            <div className="mt-2 pt-1.5 border-t border-black/4 dark:border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-600 dark:text-[#CBD5E1]">
                               <span className="truncate">{item.techFact}</span>
                               <span
                                 className={`font-mono text-xs transition-opacity duration-150 ml-1 shrink-0 ${
@@ -487,7 +499,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="font-mono text-[10px] font-semibold text-slate-400 dark:text-[#8B95A5] uppercase tracking-wider">
-                        // Herramientas directas
+                        {`// Herramientas directas`}
                       </span>
                       <span className="font-mono text-[10px] text-slate-400/60 dark:text-[#8B95A5]/50">
                         Acceso interactivo
@@ -499,13 +511,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                         const globalIdx = filteredItems.indexOf(item)
                         const isSelected = selectedIndex === globalIdx
                         const Icon = item.icon
-
-                        // Un solo foco verde a la vez: Cotizador solo tiene verde si está seleccionado
-                        const borderAndBgClass = isSelected
-                          ? 'border-emerald-500/60 dark:border-emerald-500/60 bg-emerald-500/[0.05] dark:bg-emerald-500/[0.07] -translate-y-0.5'
-                          : item.isPrimaryCta
-                            ? 'border-black/[0.1] dark:border-white/[0.12] bg-black/[0.03] dark:bg-[#141b24] hover:border-black/20 dark:hover:border-white/[0.22] hover:-translate-y-0.5'
-                            : 'border-black/[0.07] dark:border-white/[0.08] bg-black/[0.02] dark:bg-[#11161D] hover:border-black/15 dark:hover:border-white/[0.18] hover:-translate-y-0.5'
+                        const borderAndBgClass = getActionCardStyle(isSelected, item.isPrimaryCta)
 
                         return (
                           <Link
@@ -526,7 +532,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                                     className={`w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
                                       isSelected
                                         ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
-                                        : 'bg-black/[0.03] dark:bg-white/[0.04] border-black/[0.06] dark:border-white/[0.06] text-slate-600 dark:text-[#CBD5E1]'
+                                        : 'bg-black/3 dark:bg-white/4 border-black/6 dark:border-white/6 text-slate-600 dark:text-[#CBD5E1]'
                                     }`}
                                   >
                                     <Icon size={15} strokeWidth={1.8} />
@@ -537,7 +543,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                                 </div>
 
                                 <div className="flex items-center gap-1.5 shrink-0">
-                                  <kbd className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/[0.08] text-slate-500 dark:text-[#CBD5E1] border border-black/5 dark:border-white/[0.06] group-hover:border-emerald-500/40 group-hover:text-emerald-400 transition-colors">
+                                  <kbd className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/8 text-slate-500 dark:text-[#CBD5E1] border border-black/5 dark:border-white/6 group-hover:border-emerald-500/40 group-hover:text-emerald-400 transition-colors">
                                     {item.shortcutNumber}
                                   </kbd>
                                 </div>
@@ -548,7 +554,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                               </p>
                             </div>
 
-                            <div className="mt-2 pt-1.5 border-t border-black/[0.04] dark:border-white/[0.05] flex items-center justify-between text-[10px] font-mono text-slate-600 dark:text-[#CBD5E1]">
+                            <div className="mt-2 pt-1.5 border-t border-black/4 dark:border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-600 dark:text-[#CBD5E1]">
                               <span className="truncate">{item.techFact}</span>
                               <span
                                 className={`font-mono text-xs transition-opacity duration-150 ml-1 shrink-0 ${
@@ -572,7 +578,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                   <Link
                     href="/soluciones"
                     onClick={onClose}
-                    className="group flex items-center justify-between px-3 py-2 rounded-xl border border-black/[0.07] dark:border-white/[0.08] bg-black/[0.015] dark:bg-white/[0.02] hover:border-emerald-500/40 dark:hover:border-emerald-500/40 hover:bg-emerald-500/[0.03] transition-all"
+                    className="group flex items-center justify-between px-3 py-2 rounded-xl border border-black/7 dark:border-white/8 bg-black/1.5 dark:bg-white/2 hover:border-emerald-500/40 dark:hover:border-emerald-500/40 hover:bg-emerald-500/3 transition-all"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div className="w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
@@ -611,9 +617,9 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
               </div>
 
               {/* Footer de Consola: Autoría + Disponibilidad honesta + WhatsApp CTA */}
-              <div className="border-t border-black/[0.06] dark:border-white/[0.08] bg-black/[0.02] dark:bg-[#11161D]/90 p-3 sm:px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="border-t border-black/6 dark:border-white/8 bg-black/2 dark:bg-[#11161D]/90 p-3 sm:px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div className="flex items-center gap-3 w-full sm:w-auto">
-                  <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-white/[0.08] text-[11px] font-mono font-bold text-slate-800 dark:text-[#E6EAF0] flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-white/8 text-[11px] font-mono font-bold text-slate-800 dark:text-[#E6EAF0] flex items-center justify-center shrink-0">
                     EXE
                   </div>
                   <div className="min-w-0">
@@ -621,7 +627,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                       <span className="font-semibold text-xs text-slate-900 dark:text-[#E6EAF0]">
                         Exequiel Echevarría
                       </span>
-                      <span className="font-mono text-[10px] text-slate-500 dark:text-[#CBD5E1] border border-black/10 dark:border-white/[0.08] px-1.5 py-0.2 rounded bg-black/[0.02] dark:bg-white/[0.04]">
+                      <span className="font-mono text-[10px] text-slate-500 dark:text-[#CBD5E1] border border-black/10 dark:border-white/8 px-1.5 py-0.2 rounded bg-black/2 dark:bg-white/4">
                         Full-Stack · React / TypeScript
                       </span>
                     </div>
@@ -658,7 +664,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
               </div>
 
               {/* Barra de atajos de pie de consola (Keyboard hints puros) */}
-              <div className="px-3 sm:px-4 py-2 bg-black/[0.03] dark:bg-black/40 border-t border-black/[0.04] dark:border-white/[0.05] flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-[#CBD5E1]">
+              <div className="px-3 sm:px-4 py-2 bg-black/3 dark:bg-black/40 border-t border-black/4 dark:border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-[#CBD5E1]">
                 <div className="flex items-center gap-2.5">
                   <span className="flex items-center gap-1">
                     <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">

@@ -106,6 +106,69 @@ const NEO_PALETTE: NeoColor[] = [
 const LATITUDES = [-62, -42, -22, 0, 22, 42, 62].map((deg) => (deg * Math.PI) / 180)
 const MERIDIANS = [0, 30, 60, 90, 120, 150].map((deg) => (deg * Math.PI) / 180)
 
+// Generador pseudoaleatorio seguro para cumplir SonarQube S2245
+function visualRandom(): number {
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    const buffer = new Uint32Array(1)
+    crypto.getRandomValues(buffer)
+    return buffer[0]! / (0xffffffff + 1)
+  }
+  return 0.5
+}
+interface EdgeStrokeStyle {
+  strokeStyle: string
+  shadowColor: string
+  shadowBlur: number
+  lineWidth: number
+}
+
+interface EdgeStrokeOptions {
+  isFrontPass: boolean
+  isDark: boolean
+  enableGlow: boolean
+  avgDepth: number
+  maxEnergy: number
+  avgScale: number
+  rgb: [number, number, number]
+  colorConfig: { hex: string; lightHex: string }
+}
+
+function getEdgeStrokeStyle(opts: EdgeStrokeOptions): EdgeStrokeStyle {
+  const { isFrontPass, isDark, enableGlow, avgDepth, maxEnergy, avgScale, rgb, colorConfig } = opts
+
+  if (!isFrontPass) {
+    const alpha = isDark ? 0.16 : 0.2
+    return {
+      strokeStyle: `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`,
+      shadowColor: '',
+      shadowBlur: 0,
+      lineWidth: 0.8 * avgScale,
+    }
+  }
+
+  const alpha = isDark
+    ? Math.min(1, 0.4 + avgDepth * 0.35 + maxEnergy * 0.45)
+    : Math.min(1, 0.45 + avgDepth * 0.3 + maxEnergy * 0.35)
+  const shadowColor = isDark ? colorConfig.hex : colorConfig.lightHex
+
+  let lineBlur = 0
+  if (enableGlow) {
+    if (isDark) {
+      lineBlur = maxEnergy > 0.3 ? 7 : 2
+    } else if (maxEnergy > 0.3) {
+      lineBlur = 4
+    }
+  }
+  const lineWidth = (isDark ? 1.2 : 1.35) * avgScale
+
+  return {
+    strokeStyle: `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`,
+    shadowColor,
+    shadowBlur: lineBlur,
+    lineWidth,
+  }
+}
+
 export const OptimusGlyphSphere: React.FC<{
   className?: string
   sphereRadius?: number
@@ -125,8 +188,8 @@ export const OptimusGlyphSphere: React.FC<{
     let height = (canvas.height = canvas.parentElement?.clientHeight || width || 400)
 
     const isMobile = width < 640
-    // Soporte Retina / Ultra-HD (hasta 3.0 en desktop, 2.0 en mobile para nitidez absoluta sin pérdida de FPS)
-    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 2.0 : 3.0)
+    // Soporte Retina adaptativo (hasta 2.5 en desktop, 1.5 en mobile para balance óptimo de nitidez y 0 tareas largas)
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2.5)
     canvas.width = width * dpr
     canvas.height = height * dpr
     ctx.scale(dpr, dpr)
@@ -136,7 +199,7 @@ export const OptimusGlyphSphere: React.FC<{
     // ========================================================
     // 1. GENERAR PUNTOS DE FIBONACCI (DISTRIBUCIÓN UNIFORME 3D)
     // ========================================================
-    const NUM_POINTS = isMobile ? 85 : 230
+    const NUM_POINTS = isMobile ? 60 : 230
     const points: Point3D[] = []
     const phi = Math.PI * (3 - Math.sqrt(5)) // Golden angle
 
@@ -160,8 +223,8 @@ export const OptimusGlyphSphere: React.FC<{
         z,
         char: GLYPHS[i % GLYPHS.length] ?? '+',
         size: 9.0 + (i % 4) * 1.5,
-        energy: 0.05 + Math.random() * 0.1,
-        energySpeed: 0.012 + Math.random() * 0.015,
+        energy: 0.05 + visualRandom() * 0.1,
+        energySpeed: 0.012 + visualRandom() * 0.015,
         colorIdx: i % NEO_PALETTE.length,
         isGlyph,
       })
@@ -216,11 +279,11 @@ export const OptimusGlyphSphere: React.FC<{
     for (let i = 0; i < NUM_PULSES; i++) {
       if (edges.length === 0) break
       pulses.push({
-        edgeIdx: Math.floor(Math.random() * edges.length),
-        progress: Math.random(),
-        lengthRatio: 0.22 + Math.random() * 0.24, // Largo de 22% a 46% del tramo
-        speed: 0.012 + Math.random() * 0.018,
-        colorIdx: (i * 2 + Math.floor(Math.random() * 3)) % NEO_PALETTE.length,
+        edgeIdx: Math.floor(visualRandom() * edges.length),
+        progress: visualRandom(),
+        lengthRatio: 0.22 + visualRandom() * 0.24, // Largo de 22% a 46% del tramo
+        speed: 0.012 + visualRandom() * 0.018,
+        colorIdx: (i * 2 + Math.floor(visualRandom() * 3)) % NEO_PALETTE.length,
       })
     }
 
@@ -264,7 +327,7 @@ export const OptimusGlyphSphere: React.FC<{
         // Energizar aleatoriamente algunos nodos al scrollear
         const count = Math.min(5, Math.floor(absDelta / 6))
         for (let k = 0; k < count; k++) {
-          const idx = Math.floor(Math.random() * points.length)
+          const idx = Math.floor(visualRandom() * points.length)
           const pt = points[idx]
           if (pt) pt.energy = 0.95
         }
@@ -294,6 +357,7 @@ export const OptimusGlyphSphere: React.FC<{
     }
 
     const handlePointerDown = (e: PointerEvent) => {
+      if (e.button !== 0) return
       isDragging = true
       spinInertiaYaw = 0
       spinInertiaPitch = 0
@@ -682,35 +746,25 @@ export const OptimusGlyphSphere: React.FC<{
 
           const colorConfig = NEO_PALETTE[edge.colorIdx % NEO_PALETTE.length] ?? NEO_PALETTE[0]!
           const rgb = isDark ? colorConfig.rgb : colorConfig.lightRgb
-          const avgScale = (pt1.scale + pt2.scale) / 2
           const maxEnergy = Math.max(pt1.point.energy, pt2.point.energy)
+          const style = getEdgeStrokeStyle({
+            isFrontPass,
+            isDark,
+            enableGlow,
+            avgDepth,
+            maxEnergy,
+            avgScale: (pt1.scale + pt2.scale) / 2,
+            rgb,
+            colorConfig,
+          })
 
           ctx.beginPath()
           ctx.moveTo(pt1.screenX, pt1.screenY)
           ctx.lineTo(pt2.screenX, pt2.screenY)
-
-          if (isFrontPass) {
-            if (isDark) {
-              const alpha = Math.min(1, 0.4 + avgDepth * 0.35 + maxEnergy * 0.45)
-              ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`
-              ctx.shadowColor = colorConfig.hex
-              ctx.shadowBlur = enableGlow && maxEnergy > 0.3 ? 7 : enableGlow ? 2 : 0
-            } else {
-              // Modo Claro: Líneas cromáticas de alta saturación y contraste
-              const alpha = Math.min(1, 0.45 + avgDepth * 0.3 + maxEnergy * 0.35)
-              ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`
-              ctx.shadowColor = colorConfig.lightHex
-              ctx.shadowBlur = enableGlow && maxEnergy > 0.3 ? 4 : 0
-            }
-            ctx.lineWidth = (isDark ? 1.2 : 1.35) * avgScale
-          } else {
-            // Fondo
-            const alpha = isDark ? 0.16 : 0.2
-            ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`
-            ctx.lineWidth = 0.8 * avgScale
-            ctx.shadowBlur = 0
-          }
-
+          ctx.strokeStyle = style.strokeStyle
+          if (style.shadowColor) ctx.shadowColor = style.shadowColor
+          ctx.shadowBlur = style.shadowBlur
+          ctx.lineWidth = style.lineWidth
           ctx.stroke()
         }
         ctx.restore()
@@ -734,9 +788,9 @@ export const OptimusGlyphSphere: React.FC<{
         pulse.progress += (pulse.speed + extraSpinSpeed * 2.2) * dtRatio
         if (pulse.progress >= 1 + pulse.lengthRatio) {
           pulse.progress = 0
-          pulse.edgeIdx = Math.floor(Math.random() * edges.length)
-          pulse.speed = 0.012 + Math.random() * 0.018
-          pulse.lengthRatio = 0.22 + Math.random() * 0.24
+          pulse.edgeIdx = Math.floor(visualRandom() * edges.length)
+          pulse.speed = 0.012 + visualRandom() * 0.018
+          pulse.lengthRatio = 0.22 + visualRandom() * 0.24
           pulse.colorIdx = (pulse.colorIdx + 1) % NEO_PALETTE.length
           const edge = edges[pulse.edgeIdx]
           if (edge) {
@@ -804,7 +858,8 @@ export const OptimusGlyphSphere: React.FC<{
             ctx.arc(headX, headY, (isDark ? 2.5 : 2.2) * scale, 0, Math.PI * 2)
             ctx.fillStyle = isDark ? '#ffffff' : color.lightHex
             ctx.shadowColor = isDark ? color.hex : color.lightHex
-            ctx.shadowBlur = enableGlow ? (isDark ? 12 : 6) : 0
+            const diodeGlow = isDark ? 12 : 6
+            ctx.shadowBlur = enableGlow ? diodeGlow : 0
             ctx.fill()
           }
         }
@@ -867,7 +922,8 @@ export const OptimusGlyphSphere: React.FC<{
           let glyphFillColor: string
           if (point.energy > 0.28) {
             ctx.shadowColor = isDark ? colorConfig.hex : colorConfig.lightHex
-            ctx.shadowBlur = enableGlow ? (isDark ? 12 : 6) * point.energy : 0
+            const glyphGlowBase = isDark ? 12 : 6
+            ctx.shadowBlur = enableGlow ? glyphGlowBase * point.energy : 0
             if (isDark) {
               glyphFillColor = point.energy > 0.6 ? '#ffffff' : colorConfig.hex
             } else {

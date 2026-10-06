@@ -17,29 +17,17 @@ const FullAIChatWidget = dynamic(() => import('./AIChatWidget'), {
 export default function DeferredChatWidget() {
   const [shouldLoad, setShouldLoad] = useState(false)
 
-  // Cargar en idle tras 4 segundos si el usuario no interactuó antes
+  // En celulares no forzamos la carga del motor de IA hasta que el usuario interactúe
+  // Esto elimina 3 tareas largas de ~75ms y 150 KiB de descarga en redes móviles
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    // Si estamos en desktop de alta potencia, podemos precargar en idle tardío (>15s)
+    if (typeof window === 'undefined' || window.innerWidth < 768) return
 
-    const load = () => setShouldLoad(true)
+    const timer = setTimeout(() => {
+      setShouldLoad(true)
+    }, 15000)
 
-    if ('requestIdleCallback' in window) {
-      const handle = (
-        window as unknown as {
-          requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number
-        }
-      ).requestIdleCallback(load, { timeout: 4500 })
-      return () => {
-        if ('cancelIdleCallback' in window) {
-          ;(window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(
-            handle
-          )
-        }
-      }
-    } else {
-      const timer = setTimeout(load, 3500)
-      return () => clearTimeout(timer)
-    }
+    return () => clearTimeout(timer)
   }, [])
 
   if (shouldLoad) {

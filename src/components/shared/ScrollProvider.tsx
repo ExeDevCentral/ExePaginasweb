@@ -21,12 +21,12 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     const lenis = new Lenis({
-      duration: 0.8,
+      duration: 0.85,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.0,
+      wheelMultiplier: 0.9,
       touchMultiplier: 1.0,
       infinite: false,
       prevent: (node) => {
@@ -52,7 +52,23 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
     rafId = requestAnimationFrame(raf)
 
+    // Prevenir el autoscroll brusco del botón central del mouse (ruedita)
+    // que satura el compositor y ralentiza las animaciones al combatir con el scroll snap y Lenis,
+    // pero manteniendo la apertura de enlaces en una nueva pestaña (a[href]).
+    const handleMiddleMouseDown = (e: MouseEvent) => {
+      if (e.button === 1) {
+        const target = e.target as HTMLElement | null
+        const isLink = target?.closest('a[href]') !== null
+        if (!isLink) {
+          e.preventDefault()
+        }
+      }
+    }
+
+    window.addEventListener('mousedown', handleMiddleMouseDown)
+
     return () => {
+      window.removeEventListener('mousedown', handleMiddleMouseDown)
       cancelAnimationFrame(rafId)
       lenis.destroy()
       if (getGlobalLenis() === lenis) {

@@ -121,7 +121,7 @@ export default function MobileLandingView() {
          ============================================================== */}
       <section
         id="hero-mobile"
-        className="relative min-h-[92vh] flex flex-col justify-between pt-24 pb-12 px-4 border-b border-border/60"
+        className="relative min-h-dvh flex flex-col justify-between pt-24 pb-12 px-4 border-b border-border/60"
       >
         {/* Glow de fondo ambiental */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-accent-cyan/15 rounded-full blur-3xl pointer-events-none" />

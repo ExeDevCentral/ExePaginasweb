@@ -124,7 +124,8 @@ const PremiumBackground = () => {
     }
     window.addEventListener('resize', handleResize, { passive: true })
 
-    const burst = () => {
+    const burst = (e?: MouseEvent | TouchEvent) => {
+      if (e && 'button' in e && e.button !== 0) return
       nodes.forEach((n) => {
         const dx = n.x - mouse.x
         const dy = n.y - mouse.y

@@ -39,7 +39,7 @@ Convención de ramas: `feat/`, `fix/`, `refactor/`, `chore/`, `docs/`.
 - **Tests** — `npm test`; los módulos de lógica llevan unit tests (Vitest).
 - Commits con **Conventional Commits**:
 
-  ```
+  ```text
   feat(dashboard): añadir métricas de SLA al panel
   fix(auth): resolver fuga de sesión en middleware
   ```

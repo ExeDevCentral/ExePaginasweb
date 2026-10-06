@@ -181,6 +181,7 @@ export const OptimusScaleHero: React.FC = () => {
           1. HERO PRINCIPAL (ESTRUCTURA ALINEADA CON EL NAVBAR)
          ======================================================== */}
       <section
+        id="hero"
         ref={heroRef}
         aria-label="Hero principal"
         onMouseMove={handleHeroMouseMove}

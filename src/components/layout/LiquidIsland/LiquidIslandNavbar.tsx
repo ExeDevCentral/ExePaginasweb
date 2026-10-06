@@ -23,6 +23,7 @@ import BorderBeam from './BorderBeam'
 import LiquidFilter from './LiquidFilter'
 import LanguageSwitcher from '../LanguageSwitcher'
 import ThemeToggle from '../ThemeToggle'
+import { getGlobalLenis } from '@/components/shared/scrollUtils'
 
 export interface LiquidIslandNavbarProps {
   expandOnScrollUp?: boolean
@@ -125,14 +126,20 @@ export default function LiquidIslandNavbar({
           <motion.div layout="position" className="flex items-center shrink-0">
             <Link
               href="/"
-              onClick={() => {
+              onClick={(e) => {
                 setMegaPanelOpen(false)
                 if (pathname === '/' || pathname === '') {
-                  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+                  e.preventDefault()
+                  const lenis = getGlobalLenis()
+                  if (lenis) {
+                    lenis.scrollTo(0, { duration: 0.85 })
+                  } else {
+                    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+                  }
                 }
               }}
               aria-label={getNavLabel('nav.inicio', 'Inicio')}
-              className="outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-full"
+              className="outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-full min-w-11 min-h-11 flex items-center justify-center p-1 -m-1 active:scale-95 transition-transform"
             >
               <NavLogo scrollY={scrollY} isCompact={isCompact} reduceMotion={reduceMotion} />
             </Link>

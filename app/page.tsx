@@ -6,17 +6,16 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { useState, useEffect } from 'react'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import SiteHeader from '@/components/layout/SiteHeader'
-import OptimusScaleHero from '@/components/Hero/OptimusScaleHero'
-
-import HowWeWorkSection from '@/components/landing/HowWeWorkSection'
-import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription'
-import PortfolioSection from '@/components/Portfolio/PortfolioSection'
-import ContactSection from '@/components/landing/ContactSection'
 import MobileLandingView from '@/components/landing/MobileLandingView'
-import Footer from '@/components/layout/Footer'
+import BackToTopButton from '@/components/layout/BackToTopButton'
+
+const DesktopLandingView = dynamic(() => import('@/components/landing/DesktopLandingView'), {
+  ssr: false,
+})
 
 const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatWidget'), {
   ssr: false,
@@ -25,6 +24,14 @@ const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatW
 export default function HomePage() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 })
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   return (
     <ErrorBoundary>
@@ -35,27 +42,26 @@ export default function HomePage() {
         />
         <SiteHeader />
 
-        {/* ==============================================================
-            VERSIÓN MOBILE RESUMIDA (EXACTAMENTE 2 SECCIONES CON EL GLOBO 3D)
-           ============================================================== */}
-        <div className="block md:hidden">
-          <MobileLandingView />
-        </div>
+        {/* Punto de referencia principal accesible (Landmark main) */}
+        <main id="inicio">
+          {/* ==============================================================
+              VERSIÓN MOBILE RESUMIDA (EXACTAMENTE 2 SECCIONES CON EL GLOBO 3D)
+             ============================================================== */}
+          <div className={isDesktop ? 'hidden' : 'block md:hidden'}>
+            <MobileLandingView />
+          </div>
 
-        {/* ==============================================================
-            VERSIÓN DESKTOP COMPLETA Y PROFUNDA (ARQUITECTURA + COMPARATIVAS)
-           ============================================================== */}
-        <div className="hidden md:block">
-          <main id="inicio">
-            <OptimusScaleHero />
-            <HowWeWorkSection />
-            <OwnershipVsSubscription />
-            <PortfolioSection featuredOnly />
-            <ContactSection />
-          </main>
-          <Footer />
-        </div>
+          {/* ==============================================================
+              VERSIÓN DESKTOP COMPLETA Y PROFUNDA (CARGA DIFERIDA 0 DOM EN MÓVIL)
+             ============================================================== */}
+          {isDesktop && (
+            <div className="hidden md:block">
+              <DesktopLandingView />
+            </div>
+          )}
+        </main>
 
+        <BackToTopButton />
         <DeferredChatWidget />
       </div>
     </ErrorBoundary>

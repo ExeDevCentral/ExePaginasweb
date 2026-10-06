@@ -70,7 +70,10 @@ export default function HowWeWorkSection() {
   }
 
   return (
-    <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-20 border-t border-slate-200/80 dark:border-white/10">
+    <section
+      id="proceso"
+      className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-20 border-t border-slate-200/80 dark:border-white/10"
+    >
       {/* Encabezado */}
       <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 font-mono text-xs uppercase tracking-widest font-semibold mb-3">

@@ -23,7 +23,7 @@ import BorderBeam from './BorderBeam'
 import LiquidFilter from './LiquidFilter'
 import LanguageSwitcher from '../LanguageSwitcher'
 import ThemeToggle from '../ThemeToggle'
-import { getGlobalLenis } from '@/components/shared/scrollUtils'
+import { getGlobalLenis, smoothScrollTo } from '@/components/shared/scrollUtils'
 
 export interface LiquidIslandNavbarProps {
   expandOnScrollUp?: boolean
@@ -215,8 +215,13 @@ export default function LiquidIslandNavbar({
                 isActive={false}
                 isHovered={hoveredLink === 'contacto'}
                 onHover={() => setHoveredLink('contacto')}
-                onLeave={() => setHoveredLink(null)}
-                onClick={() => setMegaPanelOpen(false)}
+                onClick={(e) => {
+                  setMegaPanelOpen(false)
+                  if (pathname === '/' || pathname === '') {
+                    e.preventDefault()
+                    smoothScrollTo('#contact', -88)
+                  }
+                }}
               />
             </div>
           </div>

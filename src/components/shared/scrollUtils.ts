@@ -101,3 +101,34 @@ export function navigateSection(direction: 1 | -1, offset = 80) {
     }
   }
 }
+
+/**
+ * Navegación suave universal de alta ingeniería con compensación exacta de offset para el Navbar
+ * Por defecto offset = -88px para despejar el LiquidIslandNavbar.
+ */
+export function smoothScrollTo(targetSelectorOrY: string | number, offset = -88) {
+  if (typeof window === 'undefined') return
+
+  if (typeof targetSelectorOrY === 'number') {
+    if (globalLenis) {
+      globalLenis.scrollTo(targetSelectorOrY, { offset, duration: 0.85 })
+    } else {
+      window.scrollTo({ top: Math.max(0, targetSelectorOrY + offset), behavior: 'smooth' })
+    }
+    return
+  }
+
+  const cleanId = targetSelectorOrY.startsWith('#') ? targetSelectorOrY : `#${targetSelectorOrY}`
+  const el = typeof document !== 'undefined' ? document.querySelector(cleanId) : null
+
+  if (el) {
+    if (globalLenis) {
+      globalLenis.scrollTo(el as HTMLElement, { offset, duration: 0.85 })
+    } else {
+      const top = (el as HTMLElement).getBoundingClientRect().top + (window.scrollY || 0) + offset
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+    }
+  } else {
+    window.location.href = `/${cleanId}`
+  }
+}

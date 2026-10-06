@@ -508,24 +508,13 @@
   html {
     scroll-behavior: auto;
     -webkit-overflow-scrolling: touch;
-    scroll-padding-top: 5rem; /* Margen superior para despejar el Liquid Island Navbar al hacer snap */
-    scroll-snap-type: y proximity; /* Proximity para accesibilidad: engancha suavemente en secciones sin bloquear contenido largo */
+    scroll-padding-top: 5.5rem; /* Despeje exacto para el Liquid Island Navbar al navegar por ancla */
   }
 
-  /* Alineación de snap en secciones principales */
-  section[id],
-  main > section,
-  [data-scroll-section] {
-    scroll-snap-align: start;
-    scroll-snap-stop: normal;
-  }
-
-  /* En móviles y desktop el hero ocupa exactamente el 100% de la altura dinámica del viewport */
+  /* Altura dinámica de viewport en el Hero para rendimiento y estabilidad visual */
   #hero,
   #hero-mobile {
     min-height: 100dvh;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
 
   /* Lenis Smooth Scroll Core Rules (prevents JS vs CSS smooth scroll conflict) */

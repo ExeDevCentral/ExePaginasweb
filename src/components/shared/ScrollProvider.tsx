@@ -21,12 +21,12 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     const lenis = new Lenis({
-      duration: 0.85,
+      duration: 0.9,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.9,
+      wheelMultiplier: 1.0,
       touchMultiplier: 1.0,
       infinite: false,
       prevent: (node) => {

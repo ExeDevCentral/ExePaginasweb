@@ -8,6 +8,13 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 
 let cachedClient: SupabaseClient | null = null
 
+export function isSupabaseConfigured(): boolean {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  return Boolean(url && key && url.trim() !== '' && key.trim() !== '')
+}
+
 function createClient(): SupabaseClient {
   if (cachedClient) return cachedClient
 
@@ -15,13 +22,23 @@ function createClient(): SupabaseClient {
   const supabaseAnonKey =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error(
-      'Supabase browser client is not configured. Set NEXT_PUBLIC_SUPABASE_URL and a public key.'
+  if (!isSupabaseConfigured()) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'Supabase browser client is not configured. Set NEXT_PUBLIC_SUPABASE_URL and a public key.'
+      )
+    }
+    console.warn(
+      '[Supabase Client] NEXT_PUBLIC_SUPABASE_URL o clave pública no configuradas. Usando cliente fallback en modo desarrollo.'
     )
+    cachedClient = createBrowserClient(
+      supabaseUrl?.trim() || 'https://bksonxnxshxinqffswqc.supabase.co',
+      supabaseAnonKey?.trim() || 'sb_placeholder_anon_key'
+    )
+    return cachedClient
   }
 
-  cachedClient = createBrowserClient(supabaseUrl, supabaseAnonKey)
+  cachedClient = createBrowserClient(supabaseUrl!, supabaseAnonKey!)
   return cachedClient
 }
 
@@ -36,3 +53,5 @@ export const supabase = new Proxy({} as SupabaseClient, {
       : value
   },
 })
+
+export default supabase

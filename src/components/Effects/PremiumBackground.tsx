@@ -6,6 +6,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import Delaunator from 'delaunator'
 
 const DARK_COLORS = ['#38bdf8', '#818cf8', '#34d399', '#f472b6']
@@ -44,9 +45,9 @@ class Node {
     this.isMobile = isMobile
   }
 
-  update(w: number, h: number, mouse: { x: number; y: number; active: boolean }) {
-    this.x += this.vx
-    this.y += this.vy
+  update(w: number, h: number, mouse: { x: number; y: number; active: boolean }, dt = 1) {
+    this.x += this.vx * dt
+    this.y += this.vy * dt
 
     if (this.x < 0 || this.x > w) this.vx *= -1
     if (this.y < 0 || this.y > h) this.vy *= -1
@@ -56,48 +57,59 @@ class Node {
       const dy = this.y - mouse.y
       const dist = Math.hypot(dx, dy)
       if (dist < MOUSE_RADIUS && dist > 0) {
-        const force = (1 - dist / MOUSE_RADIUS) * 0.6
+        const force = (1 - dist / MOUSE_RADIUS) * 0.6 * dt
         this.vx += (dx / dist) * force
         this.vy += (dy / dist) * force
         this.r = this.baseR + (1 - dist / MOUSE_RADIUS) * 2.2
       } else {
-        this.r += (this.baseR - this.r) * 0.05
+        this.r += (this.baseR - this.r) * 0.05 * dt
       }
     } else {
-      this.r += (this.baseR - this.r) * 0.05
+      this.r += (this.baseR - this.r) * 0.05 * dt
     }
 
-    // Fricción suave
-    this.vx *= 0.985
-    this.vy *= 0.985
+    // Fricción suave normalizada por delta-time
+    this.vx *= Math.pow(0.985, dt)
+    this.vy *= Math.pow(0.985, dt)
 
     // Movimiento base constante relajado
     const speed = Math.hypot(this.vx, this.vy)
     if (speed < 0.1) {
-      this.vx += (Math.random() - 0.5) * 0.03
-      this.vy += (Math.random() - 0.5) * 0.03
+      this.vx += (Math.random() - 0.5) * 0.03 * dt
+      this.vy += (Math.random() - 0.5) * 0.03 * dt
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D, isDark: boolean) {
+  draw(ctx: CanvasRenderingContext2D, isDark: boolean, isScrolling = false) {
     const palette = isDark ? DARK_COLORS : LIGHT_COLORS
     const color = palette[this.colorIdx]!
 
-    ctx.save()
     ctx.beginPath()
     ctx.arc(this.x, this.y, isDark ? this.r : Math.max(2.0, this.r * 1.1), 0, Math.PI * 2)
     ctx.fillStyle = color
-    ctx.shadowColor = isDark ? color : 'rgba(2, 132, 199, 0.45)'
-    ctx.shadowBlur = isDark ? 6 : 4
+    if (!isScrolling) {
+      ctx.shadowColor = isDark ? color : 'rgba(2, 132, 199, 0.45)'
+      ctx.shadowBlur = isDark ? 6 : 4
+    }
     ctx.fill()
-    ctx.restore()
+    if (!isScrolling) {
+      ctx.shadowBlur = 0
+    }
   }
 }
 
 const PremiumBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const pathname = usePathname()
+
+  const shouldRender =
+    !pathname?.startsWith('/tienda') &&
+    !pathname?.startsWith('/login') &&
+    !pathname?.startsWith('/cotizador')
 
   useEffect(() => {
+    if (!shouldRender) return
+
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d', { alpha: true })
@@ -113,9 +125,24 @@ const PremiumBackground = () => {
     const nodeCount = isMobile ? MOBILE_NODE_COUNT : NODE_COUNT
     const maxDist = isMobile ? linkDist(MOBILE_NODE_COUNT) : linkDist(NODE_COUNT)
     const nodes = Array.from({ length: nodeCount }, () => new Node(w, h, isMobile))
+    const coords = new Float64Array(nodes.length * 2)
 
     let isDocumentVisible = true
+    let isScrolling = false
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null
     let animId: number | null = null
+    let frameCount = 0
+    let lastTime = performance.now()
+    let cachedPairs: [number, number][] = []
+
+    const handleScroll = () => {
+      isScrolling = true
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout(() => {
+        isScrolling = false
+      }, 100)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
     const handleResize = () => {
       if (!canvas) return
@@ -178,76 +205,80 @@ const PremiumBackground = () => {
     })
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 
-    // ── Delaunay triangulation mesh ───────────────────────────────────────────
+    // ── Delaunay triangulation mesh optimizada con caché de aristas ──────────
     const drawDelaunay = () => {
       const darkTheme = document.documentElement.classList.contains('dark')
 
-      const coords = new Float64Array(nodes.length * 2)
-      for (let i = 0; i < nodes.length; i++) {
-        coords[i * 2] = nodes[i]!.x
-        coords[i * 2 + 1] = nodes[i]!.y
-      }
+      // Solo recalcular Delaunator cada 2 frames y cuando no se esté scrolleando intensamente
+      if (!isScrolling && (frameCount % 2 === 0 || cachedPairs.length === 0)) {
+        for (let i = 0; i < nodes.length; i++) {
+          coords[i * 2] = nodes[i]!.x
+          coords[i * 2 + 1] = nodes[i]!.y
+        }
 
-      const del = new Delaunator(coords)
-      const tris = del.triangles
+        const del = new Delaunator(coords)
+        const tris = del.triangles
+        const pairsMap = new Map<number, Set<number>>()
 
-      const drawn = new Set<string>()
-
-      for (let t = 0; t < tris.length; t += 3) {
-        const [a, b, c] = [tris[t]!, tris[t + 1]!, tris[t + 2]!]
-        const pairs: [number, number][] = [
-          [Math.min(a, b), Math.max(a, b)],
-          [Math.min(b, c), Math.max(b, c)],
-          [Math.min(a, c), Math.max(a, c)],
-        ]
-
-        for (const [i, j] of pairs) {
-          const key = `${i}-${j}`
-          if (drawn.has(key)) continue
-          drawn.add(key)
-
-          const na = nodes[i]!
-          const nb = nodes[j]!
-          const dx = na.x - nb.x
-          const dy = na.y - nb.y
-          const dist = Math.sqrt(dx * dx + dy * dy)
-
-          if (dist > maxDist) continue
-
-          const factor = 1 - dist / maxDist
-          const opacity = darkTheme ? factor * 0.28 : factor * 0.42
-
-          ctx.beginPath()
-          ctx.moveTo(na.x, na.y)
-          ctx.lineTo(nb.x, nb.y)
-          ctx.strokeStyle = darkTheme
-            ? `rgba(56, 189, 248, ${opacity})`
-            : `rgba(2, 132, 199, ${opacity})`
-          ctx.lineWidth = darkTheme ? 0.75 : 1.15
-          ctx.stroke()
+        cachedPairs = []
+        for (let t = 0; t < tris.length; t += 3) {
+          const [a, b, c] = [tris[t]!, tris[t + 1]!, tris[t + 2]!]
+          const triplets: [number, number][] = [
+            [Math.min(a, b), Math.max(a, b)],
+            [Math.min(b, c), Math.max(b, c)],
+            [Math.min(a, c), Math.max(a, c)],
+          ]
+          for (const [i, j] of triplets) {
+            let set = pairsMap.get(i)
+            if (!set) {
+              set = new Set<number>()
+              pairsMap.set(i, set)
+            }
+            if (!set.has(j)) {
+              set.add(j)
+              cachedPairs.push([i, j])
+            }
+          }
         }
       }
 
-      // Conectar el cursor con las partículas cercanas al mover el mouse
+      // Dibujar aristas trianguladas en un único trazo por lote (reducción masiva de draw-calls)
+      ctx.beginPath()
+      for (const pair of cachedPairs) {
+        if (!pair) continue
+        const [i, j] = pair
+        const na = nodes[i]
+        const nb = nodes[j]
+        if (!na || !nb) continue
+
+        const dx = na.x - nb.x
+        const dy = na.y - nb.y
+        const dist = Math.hypot(dx, dy)
+
+        if (dist > maxDist) continue
+
+        ctx.moveTo(na.x, na.y)
+        ctx.lineTo(nb.x, nb.y)
+      }
+      ctx.strokeStyle = darkTheme ? 'rgba(56, 189, 248, 0.22)' : 'rgba(2, 132, 199, 0.35)'
+      ctx.lineWidth = darkTheme ? 0.75 : 1.15
+      ctx.stroke()
+
+      // Conectar el cursor con las partículas cercanas al mover el mouse en un único trazo
       if (mouse.active) {
-        for (let i = 0; i < nodes.length; i++) {
-          const n = nodes[i]!
+        ctx.beginPath()
+        for (const n of nodes) {
           const dx = n.x - mouse.x
           const dy = n.y - mouse.y
           const dist = Math.hypot(dx, dy)
           if (dist < MOUSE_RADIUS) {
-            const factor = 1 - dist / MOUSE_RADIUS
-            const opacity = darkTheme ? factor * 0.6 : factor * 0.75
-            ctx.beginPath()
             ctx.moveTo(mouse.x, mouse.y)
             ctx.lineTo(n.x, n.y)
-            ctx.strokeStyle = darkTheme
-              ? `rgba(56, 189, 248, ${opacity})`
-              : `rgba(2, 132, 199, ${opacity})`
-            ctx.lineWidth = darkTheme ? 1.2 : 1.6
-            ctx.stroke()
           }
         }
+        ctx.strokeStyle = darkTheme ? 'rgba(56, 189, 248, 0.55)' : 'rgba(2, 132, 199, 0.7)'
+        ctx.lineWidth = darkTheme ? 1.2 : 1.6
+        ctx.stroke()
       }
     }
 
@@ -256,7 +287,7 @@ const PremiumBackground = () => {
       drawDelaunay()
       const darkTheme = document.documentElement.classList.contains('dark')
       nodes.forEach((n) => {
-        n.draw(ctx, darkTheme)
+        n.draw(ctx, darkTheme, false)
       })
     }
 
@@ -264,6 +295,8 @@ const PremiumBackground = () => {
       renderFrame()
       return () => {
         observer.disconnect()
+        if (scrollTimeout) clearTimeout(scrollTimeout)
+        window.removeEventListener('scroll', handleScroll)
         window.removeEventListener('resize', handleResize)
         window.removeEventListener('mousemove', handleMouseMove)
         window.removeEventListener('mouseleave', handleMouseLeave)
@@ -282,12 +315,17 @@ const PremiumBackground = () => {
 
       animId = requestAnimationFrame(loop)
 
+      const now = performance.now()
+      const dtRatio = Math.max(0.2, Math.min(2.5, (now - lastTime) / 16.667))
+      lastTime = now
+      frameCount++
+
       ctx.clearRect(0, 0, w, h)
       drawDelaunay()
       const darkTheme = document.documentElement.classList.contains('dark')
       nodes.forEach((n) => {
-        n.update(w, h, mouse)
-        n.draw(ctx, darkTheme)
+        n.update(w, h, mouse, dtRatio)
+        n.draw(ctx, darkTheme, isScrolling)
       })
     }
 
@@ -296,6 +334,8 @@ const PremiumBackground = () => {
     return () => {
       if (animId) cancelAnimationFrame(animId)
       observer.disconnect()
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+      window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseleave', handleMouseLeave)
@@ -304,7 +344,9 @@ const PremiumBackground = () => {
       window.removeEventListener('touchstart', burst)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
-  }, [])
+  }, [shouldRender])
+
+  if (!shouldRender) return null
 
   return (
     <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none transition-colors duration-500 bg-background">

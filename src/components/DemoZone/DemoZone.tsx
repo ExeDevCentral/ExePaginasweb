@@ -21,6 +21,7 @@ import {
   CheckCircle2,
 } from 'lucide-react'
 import HudButton from '@/components/HudButton'
+import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
@@ -483,7 +484,8 @@ const DemoZone = () => {
   }
 
   const [propFilter, setPropFilter] = useState<'todos' | 'casa' | 'depto'>('todos')
-  const [whatsappProp, setWhatsappProp] = useState<number | null>(null)
+  const [selectedPropId, setSelectedPropId] = useState<number>(1)
+  const [isWhatsappConnecting, setIsWhatsappConnecting] = useState(false)
 
   const openProject = (project: { title: string; category: string; summary: string }) => {
     if (project.title === 'Pixel Coffee') {
@@ -496,13 +498,17 @@ const DemoZone = () => {
       }, 500)
     } else {
       setSelectedProject(project)
+      if (project.title === 'Casa Aura') {
+        setSelectedPropId(1)
+        setIsWhatsappConnecting(false)
+      }
     }
   }
 
   // Casa Aura derived state optimizado
   const auraFeatured = useMemo(
-    () => PROPERTIES.find((p) => p.id === (whatsappProp ?? 1)) ?? PROPERTIES[0]!,
-    [whatsappProp]
+    () => PROPERTIES.find((p) => p.id === selectedPropId) ?? PROPERTIES[0]!,
+    [selectedPropId]
   )
   const auraFiltered = useMemo(
     () => PROPERTIES.filter((p) => propFilter === 'todos' || p.type === propFilter),
@@ -654,7 +660,7 @@ const DemoZone = () => {
                     <button
                       onClick={() => {
                         setSelectedProject(null)
-                        setWhatsappProp(null)
+                        setIsWhatsappConnecting(false)
                       }}
                       className="sm:hidden min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-border transition-all bg-black/30"
                       aria-label={t('demozone.close')}
@@ -685,7 +691,7 @@ const DemoZone = () => {
                     <button
                       onClick={() => {
                         setSelectedProject(null)
-                        setWhatsappProp(null)
+                        setIsWhatsappConnecting(false)
                       }}
                       className="hidden sm:flex ml-3 min-w-[44px] min-h-[44px] items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-border transition-all bg-black/30"
                       aria-label={t('demozone.close')}
@@ -761,14 +767,16 @@ const DemoZone = () => {
                           </p>
                           <motion.button
                             onClick={() => {
-                              setWhatsappProp(auraFeatured.id)
-                              setTimeout(() => setWhatsappProp(null), 2000)
+                              setIsWhatsappConnecting(true)
+                              const msg = `¡Hola! Me interesa consultar por la propiedad "${auraFeatured.name}" (${auraFeatured.location}) publicada en Casa Aura.`
+                              window.open(getWhatsAppUrl(msg), '_blank', 'noopener,noreferrer')
+                              setTimeout(() => setIsWhatsappConnecting(false), 2500)
                             }}
-                            className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-bold text-sm px-5 py-3 rounded-full transition-colors"
+                            className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-bold text-sm px-5 py-3 rounded-full transition-colors cursor-pointer select-none"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             animate={
-                              whatsappProp === auraFeatured.id
+                              isWhatsappConnecting
                                 ? {
                                     scale: [1, 1.12, 0.96, 1.05, 1],
                                     boxShadow: [
@@ -796,12 +804,11 @@ const DemoZone = () => {
                           key={prop.id}
                           layout
                           className={`flex gap-3 p-3 rounded-2xl border cursor-pointer transition-all ${
-                            (whatsappProp ?? 1) === prop.id ||
-                            (!whatsappProp && prop.id === 1 && i === 0)
+                            selectedPropId === prop.id
                               ? 'border-violet-500/60 bg-violet-600/8'
                               : 'border-border hover:border-border bg-muted hover:bg-muted'
                           }`}
-                          onClick={() => setWhatsappProp(prop.id)}
+                          onClick={() => setSelectedPropId(prop.id)}
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: 20 }}
@@ -849,9 +856,9 @@ const DemoZone = () => {
 
                 {/* WhatsApp toast */}
                 <AnimatePresence>
-                  {whatsappProp !== null && (
+                  {isWhatsappConnecting && (
                     <motion.div
-                      className="absolute bottom-7 left-1/2 -translate-x-1/2 z-30 bg-green-500 text-black font-bold px-5 py-3 rounded-full text-sm shadow-[0_0_30px_rgba(34,197,94,0.5)] flex items-center gap-2"
+                      className="absolute bottom-7 left-1/2 -translate-x-1/2 z-30 bg-green-500 text-black font-bold px-5 py-3 rounded-full text-sm shadow-[0_0_30px_rgba(34,197,94,0.5)] flex items-center gap-2 pointer-events-none"
                       initial={{ opacity: 0, y: 20, scale: 0.8 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10 }}

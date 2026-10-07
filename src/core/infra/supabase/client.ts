@@ -3,7 +3,9 @@
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
-import { supabase, createClient } from '../../../../lib/supabase/client'
-
-export { supabase, createClient }
-export default supabase
+export {
+  supabase,
+  createClient,
+  isSupabaseConfigured,
+  default,
+} from '../../../../lib/supabase/client'

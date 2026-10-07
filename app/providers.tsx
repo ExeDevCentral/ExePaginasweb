@@ -28,6 +28,14 @@ const MouseSpotlight = dynamic(() => import('@/components/shared/MouseSpotlight'
   ssr: false,
 })
 
+const LaserScrollBeam = dynamic(() => import('@/components/layout/LaserScrollBeam'), {
+  ssr: false,
+})
+
+const CommandPalette = dynamic(() => import('@/components/layout/CommandPalette'), {
+  ssr: false,
+})
+
 export default function Providers({ children }: { readonly children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
@@ -56,9 +64,11 @@ export default function Providers({ children }: { readonly children: React.React
         <ThemeProvider>
           <PostHogProvider>
             <ScrollProvider>
+              <LaserScrollBeam />
               <PremiumBackground />
               <MouseSpotlight />
               <ThemedToaster />
+              <CommandPalette />
               {children}
             </ScrollProvider>
           </PostHogProvider>

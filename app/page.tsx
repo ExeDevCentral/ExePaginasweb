@@ -7,7 +7,6 @@
 
 import dynamic from 'next/dynamic'
 import { useState, useEffect } from 'react'
-import { motion, useScroll, useSpring } from 'framer-motion'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import SiteHeader from '@/components/layout/SiteHeader'
 import MobileLandingView from '@/components/landing/MobileLandingView'
@@ -22,8 +21,6 @@ const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatW
 })
 
 export default function HomePage() {
-  const { scrollYProgress } = useScroll()
-  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 })
   const [isDesktop, setIsDesktop] = useState(false)
 
   useEffect(() => {
@@ -36,10 +33,6 @@ export default function HomePage() {
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-transparent text-primary-text">
-        <motion.div
-          className="fixed left-0 right-0 top-0 z-100 h-1 origin-left bg-linear-to-r from-accent-cyan to-accent-magenta"
-          style={{ scaleX }}
-        />
         <SiteHeader />
 
         {/* Punto de referencia principal accesible (Landmark main) */}
@@ -47,9 +40,11 @@ export default function HomePage() {
           {/* ==============================================================
               VERSIÓN MOBILE RESUMIDA (EXACTAMENTE 2 SECCIONES CON EL GLOBO 3D)
              ============================================================== */}
-          <div className={isDesktop ? 'hidden' : 'block md:hidden'}>
-            <MobileLandingView />
-          </div>
+          {!isDesktop && (
+            <div className="block md:hidden">
+              <MobileLandingView />
+            </div>
+          )}
 
           {/* ==============================================================
               VERSIÓN DESKTOP COMPLETA Y PROFUNDA (CARGA DIFERIDA 0 DOM EN MÓVIL)

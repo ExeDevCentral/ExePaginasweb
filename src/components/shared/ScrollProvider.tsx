@@ -52,6 +52,21 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
     rafId = requestAnimationFrame(raf)
 
+    // Sincronización instantánea con la barra de desplazamiento nativa:
+    // Si el usuario hace clic o arrastra la barra de scroll (margen derecho fuera del cliente)
+    const handleScrollbarMouseDown = (e: MouseEvent) => {
+      if (typeof window !== 'undefined' && e.clientX >= document.documentElement.clientWidth) {
+        lenis.scrollTo(window.scrollY, { immediate: true })
+      }
+    }
+
+    // Si ocurre un scroll nativo directo (teclas PageUp/PageDown, saltos o scrollbar)
+    const handleNativeScrollSync = () => {
+      if (Math.abs(lenis.scroll - window.scrollY) > 25) {
+        lenis.scrollTo(window.scrollY, { immediate: true })
+      }
+    }
+
     // Prevenir el autoscroll brusco del botón central del mouse (ruedita)
     // que satura el compositor y ralentiza las animaciones al combatir con el scroll snap y Lenis,
     // pero manteniendo la apertura de enlaces en una nueva pestaña (a[href]).
@@ -65,9 +80,13 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
     }
 
+    window.addEventListener('mousedown', handleScrollbarMouseDown)
+    window.addEventListener('scroll', handleNativeScrollSync, { passive: true })
     window.addEventListener('mousedown', handleMiddleMouseDown)
 
     return () => {
+      window.removeEventListener('mousedown', handleScrollbarMouseDown)
+      window.removeEventListener('scroll', handleNativeScrollSync)
       window.removeEventListener('mousedown', handleMiddleMouseDown)
       cancelAnimationFrame(rafId)
       lenis.destroy()

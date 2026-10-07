@@ -122,19 +122,35 @@ export const StoreNexusBackground: React.FC = () => {
     }
     document.addEventListener('visibilitychange', handleVisibility)
 
+    let isScrolling = false
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null
+    const handleScroll = () => {
+      isScrolling = true
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout(() => {
+        isScrolling = false
+      }, 100)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
     let animationFrameId: number
     let time = 0
+    let lastTime = performance.now()
 
     const render = () => {
       animationFrameId = requestAnimationFrame(render)
       if (!isDocumentVisible) return
 
-      // Oscilación armónica suave de la grilla
-      time += 0.006
+      const now = performance.now()
+      const dtRatio = Math.max(0.2, Math.min(2.5, (now - lastTime) / 16.667))
+      lastTime = now
+
+      // Oscilación armónica suave de la grilla (normalizada por delta-time)
+      time += 0.006 * dtRatio
 
       // Interpolación suave del cursor
-      mouse.x += (mouse.targetX - mouse.x) * 0.05
-      mouse.y += (mouse.targetY - mouse.y) * 0.05
+      mouse.x += (mouse.targetX - mouse.x) * 0.05 * dtRatio
+      mouse.y += (mouse.targetY - mouse.y) * 0.05 * dtRatio
 
       const isDark = themeRef.current === 'dark'
       const colors = isDark ? DARK_COLORS : LIGHT_COLORS
@@ -191,9 +207,13 @@ export const StoreNexusBackground: React.FC = () => {
         ctx.beginPath()
         ctx.moveTo(0, y + wave)
 
-        for (let x = 0; x <= width; x += 40) {
-          const xWave = Math.sin(x * 0.004 + time + j * 0.2) * (2.2 * progress)
-          ctx.lineTo(x, y + wave + xWave)
+        if (isScrolling) {
+          ctx.lineTo(width, y + wave)
+        } else {
+          for (let x = 0; x <= width; x += 40) {
+            const xWave = Math.sin(x * 0.004 + time + j * 0.2) * (2.2 * progress)
+            ctx.lineTo(x, y + wave + xWave)
+          }
         }
 
         ctx.strokeStyle = isDark ? `rgba(56, 189, 248, ${alpha})` : `rgba(14, 116, 144, ${alpha})`
@@ -217,9 +237,9 @@ export const StoreNexusBackground: React.FC = () => {
         ctx.stroke()
       }
 
-      // Paquetes de datos que recorren la grilla
+      // Paquetes de datos que recorren la grilla (velocidad estricta normalizada por delta-time)
       packets.forEach((pkt) => {
-        pkt.progress += pkt.speed
+        pkt.progress += pkt.speed * dtRatio
         if (pkt.progress > 1) {
           pkt.progress = 0
           pkt.lineIndex = Math.floor(Math.random() * (pkt.isVertical ? gridCountX : gridCountY))
@@ -241,20 +261,24 @@ export const StoreNexusBackground: React.FC = () => {
 
         const color = colors[pkt.colorIdx]!
 
-        // Pulso luminoso de telemetría
+        // Pulso luminoso de telemetría (se omite shadowBlur durante scroll para mantener 120 FPS)
         ctx.beginPath()
         ctx.arc(px, py, pkt.size, 0, Math.PI * 2)
         ctx.fillStyle = color
-        ctx.shadowColor = color
-        ctx.shadowBlur = isDark ? 8 : 4
+        if (!isScrolling) {
+          ctx.shadowColor = color
+          ctx.shadowBlur = isDark ? 8 : 4
+        }
         ctx.fill()
-        ctx.shadowBlur = 0
+        if (!isScrolling) {
+          ctx.shadowBlur = 0
+        }
       })
 
       // Nodos cibernéticos flotantes con física serena e idéntica en ambos temas
       nodes.forEach((n) => {
-        n.x += n.vx
-        n.y += n.vy
+        n.x += n.vx * dtRatio
+        n.y += n.vy * dtRatio
 
         // Rebote suave en los límites de pantalla
         if (n.x < 0 || n.x > width) n.vx *= -1
@@ -277,7 +301,7 @@ export const StoreNexusBackground: React.FC = () => {
           const dy = n.y - mouse.y
           const dist = Math.hypot(dx, dy)
           if (dist < 150 && dist > 0) {
-            const force = (1 - dist / 150) * 0.35
+            const force = (1 - dist / 150) * 0.35 * dtRatio
             n.vx += (dx / dist) * force
             n.vy += (dy / dist) * force
           }
@@ -300,6 +324,8 @@ export const StoreNexusBackground: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animationFrameId)
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+      window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseleave', handleMouseLeave)

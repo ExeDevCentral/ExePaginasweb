@@ -188,8 +188,8 @@ export const OptimusGlyphSphere: React.FC<{
     let height = (canvas.height = canvas.parentElement?.clientHeight || width || 400)
 
     const isMobile = width < 640
-    // Soporte Retina adaptativo (hasta 2.5 en desktop, 1.5 en mobile para balance óptimo de nitidez y 0 tareas largas)
-    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2.5)
+    // Soporte Retina adaptativo calibrado (hasta 1.75 en desktop, 1.25 en mobile para balance óptimo de nitidez y 0 tareas largas)
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.75)
     canvas.width = width * dpr
     canvas.height = height * dpr
     ctx.scale(dpr, dpr)
@@ -311,10 +311,20 @@ export const OptimusGlyphSphere: React.FC<{
 
     let isHovering = false
     let isDragging = false
+    let isScrolling = false
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null
     let mouseCanvasX = -9999
     let mouseCanvasY = -9999
+    let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0
 
     const handleScroll = () => {
+      if (!isVisibleOnScreen) return
+      isScrolling = true
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout(() => {
+        isScrolling = false
+      }, 120)
+
       const currentScrollY = window.scrollY
       const delta = currentScrollY - lastScrollY
       const absDelta = Math.abs(delta)
@@ -333,9 +343,9 @@ export const OptimusGlyphSphere: React.FC<{
         }
       }
     }
-    let lastScrollY = window.scrollY
 
     const handleWheel = (e: WheelEvent) => {
+      if (!isVisibleOnScreen) return
       if (Math.abs(e.deltaY) > 5) {
         extraSpinSpeed = Math.min(extraSpinSpeed + Math.abs(e.deltaY) * 0.00008, 0.006)
         scrollEnergy = Math.min(scrollEnergy + 0.35, 2.0)
@@ -572,8 +582,8 @@ export const OptimusGlyphSphere: React.FC<{
       ctx.fillStyle = specGrad
       ctx.fill()
 
-      // Borde / Aro Perimetral Fresnel de alta definición
-      const enableGlow = !isMobile
+      // Borde / Aro Perimetral Fresnel de alta definición (desactiva shadowBlur durante scroll para 120 FPS)
+      const enableGlow = !isMobile && !isScrolling
       if (isDark) {
         ctx.strokeStyle = 'rgba(34, 211, 238, 0.65)'
         ctx.shadowColor = '#06b6d4'
@@ -1064,6 +1074,7 @@ export const OptimusGlyphSphere: React.FC<{
     return () => {
       observer.disconnect()
       cancelAnimationFrame(animationFrameId)
+      if (scrollTimeout) clearTimeout(scrollTimeout)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('wheel', handleWheel)

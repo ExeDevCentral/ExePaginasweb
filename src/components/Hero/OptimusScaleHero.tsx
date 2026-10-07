@@ -148,11 +148,8 @@ export const OptimusScaleHero: React.FC = () => {
     offset: ['start start', 'end start'],
   })
 
-  // Opción 2: Dolly-Out Phosphor Decay del Banner (sin anclar / sin trabar el scroll)
-  const heroDollyScale = useTransform(scrollYProgress, [0, 0.75], [1, 0.95])
-  const heroDollyOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.85])
+  // Aura interactiva de fondo
   const auraIntensity = useTransform(scrollYProgress, [0, 0.5], [0.6, 0.15])
-  const heroDollyY = useTransform(scrollYProgress, [0, 0.75], [0, 28])
 
   const rotatingWords = useMemo(() => {
     const list = t('hero.palabras_rotativas', { returnObjects: true })
@@ -196,16 +193,8 @@ export const OptimusScaleHero: React.FC = () => {
           }}
         />
 
-        {/* CONTENEDOR CON DOLLY-OUT (OPCIÓN 2: RETROCESO SUAVE DE PERSPECTIVA SIN TRABAR SCROLL) */}
-        <motion.div
-          style={{
-            scale: heroDollyScale,
-            opacity: heroDollyOpacity,
-            y: heroDollyY,
-            transformOrigin: 'top center',
-          }}
-          className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center my-auto"
-        >
+        {/* CONTENEDOR PRINCIPAL DEL HERO (FLUIDO, CERO RE-RASTERIZACIÓN DE COMPOSITOR EN SCROLL) */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center my-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center w-full my-auto">
             {/* COLUMNA IZQUIERDA: CONTENIDO EDITORIAL LIMPIO (lg:col-span-6) */}
             <div className="lg:col-span-6 flex flex-col items-start text-left z-20">
@@ -351,7 +340,7 @@ export const OptimusScaleHero: React.FC = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* TICKER / MARQUEE DE MÉTRICAS EN LA BASE DEL HERO (ESTILO EXACTO OPTIMUS) */}
         <div className="relative z-10 w-full mt-8 sm:mt-10 py-4.5 border-t border-slate-200/80 dark:border-white/10 overflow-hidden bg-slate-100/60 dark:bg-black/40 backdrop-blur-xs select-none">

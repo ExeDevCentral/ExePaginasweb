@@ -13,6 +13,11 @@ import {
   aiDiagnosticAutoReply,
 } from '@/lib/email/templates.js'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
+import {
+  validateContentLength,
+  validateFetchMetadata,
+  maskEmail,
+} from '@/lib/server/requestSecurity'
 
 import { detectLanguage } from '@/lib/server/language'
 
@@ -28,6 +33,16 @@ const ContactSchema = z.object({
 })
 
 export async function POST(req: NextRequest) {
+  const fetchMeta = validateFetchMetadata(req)
+  if (!fetchMeta.allowed && fetchMeta.errorResponse) {
+    return fetchMeta.errorResponse
+  }
+
+  const lengthCheck = validateContentLength(req, 50 * 1024)
+  if (!lengthCheck.allowed && lengthCheck.errorResponse) {
+    return lengthCheck.errorResponse
+  }
+
   try {
     const limit = await checkRateLimit(`contact:${clientIp(req)}`, 3_600, 5)
     if (!limit.allowed) {
@@ -68,7 +83,7 @@ export async function POST(req: NextRequest) {
   const ticketId = `${ticketPrefix}-${Date.now().toString(36).toUpperCase().slice(-5)}`
 
   console.log(
-    `[contact] [${ticketId}] [Lang: ${detectedLang}] [Diag: ${isAiDiag}] Mensaje de ${name} <${email}>: ${message.slice(0, 100)}...`
+    `[contact] [${ticketId}] [Lang: ${detectedLang}] [Diag: ${isAiDiag}] Mensaje de ${name} <${maskEmail(email)}> (${message.length} chars)`
   )
 
   try {

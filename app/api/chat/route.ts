@@ -26,6 +26,7 @@ import { dispatchN8nEvent } from '@/lib/server/n8n'
 import { contactNotification, contactAutoReply } from '@/lib/email/templates.js'
 import { detectLanguage } from '@/lib/server/language'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
+import { validateContentLength, validateFetchMetadata } from '@/lib/server/requestSecurity'
 import { AiService } from '@/core/ai/aiService'
 import { SupabaseAiAuditRepository } from '@/core/infra/ai/SupabaseAiAuditRepository'
 import { SupabaseAiContextProvider } from '@/core/infra/ai/SupabaseAiContextProvider'
@@ -212,6 +213,16 @@ function buildStreamingResponse(winner: Winner): Response {
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
+  const fetchMeta = validateFetchMetadata(req)
+  if (!fetchMeta.allowed && fetchMeta.errorResponse) {
+    return fetchMeta.errorResponse
+  }
+
+  const lengthCheck = validateContentLength(req, 100 * 1024)
+  if (!lengthCheck.allowed && lengthCheck.errorResponse) {
+    return lengthCheck.errorResponse
+  }
+
   const startedAt = performance.now()
 
   try {

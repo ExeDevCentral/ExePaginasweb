@@ -19,13 +19,15 @@
 
 ## API Endpoints
 
-- **CORS:** Solo permite origenes whitelisted (`exepaginasweb.com`, `www.exepaginasweb.com`, `NEXT_PUBLIC_SITE_URL`)
+- **CORS & Fetch Metadata:** Solo permite origenes whitelisted; peticiones de navegador `cross-site` son rechazadas con `403` via `validateFetchMetadata()`
+- **Limite de Payload:** Rechazo preventivo de payloads mayores a 50KB-100KB (`413 Payload Too Large`) antes de parsing via `validateContentLength()` para evitar agotamiento de memoria
 - **Rate Limiting:** Distribuido vía RPC `check_api_rate_limit` en Postgres (028 `durable_api_rate_limits`) para `/api/contact` (5/h), `/api/chat` (10/min), `/api/register-transfer` (10/h) y `/api/send-verification` (5/h); responde `429` con `Retry-After` y `503` si el RPC falla
 - **Validacion de entrada:** Campos requeridos validados en cada endpoint con Zod / esquemas
 - **Metodos:** Solo POST para contact y webhooks
 - **register-transfer:** Requiere Bearer token valido, el email del token debe coincidir con la cuenta, e `Idempotency-Key` (16-128 chars) para reejecuciones seguras
 - **send-verification:** Solo accesible con `VERIFICATION_API_KEY` interna (comparacion `timingSafeEqual`); devuelve `404` sin autorizacion y nunca filtra detalles internos
 - **chat:** El historial previo se convierte a `role: 'user'` con prefijo "[Historial no confiable]" para evitar prompt injection
+- **Privacidad en Logs:** Los correos y datos PII en consola son enmascarados via `maskEmail()`
 
 ## Proteccion XSS
 
@@ -39,14 +41,16 @@
 
 ## Headers de Seguridad (next.config.mjs)
 
-| Header                      | Valor                                                                           |
-| --------------------------- | ------------------------------------------------------------------------------- |
-| `X-Content-Type-Options`    | `nosniff`                                                                       |
-| `X-Frame-Options`           | `DENY`                                                                          |
-| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload`                                  |
-| `Referrer-Policy`           | `origin-when-cross-origin`                                                      |
-| `Permissions-Policy`        | camera=(), microphone=(), geolocation=()                                        |
-| `Content-Security-Policy`   | `default-src 'self'`; `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`; dominios permitidos: Supabase, PayPal, Chatbase, Resend, Groq, Vercel Analytics; `unsafe-eval`/WS solo en dev |
+| Header                              | Valor                                                                                                                                                                                                                                      |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `X-Content-Type-Options`            | `nosniff`                                                                                                                                                                                                                                  |
+| `X-Frame-Options`                   | `DENY`                                                                                                                                                                                                                                     |
+| `X-Permitted-Cross-Domain-Policies` | `none`                                                                                                                                                                                                                                     |
+| `X-DNS-Prefetch-Control`            | `on`                                                                                                                                                                                                                                       |
+| `Strict-Transport-Security`         | `max-age=63072000; includeSubDomains; preload`                                                                                                                                                                                             |
+| `Referrer-Policy`                   | `origin-when-cross-origin`                                                                                                                                                                                                                 |
+| `Permissions-Policy`                | camera=(), microphone=(), geolocation=()                                                                                                                                                                                                   |
+| `Content-Security-Policy`           | `default-src 'self'`; `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`; dominios permitidos: Supabase, PayPal, Chatbase, Resend, Groq, Vercel Analytics; `unsafe-eval`/WS solo en dev; `upgrade-insecure-requests` en prod |
 
 ## Variables de Entorno
 

@@ -43,7 +43,7 @@ const Columns4Icon = ({ className = 'w-4 h-4' }: { className?: string }) => (
   </svg>
 )
 
-import OptimusGlyphSphere from './OptimusGlyphSphere'
+import HeroProductShowcase from './HeroProductShowcase'
 import CyberTerminalCard from '../shared/CyberTerminalCard'
 import ConvergentTypewriterSubtitle from './ConvergentTypewriterSubtitle'
 import HeroNeonSignboard from './HeroNeonSignboard'
@@ -201,7 +201,7 @@ export const OptimusScaleHero: React.FC = () => {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>
                   {t('hero.eyebrow_plataforma') ||
-                    'FIG. 00 — ARQUITECTURA DE SOFTWARE & SISTEMAS CLOUD // 2025'}
+                    'ESTUDIO DE DESARROLLO WEB // ATENCIÓN DIRECTA CON EXEQUIEL'}
                 </span>
               </div>
 
@@ -288,9 +288,9 @@ export const OptimusScaleHero: React.FC = () => {
               </div>
             </div>
 
-            {/* COLUMNA DERECHA: ESFERA 3D VIBRANTE */}
-            <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end w-full py-2 lg:py-0">
-              <OptimusGlyphSphere className="w-full max-w-95 sm:max-w-125 md:max-w-140 lg:max-w-155 xl:max-w-170 mx-auto lg:ml-auto" />
+            {/* COLUMNA DERECHA: PANTALLA SHOWCASE INTERACTIVA Y VIDEO DEMO */}
+            <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end w-full py-4 lg:py-0">
+              <HeroProductShowcase className="w-full" />
             </div>
           </div>
 

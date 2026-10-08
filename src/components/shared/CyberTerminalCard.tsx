@@ -10,7 +10,6 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { CyberArrowRight } from '@/components/ui/MagnificentIcons'
 
 export interface CyberTerminalCardProps {

@@ -12,12 +12,10 @@
 'use client'
 
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import Link from 'next/link'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import HudButton from '@/components/HudButton'
 import {
-  CyberArrowRight,
   CyberRatingStar,
   CyberCheckMark,
   CyberMetricLightning,
@@ -46,7 +44,7 @@ const Columns4Icon = ({ className = 'w-4 h-4' }: { className?: string }) => (
 )
 
 import OptimusGlyphSphere from './OptimusGlyphSphere'
-import SpotlightBorderCard from '../shared/SpotlightBorderCard'
+import CyberTerminalCard from '../shared/CyberTerminalCard'
 import ConvergentTypewriterSubtitle from './ConvergentTypewriterSubtitle'
 import HeroNeonSignboard from './HeroNeonSignboard'
 import { trackEvent } from '@/core/analytics/trackEvent'
@@ -453,86 +451,23 @@ export const OptimusScaleHero: React.FC = () => {
         >
           {CAPABILITIES.filter(
             (cap) => activeMobileFilter === 'all' || activeMobileFilter === cap.id
-          ).map((cap) => {
-            const Icon = cap.icon
-            const colorTextClass =
-              cap.color === 'cyan'
-                ? 'text-cyan-600 dark:text-cyan-400'
-                : cap.color === 'fuchsia'
-                  ? 'text-fuchsia-600 dark:text-fuchsia-400'
-                  : cap.color === 'amber'
-                    ? 'text-amber-600 dark:text-amber-400'
-                    : 'text-emerald-600 dark:text-emerald-400'
-
-            const colorHoverText =
-              cap.color === 'cyan'
-                ? 'group-hover:text-cyan-500 dark:group-hover:text-cyan-300'
-                : cap.color === 'fuchsia'
-                  ? 'group-hover:text-fuchsia-500 dark:group-hover:text-fuchsia-300'
-                  : cap.color === 'amber'
-                    ? 'group-hover:text-amber-500 dark:group-hover:text-amber-300'
-                    : 'group-hover:text-emerald-500 dark:group-hover:text-emerald-300'
-
-            return (
-              <Link
-                key={'cap-card-' + cap.id}
-                href={cap.href}
-                aria-label={cap.ariaLabel}
-                className="block cursor-pointer group active:scale-[0.99] transition-transform"
-              >
-                <SpotlightBorderCard
-                  activeBeam={true}
-                  colorVariant={cap.color}
-                  animationDelay={cap.delay}
-                  className="h-full"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <span className={`text-xs font-mono font-bold ${colorTextClass}`}>
-                        {cap.code}
-                      </span>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400">
-                        {cap.badge}
-                      </span>
-                    </div>
-                    <div className="relative w-9 h-9 rounded-xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center shadow-xs dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] group-hover:scale-105 transition-all duration-300 shrink-0">
-                      <Icon
-                        className={`w-4.5 h-4.5 ${colorTextClass} transition-transform duration-300`}
-                      />
-                    </div>
-                  </div>
-
-                  <h3
-                    className={`text-xl xl:text-2xl font-bold text-slate-900 dark:text-white mb-2.5 transition-colors ${colorHoverText}`}
-                  >
-                    {t(cap.titleKey) || cap.defaultTitle}
-                  </h3>
-
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-5">
-                    {t(cap.descKey) || cap.defaultDesc}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-5">
-                    {cap.tech.map((techItem) => (
-                      <span
-                        key={'cap-tech-' + cap.id + '-' + techItem}
-                        className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[11px] font-mono text-slate-600 dark:text-slate-400 group-hover:border-slate-300 dark:group-hover:border-white/20 transition-colors"
-                      >
-                        {techItem}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div
-                    className={`flex items-center gap-1.5 text-xs font-mono font-bold ${colorTextClass} group-hover:translate-x-1.5 transition-transform duration-300`}
-                  >
-                    <span>{cap.cta}</span>
-                    <CyberArrowRight size={15} />
-                  </div>
-                </SpotlightBorderCard>
-              </Link>
-            )
-          })}
+          ).map((cap) => (
+            <CyberTerminalCard
+              key={'cap-card-' + cap.id}
+              id={cap.id}
+              code={cap.code}
+              title={t(cap.titleKey) || cap.defaultTitle}
+              desc={t(cap.descKey) || cap.defaultDesc}
+              badge={cap.badge}
+              tech={cap.tech}
+              cta={cap.cta}
+              href={cap.href}
+              color={cap.color}
+              icon={cap.icon}
+              ariaLabel={cap.ariaLabel}
+              className="h-full"
+            />
+          ))}
         </div>
       </section>
 

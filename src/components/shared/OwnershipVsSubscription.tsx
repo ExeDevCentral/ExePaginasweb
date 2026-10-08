@@ -2018,6 +2018,7 @@ export const OwnershipVsSubscription: React.FC = () => {
   const { t } = useTranslation()
   const [terminalMode, setTerminalMode] = React.useState<TermMode>('tuyo')
   const [simulationCut, setSimulationCut] = React.useState(false)
+  const [decisionPhase, setDecisionPhase] = React.useState<'experimental' | 'escala'>('escala')
 
   const handleToggleSimulation = (cut: boolean) => {
     setSimulationCut(cut)
@@ -2029,7 +2030,7 @@ export const OwnershipVsSubscription: React.FC = () => {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_20%_10%,color-mix(in_oklab,var(--own-500)_6%,transparent),transparent_60%),radial-gradient(60%_50%_at_80%_20%,color-mix(in_oklab,var(--rent-500)_6%,transparent),transparent_60%)]" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
+        {/* Header con Honestidad Brutal */}
         <motion.div
           className="text-center mb-10 sm:mb-12"
           initial={{ opacity: 0, y: 30 }}
@@ -2040,20 +2041,97 @@ export const OwnershipVsSubscription: React.FC = () => {
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-sm border border-brand/25 bg-brand/10 backdrop-blur-md mb-4 font-mono">
             <CyberInsignia size={15} className="text-brand dark:text-emerald-400" />
             <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand dark:text-emerald-400">
-              {t('versus.badge', 'MODELO DE ARQUITECTURA // 2025')}
+              AUDITORÍA DE ARQUITECTURA // HONESTIDAD BRUTAL
             </span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-black font-montserrat tracking-tight text-foreground mb-4">
-            {t('versus.titulo_principal', 'Software Diseñado Alrededor de Tu Negocio')}
+            Software Diseñado Alrededor de Tu Negocio: ¿Cuándo Conviene Alquilar y Cuándo Ser Dueño?
           </h2>
 
           <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            {t(
-              'versus.subtitulo',
-              'No vendemos plantillas de alquiler. Desarrollamos herramientas digitales únicas donde el negocio es dueño absoluto de su tecnología.'
-            )}
+            Si estás experimentando sin ventas validadas: alquilá Shopify o Wix. No gastes en
+            arquitectura a medida todavía. Pero si tu negocio ya factura y pagar comisiones
+            mensuales drena tu margen: el alquiler es un impuesto silencioso a tu propio
+            crecimiento.
           </p>
+        </motion.div>
+
+        {/* EFECTO 1: Escáner Holográfico de Decisión Estratégica */}
+        <motion.div
+          data-hologram-scanner="true"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="max-w-2xl mx-auto mb-10 sm:mb-12 text-center relative"
+        >
+          <div className="relative p-5 sm:p-6 rounded-2xl bg-[#060b14]/90 border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.15)] backdrop-blur-xl overflow-hidden">
+            {/* Línea láser de barrido holográfico (Scanline) */}
+            <div className="pointer-events-none absolute inset-x-0 h-[2px] bg-linear-to-r from-transparent via-cyan-400 to-transparent animate-pulse opacity-70" />
+
+            <div className="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-white/10 font-mono text-[11px]">
+              <span className="text-cyan-400 font-bold tracking-widest uppercase flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping inline-block" />
+                [DIAGNÓSTICO // ESCÁNER HOLOGRÁFICO]
+              </span>
+              <span className="text-slate-400 text-[10px]">VERSIÓN 2026.04</span>
+            </div>
+
+            {/* Selector de fase */}
+            <div className="grid grid-cols-2 gap-2 bg-black/60 p-1.5 rounded-xl border border-white/10 mb-4">
+              <button
+                type="button"
+                onClick={() => setDecisionPhase('experimental')}
+                className={`py-2 px-3 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                  decisionPhase === 'experimental'
+                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 font-extrabold'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>[01 // FASE EXPERIMENTAL]</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setDecisionPhase('escala')}
+                className={`py-2 px-3 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                  decisionPhase === 'escala'
+                    ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/30 font-extrabold'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>[02 // FASE ESCALA]</span>
+              </button>
+            </div>
+
+            {/* Diagnóstico condicional */}
+            {decisionPhase === 'experimental' ? (
+              <div className="text-left p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 text-amber-200 text-xs sm:text-sm leading-relaxed">
+                <div className="font-mono font-bold text-amber-400 mb-1 flex items-center gap-2">
+                  <span>⚠ RECOMENDACIÓN HONESTA: ALQUILÁ UNA PLANTILLA</span>
+                </div>
+                <p>
+                  Si todavía no probaste el producto o no sabés si hay demanda real,{' '}
+                  <strong>no inviertas en desarrollo a medida todavía</strong>. Una plantilla de $25
+                  USD/mes en Shopify o Tiendanube es perfecta para validar tus primeras ventas sin
+                  comprometer capital.
+                </p>
+              </div>
+            ) : (
+              <div className="text-left p-4 rounded-xl bg-cyan-950/30 border border-cyan-500/40 text-cyan-200 text-xs sm:text-sm leading-relaxed">
+                <div className="font-mono font-bold text-cyan-400 mb-1 flex items-center gap-2">
+                  <span>⚡ RECOMENDACIÓN ESTRATÉGICA: CONSTRUÍ TU ACTIVO PROPIO</span>
+                </div>
+                <p>
+                  Si ya tenés clientes o facturás mes a mes, pagar comisiones del 2% al 15% más
+                  cuotas obligatorias es un impuesto permanente.{' '}
+                  <strong>ExePaginasWeb te construye un activo 100% tuyo con 0% comisiones</strong>,
+                  base de datos propia y retorno directo a tu bolsillo.
+                </p>
+              </div>
+            )}
+          </div>
         </motion.div>
 
         {/* ========================================================
@@ -2103,6 +2181,46 @@ export const OwnershipVsSubscription: React.FC = () => {
                 <CyberWarningHazard size={14} className="text-white" />
                 <span>Cortar cuota mensual</span>
               </button>
+            </div>
+
+            {/* EFECTO 2: Reactor de Telemetría Energética y Blindaje */}
+            <div
+              data-energy-reactor="true"
+              className="mt-3.5 p-3 rounded-xl bg-black/50 border border-white/10 relative overflow-hidden text-left"
+            >
+              <div className="flex items-center justify-between text-[10px] font-mono mb-1.5">
+                <span className="text-slate-400 flex items-center gap-1.5">
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      simulationCut ? 'bg-rose-500 animate-ping' : 'bg-emerald-400'
+                    }`}
+                  />
+                  <span>MONITOR DE RETENCIÓN DE CAPITAL</span>
+                </span>
+                <span
+                  className={`font-bold uppercase tracking-wider ${
+                    simulationCut ? 'text-rose-400' : 'text-emerald-400'
+                  }`}
+                >
+                  {simulationCut ? 'FUGA TOTAL: 100% INACCESIBLE' : 'CAPITAL PROTEGIDO // 0% FUGAS'}
+                </span>
+              </div>
+
+              {/* Barra de reactor holográfico */}
+              <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
+                <div
+                  className={`h-full transition-all duration-700 ${
+                    simulationCut
+                      ? 'w-1 bg-rose-500 shadow-[0_0_8px_#f43f5e]'
+                      : 'w-full bg-linear-to-r from-emerald-500 via-cyan-400 to-emerald-400 shadow-[0_0_12px_#10b981]'
+                  }`}
+                />
+              </div>
+
+              <div className="mt-2 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                <span>[CORE_SHIELD: {simulationCut ? 'DISABLED' : 'MAXIMUM_ACTIVE'}]</span>
+                <span>0% COMISIONES A TERCEROS</span>
+              </div>
             </div>
 
             <p className="mt-2.5 text-[11px] text-muted-foreground font-medium">

@@ -350,7 +350,32 @@ const PremiumBackground = () => {
 
   return (
     <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none transition-colors duration-500 bg-background">
-      <canvas ref={canvasRef} className="block w-full h-full" />
+      {/* Retícula de perspectiva cibernética acelerada por GPU */}
+      <div
+        data-cyber-grid="true"
+        className="absolute inset-0 opacity-20 dark:opacity-35 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(6, 182, 212, 0.12) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(6, 182, 212, 0.12) 1px, transparent 1px)
+          `,
+          backgroundSize: '48px 48px',
+          maskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, transparent 80%)',
+          WebkitMaskImage:
+            'radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, transparent 80%)',
+        }}
+      />
+
+      {/* Resplandor fotónico de horizonte táctico */}
+      <div
+        className="cyber-horizon-glow absolute inset-0 pointer-events-none opacity-40 dark:opacity-60"
+        style={{
+          background: 'radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.08), transparent 60%)',
+        }}
+      />
+
+      {/* Malla cuántica de partículas y Delaunay */}
+      <canvas ref={canvasRef} className="block w-full h-full relative z-10" />
     </div>
   )
 }

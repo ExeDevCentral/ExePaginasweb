@@ -1,27 +1,53 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
   <defs>
     <style>
-      .brand-mark { fill: #0f172a; }
-      .brand-accent { fill: #facc15; }
+      .stroke-main { stroke: #0f172a; }
+      .fill-accent { fill: #047857; }
+      .stroke-accent { stroke: #047857; }
+      .corner-mark { stroke: #94a3b8; }
       @media (prefers-color-scheme: dark) {
-        .brand-mark { fill: #ffffff; }
+        .stroke-main { stroke: #f8fafc; }
+        .fill-accent { fill: #10b981; }
+        .stroke-accent { stroke: #10b981; }
+        .corner-mark { stroke: #475569; }
       }
     </style>
   </defs>
 
-  <!-- EXE Main Emblem Structure -->
-  <g class="brand-mark">
-    <!-- Top-left loop -->
-    <path d="M 210 90 L 260 90 L 150 200 L 120 170 Z" />
-    <path d="M 120 170 L 210 90 L 180 60 L 90 140 Z" />
-    
-    <!-- Main Center Thick Diagonal Bar -->
-    <path d="M 260 90 L 420 250 L 280 430 L 120 270 Z" />
-    
-    <!-- Bottom Leg Extension -->
-    <path d="M 240 380 L 310 450 L 270 470 L 200 400 Z" />
+  <!-- Marcas de cota técnica en esquinas (+) -->
+  <g class="corner-mark" stroke-width="6" stroke-linecap="square">
+    <line x1="32" y1="48" x2="64" y2="48" />
+    <line x1="48" y1="32" x2="48" y2="64" />
+
+    <line x1="448" y1="48" x2="480" y2="48" />
+    <line x1="464" y1="32" x2="464" y2="64" />
+
+    <line x1="32" y1="464" x2="64" y2="464" />
+    <line x1="48" y1="448" x2="48" y2="480" />
+
+    <line x1="448" y1="464" x2="480" y2="464" />
+    <line x1="464" y1="448" x2="464" y2="480" />
   </g>
 
-  <!-- Bright Yellow Parallel Accent Bar -->
-  <polygon class="brand-accent" points="285,315 425,175 445,195 305,335" />
+  <!-- Marco de lámina ortogonal -->
+  <rect x="72" y="72" width="368" height="368" rx="8" class="stroke-main" stroke-width="8" stroke-dasharray="16 8" fill="none" opacity="0.3" />
+
+  <!-- Monograma Técnico "E" Ortogonal -->
+  <!-- Columna vertical principal -->
+  <rect x="136" y="128" width="56" height="256" class="stroke-main" stroke-width="12" fill="none" rx="4" />
+  
+  <!-- Brazo superior -->
+  <path d="M 192 144 L 360 144" class="stroke-main" stroke-width="24" stroke-linecap="square" />
+  
+  <!-- Brazo medio (con cota esmeralda de marca) -->
+  <path d="M 192 256 L 312 256" class="stroke-accent" stroke-width="24" stroke-linecap="square" />
+  <circle cx="332" cy="256" r="12" class="fill-accent" />
+
+  <!-- Brazo inferior -->
+  <path d="M 192 368 L 360 368" class="stroke-main" stroke-width="24" stroke-linecap="square" />
+
+  <!-- Líneas de cota ortogonal -->
+  <line x1="380" y1="136" x2="380" y2="376" class="stroke-accent" stroke-width="4" stroke-dasharray="6 4" opacity="0.8" />
+  <line x1="372" y1="136" x2="388" y2="136" class="stroke-accent" stroke-width="4" />
+  <line x1="372" y1="376" x2="388" y2="376" class="stroke-accent" stroke-width="4" />
 </svg>

@@ -415,6 +415,48 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Cajetín Técnico de Autoría (Plano de Arquitecto) */}
+        <div className="mb-8 border border-border dark:border-border-tech font-mono text-xs bg-card/60 dark:bg-card/40 rounded-[2px] overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border dark:divide-border-tech">
+            <div className="p-4">
+              <span className="text-[10px] uppercase text-muted-foreground block mb-1">
+                ESTUDIO & AUTORÍA
+              </span>
+              <strong className="text-foreground text-xs block">ExePaginasWeb</strong>
+              <span className="text-muted-foreground text-[11px]">
+                Exequiel Echevarría — Architect
+              </span>
+            </div>
+            <div className="p-4">
+              <span className="text-[10px] uppercase text-muted-foreground block mb-1">
+                FUNDACIÓN & SEDE
+              </span>
+              <span className="text-foreground text-xs font-semibold block">Año 2025</span>
+              <span className="text-muted-foreground text-[11px]">Buenos Aires, Argentina</span>
+            </div>
+            <div className="p-4">
+              <span className="text-[10px] uppercase text-muted-foreground block mb-1">
+                ESTÁNDAR DE INGENIERÍA
+              </span>
+              <span className="text-brand font-semibold text-xs block">
+                LCP &lt; 2.5s · WCAG AA
+              </span>
+              <span className="text-muted-foreground text-[11px]">TDD · Cero Errores de Tipo</span>
+            </div>
+            <div className="p-4">
+              <span className="text-[10px] uppercase text-muted-foreground block mb-1">
+                ARQUITECTURA
+              </span>
+              <span className="text-foreground text-xs font-semibold block">
+                SaaS B2B Multi-Tenant
+              </span>
+              <span className="text-muted-foreground text-[11px]">
+                Next.js 15 · Supabase · PostgreSQL
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* Bottom Bar: Copyright, Crafted Signature, and Built By */}
         <div className="pt-6 border-t border-foreground/10 dark:border-white/10">
           {/* Gradient accent scanline */}

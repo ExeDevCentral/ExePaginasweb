@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Endpoint para disparar automatizaciones en vivo con n8n Cloud.
  */
@@ -10,7 +10,7 @@ import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 
 const AutomationRequestSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(100),
-  email: z.string().email('Email inválido').max(255).nullish(),
+  email: z.string().email().max(255).nullish(),
   automationType: z.enum([
     'cotizacion_express',
     'auditoria_gratis',

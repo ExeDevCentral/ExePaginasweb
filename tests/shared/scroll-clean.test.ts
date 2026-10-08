@@ -22,4 +22,29 @@ describe('Scroll Architecture Cleanliness', () => {
     expect(providerContent).toContain('duration: 0.9')
     expect(providerContent).toContain('wheelMultiplier: 1.0')
   })
+
+  it('no debe bloquear el botón de la rueda del mouse (botón central / autoscroll)', () => {
+    const providerPath = path.resolve(process.cwd(), 'src/components/shared/ScrollProvider.tsx')
+    const providerContent = fs.readFileSync(providerPath, 'utf-8')
+
+    // No debe interceptar e.button === 1 previniendo el comportamiento nativo del mouse
+    expect(providerContent).not.toMatch(/e\.button\s*===\s*1/)
+    expect(providerContent).not.toContain('handleMiddleMouseDown')
+  })
+
+  it('no debe contener reseteos sincrónicos que interrumpan la inercia suave del scroll', () => {
+    const providerPath = path.resolve(process.cwd(), 'src/components/shared/ScrollProvider.tsx')
+    const providerContent = fs.readFileSync(providerPath, 'utf-8')
+
+    // No debe abortar el scroll con comprobaciones artificiales de delta
+    expect(providerContent).not.toContain('handleNativeScrollSync')
+    expect(providerContent).not.toContain('Math.abs(lenis.scroll - window.scrollY)')
+  })
+
+  it('debe permitir scroll continuo en elementos anidados con allowNestedScroll', () => {
+    const providerPath = path.resolve(process.cwd(), 'src/components/shared/ScrollProvider.tsx')
+    const providerContent = fs.readFileSync(providerPath, 'utf-8')
+
+    expect(providerContent).toContain('allowNestedScroll: true')
+  })
 })

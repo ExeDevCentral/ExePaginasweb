@@ -24,15 +24,6 @@ import {
 } from 'lucide-react'
 import HudButton from '@/components/HudButton'
 import { INITIAL_PROJECTS, type Project } from '@/data/projects'
-import SpotlightBorderCard, { type SpotlightCardVariant } from '../shared/SpotlightBorderCard'
-
-const PORTFOLIO_COLOR_VARIANTS: SpotlightCardVariant[] = [
-  'cyan',
-  'fuchsia',
-  'emerald',
-  'amber',
-  'blue',
-]
 
 export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
   featuredOnly = false,
@@ -67,17 +58,17 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-150 h-87.5 bg-linear-to-r from-accent-cyan/10 to-accent-magenta/10 rounded-full blur-[130px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Encabezado Profesional */}
+        {/* Encabezado Editorial Técnico */}
         <div className="text-center mb-12">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-md mb-4"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-[2px] border border-brand/30 bg-brand/10 backdrop-blur-md mb-4 font-mono text-xs text-brand"
           >
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-cyan-400">
-              PORTAFOLIO & EXPERIENCIA PROFESIONAL
+            <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
+            <span className="font-bold uppercase tracking-wider">
+              FIG. 03 — LÁMINAS DE OBRA // CASOS DE ESTUDIO
             </span>
           </motion.div>
 
@@ -86,9 +77,10 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-5xl font-black font-montserrat tracking-tight text-foreground mb-4"
+            className="text-3xl sm:text-5xl font-display font-bold tracking-tight text-foreground mb-4"
           >
-            {t('portfolio.titulo', 'Portafolio Profesional')}
+            Arquitectura de Software en{' '}
+            <span className="font-serif italic text-brand">producción real</span>
           </motion.h2>
 
           <motion.p
@@ -100,7 +92,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
           >
             {t(
               'portfolio.subtitulo',
-              'Desarrollos reales con arquitectura moderna, código propio y despliegue en la nube. Podés consultar mi trayectoria técnica completa en mi CV online o solicitar una propuesta personalizada para tu proyecto.'
+              'Sistemas web con código propio, aislamiento de datos, conciliación automática y despliegue en la nube para empresas que escalan sus ingresos.'
             )}
           </motion.p>
 
@@ -119,7 +111,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
               variant="secondary"
               size="sm"
               label={t('portfolio.ver_cv', 'Ver Mi CV Profesional Completo')}
-              icon={<FileText className="w-3.5 h-3.5 text-cyan-200" />}
+              icon={<FileText className="w-3.5 h-3.5 text-brand" />}
               iconPosition="left"
             />
           </motion.div>
@@ -139,13 +131,13 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                       key={cat.id}
                       type="button"
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
+                      className={`flex items-center gap-2 px-3.5 py-1.5 rounded-[2px] font-mono text-xs tracking-wider uppercase transition-all duration-200 cursor-pointer ${
                         isActive
-                          ? 'btn-soft-violet border border-violet-soft text-accent-violet shadow-sm scale-105'
-                          : 'bg-card/70 hover:bg-card border border-border text-muted-foreground hover:text-foreground'
+                          ? 'bg-brand/15 border border-brand text-brand shadow-xs'
+                          : 'bg-card/70 hover:bg-card border border-border dark:border-border-tech text-muted-foreground hover:text-foreground'
                       }`}
                     >
-                      <Icon className="w-4 h-4" />
+                      <Icon className="w-3.5 h-3.5" />
                       <span>{cat.label}</span>
                     </button>
                   )
@@ -153,50 +145,73 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
               </div>
             )}
 
-            {/* Grid interactivo de proyectos */}
+            {/* Grid de Láminas de Obra */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {visibleProjects.map((project, idx) => (
                 <div key={project.id} className="h-full flex flex-col">
-                  <SpotlightBorderCard
-                    colorVariant={
-                      PORTFOLIO_COLOR_VARIANTS[idx % PORTFOLIO_COLOR_VARIANTS.length] ?? 'cyan'
-                    }
-                    noPadding={true}
-                    showHudDot={false}
-                    activeBeam={true}
-                    animationDelay={`${(idx * -2.2) % 10}s`}
-                    className="h-full flex flex-col justify-between"
-                  >
-                    {/* Imagen del proyecto + Overlay interactivo */}
-                    <div className="relative aspect-16/10 overflow-hidden bg-slate-900 rounded-t-[14px]">
+                  {/* Lámina Técnica con marcas de esquina */}
+                  <div className="relative h-full flex flex-col justify-between bg-card/90 dark:bg-card/70 border border-border dark:border-border-tech rounded-[3px] transition-colors duration-200 hover:border-brand/60 group">
+                    {/* Marcas de registro en esquinas */}
+                    <span
+                      className="absolute -top-1.5 -left-1 text-xs font-mono text-brand select-none pointer-events-none"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+                    <span
+                      className="absolute -top-1.5 -right-1 text-xs font-mono text-brand select-none pointer-events-none"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+                    <span
+                      className="absolute -bottom-1.5 -left-1 text-xs font-mono text-brand select-none pointer-events-none"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+                    <span
+                      className="absolute -bottom-1.5 -right-1 text-xs font-mono text-brand select-none pointer-events-none"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+
+                    {/* Cota estática de lámina */}
+                    <span
+                      className="absolute top-2 right-2 z-20 font-mono text-[10px] tracking-wider px-2 py-0.5 rounded-[2px] bg-background/90 border border-border dark:border-border-tech text-brand"
+                      aria-hidden="true"
+                    >
+                      LÁMINA 0{idx + 1} // 2025
+                    </span>
+
+                    {/* Imagen del proyecto */}
+                    <div className="relative aspect-16/10 overflow-hidden bg-slate-900 border-b border-border dark:border-border-tech">
                       <img
                         src={project.image}
                         alt={project.title}
                         loading="lazy"
                         decoding="async"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 ease-out"
                       />
-                      <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/30 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
+                      <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent opacity-85 group-hover:opacity-70 transition-opacity" />
 
                       {/* Estado / Badge de proyecto */}
-                      <div className="absolute top-3.5 left-3.5 flex flex-col gap-1.5 items-start">
-                        <span className="px-3 py-1 rounded-full bg-emerald-950/85 backdrop-blur-md border border-emerald-500/40 text-[11px] font-black text-emerald-400 flex items-center gap-1.5 shadow-md">
-                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
+                        <span className="px-2.5 py-0.5 rounded-[2px] bg-slate-950/90 border border-brand/50 text-[10px] font-mono text-brand flex items-center gap-1.5 shadow-xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
                           {project.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')}
-                        </span>
-                        <span className="px-2.5 py-0.5 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/10 text-[10px] font-bold text-accent-cyan">
-                          {project.categoryLabel}
                         </span>
                       </div>
 
-                      {/* Acceso rápido a link */}
+                      {/* Acceso rápido a link externo */}
                       {project.link && (
                         <a
                           href={project.link}
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`Ver sitio web de ${project.title} en producción`}
-                          className="absolute top-3.5 right-3.5 p-2 rounded-full bg-slate-950/85 backdrop-blur-md border border-accent-cyan/40 text-accent-cyan hover:bg-accent-cyan hover:text-slate-950 transition-all duration-300 shadow-lg flex items-center justify-center"
+                          className="absolute bottom-3 right-3 p-1.5 rounded-[2px] bg-slate-950/90 border border-border dark:border-border-tech text-brand hover:bg-brand hover:text-slate-950 transition-colors shadow-xs flex items-center justify-center"
                           title={`Ver sitio web de ${project.title} en producción`}
                         >
                           <ArrowUpRight className="w-4 h-4" />
@@ -204,30 +219,30 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                       )}
 
                       {/* Título en tarjeta */}
-                      <div className="absolute bottom-3 left-4 right-4">
-                        <span className="text-[11px] font-semibold text-accent-cyan uppercase tracking-wider block mb-0.5">
+                      <div className="absolute bottom-2.5 left-3 right-12">
+                        <span className="text-[10px] font-mono text-brand uppercase tracking-wider block mb-0.5">
                           {project.client}
                         </span>
-                        <h3 className="text-lg sm:text-xl font-bold text-white font-montserrat leading-tight group-hover:text-accent-cyan transition-colors">
+                        <h3 className="text-base sm:text-lg font-bold text-white font-display leading-tight group-hover:text-brand transition-colors">
                           {project.title}
                         </h3>
                       </div>
                     </div>
 
                     {/* Contenido & Detalles */}
-                    <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
-                      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3 min-h-[3.6rem]">
+                    <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 min-h-[3.2rem]">
                         {project.description}
                       </p>
 
-                      {/* Métricas destacadas */}
-                      <div className="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-slate-100/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-center">
+                      {/* Métricas destacadas en estilo técnico */}
+                      <div className="grid grid-cols-2 gap-2 p-2.5 rounded-[2px] bg-paper border border-border dark:border-border-tech text-center">
                         {project.metrics.map((m) => (
                           <div key={m.label}>
-                            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white font-montserrat">
+                            <div className="text-sm font-bold text-foreground font-mono">
                               {m.value}
                             </div>
-                            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                            <div className="text-[10px] text-muted-foreground font-mono">
                               {m.label}
                             </div>
                           </div>
@@ -235,59 +250,123 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                       </div>
 
                       {/* Tags tecnológicos */}
-                      <div className="flex flex-wrap gap-1.5 min-h-7">
+                      <div className="flex flex-wrap gap-1 min-h-6">
                         {project.tags.map((tTag) => (
                           <span
                             key={tTag}
-                            className="px-2 py-0.5 rounded-md bg-accent-cyan/10 border border-accent-cyan/20 text-[10px] font-semibold text-accent-cyan"
+                            className="px-2 py-0.5 rounded-[2px] bg-brand/10 border border-brand/20 text-[10px] font-mono text-brand"
                           >
                             {tTag}
                           </span>
                         ))}
                       </div>
 
-                      {/* Acciones principales fijas al fondo */}
-                      <div className="pt-3 border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between gap-2 mt-auto">
+                      {/* Acciones principales */}
+                      <div className="pt-2.5 border-t border-border dark:border-border-tech flex items-center justify-between gap-2 mt-auto">
                         <button
                           type="button"
                           onClick={() => setSelectedProject(project)}
-                          className="text-[11px] font-bold text-slate-700 dark:text-slate-200 hover:text-accent-cyan flex items-center gap-1 transition-colors cursor-pointer"
+                          className="text-xs font-mono text-foreground hover:text-brand flex items-center gap-1.5 transition-colors cursor-pointer"
                         >
-                          <Maximize2 className="w-3 h-3" />
-                          {t('portfolio.detalles', 'Detalles')}
+                          <Maximize2 className="w-3 h-3 text-brand" />
+                          <span>{t('portfolio.detalles', 'FICHA TÉCNICA')}</span>
                         </button>
-
-                        {project.link && (
-                          <a
-                            href={project.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`Ver sitio web de ${project.title} en producción`}
-                            className="px-3.5 py-1.5 rounded-xl bg-linear-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:scale-105 transition-all"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" />
-                            {t('portfolio.ver_en_vivo', 'Ver en Vivo')}
-                          </a>
-                        )}
                       </div>
                     </div>
-                  </SpotlightBorderCard>
+
+                    {/* Cajetín Técnico de Obra (Title Block) */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-border dark:border-border-tech font-mono text-[11px] bg-paper divide-x divide-border dark:divide-border-tech">
+                      <div className="p-2 sm:p-2.5">
+                        <span
+                          className="text-[9px] uppercase text-muted-foreground block"
+                          aria-hidden="true"
+                        >
+                          SISTEMA
+                        </span>
+                        <span className="font-semibold text-foreground truncate block">
+                          {project.client}
+                        </span>
+                      </div>
+                      <div className="p-2 sm:p-2.5">
+                        <span
+                          className="text-[9px] uppercase text-muted-foreground block"
+                          aria-hidden="true"
+                        >
+                          STACK
+                        </span>
+                        <span className="text-muted-foreground truncate block">
+                          {project.tags[0] || 'Next.js'}
+                        </span>
+                      </div>
+                      <div className="p-2 sm:p-2.5">
+                        <span
+                          className="text-[9px] uppercase text-muted-foreground block"
+                          aria-hidden="true"
+                        >
+                          MÉTRICA
+                        </span>
+                        <span className="font-bold text-brand truncate block">
+                          {project.metrics[0]?.value}
+                        </span>
+                      </div>
+                      <div className="p-2 sm:p-2.5">
+                        <span
+                          className="text-[9px] uppercase text-muted-foreground block"
+                          aria-hidden="true"
+                        >
+                          AÑO // ESTADO
+                        </span>
+                        <span className="text-brand font-medium truncate block">
+                          2025 // ACTIVO
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
-              {/* Tarjeta dinámica de "+ Tu Proyecto Custom" */}
-              <div className="rounded-3xl border-2 border-dashed border-accent-cyan/40 bg-card/40 backdrop-blur-xl p-6 flex flex-col items-center justify-center text-center space-y-4 hover:border-accent-cyan hover:bg-card/70 transition-all duration-300 group min-h-95">
-                <div className="w-12 h-12 rounded-2xl bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center text-accent-cyan group-hover:scale-110 transition-transform">
-                  <PlusCircle className="w-6 h-6" />
+
+              {/* Tarjeta de "+ Tu Proyecto Custom" estilo Lámina Técnica */}
+              <div className="relative rounded-[3px] border border-dashed border-brand/40 bg-card/40 p-6 flex flex-col items-center justify-center text-center space-y-4 hover:border-brand hover:bg-card/70 transition-colors duration-200 min-h-95">
+                <span
+                  className="absolute -top-1.5 -left-1 text-xs font-mono text-brand select-none pointer-events-none"
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+                <span
+                  className="absolute -top-1.5 -right-1 text-xs font-mono text-brand select-none pointer-events-none"
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+                <span
+                  className="absolute -bottom-1.5 -left-1 text-xs font-mono text-brand select-none pointer-events-none"
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+                <span
+                  className="absolute -bottom-1.5 -right-1 text-xs font-mono text-brand select-none pointer-events-none"
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+
+                <div className="w-10 h-10 rounded-[2px] bg-brand/10 border border-brand/30 flex items-center justify-center text-brand">
+                  <PlusCircle className="w-5 h-5" />
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold font-montserrat text-foreground mb-1">
-                    {t('portfolio.custom_card_titulo', '¿Querés tu sitio o sistema en producción?')}
+                  <span className="font-mono text-[10px] text-brand uppercase tracking-wider block mb-1">
+                    OBRA A MEDIDA // 2025
+                  </span>
+                  <h3 className="text-base sm:text-lg font-bold font-display text-foreground mb-1">
+                    {t('portfolio.custom_card_titulo', '¿Querés tu sistema en producción?')}
                   </h3>
                   <p className="text-xs text-muted-foreground max-w-xs mx-auto">
                     {t(
                       'portfolio.custom_card_desc',
-                      'Creamos desarrollos a medida con código propio y despliegue rápido.'
+                      'Creamos desarrollos a medida con 100% código propio, arquitectura robusta y despliegue llave en mano.'
                     )}
                   </p>
                 </div>
@@ -296,7 +375,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                   href="/cotizador"
                   size="sm"
                   variant="primary"
-                  label={t('portfolio.pedir_presupuesto', 'Pedir Presupuesto')}
+                  label={t('portfolio.pedir_presupuesto', 'Iniciar Proyecto [1:1]')}
                   icon={<Zap className="w-3.5 h-3.5" />}
                   iconPosition="left"
                 />

@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
@@ -265,7 +265,7 @@ function DeedCard({
   const fields = [
     {
       label: t('versus.escritura_folio_label', 'Folio'),
-      value: t('versus.escritura_folio', 'EXE-2026-0001'),
+      value: t('versus.escritura_folio', 'EXE-2025-0001'),
       mono: true,
     },
     {
@@ -1797,7 +1797,7 @@ function buildLines(t: (k: string, f: string) => string, mode: TermMode): TermLi
         { text: t('versus.extra_terminal_out_build', '✓ build OK · 0 warnings · deploy listo') },
       ],
     },
-    { kind: 'cmd', parts: [{ text: '$ cat ESCRITURA_2026.txt' }] },
+    { kind: 'cmd', parts: [{ text: '$ cat ESCRITURA_2025.txt' }] },
     {
       kind: 'ok',
       parts: [
@@ -2037,10 +2037,10 @@ export const OwnershipVsSubscription: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 backdrop-blur-md mb-4">
-            <CyberInsignia size={16} className="text-accent-cyan" />
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-accent-cyan">
-              {t('versus.badge', 'MODELO DE NEGOCIO 2026')}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-sm border border-brand/25 bg-brand/10 backdrop-blur-md mb-4 font-mono">
+            <CyberInsignia size={15} className="text-brand dark:text-emerald-400" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand dark:text-emerald-400">
+              {t('versus.badge', 'MODELO DE ARQUITECTURA // 2025')}
             </span>
           </div>
 

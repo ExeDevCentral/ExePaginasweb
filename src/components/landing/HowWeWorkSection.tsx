@@ -1,7 +1,7 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
- * Sección "Cómo trabajamos" — Proceso claro, tarjetas de alto contraste y accesos directos
+ * Sección "Cómo trabajamos" — Protocolo de desarrollo técnico, láminas de especificación y accesos directos
  */
 'use client'
 
@@ -24,33 +24,48 @@ import HudButton from '@/components/HudButton'
 const STEPS = [
   {
     step: '01',
-    badge: '15 min · Sin costo',
-    title: 'Charla de 15 minutos',
-    subtitle: 'Entendemos qué vende tu negocio',
-    desc: 'Sin tecnicismos complicados. Nos contás qué hacés, quién es tu cliente y qué metas querés alcanzar para diseñar la solución exacta.',
+    phase: 'FASE 01 / 03',
+    badge: '15 MIN · DIAGNÓSTICO',
+    title: 'Charla técnica de 15 minutos',
+    subtitle: 'Relevamiento del modelo de negocio',
+    desc: 'Sin tecnicismos innecesarios. Analizamos tu oferta, perfil de cliente y objetivos de conversión para proyectar la arquitectura exacta de software.',
     icon: PhoneCall,
-    color: 'cyan' as const,
-    points: ['Diagnóstico de tu negocio', 'Propuesta clara sin vueltas', 'Cero compromiso'],
+    tone: 'brand' as const,
+    points: [
+      'Diagnóstico de tu negocio',
+      'Propuesta de arquitectura clara',
+      'Cero compromiso inicial',
+    ],
   },
   {
     step: '02',
-    badge: 'Validación en vivo',
-    title: 'Diseño y validación',
-    subtitle: 'Te mostramos el avance antes de publicar',
-    desc: 'Construimos la estructura pensada en ventas. Revisamos juntos cada detalle para que des tu visto bueno con total tranquilidad.',
+    phase: 'FASE 02 / 03',
+    badge: 'VALIDACIÓN · PROTOTIPO',
+    title: 'Diseño e ingeniería de interfaz',
+    subtitle: 'Revisión interactiva antes de desplegar',
+    desc: 'Construimos la estructura optimizada para ventas y performance. Inspeccionamos cada módulo y flujo juntos para que apruebes con total tranquilidad.',
     icon: LayoutDashboard,
-    color: 'fuchsia' as const,
-    points: ['Avances visibles paso a paso', 'Ajustes a tu gusto', 'Sin sorpresas al final'],
+    tone: 'signal' as const,
+    points: [
+      'Entregas iterativas visibles',
+      'Ajustes guiados de precisión',
+      'Sin sorpresas en entrega',
+    ],
   },
   {
     step: '03',
-    badge: '100% Tuyo',
-    title: 'Lanzamiento y capacitación',
-    subtitle: 'Tu web online lista para facturar',
-    desc: 'Publicamos tu sitio en alta velocidad y te enseñamos a gestionar tus consultas, pedidos y precios directo desde tu celular.',
+    phase: 'FASE 03 / 03',
+    badge: 'PRODUCCIÓN · 100% TUYO',
+    title: 'Lanzamiento y transferencia',
+    subtitle: 'Infraestructura online lista para facturar',
+    desc: 'Desplegamos tu sitio con métricas Core Web Vitals optimizadas. Te entregamos el acceso total y te capacitamos para operar cobros y pedidos.',
     icon: Rocket,
-    color: 'emerald' as const,
-    points: ['Puesta online rápida', 'Video tutorial explicativo', 'Soporte post-lanzamiento'],
+    tone: 'brand' as const,
+    points: [
+      'Puesta en línea de alta velocidad',
+      'Video instructivo personalizado',
+      'Soporte de arquitectura post-lanzamiento',
+    ],
   },
 ]
 
@@ -72,52 +87,31 @@ export default function HowWeWorkSection() {
   return (
     <section
       id="proceso"
-      className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-20 border-t border-slate-200/80 dark:border-white/10"
+      className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-24 border-t border-slate-200/80 dark:border-white/10"
     >
-      {/* Encabezado */}
-      <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 font-mono text-xs uppercase tracking-widest font-semibold mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-          <span>Proceso Simple & Transparente</span>
+      {/* Encabezado Editorial / Plano */}
+      <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-brand/10 border border-brand/25 text-brand dark:text-emerald-400 font-mono text-[11px] uppercase tracking-widest font-semibold mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-brand dark:bg-emerald-400 animate-pulse" />
+          <span>FIG. 01 — PROTOCOLO DE DESARROLLO // 2025</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-950 dark:text-white leading-tight">
-          Cómo trabajamos:{' '}
-          <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-500 via-sky-400 to-fuchsia-500">
-            3 pasos sin vueltas
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-950 dark:text-white leading-tight font-display">
+          Cómo construimos:{' '}
+          <span className="font-serif italic font-normal text-brand dark:text-emerald-400">
+            3 fases sin fricción
           </span>
         </h2>
         <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-          Del primer contacto a tu web funcionando y captando clientes.
+          Del primer relevamiento de necesidades al sistema en producción captando operaciones
+          comerciales.
         </p>
       </div>
 
-      {/* Grid de los 3 pasos con BORDES NÍTIDOS DE ALTO CONTRASTE */}
+      {/* Grid de las 3 fases — Láminas Técnicas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
         {STEPS.map((item, idx) => {
           const Icon = item.icon
-          const colorStyles =
-            item.color === 'cyan'
-              ? {
-                  border: 'hover:border-cyan-400 dark:hover:border-cyan-400',
-                  badge: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border-cyan-500/30',
-                  iconBg: 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400',
-                  accent: 'text-cyan-600 dark:text-cyan-400',
-                }
-              : item.color === 'fuchsia'
-                ? {
-                    border: 'hover:border-fuchsia-400 dark:hover:border-fuchsia-400',
-                    badge:
-                      'bg-fuchsia-500/15 text-fuchsia-700 dark:text-fuchsia-300 border-fuchsia-500/30',
-                    iconBg: 'bg-fuchsia-500/15 text-fuchsia-600 dark:text-fuchsia-400',
-                    accent: 'text-fuchsia-600 dark:text-fuchsia-400',
-                  }
-                : {
-                    border: 'hover:border-emerald-400 dark:hover:border-emerald-400',
-                    badge:
-                      'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
-                    iconBg: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
-                    accent: 'text-emerald-600 dark:text-emerald-400',
-                  }
+          const isSignal = item.tone === 'signal'
 
           return (
             <motion.div
@@ -126,47 +120,63 @@ export default function HowWeWorkSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.4, delay: idx * 0.1 }}
-              className={`group relative rounded-3xl p-6 sm:p-7 bg-white dark:bg-[#0c0f1d] border-2 border-slate-300/80 dark:border-white/20 shadow-xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.7)] ${colorStyles.border} transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden`}
+              className="group relative rounded-sm p-6 sm:p-7 bg-white dark:bg-[#0c0f1d] border border-slate-300/90 dark:border-white/10 hover:border-brand/60 dark:hover:border-emerald-500/60 shadow-md dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between overflow-hidden"
             >
-              {/* Resplandor sutil reactivo en esquina */}
-              <div
-                className="pointer-events-none absolute -top-12 -right-12 w-36 h-36 rounded-full blur-2xl opacity-0 group-hover:opacity-35 transition-opacity duration-500"
-                style={{
-                  backgroundColor:
-                    item.color === 'cyan'
-                      ? '#06b6d4'
-                      : item.color === 'fuchsia'
-                        ? '#d946ef'
-                        : '#10b981',
-                }}
-              />
+              {/* Marcas de esquina técnicas (+) */}
+              <span className="absolute top-1.5 left-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+                +
+              </span>
+              <span className="absolute top-1.5 right-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+                +
+              </span>
+              <span className="absolute bottom-1.5 left-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+                +
+              </span>
+              <span className="absolute bottom-1.5 right-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+                +
+              </span>
 
               <div>
-                {/* Paso número y Badge con alto contraste */}
-                <div className="flex items-center justify-between gap-2 mb-5">
-                  <span className="font-mono text-3xl font-black text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/60 transition-colors select-none">
-                    {item.step}
-                  </span>
+                {/* Cabecera técnica de lámina: Fase + Badge */}
+                <div className="flex items-center justify-between gap-2 mb-5 pb-3 border-b border-slate-200/80 dark:border-white/10">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-2xl font-black text-slate-400 dark:text-white/30 group-hover:text-brand dark:group-hover:text-emerald-400 transition-colors select-none">
+                      {item.step}
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40">
+                      {item.phase}
+                    </span>
+                  </div>
                   <span
-                    className={`inline-flex items-center text-[11px] font-mono font-bold px-3 py-1 rounded-full border ${colorStyles.badge}`}
+                    className={`inline-flex items-center text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-sm border ${
+                      isSignal
+                        ? 'bg-signal/10 text-signal border-signal/30'
+                        : 'bg-brand/10 text-brand dark:text-emerald-300 border-brand/30 dark:border-emerald-500/30'
+                    }`}
                   >
                     {item.badge}
                   </span>
                 </div>
 
-                {/* Ícono con micro-animación en hover */}
+                {/* Ícono de cota */}
                 <div
-                  className={`w-11 h-11 rounded-2xl ${colorStyles.iconBg} flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 shadow-sm`}
+                  className={`w-10 h-10 rounded-sm flex items-center justify-center mb-4 border transition-transform duration-300 group-hover:scale-105 ${
+                    isSignal
+                      ? 'bg-signal/10 border-signal/25 text-signal'
+                      : 'bg-brand/10 border-brand/25 text-brand dark:text-emerald-400'
+                  }`}
                 >
                   <Icon className="w-5 h-5" />
                 </div>
 
                 {/* Título y subtítulo */}
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                   {item.title}
                 </h3>
                 <p
-                  className={`text-xs font-semibold uppercase tracking-wider mt-1 ${colorStyles.accent}`}
+                  className={`text-[11px] font-mono uppercase tracking-wider mt-1 ${
+                    isSignal ? 'text-signal' : 'text-brand dark:text-emerald-400'
+                  }`}
                 >
                   {item.subtitle}
                 </p>
@@ -176,14 +186,14 @@ export default function HowWeWorkSection() {
                   {item.desc}
                 </p>
 
-                {/* Puntos clave */}
+                {/* Especificaciones clave */}
                 <ul className="mt-5 space-y-2 border-t border-slate-200 dark:border-white/10 pt-4">
                   {item.points.map((pt) => (
                     <li
                       key={pt}
                       className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-brand dark:text-emerald-400 shrink-0" />
                       <span>{pt}</span>
                     </li>
                   ))}
@@ -194,20 +204,20 @@ export default function HowWeWorkSection() {
         })}
       </div>
 
-      {/* BARRA COMPACTA: AUDITORÍA GRATUITA + COTIZADOR EN 30S (Sin sobrecargar la página) */}
+      {/* MÓDULOS DE ACCESO RÁPIDO — ESTÉTICA TÉCNICA (1px border, 4px radio) */}
       <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Opción 1: Auditoría en video */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-cyan-50/80 dark:bg-cyan-950/20 border-2 border-cyan-500/30 flex items-center justify-between gap-4">
+        <div className="relative p-5 rounded-sm bg-white dark:bg-[#0c0f1d] border border-slate-300 dark:border-white/10 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-sm bg-brand/10 border border-brand/25 text-brand dark:text-emerald-400 flex items-center justify-center shrink-0">
               <Video className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-cyan-600 dark:text-cyan-400 block">
-                100% Gratuita · 5 minutos
+              <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-brand dark:text-emerald-400 block">
+                AUDITORÍA DE PRECISIÓN · 5 MINUTOS
               </span>
               <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                Auditoría en video de tu web o Instagram
+                Diagnóstico en video de tu web o perfil
               </h4>
             </div>
           </div>
@@ -218,7 +228,7 @@ export default function HowWeWorkSection() {
             onClick={() =>
               trackEvent('contact_whatsapp_clicked', { source: 'how_we_work_audit_bar' })
             }
-            className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-sm bg-brand hover:bg-brand/90 text-white font-mono font-bold text-xs shadow-sm transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
           >
             <span>Pedir video</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -226,17 +236,17 @@ export default function HowWeWorkSection() {
         </div>
 
         {/* Opción 2: Cotizador en 30 segundos */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-fuchsia-50/80 dark:bg-fuchsia-950/20 border-2 border-fuchsia-500/30 flex items-center justify-between gap-4">
+        <div className="relative p-5 rounded-sm bg-white dark:bg-[#0c0f1d] border border-slate-300 dark:border-white/10 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-fuchsia-500/20 text-fuchsia-600 dark:text-fuchsia-400 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-sm bg-signal/10 border border-signal/25 text-signal flex items-center justify-center shrink-0">
               <Calculator className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-fuchsia-600 dark:text-fuchsia-400 block">
-                Cotización online inmediata
+              <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-signal block">
+                COTIZACIÓN PARAMÉTRICA INMEDIATA
               </span>
               <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                Calculá tu presupuesto en 30 segundos
+                Calculá tu inversión en 30 segundos
               </h4>
             </div>
           </div>
@@ -253,10 +263,10 @@ export default function HowWeWorkSection() {
         </div>
       </div>
 
-      {/* Botón principal centrado de alta fidelidad (HUD Chaflanado) */}
-      <div className="mt-8 text-center flex justify-center">
+      {/* Botón principal centrado (HUD Chaflanado) */}
+      <div className="mt-10 text-center flex justify-center">
         <HudButton
-          label="Coordinar mi charla de 15 minutos"
+          label="Coordinar charla de 15 minutos"
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"

@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
@@ -11,133 +11,99 @@ import { useTranslation } from 'react-i18next'
 import { Home } from 'lucide-react'
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 
-const floatingShapes = [
-  {
-    size: 60,
-    x: '15%',
-    y: '20%',
-    delay: 0,
-    color: 'bg-accent-cyan/10',
-    border: 'border-accent-cyan/20',
-    duration: 6,
-    shape: 'rounded-2xl',
-  },
-  {
-    size: 40,
-    x: '75%',
-    y: '30%',
-    delay: 0.5,
-    color: 'bg-accent-magenta/10',
-    border: 'border-accent-magenta/20',
-    duration: 7,
-    shape: 'rounded-full',
-  },
-  {
-    size: 80,
-    x: '80%',
-    y: '70%',
-    delay: 1,
-    color: 'bg-accent-cyan/5',
-    border: 'border-accent-cyan/10',
-    duration: 8,
-    shape: 'rotate-45 rounded-2xl',
-  },
-  {
-    size: 35,
-    x: '20%',
-    y: '75%',
-    delay: 0.3,
-    color: 'bg-accent-magenta/8',
-    border: 'border-accent-magenta/15',
-    duration: 5.5,
-    shape: 'rounded-xl',
-  },
-  {
-    size: 50,
-    x: '50%',
-    y: '15%',
-    delay: 0.8,
-    color: 'bg-accent-cyan/10 dark:bg-white/5',
-    border: 'border-accent-cyan/15 dark:border-white/10',
-    duration: 7.5,
-    shape: 'rounded-full',
-  },
-]
-
 export default function NotFoundClient() {
   const { t } = useTranslation()
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden px-4">
+      {/* Switcher superior */}
       <div className="absolute top-6 right-6 z-30">
-        <div className="rounded-2xl bg-card/80 backdrop-blur-xl border border-border p-1 shadow-md flex items-center">
+        <div className="rounded-sm bg-card/90 backdrop-blur-xl border border-border p-1 shadow-xs flex items-center">
           <LanguageSwitcher />
         </div>
       </div>
 
-      {floatingShapes.map((shape) => (
-        <motion.div
-          key={`shape-${shape.x}-${shape.y}`}
-          className={`absolute ${shape.color} ${shape.border} border ${shape.shape}`}
-          style={{ width: shape.size, height: shape.size, left: shape.x, top: shape.y }}
-          animate={{
-            y: [0, -30, 0, 20, 0],
-            rotate: [0, 10, -5, 5, 0],
-          }}
-          transition={{
-            duration: shape.duration,
-            repeat: Infinity,
-            delay: shape.delay,
-            ease: 'easeInOut',
-          }}
-        />
-      ))}
+      {/* Retícula sutil de fondo */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-40 dark:opacity-20"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(148, 163, 184, 0.15) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(148, 163, 184, 0.15) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px',
+        }}
+      />
 
-      <div className="absolute w-125 h-125 bg-accent-cyan/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute w-100 h-100 bg-accent-magenta/5 rounded-full blur-[100px] pointer-events-none translate-x-40 translate-y-40" />
-
+      {/* Lámina Central de Error 404 */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="relative z-10 text-center max-w-md px-4"
+        className="relative z-10 w-full max-w-lg rounded-sm border border-slate-300 dark:border-white/10 bg-white dark:bg-[#0c0f1d] p-8 sm:p-10 shadow-xl text-center overflow-hidden"
       >
-        <motion.p
-          className="text-[140px] sm:text-[180px] font-black leading-none select-none"
-          animate={{ color: ['#0ea5e9', '#6366f1', '#0ea5e9'] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            background: 'linear-gradient(135deg, #0ea5e9, #6366f1, #0ea5e9)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundSize: '200% 200%',
-          }}
-        >
+        {/* Marcas de esquina técnicas (+) */}
+        <span className="absolute top-2 left-2 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none">
+          +
+        </span>
+        <span className="absolute top-2 right-2 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none">
+          +
+        </span>
+        <span className="absolute bottom-2 left-2 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none">
+          +
+        </span>
+        <span className="absolute bottom-2 right-2 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none">
+          +
+        </span>
+
+        {/* Eyebrow de calibración */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-signal/10 border border-signal/30 text-signal font-mono text-[10px] uppercase tracking-widest font-semibold mb-6">
+          <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse" />
+          <span>ERROR 404 // COORDENADAS FUERA DE PLANO</span>
+        </div>
+
+        {/* 404 Técnico Mono */}
+        <div className="font-mono text-7xl sm:text-8xl font-black text-slate-900 dark:text-white tracking-widest select-none mb-2">
           404
-        </motion.p>
+        </div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-2xl font-bold text-foreground mt-2"
-        >
-          {t('notfound.titulo', 'Página no encontrada')}
-        </motion.h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-display">
+          Plano no{' '}
+          <span className="font-serif italic font-normal text-brand dark:text-emerald-400">
+            encontrado
+          </span>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.35 }}
-          className="text-muted-foreground mt-3"
-        >
-          {t('notfound.descripcion', 'La página que buscás no existe o fue movida.')}
-        </motion.p>
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-3 max-w-sm mx-auto leading-relaxed">
+          {t(
+            'notfound.descripcion',
+            'La coordenada solicitada no se encuentra proyectada en los planos de arquitectura del sistema.'
+          )}
+        </p>
 
-        <div className="mt-10 flex justify-center">
+        {/* Cajetín técnico de diagnóstico */}
+        <div className="mt-6 mb-8 text-left rounded-sm border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 p-4 font-mono text-[11px] space-y-1.5">
+          <div className="flex items-center justify-between text-slate-500 dark:text-white/40">
+            <span>ESTADO:</span>
+            <span className="text-signal font-bold">DESVIACIÓN DE RUTA</span>
+          </div>
+          <div className="flex items-center justify-between text-slate-500 dark:text-white/40">
+            <span>SISTEMA:</span>
+            <span className="text-slate-800 dark:text-slate-200">EXEPAGINASWEB // 2025</span>
+          </div>
+          <div className="flex items-center justify-between text-slate-500 dark:text-white/40">
+            <span>PROTOCOLO:</span>
+            <span className="text-brand dark:text-emerald-400 font-bold">
+              RETORNO A PLANO MATRIZ
+            </span>
+          </div>
+        </div>
+
+        {/* Botón de retorno */}
+        <div className="flex justify-center">
           <HudButton
             href="/"
-            label={t('notfound.boton', 'Volver al inicio')}
+            label={t('notfound.boton', 'Volver al plano principal')}
             size="lg"
             variant="primary"
             icon={<Home className="w-4 h-4" />}

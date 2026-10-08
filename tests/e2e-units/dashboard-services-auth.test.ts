@@ -11,7 +11,7 @@ import {
   tierFromPlanLabel,
 } from '../../src/core/domain/planCatalog'
 import type { Invoice } from '../../src/core/domain/entities/Invoice'
-import type { TenantService } from '../../src/core/domain/entities/TenantService'
+import type { TenantServiceWithDetails } from '../../src/core/domain/entities/TenantService'
 
 describe('🔬 SUITE DE TEST INTEGRAL: Autenticación Google, Dashboard, Facturas y Catálogo de Servicios', () => {
   // -------------------------------------------------------------
@@ -41,55 +41,82 @@ describe('🔬 SUITE DE TEST INTEGRAL: Autenticación Google, Dashboard, Factura
       {
         id: 'inv-001',
         tenant_id: 'tenant-abc',
+        cliente_id: 'cli-001',
         numero: 'EXE-2026-0001',
         tipo: 'A',
         estado: 'pagada',
-        monto: 150000,
+        subtotal: 150000,
+        iva: 0,
+        total: 150000,
         moneda: 'ARS',
         concepto: 'Abono Mantenimiento Web SaaS - Febrero 2026',
+        detalles: [
+          { descripcion: 'Plan Avanzado', cantidad: 1, precio_unitario: 150000, total: 150000 },
+        ],
         fecha_emision: '2026-02-01T10:00:00Z',
         fecha_vencimiento: '2026-02-15T10:00:00Z',
+        fecha_pago: '2026-02-05T10:00:00Z',
+        pago_id: 'pay-001',
+        afip_cae: null,
+        afip_vencimiento: null,
+        metadata: {},
         created_at: '2026-02-01T10:00:00Z',
-        items: [
-          { descripcion: 'Plan Avanzado', cantidad: 1, precio_unitario: 150000, subtotal: 150000 },
-        ],
+        updated_at: '2026-02-05T10:00:00Z',
       },
       {
         id: 'inv-002',
         tenant_id: 'tenant-abc',
+        cliente_id: 'cli-001',
         numero: 'EXE-2026-0002',
         tipo: 'B',
         estado: 'emitida',
-        monto: 85,
+        subtotal: 85,
+        iva: 0,
+        total: 85,
         moneda: 'USD',
         concepto: 'Desarrollo de Módulo de Reservas y Turnos',
+        detalles: [
+          { descripcion: 'Custom Feature Add-on', cantidad: 1, precio_unitario: 85, total: 85 },
+        ],
         fecha_emision: '2026-02-10T10:00:00Z',
         fecha_vencimiento: '2026-02-25T10:00:00Z',
+        fecha_pago: null,
+        pago_id: null,
+        afip_cae: null,
+        afip_vencimiento: null,
+        metadata: {},
         created_at: '2026-02-10T10:00:00Z',
-        items: [
-          { descripcion: 'Custom Feature Add-on', cantidad: 1, precio_unitario: 85, subtotal: 85 },
-        ],
+        updated_at: '2026-02-10T10:00:00Z',
       },
       {
         id: 'inv-003',
         tenant_id: 'tenant-abc',
+        cliente_id: 'cli-001',
         numero: 'EXE-2026-0003',
         tipo: 'B',
         estado: 'vencida',
-        monto: 45000,
+        subtotal: 45000,
+        iva: 0,
+        total: 45000,
         moneda: 'ARS',
         concepto: 'Soporte y Horas de Consultoría',
-        fecha_emision: '2026-01-01T10:00:00Z',
-        fecha_vencimiento: '2026-01-15T10:00:00Z',
-        created_at: '2026-01-01T10:00:00Z',
-        items: [
+        detalles: [
           {
             descripcion: 'Horas de Desarrollo',
             cantidad: 3,
             precio_unitario: 15000,
-            subtotal: 45000,
+            total: 45000,
           },
         ],
+        fecha_emision: '2026-01-01T10:00:00Z',
+        fecha_vencimiento: '2026-01-15T10:00:00Z',
+        fecha_pago: null,
+        pago_id: null,
+        afip_cae: null,
+        afip_vencimiento: null,
+        metadata: {},
+        created_at: '2026-01-01T10:00:00Z',
+        updated_at: '2026-01-01T10:00:00Z',
       },
     ]
 
@@ -107,10 +134,10 @@ describe('🔬 SUITE DE TEST INTEGRAL: Autenticación Google, Dashboard, Factura
     it('debe calcular correctamente los subtotales por moneda', () => {
       const totalArs = mockInvoices
         .filter((i) => i.moneda === 'ARS' && i.estado === 'pagada')
-        .reduce((sum, i) => sum + i.monto, 0)
+        .reduce((sum, i) => sum + i.total, 0)
       const totalUsd = mockInvoices
         .filter((i) => i.moneda === 'USD')
-        .reduce((sum, i) => sum + i.monto, 0)
+        .reduce((sum, i) => sum + i.total, 0)
 
       expect(totalArs).toBe(150000)
       expect(totalUsd).toBe(85)
@@ -121,43 +148,59 @@ describe('🔬 SUITE DE TEST INTEGRAL: Autenticación Google, Dashboard, Factura
   // 3. SERVICIOS ACTIVOS Y PROVISIONING (DASHBOARD)
   // -------------------------------------------------------------
   describe('3. Módulo de Servicios y Provisioning (Dashboard)', () => {
-    const mockServices: TenantService[] = [
+    const mockServices: TenantServiceWithDetails[] = [
       {
         id: 'srv-01',
         tenant_id: 'tenant-abc',
-        nombre: 'Hosting Cloud & Dominio SSL',
-        tipo: 'hosting',
+        service_id: 'srv-base-01',
         estado: 'activo',
-        fecha_inicio: '2026-01-01T00:00:00Z',
-        fecha_fin: '2027-01-01T00:00:00Z',
-        renovacion_automatica: true,
-        precio_periodo: 120000,
+        precio_actual: 120000,
         moneda: 'ARS',
-        periodo: 'anual',
+        started_at: '2026-01-01T00:00:00Z',
+        ends_at: '2027-01-01T00:00:00Z',
+        auto_renew: true,
         metadata: { provider: 'Vercel / Cloudflare' },
+        created_at: '2026-01-01T00:00:00Z',
+        updated_at: '2026-01-01T00:00:00Z',
+        service: {
+          id: 'srv-base-01',
+          slug: 'hosting-cloud',
+          nombre: 'Hosting Cloud & Dominio SSL',
+          descripcion: null,
+          tipo: 'hosting',
+          intervalo: 'anual',
+        },
       },
       {
         id: 'srv-02',
         tenant_id: 'tenant-abc',
-        nombre: 'Mantenimiento y Actualizaciones SaaS',
-        tipo: 'mantenimiento',
+        service_id: 'srv-base-02',
         estado: 'activo',
-        fecha_inicio: '2026-02-01T00:00:00Z',
-        fecha_fin: '2026-03-01T00:00:00Z',
-        renovacion_automatica: true,
-        precio_periodo: 45000,
+        precio_actual: 45000,
         moneda: 'ARS',
-        periodo: 'mensual',
+        started_at: '2026-02-01T00:00:00Z',
+        ends_at: '2026-03-01T00:00:00Z',
+        auto_renew: true,
+        metadata: {},
+        created_at: '2026-02-01T00:00:00Z',
+        updated_at: '2026-02-01T00:00:00Z',
+        service: {
+          id: 'srv-base-02',
+          slug: 'mantenimiento-saas',
+          nombre: 'Mantenimiento y Actualizaciones SaaS',
+          descripcion: null,
+          tipo: 'mantenimiento',
+          intervalo: 'mensual',
+        },
       },
     ]
 
     it('debe verificar que los servicios activos cuentan con fechas válidas y renovación automática', () => {
       mockServices.forEach((srv) => {
         expect(srv.estado).toBe('activo')
-        expect(new Date(srv.fecha_fin!).getTime()).toBeGreaterThan(
-          new Date(srv.fecha_inicio).getTime()
-        )
-        expect(srv.renovacion_automatica).toBe(true)
+        expect(new Date(srv.ends_at!).getTime()).toBeGreaterThan(new Date(srv.started_at).getTime())
+        expect(srv.auto_renew).toBe(true)
+        expect(srv.service?.nombre).toBeTruthy()
       })
     })
   })
@@ -167,7 +210,7 @@ describe('🔬 SUITE DE TEST INTEGRAL: Autenticación Google, Dashboard, Factura
   // -------------------------------------------------------------
   describe('4. Catálogo de Servicios y Planes Oficiales (Tienda & Cotizador)', () => {
     it('debe contener los planes principales con precios válidos en ARS y USD', () => {
-      expect(PLAN_CATALOG.length).toBe(3)
+      expect(PLAN_CATALOG).toHaveLength(3)
 
       const basic = PLAN_CATALOG.find((p) => p.tier === 'basico')
       const advanced = PLAN_CATALOG.find((p) => p.tier === 'avanzado')

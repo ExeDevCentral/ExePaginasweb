@@ -200,10 +200,10 @@ export const OptimusScaleHero: React.FC = () => {
             <div className="lg:col-span-6 flex flex-col items-start text-left z-20">
               {/* 1. EYEBROW MONO, 1 LÍNEA, SIN CAJA */}
               <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 select-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>
                   {t('hero.eyebrow_plataforma') ||
-                    'Arquitectura de Software & Sistemas Cloud · Escala Global'}
+                    'FIG. 00 — ARQUITECTURA DE SOFTWARE & SISTEMAS CLOUD // 2025'}
                 </span>
               </div>
 
@@ -211,7 +211,7 @@ export const OptimusScaleHero: React.FC = () => {
               <HeroNeonSignboard className="mt-4 mb-2" />
 
               {/* 2. TÍTULO H1: 100% SEO FRIENDLY PARA BUSCADORES (BRAVE, GOOGLE, BING) */}
-              <h1 className="mt-2 text-3xl sm:text-5xl xl:text-6xl font-sans font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-slate-950 dark:text-white">
+              <h1 className="mt-2 text-3xl sm:text-5xl xl:text-6xl font-display font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-slate-950 dark:text-white">
                 <span className="sr-only">Exe Páginas Web - </span>
                 <span className="block font-semibold">
                   {t('hero.titulo_prefijo') || 'Páginas web y sistemas a medida'}
@@ -221,7 +221,7 @@ export const OptimusScaleHero: React.FC = () => {
                   <span className="text-slate-500 dark:text-slate-400 font-light">
                     {t('hero.titulo_conector') || 'para'}
                   </span>
-                  <span className="relative inline-block text-cyan-500 dark:text-cyan-400 font-bold">
+                  <span className="relative inline-block text-brand font-bold font-serif italic">
                     <AnimatePresence mode="wait">
                       <motion.span
                         key={wordIndex}
@@ -229,7 +229,7 @@ export const OptimusScaleHero: React.FC = () => {
                         animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
                         exit={{ y: -20, opacity: 0, filter: 'blur(6px)' }}
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                        className="inline-block"
+                        className="inline-block px-1"
                       >
                         {rotatingWords[wordIndex] || ROTATING_WORDS[wordIndex]}
                       </motion.span>

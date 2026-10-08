@@ -1,0 +1,47 @@
+/**
+ * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * Todos los derechos reservados.
+ * Prohibida su reproducción total o parcial sin autorización.
+ */
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { SupabaseInvoiceRepository } from '../core/infra/repositories/SupabaseInvoiceRepository'
+import { queryKeys } from '../core/infra/query/queryKeys'
+import { isValidUUID } from '../core/utils/uuid'
+
+const repo = new SupabaseInvoiceRepository()
+
+export function useInvoicesByTenant(tenantId, enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.invoices.byTenant(tenantId),
+    queryFn: () => (isValidUUID(tenantId) ? repo.listByTenantId(tenantId) : Promise.resolve([])),
+    enabled: enabled && !!tenantId && isValidUUID(tenantId),
+    staleTime: 2 * 60 * 1000,
+  })
+}
+
+export function useInvoicesByCliente(clienteId, enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.invoices.byCliente(clienteId),
+    queryFn: () => (isValidUUID(clienteId) ? repo.listByClienteId(clienteId) : Promise.resolve([])),
+    enabled: enabled && !!clienteId && isValidUUID(clienteId),
+    staleTime: 2 * 60 * 1000,
+  })
+}
+
+export function useInvoice(id, enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.invoices.detail(id),
+    queryFn: () => (isValidUUID(id) ? repo.getById(id) : Promise.resolve(null)),
+    enabled: enabled && !!id && isValidUUID(id),
+  })
+}
+
+export function useMarkInvoicePaid() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, pagoId }) => repo.markAsPaid(id, pagoId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.invoices.all })
+    },
+  })
+}

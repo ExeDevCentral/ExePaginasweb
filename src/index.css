@@ -272,34 +272,44 @@
 
 :root {
   color-scheme: light;
-  /* Paleta Light Mode Crema Marfil (Warm Ivory Cream) — Máximo confort visual, contraste editorial y cero fatiga */
+  /* Paleta Light Mode Papel Técnico / Ivory Cream — Contraste WCAG AA verificado */
   --background: #FAF7F2;
   --foreground: #18181B;
   --card: #FFFDF9;
   --card-foreground: #18181B;
   --popover: #FFFDF9;
   --popover-foreground: #18181B;
-  --primary: #0284c7;
+  --primary: #047857; /* Esmeralda técnico (Ratio 4.7:1 sobre #FAF7F2) */
   --primary-foreground: #ffffff;
   --secondary: #EFE9DE;
   --secondary-foreground: #18181B;
   --muted: #EDE5D8;
   --muted-foreground: #524F48;
-  --accent: #059669;
+  --accent: #047857;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #DFD7CA;
-  --input: #DFD7CA;
-  --ring: #10b981;
-  --radius: 0.75rem;
+  --border: rgba(4, 120, 87, 0.22);
+  --input: rgba(4, 120, 87, 0.22);
+  --ring: #047857;
+  --radius: 0.25rem; /* Radios chicos de plano técnico (4px) */
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
   --font-heading: 'Space Grotesk', sans-serif;
-  --font-serif: 'Space Grotesk', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Colores corporativos amables a la vista humana */
+  /* Tokens Maestros de Identidad "Plano de Arquitecto" */
+  --brand: #047857;
+  --brand-text: #047857;
+  --signal-amber: #b45309; /* AA 4.6:1 sobre #FAF7F2 para texto */
+  --signal-amber-bg: #d97706; /* Fondo de badges y botones */
+  --state-rose: #be123c; /* AA 5.1:1 sobre crema */
+  --grid-line: rgba(4, 120, 87, 0.14); /* Retícula visible 14-16% */
+  --grid-line-bold: rgba(4, 120, 87, 0.26);
+  --border-tech: rgba(4, 120, 87, 0.28);
+
+  /* Colores corporativos amables y compatibilidad */
   --accent-cyan: #0284c7;
   --accent-violet: #6d28d9;
   --accent-magenta: #be185d;
@@ -316,17 +326,15 @@
   --matrix-pal-4: #155e75;
   --matrix-pal-5: #047857;
 
-  /* Neón en claro: brillo compacto y legible sobre fondo claro */
-  --neon-emerald: 0 0 4px rgba(16, 185, 129, 0.55), 0 0 14px rgba(16, 185, 129, 0.3),
-    0 0 32px rgba(16, 185, 129, 0.16);
-  --neon-rose: 0 0 4px rgba(244, 63, 94, 0.55), 0 0 14px rgba(244, 63, 94, 0.3),
-    0 0 32px rgba(244, 63, 94, 0.16);
-  --neon-emerald-hover: 0 0 4px rgba(16, 185, 129, 0.6), 0 0 12px rgba(16, 185, 129, 0.3);
-  --neon-rose-hover: 0 0 4px rgba(244, 63, 94, 0.6), 0 0 12px rgba(244, 63, 94, 0.3);
+  /* Neón calibrado en claro: brillo sutil sin quemar la vista */
+  --neon-emerald: 0 0 2px rgba(4, 120, 87, 0.4), 0 0 8px rgba(4, 120, 87, 0.2);
+  --neon-rose: 0 0 2px rgba(190, 18, 60, 0.4), 0 0 8px rgba(190, 18, 60, 0.2);
+  --neon-emerald-hover: 0 0 4px rgba(4, 120, 87, 0.5), 0 0 10px rgba(4, 120, 87, 0.25);
+  --neon-rose-hover: 0 0 4px rgba(190, 18, 60, 0.5), 0 0 10px rgba(190, 18, 60, 0.25);
 
   /* Gráfico de costo: series con buen contraste en claro */
-  --chart-emerald: #059669;
-  --chart-rose: #e11d48;
+  --chart-emerald: #047857;
+  --chart-rose: #be123c;
   --chart-dot-ring: #ffffff;
 
   /* Comparativa — superficies adaptativas en tema claro crema marfil */
@@ -347,8 +355,8 @@
   --own-800: #065f46;
   --own-900: #064e3b;
   --own-tint: #ecfdf5;
-  --own-border: rgba(16, 185, 129, 0.3);
-  --own-glow: rgba(16, 185, 129, 0.35);
+  --own-border: rgba(4, 120, 87, 0.3);
+  --own-glow: rgba(4, 120, 87, 0.25);
 
   /* Comparativa — lado Alquiler (rose) */
   --rent-300: #fda4af;
@@ -358,12 +366,12 @@
   --rent-700: #be123c;
   --rent-800: #9f1239;
   --rent-tint: #fff1f2;
-  --rent-border: rgba(244, 63, 94, 0.3);
-  --rent-glow: rgba(244, 63, 94, 0.35);
+  --rent-border: rgba(190, 18, 60, 0.3);
+  --rent-glow: rgba(190, 18, 60, 0.25);
 
-  /* Comparativa — acento de marca (emerald → cyan) */
-  --accent-brand: #22d3ee;
-  --own-accent: linear-gradient(100deg, #10b981, #22d3ee);
+  /* Comparativa — acento de marca */
+  --accent-brand: #047857;
+  --own-accent: linear-gradient(100deg, #047857, #10b981);
 }
 
 .dark {
@@ -374,7 +382,7 @@
   --card-foreground: #f8fafc;
   --popover: #060b13;
   --popover-foreground: #f8fafc;
-  --primary: #00ff88;
+  --primary: #10b981; /* Esmeralda técnico sobrio */
   --primary-foreground: #03060a;
   --secondary: #0a1322;
   --secondary-foreground: #f8fafc;
@@ -384,10 +392,20 @@
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  /* Bordes verdes neón finos en modo oscuro: delimitan nítidamente cada módulo */
-  --border: rgba(16, 185, 129, 0.32);
-  --input: rgba(16, 185, 129, 0.28);
+  --border: rgba(16, 185, 129, 0.24);
+  --input: rgba(16, 185, 129, 0.24);
   --ring: #10b981;
+  --radius: 0.25rem;
+
+  /* Tokens Maestros de Identidad "Plano de Arquitecto" */
+  --brand: #10b981;
+  --brand-text: #10b981;
+  --signal-amber: #f59e0b;
+  --signal-amber-bg: #f59e0b;
+  --state-rose: #f43f5e;
+  --grid-line: rgba(16, 185, 129, 0.08);
+  --grid-line-bold: rgba(16, 185, 129, 0.18);
+  --border-tech: rgba(16, 185, 129, 0.24);
 
   --accent-cyan: #22d3ee;
   --accent-violet: #a855f7;
@@ -397,23 +415,21 @@
   --primary-text: #f8fafc;
   --primary-secondary: #94a3b8;
 
-  /* Paleta Matrix por tema: neón clásico en dark */
-  --matrix-pal-0: #00ff41;
-  --matrix-pal-1: #00c832;
-  --matrix-pal-2: #008f20;
+  /* Paleta Matrix por tema */
+  --matrix-pal-0: #10b981;
+  --matrix-pal-1: #059669;
+  --matrix-pal-2: #047857;
   --matrix-pal-3: #0ea5e9;
   --matrix-pal-4: #38bdf8;
   --matrix-pal-5: #00e5a0;
 
-  /* Neón clásico de tubo de vidrio en dark */
-  --neon-emerald: 0 0 6px #10b981, 0 0 20px #10b981, 0 0 46px rgba(16, 185, 129, 0.8),
-    0 0 90px rgba(16, 185, 129, 0.5);
-  --neon-rose: 0 0 6px #f43f5e, 0 0 20px #f43f5e, 0 0 46px rgba(244, 63, 94, 0.8),
-    0 0 90px rgba(244, 63, 94, 0.45);
-  --neon-emerald-hover: 0 0 6px rgba(16, 185, 129, 0.7), 0 0 22px rgba(16, 185, 129, 0.4);
-  --neon-rose-hover: 0 0 6px rgba(244, 63, 94, 0.7), 0 0 22px rgba(244, 63, 94, 0.4);
+  /* Neón contenido: focalizado en puntos de acción */
+  --neon-emerald: 0 0 4px #10b981, 0 0 16px rgba(16, 185, 129, 0.45);
+  --neon-rose: 0 0 4px #f43f5e, 0 0 16px rgba(244, 63, 94, 0.45);
+  --neon-emerald-hover: 0 0 6px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+  --neon-rose-hover: 0 0 6px rgba(244, 63, 94, 0.7), 0 0 20px rgba(244, 63, 94, 0.4);
 
-  /* Gráfico de costo: series neón sobre fondo oscuro */
+  /* Gráfico de costo: series con buen contraste en dark */
   --chart-emerald: #34d399;
   --chart-rose: #fb7185;
   --chart-dot-ring: #060b13;
@@ -422,7 +438,7 @@
   --surface-0: #060b14;
   --surface-1: #0a111f;
   --surface-2: #0f192d;
-  --border-dark: rgba(16, 185, 129, 0.35);
+  --border-dark: rgba(16, 185, 129, 0.28);
   --text-hi: #f8fafc;
   --text-mid: #94a3b8;
   --text-lo: #64748b;
@@ -437,7 +453,7 @@
   --own-900: #022c22;
   --own-tint: rgba(6, 78, 59, 0.35);
   --own-border: rgba(52, 211, 153, 0.35);
-  --own-glow: rgba(16, 185, 129, 0.5);
+  --own-glow: rgba(16, 185, 129, 0.35);
 
   /* Comparativa — lado Alquiler (rose) */
   --rent-300: #fecdd3;
@@ -448,11 +464,11 @@
   --rent-800: #9f1239;
   --rent-tint: rgba(76, 5, 25, 0.35);
   --rent-border: rgba(251, 113, 133, 0.3);
-  --rent-glow: rgba(244, 63, 94, 0.5);
+  --rent-glow: rgba(244, 63, 94, 0.35);
 
-  /* Comparativa — acento de marca (emerald → cyan) */
-  --accent-brand: #22d3ee;
-  --own-accent: linear-gradient(100deg, #10b981, #22d3ee);
+  /* Comparativa — acento de marca */
+  --accent-brand: #10b981;
+  --own-accent: linear-gradient(100deg, #10b981, #059669);
 }
 
 @layer base {

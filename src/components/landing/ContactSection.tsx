@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
@@ -43,21 +43,21 @@ const ContactSection = () => {
       href: getWhatsAppUrl(
         '¡Hola ExeSistemasWEB! Me contacto desde la sección de contacto de la web.'
       ),
-      color: '#22c55e',
+      tone: 'brand' as const,
     },
     {
       icon: Mail,
       tag: 'CONTACTO & SOPORTE',
       value: 'Contacto@exepaginasweb.com',
       href: 'mailto:Exemetal@hotmail.com?subject=Contacto%20y%20Soporte%20ExeSistemasWEB&body=Hola%20ExeSistemasWEB,%20quisiera%20hacer%20una%20consulta:',
-      color: '#06b6d4',
+      tone: 'neutral' as const,
     },
     {
       icon: Send,
       tag: 'VENTAS & PROYECTOS',
       value: 'Ventas@exepaginasweb.com',
       href: 'mailto:Exemetal@hotmail.com?subject=Ventas%20y%20Proyectos%20ExeSistemasWEB&body=Hola%20ExeSistemasWEB,%20quisiera%20cotizar%20un%20proyecto:',
-      color: '#ec4899',
+      tone: 'signal' as const,
     },
   ]
 
@@ -131,55 +131,67 @@ const ContactSection = () => {
   }
 
   return (
-    <section id="contact" className="relative px-4 py-24 sm:px-6 lg:px-8 overflow-hidden z-10">
+    <section
+      id="contact"
+      className="relative px-4 py-20 sm:px-6 lg:px-8 overflow-hidden z-10 border-t border-slate-200/80 dark:border-white/10"
+    >
       <span id="contacto" className="absolute top-0" />
-      {/* Ambient blobs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-24 left-1/3 h-72 w-72 rounded-full bg-accent-cyan/8 blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-accent-magenta/8 blur-[90px]" />
-      </div>
 
       <div className="relative mx-auto max-w-6xl">
-        {/* Header */}
+        {/* Header Editorial / Plano */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-14"
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-12"
         >
-          <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] text-accent-cyan/80">
-            {t('contact.seccion_titulo')}
-          </p>
-          <h2 className="font-montserrat text-5xl font-black leading-tight tracking-tight md:text-6xl lg:text-7xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-brand/10 border border-brand/25 text-brand dark:text-emerald-400 font-mono text-[11px] uppercase tracking-widest font-semibold mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand dark:bg-emerald-400 animate-pulse" />
+            <span>FIG. 03 — REGISTRO DE REQUERIMIENTOS // 2025</span>
+          </div>
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-slate-950 dark:text-white">
             {t('contact.heading_1')}
             <br />
-            <span className="relative inline-block">
+            <span className="font-serif italic font-normal text-brand dark:text-emerald-400">
               {t('contact.heading_2')}
-              <span className="absolute -bottom-1 left-0 h-0.75 w-full bg-linear-to-r from-accent-cyan via-accent-violet to-accent-magenta rounded-full" />
             </span>
           </h2>
         </motion.div>
 
-        {/* Bento grid */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          {/* FORM — big left card */}
+        {/* Bento grid de especificación técnica */}
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+          {/* FORM — Lámina Principal */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-2 rounded-3xl border border-border bg-muted p-8 backdrop-blur-sm shadow-2xl relative overflow-hidden"
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-2 rounded-sm border border-slate-300/90 dark:border-white/10 bg-white dark:bg-[#0c0f1d] p-6 sm:p-8 shadow-md dark:shadow-2xl relative overflow-hidden"
           >
+            {/* Marcas de esquina técnicas (+) */}
+            <span className="absolute top-1.5 left-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+              +
+            </span>
+            <span className="absolute top-1.5 right-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+              +
+            </span>
+            <span className="absolute bottom-1.5 left-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+              +
+            </span>
+            <span className="absolute bottom-1.5 right-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+              +
+            </span>
+
             {status === 'success' ? (
               <div className="flex h-full flex-col items-center justify-center gap-5 py-8 text-center">
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                  className="rounded-full bg-accent-cyan/15 p-4 border border-accent-cyan/30"
+                  className="rounded-sm bg-brand/10 p-3.5 border border-brand/30"
                 >
-                  <CheckCircle className="h-16 w-16 text-accent-cyan" />
+                  <CheckCircle className="h-12 w-12 text-brand dark:text-emerald-400" />
                 </motion.div>
 
                 {ticketId && (
@@ -187,26 +199,30 @@ const ContactSection = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="inline-flex items-center gap-2 rounded-full border border-accent-cyan/40 bg-accent-cyan/10 px-4 py-1.5 font-mono text-xs font-bold text-accent-cyan tracking-wider"
+                    className="inline-flex items-center gap-2 rounded-sm border border-brand/35 bg-brand/10 px-3.5 py-1.5 font-mono text-xs font-bold text-brand dark:text-emerald-300 tracking-wider"
                   >
-                    <span>TICKET DE ATENCIÓN:</span>
+                    <span>TICKET //</span>
                     <span className="underline">{ticketId}</span>
                   </motion.div>
                 )}
 
-                <h3 className="text-3xl font-black text-foreground">
+                <h3 className="text-2xl font-bold text-slate-950 dark:text-white font-display">
                   {t('contact.success_titulo')}
                 </h3>
-                <p className="max-w-md text-sm text-muted-foreground leading-relaxed">{feedback}</p>
+                <p className="max-w-md text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {feedback}
+                </p>
 
-                <div className="w-full max-w-sm rounded-2xl border border-border/80 bg-background/50 p-4 text-left backdrop-blur-md">
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-                    <span>Estado del mensaje:</span>
-                    <span className="font-semibold text-emerald-400">✅ Confirmado & Enviado</span>
+                <div className="w-full max-w-sm rounded-sm border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/5 p-4 text-left font-mono text-xs">
+                  <div className="flex items-center justify-between text-slate-600 dark:text-slate-400 mb-1">
+                    <span>ESTADO:</span>
+                    <span className="font-bold text-brand dark:text-emerald-400">
+                      INGRESADO & REGISTRADO
+                    </span>
                   </div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>Respuesta estimada:</span>
-                    <span className="font-semibold text-accent-cyan">⚡ &lt; 2 Horas</span>
+                  <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                    <span>RESPUESTA ESTIMADA:</span>
+                    <span className="font-bold text-signal">&lt; 2 HORAS HÁBILES</span>
                   </div>
                 </div>
 
@@ -216,9 +232,9 @@ const ContactSection = () => {
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center justify-center gap-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3.5 text-sm shadow-xl shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-sm bg-brand hover:bg-brand/90 text-white font-mono font-bold px-5 py-3 text-xs shadow-md transition-all cursor-pointer"
                 >
-                  <MessageCircle className="w-5 h-5 fill-slate-950 stroke-emerald-500" />
+                  <MessageCircle className="w-4 h-4" />
                   <span>Abrir Chat Directo en WhatsApp ({DISPLAY_WHATSAPP_NUMBER})</span>
                 </a>
 
@@ -232,7 +248,17 @@ const ContactSection = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
-                <p className="text-sm text-primary-secondary mb-2">{t('contact.form_desc')}</p>
+                <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-3 mb-1">
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-white/40">
+                    PLIEGO DE ENTRADA · ESPECIFICACIÓN DE PROYECTO
+                  </span>
+                  <span className="font-mono text-[10px] text-brand dark:text-emerald-400 font-bold">
+                    [REQ-ONLINE]
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-2">
+                  {t('contact.form_desc')}
+                </p>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="group relative">
@@ -243,11 +269,11 @@ const ContactSection = () => {
                       onChange={(e) => setName(e.target.value)}
                       required
                       placeholder=" "
-                      className="peer w-full rounded-xl border border-border bg-slate-100/95 px-4 pb-3 pt-6 text-sm text-slate-900 outline-none transition-all placeholder:text-muted-foreground focus:border-accent-cyan/60 focus:bg-slate-100"
+                      className="peer w-full rounded-sm border border-slate-300 dark:border-white/15 bg-slate-50/70 dark:bg-white/5 px-3.5 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white outline-none transition-all placeholder:text-muted-foreground focus:border-brand dark:focus:border-emerald-400 focus:bg-white dark:focus:bg-white/10"
                     />
                     <label
                       htmlFor="contact-name"
-                      className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70"
+                      className="absolute left-3.5 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-white/50 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-brand dark:peer-focus:text-emerald-400"
                     >
                       {t('contact.form_nombre')}
                     </label>
@@ -261,11 +287,11 @@ const ContactSection = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder=" "
-                      className="peer w-full rounded-xl border border-border bg-slate-100/95 px-4 pb-3 pt-6 text-sm text-slate-900 outline-none transition-all placeholder:text-muted-foreground focus:border-accent-cyan/60 focus:bg-slate-100"
+                      className="peer w-full rounded-sm border border-slate-300 dark:border-white/15 bg-slate-50/70 dark:bg-white/5 px-3.5 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white outline-none transition-all placeholder:text-muted-foreground focus:border-brand dark:focus:border-emerald-400 focus:bg-white dark:focus:bg-white/10"
                     />
                     <label
                       htmlFor="contact-email"
-                      className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70"
+                      className="absolute left-3.5 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-white/50 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-brand dark:peer-focus:text-emerald-400"
                     >
                       {t('contact.form_email')}
                     </label>
@@ -280,17 +306,17 @@ const ContactSection = () => {
                     required
                     placeholder=" "
                     rows={5}
-                    className="peer w-full rounded-xl border border-border bg-slate-100/95 px-4 pb-3 pt-6 text-sm text-slate-900 outline-none transition-all resize-none placeholder:text-muted-foreground focus:border-accent-cyan/60 focus:bg-slate-100"
+                    className="peer w-full rounded-sm border border-slate-300 dark:border-white/15 bg-slate-50/70 dark:bg-white/5 px-3.5 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white outline-none transition-all resize-none placeholder:text-muted-foreground focus:border-brand dark:focus:border-emerald-400 focus:bg-white dark:focus:bg-white/10"
                   />
                   <label
                     htmlFor="contact-message"
-                    className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-accent-cyan/70"
+                    className="absolute left-3.5 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-white/50 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-brand dark:peer-focus:text-emerald-400"
                   >
                     {t('contact.form_mensaje')}
                   </label>
                 </div>
 
-                {status === 'error' && <p className="text-sm text-accent-magenta">{feedback}</p>}
+                {status === 'error' && <p className="text-xs font-mono text-state">{feedback}</p>}
 
                 <HudButton
                   type="submit"
@@ -314,68 +340,61 @@ const ContactSection = () => {
             )}
           </motion.div>
 
-          {/* RIGHT COLUMN — contact chips */}
+          {/* RIGHT COLUMN — Canales de comunicación directa */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col gap-4"
           >
             {channels.map((ch, i) => {
               const Icon = ch.icon
+              const isBrand = ch.tone === 'brand'
+              const isSignal = ch.tone === 'signal'
+
               return (
                 <motion.a
                   key={ch.tag}
                   href={ch.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative flex flex-1 flex-col justify-between rounded-3xl border border-slate-300/80 dark:border-white/10 bg-slate-50/90 dark:bg-[#0a0d18] p-6 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 shadow-lg hover:shadow-2xl overflow-hidden"
-                  style={{
-                    borderColor: undefined,
-                  }}
-                  initial={{ opacity: 0, y: 20 }}
+                  className="group relative flex flex-1 flex-col justify-between rounded-sm border border-slate-300/90 dark:border-white/10 bg-white dark:bg-[#0c0f1d] p-5.5 hover:border-brand/60 dark:hover:border-emerald-500/60 transition-all duration-300 hover:-translate-y-1 shadow-sm overflow-hidden"
+                  initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 + 0.2 }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = `${ch.color}60`
-                    e.currentTarget.style.boxShadow = `0 14px 38px -10px ${ch.color}25`
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = ''
-                    e.currentTarget.style.boxShadow = ''
-                  }}
+                  transition={{ delay: i * 0.08 + 0.1 }}
                 >
-                  {/* Subtle ambient light corner glow */}
-                  <div
-                    className="pointer-events-none absolute -top-12 -right-12 w-28 h-28 rounded-full blur-2xl opacity-20 group-hover:opacity-60 transition-opacity duration-300"
-                    style={{ backgroundColor: ch.color }}
-                  />
+                  {/* Marcas de cota técnica */}
+                  <span className="absolute top-1 right-1.5 font-mono text-[9px] text-slate-400 dark:text-white/20 select-none">
+                    +
+                  </span>
+                  <span className="absolute bottom-1 right-1.5 font-mono text-[9px] text-slate-400 dark:text-white/20 select-none">
+                    +
+                  </span>
 
                   <div
-                    className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl border transition-all duration-300 group-hover:scale-110 shadow-sm"
-                    style={{
-                      backgroundColor: `${ch.color}15`,
-                      color: ch.color,
-                      borderColor: `${ch.color}30`,
-                    }}
+                    className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm border transition-all duration-300 group-hover:scale-105 ${
+                      isBrand
+                        ? 'bg-brand/10 text-brand dark:text-emerald-400 border-brand/25'
+                        : isSignal
+                          ? 'bg-signal/10 text-signal border-signal/25'
+                          : 'bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white/80 border-slate-300 dark:border-white/20'
+                    }`}
                   >
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-muted-foreground mb-1">
+                    <p className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-white/50 mb-1">
                       {ch.tag}
                     </p>
-                    <p className="text-sm font-bold text-foreground leading-snug break-all group-hover:text-white transition-colors">
+                    <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug break-all group-hover:text-brand dark:group-hover:text-emerald-400 transition-colors">
                       {ch.value}
                     </p>
                   </div>
-                  <div
-                    className="mt-4 flex items-center gap-1.5 text-xs font-bold transition-all duration-200 group-hover:translate-x-1"
-                    style={{ color: ch.color }}
-                  >
-                    {t('contact.abrir')} <ArrowRight className="h-3.5 w-3.5" />
+                  <div className="mt-3.5 flex items-center gap-1.5 font-mono text-xs font-bold text-brand dark:text-emerald-400 transition-all duration-200 group-hover:translate-x-1">
+                    <span>{t('contact.abrir')}</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </motion.a>
               )

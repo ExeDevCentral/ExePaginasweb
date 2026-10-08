@@ -62,43 +62,43 @@ interface ProjectedPoint {
 
 const GLYPHS = ['0', '1', '+', '◇', '▲', '●', '▪', '✦', '—', 'λ', '⬡', '//', '◈']
 
-// Paleta Neo Multi-Canal (Cian, Esmeralda, Violeta, Magenta/Rosa, Ámbar, Azul Cobalto)
+// Paleta de Arquitectura Técnica: Esmeralda técnico primario, verde estructural, ámbar de precisión y slate
 const NEO_PALETTE: NeoColor[] = [
   {
-    hex: '#00f0ff', // Neo Cyan
-    rgb: [0, 240, 255],
-    lightHex: '#0284c7', // Sky / Cyan profundo
-    lightRgb: [2, 132, 199],
+    hex: '#10b981', // Esmeralda técnico primario
+    rgb: [16, 185, 129],
+    lightHex: '#047857',
+    lightRgb: [4, 120, 87],
   },
   {
-    hex: '#10b981', // Neo Emerald / Matrix Green
-    rgb: [16, 185, 129],
-    lightHex: '#059669', // Esmeralda alto contraste
+    hex: '#34d399', // Esmeralda claro / Menta técnica
+    rgb: [52, 211, 153],
+    lightHex: '#059669',
     lightRgb: [5, 150, 105],
   },
   {
-    hex: '#c084fc', // Neo Purple / Violet
-    rgb: [192, 132, 252],
-    lightHex: '#7c3aed', // Violeta profundo
-    lightRgb: [124, 58, 237],
+    hex: '#059669', // Verde profundo estructural
+    rgb: [5, 150, 105],
+    lightHex: '#065f46',
+    lightRgb: [6, 95, 70],
   },
   {
-    hex: '#fb7185', // Neo Rose / Coral
-    rgb: [251, 113, 133],
-    lightHex: '#e11d48', // Rubí / Rose profundo
-    lightRgb: [225, 29, 72],
+    hex: '#f59e0b', // Ámbar técnico (destello y energía)
+    rgb: [245, 158, 11],
+    lightHex: '#b45309',
+    lightRgb: [180, 83, 9],
   },
   {
-    hex: '#fbbf24', // Neo Amber / Gold
-    rgb: [251, 191, 36],
-    lightHex: '#d97706', // Ámbar tostado
-    lightRgb: [217, 119, 6],
+    hex: '#94a3b8', // Slate técnico (cotas y nodos neutros)
+    rgb: [148, 163, 184],
+    lightHex: '#524f48',
+    lightRgb: [82, 79, 72],
   },
   {
-    hex: '#38bdf8', // Neo Electric Blue
-    rgb: [56, 189, 248],
-    lightHex: '#1d4ed8', // Azul Cobalto nítido
-    lightRgb: [29, 78, 216],
+    hex: '#10b981', // Esmeralda de cierre
+    rgb: [16, 185, 129],
+    lightHex: '#047857',
+    lightRgb: [4, 120, 87],
   },
 ]
 
@@ -1092,9 +1092,9 @@ export const OptimusGlyphSphere: React.FC<{
     <div
       className={`relative w-full aspect-square mx-auto flex items-center justify-center pointer-events-auto select-none ${className}`}
     >
-      {/* Halo ambiental multicapa detrás de la esfera (luminosidad y contraste en ambos modos) */}
-      <div className="absolute inset-2 sm:inset-4 rounded-full bg-linear-to-tr from-cyan-500/25 via-blue-600/15 to-transparent dark:from-cyan-400/25 dark:via-blue-500/20 dark:to-transparent blur-[65px] pointer-events-none transition-opacity duration-500" />
-      <div className="absolute inset-8 sm:inset-12 rounded-full bg-cyan-500/15 dark:bg-cyan-400/15 blur-2xl pointer-events-none" />
+      {/* Halo ambiental multicapa detrás de la esfera (tonos esmeralda de marca) */}
+      <div className="absolute inset-2 sm:inset-4 rounded-full bg-linear-to-tr from-emerald-500/15 via-emerald-600/10 to-transparent dark:from-emerald-400/20 dark:via-emerald-500/10 dark:to-transparent blur-[65px] pointer-events-none transition-opacity duration-500" />
+      <div className="absolute inset-8 sm:inset-12 rounded-full bg-emerald-500/10 dark:bg-emerald-400/10 blur-2xl pointer-events-none" />
 
       {/* CANVAS 3D INTERACTIVO CON TOUCH-ACTION PAN-Y */}
       <canvas

@@ -1618,81 +1618,327 @@ function CostCard() {
 }
 
 /* ============================================================
-   Letrero neón — "100% TUYO" vs "SUSPENDIDO"
+   Calculadora de Fuga de Comisiones y Retención de Capital
    ============================================================ */
-type NeonColor = 'emerald' | 'rose'
+function CommissionBleedCalculator() {
+  const [monthlyRevenue, setMonthlyRevenue] = React.useState(8000)
 
-function NeonSign({
-  text,
-  color,
-  active,
-  delay,
-  onClick,
-}: {
-  text: string
-  color: NeonColor
-  active: boolean
-  delay: string
-  onClick: () => void
-}) {
-  const [hovering, setHovering] = React.useState(false)
-  const isRose = color === 'rose'
-  const glow = active
-    ? isRose
-      ? 'var(--neon-rose)'
-      : 'var(--neon-emerald)'
-    : hovering
-      ? isRose
-        ? 'var(--neon-rose-hover)'
-        : 'var(--neon-emerald-hover)'
-      : 'none'
+  // Plataformas de alquiler (Shopify, Wix, Tiendanube):
+  // 2.5% promedio de comisión sobre facturación bruta
+  const platformFeeMonthly = Math.round(monthlyRevenue * 0.025)
+  // Plugins obligatorios (WhatsApp CRM, reseñas, abandono de carrito, facturación, backups)
+  const appSubsMonthly = 85
+  // Cuota mensual de plan
+  const planBaseMonthly = 39
+  const totalRentalMonthly = platformFeeMonthly + appSubsMonthly + planBaseMonthly
+  const totalRentalAnnual = totalRentalMonthly * 12
+
+  // ExePaginasWeb (0% comisiones a terceros, plugins integrados en código nativo)
+  const exepaginasAnnualSavings = totalRentalAnnual
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-      aria-pressed={active}
-      style={{ textShadow: glow, animationDelay: delay }}
-      className={`font-black uppercase tracking-[0.14em] select-none cursor-pointer rounded-md transition-[text-shadow,color] duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-surface-0 text-[26px] sm:text-4xl ${
-        active ? 'animate-[neon-flicker_8s_steps(1)_infinite]' : ''
-      } ${isRose ? (active ? 'text-rent-500 dark:text-rent-400/95' : 'text-rent-500/30 dark:text-rent-400/25') : active ? 'text-own-700 dark:text-own-400/95' : 'text-own-700/30 dark:text-own-400/25'}`}
+    <div
+      data-commission-calculator="true"
+      className="p-6 sm:p-8 rounded-2xl bg-[#050811]/90 border border-amber-500/30 backdrop-blur-xl shadow-2xl relative overflow-hidden mb-12 sm:mb-16"
     >
-      {text}
-    </button>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10 font-mono text-[11px]">
+        <div className="flex items-center gap-2 text-amber-400 font-bold uppercase tracking-wider">
+          <CyberMetricProcessor size={15} className="text-amber-400" />
+          <span>[SIMULADOR DE FUGA // RETENCIÓN DE CAPITAL]</span>
+        </div>
+        <span className="text-slate-400 text-[10px]">CERO COMISIONES OCULTAS</span>
+      </div>
+
+      <div className="max-w-2xl mb-8">
+        <h3 className="text-2xl sm:text-3xl font-black font-montserrat text-white tracking-tight mb-2">
+          Calculadora de Alquiler vs. Soberanía: ¿Cuánto le regalás a plataformas de terceros?
+        </h3>
+        <p className="text-slate-300 text-sm leading-relaxed">
+          Las plataformas de suscripción te cobran un impuesto silencioso: un{' '}
+          <strong className="text-amber-400">2% a 3.5% de cada venta bruta</strong> sumado a cuotas
+          fijas de plugins indispensables. Deslizá tu facturación mensual estimada y mirá la fuga
+          anual real:
+        </p>
+      </div>
+
+      {/* Control deslizante (Slider) */}
+      <div className="p-4 sm:p-5 rounded-xl bg-black/60 border border-white/10 mb-8">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <label
+            htmlFor="revenue-slider"
+            className="text-xs sm:text-sm font-mono font-bold text-slate-300"
+          >
+            Facturación mensual estimada de tu negocio:
+          </label>
+          <div className="text-xl sm:text-2xl font-black font-mono text-cyan-400 tracking-tight">
+            ${monthlyRevenue.toLocaleString('en-US')} USD{' '}
+            <span className="text-xs font-normal text-slate-400">/ mes</span>
+          </div>
+        </div>
+
+        <input
+          id="revenue-slider"
+          type="range"
+          min="1000"
+          max="40000"
+          step="500"
+          value={monthlyRevenue}
+          onChange={(e) => setMonthlyRevenue(Number(e.target.value))}
+          className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+        />
+
+        <div className="flex justify-between items-center text-[10px] font-mono text-slate-400 mt-2">
+          <span>$1,000 USD/mes</span>
+          <span>$20,000 USD/mes</span>
+          <span>$40,000 USD/mes</span>
+        </div>
+      </div>
+
+      {/* Comparación directa en 2 columnas tácticas */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch mb-8">
+        {/* Columna Alquiler */}
+        <div className="p-5 rounded-xl bg-rose-950/20 border border-rose-500/30 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between text-xs font-mono font-bold text-rose-400 pb-2 mb-3 border-b border-rose-500/20">
+              <span>ALQUILER TRADICIONAL (SaaS)</span>
+              <span>FUGA MENSUAL</span>
+            </div>
+            <ul className="space-y-2 text-xs font-mono text-slate-300 mb-4">
+              <li className="flex justify-between">
+                <span className="text-slate-400">Comisión pasarela (2.5% s/ ventas):</span>
+                <span className="font-bold text-rose-300">
+                  ${platformFeeMonthly.toLocaleString('en-US')} USD/mes
+                </span>
+              </li>
+              <li className="flex justify-between">
+                <span className="text-slate-400">Apps y plugins de terceros:</span>
+                <span className="font-bold text-rose-300">${appSubsMonthly} USD/mes</span>
+              </li>
+              <li className="flex justify-between">
+                <span className="text-slate-400">Plan base de la plataforma:</span>
+                <span className="font-bold text-rose-300">${planBaseMonthly} USD/mes</span>
+              </li>
+            </ul>
+          </div>
+          <div className="pt-3 border-t border-rose-500/30 text-right">
+            <span className="text-[10px] font-mono uppercase text-rose-400/80 block">
+              Fuga total acumulada en 1 año:
+            </span>
+            <span className="text-2xl sm:text-3xl font-black font-mono text-rose-400">
+              -${totalRentalAnnual.toLocaleString('en-US')} USD
+            </span>
+          </div>
+        </div>
+
+        {/* Columna ExePaginasWeb */}
+        <div className="p-5 rounded-xl bg-emerald-950/20 border border-emerald-500/40 shadow-[0_0_20px_rgba(16,185,129,0.15)] flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between text-xs font-mono font-bold text-emerald-400 pb-2 mb-3 border-b border-emerald-500/20">
+              <span>EXEPAGINASWEB (CÓDIGO PROPIO)</span>
+              <span>100% RETENIDO</span>
+            </div>
+            <ul className="space-y-2 text-xs font-mono text-slate-300 mb-4">
+              <li className="flex justify-between">
+                <span className="text-slate-400">Comisión por tus ventas:</span>
+                <span className="font-bold text-emerald-400">$0.00 (0%)</span>
+              </li>
+              <li className="flex justify-between">
+                <span className="text-slate-400">Costos de plugins de terceros:</span>
+                <span className="font-bold text-emerald-400">$0.00 (Nativo en código)</span>
+              </li>
+              <li className="flex justify-between">
+                <span className="text-slate-400">Infraestructura y hosting:</span>
+                <span className="font-bold text-emerald-400">En tu propia cuenta</span>
+              </li>
+            </ul>
+          </div>
+          <div className="pt-3 border-t border-emerald-500/30 text-right">
+            <span className="text-[10px] font-mono uppercase text-emerald-400/80 block">
+              Ahorro y capital retenido en tu bolsillo:
+            </span>
+            <span className="text-2xl sm:text-3xl font-black font-mono text-emerald-400">
+              +${exepaginasAnnualSavings.toLocaleString('en-US')} USD / año
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Telemetría inferior */}
+      <div className="p-3 rounded-lg bg-black/40 border border-white/5 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-400">
+        <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
+          <CyberCheckMark size={14} /> En 3 años retenés más de $
+          {(exepaginasAnnualSavings * 3).toLocaleString('en-US')} USD en margen neto para tu
+          empresa.
+        </span>
+        <span className="text-[10px] text-slate-500">[STATUS // RENTABILIDAD PURA]</span>
+      </div>
+    </div>
   )
 }
 
-function NeonDuel({
-  t,
-  mode,
-  onSelect,
-}: {
-  t: (k: string, f: string) => string
-  mode: TermMode
-  onSelect: (m: TermMode) => void
-}) {
+/* ============================================================
+   Matriz Táctica de Ingeniería Real (4 Ejes)
+   ============================================================ */
+function TacticalEngineeringMatrix() {
+  const rows = [
+    {
+      axis: 'Propiedad del Código Fuente',
+      rental:
+        'Código cerrado y retenido en los servidores de la plataforma. Si te das de baja, tu inversión desaparece por completo.',
+      exepaginas:
+        'Repositorio Git privado transferido formalmente a tu cuenta. Código TypeScript/Next.js 100% tuyo, editable y portable sin restricciones.',
+    },
+    {
+      axis: 'Base de Datos y Tus Clientes',
+      rental:
+        'Base compartida bajo esquema propietario. Acceso únicamente por su panel o APIs con límites estrictos de peticiones.',
+      exepaginas:
+        'Base de datos PostgreSQL dedicada (Supabase). Tenés acceso root, backups automáticos y control irrestricto de tus datos.',
+    },
+    {
+      axis: 'Comisiones de Venta y Pasarelas',
+      rental:
+        'Impuesto adicional del 2% al 15% sobre tus cobros brutos, sumado a lo que ya cobra MercadoPago o Stripe.',
+      exepaginas:
+        '0% de comisiones extras para siempre. Tus cobros van directamente desde la pasarela a tu cuenta bancaria sin peajes.',
+    },
+    {
+      axis: 'Continuidad Operativa',
+      rental:
+        'Si dejás de pagar la cuota un solo mes, la plataforma suspende tu tienda en 24 horas y tus clientes no pueden comprar.',
+      exepaginas:
+        'Tu aplicación sigue 100% operativa en tu servidor. Sin cuotas de alquiler forzado para mantener tu negocio online.',
+    },
+  ]
+
   return (
-    <div className="relative flex flex-wrap items-center justify-center gap-x-10 sm:gap-x-16 gap-y-4 py-10">
-      <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[min(90%,560px)] h-px bg-linear-to-r from-transparent via-border to-transparent" />
-      <NeonSign
-        color="emerald"
-        text={t('versus.extra_neon_status_a', '100% TUYO')}
-        active={mode === 'tuyo'}
-        delay="-4.2s"
-        onClick={() => onSelect('tuyo')}
-      />
-      <span className="text-sm font-black text-muted-foreground/50 tracking-[0.3em] animate-pulse select-none">
-        {t('versus.extra_vs', 'VS')}
-      </span>
-      <NeonSign
-        color="rose"
-        text={t('versus.extra_neon_status_b', 'SUSPENDIDO')}
-        active={mode === 'suspendido'}
-        delay="-1.7s"
-        onClick={() => onSelect('suspendido')}
-      />
+    <div
+      data-tactical-matrix="true"
+      className="p-6 sm:p-8 rounded-2xl bg-[#060b14]/90 border border-cyan-500/30 backdrop-blur-xl shadow-2xl mb-12 sm:mb-16"
+    >
+      <div className="flex items-center justify-between gap-2 mb-6 pb-4 border-b border-white/10 font-mono text-[11px]">
+        <div className="flex items-center gap-2 text-cyan-400 font-bold uppercase tracking-wider">
+          <CyberTechCode size={15} className="text-cyan-400" />
+          <span>[MATRIZ TÁCTICA // 4 EJES DE INGENIERÍA]</span>
+        </div>
+        <span className="text-slate-400 text-[10px]">INGENIERÍA VS PLANTILLA</span>
+      </div>
+
+      <div className="max-w-2xl mb-8">
+        <h3 className="text-2xl sm:text-3xl font-black font-montserrat text-white tracking-tight mb-2">
+          Matriz de Soberanía Técnica: ¿Qué comprás exactamente?
+        </h3>
+        <p className="text-slate-300 text-sm leading-relaxed">
+          Comparativa transparente entre alquilar una plataforma prediseñada versus construir un
+          activo de software de tu propiedad con ingeniería real.
+        </p>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="border-b border-white/10 font-mono text-xs uppercase tracking-wider">
+              <th className="py-3 px-4 text-slate-400 w-1/4">Eje de Decisión</th>
+              <th className="py-3 px-4 text-rose-400 w-[37.5%] bg-rose-950/10">
+                Plataforma Alquilada (SaaS)
+              </th>
+              <th className="py-3 px-4 text-emerald-400 w-[37.5%] bg-emerald-950/10">
+                ExePaginasWeb (Propiedad Real)
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5 text-xs sm:text-sm">
+            {rows.map((row, idx) => (
+              <tr key={idx} className="hover:bg-white/5 transition-colors">
+                <td className="py-4 px-4 font-mono font-bold text-white align-top">
+                  <span className="text-cyan-400 mr-2 text-[10px]">[0{idx + 1}]</span>
+                  {row.axis}
+                </td>
+                <td className="py-4 px-4 text-rose-200/80 bg-rose-950/5 align-top leading-relaxed">
+                  <div className="flex items-start gap-2">
+                    <CyberCrossMark size={14} className="text-rose-400 shrink-0 mt-0.5" />
+                    <span>{row.rental}</span>
+                  </div>
+                </td>
+                <td className="py-4 px-4 text-emerald-200/90 bg-emerald-950/5 align-top leading-relaxed font-medium">
+                  <div className="flex items-start gap-2">
+                    <CyberCheckMark size={14} className="text-emerald-400 shrink-0 mt-0.5" />
+                    <span>{row.exepaginas}</span>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+/* ============================================================
+   Sello Notarial Criptográfico de Autoría Directa (Exequiel Echevarria 2025)
+   ============================================================ */
+function NotarialAuthorshipSeal() {
+  return (
+    <div
+      data-notarial-seal="true"
+      className="p-6 sm:p-7 rounded-2xl bg-[#030712]/95 border border-emerald-500/40 backdrop-blur-2xl shadow-[0_0_35px_rgba(16,185,129,0.12)] relative overflow-hidden mb-12 sm:mb-16"
+    >
+      {/* Fondo holográfico sutil */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.1),transparent_60%)]" />
+
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 pb-4 mb-5 border-b border-white/10 font-mono text-[11px]">
+        <div className="flex items-center gap-2">
+          <CyberRealPropertyShield size={16} className="text-emerald-400" />
+          <span className="text-emerald-400 font-bold uppercase tracking-widest">
+            CERTIFICADO DE AUTORÍA DIRECTA // CÓDIGO PROPIO
+          </span>
+        </div>
+        <div className="flex items-center gap-2 font-mono text-[10px] text-slate-400">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>ORIGEN FORMAL: 2025</span>
+        </div>
+      </div>
+
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <div className="md:col-span-2 space-y-3">
+          <h4 className="text-xl sm:text-2xl font-bold font-montserrat text-white tracking-tight">
+            Autoría Directa de Exequiel Echevarría — Sin Intermediarios ni Agencias Cautivas
+          </h4>
+          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+            Cada línea de software desarrollada en <strong>ExePaginasWeb (Fundada en 2025)</strong>{' '}
+            se construye con arquitectura artesanal a medida. No delegamos en juniors improvisados
+            ni en plantillas empaquetadas: recibís la titularidad total del repositorio Git, control
+            administrativo absoluto y soberanía técnica garantizada.
+          </p>
+
+          <div className="flex flex-wrap gap-2 pt-2 text-[11px] font-mono">
+            <span className="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-slate-300">
+              ✓ Transferencia de Repositorio GitHub
+            </span>
+            <span className="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-slate-300">
+              ✓ Base Postgres Supabase Propia
+            </span>
+            <span className="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-slate-300">
+              ✓ 0% Vendor Lock-in
+            </span>
+          </div>
+        </div>
+
+        <div className="p-4 rounded-xl bg-black/60 border border-emerald-500/30 text-center font-mono">
+          <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">
+            SELLO DE INTEGRIDAD
+          </div>
+          <div className="text-sm font-bold text-emerald-400 mb-1">EXEQUIEL ECHEVARRÍA</div>
+          <div className="text-[11px] text-slate-400 mb-3">Software & Web Architect</div>
+          <div className="text-[9px] text-slate-500 bg-slate-900/80 p-1.5 rounded border border-white/5 break-all select-all">
+            SHA-256: 7e25b90f4a18ce82...d2025
+          </div>
+          <span className="inline-block mt-2 text-[10px] font-bold text-emerald-400/90 tracking-wider">
+            [VERIFICADO: PROPIEDAD IRRESTRICTA]
+          </span>
+        </div>
+      </div>
     </div>
   )
 }
@@ -2015,7 +2261,6 @@ function CodeLiberationTerminal({ mode }: { mode: TermMode }) {
    Sección completa
    ============================================================ */
 export const OwnershipVsSubscription: React.FC = () => {
-  const { t } = useTranslation()
   const [terminalMode, setTerminalMode] = React.useState<TermMode>('tuyo')
   const [simulationCut, setSimulationCut] = React.useState(false)
   const [decisionPhase, setDecisionPhase] = React.useState<'experimental' | 'escala'>('escala')
@@ -2068,7 +2313,7 @@ export const OwnershipVsSubscription: React.FC = () => {
         >
           <div className="relative p-5 sm:p-6 rounded-2xl bg-[#060b14]/90 border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.15)] backdrop-blur-xl overflow-hidden">
             {/* Línea láser de barrido holográfico (Scanline) */}
-            <div className="pointer-events-none absolute inset-x-0 h-[2px] bg-linear-to-r from-transparent via-cyan-400 to-transparent animate-pulse opacity-70" />
+            <div className="pointer-events-none absolute inset-x-0 h-0.5 bg-linear-to-r from-transparent via-cyan-400 to-transparent animate-pulse opacity-70" />
 
             <div className="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-white/10 font-mono text-[11px]">
               <span className="text-cyan-400 font-bold tracking-widest uppercase flex items-center gap-2">
@@ -2237,15 +2482,21 @@ export const OwnershipVsSubscription: React.FC = () => {
           <RentalCard simulatedCut={simulationCut} onToggleCut={handleToggleSimulation} />
         </div>
 
-        {/* Letrero neón: 100% TUYO vs SUSPENDIDO */}
-        <NeonDuel t={t} mode={terminalMode} onSelect={setTerminalMode} />
+        {/* 1. Simulador Interactivo de Fuga de Comisiones y Cuotas (Calculadora Soberana) */}
+        <CommissionBleedCalculator />
 
-        {/* Terminal de liberación del código */}
-        <div className="max-w-4xl mx-auto mb-14 sm:mb-20">
+        {/* 2. Matriz Táctica de 4 Ejes de Ingeniería Real */}
+        <TacticalEngineeringMatrix />
+
+        {/* 3. Terminal interactiva de liberación y posesión de código */}
+        <div className="max-w-4xl mx-auto mb-14 sm:mb-16">
           <CodeLiberationTerminal mode={terminalMode} />
         </div>
 
-        {/* Cierre con números */}
+        {/* 4. Sello Notarial Criptográfico de Autoría Directa (Exequiel Echevarría 2025) */}
+        <NotarialAuthorshipSeal />
+
+        {/* 5. Cierre financiero con curva de amortización a 5 años */}
         <CostCard />
       </div>
     </section>

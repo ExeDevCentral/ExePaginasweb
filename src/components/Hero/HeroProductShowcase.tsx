@@ -164,6 +164,25 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isCinemaMode])
 
+  // Autoplay del video al montar o cambiar de pestaña
+  useEffect(() => {
+    if (activeTab === 'video' && videoRef.current) {
+      videoRef.current.defaultMuted = true
+      videoRef.current.muted = isMuted
+      const playPromise = videoRef.current.play()
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setVideoLoaded(true)
+            setVideoError(false)
+          })
+          .catch(() => {
+            // Autoplay en espera de interacción
+          })
+      }
+    }
+  }, [activeTab, isMuted])
+
   return (
     <>
       <div
@@ -276,22 +295,28 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                 >
                   <video
                     ref={videoRef}
-                    src="/assets/videos/hero-bg.mp4"
                     autoPlay
                     loop
                     muted={isMuted}
                     playsInline
+                    preload="auto"
                     onTimeUpdate={handleTimeUpdate}
                     onLoadedData={() => {
                       setVideoLoaded(true)
                       setVideoError(false)
                     }}
-                    onError={() => {
-                      setVideoLoaded(false)
-                      setVideoError(true)
+                    onCanPlay={() => {
+                      setVideoLoaded(true)
+                      setVideoError(false)
                     }}
                     className={`w-full h-full object-cover ${videoError ? 'hidden' : 'block'}`}
-                  />
+                  >
+                    <source src="/assets/videos/hero-bg.mp4" type="video/mp4" />
+                    <source
+                      src="/assets/videos/coverr-a-businessman-working-on-a-stock-market-trading-platform-4862-1080p.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
 
                   {/* SUPER EFECTO 3: LIVE SIMULATED REEL (Fallback Dinámico si aún no hay video) */}
                   {videoError && (
@@ -542,15 +567,22 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                 </button>
               </div>
 
-              <div className="relative aspect-16/9 bg-black">
-                {activeTab === 'video' && !videoError ? (
+              <div className="relative aspect-video bg-black">
+                {activeTab === 'video' ? (
                   <video
-                    src="/assets/videos/hero-bg.mp4"
                     autoPlay
                     loop
                     controls
+                    muted={isMuted}
+                    playsInline
                     className="w-full h-full object-cover"
-                  />
+                  >
+                    <source src="/assets/videos/hero-bg.mp4" type="video/mp4" />
+                    <source
+                      src="/assets/videos/coverr-a-businessman-working-on-a-stock-market-trading-platform-4862-1080p.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
                 ) : (
                   <Image
                     src={

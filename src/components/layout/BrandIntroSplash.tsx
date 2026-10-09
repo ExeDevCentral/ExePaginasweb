@@ -16,10 +16,10 @@ export default function BrandIntroSplash() {
   const [showSplash, setShowSplash] = useState(true)
 
   useEffect(() => {
-    // 1.4 segundos de pre-presentación del logo para carga tranquila y sólida
+    // 1.8s de pre-presentación continua y fluida para estabilizar todo el árbol de componentes
     const timer = setTimeout(() => {
       setShowSplash(false)
-    }, 1400)
+    }, 1800)
 
     return () => clearTimeout(timer)
   }, [])
@@ -32,14 +32,14 @@ export default function BrandIntroSplash() {
           initial={{ opacity: 1 }}
           exit={{
             opacity: 0,
-            scale: 1.02,
-            filter: 'blur(8px)',
+            scale: 1.015,
+            filter: 'blur(12px)',
           }}
           transition={{
-            duration: 0.6,
-            ease: [0.16, 1, 0.3, 1],
+            duration: 0.75,
+            ease: [0.22, 1, 0.36, 1],
           }}
-          className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#060913] backdrop-blur-3xl select-none"
+          className="fixed inset-0 z-99999 flex flex-col items-center justify-center bg-[#070b16] select-none pointer-events-auto"
         >
           <BrandLoader size="lg" text="EXEPAGINASWEB" subtext="ARQUITECTURA DE SOFTWARE · 2025" />
         </motion.div>

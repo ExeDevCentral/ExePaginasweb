@@ -1,12 +1,13 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
- * Prohibida su reproducción total o parcial sin autorización.
+ *
+ * BrandLoader: Loader de marca y pre-presentación con aceleración por hardware en GPU pura.
+ * Elimina cualquier entrecortado o salto de frames durante la hidratación de React.
  */
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
 import Logo from './Logo'
 
 interface BrandLoaderProps {
@@ -27,89 +28,81 @@ export const BrandLoader: React.FC<BrandLoaderProps> = ({
   const isSmall = size === 'sm'
 
   let logoSize = 48
-  let ringOuterClass = 'w-20 h-20'
-  let ringInnerClass = 'w-16 h-16'
+  let ringOuterClass = 'w-24 h-24'
+  let ringInnerClass = 'w-20 h-20'
 
   if (isSmall) {
     logoSize = 36
-    ringOuterClass = 'w-14 h-14'
+    ringOuterClass = 'w-16 h-16'
     ringInnerClass = 'w-12 h-12'
   } else if (isLarge) {
     logoSize = 64
-    ringOuterClass = 'w-28 h-28 border-accent-cyan/50'
-    ringInnerClass = 'w-24 h-24'
+    ringOuterClass = 'w-32 h-32'
+    ringInnerClass = 'w-28 h-28'
   }
 
   const content = (
-    <div className={`relative flex flex-col items-center justify-center select-none ${className}`}>
-      {/* Outer ambient glow */}
+    <div
+      className={`relative flex flex-col items-center justify-center select-none transform-gpu ${className}`}
+      style={{ transform: 'translateZ(0)' }}
+    >
+      {/* Contenedor concéntrico central con aceleración de GPU pura (60-120 FPS sin caídas) */}
       <div className="relative flex items-center justify-center">
-        {/* Pulsing neon radial aura */}
-        <motion.div
-          animate={{
-            scale: [1, 1.25, 1],
-            opacity: [0.35, 0.7, 0.35],
+        {/* 1. Aura radial holográfica con respiración fluida por CSS */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-radial from-cyan-400/35 via-indigo-500/20 to-transparent blur-2xl rounded-full pointer-events-none animate-pulse transform-gpu"
+          style={{
+            width: isLarge ? 220 : 160,
+            height: isLarge ? 220 : 160,
+            transform: 'translate(-50%, -50%) translateZ(0)',
+            top: '50%',
+            left: '50%',
           }}
-          transition={{
-            repeat: Infinity,
-            duration: 2.4,
-            ease: 'easeInOut',
-          }}
-          className="absolute inset-0 bg-gradient-to-tr from-accent-cyan/40 via-yellow-400/30 to-accent-magenta/30 blur-2xl rounded-full pointer-events-none"
         />
 
-        {/* Orbiting cyber ring */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
-          className={`absolute rounded-full border border-dashed border-accent-cyan/40 pointer-events-none ${ringOuterClass}`}
+        {/* 2. Anillo orbital exterior — Rotación fluida en hilo de GPU independiente */}
+        <div
+          aria-hidden="true"
+          className={`absolute rounded-full border border-dashed border-cyan-400/40 pointer-events-none transform-gpu animate-[spin_8s_linear_infinite] ${ringOuterClass}`}
+          style={{ willChange: 'transform' }}
         />
 
-        {/* Inner reverse spin ring */}
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
-          className={`absolute rounded-full border border-t-accent-cyan border-r-transparent border-b-accent-magenta border-l-transparent pointer-events-none opacity-60 ${ringInnerClass}`}
+        {/* 3. Anillo orbital interior — Rotación inversa en contrasentido */}
+        <div
+          aria-hidden="true"
+          className={`absolute rounded-full border border-t-cyan-400/80 border-r-transparent border-b-indigo-400/70 border-l-transparent pointer-events-none opacity-70 transform-gpu animate-[spin_5s_linear_infinite_reverse] ${ringInnerClass}`}
+          style={{ willChange: 'transform' }}
         />
 
-        {/* Center Logo Box */}
-        <motion.div
-          animate={{
-            y: [0, -4, 0],
-            scale: [1, 1.03, 1],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 2.4,
-            ease: 'easeInOut',
-          }}
-          className="relative z-10 p-2.5 rounded-2xl bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border border-slate-200/80 dark:border-white/15 shadow-xl shadow-accent-cyan/10"
+        {/* 4. Caja del Logo Oficial — Rock-solid, sin saltos verticales, presencia limpia */}
+        <div
+          className="relative z-10 p-3 rounded-2xl bg-[#090e1a]/90 backdrop-blur-2xl border border-cyan-400/30 shadow-[0_0_30px_rgba(6,182,212,0.2)] transform-gpu transition-all duration-300"
+          style={{ transform: 'translateZ(0)' }}
         >
           <Logo size={logoSize} animated={false} />
-        </motion.div>
+        </div>
       </div>
 
-      {/* Brand Text / Subtext */}
-      <div className="mt-5 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="flex items-center justify-center gap-1.5 font-mono text-xs md:text-sm font-black tracking-widest uppercase text-foreground"
-        >
-          <span className="bg-gradient-to-r from-accent-cyan via-amber-300 to-accent-magenta bg-clip-text text-transparent">
+      {/* Identidad y tipografía técnica */}
+      <div className="mt-6 text-center transform-gpu">
+        <div className="flex items-center justify-center gap-1.5 font-mono text-xs md:text-sm font-black tracking-widest uppercase text-foreground">
+          <span className="bg-linear-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent drop-shadow-sm">
             {text || 'EXEPAGINASWEB'}
           </span>
-        </motion.div>
+        </div>
 
         {subtext !== undefined ? (
-          <p className="text-[11px] font-mono text-muted-foreground mt-1 tracking-wider uppercase animate-pulse">
+          <p className="text-[11px] font-mono text-slate-400 mt-1.5 tracking-wider uppercase">
             {subtext}
           </p>
         ) : (
-          <div className="flex items-center justify-center gap-1.5 mt-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-            <p className="text-[10px] font-mono text-cyan-300/80 tracking-widest uppercase">
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400" />
+            </span>
+            <p className="text-[10px] font-mono text-cyan-300/85 tracking-widest uppercase font-semibold">
               ARQUITECTURA DE SOFTWARE · 2025
             </p>
           </div>
@@ -120,7 +113,7 @@ export const BrandLoader: React.FC<BrandLoaderProps> = ({
 
   if (isFullscreen) {
     return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/90 backdrop-blur-2xl">
+      <div className="fixed inset-0 z-9999 flex items-center justify-center bg-[#070b16]/95 backdrop-blur-3xl">
         {content}
       </div>
     )

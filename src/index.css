@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
@@ -376,99 +376,107 @@
 
 .dark {
   color-scheme: dark;
-  --background: #03060a;
+  /* Fondo Obsidian Aeroespacial Suave — Elegante, profundo, cero fatiga visual */
+  --background: #080c14;
   --foreground: #f8fafc;
-  --card: #060b13;
+  --card: #0d1424;
   --card-foreground: #f8fafc;
-  --popover: #060b13;
+  --popover: #0d1424;
   --popover-foreground: #f8fafc;
-  --primary: #10b981; /* Esmeralda técnico sobrio */
-  --primary-foreground: #03060a;
-  --secondary: #0a1322;
-  --secondary-foreground: #f8fafc;
-  --muted: #0a1322;
-  --muted-foreground: #94a3b8;
-  --accent: #10b981;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: rgba(16, 185, 129, 0.24);
-  --input: rgba(16, 185, 129, 0.24);
-  --ring: #10b981;
-  --radius: 0.25rem;
 
-  /* Tokens Maestros de Identidad "Plano de Arquitecto" */
-  --brand: #10b981;
-  --brand-text: #10b981;
-  --signal-amber: #f59e0b;
+  /* Acentos Futuristas Suaves (Cian Cósmico suave / Índigo Aeroespacial / Menta Suave) */
+  --primary: #38bdf8;
+  --primary-foreground: #080c14;
+  --secondary: #111a2e;
+  --secondary-foreground: #f8fafc;
+  --muted: #111a2e;
+  --muted-foreground: #94a3b8;
+  --accent: #38bdf8;
+  --accent-foreground: #080c14;
+  --destructive: #f43f5e;
+  --destructive-foreground: #ffffff;
+
+  /* Bordes Suaves, Finos y Elegantes (Bordes limpios sin saturación verde) */
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #38bdf8;
+  --radius: 0.75rem;
+
+  /* Identidad Futurista Suave y Moderna */
+  --brand: #38bdf8;
+  --brand-text: #38bdf8;
+  --signal-amber: #fbbf24;
   --signal-amber-bg: #f59e0b;
   --state-rose: #f43f5e;
-  --grid-line: rgba(16, 185, 129, 0.08);
-  --grid-line-bold: rgba(16, 185, 129, 0.18);
-  --border-tech: rgba(16, 185, 129, 0.24);
 
-  --accent-cyan: #22d3ee;
-  --accent-violet: #a855f7;
-  --accent-magenta: #ec4899;
-  --accent-yellow: #facc15;
-  --primary-bg: #03060a;
+  /* Retícula Cósmica Sutil y Descansada (3% y 6% de opacidad) */
+  --grid-line: rgba(255, 255, 255, 0.03);
+  --grid-line-bold: rgba(56, 189, 248, 0.06);
+  --border-tech: rgba(56, 189, 248, 0.14);
+
+  /* Acentos Cósmicos Suaves y Armónicos */
+  --accent-cyan: #38bdf8;
+  --accent-violet: #818cf8;
+  --accent-magenta: #f472b6;
+  --accent-yellow: #fbbf24;
+  --primary-bg: #080c14;
   --primary-text: #f8fafc;
   --primary-secondary: #94a3b8;
 
-  /* Paleta Matrix por tema */
-  --matrix-pal-0: #10b981;
-  --matrix-pal-1: #059669;
-  --matrix-pal-2: #047857;
-  --matrix-pal-3: #0ea5e9;
-  --matrix-pal-4: #38bdf8;
-  --matrix-pal-5: #00e5a0;
+  /* Paleta Matrix Suave */
+  --matrix-pal-0: #38bdf8;
+  --matrix-pal-1: #818cf8;
+  --matrix-pal-2: #34d399;
+  --matrix-pal-3: #22d3ee;
+  --matrix-pal-4: #60a5fa;
+  --matrix-pal-5: #a78bfa;
 
-  /* Neón contenido: focalizado en puntos de acción */
-  --neon-emerald: 0 0 4px #10b981, 0 0 16px rgba(16, 185, 129, 0.45);
-  --neon-rose: 0 0 4px #f43f5e, 0 0 16px rgba(244, 63, 94, 0.45);
-  --neon-emerald-hover: 0 0 6px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
-  --neon-rose-hover: 0 0 6px rgba(244, 63, 94, 0.7), 0 0 20px rgba(244, 63, 94, 0.4);
+  /* Neón Suave y Relajante (Glow sedoso sin encandilar) */
+  --neon-emerald: 0 0 8px rgba(52, 211, 153, 0.25), 0 0 24px rgba(52, 211, 153, 0.1);
+  --neon-rose: 0 0 8px rgba(244, 63, 94, 0.25), 0 0 24px rgba(244, 63, 94, 0.1);
+  --neon-emerald-hover: 0 0 12px rgba(52, 211, 153, 0.4), 0 0 28px rgba(52, 211, 153, 0.15);
+  --neon-rose-hover: 0 0 12px rgba(244, 63, 94, 0.4), 0 0 28px rgba(244, 63, 94, 0.15);
 
-  /* Gráfico de costo: series con buen contraste en dark */
+  /* Gráficos con series suaves */
   --chart-emerald: #34d399;
-  --chart-rose: #fb7185;
-  --chart-dot-ring: #060b13;
+  --chart-rose: #f472b6;
+  --chart-dot-ring: #0d1424;
 
-  /* Comparativa — superficies oscuras */
-  --surface-0: #060b14;
-  --surface-1: #0a111f;
-  --surface-2: #0f192d;
-  --border-dark: rgba(16, 185, 129, 0.28);
+  /* Superficies de Tarjetas y Módulos */
+  --surface-0: #0a0f1d;
+  --surface-1: #0e1526;
+  --surface-2: #131d33;
+  --border-dark: rgba(255, 255, 255, 0.08);
   --text-hi: #f8fafc;
   --text-mid: #94a3b8;
   --text-lo: #64748b;
 
-  /* Comparativa — lado Propiedad (emerald) */
+  /* Comparativa — Lado Propiedad (Menta Suave) */
   --own-300: #a7f3d0;
-  --own-400: #34d399;
-  --own-500: #10b981;
-  --own-600: #059669;
-  --own-700: #047857;
-  --own-800: #065f46;
-  --own-900: #022c22;
-  --own-tint: rgba(6, 78, 59, 0.35);
-  --own-border: rgba(52, 211, 153, 0.35);
-  --own-glow: rgba(16, 185, 129, 0.35);
+  --own-400: #6ee7b7;
+  --own-500: #34d399;
+  --own-600: #10b981;
+  --own-700: #059669;
+  --own-800: #047857;
+  --own-900: #064e3b;
+  --own-tint: rgba(16, 185, 129, 0.1);
+  --own-border: rgba(52, 211, 153, 0.2);
+  --own-glow: rgba(52, 211, 153, 0.15);
 
-  /* Comparativa — lado Alquiler (rose) */
+  /* Comparativa — Lado Alquiler (Rosa/Coral Suave) */
   --rent-300: #fecdd3;
-  --rent-400: #fb7185;
-  --rent-500: #f43f5e;
-  --rent-600: #e11d48;
-  --rent-700: #be123c;
-  --rent-800: #9f1239;
-  --rent-tint: rgba(76, 5, 25, 0.35);
-  --rent-border: rgba(251, 113, 133, 0.3);
-  --rent-glow: rgba(244, 63, 94, 0.35);
+  --rent-400: #fda4af;
+  --rent-500: #fb7185;
+  --rent-600: #f43f5e;
+  --rent-700: #e11d48;
+  --rent-800: #be123c;
+  --rent-tint: rgba(244, 63, 94, 0.08);
+  --rent-border: rgba(251, 113, 133, 0.2);
+  --rent-glow: rgba(244, 63, 94, 0.15);
 
-  /* Comparativa — acento de marca */
-  --accent-brand: #10b981;
-  --own-accent: linear-gradient(100deg, #10b981, #059669);
+  /* Acento de Marca */
+  --accent-brand: #38bdf8;
+  --own-accent: linear-gradient(100deg, #38bdf8, #818cf8);
 }
 
 @layer base {
@@ -1849,23 +1857,21 @@
 }
 
 /* ============================================================
-   Bordes Verdes Neón Finos y Alargados (Identidad Cyberpunk Dark)
-   Permite discernir nítidamente dónde empieza y termina cada bloque
+   Bordes y Líneas Cyber-Tech Suaves y Futuristas
    ============================================================ */
 .neon-border-emerald {
   position: relative;
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 .dark .neon-border-emerald {
-  border-color: rgba(16, 185, 129, 0.35) !important;
-  box-shadow: 0 0 25px rgba(16, 185, 129, 0.08);
+  border-color: rgba(56, 189, 248, 0.2) !important;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.05);
 }
 .dark .neon-border-emerald:hover {
-  border-color: rgba(52, 211, 153, 0.65) !important;
-  box-shadow: 0 0 35px rgba(16, 185, 129, 0.18);
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.1);
 }
 
-/* Líneas finas y alargadas en verde neón para cajas y tarjetas */
 .neon-line-accent {
   position: relative;
 }
@@ -1873,10 +1879,10 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 6%;
-  right: 6%;
-  height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.95), transparent);
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
   pointer-events: none;
   z-index: 20;
 }
@@ -1884,10 +1890,10 @@
   content: '';
   position: absolute;
   bottom: 0;
-  left: 10%;
-  right: 10%;
+  left: 12%;
+  right: 12%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(129, 140, 248, 0.25), transparent);
   pointer-events: none;
   z-index: 20;
 }

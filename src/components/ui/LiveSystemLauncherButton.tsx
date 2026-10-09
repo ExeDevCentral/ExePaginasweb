@@ -26,32 +26,36 @@ export interface LiveSystemLauncherButtonProps {
 
 const COLOR_STYLES = {
   emerald: {
-    border: 'border-emerald-400/40 hover:border-emerald-300',
-    bg: 'bg-emerald-950/50 hover:bg-emerald-900/60',
-    glow: 'shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:shadow-[0_0_25px_rgba(16,185,129,0.35)]',
-    text: 'text-emerald-300',
-    dot: 'bg-emerald-400',
+    border:
+      'border-emerald-500/50 dark:border-emerald-400/40 hover:border-emerald-500 dark:hover:border-emerald-300',
+    bg: 'bg-white/95 dark:bg-emerald-950/50 hover:bg-emerald-50/90 dark:hover:bg-emerald-900/60',
+    glow: 'shadow-[0_4px_14px_rgba(16,185,129,0.18)] hover:shadow-[0_6px_22px_rgba(16,185,129,0.35)]',
+    text: 'text-emerald-700 dark:text-emerald-300',
+    dot: 'bg-emerald-500 shadow-[0_0_8px_#10b981]',
   },
   cyan: {
-    border: 'border-cyan-400/40 hover:border-cyan-300',
-    bg: 'bg-cyan-950/50 hover:bg-cyan-900/60',
-    glow: 'shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)]',
-    text: 'text-cyan-300',
-    dot: 'bg-cyan-400',
+    border:
+      'border-cyan-500/50 dark:border-cyan-400/40 hover:border-cyan-500 dark:hover:border-cyan-300',
+    bg: 'bg-white/95 dark:bg-cyan-950/50 hover:bg-cyan-50/90 dark:hover:bg-cyan-900/60',
+    glow: 'shadow-[0_4px_14px_rgba(6,182,212,0.18)] hover:shadow-[0_6px_22px_rgba(6,182,212,0.35)]',
+    text: 'text-cyan-700 dark:text-cyan-300',
+    dot: 'bg-cyan-500 shadow-[0_0_8px_#22d3ee]',
   },
   amber: {
-    border: 'border-amber-400/40 hover:border-amber-300',
-    bg: 'bg-amber-950/50 hover:bg-amber-900/60',
-    glow: 'shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_25px_rgba(245,158,11,0.35)]',
-    text: 'text-amber-300',
-    dot: 'bg-amber-400',
+    border:
+      'border-amber-500/50 dark:border-amber-400/40 hover:border-amber-500 dark:hover:border-amber-300',
+    bg: 'bg-white/95 dark:bg-amber-950/50 hover:bg-amber-50/90 dark:hover:bg-amber-900/60',
+    glow: 'shadow-[0_4px_14px_rgba(245,158,11,0.18)] hover:shadow-[0_6px_22px_rgba(245,158,11,0.35)]',
+    text: 'text-amber-700 dark:text-amber-300',
+    dot: 'bg-amber-500 shadow-[0_0_8px_#f59e0b]',
   },
   fuchsia: {
-    border: 'border-fuchsia-400/40 hover:border-fuchsia-300',
-    bg: 'bg-fuchsia-950/50 hover:bg-fuchsia-900/60',
-    glow: 'shadow-[0_0_15px_rgba(217,70,239,0.15)] hover:shadow-[0_0_25px_rgba(217,70,239,0.35)]',
-    text: 'text-fuchsia-300',
-    dot: 'bg-fuchsia-400',
+    border:
+      'border-fuchsia-500/50 dark:border-fuchsia-400/40 hover:border-fuchsia-500 dark:hover:border-fuchsia-300',
+    bg: 'bg-white/95 dark:bg-fuchsia-950/50 hover:bg-fuchsia-50/90 dark:hover:bg-fuchsia-900/60',
+    glow: 'shadow-[0_4px_14px_rgba(217,70,239,0.18)] hover:shadow-[0_6px_22px_rgba(217,70,239,0.35)]',
+    text: 'text-fuchsia-700 dark:text-fuchsia-300',
+    dot: 'bg-fuchsia-500 shadow-[0_0_8px_#d946ef]',
   },
 }
 
@@ -124,12 +128,12 @@ export default function LiveSystemLauncherButton({
       </span>
 
       {/* 4. Etiqueta limpia y técnica en tipografía mono */}
-      <span className="font-mono text-[11px] sm:text-xs font-bold tracking-wider uppercase text-white/95 group-hover:text-white transition-colors truncate">
+      <span className="font-mono text-[11px] sm:text-xs font-bold tracking-wider uppercase text-slate-900 dark:text-white/95 group-hover:text-slate-950 dark:group-hover:text-white transition-colors truncate">
         {label}
       </span>
 
       {/* 5. Micro-flecha HUD de acceso exterior */}
-      <ArrowUpRight className="w-3.5 h-3.5 text-white/70 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
+      <ArrowUpRight className="w-3.5 h-3.5 text-slate-700 dark:text-white/70 group-hover:text-slate-950 dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
     </motion.a>
   )
 }

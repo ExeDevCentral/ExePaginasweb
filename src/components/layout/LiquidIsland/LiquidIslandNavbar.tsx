@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * LiquidIslandNavbar: Barra de navegación Dynamic Island de vidrio líquido con spring de ancho,
  * decaimiento de fósforo, CTA magnético, indicador elástico y mega panel.
@@ -96,7 +96,7 @@ export default function LiquidIslandNavbar({
           aria-label="Navegación principal"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative pointer-events-auto w-full max-w-[1100px] mx-auto h-14 sm:h-14.5 rounded-full border border-slate-700/60 dark:border-cyan-400/30 bg-[#0c1224]/90 backdrop-blur-xl shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6),0_0_16px_rgba(6,182,212,0.1)] flex items-center justify-between px-3 sm:px-4 gap-2 transition-colors duration-200 hover:border-cyan-400/60"
+          className="relative pointer-events-auto w-full max-w-275 mx-auto h-14 sm:h-14.5 rounded-full border border-slate-200/90 dark:border-cyan-400/30 bg-white/90 dark:bg-[#0c1224]/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 dark:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6),0_0_16px_rgba(6,182,212,0.1)] flex items-center justify-between px-3 sm:px-4 gap-2 transition-colors duration-200 hover:border-slate-300 dark:hover:border-cyan-400/60"
         >
           {/* Spotlight dinámico sobre el cristal */}
           {!reduceMotion && <SpotlightGlass mouseX={mouseX} mouseY={mouseY} />}

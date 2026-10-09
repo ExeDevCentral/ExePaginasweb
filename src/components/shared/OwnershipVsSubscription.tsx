@@ -382,42 +382,63 @@ function TacticalEngineeringMatrix() {
   ]
 
   return (
-    <div data-tactical-matrix="true" className="mb-14 sm:mb-16">
-      <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-white/10 font-mono text-[11px]">
-        <div className="flex items-center gap-2 text-cyan-400 font-bold uppercase tracking-wider">
-          <CyberTechCode size={14} className="text-cyan-400" />
+    <div
+      data-tactical-matrix="true"
+      className="mb-14 sm:mb-16 rounded-2xl bg-white/95 dark:bg-[#060b14]/90 border border-slate-200/90 dark:border-cyan-500/30 p-5 sm:p-7 shadow-[0_14px_36px_-10px_rgba(6,182,212,0.12),0_4px_16px_rgba(0,0,0,0.02)] backdrop-blur-xl relative overflow-hidden"
+    >
+      {/* Haz láser holográfico superior */}
+      <div className="pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent via-cyan-500/80 to-transparent" />
+
+      <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-slate-200/80 dark:border-white/10 font-mono text-[11px]">
+        <div className="flex items-center gap-2 text-cyan-700 dark:text-cyan-400 font-bold uppercase tracking-wider">
+          <CyberTechCode size={14} className="text-cyan-600 dark:text-cyan-400" />
           <span>[MATRIZ TÁCTICA // 4 EJES DE INGENIERÍA]</span>
         </div>
-        <span className="text-slate-500 text-[10px]">INGENIERÍA VS PLANTILLA</span>
+        <span className="text-slate-500 dark:text-slate-400 text-[10px]">
+          INGENIERÍA VS PLANTILLA
+        </span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-white/10 font-mono text-xs uppercase tracking-wider">
-              <th className="py-3 px-3 text-slate-400 w-1/4">Eje Técnico</th>
-              <th className="py-3 px-3 text-rose-400 w-[37.5%]">Plataforma Alquilada (SaaS)</th>
-              <th className="py-3 px-3 text-emerald-400 w-[37.5%]">
+            <tr className="border-b border-slate-200/80 dark:border-white/10 font-mono text-xs uppercase tracking-wider">
+              <th className="py-3 px-3 text-slate-600 dark:text-slate-400 w-1/4">Eje Técnico</th>
+              <th className="py-3 px-3 text-rose-700 dark:text-rose-400 w-[37.5%] font-bold">
+                Plataforma Alquilada (SaaS)
+              </th>
+              <th className="py-3 px-3 text-emerald-700 dark:text-emerald-400 w-[37.5%] font-bold">
                 ExePaginasWeb (Propiedad Real)
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5 text-xs sm:text-sm">
+          <tbody className="divide-y divide-slate-200/80 dark:divide-white/5 text-xs sm:text-sm">
             {rows.map((row, idx) => (
-              <tr key={idx} className="hover:bg-white/5 transition-colors">
-                <td className="py-3.5 px-3 font-mono font-bold text-white align-top">
-                  <span className="text-cyan-400 mr-2 text-[10px]">[0{idx + 1}]</span>
+              <tr
+                key={idx}
+                className="hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors"
+              >
+                <td className="py-3.5 px-3 font-mono font-bold text-slate-900 dark:text-white align-top">
+                  <span className="text-cyan-700 dark:text-cyan-400 mr-2 text-[10px]">
+                    [0{idx + 1}]
+                  </span>
                   {row.axis}
                 </td>
-                <td className="py-3.5 px-3 text-rose-200/80 align-top leading-relaxed">
+                <td className="py-3.5 px-3 text-rose-900 dark:text-rose-200/80 align-top leading-relaxed">
                   <div className="flex items-start gap-2">
-                    <CyberCrossMark size={14} className="text-rose-400 shrink-0 mt-0.5" />
+                    <CyberCrossMark
+                      size={14}
+                      className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5"
+                    />
                     <span>{row.rental}</span>
                   </div>
                 </td>
-                <td className="py-3.5 px-3 text-emerald-200/90 align-top leading-relaxed font-medium">
+                <td className="py-3.5 px-3 text-emerald-950 dark:text-emerald-200/90 align-top leading-relaxed font-medium">
                   <div className="flex items-start gap-2">
-                    <CyberCheckMark size={14} className="text-emerald-400 shrink-0 mt-0.5" />
+                    <CyberCheckMark
+                      size={14}
+                      className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5"
+                    />
                     <span>{row.exepaginas}</span>
                   </div>
                 </td>
@@ -437,32 +458,39 @@ function NotarialAuthorshipSeal() {
   return (
     <div
       data-notarial-seal="true"
-      className="p-5 sm:p-6 rounded-xl bg-[#030712]/90 border border-emerald-500/30 backdrop-blur-xl relative overflow-hidden"
+      className="p-5 sm:p-6 rounded-2xl bg-white/95 dark:bg-[#030712]/90 border border-emerald-500/40 backdrop-blur-xl relative overflow-hidden shadow-[0_14px_36px_-10px_rgba(16,185,129,0.18),0_4px_16px_rgba(0,0,0,0.02)]"
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-4 border-b border-white/10 font-mono text-[11px]">
+      {/* Haz láser esmeralda superior */}
+      <div className="pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent via-emerald-500/80 to-transparent" />
+
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-4 border-b border-slate-200/80 dark:border-white/10 font-mono text-[11px]">
         <div className="flex items-center gap-2">
-          <CyberRealPropertyShield size={15} className="text-emerald-400" />
-          <span className="text-emerald-400 font-bold uppercase tracking-wider">
+          <CyberRealPropertyShield size={15} className="text-emerald-600 dark:text-emerald-400" />
+          <span className="text-emerald-700 dark:text-emerald-400 font-bold uppercase tracking-wider">
             CERTIFICADO DE AUTORÍA DIRECTA // CÓDIGO PROPIO
           </span>
         </div>
-        <span className="text-slate-400 text-[10px]">ORIGEN FORMAL: 2025</span>
+        <span className="text-slate-500 dark:text-slate-400 text-[10px]">ORIGEN FORMAL: 2025</span>
       </div>
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1.5 max-w-xl">
-          <h4 className="text-base sm:text-lg font-bold font-montserrat text-white tracking-tight">
+          <h4 className="text-base sm:text-lg font-bold font-montserrat text-slate-950 dark:text-white tracking-tight">
             Autoría Directa de Exequiel Echevarría — Sin Intermediarios
           </h4>
-          <p className="text-slate-300 text-xs leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
             ExePaginasWeb (Fundada en 2025): Transferencia de Repositorio GitHub a tu nombre, base
             PostgreSQL dedicada en Supabase y 0% vendor lock-in.
           </p>
         </div>
 
         <div className="font-mono text-left sm:text-right shrink-0">
-          <div className="text-xs font-bold text-emerald-400">EXEQUIEL ECHEVARRÍA</div>
-          <div className="text-[10px] text-slate-400">Software & Web Architect</div>
+          <div className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
+            EXEQUIEL ECHEVARRÍA
+          </div>
+          <div className="text-[10px] text-slate-600 dark:text-slate-400">
+            Software & Web Architect
+          </div>
           <div className="text-[9px] text-slate-500 mt-1 select-all font-mono">
             SHA-256: 7e25...d2025
           </div>
@@ -520,27 +548,29 @@ export const OwnershipVsSubscription: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-12 text-center"
         >
-          <div className="p-5 sm:p-6 rounded-2xl bg-[#060b14]/90 border border-cyan-500/30 shadow-[0_0_25px_rgba(6,182,212,0.12)] backdrop-blur-xl relative overflow-hidden">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#060b14]/90 border border-slate-200/90 dark:border-cyan-500/30 shadow-xl shadow-slate-900/5 dark:shadow-[0_0_25px_rgba(6,182,212,0.12)] backdrop-blur-xl relative overflow-hidden">
             {/* Línea láser de barrido holográfico */}
-            <div className="pointer-events-none absolute inset-x-0 h-0.5 bg-linear-to-r from-transparent via-cyan-400 to-transparent animate-pulse opacity-70" />
+            <div className="pointer-events-none absolute inset-x-0 h-0.5 bg-linear-to-r from-transparent via-cyan-500 dark:via-cyan-400 to-transparent animate-pulse opacity-70" />
 
-            <div className="flex items-center justify-between gap-2 mb-3 pb-2.5 border-b border-white/10 font-mono text-[11px]">
-              <span className="text-cyan-400 font-bold tracking-widest uppercase flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping inline-block" />
+            <div className="flex items-center justify-between gap-2 mb-3 pb-2.5 border-b border-slate-200 dark:border-white/10 font-mono text-[11px]">
+              <span className="text-cyan-700 dark:text-cyan-400 font-bold tracking-widest uppercase flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-ping inline-block" />
                 [DIAGNÓSTICO // ESCÁNER HOLOGRÁFICO]
               </span>
-              <span className="text-slate-500 text-[10px]">VERSIÓN 2026.04</span>
+              <span className="text-slate-500 dark:text-slate-400 text-[10px]">
+                VERSIÓN 2026.04
+              </span>
             </div>
 
             {/* Selector de fase */}
-            <div className="grid grid-cols-2 gap-2 bg-black/60 p-1.5 rounded-xl border border-white/10 mb-4">
+            <div className="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-black/60 p-1.5 rounded-xl border border-slate-200 dark:border-white/10 mb-4">
               <button
                 type="button"
                 onClick={() => setDecisionPhase('experimental')}
                 className={`py-2 px-3 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                   decisionPhase === 'experimental'
                     ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 font-extrabold'
-                    : 'text-slate-400 hover:text-white'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
                 }`}
               >
                 <span>[01 // FASE EXPERIMENTAL]</span>
@@ -552,7 +582,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                 className={`py-2 px-3 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                   decisionPhase === 'escala'
                     ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/30 font-extrabold'
-                    : 'text-slate-400 hover:text-white'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
                 }`}
               >
                 <span>[02 // FASE ESCALA]</span>
@@ -561,9 +591,9 @@ export const OwnershipVsSubscription: React.FC = () => {
 
             {/* Diagnóstico condicional */}
             {decisionPhase === 'experimental' ? (
-              <div className="text-left p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 text-amber-200 text-xs sm:text-sm leading-relaxed mb-4">
-                <div className="font-mono font-bold text-amber-400 mb-1 flex items-center gap-2">
-                  <CyberWarningHazard size={14} className="text-amber-400" />
+              <div className="text-left p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-500/40 text-amber-950 dark:text-amber-200 text-xs sm:text-sm leading-relaxed mb-4">
+                <div className="font-mono font-bold text-amber-800 dark:text-amber-400 mb-1 flex items-center gap-2">
+                  <CyberWarningHazard size={14} className="text-amber-700 dark:text-amber-400" />
                   <span>RECOMENDACIÓN HONESTA: ALQUILÁ UNA PLANTILLA</span>
                 </div>
                 <p>
@@ -574,9 +604,9 @@ export const OwnershipVsSubscription: React.FC = () => {
                 </p>
               </div>
             ) : (
-              <div className="text-left p-4 rounded-xl bg-cyan-950/30 border border-cyan-500/40 text-cyan-200 text-xs sm:text-sm leading-relaxed mb-4">
-                <div className="font-mono font-bold text-cyan-400 mb-1 flex items-center gap-2">
-                  <CyberPowerSwitch size={14} className="text-cyan-400" />
+              <div className="text-left p-4 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-300 dark:border-cyan-500/40 text-slate-800 dark:text-cyan-200 text-xs sm:text-sm leading-relaxed mb-4">
+                <div className="font-mono font-bold text-cyan-800 dark:text-cyan-400 mb-1 flex items-center gap-2">
+                  <CyberPowerSwitch size={14} className="text-cyan-700 dark:text-cyan-400" />
                   <span>RECOMENDACIÓN ESTRATÉGICA: CONSTRUÍ TU ACTIVO PROPIO</span>
                 </div>
                 <p>
@@ -591,18 +621,18 @@ export const OwnershipVsSubscription: React.FC = () => {
             {/* EFECTO 2: Reactor de Telemetría */}
             <div
               data-energy-reactor="true"
-              className="p-3 rounded-xl bg-black/50 border border-white/10 text-left"
+              className="p-3 rounded-xl bg-slate-100 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-left"
             >
               <div className="flex items-center justify-between text-[10px] font-mono mb-1.5">
-                <span className="text-slate-400 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                   <span>MONITOR DE RETENCIÓN DE CAPITAL</span>
                 </span>
-                <span className="font-bold uppercase tracking-wider text-emerald-400">
+                <span className="font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
                   CAPITAL PROTEGIDO // 0% FUGAS
                 </span>
               </div>
-              <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
+              <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300/60 dark:border-white/5">
                 <div className="h-full w-full bg-linear-to-r from-emerald-500 via-cyan-400 to-emerald-400 shadow-[0_0_10px_#10b981]" />
               </div>
             </div>

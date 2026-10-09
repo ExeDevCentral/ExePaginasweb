@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * SpotlightGlass: Gradiente radial que sigue al cursor con useMotionValue y useMotionTemplate (0 re-renders).
  */

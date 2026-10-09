@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * NavLink con indicador líquido elástico compartido (nav-blob + trail spring lenta).
  */

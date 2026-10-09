@@ -167,19 +167,25 @@ const ContactSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-2 rounded-sm border border-slate-300/90 dark:border-white/10 bg-white dark:bg-[#0c0f1d] p-6 sm:p-8 shadow-md dark:shadow-2xl relative overflow-hidden"
+            className="lg:col-span-2 rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white/95 dark:bg-[#0c1224]/90 backdrop-blur-xl p-6 sm:p-8 shadow-[0_12px_32px_-10px_rgba(0,0,0,0.06),0_4px_16px_rgba(6,182,212,0.06)] hover:border-cyan-500/50 hover:shadow-[0_24px_50px_-12px_rgba(6,182,212,0.18)] transition-all duration-300 relative overflow-hidden"
           >
+            {/* Haz láser perimetral superior */}
+            <div className="pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent via-cyan-500/80 to-transparent" />
+
+            {/* Resplandor radial interno suave */}
+            <div className="pointer-events-none absolute -inset-px rounded-2xl opacity-40 bg-[radial-gradient(400px_circle_at_50%_0%,rgba(6,182,212,0.08),transparent_70%)]" />
+
             {/* Marcas de esquina técnicas (+) */}
-            <span className="absolute top-1.5 left-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+            <span className="absolute top-2 left-2 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none pointer-events-none">
               +
             </span>
-            <span className="absolute top-1.5 right-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+            <span className="absolute top-2 right-2 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none pointer-events-none">
               +
             </span>
-            <span className="absolute bottom-1.5 left-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+            <span className="absolute bottom-2 left-2 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none pointer-events-none">
               +
             </span>
-            <span className="absolute bottom-1.5 right-1.5 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none pointer-events-none">
+            <span className="absolute bottom-2 right-2 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none pointer-events-none">
               +
             </span>
 
@@ -269,11 +275,11 @@ const ContactSection = () => {
                       onChange={(e) => setName(e.target.value)}
                       required
                       placeholder=" "
-                      className="peer w-full rounded-sm border border-slate-300 dark:border-white/15 bg-slate-50/70 dark:bg-white/5 px-3.5 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white outline-none transition-all placeholder:text-muted-foreground focus:border-brand dark:focus:border-emerald-400 focus:bg-white dark:focus:bg-white/10"
+                      className="peer w-full rounded-xl border border-slate-200 dark:border-white/15 bg-slate-50/80 dark:bg-white/5 px-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white outline-none transition-all placeholder:text-muted-foreground focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 focus:bg-white dark:focus:bg-white/10 shadow-2xs"
                     />
                     <label
                       htmlFor="contact-name"
-                      className="absolute left-3.5 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-white/50 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-brand dark:peer-focus:text-emerald-400"
+                      className="absolute left-4 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-white/50 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-cyan-600 dark:peer-focus:text-emerald-400"
                     >
                       {t('contact.form_nombre')}
                     </label>
@@ -287,11 +293,11 @@ const ContactSection = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder=" "
-                      className="peer w-full rounded-sm border border-slate-300 dark:border-white/15 bg-slate-50/70 dark:bg-white/5 px-3.5 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white outline-none transition-all placeholder:text-muted-foreground focus:border-brand dark:focus:border-emerald-400 focus:bg-white dark:focus:bg-white/10"
+                      className="peer w-full rounded-xl border border-slate-200 dark:border-white/15 bg-slate-50/80 dark:bg-white/5 px-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white outline-none transition-all placeholder:text-muted-foreground focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 focus:bg-white dark:focus:bg-white/10 shadow-2xs"
                     />
                     <label
                       htmlFor="contact-email"
-                      className="absolute left-3.5 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-white/50 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-brand dark:peer-focus:text-emerald-400"
+                      className="absolute left-4 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-white/50 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-cyan-600 dark:peer-focus:text-emerald-400"
                     >
                       {t('contact.form_email')}
                     </label>
@@ -306,11 +312,11 @@ const ContactSection = () => {
                     required
                     placeholder=" "
                     rows={5}
-                    className="peer w-full rounded-sm border border-slate-300 dark:border-white/15 bg-slate-50/70 dark:bg-white/5 px-3.5 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white outline-none transition-all resize-none placeholder:text-muted-foreground focus:border-brand dark:focus:border-emerald-400 focus:bg-white dark:focus:bg-white/10"
+                    className="peer w-full rounded-xl border border-slate-200 dark:border-white/15 bg-slate-50/80 dark:bg-white/5 px-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white outline-none transition-all resize-none placeholder:text-muted-foreground focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 focus:bg-white dark:focus:bg-white/10 shadow-2xs"
                   />
                   <label
                     htmlFor="contact-message"
-                    className="absolute left-3.5 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-white/50 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-brand dark:peer-focus:text-emerald-400"
+                    className="absolute left-4 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-white/50 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-cyan-600 dark:peer-focus:text-emerald-400"
                   >
                     {t('contact.form_mensaje')}
                   </label>
@@ -353,33 +359,66 @@ const ContactSection = () => {
               const isBrand = ch.tone === 'brand'
               const isSignal = ch.tone === 'signal'
 
+              const channelLaser = isBrand
+                ? 'via-emerald-400'
+                : isSignal
+                  ? 'via-amber-400'
+                  : 'via-cyan-400'
+
+              const channelHoverBorder = isBrand
+                ? 'hover:border-emerald-500/60'
+                : isSignal
+                  ? 'hover:border-amber-500/60'
+                  : 'hover:border-cyan-500/60'
+
+              const channelHoverShadow = isBrand
+                ? 'hover:shadow-[0_16px_36px_-10px_rgba(16,185,129,0.22)]'
+                : isSignal
+                  ? 'hover:shadow-[0_16px_36px_-10px_rgba(245,158,11,0.22)]'
+                  : 'hover:shadow-[0_16px_36px_-10px_rgba(6,182,212,0.22)]'
+
+              const channelCornerHover = isBrand
+                ? 'group-hover:text-emerald-500'
+                : isSignal
+                  ? 'group-hover:text-amber-500'
+                  : 'group-hover:text-cyan-500'
+
               return (
                 <motion.a
                   key={ch.tag}
                   href={ch.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative flex flex-1 flex-col justify-between rounded-sm border border-slate-300/90 dark:border-white/10 bg-white dark:bg-[#0c0f1d] p-5.5 hover:border-brand/60 dark:hover:border-emerald-500/60 transition-all duration-300 hover:-translate-y-1 shadow-sm overflow-hidden"
+                  className={`group relative flex flex-1 flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white/95 dark:bg-[#0c1224]/90 backdrop-blur-xl p-5.5 ${channelHoverBorder} shadow-[0_8px_24px_-8px_rgba(0,0,0,0.06)] ${channelHoverShadow} transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
                   initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08 + 0.1 }}
                 >
+                  {/* Haz láser de borde */}
+                  <div
+                    className={`pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent ${channelLaser} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                  />
+
                   {/* Marcas de cota técnica */}
-                  <span className="absolute top-1 right-1.5 font-mono text-[9px] text-slate-400 dark:text-white/20 select-none">
+                  <span
+                    className={`absolute top-2 right-2.5 font-mono text-[9px] text-slate-300 dark:text-white/20 select-none ${channelCornerHover} transition-colors`}
+                  >
                     +
                   </span>
-                  <span className="absolute bottom-1 right-1.5 font-mono text-[9px] text-slate-400 dark:text-white/20 select-none">
+                  <span
+                    className={`absolute bottom-2 right-2.5 font-mono text-[9px] text-slate-300 dark:text-white/20 select-none ${channelCornerHover} transition-colors`}
+                  >
                     +
                   </span>
 
                   <div
-                    className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm border transition-all duration-300 group-hover:scale-105 ${
+                    className={`mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-300 group-hover:scale-110 shadow-inner ${
                       isBrand
-                        ? 'bg-brand/10 text-brand dark:text-emerald-400 border-brand/25'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30'
                         : isSignal
-                          ? 'bg-signal/10 text-signal border-signal/25'
-                          : 'bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white/80 border-slate-300 dark:border-white/20'
+                          ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/30'
+                          : 'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-500/30'
                     }`}
                   >
                     <Icon className="h-5 w-5" />

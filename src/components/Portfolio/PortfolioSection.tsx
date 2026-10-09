@@ -154,229 +154,250 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
 
             {/* Grid de Láminas de Obra */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {visibleProjects.map((project, idx) => (
-                <div key={project.id} className="h-full flex flex-col">
-                  {/* Lámina Técnica con marcas de esquina */}
-                  <div className="relative h-full flex flex-col justify-between bg-card/90 dark:bg-card/70 border border-border dark:border-border-tech rounded-[3px] transition-colors duration-200 hover:border-brand/60 group">
-                    {/* Marcas de registro en esquinas */}
-                    <span
-                      className="absolute -top-1.5 -left-1 text-xs font-mono text-brand select-none pointer-events-none"
-                      aria-hidden="true"
-                    >
-                      +
-                    </span>
-                    <span
-                      className="absolute -top-1.5 -right-1 text-xs font-mono text-brand select-none pointer-events-none"
-                      aria-hidden="true"
-                    >
-                      +
-                    </span>
-                    <span
-                      className="absolute -bottom-1.5 -left-1 text-xs font-mono text-brand select-none pointer-events-none"
-                      aria-hidden="true"
-                    >
-                      +
-                    </span>
-                    <span
-                      className="absolute -bottom-1.5 -right-1 text-xs font-mono text-brand select-none pointer-events-none"
-                      aria-hidden="true"
-                    >
-                      +
-                    </span>
+              {visibleProjects.map((project, idx) => {
+                const projectLaser =
+                  project.id === 'sportmanager'
+                    ? 'via-cyan-500/90 dark:via-cyan-400'
+                    : project.id === 'celstore'
+                      ? 'via-fuchsia-500/90 dark:via-fuchsia-400'
+                      : project.id === 'restoai'
+                        ? 'via-amber-500/90 dark:via-amber-400'
+                        : 'via-emerald-500/90 dark:via-emerald-400'
 
-                    {/* Cota estática de lámina */}
-                    <span
-                      className="absolute top-2 right-2 z-20 font-mono text-[10px] tracking-wider px-2 py-0.5 rounded-[2px] bg-background/90 border border-border dark:border-border-tech text-brand"
-                      aria-hidden="true"
-                    >
-                      LÁMINA 0{idx + 1} // 2025
-                    </span>
+                const projectHoverShadow =
+                  project.id === 'sportmanager'
+                    ? 'hover:shadow-[0_24px_50px_-12px_rgba(6,182,212,0.25),0_0_25px_rgba(6,182,212,0.12)] hover:border-cyan-500/60'
+                    : project.id === 'celstore'
+                      ? 'hover:shadow-[0_24px_50px_-12px_rgba(217,70,239,0.25),0_0_25px_rgba(217,70,239,0.12)] hover:border-fuchsia-500/60'
+                      : project.id === 'restoai'
+                        ? 'hover:shadow-[0_24px_50px_-12px_rgba(245,158,11,0.25),0_0_25px_rgba(245,158,11,0.12)] hover:border-amber-500/60'
+                        : 'hover:shadow-[0_24px_50px_-12px_rgba(16,185,129,0.25),0_0_25px_rgba(16,185,129,0.12)] hover:border-emerald-500/60'
 
-                    {/* Imagen del proyecto */}
-                    <div className="relative aspect-16/10 overflow-hidden bg-slate-900 border-b border-border dark:border-border-tech">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 ease-out"
+                return (
+                  <div key={project.id} className="h-full flex flex-col">
+                    {/* Lámina Técnica con marcas de esquina */}
+                    <div
+                      className={`relative h-full flex flex-col justify-between bg-white/95 dark:bg-[#0c1224]/90 backdrop-blur-xl border border-slate-200/90 dark:border-white/10 rounded-2xl shadow-[0_12px_32px_-10px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.02)] ${projectHoverShadow} hover:-translate-y-1.5 transition-all duration-300 overflow-hidden group`}
+                    >
+                      {/* Haz láser perimetral superior (efecto holográfico continuo) */}
+                      <div
+                        className={`pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent ${projectLaser} to-transparent group-hover:h-1 transition-all duration-300 z-30`}
                       />
-                      <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent opacity-85 group-hover:opacity-70 transition-opacity" />
 
-                      {/* Estado / Badge de proyecto */}
-                      <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
-                        <span className="px-2.5 py-0.5 rounded-[2px] bg-slate-950/90 border border-brand/50 text-[10px] font-mono text-brand flex items-center gap-1.5 shadow-xs">
-                          <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
-                          {project.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')}
-                        </span>
-                      </div>
+                      {/* Marcas de registro en esquinas */}
+                      <span
+                        className="absolute top-2 left-2 z-20 text-[10px] font-mono text-slate-300 dark:text-white/20 select-none pointer-events-none group-hover:text-emerald-500 transition-colors"
+                        aria-hidden="true"
+                      >
+                        +
+                      </span>
+                      <span
+                        className="absolute bottom-2 left-2 z-20 text-[10px] font-mono text-slate-300 dark:text-white/20 select-none pointer-events-none group-hover:text-emerald-500 transition-colors"
+                        aria-hidden="true"
+                      >
+                        +
+                      </span>
+                      <span
+                        className="absolute bottom-2 right-2 z-20 text-[10px] font-mono text-slate-300 dark:text-white/20 select-none pointer-events-none group-hover:text-emerald-500 transition-colors"
+                        aria-hidden="true"
+                      >
+                        +
+                      </span>
 
-                      {/* Acceso rápido a link externo */}
-                      {project.link && (
-                        <a
-                          href={project.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`Ver sitio web de ${project.title} en producción`}
-                          className="absolute bottom-3 right-3 p-1.5 rounded-[2px] bg-slate-950/90 border border-border dark:border-border-tech text-brand hover:bg-brand hover:text-slate-950 transition-colors shadow-xs flex items-center justify-center"
-                          title={`Ver sitio web de ${project.title} en producción`}
-                        >
-                          <ArrowUpRight className="w-4 h-4" />
-                        </a>
-                      )}
+                      {/* Cota estática de lámina */}
+                      <span
+                        className="absolute top-3 right-3 z-20 font-mono text-[10px] tracking-wider px-2.5 py-0.5 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white font-bold shadow-xs"
+                        aria-hidden="true"
+                      >
+                        LÁMINA 0{idx + 1} // 2025
+                      </span>
 
-                      {/* Título en tarjeta */}
-                      <div className="absolute bottom-2.5 left-3 right-12">
-                        <span className="text-[10px] font-mono text-brand uppercase tracking-wider block mb-0.5">
-                          {project.client}
-                        </span>
-                        <h3 className="text-base sm:text-lg font-bold text-white font-display leading-tight group-hover:text-brand transition-colors">
-                          {project.title}
-                        </h3>
-                      </div>
-                    </div>
+                      {/* Imagen del proyecto */}
+                      <div className="relative aspect-16/10 overflow-hidden bg-slate-900 border-b border-slate-200/80 dark:border-white/10">
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 ease-out"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent opacity-85 group-hover:opacity-70 transition-opacity" />
 
-                    {/* Contenido & Detalles */}
-                    <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
-                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 min-h-[3.2rem]">
-                        {project.description}
-                      </p>
-
-                      {/* Métricas destacadas en estilo técnico */}
-                      <div className="grid grid-cols-2 gap-2 p-2.5 rounded-[2px] bg-paper border border-border dark:border-border-tech text-center">
-                        {project.metrics.map((m) => (
-                          <div key={m.label}>
-                            <div className="text-sm font-bold text-foreground font-mono">
-                              {m.value}
-                            </div>
-                            <div className="text-[10px] text-muted-foreground font-mono">
-                              {m.label}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Tags tecnológicos */}
-                      <div className="flex flex-wrap gap-1 min-h-6">
-                        {project.tags.map((tTag) => (
-                          <span
-                            key={tTag}
-                            className="px-2 py-0.5 rounded-[2px] bg-brand/10 border border-brand/20 text-[10px] font-mono text-brand"
-                          >
-                            {tTag}
+                        {/* Estado / Badge de proyecto */}
+                        <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
+                          <span className="px-2.5 py-0.5 rounded-full bg-slate-950/90 border border-emerald-400/50 text-[10px] font-mono text-emerald-300 flex items-center gap-1.5 shadow-xs font-semibold">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            {project.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')}
                           </span>
-                        ))}
-                      </div>
+                        </div>
 
-                      {/* Acciones principales con botón de lanzamiento directo */}
-                      <div className="pt-3 border-t border-border dark:border-border-tech flex flex-wrap items-center justify-between gap-2 mt-auto">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedProject(project)}
-                          className="text-xs font-mono text-muted-foreground hover:text-brand flex items-center gap-1.5 transition-colors cursor-pointer py-1"
-                        >
-                          <Maximize2 className="w-3 h-3 text-brand" />
-                          <span>{t('portfolio.detalles', 'FICHA TÉCNICA')}</span>
-                        </button>
-
+                        {/* Acceso rápido a link externo */}
                         {project.link && (
-                          <LiveSystemLauncherButton
-                            label={
-                              project.id === 'sportmanager'
-                                ? 'PROBAR PÁDEL EN VIVO'
-                                : project.id === 'celstore'
-                                  ? 'PROBAR TIENDA 3D'
-                                  : project.id === 'restoai'
-                                    ? 'PROBAR RESTOIA'
-                                    : project.id === 'owleye'
-                                      ? 'TESTEAR RADAR'
-                                      : 'LANZAR APP EN VIVO'
-                            }
-                            sublabel="PRODUCCIÓN · DIRECTO"
+                          <a
                             href={project.link}
-                            icon={
-                              project.id === 'sportmanager' ? (
-                                <CyberPitchRadarIcon size={16} />
-                              ) : project.id === 'celstore' ? (
-                                <CyberShopBagIcon size={16} />
-                              ) : project.id === 'restoai' ? (
-                                <RestoiaEngineIcon size={16} />
-                              ) : project.id === 'owleye' ? (
-                                <CyberMetricShield size={16} />
-                              ) : (
-                                <CyberRocketLaunch size={16} />
-                              )
-                            }
-                            color={
-                              project.id === 'sportmanager'
-                                ? 'cyan'
-                                : project.id === 'celstore'
-                                  ? 'fuchsia'
-                                  : project.id === 'restoai'
-                                    ? 'amber'
-                                    : 'emerald'
-                            }
-                            compact
-                          />
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Ver sitio web de ${project.title} en producción`}
+                            className="absolute bottom-3 right-3 p-1.5 rounded-lg bg-slate-950/90 border border-white/20 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-colors shadow-xs flex items-center justify-center cursor-pointer"
+                            title={`Ver sitio web de ${project.title} en producción`}
+                          >
+                            <ArrowUpRight className="w-4 h-4" />
+                          </a>
                         )}
-                      </div>
-                    </div>
 
-                    {/* Cajetín Técnico de Obra (Title Block) */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-border dark:border-border-tech font-mono text-[11px] bg-paper divide-x divide-border dark:divide-border-tech">
-                      <div className="p-2 sm:p-2.5">
-                        <span
-                          className="text-[9px] uppercase text-muted-foreground block"
-                          aria-hidden="true"
-                        >
-                          SISTEMA
-                        </span>
-                        <span className="font-semibold text-foreground truncate block">
-                          {project.client}
-                        </span>
+                        {/* Título en tarjeta */}
+                        <div className="absolute bottom-2.5 left-3 right-12">
+                          <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider block mb-0.5 font-bold">
+                            {project.client}
+                          </span>
+                          <h3 className="text-base sm:text-lg font-bold text-white font-display leading-tight group-hover:text-emerald-300 transition-colors">
+                            {project.title}
+                          </h3>
+                        </div>
                       </div>
-                      <div className="p-2 sm:p-2.5">
-                        <span
-                          className="text-[9px] uppercase text-muted-foreground block"
-                          aria-hidden="true"
-                        >
-                          STACK
-                        </span>
-                        <span className="text-muted-foreground truncate block">
-                          {project.tags[0] || 'Next.js'}
-                        </span>
+
+                      {/* Contenido & Detalles */}
+                      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3 min-h-[3.2rem]">
+                          {project.description}
+                        </p>
+
+                        {/* Métricas destacadas en estilo técnico */}
+                        <div className="grid grid-cols-2 gap-2 p-3 rounded-xl bg-slate-50/90 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-center shadow-inner">
+                          {project.metrics.map((m) => (
+                            <div key={m.label}>
+                              <div className="text-sm font-bold text-slate-950 dark:text-white font-mono">
+                                {m.value}
+                              </div>
+                              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                                {m.label}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Tags tecnológicos */}
+                        <div className="flex flex-wrap gap-1.5 min-h-6">
+                          {project.tags.map((tTag) => (
+                            <span
+                              key={tTag}
+                              className="px-2 py-0.5 rounded-md bg-slate-100/90 dark:bg-white/5 border border-slate-200/90 dark:border-white/10 text-[10px] font-mono font-medium text-slate-700 dark:text-slate-300"
+                            >
+                              {tTag}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Acciones principales con botón de lanzamiento directo */}
+                        <div className="pt-3 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center justify-between gap-2 mt-auto">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedProject(project)}
+                            className="text-xs font-mono text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1.5 transition-colors cursor-pointer py-1 font-bold"
+                          >
+                            <Maximize2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                            <span>{t('portfolio.detalles', 'FICHA TÉCNICA')}</span>
+                          </button>
+
+                          {project.link && (
+                            <LiveSystemLauncherButton
+                              label={
+                                project.id === 'sportmanager'
+                                  ? 'PROBAR PÁDEL EN VIVO'
+                                  : project.id === 'celstore'
+                                    ? 'PROBAR TIENDA 3D'
+                                    : project.id === 'restoai'
+                                      ? 'PROBAR RESTOIA'
+                                      : project.id === 'owleye'
+                                        ? 'TESTEAR RADAR'
+                                        : 'LANZAR APP EN VIVO'
+                              }
+                              sublabel="PRODUCCIÓN · DIRECTO"
+                              href={project.link}
+                              icon={
+                                project.id === 'sportmanager' ? (
+                                  <CyberPitchRadarIcon size={16} />
+                                ) : project.id === 'celstore' ? (
+                                  <CyberShopBagIcon size={16} />
+                                ) : project.id === 'restoai' ? (
+                                  <RestoiaEngineIcon size={16} />
+                                ) : project.id === 'owleye' ? (
+                                  <CyberMetricShield size={16} />
+                                ) : (
+                                  <CyberRocketLaunch size={16} />
+                                )
+                              }
+                              color={
+                                project.id === 'sportmanager'
+                                  ? 'cyan'
+                                  : project.id === 'celstore'
+                                    ? 'fuchsia'
+                                    : project.id === 'restoai'
+                                      ? 'amber'
+                                      : 'emerald'
+                              }
+                              compact
+                            />
+                          )}
+                        </div>
                       </div>
-                      <div className="p-2 sm:p-2.5">
-                        <span
-                          className="text-[9px] uppercase text-muted-foreground block"
-                          aria-hidden="true"
-                        >
-                          MÉTRICA
-                        </span>
-                        <span className="font-bold text-brand truncate block">
-                          {project.metrics[0]?.value}
-                        </span>
-                      </div>
-                      <div className="p-2 sm:p-2.5">
-                        <span
-                          className="text-[9px] uppercase text-muted-foreground block"
-                          aria-hidden="true"
-                        >
-                          AÑO // ESTADO
-                        </span>
-                        <span className="text-brand font-medium truncate block">
-                          2025 // ACTIVO
-                        </span>
+
+                      {/* Cajetín Técnico de Obra (Title Block) */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-slate-200/80 dark:border-white/10 font-mono text-[11px] bg-slate-100/70 dark:bg-black/40 divide-x divide-slate-200/80 dark:divide-white/10">
+                        <div className="p-2 sm:p-2.5">
+                          <span
+                            className="text-[9px] uppercase text-slate-500 dark:text-slate-400 block"
+                            aria-hidden="true"
+                          >
+                            SISTEMA
+                          </span>
+                          <span className="font-semibold text-slate-900 dark:text-white truncate block">
+                            {project.client}
+                          </span>
+                        </div>
+                        <div className="p-2 sm:p-2.5">
+                          <span
+                            className="text-[9px] uppercase text-slate-500 dark:text-slate-400 block"
+                            aria-hidden="true"
+                          >
+                            STACK
+                          </span>
+                          <span className="text-slate-600 dark:text-slate-300 truncate block">
+                            {project.tags[0] || 'Next.js'}
+                          </span>
+                        </div>
+                        <div className="p-2 sm:p-2.5">
+                          <span
+                            className="text-[9px] uppercase text-slate-500 dark:text-slate-400 block"
+                            aria-hidden="true"
+                          >
+                            MÉTRICA
+                          </span>
+                          <span className="font-bold text-emerald-700 dark:text-emerald-400 truncate block">
+                            {project.metrics[0]?.value}
+                          </span>
+                        </div>
+                        <div className="p-2 sm:p-2.5">
+                          <span
+                            className="text-[9px] uppercase text-slate-500 dark:text-slate-400 block"
+                            aria-hidden="true"
+                          >
+                            AÑO // ESTADO
+                          </span>
+                          <span className="text-emerald-700 dark:text-emerald-400 font-medium truncate block">
+                            2025 // ACTIVO
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
 
               {/* Tarjeta de "+ Tu Proyecto Custom" estilo Lámina Técnica */}
-              <div className="relative rounded-[3px] border border-dashed border-brand/40 bg-card/40 p-6 flex flex-col items-center justify-center text-center space-y-4 hover:border-brand hover:bg-card/70 transition-colors duration-200 min-h-95">
+              <div className="relative rounded-2xl border-2 border-dashed border-emerald-500/40 bg-white/80 dark:bg-card/40 p-6 flex flex-col items-center justify-center text-center space-y-4 hover:border-emerald-500 hover:shadow-xl transition-all duration-300 min-h-95">
                 <span
-                  className="absolute -top-1.5 -left-1 text-xs font-mono text-brand select-none pointer-events-none"
+                  className="absolute top-2 left-2 text-xs font-mono text-emerald-500 select-none pointer-events-none"
                   aria-hidden="true"
                 >
                   +

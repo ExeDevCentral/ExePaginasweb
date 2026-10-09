@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * NavLogo: Logo oficial nítido y adaptable (auto light/dark) con Phosphor Decay y micro-flicker de neón.
  */

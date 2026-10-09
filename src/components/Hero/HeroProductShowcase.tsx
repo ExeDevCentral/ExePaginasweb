@@ -45,16 +45,16 @@ interface TabConfig {
 
 const TABS: TabConfig[] = [
   {
-    id: 'video',
-    label: 'Video Demo',
+    id: 'turnos',
+    label: 'Turnos & Citas',
     icon: (
-      <CyberPlayIcon
-        size={14}
+      <CyberPitchRadarIcon
+        size={15}
         className="text-cyan-400 group-hover:text-cyan-300 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)]"
       />
     ),
-    url: 'https://exepaginasweb.com/demo-en-accion',
-    badge: 'DEMO CINEMÁTICA',
+    url: 'https://sportmanager.app/reservas',
+    badge: 'COBROS 24/7',
   },
   {
     id: 'ecommerce',
@@ -69,18 +69,6 @@ const TABS: TabConfig[] = [
     badge: '0% COMISIONES',
   },
   {
-    id: 'turnos',
-    label: 'Turnos & Citas',
-    icon: (
-      <CyberPitchRadarIcon
-        size={15}
-        className="text-cyan-400 group-hover:text-cyan-300 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)]"
-      />
-    ),
-    url: 'https://sportmanager.app/reservas',
-    badge: 'COBROS 24/7',
-  },
-  {
     id: 'gestion',
     label: 'Sistema a Medida',
     icon: (
@@ -92,10 +80,22 @@ const TABS: TabConfig[] = [
     url: 'https://restoai.com/panel-control',
     badge: 'CONTROL TOTAL',
   },
+  {
+    id: 'video',
+    label: 'Video Demo',
+    icon: (
+      <CyberPlayIcon
+        size={14}
+        className="text-cyan-400 group-hover:text-cyan-300 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)]"
+      />
+    ),
+    url: 'https://exepaginasweb.com/demo-en-accion',
+    badge: 'OPCIONAL // 4K',
+  },
 ]
 
 export default function HeroProductShowcase({ className = '' }: Readonly<{ className?: string }>) {
-  const [activeTab, setActiveTab] = useState<ShowcaseTab>('video')
+  const [activeTab, setActiveTab] = useState<ShowcaseTab>('turnos')
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [videoError, setVideoError] = useState(false)
   const [isPlaying, setIsPlaying] = useState(true)
@@ -104,10 +104,44 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
   const [progress, setProgress] = useState(0)
   const [currentTime, setCurrentTime] = useState('00:00')
   const [duration, setDuration] = useState('00:15')
+  const [showControls, setShowControls] = useState(true)
 
   const videoRef = useRef<HTMLVideoElement>(null)
+  const controlsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const currentTab: TabConfig = TABS.find((t) => t.id === activeTab) ?? (TABS[0] as TabConfig)
+
+  // Temporizador para auto-ocultar controles tras 4 segundos de inactividad
+  const resetControlsTimer = useCallback(() => {
+    setShowControls(true)
+    if (controlsTimeoutRef.current) {
+      clearTimeout(controlsTimeoutRef.current)
+    }
+    if (isPlaying) {
+      controlsTimeoutRef.current = setTimeout(() => {
+        setShowControls(false)
+      }, 4000)
+    }
+  }, [isPlaying])
+
+  // Iniciar auto-ocultado al reproducir o cambiar a la pestaña de video
+  useEffect(() => {
+    if (activeTab === 'video') {
+      if (isPlaying) {
+        resetControlsTimer()
+      } else {
+        setShowControls(true)
+        if (controlsTimeoutRef.current) {
+          clearTimeout(controlsTimeoutRef.current)
+        }
+      }
+    }
+    return () => {
+      if (controlsTimeoutRef.current) {
+        clearTimeout(controlsTimeoutRef.current)
+      }
+    }
+  }, [activeTab, isPlaying, resetControlsTimer])
 
   // 1. Play / Pause
   const togglePlay = useCallback(() => {
@@ -115,11 +149,16 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
     if (isPlaying) {
       videoRef.current.pause()
       setIsPlaying(false)
+      setShowControls(true)
+      if (controlsTimeoutRef.current) {
+        clearTimeout(controlsTimeoutRef.current)
+      }
     } else {
       void videoRef.current.play().catch(() => {})
       setIsPlaying(true)
+      resetControlsTimer()
     }
-  }, [isPlaying])
+  }, [isPlaying, resetControlsTimer])
 
   // 2. Mute / Unmute
   const toggleMute = useCallback(() => {
@@ -127,7 +166,8 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
     const nextMuted = !isMuted
     videoRef.current.muted = nextMuted
     setIsMuted(nextMuted)
-  }, [isMuted])
+    resetControlsTimer()
+  }, [isMuted, resetControlsTimer])
 
   // 3. Time Update & Scrubbing
   const handleTimeUpdate = () => {
@@ -283,6 +323,9 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
                     className="relative w-full h-full flex items-center justify-center bg-slate-950 overflow-hidden"
+                    onMouseMove={resetControlsTimer}
+                    onMouseEnter={resetControlsTimer}
+                    onTouchStart={resetControlsTimer}
                   >
                     <video
                       ref={videoRef}
@@ -290,7 +333,8 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       loop
                       muted={isMuted}
                       playsInline
-                      preload="auto"
+                      preload={activeTab === 'video' ? 'metadata' : 'none'}
+                      onClick={togglePlay}
                       onTimeUpdate={handleTimeUpdate}
                       onLoadedData={() => {
                         setVideoLoaded(true)
@@ -305,7 +349,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                         transform: 'translateZ(0)',
                         backfaceVisibility: 'hidden',
                       }}
-                      className={`w-full h-full object-cover ${videoError ? 'hidden' : 'block'}`}
+                      className={`w-full h-full object-cover cursor-pointer ${videoError ? 'hidden' : 'block'}`}
                     >
                       <source src="/assets/videos/hero-bg.mp4" type="video/mp4" />
                       <source
@@ -359,7 +403,13 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
 
                     {/* Controles cinemáticos flotantes & ecualizador */}
                     {!videoError && videoLoaded && (
-                      <div className="absolute inset-x-0 bottom-0 z-20 p-3 sm:p-4 bg-linear-to-t from-black/90 via-black/40 to-transparent flex flex-col gap-2">
+                      <div
+                        className={`absolute inset-x-0 bottom-0 z-20 p-3 sm:p-4 bg-linear-to-t from-black/90 via-black/40 to-transparent flex flex-col gap-2 transition-all duration-500 ease-out ${
+                          showControls
+                            ? 'opacity-100 translate-y-0 pointer-events-auto'
+                            : 'opacity-0 translate-y-3 pointer-events-none'
+                        }`}
+                      >
                         {/* Barra de progreso de video */}
                         <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
                           <div

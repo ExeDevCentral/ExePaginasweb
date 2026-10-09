@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * LiquidFilter: Filtro SVG feTurbulence + feDisplacementMap para refracción de vidrio líquido.
  */

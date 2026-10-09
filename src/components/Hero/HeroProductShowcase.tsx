@@ -444,18 +444,17 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
-                    <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-white bg-black/80 p-3 rounded-xl border border-white/20 backdrop-blur-md">
+                    <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-white bg-black/60 p-2.5 sm:p-3 rounded-xl border border-white/15 backdrop-blur-md">
                       <div>
                         <div className="font-bold text-emerald-400">CelStore · E-Commerce 3D</div>
                         <div className="text-[11px] text-slate-300">
-                          Catálogo 3D con Three.js y MercadoPago
+                          Catálogo interactivo con Three.js & checkout
                         </div>
                       </div>
                       <LiveSystemLauncherButton
                         label="PROBAR CELSTORE"
-                        sublabel="EN VIVO · CATÁLOGO 3D"
                         href="https://multi-tiendas-celphone.vercel.app"
-                        icon={<CyberShopBagIcon size={18} />}
+                        icon={<CyberShopBagIcon size={14} />}
                         color="emerald"
                         compact
                       />
@@ -480,20 +479,19 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
-                    <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-white bg-black/80 p-3 rounded-xl border border-cyan-500/30 backdrop-blur-md">
+                    <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-white bg-black/60 p-2.5 sm:p-3 rounded-xl border border-cyan-500/30 backdrop-blur-md">
                       <div>
                         <div className="font-bold text-cyan-400">
                           SportManager · Software de Pádel
                         </div>
                         <div className="text-[11px] text-slate-300">
-                          Reservas de canchas 24/7 y señas directas a tu banco
+                          Reservas de canchas 24/7 y señas bancarias directas
                         </div>
                       </div>
                       <LiveSystemLauncherButton
                         label="PROBAR PÁDEL EN VIVO"
-                        sublabel="DIRECTO A SPORTMANAGER"
                         href="https://sportmanager-playhub.vercel.app"
-                        icon={<CyberPitchRadarIcon size={18} />}
+                        icon={<CyberPitchRadarIcon size={14} />}
                         color="cyan"
                         compact
                       />
@@ -518,7 +516,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
-                    <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-white bg-black/80 p-3 rounded-xl border border-white/20 backdrop-blur-md">
+                    <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-white bg-black/60 p-2.5 sm:p-3 rounded-xl border border-white/15 backdrop-blur-md">
                       <div>
                         <div className="font-bold text-amber-400">
                           RESTOia · Gastronomía & Comandas
@@ -529,9 +527,8 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       </div>
                       <LiveSystemLauncherButton
                         label="PROBAR RESTOIA"
-                        sublabel="EN VIVO · 100% OFFLINE"
                         href="https://kobe-sand.vercel.app/"
-                        icon={<RestoiaEngineIcon size={18} />}
+                        icon={<RestoiaEngineIcon size={14} />}
                         color="amber"
                         compact
                       />
@@ -549,74 +546,6 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
               </span>
               <span className="text-emerald-400 font-semibold">ExePaginasWeb © 2025</span>
             </div>
-          </div>
-        </div>
-
-        {/* BARRA INFERIOR POCO CONVENCIONAL DE DISPARO DIRECTO */}
-        <div className="mt-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#070b16]/90 border border-white/15 backdrop-blur-xl shadow-xl">
-          <div className="flex items-center gap-2.5 text-xs font-mono text-slate-300">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
-            </span>
-            <span className="text-[11px]">
-              SISTEMA LISTO:{' '}
-              <strong className="text-white font-sans font-bold uppercase">
-                {activeTab === 'turnos'
-                  ? 'SPORTMANAGER (PÁDEL)'
-                  : activeTab === 'ecommerce'
-                    ? 'CELSTORE 3D'
-                    : activeTab === 'gestion'
-                      ? 'RESTOIA GASTRONOMÍA'
-                      : 'SPORTMANAGER (PÁDEL)'}
-              </strong>
-            </span>
-          </div>
-
-          <div className="w-full sm:w-auto">
-            <LiveSystemLauncherButton
-              label={
-                activeTab === 'turnos'
-                  ? 'LANZAR SPORTMANAGER (PÁDEL)'
-                  : activeTab === 'ecommerce'
-                    ? 'LANZAR TIENDA CELSTORE'
-                    : activeTab === 'gestion'
-                      ? 'LANZAR RESTOIA GASTRONOMÍA'
-                      : 'PROBAR SISTEMA DE PÁDEL EN VIVO'
-              }
-              sublabel="APP REAL EN PRODUCCIÓN · SIN PORTAFOLIO"
-              href={
-                activeTab === 'turnos'
-                  ? 'https://sportmanager-playhub.vercel.app'
-                  : activeTab === 'ecommerce'
-                    ? 'https://multi-tiendas-celphone.vercel.app'
-                    : activeTab === 'gestion'
-                      ? 'https://kobe-sand.vercel.app/'
-                      : 'https://sportmanager-playhub.vercel.app'
-              }
-              icon={
-                activeTab === 'turnos' ? (
-                  <CyberPitchRadarIcon size={18} />
-                ) : activeTab === 'ecommerce' ? (
-                  <CyberShopBagIcon size={18} />
-                ) : activeTab === 'gestion' ? (
-                  <RestoiaEngineIcon size={18} />
-                ) : (
-                  <CyberPitchRadarIcon size={18} />
-                )
-              }
-              color={
-                activeTab === 'turnos'
-                  ? 'cyan'
-                  : activeTab === 'ecommerce'
-                    ? 'emerald'
-                    : activeTab === 'gestion'
-                      ? 'amber'
-                      : 'cyan'
-              }
-              compact
-              className="w-full sm:w-auto justify-between"
-            />
           </div>
         </div>
       </div>

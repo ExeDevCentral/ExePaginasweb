@@ -10,7 +10,7 @@ import React, { useState, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence, useMotionValue, useReducedMotion } from 'framer-motion'
+import { motion, useMotionValue, useReducedMotion } from 'framer-motion'
 import { CyberChevron, CyberBurgerIcon, CyberRadarBeacon } from '@/components/ui/MagnificentIcons'
 
 import { useNavScroll } from './useNavScroll'
@@ -35,7 +35,7 @@ export default function LiquidIslandNavbar({
   const pathname = usePathname()
   const reduceMotion = Boolean(useReducedMotion())
 
-  const { isCompact, scrollY } = useNavScroll({ expandOnScrollUp })
+  const { scrollY } = useNavScroll({ expandOnScrollUp })
 
   // Estados interactivos
   const [megaPanelOpen, setMegaPanelOpen] = useState(false)
@@ -158,40 +158,16 @@ export default function LiquidIslandNavbar({
                 </button>
               </div>
 
-              {/* Casos / Portafolio con floating preview de caso real */}
-              <div className="relative">
-                <NavLink
-                  href="/portafolio"
-                  label={getNavLabel('nav.casos', 'Casos de Éxito')}
-                  isActive={pathname === '/portafolio'}
-                  isHovered={hoveredLink === 'casos'}
-                  onHover={() => setHoveredLink('casos')}
-                  onLeave={() => setHoveredLink(null)}
-                  onClick={() => setMegaPanelOpen(false)}
-                />
-                <AnimatePresence>
-                  {hoveredLink === 'casos' && !isCompact && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 6, scale: 0.95 }}
-                      transition={{ duration: 0.16 }}
-                      className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 w-72 p-3.5 rounded-2xl border border-cyan-500/30 bg-[#070914]/95 backdrop-blur-xl shadow-2xl z-50 text-left select-none"
-                    >
-                      <div className="flex items-center justify-between gap-1 mb-1.5">
-                        <span className="font-bold text-xs text-white">RESTOia Engine</span>
-                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
-                          EN PRODUCCIÓN
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-slate-300 leading-relaxed">
-                        Suite gastronómica inteligente con facturación fiscal ARCA/AFIP, KDS en
-                        vivo, motor offline y protocolo MCP.
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              {/* Casos / Portafolio */}
+              <NavLink
+                href="/portafolio"
+                label={getNavLabel('nav.casos', 'Casos de Éxito')}
+                isActive={pathname === '/portafolio'}
+                isHovered={hoveredLink === 'casos'}
+                onHover={() => setHoveredLink('casos')}
+                onLeave={() => setHoveredLink(null)}
+                onClick={() => setMegaPanelOpen(false)}
+              />
 
               {/* Planes / Precios */}
               <NavLink

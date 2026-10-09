@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
-import { CyberKineticArrowIcon } from '@/components/ui/MagnificentIcons'
+import { CyberKineticArrowIcon, CyberPitchRadarIcon } from '@/components/ui/MagnificentIcons'
 import HudButton from '@/components/HudButton'
 import LiveSystemLauncherButton from '@/components/ui/LiveSystemLauncherButton'
 
@@ -204,10 +204,10 @@ export default function HowWeWorkSection() {
                 {item.step === '03' && (
                   <div className="mt-4 pt-3 border-t border-slate-200 dark:border-white/10">
                     <LiveSystemLauncherButton
-                      label="PROBAR PÁDEL EN VIVO 🎾"
+                      label="PROBAR PÁDEL EN VIVO"
                       sublabel="SISTEMA ENTREGADO"
                       href="https://sportmanager-playhub.vercel.app"
-                      icon="🎾"
+                      icon={<CyberPitchRadarIcon size={16} />}
                       color="cyan"
                       compact
                       className="w-full justify-between"

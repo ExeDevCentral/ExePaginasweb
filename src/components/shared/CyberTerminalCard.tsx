@@ -15,10 +15,10 @@ import LiveSystemLauncherButton from '@/components/ui/LiveSystemLauncherButton'
 
 export interface LiveLauncherConfig {
   label: string
-  sublabel?: string
+  sublabel?: string | undefined
   href: string
-  icon?: string
-  color?: 'cyan' | 'fuchsia' | 'amber' | 'emerald'
+  icon?: React.ReactNode | undefined
+  color?: ('cyan' | 'fuchsia' | 'amber' | 'emerald') | undefined
 }
 
 export interface CyberTerminalCardProps {

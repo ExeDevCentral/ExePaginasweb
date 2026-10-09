@@ -25,6 +25,12 @@ import {
   Sparkles,
   Zap,
 } from 'lucide-react'
+import {
+  CyberPlayIcon,
+  CyberShopBagIcon,
+  CyberPitchRadarIcon,
+  RestoiaEngineIcon,
+} from '@/components/ui/MagnificentIcons'
 import LiveSystemLauncherButton from '@/components/ui/LiveSystemLauncherButton'
 
 type ShowcaseTab = 'video' | 'ecommerce' | 'turnos' | 'gestion'
@@ -32,7 +38,7 @@ type ShowcaseTab = 'video' | 'ecommerce' | 'turnos' | 'gestion'
 interface TabConfig {
   id: ShowcaseTab
   label: string
-  icon: string
+  icon: React.ReactNode
   url: string
   badge: string
 }
@@ -41,28 +47,48 @@ const TABS: TabConfig[] = [
   {
     id: 'video',
     label: 'Video Demo',
-    icon: '🎬',
+    icon: (
+      <CyberPlayIcon
+        size={14}
+        className="text-cyan-400 group-hover:text-cyan-300 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)]"
+      />
+    ),
     url: 'https://exepaginasweb.com/demo-en-accion',
     badge: 'DEMO CINEMÁTICA',
   },
   {
     id: 'ecommerce',
     label: 'Tienda Online',
-    icon: '🛒',
+    icon: (
+      <CyberShopBagIcon
+        size={15}
+        className="text-emerald-400 group-hover:text-emerald-300 drop-shadow-[0_0_6px_rgba(16,185,129,0.8)]"
+      />
+    ),
     url: 'https://celstore.com/catalogo',
     badge: '0% COMISIONES',
   },
   {
     id: 'turnos',
     label: 'Turnos & Citas',
-    icon: '📅',
+    icon: (
+      <CyberPitchRadarIcon
+        size={15}
+        className="text-cyan-400 group-hover:text-cyan-300 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)]"
+      />
+    ),
     url: 'https://sportmanager.app/reservas',
     badge: 'COBROS 24/7',
   },
   {
     id: 'gestion',
     label: 'Sistema a Medida',
-    icon: '📊',
+    icon: (
+      <RestoiaEngineIcon
+        size={15}
+        className="text-amber-400 group-hover:text-amber-300 drop-shadow-[0_0_6px_rgba(245,158,11,0.8)]"
+      />
+    ),
     url: 'https://restoai.com/panel-control',
     badge: 'CONTROL TOTAL',
   },
@@ -429,7 +455,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                         label="PROBAR CELSTORE"
                         sublabel="EN VIVO · CATÁLOGO 3D"
                         href="https://multi-tiendas-celphone.vercel.app"
-                        icon="🛒"
+                        icon={<CyberShopBagIcon size={18} />}
                         color="emerald"
                         compact
                       />
@@ -467,7 +493,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                         label="PROBAR PÁDEL EN VIVO"
                         sublabel="DIRECTO A SPORTMANAGER"
                         href="https://sportmanager-playhub.vercel.app"
-                        icon="🎾"
+                        icon={<CyberPitchRadarIcon size={18} />}
                         color="cyan"
                         compact
                       />
@@ -505,7 +531,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                         label="PROBAR RESTOIA"
                         sublabel="EN VIVO · 100% OFFLINE"
                         href="https://kobe-sand.vercel.app/"
-                        icon="🍷"
+                        icon={<RestoiaEngineIcon size={18} />}
                         color="amber"
                         compact
                       />
@@ -569,13 +595,15 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       : 'https://sportmanager-playhub.vercel.app'
               }
               icon={
-                activeTab === 'turnos'
-                  ? '🎾'
-                  : activeTab === 'ecommerce'
-                    ? '🛒'
-                    : activeTab === 'gestion'
-                      ? '🍷'
-                      : '🎾'
+                activeTab === 'turnos' ? (
+                  <CyberPitchRadarIcon size={18} />
+                ) : activeTab === 'ecommerce' ? (
+                  <CyberShopBagIcon size={18} />
+                ) : activeTab === 'gestion' ? (
+                  <RestoiaEngineIcon size={18} />
+                ) : (
+                  <CyberPitchRadarIcon size={18} />
+                )
               }
               color={
                 activeTab === 'turnos'

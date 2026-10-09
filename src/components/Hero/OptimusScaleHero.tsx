@@ -23,6 +23,9 @@ import {
   CyberMetricProcessor,
   CyberSpeedGauge,
   CyberCatalogIcon,
+  CyberPitchRadarIcon,
+  CyberShopBagIcon,
+  RestoiaEngineIcon,
 } from '@/components/ui/MagnificentIcons'
 
 const Grid2x2Icon = ({ className = 'w-4 h-4' }: { className?: string }) => (
@@ -72,10 +75,10 @@ const CAPABILITIES = [
     cta: 'Lanzar SportManager en vivo',
     href: 'https://sportmanager-playhub.vercel.app',
     liveLauncher: {
-      label: 'PROBAR PÁDEL EN VIVO 🎾',
-      sublabel: 'SPORTMANAGER · SISTEMA REAL',
+      label: 'PROBAR SPORTMANAGER (PÁDEL)',
+      sublabel: 'RESERVAS Y CANCHAS REALES',
       href: 'https://sportmanager-playhub.vercel.app',
-      icon: '🎾',
+      icon: <CyberPitchRadarIcon size={18} />,
       color: 'cyan' as const,
     },
     ariaLabel: 'Probar SportManager Pádel en vivo sin filtros',
@@ -96,10 +99,10 @@ const CAPABILITIES = [
     cta: 'Lanzar CelStore 3D en vivo',
     href: 'https://multi-tiendas-celphone.vercel.app',
     liveLauncher: {
-      label: 'PROBAR TIENDA CELSTORE 🛒',
+      label: 'PROBAR TIENDA CELSTORE 3D',
       sublabel: 'CATÁLOGO 3D & CHECKOUT',
       href: 'https://multi-tiendas-celphone.vercel.app',
-      icon: '🛒',
+      icon: <CyberShopBagIcon size={18} />,
       color: 'fuchsia' as const,
     },
     ariaLabel: 'Probar CelStore E-Commerce en vivo sin filtros',
@@ -120,10 +123,10 @@ const CAPABILITIES = [
     cta: 'Lanzar RESTOia en vivo',
     href: 'https://kobe-sand.vercel.app/',
     liveLauncher: {
-      label: 'PROBAR RESTOIA EN VIVO 🍷',
+      label: 'PROBAR RESTOIA EN VIVO',
       sublabel: 'KOBE ENGINE · 100% OFFLINE',
       href: 'https://kobe-sand.vercel.app/',
-      icon: '🍷',
+      icon: <RestoiaEngineIcon size={18} />,
       color: 'amber' as const,
     },
     ariaLabel: 'Probar RESTOia gastronómico en vivo sin filtros',
@@ -144,10 +147,10 @@ const CAPABILITIES = [
     cta: 'Lanzar OwlEye en vivo',
     href: 'https://owl-eye-engine.vercel.app',
     liveLauncher: {
-      label: 'TESTEAR OWLEYE ENGINE 🛡️',
+      label: 'TESTEAR OWLEYE ENGINE',
       sublabel: 'RADAR HEURÍSTICO EN VIVO',
       href: 'https://owl-eye-engine.vercel.app',
-      icon: '🛡️',
+      icon: <CyberMetricShield size={18} />,
       color: 'emerald' as const,
     },
     ariaLabel: 'Probar OwlEye Engine en vivo sin filtros',

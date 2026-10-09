@@ -27,7 +27,13 @@ import LiveSystemLauncherButton from '@/components/ui/LiveSystemLauncherButton'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '@/core/utils/whatsappUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
 import { toast } from 'sonner'
-import { CyberRatingStar, CyberCheckMark } from '../ui/MagnificentIcons'
+import {
+  CyberRatingStar,
+  CyberCheckMark,
+  CyberPitchRadarIcon,
+  CyberShopBagIcon,
+  RestoiaEngineIcon,
+} from '../ui/MagnificentIcons'
 
 export default function MobileLandingView() {
   // Formulario rápido de contacto móvil
@@ -275,10 +281,10 @@ export default function MobileLandingView() {
                   <LiveSystemLauncherButton
                     label={
                       item.id === 'web'
-                        ? 'PROBAR PÁDEL EN VIVO 🎾'
+                        ? 'PROBAR PÁDEL EN VIVO'
                         : item.id === 'ecommerce'
-                          ? 'PROBAR TIENDA 3D 🛒'
-                          : 'PROBAR RESTOIA EN VIVO 🍷'
+                          ? 'PROBAR TIENDA 3D'
+                          : 'PROBAR RESTOIA EN VIVO'
                     }
                     sublabel="DEMO REAL EN PRODUCCIÓN"
                     href={
@@ -288,7 +294,15 @@ export default function MobileLandingView() {
                           ? 'https://multi-tiendas-celphone.vercel.app'
                           : 'https://kobe-sand.vercel.app/'
                     }
-                    icon={item.id === 'web' ? '🎾' : item.id === 'ecommerce' ? '🛒' : '🍷'}
+                    icon={
+                      item.id === 'web' ? (
+                        <CyberPitchRadarIcon size={16} />
+                      ) : item.id === 'ecommerce' ? (
+                        <CyberShopBagIcon size={16} />
+                      ) : (
+                        <RestoiaEngineIcon size={16} />
+                      )
+                    }
                     color={
                       item.id === 'web' ? 'cyan' : item.id === 'ecommerce' ? 'emerald' : 'amber'
                     }

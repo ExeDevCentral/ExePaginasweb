@@ -45,6 +45,7 @@
     "@sentry/react": "^10.73.0",
     "@supabase/ssr": "^0.12.6",
     "@supabase/supabase-js": "^2.115.0",
+    "@tabler/icons-react": "^3.49.0",
     "@tanstack/react-query": "^5.102.8",
     "@tanstack/react-table": "^8.21.3",
     "@vercel/analytics": "^2.0.1",

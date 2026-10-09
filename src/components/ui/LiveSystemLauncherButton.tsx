@@ -11,12 +11,13 @@
 import React, { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowUpRight, Radio, Sparkles } from 'lucide-react'
+import { CyberRocketLaunch } from '@/components/ui/MagnificentIcons'
 
 export interface LiveSystemLauncherButtonProps {
   label: string
   sublabel?: string | undefined
   href: string
-  icon?: string | undefined
+  icon?: React.ReactNode | undefined
   color?: 'emerald' | 'cyan' | 'amber' | 'fuchsia' | undefined
   className?: string | undefined
   compact?: boolean | undefined
@@ -66,7 +67,7 @@ export default function LiveSystemLauncherButton({
   label,
   sublabel = 'ABRIR APP EN VIVO // SIN FILTROS',
   href,
-  icon = '⚡',
+  icon,
   color = 'cyan',
   className = '',
   compact = false,
@@ -144,9 +145,9 @@ export default function LiveSystemLauncherButton({
         </span>
       </div>
 
-      {/* 4. Icono temático grande con micro-rotación dinámica */}
-      <span className="text-xl sm:text-2xl transition-transform duration-300 group-hover:scale-130 group-hover:rotate-12 shrink-0 filter drop-shadow">
-        {icon}
+      {/* 4. Icono temático de alta ingeniería con micro-rotación dinámica */}
+      <span className="flex items-center justify-center transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6 shrink-0 filter drop-shadow">
+        {icon ?? <CyberRocketLaunch size={compact ? 16 : 20} className={theme.text} />}
       </span>
 
       {/* 5. Textos de lanzamiento poco convencionales */}

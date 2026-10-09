@@ -23,6 +23,13 @@ import {
 } from 'lucide-react'
 import HudButton from '@/components/HudButton'
 import LiveSystemLauncherButton from '@/components/ui/LiveSystemLauncherButton'
+import {
+  CyberPitchRadarIcon,
+  CyberShopBagIcon,
+  RestoiaEngineIcon,
+  CyberMetricShield,
+  CyberRocketLaunch,
+} from '@/components/ui/MagnificentIcons'
 import { INITIAL_PROJECTS, type Project } from '@/data/projects'
 
 export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
@@ -276,27 +283,29 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                           <LiveSystemLauncherButton
                             label={
                               project.id === 'sportmanager'
-                                ? 'PROBAR PÁDEL EN VIVO 🎾'
+                                ? 'PROBAR PÁDEL EN VIVO'
                                 : project.id === 'celstore'
-                                  ? 'PROBAR TIENDA 3D 🛒'
+                                  ? 'PROBAR TIENDA 3D'
                                   : project.id === 'restoai'
-                                    ? 'PROBAR RESTOIA 🍷'
+                                    ? 'PROBAR RESTOIA'
                                     : project.id === 'owleye'
-                                      ? 'TESTEAR RADAR 🛡️'
+                                      ? 'TESTEAR RADAR'
                                       : 'LANZAR APP EN VIVO'
                             }
                             sublabel="PRODUCCIÓN · DIRECTO"
                             href={project.link}
                             icon={
-                              project.id === 'sportmanager'
-                                ? '🎾'
-                                : project.id === 'celstore'
-                                  ? '🛒'
-                                  : project.id === 'restoai'
-                                    ? '🍷'
-                                    : project.id === 'owleye'
-                                      ? '🛡️'
-                                      : '⚡'
+                              project.id === 'sportmanager' ? (
+                                <CyberPitchRadarIcon size={16} />
+                              ) : project.id === 'celstore' ? (
+                                <CyberShopBagIcon size={16} />
+                              ) : project.id === 'restoai' ? (
+                                <RestoiaEngineIcon size={16} />
+                              ) : project.id === 'owleye' ? (
+                                <CyberMetricShield size={16} />
+                              ) : (
+                                <CyberRocketLaunch size={16} />
+                              )
                             }
                             color={
                               project.id === 'sportmanager'
@@ -619,23 +628,25 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                   <LiveSystemLauncherButton
                     label={
                       selectedProject.id === 'sportmanager'
-                        ? 'ABRIR SPORTMANAGER (PÁDEL) EN VIVO 🎾'
+                        ? 'ABRIR SPORTMANAGER EN VIVO'
                         : selectedProject.id === 'celstore'
-                          ? 'ABRIR TIENDA CELSTORE 3D 🛒'
+                          ? 'ABRIR TIENDA CELSTORE 3D'
                           : selectedProject.id === 'restoai'
-                            ? 'ABRIR RESTOIA EN VIVO 🍷'
+                            ? 'ABRIR RESTOIA EN VIVO'
                             : 'ABRIR SISTEMA EN PRODUCCIÓN'
                     }
                     sublabel="ACCESO DIRECTO · DESPLEGADO EN VERCEL"
                     href={selectedProject.link}
                     icon={
-                      selectedProject.id === 'sportmanager'
-                        ? '🎾'
-                        : selectedProject.id === 'celstore'
-                          ? '🛒'
-                          : selectedProject.id === 'restoai'
-                            ? '🍷'
-                            : '⚡'
+                      selectedProject.id === 'sportmanager' ? (
+                        <CyberPitchRadarIcon size={18} />
+                      ) : selectedProject.id === 'celstore' ? (
+                        <CyberShopBagIcon size={18} />
+                      ) : selectedProject.id === 'restoai' ? (
+                        <RestoiaEngineIcon size={18} />
+                      ) : (
+                        <CyberRocketLaunch size={18} />
+                      )
                     }
                     color={
                       selectedProject.id === 'sportmanager'

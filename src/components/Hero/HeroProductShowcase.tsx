@@ -38,19 +38,23 @@ type ShowcaseTab = 'video' | 'ecommerce' | 'turnos' | 'gestion'
 interface TabConfig {
   id: ShowcaseTab
   label: string
+  shortLabel: string
   icon: React.ReactNode
   url: string
   badge: string
+  accent: 'cyan' | 'emerald' | 'amber'
 }
 
 const TABS: TabConfig[] = [
   {
     id: 'turnos',
     label: 'Turnos & Citas',
+    shortLabel: 'Turnos',
+    accent: 'cyan',
     icon: (
       <CyberPitchRadarIcon
         size={15}
-        className="text-cyan-400 group-hover:text-cyan-300 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)]"
+        className="text-cyan-500 dark:text-cyan-400 group-hover:text-cyan-400 drop-shadow-[0_0_6px_rgba(6,182,212,0.7)] shrink-0"
       />
     ),
     url: 'https://sportmanager.app/reservas',
@@ -59,10 +63,12 @@ const TABS: TabConfig[] = [
   {
     id: 'ecommerce',
     label: 'Tienda Online',
+    shortLabel: 'Tienda',
+    accent: 'emerald',
     icon: (
       <CyberShopBagIcon
         size={15}
-        className="text-emerald-400 group-hover:text-emerald-300 drop-shadow-[0_0_6px_rgba(16,185,129,0.8)]"
+        className="text-emerald-500 dark:text-emerald-400 group-hover:text-emerald-400 drop-shadow-[0_0_6px_rgba(16,185,129,0.7)] shrink-0"
       />
     ),
     url: 'https://celstore.com/catalogo',
@@ -71,10 +77,12 @@ const TABS: TabConfig[] = [
   {
     id: 'gestion',
     label: 'Sistema a Medida',
+    shortLabel: 'Sistemas',
+    accent: 'amber',
     icon: (
       <RestoiaEngineIcon
         size={15}
-        className="text-amber-400 group-hover:text-amber-300 drop-shadow-[0_0_6px_rgba(245,158,11,0.8)]"
+        className="text-amber-500 dark:text-amber-400 group-hover:text-amber-400 drop-shadow-[0_0_6px_rgba(245,158,11,0.7)] shrink-0"
       />
     ),
     url: 'https://restoai.com/panel-control',
@@ -83,16 +91,32 @@ const TABS: TabConfig[] = [
   {
     id: 'video',
     label: 'Video Demo',
+    shortLabel: 'Video',
+    accent: 'cyan',
     icon: (
       <CyberPlayIcon
         size={14}
-        className="text-cyan-400 group-hover:text-cyan-300 drop-shadow-[0_0_6px_rgba(6,182,212,0.8)]"
+        className="text-cyan-500 dark:text-cyan-400 group-hover:text-cyan-400 drop-shadow-[0_0_6px_rgba(6,182,212,0.7)] shrink-0"
       />
     ),
     url: 'https://exepaginasweb.com/demo-en-accion',
     badge: 'OPCIONAL // 4K',
   },
 ]
+
+function getTabButtonClasses(tab: TabConfig, isActive: boolean): string {
+  if (isActive) {
+    if (tab.accent === 'emerald') {
+      return 'bg-white dark:bg-emerald-950/70 text-emerald-950 dark:text-emerald-200 border-emerald-500 dark:border-emerald-400 shadow-md shadow-emerald-500/10 dark:shadow-[0_0_12px_rgba(16,185,129,0.35)] ring-1 ring-emerald-500/40'
+    }
+    if (tab.accent === 'amber') {
+      return 'bg-white dark:bg-amber-950/70 text-amber-950 dark:text-amber-200 border-amber-500 dark:border-amber-400 shadow-md shadow-amber-500/10 dark:shadow-[0_0_12px_rgba(245,158,11,0.35)] ring-1 ring-amber-500/40'
+    }
+    return 'bg-white dark:bg-cyan-950/70 text-cyan-950 dark:text-cyan-200 border-cyan-500 dark:border-cyan-400 shadow-md shadow-cyan-500/10 dark:shadow-[0_0_12px_rgba(6,182,212,0.35)] ring-1 ring-cyan-500/40'
+  }
+
+  return 'bg-slate-100/90 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-800/90 text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-200 border-slate-300 dark:border-white/10 hover:border-slate-400 dark:hover:border-white/20 shadow-xs'
+}
 
 export default function HeroProductShowcase({ className = '' }: Readonly<{ className?: string }>) {
   const [activeTab, setActiveTab] = useState<ShowcaseTab>('turnos')
@@ -253,26 +277,26 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
           />
 
           {/* Chasis Interior Fijo de Titanio / Cristal */}
-          <div className="relative rounded-[15px] bg-[#060a14] overflow-hidden">
+          <div className="relative rounded-[15px] bg-slate-100 dark:bg-[#060a14] border border-slate-300/80 dark:border-white/10 overflow-hidden shadow-2xl transition-colors">
             {/* Barra superior de navegador estilo Chrome/Safari */}
-            <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-[#0a0f1d] border-b border-white/10 font-mono text-xs select-none">
+            <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-200/90 dark:bg-[#0a0f1d] border-b border-slate-300 dark:border-white/10 font-mono text-xs select-none transition-colors">
               {/* Botones de ventana */}
               <div className="flex items-center gap-2">
                 <span className="flex gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/90 inline-block shadow-xs" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/90 inline-block shadow-xs" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/90 inline-block shadow-xs" />
                 </span>
-                <div className="hidden sm:flex items-center gap-1.5 ml-2 px-3 py-1 rounded-md bg-black/60 border border-white/10 text-[11px] text-slate-300">
-                  <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                <div className="hidden sm:flex items-center gap-1.5 ml-2 px-3 py-1 rounded-md bg-white dark:bg-black/60 border border-slate-300 dark:border-white/10 text-[11px] text-slate-700 dark:text-slate-300 shadow-xs">
+                  <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                   <span className="truncate max-w-50">{currentTab.url}</span>
                 </div>
               </div>
 
               {/* Badges y Modo Cine */}
               <div className="flex items-center gap-2">
-                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                   {currentTab.badge}
                 </span>
 
@@ -281,31 +305,52 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                   type="button"
                   onClick={() => setIsCinemaMode(true)}
                   title="Modo Cine a Pantalla Completa"
-                  className="hidden sm:flex items-center gap-1 p-1 px-2 rounded-md bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-colors text-[10px] font-mono cursor-pointer"
+                  className="hidden sm:flex items-center gap-1 p-1 px-2 rounded-md bg-white/80 dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/10 transition-colors text-[10px] font-mono cursor-pointer shadow-xs"
                 >
-                  <Maximize2 className="w-3 h-3 text-cyan-400" />
+                  <Maximize2 className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
                   <span>Cine</span>
                 </button>
               </div>
             </div>
 
-            {/* Selector de Soluciones / Pestañas */}
-            <div className="grid grid-cols-4 bg-black/60 p-1 border-b border-white/10 text-xs font-mono">
+            {/* Selector de Soluciones / Pestañas con separación física y contornos nítidos */}
+            <div
+              role="tablist"
+              aria-label="Pestañas interactivas de demostración de productos"
+              className="grid grid-cols-4 gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-slate-200/90 dark:bg-black/75 border-b border-slate-300 dark:border-white/10 text-xs font-mono transition-colors"
+            >
               {TABS.map((tab) => {
                 const isActive = activeTab === tab.id
                 return (
                   <button
                     key={tab.id}
                     type="button"
+                    role="tab"
+                    aria-selected={isActive}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`py-2 px-1 text-center transition-all cursor-pointer flex items-center justify-center gap-1 rounded-lg ${
+                    className={`group relative py-2 sm:py-2.5 px-1.5 sm:px-2 text-center transition-all duration-150 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 rounded-lg sm:rounded-xl border font-mono font-medium ${getTabButtonClasses(
+                      tab,
                       isActive
-                        ? 'bg-white/15 text-white font-bold shadow-md shadow-black/40'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                    }`}
+                    )}`}
                   >
                     <span>{tab.icon}</span>
-                    <span className="hidden sm:inline text-[11px]">{tab.label}</span>
+                    <span className="sm:hidden text-[10px] font-bold tracking-tight truncate">
+                      {tab.shortLabel}
+                    </span>
+                    <span className="hidden sm:inline text-[11px] tracking-tight truncate">
+                      {tab.label}
+                    </span>
+                    {isActive && (
+                      <span
+                        className={`absolute -bottom-0.5 inset-x-2 h-0.5 rounded-full ${
+                          tab.accent === 'emerald'
+                            ? 'bg-emerald-500 dark:bg-emerald-400'
+                            : tab.accent === 'amber'
+                              ? 'bg-amber-500 dark:bg-amber-400'
+                              : 'bg-cyan-500 dark:bg-cyan-400'
+                        }`}
+                      />
+                    )}
                   </button>
                 )
               })}

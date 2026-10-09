@@ -178,7 +178,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
         <div className="relative rounded-2xl p-[1.5px] overflow-hidden shadow-[0_25px_65px_rgba(0,0,0,0.85)]">
           {/* Haz láser girando por el perímetro */}
           <div
-            className="absolute -inset-[150%] animate-[spin_5s_linear_infinite] pointer-events-none"
+            className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] pointer-events-none"
             style={{
               background:
                 'conic-gradient(from 0deg, transparent 0 310deg, rgba(16,185,129,0.9) 340deg, rgba(6,182,212,1) 360deg)',
@@ -244,8 +244,8 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
               })}
             </div>
 
-            {/* Área de Visualización Principal (16:10) */}
-            <div className="relative aspect-16/10 bg-black overflow-hidden">
+            {/* Área de Visualización Principal (16:9 NATIVO 1080p) */}
+            <div className="relative aspect-video bg-black overflow-hidden">
               <AnimatePresence mode="wait">
                 {/* PESTAÑA 1: VIDEO DEMO */}
                 {activeTab === 'video' && (
@@ -257,7 +257,6 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                     transition={{ duration: 0.3 }}
                     className="relative w-full h-full flex items-center justify-center bg-slate-950 overflow-hidden"
                   >
-                    {/* EFECTO 3: MICRO-ENFOQUE CINEMÁTICO (El video hace zoom suave al pasar el mouse, el marco no se mueve) */}
                     <video
                       ref={videoRef}
                       autoPlay
@@ -274,9 +273,12 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                         setVideoLoaded(true)
                         setVideoError(false)
                       }}
-                      className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] ${
-                        videoError ? 'hidden' : 'block'
-                      }`}
+                      style={{
+                        imageRendering: '-webkit-optimize-contrast',
+                        transform: 'translateZ(0)',
+                        backfaceVisibility: 'hidden',
+                      }}
+                      className={`w-full h-full object-cover ${videoError ? 'hidden' : 'block'}`}
                     >
                       <source src="/assets/videos/hero-bg.mp4" type="video/mp4" />
                       <source
@@ -293,7 +295,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                           alt="Demostración de sistemas a medida"
                           fill
                           priority
-                          className="object-cover opacity-45 mix-blend-luminosity transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                          className="object-cover opacity-45 mix-blend-luminosity"
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
 
@@ -412,7 +414,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       src="/portfolio/celstore.webp"
                       alt="Catálogo y tienda online de alta conversión"
                       fill
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                      className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
                     <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-white bg-black/70 p-3 rounded-xl border border-white/15 backdrop-blur-md">
@@ -445,7 +447,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       src="/portfolio/sportmanager.webp"
                       alt="Sistema de reservas y turnos automáticos"
                       fill
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                      className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
                     <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-white bg-black/70 p-3 rounded-xl border border-white/15 backdrop-blur-md">
@@ -476,7 +478,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       src="/portfolio/restoai.webp"
                       alt="Panel de control para gastronomía y servicios"
                       fill
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                      className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
                     <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-white bg-black/70 p-3 rounded-xl border border-white/15 backdrop-blur-md">

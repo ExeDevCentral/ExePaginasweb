@@ -114,7 +114,7 @@ const Footer = () => {
                 </span>
                 <span>
                   {t('footer.cupos_disponibles') ||
-                    'Cupos exclusivos abiertos · Arquitectura & Desarrollo Q4 2025'}
+                    'Disponibilidad activa · Arquitectura & Desarrollo de Software'}
                 </span>
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-400 text-[11px] font-mono w-fit">

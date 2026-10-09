@@ -352,10 +352,6 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       className={`w-full h-full object-cover cursor-pointer ${videoError ? 'hidden' : 'block'}`}
                     >
                       <source src="/assets/videos/hero-bg.mp4" type="video/mp4" />
-                      <source
-                        src="/assets/videos/coverr-a-businessman-working-on-a-stock-market-trading-platform-4862-1080p.mp4"
-                        type="video/mp4"
-                      />
                     </video>
 
                     {/* Fallback si el video no carga */}
@@ -636,10 +632,6 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                     className="w-full h-full object-cover"
                   >
                     <source src="/assets/videos/hero-bg.mp4" type="video/mp4" />
-                    <source
-                      src="/assets/videos/coverr-a-businessman-working-on-a-stock-market-trading-platform-4862-1080p.mp4"
-                      type="video/mp4"
-                    />
                   </video>
                 ) : (
                   <Image

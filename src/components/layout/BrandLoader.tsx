@@ -98,7 +98,7 @@ export const BrandLoader: React.FC<BrandLoaderProps> = ({
           className="flex items-center justify-center gap-1.5 font-mono text-xs md:text-sm font-black tracking-widest uppercase text-foreground"
         >
           <span className="bg-gradient-to-r from-accent-cyan via-amber-300 to-accent-magenta bg-clip-text text-transparent">
-            {text || 'EXESISTEMASWEB'}
+            {text || 'EXEPAGINASWEB'}
           </span>
         </motion.div>
 
@@ -107,10 +107,10 @@ export const BrandLoader: React.FC<BrandLoaderProps> = ({
             {subtext}
           </p>
         ) : (
-          <div className="flex items-center justify-center gap-1 mt-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-ping" />
-            <p className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase">
-              Cargando experiencia...
+          <div className="flex items-center justify-center gap-1.5 mt-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+            <p className="text-[10px] font-mono text-cyan-300/80 tracking-widest uppercase">
+              ARQUITECTURA DE SOFTWARE · 2025
             </p>
           </div>
         )}

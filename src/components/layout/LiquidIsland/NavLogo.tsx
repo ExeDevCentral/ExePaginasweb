@@ -5,14 +5,8 @@
  */
 'use client'
 
-import React, { useRef } from 'react'
-import {
-  motion,
-  useTransform,
-  useMotionValue,
-  useMotionValueEvent,
-  type MotionValue,
-} from 'framer-motion'
+import React from 'react'
+import { motion, useTransform, type MotionValue } from 'framer-motion'
 import { useTheme } from '@/core/theme/ThemeContext'
 import { MatrixWordmark } from '@/components/Effects/MatrixText'
 import Logo from '../Logo'
@@ -32,32 +26,7 @@ export default function NavLogo({
   const light = theme === 'light'
 
   // 1. Dolly-Out Phosphor Decay continuo de 0 a 300px
-  const logoScale = useTransform(scrollY, [0, 300], [1, 0.82], { clamp: true })
-
-  // 2. Micro-flicker corto al iniciar el scroll usando MotionValue (0 re-renders de React)
-  const flickerOpacity = useMotionValue(1)
-  const hasFlickeredRef = useRef(false)
-
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    if (reduceMotion) return
-
-    if (latest > 10 && latest < 90 && !hasFlickeredRef.current) {
-      hasFlickeredRef.current = true
-      // Secuencia corta de micro-parpadeo analógico de fósforo (120ms total)
-      flickerOpacity.set(0.4)
-      const t1 = setTimeout(() => flickerOpacity.set(1), 35)
-      const t2 = setTimeout(() => flickerOpacity.set(0.65), 70)
-      const t3 = setTimeout(() => flickerOpacity.set(1), 115)
-      return () => {
-        clearTimeout(t1)
-        clearTimeout(t2)
-        clearTimeout(t3)
-      }
-    } else if (latest < 6) {
-      hasFlickeredRef.current = false
-      flickerOpacity.set(1)
-    }
-  })
+  const logoScale = useTransform(scrollY, [0, 300], [1, 0.88], { clamp: true })
 
   return (
     <div className="flex items-center gap-2 shrink-0 select-none">
@@ -66,7 +35,6 @@ export default function NavLogo({
         className="relative flex items-center justify-center shrink-0 origin-left"
         style={{
           scale: reduceMotion ? 0.9 : logoScale,
-          opacity: flickerOpacity,
         }}
         layout="position"
       >

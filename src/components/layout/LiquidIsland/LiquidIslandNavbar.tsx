@@ -19,7 +19,6 @@ import NavLink from './NavLink'
 import MagneticCTA from './MagneticCTA'
 import MegaPanel from './MegaPanel'
 import SpotlightGlass from './SpotlightGlass'
-import BorderBeam from './BorderBeam'
 import LiquidFilter from './LiquidFilter'
 import LanguageSwitcher from '../LanguageSwitcher'
 import ThemeToggle from '../ThemeToggle'
@@ -81,7 +80,7 @@ export default function LiquidIslandNavbar({
       >
         {/* MICRO-AURA PERIMETRAL SOBRIA DE ALTA INGENIERIA */}
         <div
-          className="pointer-events-none absolute -inset-1 rounded-full bg-linear-to-r from-cyan-500/20 via-sky-400/15 to-emerald-400/20 blur-lg -z-20 opacity-30 dark:opacity-40 transition-opacity duration-300"
+          className="pointer-events-none absolute -inset-1 rounded-full bg-cyan-500/10 blur-xl -z-20 opacity-40"
           style={{
             maxWidth: 1100,
             margin: '0 auto',
@@ -97,13 +96,10 @@ export default function LiquidIslandNavbar({
           aria-label="Navegación principal"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative pointer-events-auto w-full max-w-[1100px] mx-auto h-14 sm:h-14.5 rounded-full border border-slate-300/80 dark:border-cyan-400/35 bg-white/90 dark:bg-[#0c1224]/90 backdrop-blur-xl shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.4),0_12px_32px_-8px_rgba(0,0,0,0.5),0_0_16px_rgba(6,182,212,0.15)] flex items-center justify-between px-3 sm:px-4 gap-2 transition-[box-shadow,border-color,background-color] duration-300 hover:border-cyan-400/60"
+          className="relative pointer-events-auto w-full max-w-[1100px] mx-auto h-14 sm:h-14.5 rounded-full border border-slate-700/60 dark:border-cyan-400/30 bg-[#0c1224]/90 backdrop-blur-xl shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6),0_0_16px_rgba(6,182,212,0.1)] flex items-center justify-between px-3 sm:px-4 gap-2 transition-colors duration-200 hover:border-cyan-400/60"
         >
           {/* Spotlight dinámico sobre el cristal */}
           {!reduceMotion && <SpotlightGlass mouseX={mouseX} mouseY={mouseY} />}
-
-          {/* Border beam animado con gradiente cian a amarillo */}
-          <BorderBeam duration={7} />
 
           {/* IZQUIERDA: Logo interactivo con Phosphor Decay */}
           <motion.div layout="position" className="flex items-center shrink-0">

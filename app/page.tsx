@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic'
 import { useState, useEffect } from 'react'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import SiteHeader from '@/components/layout/SiteHeader'
+import BrandIntroSplash from '@/components/layout/BrandIntroSplash'
 import MobileLandingView from '@/components/landing/MobileLandingView'
 import BackToTopButton from '@/components/layout/BackToTopButton'
 
@@ -32,6 +33,7 @@ export default function HomePage() {
 
   return (
     <ErrorBoundary>
+      <BrandIntroSplash />
       <div className="min-h-screen bg-transparent text-primary-text">
         <SiteHeader />
 

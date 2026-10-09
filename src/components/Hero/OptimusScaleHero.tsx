@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Hero inspirado 100% en Optimus (v0 template LHv4frpA7Us)
  *
  * - Fondo pulcro off-white / obsidiana con viñeta suave
@@ -63,71 +63,99 @@ const TICKER_ITEMS = [
 const CAPABILITIES = [
   {
     id: '01',
-    code: '01 // MÁS VENTAS',
+    code: '01 // PÁDEL & TURNOS',
     titleKey: 'hero.card_1_titulo',
-    defaultTitle: 'Páginas de Alta Conversión',
+    defaultTitle: 'Pádel SaaS & Reservas 24/7',
     descKey: 'hero.card_1_desc',
     defaultDesc:
-      'Carga instantánea en 0.38s, diseño que cautiva a tus clientes y posicionamiento en Google para que te encuentren primero.',
-    cta: 'Ver soluciones web',
-    href: '/soluciones#paginas-web',
-    ariaLabel: 'Ver soluciones web: Páginas de alta conversión',
+      'Carga en 0.38s, reservas automáticas de canchas con seña a tu banco y calendario multi-espacio en tiempo real sin comisiones.',
+    cta: 'Lanzar SportManager en vivo',
+    href: 'https://sportmanager-playhub.vercel.app',
+    liveLauncher: {
+      label: 'PROBAR PÁDEL EN VIVO 🎾',
+      sublabel: 'SPORTMANAGER · SISTEMA REAL',
+      href: 'https://sportmanager-playhub.vercel.app',
+      icon: '🎾',
+      color: 'cyan' as const,
+    },
+    ariaLabel: 'Probar SportManager Pádel en vivo sin filtros',
     color: 'cyan' as const,
     delay: '0s',
     icon: CyberSpeedGauge,
-    badge: 'Más Consultas',
-    tech: ['Primero en Google (SEO)', 'Carga Ultra Rápida', 'Ventas desde el Celular'],
+    badge: 'Canchas & Pádel',
+    tech: ['Pádel & Canchas 24/7', 'Señas a tu Banco', 'Cero Comisiones'],
   },
   {
     id: '02',
-    code: '02 // GESTIÓN MÓVIL',
+    code: '02 // E-COMMERCE 3D',
     titleKey: 'hero.card_2_titulo',
-    defaultTitle: 'Catálogo y Gestión Móvil',
+    defaultTitle: 'Tienda CelStore con Visor 3D',
     descKey: 'hero.card_2_desc',
     defaultDesc:
-      'Tu catálogo y pedidos actualizados al instante desde tu celular. Control total de ventas, clientes y stock sin complicaciones.',
-    cta: 'Ver paneles a medida',
-    href: '/soluciones#gestion-movil',
-    ariaLabel: 'Ver paneles a medida: Catálogo y gestión móvil',
+      'Catálogo interactivo con renderizado 3D en GPU, checkout directo con Mercado Pago y stock atómico sin cuotas cautivas.',
+    cta: 'Lanzar CelStore 3D en vivo',
+    href: 'https://multi-tiendas-celphone.vercel.app',
+    liveLauncher: {
+      label: 'PROBAR TIENDA CELSTORE 🛒',
+      sublabel: 'CATÁLOGO 3D & CHECKOUT',
+      href: 'https://multi-tiendas-celphone.vercel.app',
+      icon: '🛒',
+      color: 'fuchsia' as const,
+    },
+    ariaLabel: 'Probar CelStore E-Commerce en vivo sin filtros',
     color: 'fuchsia' as const,
     delay: '-2.75s',
     icon: CyberCatalogIcon,
-    badge: 'Control Total',
-    tech: ['Gestión desde tu Celular', 'Facturación AFIP', 'Control de Stock y Clientes'],
+    badge: 'Visor 3D GPU',
+    tech: ['Visor 3D Three.js', 'Cobro Mercado Pago', '0% Comisiones'],
   },
   {
     id: '03',
-    code: '03 // AUTOMATIZACIÓN',
+    code: '03 // GASTRONOMÍA & POS',
     titleKey: 'hero.card_3_titulo',
-    defaultTitle: 'WhatsApp & Cobros 24/7',
+    defaultTitle: 'Suite RESTOia & Comandas',
     descKey: 'hero.card_3_desc',
     defaultDesc:
-      'Dejá de responder precios manualmente: cobros y reservas automáticas 24/7 con tarjetas y comprobantes sin intervención humana.',
-    cta: 'Calcular automatización',
-    href: '/cotizador',
-    ariaLabel: 'Calcular automatización de WhatsApp y cobros 24/7',
+      'Mapa interactivo de mesas, comandas de cocina 100% offline ante microcortes, arqueo blindado y cobros sin intermediarios.',
+    cta: 'Lanzar RESTOia en vivo',
+    href: 'https://kobe-sand.vercel.app/',
+    liveLauncher: {
+      label: 'PROBAR RESTOIA EN VIVO 🍷',
+      sublabel: 'KOBE ENGINE · 100% OFFLINE',
+      href: 'https://kobe-sand.vercel.app/',
+      icon: '🍷',
+      color: 'amber' as const,
+    },
+    ariaLabel: 'Probar RESTOia gastronómico en vivo sin filtros',
     color: 'amber' as const,
     delay: '-5.5s',
     icon: CyberMetricLightning,
-    badge: 'Ventas Automáticas',
-    tech: ['WhatsApp Automatizado', 'Cobro con Tarjetas/MP', 'Alertas de Ventas al Instante'],
+    badge: '100% Offline',
+    tech: ['Comandas 100% Offline', 'KDS Cocina en Vivo', 'Arqueo Ciego Z'],
   },
   {
     id: '04',
-    code: '04 // LIBERTAD',
+    code: '04 // CIBERSEGURIDAD',
     titleKey: 'hero.card_4_titulo',
-    defaultTitle: '100% Código Tuyo (0% Comisiones)',
+    defaultTitle: 'OwlEye Engine · Ciberdefensa',
     descKey: 'hero.card_4_desc',
     defaultDesc:
-      'Sin pagar comisiones del 15% a plataformas terceras. El sitio, la base de clientes y los datos son 100% tuyos para siempre.',
-    cta: 'Comparar planes y precios',
-    href: '/precios',
-    ariaLabel: 'Comparar planes y precios con 100% código propio',
+      'Radar heurístico de amenazas, mitigación activa en tiempo real y telemetría por WebSocket. Código propio transferido a tu nombre.',
+    cta: 'Lanzar OwlEye en vivo',
+    href: 'https://owl-eye-engine.vercel.app',
+    liveLauncher: {
+      label: 'TESTEAR OWLEYE ENGINE 🛡️',
+      sublabel: 'RADAR HEURÍSTICO EN VIVO',
+      href: 'https://owl-eye-engine.vercel.app',
+      icon: '🛡️',
+      color: 'emerald' as const,
+    },
+    ariaLabel: 'Probar OwlEye Engine en vivo sin filtros',
     color: 'emerald' as const,
     delay: '-8.25s',
     icon: CyberMetricShield,
-    badge: 'Sin Ataduras',
-    tech: ['0% Comisiones por Venta', 'Sin Mensualidades Forzosas', 'Tu Base de Clientes'],
+    badge: 'Defensa Activa',
+    tech: ['WebSocket en Vivo', 'Defensa Activa Heurística', 'Código 100% Tuyo'],
   },
 ]
 
@@ -462,6 +490,7 @@ export const OptimusScaleHero: React.FC = () => {
               tech={cap.tech}
               cta={cap.cta}
               href={cap.href}
+              liveLauncher={cap.liveLauncher}
               color={cap.color}
               icon={cap.icon}
               ariaLabel={cap.ariaLabel}

@@ -1,16 +1,25 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  *
  * CyberTerminalCard: Chasis de ingeniería cibernética con biselado táctico,
- * telemetría de consola, diodo LED pulsante y pistas de circuito reactivas.
+ * telemetría de consola, diodo LED pulsante y disparador directo de apps en producción.
  */
 'use client'
 
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { CyberArrowRight } from '@/components/ui/MagnificentIcons'
+import LiveSystemLauncherButton from '@/components/ui/LiveSystemLauncherButton'
+
+export interface LiveLauncherConfig {
+  label: string
+  sublabel?: string
+  href: string
+  icon?: string
+  color?: 'cyan' | 'fuchsia' | 'amber' | 'emerald'
+}
 
 export interface CyberTerminalCardProps {
   id?: string
@@ -21,6 +30,7 @@ export interface CyberTerminalCardProps {
   tech?: string[]
   cta?: string
   href?: string
+  liveLauncher?: LiveLauncherConfig
   color?: 'cyan' | 'fuchsia' | 'amber' | 'emerald'
   icon?: React.ComponentType<{ className?: string }>
   className?: string
@@ -70,6 +80,7 @@ export default function CyberTerminalCard({
   tech = [],
   cta,
   href,
+  liveLauncher,
   color = 'cyan',
   icon: Icon,
   className = '',
@@ -182,17 +193,45 @@ export default function CyberTerminalCard({
         </div>
       )}
 
-      {/* 5. Pie de Chasis con Botón Disparador CTA */}
-      {cta && href && (
+      {/* 5. Disparador poco convencional de Sistema en Vivo */}
+      {liveLauncher && (
+        <div className="relative z-10 pt-4 border-t border-white/10 dark:border-white/5">
+          <LiveSystemLauncherButton
+            label={liveLauncher.label}
+            sublabel={liveLauncher.sublabel}
+            href={liveLauncher.href}
+            icon={liveLauncher.icon}
+            color={liveLauncher.color || color}
+            compact
+            className="w-full justify-between"
+          />
+        </div>
+      )}
+
+      {/* 6. Pie de Chasis con Enlace Secundario CTA (si no hay liveLauncher o como acceso complementario) */}
+      {cta && href && !liveLauncher && (
         <div className="relative z-10 pt-3 border-t border-white/10 dark:border-white/5 flex items-center justify-between">
-          <Link
-            href={href}
-            aria-label={ariaLabel || cta}
-            className={`inline-flex items-center gap-2 text-xs font-mono font-semibold tracking-wider uppercase ${theme.accent} hover:brightness-125 transition-all group/link`}
-          >
-            <span>{cta}</span>
-            <CyberArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/link:translate-x-1" />
-          </Link>
+          {href.startsWith('http') ? (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={ariaLabel || cta}
+              className={`inline-flex items-center gap-2 text-xs font-mono font-semibold tracking-wider uppercase ${theme.accent} hover:brightness-125 transition-all group/link`}
+            >
+              <span>{cta}</span>
+              <CyberArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/link:translate-x-1" />
+            </a>
+          ) : (
+            <Link
+              href={href}
+              aria-label={ariaLabel || cta}
+              className={`inline-flex items-center gap-2 text-xs font-mono font-semibold tracking-wider uppercase ${theme.accent} hover:brightness-125 transition-all group/link`}
+            >
+              <span>{cta}</span>
+              <CyberArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/link:translate-x-1" />
+            </Link>
+          )}
 
           {/* Micro-anclaje táctico perimetral */}
           <span className="text-[10px] font-mono text-slate-500 select-none">[EXE_MODULE]</span>

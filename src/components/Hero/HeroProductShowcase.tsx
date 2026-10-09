@@ -1,12 +1,12 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  *
  * HeroProductShowcase: Cinema Display 100% Estable y Sólido.
  * Incorpora los 3 Efectos Premium:
  * 1. Haz de Luz Perimetral (Border Beam giratorio continuo).
  * 2. Aura Ambilight Respirante Fija (OLED Ambient Glow sin tambaleos).
- * 3. Micro-Enfoque Cinemático Interno (Zoom óptico suave del 3% al posar el mouse).
+ * 3. Lanzadores directos poco convencionales para probar software en producción.
  */
 'use client'
 
@@ -25,6 +25,7 @@ import {
   Sparkles,
   Zap,
 } from 'lucide-react'
+import LiveSystemLauncherButton from '@/components/ui/LiveSystemLauncherButton'
 
 type ShowcaseTab = 'video' | 'ecommerce' | 'turnos' | 'gestion'
 
@@ -417,23 +418,26 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-white bg-black/70 p-3 rounded-xl border border-white/15 backdrop-blur-md">
+                    <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-white bg-black/80 p-3 rounded-xl border border-white/20 backdrop-blur-md">
                       <div>
-                        <div className="font-bold text-emerald-400">
-                          E-Commerce de Alta Velocidad
-                        </div>
+                        <div className="font-bold text-emerald-400">CelStore · E-Commerce 3D</div>
                         <div className="text-[11px] text-slate-300">
-                          Catálogo, variantes y carrito instantáneo
+                          Catálogo 3D con Three.js y MercadoPago
                         </div>
                       </div>
-                      <span className="px-2 py-1 rounded bg-emerald-500 text-slate-950 font-bold text-[10px]">
-                        0% COMISIÓN
-                      </span>
+                      <LiveSystemLauncherButton
+                        label="PROBAR CELSTORE"
+                        sublabel="EN VIVO · CATÁLOGO 3D"
+                        href="https://multi-tiendas-celphone.vercel.app"
+                        icon="🛒"
+                        color="emerald"
+                        compact
+                      />
                     </div>
                   </motion.div>
                 )}
 
-                {/* PESTAÑA 3: TURNOS & CITAS */}
+                {/* PESTAÑA 3: TURNOS & CITAS (PÁDEL / SPORTMANAGER) */}
                 {activeTab === 'turnos' && (
                   <motion.div
                     key="tab-turnos"
@@ -445,21 +449,28 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                   >
                     <Image
                       src="/portfolio/sportmanager.webp"
-                      alt="Sistema de reservas y turnos automáticos"
+                      alt="Sistema de reservas de canchas y turnos de pádel"
                       fill
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-white bg-black/70 p-3 rounded-xl border border-white/15 backdrop-blur-md">
+                    <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-white bg-black/80 p-3 rounded-xl border border-cyan-500/30 backdrop-blur-md">
                       <div>
-                        <div className="font-bold text-cyan-400">Sistema de Turnos & Clientes</div>
+                        <div className="font-bold text-cyan-400">
+                          SportManager · Software de Pádel
+                        </div>
                         <div className="text-[11px] text-slate-300">
-                          Reservas 24/7 con seña directa a tu banco
+                          Reservas de canchas 24/7 y señas directas a tu banco
                         </div>
                       </div>
-                      <span className="px-2 py-1 rounded bg-cyan-400 text-slate-950 font-bold text-[10px]">
-                        AUTÓNOMO
-                      </span>
+                      <LiveSystemLauncherButton
+                        label="PROBAR PÁDEL EN VIVO"
+                        sublabel="DIRECTO A SPORTMANAGER"
+                        href="https://sportmanager-playhub.vercel.app"
+                        icon="🎾"
+                        color="cyan"
+                        compact
+                      />
                     </div>
                   </motion.div>
                 )}
@@ -481,18 +492,23 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-white bg-black/70 p-3 rounded-xl border border-white/15 backdrop-blur-md">
+                    <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-white bg-black/80 p-3 rounded-xl border border-white/20 backdrop-blur-md">
                       <div>
                         <div className="font-bold text-amber-400">
-                          Panel Operativo en Tiempo Real
+                          RESTOia · Gastronomía & Comandas
                         </div>
                         <div className="text-[11px] text-slate-300">
-                          Mesas, comandas y métricas desde iPad o celular
+                          Motor KOBE 100% offline y mapa interactivo
                         </div>
                       </div>
-                      <span className="px-2 py-1 rounded bg-amber-400 text-slate-950 font-bold text-[10px]">
-                        TIEMPO REAL
-                      </span>
+                      <LiveSystemLauncherButton
+                        label="PROBAR RESTOIA"
+                        sublabel="EN VIVO · 100% OFFLINE"
+                        href="https://kobe-sand.vercel.app/"
+                        icon="🍷"
+                        color="amber"
+                        compact
+                      />
                     </div>
                   </motion.div>
                 )}
@@ -502,11 +518,77 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
             {/* Pie de la pantalla con mensaje de confianza */}
             <div className="px-4 py-2.5 bg-[#070b14] border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-slate-400">
               <span className="flex items-center gap-2 text-slate-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
-                <span>Explorá interfaces reales de negocios en producción</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
+                <span>Probá sistemas reales desplegados en producción Vercel</span>
               </span>
               <span className="text-emerald-400 font-semibold">ExePaginasWeb © 2025</span>
             </div>
+          </div>
+        </div>
+
+        {/* BARRA INFERIOR POCO CONVENCIONAL DE DISPARO DIRECTO */}
+        <div className="mt-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#070b16]/90 border border-white/15 backdrop-blur-xl shadow-xl">
+          <div className="flex items-center gap-2.5 text-xs font-mono text-slate-300">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
+            </span>
+            <span className="text-[11px]">
+              SISTEMA LISTO:{' '}
+              <strong className="text-white font-sans font-bold uppercase">
+                {activeTab === 'turnos'
+                  ? 'SPORTMANAGER (PÁDEL)'
+                  : activeTab === 'ecommerce'
+                    ? 'CELSTORE 3D'
+                    : activeTab === 'gestion'
+                      ? 'RESTOIA GASTRONOMÍA'
+                      : 'SPORTMANAGER (PÁDEL)'}
+              </strong>
+            </span>
+          </div>
+
+          <div className="w-full sm:w-auto">
+            <LiveSystemLauncherButton
+              label={
+                activeTab === 'turnos'
+                  ? 'LANZAR SPORTMANAGER (PÁDEL)'
+                  : activeTab === 'ecommerce'
+                    ? 'LANZAR TIENDA CELSTORE'
+                    : activeTab === 'gestion'
+                      ? 'LANZAR RESTOIA GASTRONOMÍA'
+                      : 'PROBAR SISTEMA DE PÁDEL EN VIVO'
+              }
+              sublabel="APP REAL EN PRODUCCIÓN · SIN PORTAFOLIO"
+              href={
+                activeTab === 'turnos'
+                  ? 'https://sportmanager-playhub.vercel.app'
+                  : activeTab === 'ecommerce'
+                    ? 'https://multi-tiendas-celphone.vercel.app'
+                    : activeTab === 'gestion'
+                      ? 'https://kobe-sand.vercel.app/'
+                      : 'https://sportmanager-playhub.vercel.app'
+              }
+              icon={
+                activeTab === 'turnos'
+                  ? '🎾'
+                  : activeTab === 'ecommerce'
+                    ? '🛒'
+                    : activeTab === 'gestion'
+                      ? '🍷'
+                      : '🎾'
+              }
+              color={
+                activeTab === 'turnos'
+                  ? 'cyan'
+                  : activeTab === 'ecommerce'
+                    ? 'emerald'
+                    : activeTab === 'gestion'
+                      ? 'amber'
+                      : 'cyan'
+              }
+              compact
+              className="w-full sm:w-auto justify-between"
+            />
           </div>
         </div>
       </div>

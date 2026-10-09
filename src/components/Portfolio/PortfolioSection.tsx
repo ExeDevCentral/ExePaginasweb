@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
@@ -9,7 +9,6 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import {
-  ExternalLink,
   Calendar,
   ShoppingBag,
   Globe,
@@ -23,6 +22,7 @@ import {
   FileText,
 } from 'lucide-react'
 import HudButton from '@/components/HudButton'
+import LiveSystemLauncherButton from '@/components/ui/LiveSystemLauncherButton'
 import { INITIAL_PROJECTS, type Project } from '@/data/projects'
 
 export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
@@ -261,16 +261,55 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                         ))}
                       </div>
 
-                      {/* Acciones principales */}
-                      <div className="pt-2.5 border-t border-border dark:border-border-tech flex items-center justify-between gap-2 mt-auto">
+                      {/* Acciones principales con botón de lanzamiento directo */}
+                      <div className="pt-3 border-t border-border dark:border-border-tech flex flex-wrap items-center justify-between gap-2 mt-auto">
                         <button
                           type="button"
                           onClick={() => setSelectedProject(project)}
-                          className="text-xs font-mono text-foreground hover:text-brand flex items-center gap-1.5 transition-colors cursor-pointer"
+                          className="text-xs font-mono text-muted-foreground hover:text-brand flex items-center gap-1.5 transition-colors cursor-pointer py-1"
                         >
                           <Maximize2 className="w-3 h-3 text-brand" />
                           <span>{t('portfolio.detalles', 'FICHA TÉCNICA')}</span>
                         </button>
+
+                        {project.link && (
+                          <LiveSystemLauncherButton
+                            label={
+                              project.id === 'sportmanager'
+                                ? 'PROBAR PÁDEL EN VIVO 🎾'
+                                : project.id === 'celstore'
+                                  ? 'PROBAR TIENDA 3D 🛒'
+                                  : project.id === 'restoai'
+                                    ? 'PROBAR RESTOIA 🍷'
+                                    : project.id === 'owleye'
+                                      ? 'TESTEAR RADAR 🛡️'
+                                      : 'LANZAR APP EN VIVO'
+                            }
+                            sublabel="PRODUCCIÓN · DIRECTO"
+                            href={project.link}
+                            icon={
+                              project.id === 'sportmanager'
+                                ? '🎾'
+                                : project.id === 'celstore'
+                                  ? '🛒'
+                                  : project.id === 'restoai'
+                                    ? '🍷'
+                                    : project.id === 'owleye'
+                                      ? '🛡️'
+                                      : '⚡'
+                            }
+                            color={
+                              project.id === 'sportmanager'
+                                ? 'cyan'
+                                : project.id === 'celstore'
+                                  ? 'fuchsia'
+                                  : project.id === 'restoai'
+                                    ? 'amber'
+                                    : 'emerald'
+                            }
+                            compact
+                          />
+                        )}
                       </div>
                     </div>
 
@@ -577,16 +616,37 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                 </button>
 
                 {selectedProject.link && (
-                  <a
+                  <LiveSystemLauncherButton
+                    label={
+                      selectedProject.id === 'sportmanager'
+                        ? 'ABRIR SPORTMANAGER (PÁDEL) EN VIVO 🎾'
+                        : selectedProject.id === 'celstore'
+                          ? 'ABRIR TIENDA CELSTORE 3D 🛒'
+                          : selectedProject.id === 'restoai'
+                            ? 'ABRIR RESTOIA EN VIVO 🍷'
+                            : 'ABRIR SISTEMA EN PRODUCCIÓN'
+                    }
+                    sublabel="ACCESO DIRECTO · DESPLEGADO EN VERCEL"
                     href={selectedProject.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Ver sitio web de ${selectedProject.title} en producción`}
-                    className="px-5 py-2.5 rounded-xl bg-linear-to-r from-emerald-500 to-accent-cyan text-slate-950 font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    Abrir Sitio en Producción
-                  </a>
+                    icon={
+                      selectedProject.id === 'sportmanager'
+                        ? '🎾'
+                        : selectedProject.id === 'celstore'
+                          ? '🛒'
+                          : selectedProject.id === 'restoai'
+                            ? '🍷'
+                            : '⚡'
+                    }
+                    color={
+                      selectedProject.id === 'sportmanager'
+                        ? 'cyan'
+                        : selectedProject.id === 'celstore'
+                          ? 'fuchsia'
+                          : selectedProject.id === 'restoai'
+                            ? 'amber'
+                            : 'emerald'
+                    }
+                  />
                 )}
               </div>
             </motion.div>

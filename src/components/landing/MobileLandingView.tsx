@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  *
  * MobileLandingView:
@@ -23,6 +23,7 @@ import {
 } from 'lucide-react'
 import OptimusGlyphSphere from '../Hero/OptimusGlyphSphere'
 import HudButton from '../HudButton'
+import LiveSystemLauncherButton from '@/components/ui/LiveSystemLauncherButton'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '@/core/utils/whatsappUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
 import { toast } from 'sonner'
@@ -267,6 +268,33 @@ export default function MobileLandingView() {
                       <span>{feat}</span>
                     </div>
                   ))}
+                </div>
+
+                {/* Botón táctil poco convencional para probar el sistema en vivo */}
+                <div className="mt-3 pt-2.5 border-t border-border/50">
+                  <LiveSystemLauncherButton
+                    label={
+                      item.id === 'web'
+                        ? 'PROBAR PÁDEL EN VIVO 🎾'
+                        : item.id === 'ecommerce'
+                          ? 'PROBAR TIENDA 3D 🛒'
+                          : 'PROBAR RESTOIA EN VIVO 🍷'
+                    }
+                    sublabel="DEMO REAL EN PRODUCCIÓN"
+                    href={
+                      item.id === 'web'
+                        ? 'https://sportmanager-playhub.vercel.app'
+                        : item.id === 'ecommerce'
+                          ? 'https://multi-tiendas-celphone.vercel.app'
+                          : 'https://kobe-sand.vercel.app/'
+                    }
+                    icon={item.id === 'web' ? '🎾' : item.id === 'ecommerce' ? '🛒' : '🍷'}
+                    color={
+                      item.id === 'web' ? 'cyan' : item.id === 'ecommerce' ? 'emerald' : 'amber'
+                    }
+                    compact
+                    className="w-full justify-between"
+                  />
                 </div>
               </div>
             )

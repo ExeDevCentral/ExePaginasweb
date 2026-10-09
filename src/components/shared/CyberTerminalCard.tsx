@@ -130,6 +130,8 @@ export default function CyberTerminalCard({
 
   return (
     <div
+      role="region"
+      aria-label={title}
       data-cyber-chassis="true"
       data-cyber-color={color}
       onMouseMove={handleMouseMove}

@@ -278,4 +278,30 @@ export const INITIAL_PROJECTS: Project[] = [
     status: 'live',
     statusLabel: 'EN PRODUCCIÓN',
   },
+  {
+    id: 'pelu-rosario',
+    title: 'Pelu Rosario — Barbería Boutique & Visagismo IA',
+    category: 'turnos',
+    categoryLabel: 'Turnos & E-Commerce',
+    client: 'Peluquería Rosario · El Búho Dorado (Est. 1947)',
+    description:
+      'Plataforma integral para barbería clásica y boutique capilar: sistema de reservas online con confirmación instantánea vía WhatsApp y señas protegidas, catálogo interactivo de cortes con efectos hover reveal, boutique e-commerce de productos y asistente biométrico de visagismo capilar con IA.',
+    image: '/portfolio/pelu-rosario.webp',
+    tags: ['React 19', 'Vite', 'Tailwind CSS', 'Visagismo IA', 'Turnos', 'E-Commerce'],
+    metrics: [
+      { label: 'Stack', value: 'React + Vite' },
+      { label: 'Innovación', value: 'Visagismo IA' },
+    ],
+    highlights: [
+      'Reserva de turnos con confirmación en tiempo real por WhatsApp y código QR',
+      'Diagnóstico biométrico y visagismo capilar inteligente con proporción áurea',
+      'Catálogo de estilos y tendencias con microinteracciones y efectos hover reveal',
+      'Boutique capilar con carrito de compras sincronizado y checkout ágil',
+      'Panel administrativo para gestión de agenda, CRM de clientes y stock de productos',
+      'Diseño editorial de alta gama: tradición rosarina y estética de ciudad y campo',
+    ],
+    link: 'https://pelu-rosario.vercel.app/',
+    status: 'live',
+    statusLabel: 'EN PRODUCCIÓN',
+  },
 ]

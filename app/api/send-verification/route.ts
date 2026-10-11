@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { timingSafeEqual } from 'node:crypto'
 import { z } from 'zod'
 import { sendEmail } from '@/lib/email/send'
-import { emailVerification } from '@/lib/email/templates.js'
+import { emailVerification } from '@/lib/email/templates'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 
 const SendVerificationSchema = z.object({

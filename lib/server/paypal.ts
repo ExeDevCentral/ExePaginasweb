@@ -5,7 +5,7 @@
  */
 import { isSupabaseAdminConfigured, supabaseAdmin as db } from '@/lib/supabase/admin'
 import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send'
-import { paymentConfirmation, paymentNotification } from '@/lib/email/templates.js'
+import { paymentConfirmation, paymentNotification } from '@/lib/email/templates'
 import { catalogEntryById, PLAN_CATALOG } from '@/core/domain/planCatalog'
 
 export const PAYPAL_API_BASE = process.env.PAYPAL_API_BASE || 'https://api-m.paypal.com'

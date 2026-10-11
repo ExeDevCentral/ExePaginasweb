@@ -7,11 +7,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
 import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send'
 import { dispatchN8nEvent } from '@/lib/server/n8n'
-import {
-  contactNotification,
-  contactAutoReply,
-  aiDiagnosticAutoReply,
-} from '@/lib/email/templates.js'
+import { contactNotification, contactAutoReply, aiDiagnosticAutoReply } from '@/lib/email/templates'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 import {
   validateContentLength,

@@ -14,7 +14,7 @@ import {
   emailVerification,
   slaBreachAlert,
   aiDiagnosticAutoReply,
-} from '../../lib/email/templates.js'
+} from '../../lib/email/templates'
 import {
   calculateInvoiceTotals,
   calculateTenantMRR,

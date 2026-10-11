@@ -3,8 +3,88 @@
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
-function escapeHtml(str) {
-  if (typeof str !== 'string') return str ?? ''
+type TemplateValue = string | number | null | undefined
+
+type PaymentConfirmationInput = {
+  name: TemplateValue
+  plan: TemplateValue
+  amount: TemplateValue
+  currency: TemplateValue
+  orderId?: TemplateValue
+  dashboardUrl?: TemplateValue
+}
+type PaymentNotificationInput = {
+  name?: TemplateValue
+  email: TemplateValue
+  plan: TemplateValue
+  slug: TemplateValue
+  amount: TemplateValue
+  tipoProyecto?: TemplateValue
+  orderId?: TemplateValue
+}
+type ContactInput = {
+  name: TemplateValue
+  email: TemplateValue
+  message: TemplateValue
+  ticketId?: TemplateValue
+}
+type AutoReplyInput = {
+  name?: TemplateValue
+  message: TemplateValue
+  ticketId?: TemplateValue
+  lang?: string
+}
+type DiagnosticInput = {
+  name?: TemplateValue
+  message: TemplateValue
+  ticketId?: TemplateValue
+  projectType?: TemplateValue
+  total?: TemplateValue
+  lang?: string
+}
+type WelcomeInput = { name?: TemplateValue; email?: TemplateValue; dashboardUrl?: TemplateValue }
+type RenewalInput = {
+  tenantName: TemplateValue
+  serviceName: TemplateValue
+  price: TemplateValue
+  currency: TemplateValue
+  renewalDate: TemplateValue
+  dashboardUrl?: TemplateValue
+}
+type SlaInput = {
+  tenantName: TemplateValue
+  ticketId: TemplateValue
+  subject: TemplateValue
+  priority: TemplateValue
+  breachTime: TemplateValue
+  dashboardUrl?: TemplateValue
+}
+type InvoiceInput = {
+  tenantName: TemplateValue
+  invoiceNumber: TemplateValue
+  invoiceType: TemplateValue
+  amount: TemplateValue
+  date: TemplateValue
+  cae?: TemplateValue
+  caeDueDate?: TemplateValue
+  dashboardUrl?: TemplateValue
+}
+type VerificationInput = {
+  name?: TemplateValue
+  verificationUrl?: TemplateValue
+  token?: TemplateValue
+}
+type InboundInput = {
+  fromEmail?: TemplateValue
+  toEmail?: TemplateValue
+  subject?: TemplateValue
+  html?: TemplateValue
+  text?: TemplateValue
+  ticketId?: TemplateValue
+}
+
+function escapeHtml(str: TemplateValue): string {
+  if (typeof str !== 'string') return String(str ?? '')
   return str
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -13,7 +93,7 @@ function escapeHtml(str) {
     .replace(/'/g, '&#x27;')
 }
 
-function stripHtml(str) {
+function stripHtml(str: TemplateValue): string {
   if (typeof str !== 'string') return ''
   return str
     .replace(/<[^>]*>/g, ' ')
@@ -29,7 +109,7 @@ const BRAND = {
   secondary: '#ff00ff',
 }
 
-function baseLayout(body, title) {
+function baseLayout(body: string, title: string): string {
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -92,7 +172,14 @@ function styles() {
   `
 }
 
-export function paymentConfirmation({ name, plan, amount, currency, orderId, dashboardUrl }) {
+export function paymentConfirmation({
+  name,
+  plan,
+  amount,
+  currency,
+  orderId,
+  dashboardUrl,
+}: PaymentConfirmationInput): string {
   const body = `
     <h1>✅ ¡Pago aprobado!</h1>
     <p>Hola <strong style="color:#fff">${escapeHtml(name)}</strong>, tu pago fue procesado correctamente.</p>
@@ -113,7 +200,15 @@ export function paymentConfirmation({ name, plan, amount, currency, orderId, das
   return baseLayout(body, 'Pago aprobado')
 }
 
-export function paymentNotification({ name, email, plan, slug, amount, tipoProyecto, orderId }) {
+export function paymentNotification({
+  name,
+  email,
+  plan,
+  slug,
+  amount,
+  tipoProyecto,
+  orderId,
+}: PaymentNotificationInput): string {
   const body = `
     <h1>🚀 ¡Nueva venta!</h1>
     <div style="background:#0d0d14;border-radius:12px;padding:20px;margin:20px 0;border:1px solid #1e1e2e">
@@ -135,7 +230,7 @@ export function paymentNotification({ name, email, plan, slug, amount, tipoProye
   return baseLayout(body, 'Nueva venta recibida')
 }
 
-export function contactNotification({ name, email, message, ticketId }) {
+export function contactNotification({ name, email, message, ticketId }: ContactInput): string {
   const safeTicket = escapeHtml(ticketId || 'EXE-CNT-DIRECT')
   const body = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
@@ -150,7 +245,7 @@ export function contactNotification({ name, email, message, ticketId }) {
       <hr class="divider" style="margin:12px 0">
       <div class="label">Mensaje del Cliente</div>
       <div style="color:#e2e8f0;background:#0a0a0f;padding:16px;border-radius:10px;margin:8px 0 0;font-size:14px;line-height:1.6;border:1px solid #1e1e2e;">
-        ${escapeHtml(message).replace(/\n/g, '<br>')}
+        ${escapeHtml(message).replace(/\\n/g, '<br>')}
       </div>
     </div>
     <div style="text-align:center;margin-top:24px;">
@@ -160,7 +255,7 @@ export function contactNotification({ name, email, message, ticketId }) {
   return baseLayout(body, `[${safeTicket}] Nuevo contacto de ${escapeHtml(name)}`)
 }
 
-export function contactAutoReply({ name, message, ticketId, lang = 'es' }) {
+export function contactAutoReply({ name, message, ticketId, lang = 'es' }: AutoReplyInput): string {
   const isEn = String(lang).toLowerCase().startsWith('en')
   const safeName = escapeHtml(name || (isEn ? 'Valued Client' : 'Estimado/a'))
   const safeTicket = escapeHtml(ticketId || 'EXE-CNT-00000')
@@ -220,7 +315,7 @@ export function contactAutoReply({ name, message, ticketId, lang = 'es' }) {
 
       <div class="label" style="margin-bottom:8px;">${copy.summaryLabel}</div>
       <div style="color:#cbd5e1;background:#0a0a0f;padding:14px 16px;border-radius:10px;font-size:13px;line-height:1.5;border:1px solid #1e1e2e;font-style:italic;">
-        "${escapeHtml(message).replace(/\n/g, '<br>')}"
+        "${escapeHtml(message).replace(/\\n/g, '<br>')}"
       </div>
     </div>
 
@@ -247,7 +342,7 @@ export function aiDiagnosticAutoReply({
   projectType,
   total,
   lang = 'es',
-}) {
+}: DiagnosticInput): string {
   const isEn = String(lang).toLowerCase().startsWith('en')
   const safeName = escapeHtml(name || (isEn ? 'Valued Client' : 'Estimado/a'))
   const safeTicket = escapeHtml(ticketId || 'EXE-AI-00000')
@@ -314,7 +409,7 @@ export function aiDiagnosticAutoReply({
         ${projectType ? `<p style="margin:0 0 6px;color:#fff;"><strong>Proyecto:</strong> ${escapeHtml(projectType)}</p>` : ''}
         ${total ? `<p style="margin:0 0 6px;color:#22c55e;"><strong>Estimación:</strong> ${escapeHtml(String(total))}</p>` : ''}
         <div style="margin-top:6px;font-style:italic;color:#94a3b8;">
-          "${escapeHtml(message).replace(/\n/g, '<br>')}"
+          "${escapeHtml(message).replace(/\\n/g, '<br>')}"
         </div>
       </div>
 
@@ -338,7 +433,7 @@ export function aiDiagnosticAutoReply({
   return baseLayout(body, copy.subject)
 }
 
-export function welcomeEmail({ name, email, dashboardUrl }) {
+export function welcomeEmail({ name, email, dashboardUrl }: WelcomeInput): string {
   const body = `
     <h1>🎉 Bienvenido a ${BRAND.name}</h1>
     <p>Hola <strong style="color:#fff">${escapeHtml(name || email)}</strong>,</p>
@@ -357,7 +452,7 @@ export function renewalNotice({
   currency,
   renewalDate,
   dashboardUrl,
-}) {
+}: RenewalInput): string {
   const body = `
     <h1>📅 Aviso de Renovación Próxima</h1>
     <p>Hola, te informamos que tu servicio en <strong style="color:#fff">${escapeHtml(tenantName)}</strong> está programado para renovarse próximamente.</p>
@@ -386,7 +481,7 @@ export function slaBreachAlert({
   priority,
   breachTime,
   dashboardUrl,
-}) {
+}: SlaInput): string {
   const body = `
     <h1 style="color:#ff3366;">⚠️ Alerta de Incumplimiento de SLA</h1>
     <p>Se ha detectado un ticket fuera del tiempo límite establecido por el contrato SLA en <strong style="color:#fff">${escapeHtml(tenantName)}</strong>.</p>
@@ -415,7 +510,7 @@ export function invoiceReceipt({
   cae,
   caeDueDate,
   dashboardUrl,
-}) {
+}: InvoiceInput): string {
   const body = `
     <h1>📄 Tu Factura Electrónica está lista</h1>
     <p>Hemos emitido el comprobante correspondiente a tus servicios en <strong style="color:#fff">${escapeHtml(tenantName)}</strong>.</p>
@@ -444,7 +539,7 @@ export function invoiceReceipt({
   return baseLayout(body, 'Factura Emitida')
 }
 
-export function emailVerification({ name, verificationUrl, token }) {
+export function emailVerification({ name, verificationUrl, token }: VerificationInput): string {
   const body = `
     <h1 style="color:#00d4ff;">🔒 Verificación de Cuenta</h1>
     <p>Hola <strong style="color:#fff">${escapeHtml(name || 'Cliente')}</strong>,</p>
@@ -476,7 +571,14 @@ export function emailVerification({ name, verificationUrl, token }) {
   return baseLayout(body, 'Confirma tu Correo Electrónico')
 }
 
-export function inboundEmailNotification({ fromEmail, toEmail, subject, html, text, ticketId }) {
+export function inboundEmailNotification({
+  fromEmail,
+  toEmail,
+  subject,
+  html,
+  text,
+  ticketId,
+}: InboundInput): string {
   const safeSubject = escapeHtml(subject || 'Sin Asunto')
   const safeFrom = escapeHtml(fromEmail || 'Desconocido')
   const safeTo = escapeHtml(toEmail || 'Contacto@exepaginasweb.com')

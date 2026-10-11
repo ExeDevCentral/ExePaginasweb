@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Webhook } from 'svix'
 import { z } from 'zod'
 import { sendEmail } from '@/lib/email/send'
-import { inboundEmailNotification, contactAutoReply } from '@/lib/email/templates.js'
+import { inboundEmailNotification, contactAutoReply } from '@/lib/email/templates'
 import { detectLanguage } from '@/lib/server/language'
 import {
   claimWebhookEvent,

@@ -13,7 +13,7 @@ import {
   aiDiagnosticAutoReply,
   paymentConfirmation,
   emailVerification,
-} from '../lib/email/templates.js'
+} from '../lib/email/templates'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const outDir = path.resolve(__dirname, '../resend-templates')

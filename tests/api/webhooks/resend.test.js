@@ -127,8 +127,7 @@ describe('Resend Webhook Handler (app/api/webhooks/resend/route.ts)', () => {
   })
 
   it('debe generar correctamente la plantilla HTML de contactAutoReply con Ticket ID', async () => {
-    const { contactAutoReply, contactNotification } =
-      await import('../../../lib/email/templates.js')
+    const { contactAutoReply, contactNotification } = await import('../../../lib/email/templates')
 
     const htmlReply = contactAutoReply({
       name: 'Carlos Gomez',
@@ -153,7 +152,7 @@ describe('Resend Webhook Handler (app/api/webhooks/resend/route.ts)', () => {
 
   it('debe detectar correctamente el idioma (Español vs Inglés) y generar la plantilla en Inglés', async () => {
     const { detectLanguage } = await import('../../../lib/server/language')
-    const { contactAutoReply } = await import('../../../lib/email/templates.js')
+    const { contactAutoReply } = await import('../../../lib/email/templates')
 
     expect(detectLanguage('Hello, I need a website for my business', '')).toBe('en')
     expect(detectLanguage('Hi! Could you send me pricing details?', '')).toBe('en')

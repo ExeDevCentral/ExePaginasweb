@@ -9,7 +9,7 @@ import { NextRequest } from 'next/server'
 import { POST as chatHandler } from '../../../app/api/chat/route'
 import { POST as webhookHandler } from '../../../app/api/webhooks/resend/route'
 import { POST as contactHandler } from '../../../app/api/contact/route'
-import { contactAutoReply } from '../../../lib/email/templates.js'
+import { contactAutoReply } from '../../../lib/email/templates'
 import { sendEmail } from '../../../lib/email/send'
 
 // Mock Supabase y sendEmail

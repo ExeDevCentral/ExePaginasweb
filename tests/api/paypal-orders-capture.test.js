@@ -32,7 +32,7 @@ vi.mock('@/lib/email/send', () => ({
   ADMIN_EMAIL: 'admin@exepaginasweb.com',
 }))
 
-vi.mock('@/lib/email/templates.js', () => ({
+vi.mock('@/lib/email/templates', () => ({
   paymentConfirmation: vi.fn((args) => `<p>confirm ${args.plan} ${args.amount}</p>`),
   paymentNotification: vi.fn((args) => `<p>sell ${args.plan} ${args.amount}</p>`),
 }))

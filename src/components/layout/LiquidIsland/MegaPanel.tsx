@@ -108,14 +108,15 @@ const paletteItems: PaletteItem[] = [
   },
 ]
 
-function getActionCardStyle(isSelected: boolean, isPrimaryCta?: boolean) {
+function getActionCardStyle(isSelected: boolean, isPrimaryCta?: boolean, itemId?: string) {
+  const accent = itemId === 'tienda' ? 'fuchsia' : 'emerald'
   if (isSelected) {
-    return 'border-emerald-500/60 dark:border-emerald-500/60 bg-emerald-500/5 dark:bg-emerald-500/7 -translate-y-0.5'
+    return `border-${accent}-300/75 dark:border-${accent}-300/75 bg-black/8 dark:bg-white/6 -translate-y-0.5`
   }
   if (isPrimaryCta) {
-    return 'border-black/10 dark:border-white/12 bg-black/3 dark:bg-[#141b24] hover:border-black/20 dark:hover:border-white/22 hover:-translate-y-0.5'
+    return 'border-emerald-400/35 dark:border-emerald-300/30 bg-black/3 dark:bg-white/3 hover:border-emerald-300/70 dark:hover:border-emerald-300/65 hover:-translate-y-0.5'
   }
-  return 'border-black/7 dark:border-white/8 bg-black/2 dark:bg-[#11161D] hover:border-black/15 dark:hover:border-white/18 hover:-translate-y-0.5'
+  return 'border-fuchsia-400/25 dark:border-fuchsia-300/25 bg-black/3 dark:bg-white/2 hover:border-fuchsia-300/65 dark:hover:border-fuchsia-300/60 hover:-translate-y-0.5'
 }
 
 export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaPanelProps>) {
@@ -451,8 +452,12 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                                   <div
                                     className={`w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
                                       isSelected
-                                        ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
-                                        : 'bg-black/3 dark:bg-white/4 border-black/6 dark:border-white/6 text-slate-600 dark:text-[#CBD5E1]'
+                                        ? item.id === 'tienda'
+                                          ? 'bg-fuchsia-400/15 border-fuchsia-400/35 text-fuchsia-300'
+                                          : 'bg-emerald-500/15 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
+                                        : item.id === 'tienda'
+                                          ? 'bg-fuchsia-400/8 border-fuchsia-400/20 text-fuchsia-300/80'
+                                          : 'bg-emerald-500/8 border-emerald-500/20 text-emerald-500/90'
                                     }`}
                                   >
                                     <Icon size={15} strokeWidth={1.8} />
@@ -462,7 +467,16 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                                   </h4>
                                 </div>
 
-                                <div className="flex items-center gap-1.5 shrink-0">
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className={`font-mono text-[8px] tracking-[0.18em] uppercase ${
+                                      item.id === 'tienda'
+                                        ? 'text-fuchsia-200/80'
+                                        : 'text-emerald-200/80'
+                                    }`}
+                                  >
+                                    {item.id === 'tienda' ? 'DIRECT // ONLINE' : 'ENGINE // READY'}
+                                  </span>
                                   <kbd className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/8 text-slate-500 dark:text-[#CBD5E1] border border-black/5 dark:border-white/6 group-hover:border-emerald-500/40 group-hover:text-emerald-400 transition-colors">
                                     {item.shortcutNumber}
                                   </kbd>
@@ -511,7 +525,11 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                         const globalIdx = filteredItems.indexOf(item)
                         const isSelected = selectedIndex === globalIdx
                         const Icon = item.icon
-                        const borderAndBgClass = getActionCardStyle(isSelected, item.isPrimaryCta)
+                        const borderAndBgClass = getActionCardStyle(
+                          isSelected,
+                          item.isPrimaryCta,
+                          item.id
+                        )
 
                         return (
                           <Link
@@ -523,8 +541,28 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                             style={{
                               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
                             }}
-                            className={`group relative flex flex-col justify-between p-3 rounded-xl border transition-all duration-150 ${borderAndBgClass}`}
+                            className={`group relative flex flex-col justify-between p-3.5 rounded-xl border transition-all duration-200 overflow-hidden clip-path-[polygon(0_10px,10px_0,calc(100%_-_10px)_0,100%_10px,100%_calc(100%_-_10px),calc(100%_-_10px)_100%,10px_100%,0_calc(100%_-_10px))] ${borderAndBgClass}`}
                           >
+                            <div
+                              className={`absolute left-0 top-3 bottom-3 w-px transition-all duration-200 ${
+                                item.id === 'tienda'
+                                  ? 'bg-fuchsia-300/80 group-hover:w-0.5'
+                                  : 'bg-emerald-300/80 group-hover:w-0.5'
+                              }`}
+                              aria-hidden="true"
+                            />
+                            <div
+                              className={`absolute right-3 top-0 h-px w-20 bg-linear-to-r from-transparent ${
+                                item.id === 'tienda' ? 'via-fuchsia-300/70' : 'via-emerald-300/70'
+                              } to-transparent`}
+                              aria-hidden="true"
+                            />
+                            <div
+                              className="absolute right-3 bottom-3 font-mono text-[8px] tracking-[0.2em] text-white/30 group-hover:text-white/60 transition-colors"
+                              aria-hidden="true"
+                            >
+                              {item.id === 'tienda' ? 'COMMERCE // 06' : 'ESTIMATE // 05'}
+                            </div>
                             <div>
                               <div className="flex items-center justify-between gap-2 mb-2">
                                 <div className="flex items-center gap-2.5">

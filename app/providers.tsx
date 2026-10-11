@@ -32,6 +32,8 @@ const LaserScrollBeam = dynamic(() => import('@/components/layout/LaserScrollBea
   ssr: false,
 })
 
+const AnimatedFavicon = dynamic(() => import('@/components/layout/AnimatedFavicon'), { ssr: false })
+
 const CommandPalette = dynamic(() => import('@/components/layout/CommandPalette'), {
   ssr: false,
 })
@@ -65,6 +67,7 @@ export default function Providers({ children }: { readonly children: React.React
           <PostHogProvider>
             <ScrollProvider>
               <LaserScrollBeam />
+              <AnimatedFavicon />
               <PremiumBackground />
               <MouseSpotlight />
               <ThemedToaster />

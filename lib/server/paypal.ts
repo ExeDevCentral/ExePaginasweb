@@ -4,7 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import { isSupabaseAdminConfigured, supabaseAdmin as db } from '@/lib/supabase/admin'
-import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
+import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send'
 import { paymentConfirmation, paymentNotification } from '@/lib/email/templates.js'
 import { catalogEntryById, PLAN_CATALOG } from '@/core/domain/planCatalog'
 

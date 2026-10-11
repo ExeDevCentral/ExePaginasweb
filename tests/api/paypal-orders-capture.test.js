@@ -27,7 +27,7 @@ vi.mock('@/lib/supabase/admin', () => ({
   isSupabaseAdminConfigured: () => true,
 }))
 
-vi.mock('@/lib/email/send.js', () => ({
+vi.mock('@/lib/email/send', () => ({
   sendEmail: vi.fn().mockResolvedValue({ id: 'msg_test_123' }),
   ADMIN_EMAIL: 'admin@exepaginasweb.com',
 }))
@@ -325,15 +325,13 @@ describe('💳 PayPal Orders v2: creación y captura server-side', () => {
                     : [],
             }),
             single: vi.fn().mockResolvedValue({ data: { id: `${tabla}_s_123` }, error: null }),
-            maybeSingle: vi
-              .fn()
-              .mockResolvedValue({
-                data: { id: `${tabla}_m_123` },
-                status: 'processed',
-                attempts: 1,
-                claimed_at: new Date().toISOString(),
-                error: null,
-              }),
+            maybeSingle: vi.fn().mockResolvedValue({
+              data: { id: `${tabla}_m_123` },
+              status: 'processed',
+              attempts: 1,
+              claimed_at: new Date().toISOString(),
+              error: null,
+            }),
           })),
           single: vi.fn().mockResolvedValue({ data: { id: `${tabla}_single_123` }, error: null }),
         })),

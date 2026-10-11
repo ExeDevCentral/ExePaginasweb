@@ -10,7 +10,7 @@ import { POST as chatHandler } from '../../../app/api/chat/route'
 import { POST as webhookHandler } from '../../../app/api/webhooks/resend/route'
 import { POST as contactHandler } from '../../../app/api/contact/route'
 import { contactAutoReply } from '../../../lib/email/templates.js'
-import { sendEmail } from '../../../lib/email/send.js'
+import { sendEmail } from '../../../lib/email/send'
 
 // Mock Supabase y sendEmail
 const { mockSupabaseInstance } = vi.hoisted(() => ({
@@ -34,13 +34,13 @@ vi.mock('@/lib/supabase/admin', () => ({
   isSupabaseAdminConfigured: () => true,
 }))
 
-vi.mock('../../../lib/email/send.js', () => ({
+vi.mock('../../../lib/email/send', () => ({
   sendEmail: vi.fn().mockResolvedValue({ id: 'mock_send_audit_999' }),
   syncContactToAudience: vi.fn().mockResolvedValue({ id: 'mock_contact_999' }),
   ADMIN_EMAIL: 'Exemetal@hotmail.com',
 }))
 
-vi.mock('@/lib/email/send.js', () => ({
+vi.mock('@/lib/email/send', () => ({
   sendEmail: vi.fn().mockResolvedValue({ id: 'mock_send_audit_999' }),
   syncContactToAudience: vi.fn().mockResolvedValue({ id: 'mock_contact_999' }),
   ADMIN_EMAIL: 'Exemetal@hotmail.com',

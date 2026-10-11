@@ -5,7 +5,7 @@
  */
 import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
-import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send.js'
+import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send'
 import { dispatchN8nEvent } from '@/lib/server/n8n'
 import {
   contactNotification,

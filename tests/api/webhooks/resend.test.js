@@ -29,7 +29,7 @@ vi.mock('@/lib/supabase/admin', () => ({
   isSupabaseAdminConfigured: () => true,
 }))
 
-vi.mock('../../../lib/email/send.js', () => ({
+vi.mock('../../../lib/email/send', () => ({
   sendEmail: vi.fn().mockResolvedValue({ id: 'mock_send_123' }),
   ADMIN_EMAIL: 'admin@exepaginasweb.com',
 }))

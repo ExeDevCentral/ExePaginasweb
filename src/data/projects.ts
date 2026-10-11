@@ -156,7 +156,7 @@ export const INITIAL_PROJECTS: Project[] = [
     client: 'Colección Patrimonial · Chile',
     description:
       'Museo digital de un fondo histórico chileno con vocación de donación museográfica: catálogo curatorial de libros antiguos, cerámica colonial con pan de oro, manuscritos republicanos, obras de arte y máquinas de escribir de época, con protocolo formal de donación a instituciones.',
-    image: '/portfolio/coleccion-patrimonial.svg',
+    image: '/portfolio/coleccion-patrimonial.webp',
     tags: ['React', 'Vite', 'Tailwind', 'Museo Digital'],
     metrics: [
       { label: 'Stack', value: 'Vite' },

@@ -180,7 +180,7 @@ export const INITIAL_PROJECTS: Project[] = [
     client: 'Bilex · Herramienta de Traducción Bilingüe',
     description:
       'Aplicación web para traducir documentos completos (PDFs e imágenes) con vista dual bilingüe sincronizada. OCR con Tesseract.js, múltiples motores de traducción (Gemini, Groq, DeepL, OpenAI, Claude), exportación a PDF, TXT, Markdown y sesiones JSON.',
-    image: '/portfolio/bilex.svg',
+    image: '/portfolio/bilex.webp',
     tags: ['React', 'TypeScript', 'Vite', 'OCR', 'PDF', 'Traducción'],
     metrics: [
       { label: 'Stack', value: 'React + Vite' },

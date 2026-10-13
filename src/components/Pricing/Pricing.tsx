@@ -78,7 +78,7 @@ const PricingCard = ({
   const handleRequestClick = () => {
     if (currency === 'ARS') {
       // Abrir WhatsApp con cotización en pesos
-      const message = `¡Hola ExeSistemasWEB! Me interesa el plan ${plan.tKey === 'landing' ? 'Landing' : 'E-commerce'}. Setup: ${plan.setupFee.ARS}, Mantenimiento: ${plan.monthlyFee.ARS}/mes. Quisiera más información. 👋`
+      const message = `¡Hola Exequiel! Me interesa el desarrollo de ${plan.tKey === 'landing' ? 'Landing Page' : 'E-Commerce / Reservas'} (${plan.setupFee.ARS}, 1 solo pago). Quisiera coordinar una propuesta técnica. 👋`
       window.open(getWhatsAppUrl(message), '_blank')
     } else {
       // Para USD, ir a la sección de contacto si existe, o redirigir al cotizador
@@ -169,7 +169,7 @@ const PricingCard = ({
 
         <ul className="space-y-4 mb-10 flex-1">
           {plan.includedFeatures.map((included, i) => (
-            <li key={i} className="flex items-center gap-3">
+            <li key={`${plan.tKey}-feat-${i + 1}`} className="flex items-center gap-3">
               <div className="shrink-0 flex items-center justify-center">
                 {included ? <CyberCheckMark size={18} /> : <CyberCrossMark size={18} />}
               </div>

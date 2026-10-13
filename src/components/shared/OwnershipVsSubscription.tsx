@@ -289,6 +289,7 @@ function CodeLiberationTerminal({
       <div
         role="button"
         tabIndex={0}
+        aria-label="Ejecutar comparativa entre propiedad y suscripción en terminal interactivo"
         onClick={handleConsoleClick}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {

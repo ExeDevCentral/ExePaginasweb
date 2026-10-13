@@ -15,6 +15,37 @@ import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsa
 import { trackEvent } from '@/core/analytics/trackEvent'
 import HudButton from '@/components/HudButton'
 
+function getChannelStyles(tone: string) {
+  if (tone === 'brand') {
+    return {
+      laser: 'via-emerald-400',
+      hoverBorder: 'hover:border-emerald-500/60',
+      hoverShadow: 'hover:shadow-[0_16px_36px_-10px_rgba(16,185,129,0.22)]',
+      cornerHover: 'group-hover:text-emerald-500',
+      iconBox:
+        'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30',
+    }
+  }
+  if (tone === 'signal') {
+    return {
+      laser: 'via-amber-400',
+      hoverBorder: 'hover:border-amber-500/60',
+      hoverShadow: 'hover:shadow-[0_16px_36px_-10px_rgba(245,158,11,0.22)]',
+      cornerHover: 'group-hover:text-amber-500',
+      iconBox:
+        'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/30',
+    }
+  }
+  return {
+    laser: 'via-cyan-400',
+    hoverBorder: 'hover:border-cyan-500/60',
+    hoverShadow: 'hover:shadow-[0_16px_36px_-10px_rgba(6,182,212,0.22)]',
+    cornerHover: 'group-hover:text-cyan-500',
+    iconBox:
+      'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-500/30',
+  }
+}
+
 const ContactSection = () => {
   const { t, i18n } = useTranslation()
 
@@ -356,32 +387,7 @@ const ContactSection = () => {
           >
             {channels.map((ch, i) => {
               const Icon = ch.icon
-              const isBrand = ch.tone === 'brand'
-              const isSignal = ch.tone === 'signal'
-
-              const channelLaser = isBrand
-                ? 'via-emerald-400'
-                : isSignal
-                  ? 'via-amber-400'
-                  : 'via-cyan-400'
-
-              const channelHoverBorder = isBrand
-                ? 'hover:border-emerald-500/60'
-                : isSignal
-                  ? 'hover:border-amber-500/60'
-                  : 'hover:border-cyan-500/60'
-
-              const channelHoverShadow = isBrand
-                ? 'hover:shadow-[0_16px_36px_-10px_rgba(16,185,129,0.22)]'
-                : isSignal
-                  ? 'hover:shadow-[0_16px_36px_-10px_rgba(245,158,11,0.22)]'
-                  : 'hover:shadow-[0_16px_36px_-10px_rgba(6,182,212,0.22)]'
-
-              const channelCornerHover = isBrand
-                ? 'group-hover:text-emerald-500'
-                : isSignal
-                  ? 'group-hover:text-amber-500'
-                  : 'group-hover:text-cyan-500'
+              const styles = getChannelStyles(ch.tone)
 
               return (
                 <motion.a
@@ -389,7 +395,7 @@ const ContactSection = () => {
                   href={ch.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`group relative flex flex-1 flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white/95 dark:bg-[#0c1224]/90 backdrop-blur-xl p-5.5 ${channelHoverBorder} shadow-[0_8px_24px_-8px_rgba(0,0,0,0.06)] ${channelHoverShadow} transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
+                  className={`group relative flex flex-1 flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white/95 dark:bg-[#0c1224]/90 backdrop-blur-xl p-5.5 ${styles.hoverBorder} shadow-[0_8px_24px_-8px_rgba(0,0,0,0.06)] ${styles.hoverShadow} transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
                   initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -397,29 +403,23 @@ const ContactSection = () => {
                 >
                   {/* Haz láser de borde */}
                   <div
-                    className={`pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent ${channelLaser} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                    className={`pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent ${styles.laser} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
                   />
 
                   {/* Marcas de cota técnica */}
                   <span
-                    className={`absolute top-2 right-2.5 font-mono text-[9px] text-slate-300 dark:text-white/20 select-none ${channelCornerHover} transition-colors`}
+                    className={`absolute top-2 right-2.5 font-mono text-[9px] text-slate-300 dark:text-white/20 select-none ${styles.cornerHover} transition-colors`}
                   >
                     +
                   </span>
                   <span
-                    className={`absolute bottom-2 right-2.5 font-mono text-[9px] text-slate-300 dark:text-white/20 select-none ${channelCornerHover} transition-colors`}
+                    className={`absolute bottom-2 right-2.5 font-mono text-[9px] text-slate-300 dark:text-white/20 select-none ${styles.cornerHover} transition-colors`}
                   >
                     +
                   </span>
 
                   <div
-                    className={`mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-300 group-hover:scale-110 shadow-inner ${
-                      isBrand
-                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30'
-                        : isSignal
-                          ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/30'
-                          : 'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-500/30'
-                    }`}
+                    className={`mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-300 group-hover:scale-110 shadow-inner ${styles.iconBox}`}
                   >
                     <Icon className="h-5 w-5" />
                   </div>

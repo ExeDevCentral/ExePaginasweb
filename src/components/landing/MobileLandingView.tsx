@@ -94,6 +94,12 @@ const LIVE_DEMOS: readonly DemoItem[] = [
   },
 ]
 
+function renderDemoIcon(iconType: 'radar' | 'shop' | 'resto') {
+  if (iconType === 'radar') return <CyberPitchRadarIcon size={16} />
+  if (iconType === 'shop') return <CyberShopBagIcon size={16} />
+  return <RestoiaEngineIcon size={16} />
+}
+
 export default function MobileLandingView() {
   const whatsappHeroUrl = getWhatsAppUrl(
     '¡Hola Exequiel! Vi tu web en mi celular y quiero cotizar mi proyecto.'
@@ -137,7 +143,7 @@ export default function MobileLandingView() {
           </p>
 
           {/* GLOBO 3D HOLOGRÁFICO INTERACTIVO */}
-          <div className="w-full max-w-[280px] sm:max-w-[320px] my-3 relative">
+          <div className="w-full max-w-70 sm:max-w-[320px] my-3 relative">
             <OptimusGlyphSphere
               className="w-full aspect-square"
               sphereRadius={210}
@@ -199,7 +205,7 @@ export default function MobileLandingView() {
          ============================================================== */}
       <section
         id="demos-mobile"
-        className="relative py-10 px-4 space-y-8 bg-gradient-to-b from-background via-surface-1/30 to-background"
+        className="relative py-10 px-4 space-y-8 bg-linear-to-b from-background via-surface-1/30 to-background"
       >
         {/* Cabecera Demos */}
         <div className="text-center max-w-sm mx-auto">
@@ -215,14 +221,7 @@ export default function MobileLandingView() {
         {/* Tarjetas de Demos con LiveSystemLauncherButton */}
         <div className="space-y-3.5 max-w-sm mx-auto">
           {LIVE_DEMOS.map((demo) => {
-            const icon =
-              demo.iconType === 'radar' ? (
-                <CyberPitchRadarIcon size={16} />
-              ) : demo.iconType === 'shop' ? (
-                <CyberShopBagIcon size={16} />
-              ) : (
-                <RestoiaEngineIcon size={16} />
-              )
+            const icon = renderDemoIcon(demo.iconType)
 
             return (
               <div
@@ -232,7 +231,7 @@ export default function MobileLandingView() {
                 {/* Micro indicador luminoso superior */}
                 <div
                   aria-hidden="true"
-                  className="absolute top-0 inset-x-6 h-[1.5px] bg-gradient-to-r from-transparent via-accent-cyan/80 to-transparent pointer-events-none"
+                  className="absolute top-0 inset-x-6 h-[1.5px] bg-linear-to-r from-transparent via-accent-cyan/80 to-transparent pointer-events-none"
                 />
 
                 <div className="flex items-start justify-between gap-2 mb-1.5">
@@ -262,7 +261,7 @@ export default function MobileLandingView() {
         <div className="relative max-w-sm mx-auto p-4 rounded-2xl bg-card border border-border dark:border-emerald-500/35 shadow-lg overflow-hidden">
           <div
             aria-hidden="true"
-            className="absolute top-0 inset-x-8 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/80 to-transparent pointer-events-none"
+            className="absolute top-0 inset-x-8 h-[1.5px] bg-linear-to-r from-transparent via-emerald-400/80 to-transparent pointer-events-none"
           />
 
           <div className="flex items-center gap-2 mb-2.5">

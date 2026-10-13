@@ -7,13 +7,13 @@ import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { RefreshCw, AlertTriangle } from 'lucide-react'
 
 interface Props {
-  children: ReactNode
-  panelName?: string
+  readonly children: ReactNode
+  readonly panelName?: string
 }
 
 interface State {
-  hasError: boolean
-  error: Error | null
+  readonly hasError: boolean
+  readonly error: Error | null
 }
 
 export class PanelErrorBoundary extends Component<Props, State> {
@@ -64,7 +64,9 @@ export class PanelErrorBoundary extends Component<Props, State> {
           <h3 className="text-lg font-extrabold text-white">
             {chunkError
               ? 'Se actualizó la aplicación'
-              : `Error al cargar el panel ${this.props.panelName ? `(${this.props.panelName})` : ''}`}
+              : this.props.panelName
+                ? `Error al cargar el panel (${this.props.panelName})`
+                : 'Error al cargar el panel'}
           </h3>
           <p className="text-xs text-rose-400 font-mono mt-2 max-w-md mx-auto">
             {chunkError

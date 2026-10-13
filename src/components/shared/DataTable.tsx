@@ -24,11 +24,21 @@ import {
 } from 'lucide-react'
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  searchPlaceholder?: string
-  pageSize?: number
-  emptyMessage?: string
+  readonly columns: ColumnDef<TData, TValue>[]
+  readonly data: TData[]
+  readonly searchPlaceholder?: string
+  readonly pageSize?: number
+  readonly emptyMessage?: string
+}
+
+function renderSortIcon(isSorted: false | 'asc' | 'desc') {
+  if (isSorted === 'asc') {
+    return <ChevronUp className="w-3.5 h-3.5 text-accent-cyan" />
+  }
+  if (isSorted === 'desc') {
+    return <ChevronDown className="w-3.5 h-3.5 text-accent-cyan" />
+  }
+  return <ArrowUpDown className="w-3 h-3 opacity-40 hover:opacity-100" />
 }
 
 export function DataTable<TData, TValue>({
@@ -107,13 +117,7 @@ export function DataTable<TData, TValue>({
                             {flexRender(header.column.columnDef.header, header.getContext())}
                             {canSort && (
                               <span className="text-muted-foreground/70">
-                                {isSorted === 'asc' ? (
-                                  <ChevronUp className="w-3.5 h-3.5 text-accent-cyan" />
-                                ) : isSorted === 'desc' ? (
-                                  <ChevronDown className="w-3.5 h-3.5 text-accent-cyan" />
-                                ) : (
-                                  <ArrowUpDown className="w-3 h-3 opacity-40 hover:opacity-100" />
-                                )}
+                                {renderSortIcon(isSorted)}
                               </span>
                             )}
                           </button>

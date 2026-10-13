@@ -64,7 +64,7 @@ export default function MouseSpotlight() {
       transition={{ duration: 0.3 }}
     >
       <motion.div
-        className="absolute w-[480px] h-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transform-gpu"
+        className="absolute w-120 h-120 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transform-gpu"
         style={{
           x: smoothX,
           y: smoothY,

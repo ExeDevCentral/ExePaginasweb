@@ -674,6 +674,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                     controls
                     muted={isMuted}
                     playsInline
+                    preload="metadata"
                     className="w-full h-full object-cover"
                   >
                     <source src="/assets/videos/hero-bg.mp4" type="video/mp4" />

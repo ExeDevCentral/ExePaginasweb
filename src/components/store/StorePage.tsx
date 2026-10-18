@@ -23,7 +23,7 @@ import {
   CyberPlanAdvanced,
   CyberPlanPremium,
 } from '@/components/ui/MagnificentIcons'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/navigation'
 import HudButton from '@/components/HudButton'
@@ -42,78 +42,90 @@ import { storeAudio } from '../../core/utils/storeAudio'
 import { getWhatsAppUrl } from '../../core/utils/whatsappUtils'
 import { toast } from 'sonner'
 
-const basePlans: Omit<PlanData, 'price' | 'priceUSD' | 'period' | 'rawPriceARS' | 'rawPriceUSD'>[] =
-  [
+const formatARS = (n: number) => '$' + n.toLocaleString('es-AR').replaceAll(',', '.')
+const formatUSD = (n: number) => '$' + n
+
+import type { TFunction } from 'i18next'
+
+function getStorePlans(t: TFunction): PlanData[] {
+  const configs = [
     {
       id: 'mantenimiento-basico',
-      title: 'Abono Básico',
-      description: 'Mantenimiento mensual para Landing Pages y sitios institucionales.',
+      title: t('store.abono_basico_title', 'Abono Básico'),
+      description: t(
+        'store.abono_basico_desc',
+        'Mantenimiento mensual para Landing Pages y sitios institucionales.'
+      ),
       icon: CyberPlanBasic,
       color: 'from-blue-400 to-cyan-400',
       shadow: 'shadow-cyan-500/20',
       border: 'border-cyan-500/30',
       features: [
-        'Hosting de alta velocidad Vercel Edge',
-        'Monitoreo de uptime y disponibilidad 24/7',
-        'Actualizaciones continuas de seguridad',
-        'Certificado SSL bancario automático',
-        'Soporte técnico estándar por ticket',
+        t('store.abono_basico_feat_1', 'Hosting de alta velocidad Vercel Edge'),
+        t('store.abono_basico_feat_2', 'Monitoreo de uptime y disponibilidad 24/7'),
+        t('store.abono_basico_feat_3', 'Actualizaciones continuas de seguridad'),
+        t('store.abono_basico_feat_4', 'Certificado SSL bancario automático'),
+        t('store.abono_basico_feat_5', 'Soporte técnico estándar por ticket'),
       ],
       popular: false,
     },
     {
       id: 'mantenimiento-avanzado',
-      title: 'Abono Avanzado',
-      description: 'Mantenimiento integral para Sistemas Web, Reservas y E-Commerce.',
+      title: t('store.abono_avanzado_title', 'Abono Avanzado'),
+      description: t(
+        'store.abono_avanzado_desc',
+        'Mantenimiento integral para Sistemas Web, Reservas y E-Commerce.'
+      ),
       icon: CyberPlanAdvanced,
       color: 'from-cyan-400 to-purple-500',
       shadow: 'shadow-purple-500/30',
       border: 'border-purple-500/50',
       features: [
-        'Todo lo del Abono Básico',
-        'Renovación de dominio anual bonificada*',
-        'Gestión y monitoreo de Base de Datos',
-        'Backups diarios automáticos en la nube',
-        'Monitoreo de pasarelas de pago y webhooks',
-        'Soporte técnico prioritario por WhatsApp',
+        t('store.abono_avanzado_feat_1', 'Todo lo del Abono Básico'),
+        t('store.abono_avanzado_feat_2', 'Renovación de dominio anual bonificada*'),
+        t('store.abono_avanzado_feat_3', 'Gestión y monitoreo de Base de Datos'),
+        t('store.abono_avanzado_feat_4', 'Backups diarios automáticos en la nube'),
+        t('store.abono_avanzado_feat_5', 'Monitoreo de pasarelas de pago y webhooks'),
+        t('store.abono_avanzado_feat_6', 'Soporte técnico prioritario por WhatsApp'),
       ],
       popular: true,
     },
     {
       id: 'mantenimiento-premium',
-      title: 'Abono Premium',
-      description: 'Evolución continua, nuevas funcionalidades y bolsa de horas de desarrollo.',
+      title: t('store.abono_premium_title', 'Abono Premium'),
+      description: t(
+        'store.abono_premium_desc',
+        'Evolución continua, nuevas funcionalidades y bolsa de horas de desarrollo.'
+      ),
       icon: CyberPlanPremium,
       color: 'from-purple-500 to-pink-500',
       shadow: 'shadow-pink-500/20',
       border: 'border-pink-500/30',
       features: [
-        'Todo lo del Abono Avanzado',
-        'Servidor Edge de máxima prioridad y SLA',
-        'Bolsa de horas de desarrollo (2hs/mes)',
-        'Consultoría estratégica de crecimiento',
-        'Account Manager e informes de métricas',
+        t('store.abono_premium_feat_1', 'Todo lo del Abono Avanzado'),
+        t('store.abono_premium_feat_2', 'Servidor Edge de máxima prioridad y SLA'),
+        t('store.abono_premium_feat_3', 'Bolsa de horas de desarrollo (2hs/mes)'),
+        t('store.abono_premium_feat_4', 'Consultoría estratégica de crecimiento'),
+        t('store.abono_premium_feat_5', 'Account Manager e informes de métricas'),
       ],
       popular: false,
     },
   ]
 
-const formatARS = (n: number) => '$' + n.toLocaleString('es-AR').replaceAll(',', '.')
-const formatUSD = (n: number) => '$' + n
-
-const PLANS: PlanData[] = basePlans.map((p) => {
-  const entry = PLAN_CATALOG.find((c) => c.id === p.id)
-  const rawARS = entry?.precio ?? 0
-  const rawUSD = entry?.precioUSD ?? 0
-  return {
-    ...p,
-    rawPriceARS: rawARS,
-    rawPriceUSD: rawUSD,
-    price: formatARS(rawARS),
-    priceUSD: formatUSD(rawUSD),
-    period: '/mes',
-  }
-})
+  return configs.map((p) => {
+    const entry = PLAN_CATALOG.find((c) => c.id === p.id)
+    const rawARS = entry?.precio ?? 0
+    const rawUSD = entry?.precioUSD ?? 0
+    return {
+      ...p,
+      rawPriceARS: rawARS,
+      rawPriceUSD: rawUSD,
+      price: formatARS(rawARS),
+      priceUSD: formatUSD(rawUSD),
+      period: t('store.period_month', '/mes'),
+    }
+  })
+}
 
 export default function StorePage() {
   const { t } = useTranslation()
@@ -121,6 +133,8 @@ export default function StorePage() {
   const navigate = (path: string) => router.push(path)
   const { theme, setTheme } = useTheme()
   const [selectedPlan, setSelectedPlan] = useState<PlanData | null>(null)
+
+  const plans = useMemo(() => getStorePlans(t), [t])
 
   // Interactive controls
   const [currency, setCurrency] = useState<'ARS' | 'USD'>('ARS')
@@ -173,7 +187,7 @@ export default function StorePage() {
         {/* NAVEGACIÓN SUPERIOR ELEGANTE */}
         <header className="relative z-30 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 max-w-6xl mx-auto pt-2">
           <HudButton
-            label="Volver al Inicio"
+            label={t('store.volver_inicio', 'Volver al Inicio')}
             variant="secondary"
             size="sm"
             onClick={() => {
@@ -204,7 +218,7 @@ export default function StorePage() {
                 <VolumeX className="w-4 h-4 text-muted-foreground" />
               )}
               <span className="text-xs font-mono hidden sm:inline">
-                {soundEnabled ? 'Audio ON' : 'Mute'}
+                {soundEnabled ? t('store.audio_on', 'Audio ON') : t('store.audio_mute', 'Mute')}
               </span>
             </button>
 
@@ -222,7 +236,9 @@ export default function StorePage() {
                 <Moon className="w-4 h-4 text-indigo-400" />
               )}
               <span className="text-xs font-bold font-mono">
-                {isDark ? '☀️ Claro' : '🌙 Oscuro'}
+                {isDark
+                  ? `☀️ ${t('store.tema_claro', 'Claro')}`
+                  : `🌙 ${t('store.tema_oscuro', 'Oscuro')}`}
               </span>
             </button>
           </div>
@@ -241,9 +257,8 @@ export default function StorePage() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold leading-tight text-slate-900 dark:text-white mb-6 tracking-tight">
-              Abonos de{' '}
               <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Mantenimiento
+                {t('store.subtitulo', 'Abonos de Mantenimiento')}
               </span>
             </h1>
 
@@ -302,7 +317,7 @@ export default function StorePage() {
                 }`}
               >
                 <Calendar size={14} />
-                <span>Mensual</span>
+                <span>{t('store.mensual', 'Mensual')}</span>
               </button>
               <button
                 type="button"
@@ -313,9 +328,9 @@ export default function StorePage() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <span>Anual</span>
+                <span>{t('store.anual', 'Anual')}</span>
                 <span className="text-[10px] font-black uppercase bg-emerald-400 text-slate-950 px-2 py-0.5 rounded-full shadow-sm">
-                  20% OFF
+                  {t('store.descuento_anual', '20% OFF')}
                 </span>
               </button>
             </div>
@@ -323,7 +338,7 @@ export default function StorePage() {
 
           {/* PLAN CARDS GRID */}
           <PlanGrid
-            plans={PLANS}
+            plans={plans}
             currency={currency}
             isAnnual={isAnnual}
             onSelectPlan={setSelectedPlan}

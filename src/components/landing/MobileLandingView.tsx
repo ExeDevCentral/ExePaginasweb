@@ -11,8 +11,10 @@
  */
 'use client'
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import dynamic from 'next/dynamic'
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 import {
   ShieldCheck,
   CheckCircle2,
@@ -58,37 +60,46 @@ interface DemoItem {
   readonly iconType: 'radar' | 'shop' | 'resto'
 }
 
-const LIVE_DEMOS: readonly DemoItem[] = [
+const getLiveDemos = (t: TFunction): readonly DemoItem[] => [
   {
     id: 'ecommerce',
-    title: 'Tienda 3D & E-Commerce',
+    title: t('mobile.demo_ecommerce_title', 'Tienda 3D & E-Commerce'),
     badge: 'Three.js · Next.js 14',
-    desc: 'Catálogo interactivo en 3D, stock sincronizado y pagos directos a tu banco sin comisiones.',
+    desc: t(
+      'mobile.demo_ecommerce_desc',
+      'Catálogo interactivo en 3D, stock sincronizado y pagos directos a tu banco sin comisiones.'
+    ),
     tech: 'Three.js / React Three Fiber',
     href: 'https://multi-tiendas-celphone.vercel.app',
-    launcherLabel: 'PROBAR TIENDA 3D',
+    launcherLabel: t('mobile.demo_ecommerce_btn', 'PROBAR TIENDA 3D'),
     color: 'emerald',
     iconType: 'shop',
   },
   {
     id: 'sports',
-    title: 'Gestión Deportiva & Canchas',
+    title: t('mobile.demo_sports_title', 'Gestión Deportiva & Canchas'),
     badge: 'Turnos en Vivo · Supabase',
-    desc: 'Reservas automáticas 24/7 con seña online, control de clientes y panel de administración.',
+    desc: t(
+      'mobile.demo_sports_desc',
+      'Reservas automáticas 24/7 con seña online, control de clientes y panel de administración.'
+    ),
     tech: 'React / Vite / Supabase',
     href: 'https://sportmanager-playhub.vercel.app',
-    launcherLabel: 'PROBAR PÁDEL EN VIVO',
+    launcherLabel: t('mobile.demo_sports_btn', 'PROBAR PÁDEL EN VIVO'),
     color: 'cyan',
     iconType: 'radar',
   },
   {
     id: 'restoai',
-    title: 'Sistema Gastronómico con IA',
+    title: t('mobile.demo_resto_title', 'Sistema Gastronómico con IA'),
     badge: 'Carta Dinámica · Automatización',
-    desc: 'Carta inteligente con pedidos directos a cocina y sugerencias con IA en tiempo real.',
+    desc: t(
+      'mobile.demo_resto_desc',
+      'Carta inteligente con pedidos directos a cocina y sugerencias con IA en tiempo real.'
+    ),
     tech: 'Next.js / AI Engine',
     href: 'https://kobe-sand.vercel.app/',
-    launcherLabel: 'PROBAR RESTOAI EN VIVO',
+    launcherLabel: t('mobile.demo_resto_btn', 'PROBAR RESTOAI EN VIVO'),
     color: 'amber',
     iconType: 'resto',
   },
@@ -101,6 +112,9 @@ function renderDemoIcon(iconType: 'radar' | 'shop' | 'resto') {
 }
 
 export default function MobileLandingView() {
+  const { t } = useTranslation()
+  const liveDemos = useMemo(() => getLiveDemos(t), [t])
+
   const whatsappHeroUrl = getWhatsAppUrl(
     '¡Hola Exequiel! Vi tu web en mi celular y quiero cotizar mi proyecto.'
   )
@@ -127,19 +141,24 @@ export default function MobileLandingView() {
           {/* Eyebrow de Autoridad Directa */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-cyan/10 border border-accent-cyan/30 text-[11px] font-mono font-bold text-accent-cyan mb-3">
             <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
-            <span>EXEQUIEL ECHEVARRÍA · ARCHITECT · 2025</span>
+            <span>{t('mobile.eyebrow', 'EXEQUIEL ECHEVARRÍA · ARCHITECT · 2025')}</span>
           </div>
 
           {/* Titular de Alto Impacto */}
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-[1.12] text-foreground">
-            Tu Web &amp; Software a Medida
+            {t('mobile.h1', 'Tu Web & Software a Medida')}
           </h1>
 
           {/* Propuesta de Valor en 1 Línea */}
           <p className="mt-2.5 text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-sm">
-            Código 100% tuyo ·{' '}
-            <strong className="text-foreground font-semibold">1 Solo Pago</strong>. Sin alquileres
-            de software, comisiones cautivas ni intermediarios.
+            {t('mobile.desc_1', 'Código 100% tuyo · ')}
+            <strong className="text-foreground font-semibold">
+              {t('mobile.desc_bold', '1 Solo Pago')}
+            </strong>
+            {t(
+              'mobile.desc_2',
+              '. Sin alquileres de software, comisiones cautivas ni intermediarios.'
+            )}
           </p>
 
           {/* GLOBO 3D HOLOGRÁFICO INTERACTIVO */}
@@ -150,7 +169,7 @@ export default function MobileLandingView() {
               radiusRatio={0.42}
             />
             <p className="text-[10px] font-mono text-muted-foreground/75 -mt-2">
-              ⚡ Girá la esfera con tu dedo para interactuar
+              {t('mobile.interact_hint', '⚡ Girá la esfera con tu dedo para interactuar')}
             </p>
           </div>
 
@@ -166,7 +185,7 @@ export default function MobileLandingView() {
               rel="noopener noreferrer"
               onClick={() => trackEvent('contact_whatsapp_clicked', { source: 'mobile_hero_cta' })}
             >
-              Cotizar por WhatsApp (15 min)
+              {t('mobile.cta_whatsapp', 'Cotizar por WhatsApp (15 min)')}
             </HudButton>
 
             <HudButton
@@ -176,7 +195,7 @@ export default function MobileLandingView() {
               href="#demos-mobile"
               onClick={() => trackEvent('hero_cta_demo_clicked', { source: 'mobile_hero_scroll' })}
             >
-              Ver Demos en Vivo ↓
+              {t('mobile.cta_demos', 'Ver Demos en Vivo ↓')}
             </HudButton>
           </div>
 
@@ -189,12 +208,12 @@ export default function MobileLandingView() {
             <span>•</span>
             <div className="flex items-center gap-1">
               <CyberCheckMark size={13} className="text-emerald-400" />
-              <span>SLA por contrato</span>
+              <span>{t('mobile.trust_sla', 'SLA por contrato')}</span>
             </div>
             <span>•</span>
             <div className="flex items-center gap-1">
               <CyberCheckMark size={13} className="text-cyan-400" />
-              <span>Código tuyo</span>
+              <span>{t('mobile.trust_code', 'Código tuyo')}</span>
             </div>
           </div>
         </div>
@@ -210,17 +229,22 @@ export default function MobileLandingView() {
         {/* Cabecera Demos */}
         <div className="text-center max-w-sm mx-auto">
           <span className="text-xs font-mono font-bold text-accent-cyan uppercase tracking-wider">
-            Sistemas Reales en Producción
+            {t('mobile.demos_badge', 'Sistemas Reales en Producción')}
           </span>
-          <h2 className="text-2xl font-extrabold text-foreground mt-1">Tocá y probalos en vivo</h2>
+          <h2 className="text-2xl font-extrabold text-foreground mt-1">
+            {t('mobile.demos_title', 'Tocá y probalos en vivo')}
+          </h2>
           <p className="text-xs text-muted-foreground mt-1.5">
-            Plataformas reales desarrolladas para clientes. Cero maquetas vacías.
+            {t(
+              'mobile.demos_desc',
+              'Plataformas reales desarrolladas para clientes. Cero maquetas vacías.'
+            )}
           </p>
         </div>
 
         {/* Tarjetas de Demos con LiveSystemLauncherButton */}
         <div className="space-y-3.5 max-w-sm mx-auto">
-          {LIVE_DEMOS.map((demo) => {
+          {liveDemos.map((demo) => {
             const icon = renderDemoIcon(demo.iconType)
 
             return (
@@ -245,7 +269,7 @@ export default function MobileLandingView() {
 
                 <LiveSystemLauncherButton
                   label={demo.launcherLabel}
-                  sublabel="PROBAR EN PRODUCCIÓN"
+                  sublabel={t('mobile.btn_sublabel', 'PROBAR EN PRODUCCIÓN')}
                   href={demo.href}
                   icon={icon}
                   color={demo.color}

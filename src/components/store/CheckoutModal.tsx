@@ -15,7 +15,7 @@ import {
   LogIn,
   RefreshCw,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { useAuthSession } from '../../core/auth/AuthSessionProvider'
@@ -39,13 +39,6 @@ declare global {
   }
 }
 
-const TIPO_PROYECTO_OPTIONS = [
-  { value: 'mantenimiento', label: 'Mantenimiento', icon: Monitor },
-  { value: 'desarrollo', label: 'Desarrollo Web', icon: Palette },
-  { value: 'ecommerce', label: 'E-Commerce', icon: ShoppingBag },
-  { value: 'reservas', label: 'Sistema de Reservas', icon: Calendar },
-]
-
 type PaypalStatus = 'idle' | 'login' | 'loading' | 'ready' | 'error' | 'approval-error' | 'success'
 
 interface CheckoutModalProps {
@@ -63,6 +56,32 @@ export default function CheckoutModal({
   const router = useRouter()
   const { session } = useAuthSession()
   const [tipoProyecto, setTipoProyecto] = useState('mantenimiento')
+
+  const tipoProyectoOptions = useMemo(
+    () => [
+      {
+        value: 'mantenimiento',
+        label: t('store.tipo_mantenimiento', 'Mantenimiento'),
+        icon: Monitor,
+      },
+      {
+        value: 'desarrollo',
+        label: t('store.tipo_desarrollo', 'Desarrollo Web'),
+        icon: Palette,
+      },
+      {
+        value: 'ecommerce',
+        label: t('store.tipo_ecommerce', 'E-Commerce'),
+        icon: ShoppingBag,
+      },
+      {
+        value: 'reservas',
+        label: t('store.tipo_reservas', 'Sistema de Reservas'),
+        icon: Calendar,
+      },
+    ],
+    [t]
+  )
   const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'paypal'>(initialMethod)
   const [paypalStatus, setPaypalStatus] = useState<PaypalStatus>('idle')
   const [paypalError, setPaypalError] = useState('')
@@ -237,10 +256,10 @@ export default function CheckoutModal({
           {/* Project type selector */}
           <div className="relative mb-6">
             <p className="block text-sm font-bold text-foreground/70 mb-2 uppercase tracking-wider">
-              Tipo de proyecto
+              {t('store.tipo_proyecto', 'Tipo de proyecto')}
             </p>
             <div className="grid grid-cols-2 gap-2">
-              {TIPO_PROYECTO_OPTIONS.map((opt) => (
+              {tipoProyectoOptions.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
@@ -261,7 +280,7 @@ export default function CheckoutModal({
           {/* Payment method toggle */}
           <div className="relative mb-6">
             <p className="block text-sm font-bold text-foreground/70 mb-3 uppercase tracking-wider">
-              Método de Pago
+              {t('store.metodo_pago', 'Método de Pago')}
             </p>
             <div className="flex bg-zinc-800/5 dark:bg-white/5 rounded-2xl p-1 border border-zinc-200 dark:border-white/5">
               <button
@@ -273,7 +292,7 @@ export default function CheckoutModal({
                     : 'text-muted-foreground hover:text-foreground hover:bg-zinc-800/5 dark:hover:bg-white/5'
                 }`}
               >
-                Transferencia (ARS)
+                {t('store.tab_transfer', 'Transferencia (ARS)')}
               </button>
               <button
                 type="button"
@@ -288,7 +307,7 @@ export default function CheckoutModal({
                 }`}
               >
                 <Globe className="w-4 h-4" />
-                PayPal (USD)
+                {t('store.tab_paypal', 'PayPal (USD)')}
               </button>
             </div>
           </div>
@@ -310,10 +329,13 @@ export default function CheckoutModal({
               >
                 <CheckCircle2 className="w-12 h-12 mx-auto text-green-500" />
                 <p className="text-lg font-bold text-foreground mt-3">
-                  Pago aprobado correctamente
+                  {t('store.checkout_exito_titulo', 'Pago aprobado correctamente')}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Tu abono quedó activado. Ya podés ingresar a tu panel.
+                  {t(
+                    'store.checkout_exito_desc',
+                    'Tu abono quedó activado. Ya podés ingresar a tu panel.'
+                  )}
                 </p>
                 <div className="mt-4">
                   <HudButton
@@ -322,7 +344,7 @@ export default function CheckoutModal({
                     variant="primary"
                     size="md"
                     className="w-full justify-center"
-                    label="Ir al Dashboard"
+                    label={t('store.checkout_ir_dashboard', 'Ir al Dashboard')}
                   />
                 </div>
               </motion.div>
@@ -330,7 +352,7 @@ export default function CheckoutModal({
               <div className="space-y-3 text-center">
                 <LogIn className="w-8 h-8 mx-auto text-accent-magenta" />
                 <p className="text-sm text-muted-foreground">
-                  Iniciá sesión para pagar con PayPal.
+                  {t('store.checkout_login_aviso', 'Iniciá sesión para pagar con PayPal.')}
                 </p>
                 <HudButton
                   type="button"
@@ -338,14 +360,14 @@ export default function CheckoutModal({
                   variant="primary"
                   size="md"
                   className="w-full justify-center"
-                  label="Iniciar sesión"
+                  label={t('store.checkout_iniciar_sesion', 'Iniciar sesión')}
                 />
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('transfer')}
                   className="text-xs text-muted-foreground underline hover:text-foreground"
                 >
-                  O pagá por transferencia bancaria
+                  {t('store.checkout_o_transferencia', 'O pagá por transferencia bancaria')}
                 </button>
               </div>
             ) : (
@@ -353,26 +375,30 @@ export default function CheckoutModal({
                 {paypalStatus === 'loading' && (
                   <div className="flex items-center justify-center min-h-12.5">
                     <div className="w-6 h-6 border-2 border-accent-magenta border-t-transparent rounded-full animate-spin" />
-                    <span className="ml-3 text-sm text-muted-foreground">Cargando PayPal...</span>
+                    <span className="ml-3 text-sm text-muted-foreground">
+                      {t('store.checkout_cargando_paypal', 'Cargando PayPal...')}
+                    </span>
                   </div>
                 )}
                 {paypalStatus === 'error' && (
                   <div className="text-center min-h-12.5 flex flex-col items-center justify-center gap-2">
-                    <p className="text-sm text-accent-magenta">No se pudo cargar PayPal</p>
+                    <p className="text-sm text-accent-magenta">
+                      {t('store.checkout_error_paypal', 'No se pudo cargar PayPal')}
+                    </p>
                     <button
                       type="button"
                       onClick={retrySdk}
                       className="inline-flex items-center gap-1.5 text-sm font-bold text-foreground underline hover:text-accent-magenta"
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
-                      Reintentar
+                      {t('store.checkout_reintentar', 'Reintentar')}
                     </button>
                     <button
                       type="button"
                       onClick={() => setPaymentMethod('transfer')}
                       className="text-xs text-muted-foreground underline hover:text-foreground"
                     >
-                      Probá con transferencia bancaria
+                      {t('store.checkout_o_transferencia', 'Probá con transferencia bancaria')}
                     </button>
                   </div>
                 )}
@@ -385,7 +411,7 @@ export default function CheckoutModal({
                       className="inline-flex items-center gap-1.5 text-sm font-bold text-foreground underline hover:text-accent-magenta"
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
-                      Reintentar
+                      {t('store.checkout_reintentar', 'Reintentar')}
                     </button>
                   </div>
                 )}
@@ -400,7 +426,10 @@ export default function CheckoutModal({
           </div>
 
           <p className="relative text-xs text-muted-foreground text-center mt-4">
-            Pago verificado de forma segura. Podés cancelar tu abono cuando quieras desde tu panel.
+            {t(
+              'store.checkout_seguridad_nota',
+              'Pago verificado de forma segura. Podés cancelar tu abono cuando quieras desde tu panel.'
+            )}
           </p>
         </motion.div>
       </motion.div>

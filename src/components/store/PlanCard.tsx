@@ -205,7 +205,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
             {/* Badge de Garantía en la esquina */}
             <div className="flex items-center gap-1 text-[10px] font-mono font-bold uppercase px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-muted-foreground">
               <CyberRealPropertyShield size={14} />
-              <span>SLA Activo</span>
+              <span>{t('store.sla_activo', 'SLA Activo')}</span>
             </div>
           </div>
 
@@ -226,7 +226,8 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
                 {formattedPrice}
               </span>
               <span className="text-cyan-600 dark:text-cyan-400 font-extrabold text-sm">
-                {currency}/mes
+                {currency}
+                {t('store.period_month', '/mes')}
               </span>
             </div>
 
@@ -234,7 +235,9 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
               <div className="mt-2 flex items-center gap-2">
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-500 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
                   <CyberMetricLightning size={14} />
-                  Ahorrás {currency === 'ARS' ? `$${savingsARS}` : `$${savingsUSD}`}/año
+                  {t('store.ahorras_anual', 'Ahorrás {{amount}}/año', {
+                    amount: currency === 'ARS' ? `$${savingsARS}` : `$${savingsUSD}`,
+                  })}
                 </span>
                 <span className="text-[11px] text-muted-foreground line-through font-mono">
                   {currency === 'ARS' ? plan.price : plan.priceUSD}
@@ -242,7 +245,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
               </div>
             ) : (
               <p className="text-[11px] text-muted-foreground mt-1 font-mono">
-                Facturación mensual sin compromiso
+                {t('store.facturacion_sin_compromiso', 'Facturación mensual sin compromiso')}
               </p>
             )}
           </div>
@@ -250,7 +253,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
           {/* Lista de Prestaciones */}
           <div className="relative z-20 flex-1 mb-8">
             <p className="text-xs font-mono font-bold uppercase tracking-wider text-muted-foreground mb-3">
-              Incluye en este plan:
+              {t('store.incluye_plan', 'Incluye en este plan:')}
             </p>
             <ul className="space-y-3">
               {plan.features.map((feature, i) => (

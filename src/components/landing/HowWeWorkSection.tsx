@@ -5,8 +5,10 @@
  */
 'use client'
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 import {
   PhoneCall,
   LayoutDashboard,
@@ -22,16 +24,41 @@ import { CyberKineticArrowIcon, CyberPitchRadarIcon } from '@/components/ui/Magn
 import HudButton from '@/components/HudButton'
 import LiveSystemLauncherButton from '@/components/ui/LiveSystemLauncherButton'
 
-const STEPS = [
+interface StepItem {
+  step: string
+  phase: string
+  badge: string
+  title: string
+  subtitle: string
+  desc: string
+  icon: React.ElementType
+  tone: 'emerald' | 'amber' | 'cyan'
+  laser: string
+  border: string
+  hoverShadow: string
+  spotlight: string
+  cornerHover: string
+  numColor: string
+  iconStyle: string
+  badgeStyle: string
+  dotColor: string
+  checkColor: string
+  points: string[]
+}
+
+const getSteps = (t: TFunction): StepItem[] => [
   {
     step: '01',
-    phase: 'FASE 01 / 03',
-    badge: '15 MIN · DIAGNÓSTICO',
-    title: 'Charla técnica de 15 minutos',
-    subtitle: 'Relevamiento del modelo de negocio',
-    desc: 'Sin tecnicismos innecesarios. Analizamos tu oferta, perfil de cliente y objetivos de conversión para proyectar la arquitectura exacta de software.',
+    phase: t('how_we_work.phase_1_phase', 'FASE 01 / 03'),
+    badge: t('how_we_work.phase_1_badge', '15 MIN · DIAGNÓSTICO'),
+    title: t('how_we_work.phase_1_title', 'Charla técnica de 15 minutos'),
+    subtitle: t('how_we_work.phase_1_subtitle', 'Relevamiento del modelo de negocio'),
+    desc: t(
+      'how_we_work.phase_1_desc',
+      'Sin tecnicismos innecesarios. Analizamos tu oferta, perfil de cliente y objetivos de conversión para proyectar la arquitectura exacta de software.'
+    ),
     icon: PhoneCall,
-    tone: 'emerald' as const,
+    tone: 'emerald',
     laser: 'via-emerald-500/90 dark:via-emerald-400',
     border:
       'border-emerald-500/35 dark:border-white/10 hover:border-emerald-500 dark:hover:border-emerald-400',
@@ -47,20 +74,23 @@ const STEPS = [
     dotColor: 'bg-emerald-500',
     checkColor: 'text-emerald-600 dark:text-emerald-400',
     points: [
-      'Diagnóstico de tu negocio',
-      'Propuesta de arquitectura clara',
-      'Cero compromiso inicial',
+      t('how_we_work.phase_1_point_1', 'Diagnóstico de tu negocio'),
+      t('how_we_work.phase_1_point_2', 'Propuesta de arquitectura clara'),
+      t('how_we_work.phase_1_point_3', 'Cero compromiso inicial'),
     ],
   },
   {
     step: '02',
-    phase: 'FASE 02 / 03',
-    badge: 'VALIDACIÓN · PROTOTIPO',
-    title: 'Diseño e ingeniería de interfaz',
-    subtitle: 'Revisión interactiva antes de desplegar',
-    desc: 'Construimos la estructura optimizada para ventas y performance. Inspeccionamos cada módulo y flujo juntos para que apruebes con total tranquilidad.',
+    phase: t('how_we_work.phase_2_phase', 'FASE 02 / 03'),
+    badge: t('how_we_work.phase_2_badge', 'VALIDACIÓN · PROTOTIPO'),
+    title: t('how_we_work.phase_2_title', 'Diseño e ingeniería de interfaz'),
+    subtitle: t('how_we_work.phase_2_subtitle', 'Revisión interactiva antes de desplegar'),
+    desc: t(
+      'how_we_work.phase_2_desc',
+      'Construimos la estructura optimizada para ventas y performance. Inspeccionamos cada módulo y flujo juntos para que apruebes con total tranquilidad.'
+    ),
     icon: LayoutDashboard,
-    tone: 'amber' as const,
+    tone: 'amber',
     laser: 'via-amber-500/90 dark:via-amber-400',
     border:
       'border-amber-500/35 dark:border-white/10 hover:border-amber-500 dark:hover:border-amber-400',
@@ -76,20 +106,23 @@ const STEPS = [
     dotColor: 'bg-amber-500',
     checkColor: 'text-amber-600 dark:text-amber-400',
     points: [
-      'Entregas iterativas visibles',
-      'Ajustes guiados de precisión',
-      'Sin sorpresas en entrega',
+      t('how_we_work.phase_2_point_1', 'Entregas iterativas visibles'),
+      t('how_we_work.phase_2_point_2', 'Ajustes guiados de precisión'),
+      t('how_we_work.phase_2_point_3', 'Sin sorpresas en entrega'),
     ],
   },
   {
     step: '03',
-    phase: 'FASE 03 / 03',
-    badge: 'PRODUCCIÓN · 100% TUYO',
-    title: 'Lanzamiento y transferencia',
-    subtitle: 'Infraestructura online lista para facturar',
-    desc: 'Desplegamos tu sitio con métricas Core Web Vitals optimizadas. Te entregamos el acceso total y te capacitamos para operar cobros y pedidos.',
+    phase: t('how_we_work.phase_3_phase', 'FASE 03 / 03'),
+    badge: t('how_we_work.phase_3_badge', 'PRODUCCIÓN · 100% TUYO'),
+    title: t('how_we_work.phase_3_title', 'Lanzamiento y transferencia'),
+    subtitle: t('how_we_work.phase_3_subtitle', 'Infraestructura online lista para facturar'),
+    desc: t(
+      'how_we_work.phase_3_desc',
+      'Desplegamos tu sitio con métricas Core Web Vitals optimizadas. Te entregamos el acceso total y te capacitamos para operar cobros y pedidos.'
+    ),
     icon: Rocket,
-    tone: 'cyan' as const,
+    tone: 'cyan',
     laser: 'via-cyan-500/90 dark:via-cyan-400',
     border:
       'border-cyan-500/35 dark:border-white/10 hover:border-cyan-500 dark:hover:border-cyan-400',
@@ -105,14 +138,17 @@ const STEPS = [
     dotColor: 'bg-cyan-500',
     checkColor: 'text-cyan-600 dark:text-cyan-400',
     points: [
-      'Puesta en línea de alta velocidad',
-      'Video instructivo personalizado',
-      'Soporte de arquitectura post-lanzamiento',
+      t('how_we_work.phase_3_point_1', 'Puesta en línea de alta velocidad'),
+      t('how_we_work.phase_3_point_2', 'Video instructivo personalizado'),
+      t('how_we_work.phase_3_point_3', 'Soporte de arquitectura post-lanzamiento'),
     ],
   },
 ]
 
 export default function HowWeWorkSection() {
+  const { t } = useTranslation()
+  const steps = useMemo(() => getSteps(t), [t])
+
   const whatsappUrl = getWhatsAppUrl(
     'Hola Exequiel, me gustaría coordinar una charla de 15 minutos para consultar por mi proyecto web'
   )
@@ -136,23 +172,25 @@ export default function HowWeWorkSection() {
       <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-brand/10 border border-brand/25 text-brand dark:text-emerald-400 font-mono text-[11px] uppercase tracking-widest font-semibold mb-4">
           <span className="w-1.5 h-1.5 rounded-full bg-brand dark:bg-emerald-400 animate-pulse" />
-          <span>FIG. 01 — PROTOCOLO DE DESARROLLO // 2025</span>
+          <span>{t('how_we_work.fig_badge', 'FIG. 01 — PROTOCOLO DE DESARROLLO // 2025')}</span>
         </div>
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-950 dark:text-white leading-tight font-display">
-          Cómo construimos:{' '}
+          {t('how_we_work.title_pre', 'Cómo construimos: ')}
           <span className="font-serif italic font-normal text-brand dark:text-emerald-400">
-            3 fases sin fricción
+            {t('how_we_work.title_highlight', '3 fases sin fricción')}
           </span>
         </h2>
         <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-          Del primer relevamiento de necesidades al sistema en producción captando operaciones
-          comerciales.
+          {t(
+            'how_we_work.subtitle',
+            'Del primer relevamiento de necesidades al sistema en producción captando operaciones comerciales.'
+          )}
         </p>
       </div>
 
       {/* Grid de las 3 fases — Láminas Técnicas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
-        {STEPS.map((item, idx) => {
+        {steps.map((item, idx) => {
           const Icon = item.icon
 
           return (
@@ -256,7 +294,7 @@ export default function HowWeWorkSection() {
                 </ul>
               </div>
 
-              {/* Botón directo poco convencional en cada fase */}
+              {/* Botón directo en cada fase */}
               <div className="mt-5 pt-3 border-t border-slate-200/80 dark:border-white/10">
                 {item.step === '01' && (
                   <LiveSystemLauncherButton
@@ -365,7 +403,7 @@ export default function HowWeWorkSection() {
       {/* Botón principal centrado (HUD Chaflanado) */}
       <div className="mt-10 text-center flex justify-center">
         <HudButton
-          label="Coordinar charla de 15 minutos"
+          label={t('how_we_work.cta_charla', 'Coordinar charla de 15 minutos')}
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"

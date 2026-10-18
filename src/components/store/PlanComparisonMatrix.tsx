@@ -5,8 +5,10 @@
  */
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 import {
   CyberCheckMark,
   CyberMinusIcon,
@@ -19,6 +21,7 @@ import {
 import { storeAudio } from '../../core/utils/storeAudio'
 
 interface FeatureRow {
+  id: string
   name: string
   tooltip?: string
   basico: boolean | string
@@ -27,102 +30,146 @@ interface FeatureRow {
 }
 
 interface FeatureCategory {
+  id: string
   title: string
   icon: React.ElementType
   rows: FeatureRow[]
 }
 
-const COMPARISON_CATEGORIES: FeatureCategory[] = [
+const getComparisonCategories = (t: TFunction): FeatureCategory[] => [
   {
-    title: 'Infraestructura Cloud & Velocidad',
+    id: 'cat_infra',
+    title: t('store.matrix_cat1', 'Infraestructura Cloud & Velocidad'),
     icon: CyberMetricLightning,
     rows: [
       {
-        name: 'Hosting Serverless Vercel Edge',
-        tooltip: 'Despliegue ultra rápido en la red perimetral con 0 tiempo de inactividad.',
+        id: 'hosting',
+        name: t('store.matrix_row_hosting', 'Hosting Serverless Vercel Edge'),
+        tooltip: t(
+          'store.matrix_row_hosting_desc',
+          'Despliegue ultra rápido en la red perimetral con 0 tiempo de inactividad.'
+        ),
         basico: true,
         avanzado: true,
         premium: true,
       },
       {
-        name: 'Certificado SSL Automático',
-        tooltip: 'Cifrado HTTPS bancario renovado automáticamente.',
+        id: 'ssl',
+        name: t('store.matrix_row_ssl', 'Certificado SSL Automático'),
+        tooltip: t('store.matrix_row_ssl_desc', 'Cifrado HTTPS bancario renovado automáticamente.'),
         basico: true,
         avanzado: true,
         premium: true,
       },
       {
-        name: 'Renovación de Dominio Anual',
-        tooltip:
-          'Gestión y costo de renovación de tu dominio (.com o .com.ar) 100% bonificado para suscriptores activos (antigüedad mínima de 6 meses).',
+        id: 'domain',
+        name: t('store.matrix_row_domain', 'Renovación de Dominio Anual'),
+        tooltip: t(
+          'store.matrix_row_domain_desc',
+          'Gestión y costo de renovación de tu dominio (.com o .com.ar) 100% bonificado para suscriptores activos (antigüedad mínima de 6 meses).'
+        ),
         basico: false,
-        avanzado: 'Bonificado*',
-        premium: 'Bonificado*',
+        avanzado: t('store.matrix_bonificado', 'Bonificado*'),
+        premium: t('store.matrix_bonificado', 'Bonificado*'),
       },
       {
-        name: 'CDN Global Anycast Ultra-Rápido',
-        tooltip: 'Carga instantánea desde el nodo geográfico más cercano al cliente.',
-        basico: 'Estándar',
-        avanzado: 'Acelerado',
-        premium: 'Prioridad Edge Tier-1',
+        id: 'cdn',
+        name: t('store.matrix_row_cdn', 'CDN Global Anycast Ultra-Rápido'),
+        tooltip: t(
+          'store.matrix_row_cdn_desc',
+          'Carga instantánea desde el nodo geográfico más cercano al cliente.'
+        ),
+        basico: t('store.matrix_standard', 'Estándar'),
+        avanzado: t('store.matrix_accelerated', 'Acelerado'),
+        premium: t('store.matrix_edge_priority', 'Prioridad Edge Tier-1'),
       },
     ],
   },
   {
-    title: 'Seguridad, Respaldos & Monitoreo',
+    id: 'cat_sec',
+    title: t('store.matrix_cat2', 'Seguridad, Respaldos & Monitoreo'),
     icon: CyberRealPropertyShield,
     rows: [
       {
-        name: 'Actualizaciones de Seguridad y Parches',
-        tooltip: 'Auditorías regulares de vulnerabilidades en Next.js, librerías y dependencias.',
+        id: 'security_patches',
+        name: t('store.matrix_row_sec', 'Actualizaciones de Seguridad y Parches'),
+        tooltip: t(
+          'store.matrix_row_sec_desc',
+          'Auditorías regulares de vulnerabilidades en Next.js, librerías y dependencias.'
+        ),
         basico: true,
         avanzado: true,
         premium: true,
       },
       {
-        name: 'Backups Diarios Automáticos',
-        tooltip: 'Copias de seguridad automáticas en la nube con retención de 30 días.',
+        id: 'backups',
+        name: t('store.matrix_row_backups', 'Backups Diarios Automáticos'),
+        tooltip: t(
+          'store.matrix_row_backups_desc',
+          'Copias de seguridad automáticas en la nube con retención de 30 días.'
+        ),
         basico: false,
         avanzado: true,
         premium: true,
       },
       {
-        name: 'Monitoreo de Pasarelas de Pago',
-        tooltip: 'Verificación continua de webhooks y cobros con Mercado Pago / PayPal.',
+        id: 'gateways',
+        name: t('store.matrix_row_gateways', 'Monitoreo de Pasarelas de Pago'),
+        tooltip: t(
+          'store.matrix_row_gateways_desc',
+          'Verificación continua de webhooks y cobros con Mercado Pago / PayPal.'
+        ),
         basico: false,
         avanzado: true,
         premium: true,
       },
       {
-        name: 'Protección Anti-DDoS y WAF',
-        tooltip: 'Escudo perimetral contra ataques de fuerza bruta e inyecciones.',
-        basico: 'Básico',
-        avanzado: 'Avanzado',
-        premium: 'Empresarial Proactivo',
+        id: 'waf',
+        name: t('store.matrix_row_waf', 'Protección Anti-DDoS y WAF'),
+        tooltip: t(
+          'store.matrix_row_waf_desc',
+          'Escudo perimetral contra ataques de fuerza bruta e inyecciones.'
+        ),
+        basico: t('store.matrix_val_basic', 'Básico'),
+        avanzado: t('store.matrix_val_advanced', 'Avanzado'),
+        premium: t('store.matrix_val_enterprise', 'Empresarial Proactivo'),
       },
     ],
   },
   {
-    title: 'Base de Datos & Arquitectura',
+    id: 'cat_db',
+    title: t('store.matrix_cat3', 'Base de Datos & Arquitectura'),
     icon: CyberDatabaseCore,
     rows: [
       {
-        name: 'Gestión y Monitoreo de Base de Datos',
-        tooltip: 'Mantenimiento de instancias Supabase / PostgreSQL.',
+        id: 'db_mgmt',
+        name: t('store.matrix_row_db', 'Gestión y Monitoreo de Base de Datos'),
+        tooltip: t(
+          'store.matrix_row_db_desc',
+          'Mantenimiento de instancias Supabase / PostgreSQL.'
+        ),
         basico: false,
         avanzado: true,
         premium: true,
       },
       {
-        name: 'Optimización de Consultas e Índices',
-        tooltip: 'Ajustes en la base de datos para máxima velocidad en catálogos y reservas.',
+        id: 'query_opt',
+        name: t('store.matrix_row_indexes', 'Optimización de Consultas e Índices'),
+        tooltip: t(
+          'store.matrix_row_indexes_desc',
+          'Ajustes en la base de datos para máxima velocidad en catálogos y reservas.'
+        ),
         basico: false,
         avanzado: true,
         premium: true,
       },
       {
-        name: 'Migración y Esquemas de Datos',
-        tooltip: 'Aplicación segura de migraciones SQL sin pérdida de datos.',
+        id: 'data_migrations',
+        name: t('store.matrix_row_migrations', 'Migración y Esquemas de Datos'),
+        tooltip: t(
+          'store.matrix_row_migrations_desc',
+          'Aplicación segura de migraciones SQL sin pérdida de datos.'
+        ),
         basico: false,
         avanzado: false,
         premium: true,
@@ -130,33 +177,50 @@ const COMPARISON_CATEGORIES: FeatureCategory[] = [
     ],
   },
   {
-    title: 'Soporte, Evolución & Horas de Desarrollo',
+    id: 'cat_support',
+    title: t('store.matrix_cat4', 'Soporte, Evolución & Horas de Desarrollo'),
     icon: CyberStackLayers,
     rows: [
       {
-        name: 'Canal de Soporte Técnico',
-        tooltip: 'Canales de comunicación directa con nuestro equipo de ingeniería.',
-        basico: 'Email / Ticket',
-        avanzado: 'WhatsApp + Ticket',
-        premium: 'WhatsApp 24/7 Prioritario',
+        id: 'support_channel',
+        name: t('store.matrix_row_support', 'Canal de Soporte Técnico'),
+        tooltip: t(
+          'store.matrix_row_support_desc',
+          'Canales de comunicación directa con nuestro equipo de ingeniería.'
+        ),
+        basico: t('store.matrix_val_email_ticket', 'Email / Ticket'),
+        avanzado: t('store.matrix_val_wa_ticket', 'WhatsApp + Ticket'),
+        premium: t('store.matrix_val_wa_priority', 'WhatsApp 24/7 Prioritario'),
       },
       {
-        name: 'SLA de Respuesta a Incidentes',
-        tooltip: 'Tiempo máximo de respuesta ante cualquier consulta técnica.',
-        basico: '< 24 Horas',
-        avanzado: '< 6 Horas',
-        premium: '< 2 Horas (Urgente)',
+        id: 'incident_sla',
+        name: t('store.matrix_row_sla', 'SLA de Respuesta a Incidentes'),
+        tooltip: t(
+          'store.matrix_row_sla_desc',
+          'Tiempo máximo de respuesta ante cualquier consulta técnica.'
+        ),
+        basico: t('store.matrix_val_24h', '< 24 Horas'),
+        avanzado: t('store.matrix_val_6h', '< 6 Horas'),
+        premium: t('store.matrix_val_2h', '< 2 Horas (Urgente)'),
       },
       {
-        name: 'Bolsa de Horas de Desarrollo Mensual',
-        tooltip: 'Horas mensuales acumulables para nuevos módulos, cambios visuales o ajustes.',
+        id: 'dev_hours',
+        name: t('store.matrix_row_hours', 'Bolsa de Horas de Desarrollo Mensual'),
+        tooltip: t(
+          'store.matrix_row_hours_desc',
+          'Horas mensuales acumulables para nuevos módulos, cambios visuales o ajustes.'
+        ),
         basico: false,
-        avanzado: 'Descuento 20%',
-        premium: '2 Horas/mes Incluidas',
+        avanzado: t('store.matrix_val_disc_20', 'Descuento 20%'),
+        premium: t('store.matrix_val_2h_inc', '2 Horas/mes Incluidas'),
       },
       {
-        name: 'Account Manager & Consultoría Estratégica',
-        tooltip: 'Reunión mensual de crecimiento digital, análisis de métricas y nuevas ideas.',
+        id: 'account_manager',
+        name: t('store.matrix_row_manager', 'Account Manager & Consultoría Estratégica'),
+        tooltip: t(
+          'store.matrix_row_manager_desc',
+          'Reunión mensual de crecimiento digital, análisis de métricas y nuevas ideas.'
+        ),
         basico: false,
         avanzado: false,
         premium: true,
@@ -166,7 +230,10 @@ const COMPARISON_CATEGORIES: FeatureCategory[] = [
 ]
 
 export const PlanComparisonMatrix: React.FC = () => {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
+
+  const categories = useMemo(() => getComparisonCategories(t), [t])
 
   const toggleOpen = () => {
     storeAudio.playToggle()
@@ -208,8 +275,8 @@ export const PlanComparisonMatrix: React.FC = () => {
           />
           <span>
             {isOpen
-              ? 'Ocultar Tabla Comparativa Completa'
-              : 'Comparar Todos los Beneficios Detallados'}
+              ? t('store.matrix_toggle_close', 'Ocultar Tabla Comparativa Completa')
+              : t('store.matrix_toggle_open', 'Comparar Todos los Beneficios Detallados')}
           </span>
           <CyberChevron isOpen={isOpen} size={15} className="text-accent-cyan" />
         </motion.button>
@@ -229,25 +296,31 @@ export const PlanComparisonMatrix: React.FC = () => {
                 <thead>
                   <tr className="border-b border-border/80 pb-4">
                     <th className="py-4 px-4 text-sm font-bold uppercase tracking-wider text-muted-foreground w-2/5">
-                      Prestaciones y Cobertura
+                      {t('store.matrix_col_features', 'Prestaciones y Cobertura')}
                     </th>
                     <th className="py-4 px-4 text-center font-black text-slate-900 dark:text-white text-base w-1/5">
-                      <span className="text-cyan-500">Abono Básico</span>
+                      <span className="text-cyan-500">
+                        {t('store.abono_basico_title', 'Abono Básico')}
+                      </span>
                     </th>
                     <th className="py-4 px-4 text-center font-black text-slate-900 dark:text-white text-base w-1/5 bg-purple-500/10 rounded-t-2xl">
-                      <span className="text-purple-400">Abono Avanzado</span>
+                      <span className="text-purple-400">
+                        {t('store.abono_avanzado_title', 'Abono Avanzado')}
+                      </span>
                       <span className="block text-[10px] font-mono text-purple-300 font-bold uppercase mt-0.5">
-                        Más Elegido
+                        {t('store.mas_elegido', 'Más Elegido')}
                       </span>
                     </th>
                     <th className="py-4 px-4 text-center font-black text-slate-900 dark:text-white text-base w-1/5">
-                      <span className="text-pink-500">Abono Premium</span>
+                      <span className="text-pink-500">
+                        {t('store.abono_premium_title', 'Abono Premium')}
+                      </span>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {COMPARISON_CATEGORIES.map((cat, catIdx) => (
-                    <React.Fragment key={catIdx}>
+                  {categories.map((cat) => (
+                    <React.Fragment key={cat.id}>
                       <tr className="bg-muted/40">
                         <td
                           colSpan={4}
@@ -257,9 +330,9 @@ export const PlanComparisonMatrix: React.FC = () => {
                           <span>{cat.title}</span>
                         </td>
                       </tr>
-                      {cat.rows.map((row, rowIdx) => (
+                      {cat.rows.map((row) => (
                         <tr
-                          key={rowIdx}
+                          key={row.id}
                           className="border-b border-border/40 hover:bg-white/5 transition-colors"
                         >
                           <td className="py-3.5 px-4">
@@ -286,9 +359,10 @@ export const PlanComparisonMatrix: React.FC = () => {
               <div className="p-3.5 sm:p-4 border-t border-border/40 bg-slate-100/50 dark:bg-white/2 text-xs text-slate-500 dark:text-slate-400">
                 <p>
                   <span className="text-cyan-500 font-bold">*</span>{' '}
-                  <strong>Renovación de Dominio:</strong> La bonificación del costo de renovación
-                  anual (.com / .com.ar) aplica para clientes activos a partir del 6º mes
-                  ininterrumpido de suscripción en Abonos Avanzado y Premium.
+                  {t(
+                    'store.matrix_domain_note',
+                    'Renovación de Dominio: La bonificación del costo de renovación anual (.com / .com.ar) aplica para clientes activos a partir del 6º mes ininterrumpido de suscripción en Abonos Avanzado y Premium.'
+                  )}
                 </p>
               </div>
             </div>

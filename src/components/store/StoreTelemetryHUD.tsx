@@ -8,9 +8,11 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Activity, ShieldCheck, Zap, Server, Globe2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { storeAudio } from '../../core/utils/storeAudio'
 
 export const StoreTelemetryHUD: React.FC = () => {
+  const { t } = useTranslation()
   const [latency, setLatency] = useState(14)
   const [activePoP, setActivePoP] = useState('EZE - Buenos Aires')
 
@@ -59,27 +61,27 @@ export const StoreTelemetryHUD: React.FC = () => {
           <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-muted-foreground font-mono text-[11px] sm:text-xs">
             <div className="flex items-center gap-1.5">
               <Globe2 className="w-3.5 h-3.5 text-accent-cyan" />
-              <span>Nodo:</span>
+              <span>{t('store.hud_nodo', 'Nodo:')}</span>
               <span className="text-foreground font-semibold">{activePoP}</span>
             </div>
 
             <div className="flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-              <span>Latencia:</span>
+              <span>{t('store.hud_latencia', 'Latencia:')}</span>
               <span className="text-amber-600 dark:text-amber-400 font-bold">{latency}ms</span>
             </div>
 
             <div className="hidden md:flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
-              <span>WAF & SSL:</span>
+              <span>{t('store.hud_waf', 'WAF & SSL:')}</span>
               <span className="text-emerald-700 dark:text-emerald-400 font-semibold">
-                Protección Activa
+                {t('store.hud_proteccion_activa', 'Protección Activa')}
               </span>
             </div>
 
             <div className="hidden lg:flex items-center gap-1.5">
               <Activity className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-              <span>Uptime SLA:</span>
+              <span>{t('store.hud_uptime_label', 'Uptime SLA:')}</span>
               <span className="text-foreground font-bold">99.98%</span>
             </div>
           </div>

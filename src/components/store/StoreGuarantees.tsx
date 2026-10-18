@@ -16,39 +16,47 @@ import {
   CyberChevron,
   CyberSparkleIcon,
 } from '@/components/ui/MagnificentIcons'
+import { useTranslation } from 'react-i18next'
 import { storeAudio } from '../../core/utils/storeAudio'
 
-interface FAQItem {
-  q: string
-  a: string
-  icon: React.ElementType
-}
-
-const FAQS: FAQItem[] = [
-  {
-    q: '¿Cómo funciona la facturación y qué métodos de pago aceptan?',
-    a: 'Para Argentina podés abonar mensualmente vía Transferencia Bancaria Directa o Mercado Pago con Factura Fiscal A o B. Para clientes internacionales aceptamos PayPal o transferencia internacional en USD.',
-    icon: CyberPaymentCard,
-  },
-  {
-    q: '¿Qué sucede si necesito cambios o nuevas funcionalidades?',
-    a: 'El Abono Premium incluye 2 horas mensuales de desarrollo de nuevas funciones. Para los planes Básico y Avanzado, contás con un 20% de descuento preferencial en horas de ingeniería de software.',
-    icon: CyberTechCode,
-  },
-  {
-    q: '¿Cómo es el proceso de migración si ya tengo mi web en otro hosting?',
-    a: 'Nosotros nos encargamos del 100% del traslado (código, base de datos, correos corporativos y registros DNS) de forma bonificada, garantizando 0 tiempo de inactividad durante la migración.',
-    icon: CyberRocketLaunch,
-  },
-  {
-    q: '¿Tengo algún contrato de permanencia obligatoria?',
-    a: 'No, ninguno. Podés cancelar, pausar o cambiar de nivel de abono en cualquier momento desde tu panel de cliente o avisándonos con un mensaje por WhatsApp sin penalizaciones.',
-    icon: CyberRealPropertyShield,
-  },
-]
-
 export const StoreGuarantees: React.FC = () => {
+  const { t } = useTranslation()
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
+
+  const faqs = [
+    {
+      q: t('store.faq1_q', '¿Cómo funciona la facturación y qué métodos de pago aceptan?'),
+      a: t(
+        'store.faq1_a',
+        'Para Argentina podés abonar mensualmente vía Transferencia Bancaria Directa o Mercado Pago con Factura Fiscal A o B. Para clientes internacionales aceptamos PayPal o transferencia internacional en USD.'
+      ),
+      icon: CyberPaymentCard,
+    },
+    {
+      q: t('store.faq2_q', '¿Qué sucede si necesito cambios o nuevas funcionalidades?'),
+      a: t(
+        'store.faq2_a',
+        'El Abono Premium incluye 2 horas mensuales de desarrollo de nuevas funciones. Para los planes Básico y Avanzado, contás con un 20% de descuento preferencial en horas de ingeniería de software.'
+      ),
+      icon: CyberTechCode,
+    },
+    {
+      q: t('store.faq3_q', '¿Cómo es el proceso de migración si ya tengo mi web en otro hosting?'),
+      a: t(
+        'store.faq3_a',
+        'Nosotros nos encargamos del 100% del traslado (código, base de datos, correos corporativos y registros DNS) de forma bonificada, garantizando 0 tiempo de inactividad durante la migración.'
+      ),
+      icon: CyberRocketLaunch,
+    },
+    {
+      q: t('store.faq4_q', '¿Tengo algún contrato de permanencia obligatoria?'),
+      a: t(
+        'store.faq4_a',
+        'No, ninguno. Podés cancelar, pausar o cambiar de nivel de abono en cualquier momento desde tu panel de cliente o avisándonos con un mensaje por WhatsApp sin penalizaciones.'
+      ),
+      icon: CyberRealPropertyShield,
+    },
+  ]
 
   const toggleFaq = (index: number) => {
     storeAudio.playToggle()
@@ -69,9 +77,14 @@ export const StoreGuarantees: React.FC = () => {
           <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
             <CyberRocketLaunch size={24} className="text-cyan-400" />
           </div>
-          <h4 className="text-xl font-bold text-foreground mb-2">Migración 100% Bonificada</h4>
+          <h4 className="text-xl font-bold text-foreground mb-2">
+            {t('store.pillar1_title', 'Migración 100% Bonificada')}
+          </h4>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Trasladamos tu sitio, bases de datos y DNS sin interrumpir tus ventas ni un solo minuto.
+            {t(
+              'store.pillar1_desc',
+              'Trasladamos tu sitio, bases de datos y DNS sin interrumpir tus ventas ni un solo minuto.'
+            )}
           </p>
         </motion.div>
 
@@ -85,9 +98,14 @@ export const StoreGuarantees: React.FC = () => {
           <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
             <CyberServerUptime size={24} className="text-emerald-400" />
           </div>
-          <h4 className="text-xl font-bold text-foreground mb-2">Uptime Garantizado 99.98%</h4>
+          <h4 className="text-xl font-bold text-foreground mb-2">
+            {t('store.pillar2_title', 'Uptime Garantizado 99.98%')}
+          </h4>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Infraestructura Edge distribuida globalmente con redundancia y monitoreo proactivo 24/7.
+            {t(
+              'store.pillar2_desc',
+              'Infraestructura Edge distribuida globalmente con redundancia y monitoreo proactivo 24/7.'
+            )}
           </p>
         </motion.div>
 
@@ -101,10 +119,14 @@ export const StoreGuarantees: React.FC = () => {
           <div className="w-12 h-12 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
             <CyberRealPropertyShield size={24} className="text-pink-400" />
           </div>
-          <h4 className="text-xl font-bold text-foreground mb-2">Sin Permanencias</h4>
+          <h4 className="text-xl font-bold text-foreground mb-2">
+            {t('store.pillar3_title', 'Sin Permanencias')}
+          </h4>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Libertad absoluta. Podés pausar, mejorar o dar de baja tu abono cuando quieras con 1
-            clic.
+            {t(
+              'store.pillar3_desc',
+              'Libertad absoluta. Podés pausar, mejorar o dar de baja tu abono cuando quieras con 1 clic.'
+            )}
           </p>
         </motion.div>
       </div>
@@ -117,16 +139,19 @@ export const StoreGuarantees: React.FC = () => {
           </div>
           <div>
             <h3 className="text-2xl font-bold text-foreground">
-              Preguntas Frecuentes sobre Abonos
+              {t('store.faq_heading', 'Preguntas Frecuentes sobre Abonos')}
             </h3>
             <p className="text-xs sm:text-sm text-muted-foreground">
-              Todo lo que necesitás saber sobre la contratación y soporte
+              {t(
+                'store.faq_subheading',
+                'Todo lo que necesitás saber sobre la contratación y soporte'
+              )}
             </p>
           </div>
         </div>
 
         <div className="space-y-4">
-          {FAQS.map((faq, idx) => {
+          {faqs.map((faq, idx) => {
             const isOpen = openFaqIndex === idx
             const Icon = faq.icon
             return (

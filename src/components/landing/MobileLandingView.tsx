@@ -41,9 +41,9 @@ const OptimusGlyphSphere = dynamic(() => import('../Hero/OptimusGlyphSphere'), {
   loading: () => (
     <div
       aria-hidden="true"
-      className="w-full aspect-square flex items-center justify-center rounded-full bg-accent-cyan/5 border border-accent-cyan/20 animate-pulse"
+      className="relative w-full aspect-square flex items-center justify-center rounded-full bg-emerald-500/5 dark:bg-cyan-500/5 border border-emerald-500/20 dark:border-cyan-400/20 pointer-events-none transform-gpu"
     >
-      <span className="text-[11px] font-mono text-accent-cyan/60">Cargando 3D...</span>
+      <div className="w-3/4 h-3/4 rounded-full border border-dashed border-emerald-400/30 dark:border-cyan-400/30 animate-[spin_14s_linear_infinite]" />
     </div>
   ),
 })
@@ -224,7 +224,7 @@ export default function MobileLandingView() {
          ============================================================== */}
       <section
         id="demos-mobile"
-        className="relative py-10 px-4 space-y-8 bg-linear-to-b from-background via-surface-1/30 to-background"
+        className="relative py-10 px-4 space-y-8 bg-linear-to-b from-background via-surface-1/30 to-background [content-visibility:auto] [contain-intrinsic-size:1px_800px]"
       >
         {/* Cabecera Demos */}
         <div className="text-center max-w-sm mx-auto">

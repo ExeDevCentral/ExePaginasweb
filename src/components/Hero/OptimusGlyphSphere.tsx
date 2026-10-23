@@ -366,9 +366,13 @@ export const OptimusGlyphSphere: React.FC<{
       }
     }
 
+    let idleTimer: number | ReturnType<typeof setTimeout> | null = null
+    let startLoop = () => {}
+
     const handlePointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return
       isDragging = true
+      startLoop()
       spinInertiaYaw = 0
       spinInertiaPitch = 0
       lastDragX = e.clientX
@@ -443,6 +447,7 @@ export const OptimusGlyphSphere: React.FC<{
       ctx.scale(dpr, dpr)
       ctx.imageSmoothingEnabled = true
       ctx.imageSmoothingQuality = 'high'
+      render(false)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -460,7 +465,7 @@ export const OptimusGlyphSphere: React.FC<{
     // ========================================================
     let lastRenderTime = performance.now()
 
-    const render = () => {
+    const render = (continuous = true) => {
       const now = performance.now()
       const rawDelta = now - lastRenderTime
       lastRenderTime = now
@@ -1040,9 +1045,22 @@ export const OptimusGlyphSphere: React.FC<{
         ctx.restore()
       }
 
-      if (isVisibleOnScreen) {
-        animationFrameId = requestAnimationFrame(render)
+      if (continuous && isVisibleOnScreen) {
+        animationFrameId = requestAnimationFrame(() => render(true))
       }
+    }
+
+    startLoop = () => {
+      if (idleTimer) {
+        if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+          window.cancelIdleCallback(idleTimer as number)
+        } else {
+          clearTimeout(idleTimer as ReturnType<typeof setTimeout>)
+        }
+        idleTimer = null
+      }
+      if (animationFrameId) cancelAnimationFrame(animationFrameId)
+      animationFrameId = requestAnimationFrame(() => render(true))
     }
 
     const observer = new IntersectionObserver(
@@ -1051,8 +1069,7 @@ export const OptimusGlyphSphere: React.FC<{
         const wasVisible = isVisibleOnScreen
         isVisibleOnScreen = entry ? entry.isIntersecting : true
         if (isVisibleOnScreen && !wasVisible) {
-          cancelAnimationFrame(animationFrameId)
-          animationFrameId = requestAnimationFrame(render)
+          startLoop()
         }
       },
       { threshold: 0.05 }
@@ -1062,18 +1079,34 @@ export const OptimusGlyphSphere: React.FC<{
       if (!isDocVisible) {
         cancelAnimationFrame(animationFrameId)
       } else if (isVisibleOnScreen) {
-        cancelAnimationFrame(animationFrameId)
-        animationFrameId = requestAnimationFrame(render)
+        startLoop()
       }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
     observer.observe(canvas)
-    animationFrameId = requestAnimationFrame(render)
+    render(false)
+
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) {
+        idleTimer = window.requestIdleCallback(startLoop, { timeout: 800 })
+      } else {
+        idleTimer = setTimeout(startLoop, 400)
+      }
+    } else {
+      startLoop()
+    }
 
     return () => {
       observer.disconnect()
       cancelAnimationFrame(animationFrameId)
+      if (idleTimer) {
+        if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+          window.cancelIdleCallback(idleTimer as number)
+        } else {
+          clearTimeout(idleTimer as ReturnType<typeof setTimeout>)
+        }
+      }
       if (scrollTimeout) clearTimeout(scrollTimeout)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('scroll', handleScroll)
@@ -1092,9 +1125,9 @@ export const OptimusGlyphSphere: React.FC<{
     <div
       className={`relative w-full aspect-square mx-auto flex items-center justify-center pointer-events-auto select-none ${className}`}
     >
-      {/* Halo ambiental multicapa detrás de la esfera (tonos esmeralda de marca) */}
-      <div className="absolute inset-2 sm:inset-4 rounded-full bg-linear-to-tr from-emerald-500/15 via-emerald-600/10 to-transparent dark:from-emerald-400/20 dark:via-emerald-500/10 dark:to-transparent blur-[65px] pointer-events-none transition-opacity duration-500" />
-      <div className="absolute inset-8 sm:inset-12 rounded-full bg-emerald-500/10 dark:bg-emerald-400/10 blur-2xl pointer-events-none" />
+      {/* Halo ambiental multicapa detrás de la esfera (tonos esmeralda de marca acelerados por GPU) */}
+      <div className="absolute inset-2 sm:inset-4 rounded-full bg-linear-to-tr from-emerald-500/15 via-emerald-600/10 to-transparent dark:from-emerald-400/20 dark:via-emerald-500/10 dark:to-transparent blur-[40px] sm:blur-[65px] pointer-events-none transition-opacity duration-500 transform-gpu will-change-transform" />
+      <div className="absolute inset-8 sm:inset-12 rounded-full bg-emerald-500/10 dark:bg-emerald-400/10 blur-xl sm:blur-2xl pointer-events-none transform-gpu will-change-transform" />
 
       {/* CANVAS 3D INTERACTIVO CON TOUCH-ACTION PAN-Y */}
       <canvas

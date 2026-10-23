@@ -6,31 +6,18 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useState, useEffect } from 'react'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import SiteHeader from '@/components/layout/SiteHeader'
 import BrandIntroSplash from '@/components/layout/BrandIntroSplash'
 import MobileLandingView from '@/components/landing/MobileLandingView'
+import DesktopLandingView from '@/components/landing/DesktopLandingView'
 import BackToTopButton from '@/components/layout/BackToTopButton'
-
-const DesktopLandingView = dynamic(() => import('@/components/landing/DesktopLandingView'), {
-  ssr: false,
-})
 
 const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatWidget'), {
   ssr: false,
 })
 
 export default function HomePage() {
-  const [isDesktop, setIsDesktop] = useState(false)
-
-  useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
-
   return (
     <ErrorBoundary>
       <BrandIntroSplash />
@@ -42,20 +29,16 @@ export default function HomePage() {
           {/* ==============================================================
               VERSIÓN MOBILE RESUMIDA (EXACTAMENTE 2 SECCIONES CON EL GLOBO 3D)
              ============================================================== */}
-          {!isDesktop && (
-            <div className="block md:hidden">
-              <MobileLandingView />
-            </div>
-          )}
+          <div className="block md:hidden">
+            <MobileLandingView />
+          </div>
 
           {/* ==============================================================
-              VERSIÓN DESKTOP COMPLETA Y PROFUNDA (CARGA DIFERIDA 0 DOM EN MÓVIL)
+              VERSIÓN DESKTOP COMPLETA Y PROFUNDA (INMEDIATA EN PRIMER PINTADO)
              ============================================================== */}
-          {isDesktop && (
-            <div className="hidden md:block">
-              <DesktopLandingView />
-            </div>
-          )}
+          <div className="hidden md:block">
+            <DesktopLandingView />
+          </div>
         </main>
 
         <BackToTopButton />

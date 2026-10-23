@@ -13,16 +13,31 @@ import { motion, AnimatePresence } from 'framer-motion'
 import BrandLoader from './BrandLoader'
 
 export default function BrandIntroSplash() {
-  const [showSplash, setShowSplash] = useState(true)
+  const [showSplash, setShowSplash] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return !sessionStorage.getItem('exe_splash_seen')
+      } catch {
+        return false
+      }
+    }
+    return true
+  })
 
   useEffect(() => {
-    // 1.8s de pre-presentación continua y fluida para estabilizar todo el árbol de componentes
+    if (!showSplash) return
+    try {
+      sessionStorage.setItem('exe_splash_seen', 'true')
+    } catch {
+      // Storage might be restricted in private/sandbox mode
+    }
+
     const timer = setTimeout(() => {
       setShowSplash(false)
-    }, 1800)
+    }, 450)
 
     return () => clearTimeout(timer)
-  }, [])
+  }, [showSplash])
 
   return (
     <AnimatePresence>
@@ -33,13 +48,13 @@ export default function BrandIntroSplash() {
           exit={{
             opacity: 0,
             scale: 1.015,
-            filter: 'blur(12px)',
+            filter: 'blur(8px)',
           }}
           transition={{
-            duration: 0.75,
+            duration: 0.35,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="fixed inset-0 z-99999 flex flex-col items-center justify-center bg-[#070b16] select-none pointer-events-auto"
+          className="fixed inset-0 z-99999 flex flex-col items-center justify-center bg-[#070b16] select-none pointer-events-none"
         >
           <BrandLoader size="lg" text="EXEPAGINASWEB" subtext="ARQUITECTURA DE SOFTWARE · 2025" />
         </motion.div>

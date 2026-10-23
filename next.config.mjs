@@ -97,7 +97,7 @@ const nextConfig = {
       },
       // Caching inmutable para assets estáticos
       {
-        source: '/images/:path*',
+        source: '/(images|portfolio|assets)/:path*',
         headers: [
           {
             key: 'Cache-Control',

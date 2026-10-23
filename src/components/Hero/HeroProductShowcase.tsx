@@ -532,6 +532,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       src="/portfolio/celstore.webp"
                       alt="Catálogo y tienda online de alta conversión"
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 672px"
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
@@ -567,6 +568,8 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       src="/portfolio/sportmanager.webp"
                       alt="Sistema de reservas de canchas y turnos de pádel"
                       fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 672px"
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
@@ -604,6 +607,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       src="/portfolio/restoai.webp"
                       alt="Panel de control para gastronomía y servicios"
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 672px"
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />

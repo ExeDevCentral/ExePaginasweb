@@ -329,10 +329,28 @@ const PremiumBackground = () => {
       })
     }
 
-    loop()
+    renderFrame()
+
+    let idleTimer: number | ReturnType<typeof setTimeout> | null = null
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) {
+        idleTimer = window.requestIdleCallback(() => loop(), { timeout: 1200 })
+      } else {
+        idleTimer = setTimeout(() => loop(), 600)
+      }
+    } else {
+      loop()
+    }
 
     return () => {
       if (animId) cancelAnimationFrame(animId)
+      if (idleTimer) {
+        if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+          window.cancelIdleCallback(idleTimer as number)
+        } else {
+          clearTimeout(idleTimer as ReturnType<typeof setTimeout>)
+        }
+      }
       observer.disconnect()
       if (scrollTimeout) clearTimeout(scrollTimeout)
       window.removeEventListener('scroll', handleScroll)

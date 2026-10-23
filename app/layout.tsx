@@ -4,7 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import type { Metadata, Viewport } from 'next'
-import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+import { Inter, Space_Grotesk, JetBrains_Mono, Instrument_Serif } from 'next/font/google'
 import Providers from './providers'
 import './globals.css'
 
@@ -23,6 +23,14 @@ const spaceGrotesk = Space_Grotesk({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
+  display: 'swap',
+})
+
+const instrumentSerif = Instrument_Serif({
+  weight: '400',
+  style: ['italic'],
+  subsets: ['latin'],
+  variable: '--font-serif',
   display: 'swap',
 })
 
@@ -166,16 +174,10 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`dark ${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`dark ${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable}`}
       suppressHydrationWarning
     >
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..200&display=swap"
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

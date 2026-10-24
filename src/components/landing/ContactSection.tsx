@@ -117,7 +117,7 @@ const ContactSection = () => {
         body: JSON.stringify({ name, email, message, lang: i18n.language }),
       })
 
-      const data = await res.json()
+      const data = (await res.json()) as { ticketId?: string; message?: string; error?: string }
 
       if (res.ok) {
         supabase

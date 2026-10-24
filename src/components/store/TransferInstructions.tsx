@@ -75,7 +75,7 @@ export default function TransferInstructions({
           tipoProyecto: projectType,
         }),
       })
-      const data = await resp.json().catch(() => ({}))
+      const data = (await resp.json().catch(() => ({}))) as { error?: string }
       if (!resp.ok) {
         setError(data?.error || 'No se pudo registrar la transferencia.')
         setRegistering(false)

@@ -119,7 +119,7 @@ export default function CheckoutModal({
                 },
                 body: JSON.stringify({ planSlug: plan.id, tipoProyecto }),
               })
-              const json = await resp.json().catch(() => ({}))
+              const json = (await resp.json().catch(() => ({}))) as { id?: string; error?: string }
               if (!resp.ok || !json?.id) {
                 throw new Error(json?.error || 'No se pudo iniciar el pago con PayPal.')
               }
@@ -135,7 +135,7 @@ export default function CheckoutModal({
                   },
                   body: JSON.stringify({ orderId: data.orderID }),
                 })
-                const json = await resp.json().catch(() => ({}))
+                const json = (await resp.json().catch(() => ({}))) as { error?: string }
                 if (!resp.ok) {
                   setPaypalError(json?.error || 'No se pudo confirmar el pago.')
                   setPaypalStatus('approval-error')

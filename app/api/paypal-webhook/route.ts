@@ -69,7 +69,7 @@ async function verifyWebhookSignature(req: NextRequest, rawBody: string): Promis
         webhook_event: JSON.parse(rawBody),
       }),
     })
-    const result = await resp.json()
+    const result = (await resp.json()) as { verification_status?: string }
     return result.verification_status === 'SUCCESS'
   } catch (e) {
     console.error('[paypal-webhook] Verification error:', e)

@@ -104,11 +104,10 @@ function getLastUserText(
     if (m?.role !== 'user') continue
     if (typeof m.content === 'string' && m.content) return m.content
     if (Array.isArray(m.parts)) {
-      const text = m.parts
-        .filter(
-          (p: { type?: string; text?: string }) => p?.type === 'text' && typeof p.text === 'string'
-        )
-        .map((p: { text?: string }) => p.text)
+      const parts = m.parts as Array<{ type?: string; text?: string }>
+      const text = parts
+        .filter((p) => p?.type === 'text' && typeof p.text === 'string')
+        .map((p) => p.text)
         .join('')
       if (text) return text
     }

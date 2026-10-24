@@ -103,7 +103,7 @@ export class RedisCache implements ICacheProvider {
       const client = this.redis as { get: (key: string) => Promise<string | null> }
       const cached = await client.get(key)
       if (!cached) return null
-      return JSON.parse(cached)
+      return JSON.parse(cached) as T
     } catch (error) {
       console.error(`[RedisCache] Error getting key ${key}:`, error)
       return null

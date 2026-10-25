@@ -4,6 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 const RESEND_API = 'https://api.resend.com/emails'
+const RESEND_WEBHOOKS_API = 'https://api.resend.com/webhooks'
 
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'Exemetal@hotmail.com'
 export const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'Contacto@exepaginasweb.com'
@@ -37,6 +38,14 @@ export interface SyncAudienceContactOptions {
   audienceId?: string | undefined
 }
 
+export interface WebhookStatusReport {
+  checked: boolean
+  total: number
+  enabled: number
+  reactivated: number
+  errors?: string[]
+}
+
 function getConfig() {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
@@ -48,6 +57,11 @@ function getConfig() {
   }
 }
 
+/**
+ * Espera pasiva defensiva para respetar el rate-limit del modo gratis de Resend (2 req/seg).
+ */
+const waitMs = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 export async function sendEmail({
   to,
   subject,
@@ -56,7 +70,7 @@ export async function sendEmail({
   tags,
   headers,
   template,
-}: SendEmailOptions) {
+}: SendEmailOptions): Promise<Record<string, unknown>> {
   const { apiKey, from } = getConfig()
 
   const payload: Record<string, unknown> = {
@@ -74,24 +88,47 @@ export async function sendEmail({
   if (headers && Object.keys(headers).length > 0) payload.headers = headers
   if (template) payload.template = template
 
-  const res = await fetch(RESEND_API, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-    signal: AbortSignal.timeout(8000),
-  })
+  const maxAttempts = 2
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const res = await fetch(RESEND_API, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(8000),
+      })
 
-  if (!res.ok) {
-    const err = await res.text()
-    console.error('[email] Error al enviar:', res.status, err)
-    throw new Error(`Resend error: ${res.status}`)
+      if (res.ok) {
+        const json = (await res.json()) as Record<string, unknown>
+        console.log('[email] Enviado correctamente a', to)
+        return json
+      }
+
+      // Si el plan gratis llega al límite de ráfaga (429 Rate Limit) o error temporal 5xx
+      if ((res.status === 429 || res.status >= 500) && attempt < maxAttempts) {
+        console.warn(
+          `[email] Resend respondió ${res.status}. Reintentando con retroceso en modo gratis...`
+        )
+        await waitMs(650)
+        continue
+      }
+
+      const errText = await res.text()
+      console.error('[email] Error al enviar:', res.status, errText)
+      throw new Error(`Resend error: ${res.status}`)
+    } catch (err) {
+      if (attempt < maxAttempts && err instanceof Error && err.name === 'TimeoutError') {
+        await waitMs(500)
+        continue
+      }
+      throw err
+    }
   }
 
-  console.log('[email] Enviado correctamente a', to)
-  return res.json()
+  throw new Error('Resend error: Max attempts reached')
 }
 
 /**
@@ -150,5 +187,101 @@ export async function syncContactToAudience({
   } catch (err) {
     console.warn(`[resend-audience] Excepción al sincronizar contacto ${email}:`, err)
     return null
+  }
+}
+
+/**
+ * Auto-Healer para Webhooks de Resend:
+ * Si Svix/Resend desactiva el endpoint tras reintentos fallidos, esta función
+ * consulta la API de Resend y reactiva automáticamente cualquier webhook deshabilitado
+ * sin necesidad de entrar a la consola manual.
+ */
+export async function ensureResendWebhooksActive(): Promise<WebhookStatusReport> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    return {
+      checked: false,
+      total: 0,
+      enabled: 0,
+      reactivated: 0,
+      errors: ['RESEND_API_KEY no configurada'],
+    }
+  }
+
+  try {
+    const res = await fetch(RESEND_WEBHOOKS_API, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      signal: AbortSignal.timeout(6000),
+    })
+
+    if (!res.ok) {
+      const err = await res.text()
+      return {
+        checked: false,
+        total: 0,
+        enabled: 0,
+        reactivated: 0,
+        errors: [`HTTP ${res.status}: ${err}`],
+      }
+    }
+
+    const body = (await res.json()) as {
+      data?: Array<{ id: string; status?: string; url?: string }>
+    }
+    const webhooks = body?.data || []
+    let enabledCount = 0
+    let reactivatedCount = 0
+    const errors: string[] = []
+
+    for (const wh of webhooks) {
+      const status = wh.status?.toLowerCase()
+      if (status === 'active' || status === 'enabled') {
+        enabledCount++
+      } else if (wh.id) {
+        // Intentar reactivar vía PATCH
+        try {
+          const patchRes = await fetch(`${RESEND_WEBHOOKS_API}/${wh.id}`, {
+            method: 'PATCH',
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: 'enabled' }),
+            signal: AbortSignal.timeout(5000),
+          })
+          if (patchRes.ok) {
+            reactivatedCount++
+            console.log(`[resend-healer] ✅ Webhook ${wh.id} reactivado automáticamente en Resend.`)
+          } else {
+            const patchErr = await patchRes.text()
+            errors.push(`No se pudo reactivar ${wh.id}: ${patchErr}`)
+          }
+        } catch (patchEx) {
+          errors.push(
+            `Excepción reactivando ${wh.id}: ${patchEx instanceof Error ? patchEx.message : String(patchEx)}`
+          )
+        }
+      }
+    }
+
+    return {
+      checked: true,
+      total: webhooks.length,
+      enabled: enabledCount + reactivatedCount,
+      reactivated: reactivatedCount,
+      errors: errors.length > 0 ? errors : undefined,
+    }
+  } catch (err) {
+    return {
+      checked: false,
+      total: 0,
+      enabled: 0,
+      reactivated: 0,
+      errors: [err instanceof Error ? err.message : String(err)],
+    }
   }
 }

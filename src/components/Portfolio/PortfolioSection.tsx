@@ -52,7 +52,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
     activeCategory === 'all'
       ? INITIAL_PROJECTS
       : INITIAL_PROJECTS.filter((p) => p.category === activeCategory)
-  const FEATURED_IDS = ['restoai', 'sportmanager', 'owleye']
+  const FEATURED_IDS = ['restoai', 'sportmanager', 'celstore']
   const visibleProjects = featuredOnly
     ? FEATURED_IDS.map((id) => INITIAL_PROJECTS.find((p) => p.id === id)).filter(
         (p): p is Project => Boolean(p)

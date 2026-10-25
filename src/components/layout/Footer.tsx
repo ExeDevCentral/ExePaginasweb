@@ -220,6 +220,14 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  href="/#sistemas-linux"
+                  className="text-muted-foreground hover:text-emerald-400 transition-colors flex items-center gap-1.5"
+                >
+                  <span>{t('footer.nav_linux') || 'Terminales Linux POS & Nodos'}</span>
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/cotizador"
                   className="text-muted-foreground hover:text-accent-cyan transition-colors"
                 >

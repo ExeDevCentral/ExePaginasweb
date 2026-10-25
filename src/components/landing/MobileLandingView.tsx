@@ -307,6 +307,19 @@ export default function MobileLandingView() {
               </p>
             </div>
 
+            <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/25">
+              <div className="flex items-center gap-1.5 font-bold text-cyan-600 dark:text-cyan-400 mb-0.5">
+                <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                <span>{t('mobile.diff_linux_title', 'Terminales Linux POS para tu Local')}</span>
+              </div>
+              <p className="text-[11px] leading-relaxed text-muted-foreground">
+                {t(
+                  'mobile.diff_linux_desc',
+                  'Revivimos tus PCs de mostrador o caja con Linux dedicado: arranque en 4s, cero cuelgues, cero virus y $0 en licencias.'
+                )}
+              </p>
+            </div>
+
             <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/25">
               <div className="flex items-center gap-1.5 font-bold text-rose-600 dark:text-rose-400 mb-0.5">
                 <XCircle className="w-3.5 h-3.5 shrink-0" />

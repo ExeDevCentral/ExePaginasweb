@@ -28,6 +28,8 @@ import {
   Star,
   Info,
   ShieldCheck,
+  Terminal,
+  Server,
 } from 'lucide-react'
 import Header from '../layout/Header'
 import HudButton from '@/components/HudButton'
@@ -81,6 +83,23 @@ function getPlans(t: (key: string) => string): PlanData[] {
       ],
       popular: true,
       icon: ShoppingCart,
+    },
+    {
+      id: 'plan-linux',
+      name: t('cotizador.plan_linux_name'),
+      description: t('cotizador.plan_linux_desc'),
+      setup: { ARS: '$350.000', USD: 'u$s 320' },
+      monthly: { ARS: '$18.000', USD: 'u$s 30' },
+      features: [
+        t('cotizador.plan_linux_feat_1'),
+        t('cotizador.plan_linux_feat_2'),
+        t('cotizador.plan_linux_feat_3'),
+        t('cotizador.plan_linux_feat_4'),
+        t('cotizador.plan_linux_feat_5'),
+        t('cotizador.plan_linux_feat_6'),
+      ],
+      popular: false,
+      icon: Terminal,
     },
   ]
 }
@@ -136,6 +155,22 @@ const PROJECT_TYPES: ProjectType[] = [
     description: 'Clientes, ventas, reportes, equipo',
     basePrice: 890000,
   },
+  {
+    id: 'linux-pos',
+    label: 'Terminal Linux POS / Migración de PCs',
+    icon: Terminal,
+    description:
+      'PCs de caja o mostrador en modo quiosco blindado, arranque en 4.5s y USB de rescate',
+    basePrice: 350000,
+  },
+  {
+    id: 'edge-server',
+    label: 'Servidor Local Offline-First + Cloud',
+    icon: Server,
+    description:
+      'Nodo Linux en red local (LAN) con PostgreSQL y réplica asíncrona para operar sin internet',
+    basePrice: 520000,
+  },
 ]
 
 interface Feature {
@@ -162,6 +197,28 @@ const FEATURES: Feature[] = [
     hasAsterisk: true,
     description:
       'Integración técnica de cobros (Mercado Pago, Stripe). Comisiones y alta comercial a cargo de la pasarela.*',
+  },
+  {
+    id: 'kiosk_pos',
+    label: 'Modo Quiosco Linux + Impresora Térmica ESC/POS',
+    price: 110000,
+    popular: true,
+    description:
+      'Sesión dedicada sin escritorio distractivo y reglas udev persistentes para impresoras térmicas y lectores de códigos.',
+  },
+  {
+    id: 'offline_node',
+    label: 'Nodo Servidor Local Offline-First (LAN)',
+    price: 180000,
+    description:
+      'Motor PostgreSQL local con cola de sincronización asíncrona para operar con 0% de interrupción ante cortes de internet.',
+  },
+  {
+    id: 'rescue_usb',
+    label: 'Kit Pendrive USB Booteable de Rescate',
+    price: 65000,
+    description:
+      'Imagen física en vivo (Ventoy + Timeshift) configurada para restaurar el sistema completo en 3 minutos.',
   },
   {
     id: 'domain',
@@ -567,6 +624,34 @@ export default function QuoteBuilder() {
   const [confettiTrigger, setConfettiTrigger] = useState(0)
   const [planConfetti, setPlanConfetti] = useState(0)
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    const currParam = params.get('currency')
+    if (currParam === 'USD' || currParam === 'ARS') {
+      setCurrency(currParam)
+    }
+    const typeParam = params.get('type')
+    const planParam = params.get('plan')
+    if (typeParam && PROJECT_TYPES.some((pt) => pt.id === typeParam)) {
+      setSelectedType(typeParam)
+      if (typeParam === 'linux-pos') {
+        setSelectedFeatures(new Set(['kiosk_pos', 'rescue_usb']))
+      } else if (typeParam === 'edge-server') {
+        setSelectedFeatures(new Set(['offline_node', 'rescue_usb']))
+      }
+      setMode('custom')
+      setStep(1)
+    } else if (planParam === 'linux' || planParam === 'plan-linux') {
+      setSelectedPlan('plan-linux')
+      setSelectedType('linux-pos')
+      setSelectedFeatures(new Set(['kiosk_pos', 'rescue_usb']))
+      setDesignTier('template')
+      setMode('custom')
+      setStep(3)
+    }
+  }, [])
+
   const toggleFeature = (id: string) => {
     setSelectedFeatures((prev) => {
       const next = new Set(prev)
@@ -590,11 +675,14 @@ export default function QuoteBuilder() {
   const selectedTypeData = PROJECT_TYPES.find((t) => t.id === selectedType)
 
   const buildWhatsAppMessage = () => {
-    const typeName = selectedTypeData?.label ?? ''
+    const typeName = selectedTypeData
+      ? t('cotizador.tipo_' + selectedTypeData.id, selectedTypeData.label)
+      : ''
     const featureNames = FEATURES.filter((f) => selectedFeatures.has(f.id)).map(
-      (f) => f.label + (f.hasAsterisk ? ' (*)' : '')
+      (f) => t('cotizador.feat_' + f.id, f.label) + (f.hasAsterisk ? ' (*)' : '')
     )
-    const designName = DESIGN_TIERS.find((d) => d.id === designTier)?.label ?? ''
+    const designObj = DESIGN_TIERS.find((d) => d.id === designTier)
+    const designName = designObj ? t('cotizador.design_' + designObj.id, designObj.label) : ''
     let msg = `¡Hola ExeSistemasWEB! Quiero solicitar una cotización:%0A%0A`
     msg += `*Proyecto:* ${typeName}%0A`
     msg += `*Diseño:* ${designName}%0A`
@@ -609,6 +697,11 @@ export default function QuoteBuilder() {
 
   const handleSendQuote = async () => {
     setSending(true)
+    const typeName = selectedTypeData
+      ? t('cotizador.tipo_' + selectedTypeData.id, selectedTypeData.label)
+      : 'Sistema Web a Medida'
+    const designObj = DESIGN_TIERS.find((d) => d.id === designTier)
+    const designName = designObj ? t('cotizador.design_' + designObj.id, designObj.label) : ''
     try {
       await fetch('/api/contact', {
         method: 'POST',
@@ -617,12 +710,12 @@ export default function QuoteBuilder() {
           name: name || 'Sin nombre',
           email: email || 'Sin email',
           isDiagnostic: true,
-          projectType: selectedTypeData?.label ?? 'Sistema Web a Medida',
+          projectType: typeName,
           total: formatPrice(total),
-          message: `Cotización / Diagnóstico IA:\nProyecto: ${selectedTypeData?.label ?? ''}\nDiseño: ${DESIGN_TIERS.find((d) => d.id === designTier)?.label ?? ''}\nFuncionalidades: ${FEATURES.filter(
+          message: `Cotización / Diagnóstico IA:\nProyecto: ${typeName}\nDiseño: ${designName}\nFuncionalidades: ${FEATURES.filter(
             (f) => selectedFeatures.has(f.id)
           )
-            .map((f) => f.label + (f.hasAsterisk ? ' (*)' : ''))
+            .map((f) => t('cotizador.feat_' + f.id, f.label) + (f.hasAsterisk ? ' (*)' : ''))
             .join(
               ', '
             )}\nPresupuesto: ${formatPrice(total)}\nEmpresa: ${company || '-'}\nNota: Presupuesto orientativo sujeto a diagnóstico técnico previo.`,
@@ -646,6 +739,10 @@ export default function QuoteBuilder() {
     if (planId === 'plan-landing') {
       setSelectedType('landing')
       setSelectedFeatures(new Set(['admin', 'notifications']))
+      setDesignTier('template')
+    } else if (planId === 'plan-linux') {
+      setSelectedType('linux-pos')
+      setSelectedFeatures(new Set(['kiosk_pos', 'rescue_usb']))
       setDesignTier('template')
     } else {
       setSelectedType('ecommerce')
@@ -681,7 +778,7 @@ export default function QuoteBuilder() {
       <Quote3DCanvas />
       <Header />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 pt-36 pb-24">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 pt-36 pb-24">
         {mode === 'plans' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="text-center mb-12">
@@ -741,7 +838,7 @@ export default function QuoteBuilder() {
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-10">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-10">
               {plans.map((plan, i) => (
                 <PlanCard
                   key={plan.id}

@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import {
   Calendar,
@@ -16,6 +17,7 @@ import {
   Trophy,
   Calculator,
   ShoppingBag,
+  Terminal,
   MessageCircle,
   Search,
   Layers,
@@ -86,6 +88,16 @@ const paletteItems: PaletteItem[] = [
     category: 'rubro',
   },
   {
+    id: 'linux-pos',
+    shortcutNumber: 7,
+    href: '/#sistemas-linux',
+    label: 'Terminales Linux POS & Cajas para Negocios',
+    detail: 'Blindamos las PCs de tu mostrador o caja: arranque en 4s, cero virus y $0 licencias.',
+    techFact: 'Kiosk Mode · 480MB RAM · USB Rescue Key · Offline-First',
+    icon: Terminal,
+    category: 'rubro',
+  },
+  {
     id: 'cotizador',
     shortcutNumber: 5,
     href: '/cotizador',
@@ -120,6 +132,7 @@ function getActionCardStyle(isSelected: boolean, isPrimaryCta?: boolean, itemId?
 }
 
 export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaPanelProps>) {
+  const { t } = useTranslation()
   const router = useRouter()
   const panelRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -128,6 +141,104 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [shortcutKey, setShortcutKey] = useState('Ctrl K')
+
+  const localizedPaletteItems: PaletteItem[] = useMemo(
+    () => [
+      {
+        id: 'peluqueria',
+        shortcutNumber: 1,
+        href: '/soluciones#peluqueria',
+        label: t('megapanel.item_1_label', 'Turnos online para peluquerías'),
+        detail: t(
+          'megapanel.item_1_detail',
+          'Agenda automatizada 24/7, recordatorios por WhatsApp y fidelización.'
+        ),
+        techFact: 'Event-Driven · WhatsApp Cloud API · Postgres RLS',
+        icon: Calendar,
+        category: 'rubro',
+      },
+      {
+        id: 'gastronomia',
+        shortcutNumber: 2,
+        href: '/soluciones#panaderia',
+        label: t('megapanel.item_2_label', 'Comandas y pedidos gastronómicos'),
+        detail: t(
+          'megapanel.item_2_detail',
+          'Terminal de pedidos rápidos, combos, delivery y control de stock.'
+        ),
+        techFact: 'Offline-First · Sync Local · WebSockets KDS',
+        icon: UtensilsCrossed,
+        category: 'rubro',
+      },
+      {
+        id: 'indumentaria',
+        shortcutNumber: 3,
+        href: '/soluciones#indumentaria',
+        label: t('megapanel.item_3_label', 'Catálogo y stock para indumentaria'),
+        detail: t(
+          'megapanel.item_3_detail',
+          'Gestión ágil de talles, variantes en vivo y sincronización de stock.'
+        ),
+        techFact: 'Multi-Tenant · Stock Concurrente · Edge CDN',
+        icon: Shirt,
+        category: 'rubro',
+      },
+      {
+        id: 'canchas',
+        shortcutNumber: 4,
+        href: '/soluciones#canchas',
+        label: t('megapanel.item_4_label', 'Reservas para canchas y complejos'),
+        detail: t(
+          'megapanel.item_4_detail',
+          'Grilla de ocupación en tiempo real y bloqueo anti-solapamiento.'
+        ),
+        techFact: 'Locking Anti-Solapamiento · Realtime · State Engine',
+        icon: Trophy,
+        category: 'rubro',
+      },
+      {
+        id: 'linux-pos',
+        shortcutNumber: 7,
+        href: '/#sistemas-linux',
+        label: t('megapanel.item_7_label', 'Terminales Linux POS & Arquitectura B2B'),
+        detail: t(
+          'megapanel.item_7_detail',
+          'Estaciones en modo quiosco, servidores offline-first y rescate de hardware.'
+        ),
+        techFact: 'Kiosk Mode · 480MB RAM · USB Rescue Key · Offline-First',
+        icon: Terminal,
+        category: 'rubro',
+      },
+      {
+        id: 'cotizador',
+        shortcutNumber: 5,
+        href: '/cotizador',
+        label: t('megapanel.item_5_label', 'Cotizador Interactivo'),
+        detail: t(
+          'megapanel.item_5_detail',
+          'Calculá tu presupuesto en 2 min con desglose transparente de arquitectura.'
+        ),
+        techFact: 'Reactive State Engine · PDF Streaming · Zero Latency',
+        icon: Calculator,
+        category: 'action',
+        isPrimaryCta: true,
+      },
+      {
+        id: 'tienda',
+        shortcutNumber: 6,
+        href: '/tienda',
+        label: t('megapanel.item_6_label', 'Tienda Online & E-Commerce'),
+        detail: t(
+          'megapanel.item_6_detail',
+          'Tu tienda propia sin comisiones por venta con cobros directos.'
+        ),
+        techFact: 'Server Components · 0% Fee Gateway · Direct Auth',
+        icon: ShoppingBag,
+        category: 'action',
+      },
+    ],
+    [t]
+  )
 
   // Detección honesta de disponibilidad según horario de Rosario (UTC-3)
   const [availability, setAvailability] = useState<{
@@ -188,15 +299,15 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
 
   // Filtrado reactivo tipo Command Palette
   const filteredItems = useMemo(() => {
-    if (!searchQuery.trim()) return paletteItems
+    if (!searchQuery.trim()) return localizedPaletteItems
     const q = searchQuery.toLowerCase().trim()
-    return paletteItems.filter(
+    return localizedPaletteItems.filter(
       (item) =>
         item.label.toLowerCase().includes(q) ||
         item.detail.toLowerCase().includes(q) ||
         item.techFact.toLowerCase().includes(q)
     )
-  }, [searchQuery])
+  }, [searchQuery, localizedPaletteItems])
 
   // Reset del foco e índice al abrir (solo auto-enfoca en desktop para no tapar la pantalla con el teclado virtual móvil)
   useEffect(() => {
@@ -259,11 +370,11 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
         }
       }
 
-      // Accesos directos numéricos 1–6 (cuando el input no tiene texto o no está enfocado)
+      // Accesos directos numéricos 1–7 (cuando el input no tiene texto o no está enfocado)
       const isInputActive = document.activeElement === inputRef.current
-      if (event.key >= '1' && event.key <= '6' && (!isInputActive || searchQuery === '')) {
+      if (event.key >= '1' && event.key <= '7' && (!isInputActive || searchQuery === '')) {
         const num = Number.parseInt(event.key, 10)
-        const target = paletteItems.find((item) => item.shortcutNumber === num)
+        const target = localizedPaletteItems.find((item) => item.shortcutNumber === num)
         if (target) {
           event.preventDefault()
           router.push(target.href)
@@ -387,7 +498,10 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Buscar solución o herramienta…"
+                    placeholder={t(
+                      'megapanel.search_placeholder',
+                      'Buscar solución, rubro o arquitectura…'
+                    )}
                     className="w-full bg-transparent text-xs sm:text-sm text-slate-900 dark:text-[#E6EAF0] placeholder:text-slate-400 dark:placeholder:text-[#8B95A5]/60 focus:outline-hidden font-sans"
                     aria-label="Buscar en la consola"
                   />
@@ -417,10 +531,10 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="font-mono text-[10px] font-semibold text-slate-400 dark:text-[#8B95A5] uppercase tracking-wider">
-                        {`// Soluciones por rubro`}
+                        {t('megapanel.cat_rubros', '// Soluciones por rubro')}
                       </span>
                       <span className="font-mono text-[10px] text-slate-400/60 dark:text-[#8B95A5]/50">
-                        {rubroItems.length} módulos
+                        {rubroItems.length} {t('megapanel.modules_count', 'módulos')}
                       </span>
                     </div>
 
@@ -513,10 +627,10 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="font-mono text-[10px] font-semibold text-slate-400 dark:text-[#8B95A5] uppercase tracking-wider">
-                        {`// Herramientas directas`}
+                        {t('megapanel.cat_actions', '// Herramientas directas')}
                       </span>
                       <span className="font-mono text-[10px] text-slate-400/60 dark:text-[#8B95A5]/50">
-                        Acceso interactivo
+                        {t('megapanel.interactive_access', 'Acceso interactivo')}
                       </span>
                     </div>
 
@@ -611,10 +725,10 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                   </div>
                 )}
 
-                {/* Banner destacado: Arquitectura completa & casos reales de software (subido de jerarquía) */}
+                {/* Banner destacado: Arquitectura completa & casos reales de software */}
                 <div className="pt-0.5">
                   <Link
-                    href="/soluciones"
+                    href="/#sistemas-linux"
                     onClick={onClose}
                     className="group flex items-center justify-between px-3 py-2 rounded-xl border border-black/7 dark:border-white/8 bg-black/1.5 dark:bg-white/2 hover:border-emerald-500/40 dark:hover:border-emerald-500/40 hover:bg-emerald-500/3 transition-all"
                   >
@@ -624,15 +738,21 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                       </div>
                       <div className="min-w-0">
                         <div className="font-semibold text-xs text-slate-900 dark:text-[#E6EAF0] tracking-[-0.01em] truncate">
-                          Arquitectura completa &amp; casos reales de software
+                          {t(
+                            'megapanel.arch_banner_title',
+                            'Ingeniería Linux POS, Nodos Locales & Casos de Software'
+                          )}
                         </div>
                         <div className="font-mono text-[10px] text-slate-500 dark:text-[#CBD5E1] truncate">
-                          Documentación técnica · Diagramas de flujo · Benchmarks de rendimiento
+                          {t(
+                            'megapanel.arch_banner_sub',
+                            'Especificación para Arquitectos, Ingenieros y Analistas de Sistemas'
+                          )}
                         </div>
                       </div>
                     </div>
                     <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform shrink-0 ml-2">
-                      Ver ingeniería ↗
+                      {t('megapanel.arch_banner_cta', 'Abrir especificación ↗')}
                     </span>
                   </Link>
                 </div>
@@ -695,7 +815,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs transition-colors shrink-0 shadow-xs active:scale-[0.98]"
                   >
                     <MessageCircle size={15} strokeWidth={2} />
-                    <span>Hablar por WhatsApp</span>
+                    <span>{t('megapanel.whatsapp_cta', 'Hablar por WhatsApp')}</span>
                     <span className="font-mono text-[10px]">↗</span>
                   </a>
                 </div>
@@ -708,28 +828,28 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                     <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
                       ↑↓
                     </kbd>{' '}
-                    navegar
+                    {t('megapanel.nav_hint', 'navegar')}
                   </span>
                   <span>·</span>
                   <span className="flex items-center gap-1">
                     <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
                       ↵
                     </kbd>{' '}
-                    abrir
+                    {t('megapanel.open_hint', 'abrir')}
                   </span>
                   <span>·</span>
                   <span className="flex items-center gap-1">
                     <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
-                      1–6
+                      1–7
                     </kbd>{' '}
-                    acceso directo
+                    {t('megapanel.shortcut_hint', 'acceso directo')}
                   </span>
                   <span>·</span>
                   <span className="flex items-center gap-1">
                     <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
                       esc
                     </kbd>{' '}
-                    cerrar
+                    {t('megapanel.close_hint', 'cerrar')}
                   </span>
                 </div>
               </div>

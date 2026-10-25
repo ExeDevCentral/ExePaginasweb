@@ -138,27 +138,27 @@ const CAPABILITIES = [
   },
   {
     id: '04',
-    code: '04 // CIBERSEGURIDAD',
+    code: '04 // LINUX POS & TERMINALES',
     titleKey: 'hero.card_4_titulo',
-    defaultTitle: 'OwlEye Engine · Ciberdefensa',
+    defaultTitle: 'Estaciones Linux POS para Negocios',
     descKey: 'hero.card_4_desc',
     defaultDesc:
-      'Radar heurístico de amenazas, mitigación activa en tiempo real y telemetría por WebSocket. Código propio transferido a tu nombre.',
-    cta: 'Lanzar OwlEye en vivo',
-    href: 'https://owl-eye-engine.vercel.app',
+      'Transformamos las PCs actuales de tu mostrador o caja en terminales Linux dedicadas: arranque en 4s, cero virus, modo quiosco blindado y $0 en licencias.',
+    cta: 'Ver Terminales Linux para Comercios',
+    href: '#sistemas-linux',
     liveLauncher: {
-      label: 'TESTEAR OWLEYE ENGINE',
-      sublabel: 'RADAR HEURÍSTICO EN VIVO',
-      href: 'https://owl-eye-engine.vercel.app',
-      icon: <CyberMetricShield size={18} />,
+      label: 'VER TERMINALES LINUX POS',
+      sublabel: '0% LICENCIAS · ANTI-CUELGUES',
+      href: '#sistemas-linux',
+      icon: <CyberMetricProcessor size={18} />,
       color: 'emerald' as const,
     },
-    ariaLabel: 'Probar OwlEye Engine en vivo sin filtros',
+    ariaLabel: 'Ver terminales Linux POS para negocios y comercios',
     color: 'emerald' as const,
     delay: '-8.25s',
-    icon: CyberMetricShield,
-    badge: 'Defensa Activa',
-    tech: ['WebSocket en Vivo', 'Defensa Activa Heurística', 'Código 100% Tuyo'],
+    icon: CyberMetricProcessor,
+    badge: 'Cero Cuelgues',
+    tech: ['Arranque en 4 Seg', 'Revive PCs Lentas', '$0 Licencias & Virus'],
   },
 ]
 
@@ -486,14 +486,30 @@ export const OptimusScaleHero: React.FC = () => {
             <CyberTerminalCard
               key={'cap-card-' + cap.id}
               id={cap.id}
-              code={cap.code}
+              code={cap.id === '04' ? t('hero.card_4_code', cap.code) : cap.code}
               title={t(cap.titleKey) || cap.defaultTitle}
               desc={t(cap.descKey) || cap.defaultDesc}
-              badge={cap.badge}
-              tech={cap.tech}
-              cta={cap.cta}
+              badge={cap.id === '04' ? t('hero.card_4_badge', cap.badge) : cap.badge}
+              tech={
+                cap.id === '04'
+                  ? [
+                      t('hero.card_4_tech_1', 'Arranque en 4 Seg'),
+                      t('hero.card_4_tech_2', 'Revive PCs Lentas'),
+                      t('hero.card_4_tech_3', '$0 Licencias & Virus'),
+                    ]
+                  : cap.tech
+              }
+              cta={cap.id === '04' ? t('hero.card_4_cta', cap.cta) : cap.cta}
               href={cap.href}
-              liveLauncher={cap.liveLauncher}
+              liveLauncher={
+                cap.id === '04'
+                  ? {
+                      ...cap.liveLauncher,
+                      label: t('hero.card_4_launcher_label', cap.liveLauncher.label),
+                      sublabel: t('hero.card_4_launcher_sub', cap.liveLauncher.sublabel),
+                    }
+                  : cap.liveLauncher
+              }
               color={cap.color}
               icon={cap.icon}
               ariaLabel={cap.ariaLabel}

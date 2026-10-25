@@ -180,9 +180,20 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-cyan-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <Calculator className="w-4 h-4 text-pink-400 shrink-0" />
-                      <span>Cotizador Interactivo Online</span>
+                      <span>Cotizador Interactivo Online (Web + Linux POS)</span>
                       <kbd className="ml-auto text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-slate-300">
                         /cotizador
+                      </kbd>
+                    </Command.Item>
+
+                    <Command.Item
+                      onSelect={() => executeAction(() => router.push('/#sistemas-linux'))}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-emerald-500/20 aria-selected:text-white cursor-pointer transition-colors"
+                    >
+                      <Laptop className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>Terminales Linux POS, Quiosco & Nodos Locales</span>
+                      <kbd className="ml-auto text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-slate-300">
+                        /#sistemas-linux
                       </kbd>
                     </Command.Item>
 

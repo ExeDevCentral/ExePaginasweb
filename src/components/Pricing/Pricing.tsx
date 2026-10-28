@@ -280,11 +280,11 @@ const Pricing = () => {
         </div>
 
         {/* Bloque Horizontal de Infraestructura Linux POS & Nodos Locales (Cero repetición de cards) */}
-        <div className="max-w-5xl mx-auto mb-12 rounded-2xl border border-emerald-500/35 bg-[#050911]/95 text-slate-100 p-6 sm:p-8 font-mono shadow-xl">
+        <div className="max-w-5xl mx-auto mb-12 rounded-2xl border border-border bg-card text-foreground p-6 sm:p-8 font-mono shadow-xl">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="space-y-2 max-w-2xl">
-              <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest text-emerald-400 font-bold">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest text-emerald-700 dark:text-emerald-400 font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
                 <span>
                   {t(
                     'pricing.linux_banner_badge',
@@ -292,13 +292,13 @@ const Pricing = () => {
                   )}
                 </span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-outfit font-black text-white font-sans">
+              <h3 className="text-xl sm:text-2xl font-outfit font-black text-foreground font-sans">
                 {t(
                   'pricing.linux_banner_title',
                   'Terminales de Punto de Venta en Modo Quiosco y Nodos Offline-First'
                 )}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">
                 {t(
                   'pricing.linux_banner_desc',
                   'Aprovisionamos tus PCs actuales con imágenes Linux deterministas (arranque en 4.5s, reglas fijas para impresoras térmicas ESC/POS, PostgreSQL en red local LAN y pendrive USB físico de rescate en 3 minutos).'
@@ -306,12 +306,12 @@ const Pricing = () => {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end justify-between gap-4 shrink-0 border-t lg:border-t-0 lg:border-l border-white/10 pt-4 lg:pt-0 lg:pl-6">
+            <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end justify-between gap-4 shrink-0 border-t lg:border-t-0 lg:border-l border-border pt-4 lg:pt-0 lg:pl-6">
               <div>
-                <span className="text-[10px] uppercase tracking-widest text-slate-400 block">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground block">
                   {t('pricing.setup_label')}
                 </span>
-                <span className="text-2xl sm:text-3xl font-outfit font-black text-emerald-400">
+                <span className="text-2xl sm:text-3xl font-outfit font-black text-emerald-700 dark:text-emerald-400">
                   {currency === 'ARS' ? '$350.000' : 'u$s 320'}
                 </span>
               </div>
@@ -335,7 +335,7 @@ const Pricing = () => {
 
         {/* Aclaración Mantenimiento Opcional */}
         <div className="text-center max-w-2xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs md:text-sm font-semibold shadow-lg shadow-emerald-500/5">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs md:text-sm font-semibold shadow-lg shadow-emerald-500/5">
             <CyberCheckMark size={18} />
             <span>{t('pricing.opcional_nota')}</span>
           </div>

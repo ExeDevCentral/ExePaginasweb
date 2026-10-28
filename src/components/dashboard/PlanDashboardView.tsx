@@ -175,10 +175,10 @@ export default function PlanDashboardView({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               {t('dashboard.hola', 'Hola')}, {nombre}
             </h1>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#151B28] border border-[#1E2638] text-[#38BDF8] flex items-center gap-1">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-muted/40 border border-border text-[#38BDF8] flex items-center gap-1">
               <Icon size={12} />
               {theme.badge}
             </span>
@@ -197,9 +197,9 @@ export default function PlanDashboardView({
             type="button"
             onClick={handleRefresh}
             disabled={refreshing}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#151B28] hover:bg-[#1C2438] text-slate-300 border border-[#1E2638] text-xs sm:text-sm font-medium transition-all shadow-sm cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-muted/40 hover:bg-muted text-muted-foreground border border-border text-xs sm:text-sm font-medium transition-all shadow-sm cursor-pointer disabled:opacity-50"
           >
-            <Download className="w-3.5 h-3.5 text-[#8C9BB0]" />
+            <Download className="w-3.5 h-3.5 text-muted-foreground" />
             <span>{t('dashboard.export_data', 'Descargar Reporte')}</span>
           </button>
 
@@ -260,21 +260,21 @@ export default function PlanDashboardView({
             />
 
             {/* Account Profile Card */}
-            <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-5 shadow-sm space-y-3">
-              <p className="text-xs font-bold uppercase tracking-wider text-white">
+            <div className="rounded-2xl bg-card border border-border p-5 shadow-sm space-y-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-foreground">
                 {t('dashboard.tu_cuenta', 'Tu cuenta')}
               </p>
               <div className="space-y-2.5 text-xs">
-                <div className="flex justify-between items-center gap-3 pb-2 border-b border-[#1E2638]">
+                <div className="flex justify-between items-center gap-3 pb-2 border-b border-border">
                   <span className="text-[#8C9BB0]">{t('dashboard.email', 'Email')}</span>
-                  <span className="text-white font-medium truncate max-w-[190px]">
+                  <span className="text-foreground font-medium truncate max-w-[190px]">
                     {cliente?.email ?? '—'}
                   </span>
                 </div>
                 {suscripciones[0] && (
                   <div className="flex justify-between items-center gap-3">
                     <span className="text-[#8C9BB0]">{t('dashboard.desde', 'Desde')}</span>
-                    <span className="text-white font-medium">
+                    <span className="text-foreground font-medium">
                       {formatDate(suscripciones[0].fecha_inicio, i18n.language)}
                     </span>
                   </div>
@@ -284,14 +284,14 @@ export default function PlanDashboardView({
 
             {/* Last Payment Card */}
             {pagos.length > 0 && (
-              <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-5 shadow-sm space-y-1.5">
-                <p className="text-xs font-bold uppercase tracking-wider text-[#8C9BB0]">
+              <div className="rounded-2xl bg-card border border-border p-5 shadow-sm space-y-1.5">
+                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   {t('dashboard.ultimo_pago', 'Último pago')}
                 </p>
-                <p className="text-2xl font-bold font-mono text-white">
+                <p className="text-2xl font-bold font-mono text-foreground">
                   ${pagos[0]!.monto} {pagos[0]!.moneda}
                 </p>
-                <p className="text-xs text-emerald-400 font-semibold uppercase tracking-wide">
+                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wide">
                   ● {pagos[0]!.estado}
                 </p>
               </div>

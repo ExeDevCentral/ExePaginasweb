@@ -53,9 +53,9 @@ export function AdminTicketsTable({
             <span
               className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
                 p === 'urgente' || p === 'alta'
-                  ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                  ? 'bg-red-500/15 text-rose-700 dark:text-red-400 border border-red-500/30'
                   : p === 'normal'
-                    ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                    ? 'bg-blue-500/15 text-blue-700 dark:text-blue-400 border border-blue-500/30'
                     : 'bg-muted text-muted-foreground border border-border'
               }`}
             >
@@ -75,11 +75,11 @@ export function AdminTicketsTable({
               <h4 className="text-foreground font-bold text-sm">{t.asunto}</h4>
               <p className="text-muted-foreground text-xs line-clamp-2">{t.mensaje}</p>
               {t.respuesta_resolucion && (
-                <div className="mt-1.5 p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-emerald-400 text-[11px]">
+                <div className="mt-1.5 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-[11px]">
                   <p className="font-bold flex items-center gap-1">
                     <Check size={12} /> Resuelto:
                   </p>
-                  <p className="text-foreground/70 italic line-clamp-1">{t.respuesta_resolucion}</p>
+                  <p className="text-foreground/80 italic line-clamp-1">{t.respuesta_resolucion}</p>
                 </div>
               )}
             </div>
@@ -117,12 +117,12 @@ export function AdminTicketsTable({
           const e = row.original.estado
           return (
             <span
-              className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
+              className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border ${
                 e === 'abierto'
-                  ? 'bg-yellow-500/20 text-yellow-400'
+                  ? 'bg-amber-500/15 text-amber-700 dark:text-yellow-400 border-amber-500/30'
                   : e === 'en_progreso'
-                    ? 'bg-blue-400/20 text-blue-400'
-                    : 'bg-emerald-500/20 text-emerald-400'
+                    ? 'bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30'
+                    : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
               }`}
             >
               {e.replace('_', ' ')}

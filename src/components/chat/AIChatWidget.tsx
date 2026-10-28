@@ -29,7 +29,10 @@ import {
   CheckCircle2,
   Edit3,
   Sparkles,
+  Mail,
+  Loader2,
 } from 'lucide-react'
+import { toast } from 'sonner'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
 import Logo from '../layout/Logo'
@@ -122,50 +125,87 @@ const N8nExecutionCard: React.FC<{
   clientName,
   automationType = 'Cotización / Flujo n8n',
   status = 'EJECUTADO',
-}) => (
-  <div className="mt-2.5 p-3.5 rounded-2xl bg-linear-to-br from-[#0b1622] via-[#08101a] to-[#03060c] border border-cyan-400/40 shadow-xl shadow-cyan-950/50 select-none">
-    <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-white/10">
-      <span className="flex items-center gap-1.5 text-[10px] font-mono text-cyan-300 font-bold uppercase tracking-wider">
-        <Zap className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-        n8n Cloud Workflow Live
-      </span>
-      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-[9px] font-mono text-emerald-300 font-bold tracking-wider flex items-center gap-1">
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-        {status}
-      </span>
-    </div>
-    <div className="space-y-1.5 text-[11px] text-slate-300 font-sans">
-      <div className="flex items-center justify-between">
-        <span className="text-slate-400">Solicitante:</span>
-        <span className="font-bold text-white flex items-center gap-1">
-          <User className="w-3 h-3 text-cyan-400" />
-          {clientName}
+}) => {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      void navigator.clipboard.writeText(ticketId)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  const whatsappUrl = getWhatsAppUrl(
+    `¡Hola Exequiel! Disparé la automatización en vivo [${ticketId}] (${automationType}) y quisiera asesorarme sobre cómo implementarla en mi web.`
+  )
+
+  return (
+    <div className="mt-2.5 p-3.5 rounded-2xl bg-linear-to-br from-[#080e18] via-[#0b1626] to-[#040810] border border-cyan-400/50 shadow-xl shadow-cyan-950/60 select-none">
+      <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-white/10">
+        <span className="flex items-center gap-1.5 text-[10px] font-mono text-cyan-300 font-bold uppercase tracking-wider">
+          <Zap className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+          n8n Cloud + Resend Engine
+        </span>
+        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-[9px] font-mono text-emerald-300 font-bold tracking-wider flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          {status}
         </span>
       </div>
-      <div className="flex items-center justify-between">
-        <span className="text-slate-400">Acción:</span>
-        <span className="text-cyan-300 font-mono text-[10px]">{automationType}</span>
+      <div className="space-y-1.5 text-[11px] text-slate-300 font-sans">
+        <div className="flex items-center justify-between">
+          <span className="text-slate-400">Solicitante:</span>
+          <span className="font-bold text-white flex items-center gap-1">
+            <User className="w-3 h-3 text-cyan-400" />
+            {clientName}
+          </span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-slate-400">Acción:</span>
+          <span className="text-cyan-300 font-mono text-[10px]">{automationType}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-slate-400">Ticket n8n:</span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-mono text-cyan-300 font-bold text-xs">{ticketId}</span>
+            <button
+              type="button"
+              onClick={handleCopy}
+              title="Copiar Ticket"
+              className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 hover:text-white cursor-pointer transition-colors"
+            >
+              {copied ? '✓' : 'Copiar'}
+            </button>
+          </div>
+        </div>
       </div>
-      <div className="flex items-center justify-between">
-        <span className="text-slate-400">Ticket n8n:</span>
-        <span className="font-mono text-cyan-300 font-bold text-xs">{ticketId}</span>
+      <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono">
+        <span className="flex items-center gap-1 text-emerald-400">
+          <CheckCircle2 className="w-3 h-3" /> Webhook
+        </span>
+        <span className="text-cyan-500/60">➔</span>
+        <span className="flex items-center gap-1 text-cyan-400">
+          <CheckCircle2 className="w-3 h-3" /> Switch
+        </span>
+        <span className="text-cyan-500/60">➔</span>
+        <span className="flex items-center gap-1 text-emerald-400">
+          <CheckCircle2 className="w-3 h-3" /> Resend
+        </span>
+      </div>
+      <div className="mt-2.5 pt-2 border-t border-white/5 text-center">
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-1 text-[10px] font-mono font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
+        >
+          <span>Continuar con este Ticket en WhatsApp</span>
+          <ArrowUpRight className="w-3 h-3" />
+        </a>
       </div>
     </div>
-    <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono">
-      <span className="flex items-center gap-1 text-emerald-400">
-        <CheckCircle2 className="w-3 h-3" /> Webhook
-      </span>
-      <span className="text-cyan-500/60">➔</span>
-      <span className="flex items-center gap-1 text-cyan-400">
-        <CheckCircle2 className="w-3 h-3" /> Switch
-      </span>
-      <span className="text-cyan-500/60">➔</span>
-      <span className="flex items-center gap-1 text-emerald-400">
-        <CheckCircle2 className="w-3 h-3" /> Despacho
-      </span>
-    </div>
-  </div>
-)
+  )
+}
 
 const VisitorIdentityBar: React.FC<{
   visitorName: string
@@ -295,7 +335,59 @@ export const AIChatWidget: React.FC = () => {
   const [visitorName, setVisitorName] = useState('')
   const [isEditingName, setIsEditingName] = useState(false)
   const [nameInput, setNameInput] = useState('')
+  const [selectedAutoType, setSelectedAutoType] = useState<
+    'cotizacion_express' | 'auditoria_gratis' | 'demo_sistema' | 'notificacion_directa'
+  >('cotizacion_express')
+  const [autoEmail, setAutoEmail] = useState('')
+  const [isAutomating, setIsAutomating] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const handleTriggerLiveAutomation = async (typeOverride?: typeof selectedAutoType) => {
+    const targetType = typeOverride || selectedAutoType
+    setIsAutomating(true)
+    const effectiveName = visitorName.trim() || 'Visitante Web'
+    try {
+      const res = await fetch('/api/automation/n8n', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: effectiveName,
+          email: autoEmail.trim() || undefined,
+          automationType: targetType,
+          details: `Disparado desde el centro de soporte unificado (${targetType})`,
+        }),
+      })
+      const data = (await res.json()) as { ticketId?: string; message?: string }
+      if (res.ok && data.ticketId) {
+        toast.success('¡Automatización ejecutada!', {
+          description: `Ticket generado: ${data.ticketId}. Revisa tu casilla o continuá por WhatsApp.`,
+        })
+        const typeLabels: Record<string, string> = {
+          cotizacion_express: 'Cotización Express',
+          auditoria_gratis: 'Auditoría en Video Gratis',
+          demo_sistema: 'Demo Sistema & Turnos 24/7',
+          notificacion_directa: 'Alerta Directa con Ingeniería',
+        }
+        const label = typeLabels[targetType] || targetType
+        setMessages((prev) => [
+          ...prev,
+          makeMessage(
+            'assistant',
+            `⚡ ¡Automatización n8n ejecutada con éxito para ${effectiveName}!\n\nTicket: [${data.ticketId}].\nFlujo: ${label}.${autoEmail ? `\nEnviamos la confirmación a ${autoEmail}.` : ''}\n\n¿Querés que configuremos este sistema en tu negocio?`
+          ),
+        ])
+        setHubView('chat')
+        setCurrentTicket(data.ticketId)
+      } else {
+        toast.error('Error al ejecutar automatización')
+      }
+    } catch (err) {
+      console.error('[AIChatWidget] Error disparando automatización:', err)
+      toast.error('No se pudo conectar con el motor de automatizaciones')
+    } finally {
+      setIsAutomating(false)
+    }
+  }
 
   useEffect(() => {
     try {
@@ -620,7 +712,95 @@ export const AIChatWidget: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* CANAL 2: ASISTENTE IA (AUTÓNOMO 24/7) */}
+                  {/* CANAL 2: AUTOMATIZACIONES EN VIVO (n8n + RESEND) */}
+                  <div className="rounded-2xl p-4 bg-linear-to-br from-indigo-950/40 via-cyan-950/30 to-transparent border-2 border-cyan-500/40 hover:border-cyan-400/80 transition-all duration-300 shadow-lg shadow-cyan-950/40">
+                    <div className="flex items-start justify-between gap-3 mb-2.5">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shrink-0">
+                          <Zap className="w-5 h-5 text-cyan-400 animate-pulse" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <h4 className="text-sm font-bold text-white">
+                              Automatizaciones en Vivo
+                            </h4>
+                            <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-emerald-400/20 text-emerald-300 font-bold border border-emerald-400/30">
+                              GRATIS
+                            </span>
+                          </div>
+                          <span className="text-[11px] font-mono text-cyan-300 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block shadow-[0_0_6px_#06b6d4]" />
+                            <span>n8n Cloud + Resend · Despacho &lt; 2s</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <span className="px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/30 text-[10px] font-mono text-cyan-300 font-bold shrink-0">
+                        SYS // LIVE
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-300 mb-3 leading-relaxed">
+                      Elegí un flujo y probalo en tiempo real a tu nombre. Te generará un ticket y
+                      enviará el reporte interactivo.
+                    </p>
+
+                    {/* Selector de flujos */}
+                    <div className="grid grid-cols-2 gap-1.5 mb-3">
+                      {[
+                        { id: 'cotizacion_express', label: '🚀 Cotización Express' },
+                        { id: 'auditoria_gratis', label: '🎁 Auditoría Video' },
+                        { id: 'demo_sistema', label: '📅 Demo Turnos 24/7' },
+                        { id: 'notificacion_directa', label: '⚡ Alerta Ingeniería' },
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => setSelectedAutoType(item.id as typeof selectedAutoType)}
+                          className={`p-2 rounded-xl text-[10.5px] font-mono font-bold border text-left transition-all cursor-pointer ${
+                            selectedAutoType === item.id
+                              ? 'bg-cyan-500/20 border-cyan-400 text-cyan-200 shadow-[0_0_12px_rgba(6,182,212,0.25)]'
+                              : 'bg-black/40 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Email opcional */}
+                    <div className="relative mb-3">
+                      <Mail className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-3" />
+                      <input
+                        type="email"
+                        value={autoEmail}
+                        onChange={(e) => setAutoEmail(e.target.value)}
+                        placeholder="Tu email (opcional para recibir la plantilla)"
+                        className="w-full pl-8 pr-3 py-2 rounded-xl bg-black/60 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 font-sans"
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      disabled={isAutomating}
+                      onClick={() => void handleTriggerLiveAutomation()}
+                      className="w-full py-2.5 px-4 rounded-xl bg-linear-to-r from-cyan-500 via-sky-400 to-emerald-400 hover:opacity-95 disabled:opacity-50 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md shadow-cyan-500/30 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                    >
+                      {isAutomating ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          <span>Despachando a n8n &amp; Resend...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Zap className="w-3.5 h-3.5" />
+                          <span>Disparar Flujo en Vivo (Gratis)</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* CANAL 3: ASISTENTE IA (AUTÓNOMO 24/7) */}
                   <div className="rounded-2xl p-4 bg-linear-to-br from-cyan-950/40 via-sky-900/20 to-transparent border-2 border-cyan-500/40 hover:border-cyan-400/80 transition-all duration-300 shadow-lg shadow-cyan-950/50">
                     <div className="flex items-start justify-between gap-3 mb-2.5">
                       <div className="flex items-center gap-3">

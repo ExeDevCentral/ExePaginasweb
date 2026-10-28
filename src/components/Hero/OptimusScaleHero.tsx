@@ -199,7 +199,7 @@ export const OptimusScaleHero: React.FC = () => {
   }
 
   return (
-    <div className="relative w-full bg-transparent text-slate-900 dark:text-white transition-colors duration-300">
+    <div className="relative w-full bg-transparent text-foreground text-foreground transition-colors duration-300">
       {/* ========================================================
           1. HERO PRINCIPAL (ESTRUCTURA EXACTA OPTIMUS DESAHOGADA)
          ======================================================== */}
@@ -228,7 +228,7 @@ export const OptimusScaleHero: React.FC = () => {
             {/* COLUMNA IZQUIERDA: CONTENIDO EDITORIAL LIMPIO (lg:col-span-6) */}
             <div className="lg:col-span-6 flex flex-col items-start text-left z-20">
               {/* 1. EYEBROW MONO, 1 LÍNEA, SIN CAJA */}
-              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 select-none">
+              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted-foreground dark:text-muted-foreground select-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>
                   {t('hero.eyebrow_plataforma') ||
@@ -240,14 +240,14 @@ export const OptimusScaleHero: React.FC = () => {
               <HeroNeonSignboard className="mt-4 mb-2" />
 
               {/* 2. TÍTULO H1: 100% SEO FRIENDLY PARA BUSCADORES (BRAVE, GOOGLE, BING) */}
-              <h1 className="mt-2 text-3xl sm:text-5xl xl:text-6xl font-display font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-slate-950 dark:text-white">
+              <h1 className="mt-2 text-3xl sm:text-5xl xl:text-6xl font-display font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-foreground text-foreground">
                 <span className="sr-only">Exe Páginas Web - </span>
                 <span className="block font-semibold">
                   {t('hero.titulo_prefijo') || 'Páginas web y sistemas a medida'}
                 </span>
 
                 <span className="inline-flex items-center gap-2 sm:gap-4 flex-wrap mt-1">
-                  <span className="text-slate-500 dark:text-slate-400 font-light">
+                  <span className="text-muted-foreground dark:text-muted-foreground font-light">
                     {t('hero.titulo_conector') || 'para'}
                   </span>
                   <span className="relative inline-block text-brand font-bold font-serif italic">
@@ -292,7 +292,7 @@ export const OptimusScaleHero: React.FC = () => {
               </div>
 
               {/* 5. CONFIANZA: mt-8 */}
-              <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-slate-600 dark:text-slate-400">
+              <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-muted-foreground dark:text-muted-foreground">
                 <div className="flex items-center gap-1.5">
                   <div className="flex items-center gap-0.5 text-amber-500">
                     <CyberRatingStar size={14} />
@@ -301,17 +301,17 @@ export const OptimusScaleHero: React.FC = () => {
                     <CyberRatingStar size={14} />
                     <CyberRatingStar size={14} />
                   </div>
-                  <span className="font-sans font-bold text-slate-900 dark:text-white">4.9/5</span>
-                  <span className="text-slate-500 dark:text-slate-400">
+                  <span className="font-sans font-bold text-foreground text-foreground">4.9/5</span>
+                  <span className="text-muted-foreground dark:text-muted-foreground">
                     {t('hero.trust_proyectos') || '(+50 proyectos)'}
                   </span>
                 </div>
-                <span className="text-slate-300 dark:text-white/20 hidden sm:inline">•</span>
+                <span className="text-slate-300 text-foreground/20 hidden sm:inline">•</span>
                 <div className="flex items-center gap-1.5 font-sans">
                   <CyberCheckMark size={14} />
                   <span>{t('hero.trust_sla') || 'SLA por contrato'}</span>
                 </div>
-                <span className="text-slate-300 dark:text-white/20 hidden sm:inline">•</span>
+                <span className="text-slate-300 text-foreground/20 hidden sm:inline">•</span>
                 <div className="flex items-center gap-1.5 font-sans">
                   <CyberCheckMark size={14} />
                   <span>{t('hero.trust_entrega') || 'Entrega en 7-15 días'}</span>
@@ -333,10 +333,10 @@ export const OptimusScaleHero: React.FC = () => {
                   <CyberMetricLightning size={19} />
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">
+                  <span className="text-sm font-bold text-foreground text-foreground">
                     {t('hero.metric_carga') || '0.38s Carga'}
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  <span className="text-xs text-muted-foreground dark:text-muted-foreground font-mono">
                     {t('hero.metric_carga_sub') || 'Edge CDN Global'}
                   </span>
                 </div>
@@ -346,10 +346,10 @@ export const OptimusScaleHero: React.FC = () => {
                   <CyberMetricShield size={19} />
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">
+                  <span className="text-sm font-bold text-foreground text-foreground">
                     {t('hero.metric_tuyo') || '100% Tuyo'}
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  <span className="text-xs text-muted-foreground dark:text-muted-foreground font-mono">
                     {t('hero.metric_tuyo_sub') || 'Cero ataduras o cuotas'}
                   </span>
                 </div>
@@ -359,10 +359,10 @@ export const OptimusScaleHero: React.FC = () => {
                   <CyberMetricProcessor size={19} />
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">
+                  <span className="text-sm font-bold text-foreground text-foreground">
                     {t('hero.metric_autonomo') || 'Autónomo 24/7'}
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  <span className="text-xs text-muted-foreground dark:text-muted-foreground font-mono">
                     {t('hero.metric_autonomo_sub') || 'WhatsApp & Cobros'}
                   </span>
                 </div>
@@ -379,12 +379,12 @@ export const OptimusScaleHero: React.FC = () => {
                 key={'ticker-' + item.label + '-' + idx}
                 className="flex items-center gap-3 shrink-0"
               >
-                <span className="text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white tracking-tight">
+                <span className="text-2xl sm:text-3xl font-extrabold text-foreground text-foreground tracking-tight">
                   {item.value}
                 </span>
-                <span className="text-xs sm:text-[13px] font-mono uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                <span className="text-xs sm:text-[13px] font-mono uppercase tracking-wider text-muted-foreground dark:text-muted-foreground">
                   {item.label}{' '}
-                  <strong className="text-slate-950 dark:text-[#f7f5ee] font-semibold">
+                  <strong className="text-foreground dark:text-[#f7f5ee] font-semibold">
                     {item.tag}
                   </strong>
                 </span>
@@ -401,14 +401,14 @@ export const OptimusScaleHero: React.FC = () => {
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-20 border-t border-slate-200/80 dark:border-white/10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
           <div className="text-left">
-            <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 mb-3">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground dark:text-muted-foreground mb-3">
               {t('hero.capacidades_eyebrow') || '— Capacidades'}
             </p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold tracking-tight leading-tight">
-              <span className="block text-slate-950 dark:text-white">
+              <span className="block text-foreground text-foreground">
                 {t('hero.capacidades_titulo') || 'Todo lo que tu empresa necesita.'}
               </span>
-              <span className="block text-slate-400 dark:text-slate-500">
+              <span className="block text-muted-foreground dark:text-muted-foreground">
                 {t('hero.capacidades_subtitulo') || 'Nada de plantillas genéricas.'}
               </span>
             </h2>
@@ -422,7 +422,7 @@ export const OptimusScaleHero: React.FC = () => {
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 desktopView === 'grid2x2'
                   ? 'bg-white dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 font-bold shadow-xs border border-slate-200/80 dark:border-cyan-500/40'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  : 'text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-white'
               }`}
             >
               <Grid2x2Icon className="w-3.5 h-3.5" />
@@ -434,7 +434,7 @@ export const OptimusScaleHero: React.FC = () => {
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 desktopView === 'row4'
                   ? 'bg-white dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 font-bold shadow-xs border border-slate-200/80 dark:border-cyan-500/40'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  : 'text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-white'
               }`}
             >
               <Columns4Icon className="w-3.5 h-3.5" />
@@ -450,8 +450,8 @@ export const OptimusScaleHero: React.FC = () => {
             onClick={() => setActiveMobileFilter('all')}
             className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-mono transition-all touch-manipulation cursor-pointer ${
               activeMobileFilter === 'all'
-                ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/30'
-                : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400'
+                ? 'bg-cyan-500 text-foreground font-bold shadow-md shadow-cyan-500/30'
+                : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-muted-foreground dark:text-muted-foreground'
             }`}
           >
             Todas (4)
@@ -463,8 +463,8 @@ export const OptimusScaleHero: React.FC = () => {
               onClick={() => setActiveMobileFilter(cap.id as '01' | '02' | '03' | '04')}
               className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-mono transition-all touch-manipulation cursor-pointer ${
                 activeMobileFilter === cap.id
-                  ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/30'
-                  : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400'
+                  ? 'bg-cyan-500 text-foreground font-bold shadow-md shadow-cyan-500/30'
+                  : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-muted-foreground dark:text-muted-foreground'
               }`}
             >
               {cap.code}

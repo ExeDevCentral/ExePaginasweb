@@ -1,5 +1,5 @@
 {
-  "name": "ExePaginasWeb — Leads & Eventos Automáticos",
+  "name": "ExePaginasWeb — Leads & Eventos Automáticos (Resiliente 2026)",
   "nodes": [
     {
       "parameters": {
@@ -19,7 +19,7 @@
     {
       "parameters": {
         "dataType": "string",
-        "value1": "={{ $json.body.event }}",
+        "value1": "={{ $json.body ? $json.body.event : '' }}",
         "rules": {
           "rules": [
             {
@@ -41,6 +41,10 @@
             {
               "value2": "automation.trigger",
               "outputKey": "automatizacion"
+            },
+            {
+              "value2": "ping.keepalive",
+              "outputKey": "keepalive"
             }
           ]
         }
@@ -57,11 +61,11 @@
           "string": [
             {
               "name": "titulo",
-              "value": "=🚨 NUEVO LEAD DE CONTACTO ({{ $json.body.ticketId }})"
+              "value": "=🚨 NUEVO LEAD DE CONTACTO ({{ $json.body ? $json.body.ticketId : 'EXE-CNT' }})"
             },
             {
               "name": "mensaje_formateado",
-              "value": "=Nombre: {{ $json.body.name }}\nEmail: {{ $json.body.email }}\nIdioma: {{ $json.body.lang }}\nTicket: {{ $json.body.ticketId }}\nMensaje: {{ $json.body.message }}\nFecha: {{ $json.body.timestamp }}"
+              "value": "=Nombre: {{ $json.body ? $json.body.name : 'N/A' }}\nEmail: {{ $json.body ? $json.body.email : 'N/A' }}\nIdioma: {{ $json.body ? $json.body.lang : 'es' }}\nTicket: {{ $json.body ? $json.body.ticketId : '' }}\nMensaje: {{ $json.body ? $json.body.message : '' }}\nFecha: {{ $json.body ? $json.body.timestamp : '' }}"
             }
           ]
         },
@@ -79,11 +83,11 @@
           "string": [
             {
               "name": "titulo",
-              "value": "=💬 EMAIL CAPTURADO EN CHATBOT ({{ $json.body.ticketId }})"
+              "value": "=💬 EMAIL CAPTURADO EN CHATBOT ({{ $json.body ? $json.body.ticketId : 'EXE-CHT' }})"
             },
             {
               "name": "mensaje_formateado",
-              "value": "=Nombre: {{ $json.body.name || 'Visitante' }}\nEmail: {{ $json.body.email }}\nTicket: {{ $json.body.ticketId }}\nIdioma: {{ $json.body.lang }}\nFecha: {{ $json.body.timestamp }}"
+              "value": "=Nombre: {{ ($json.body && $json.body.name) || 'Visitante' }}\nEmail: {{ $json.body ? $json.body.email : 'N/A' }}\nTicket: {{ $json.body ? $json.body.ticketId : '' }}\nIdioma: {{ $json.body ? $json.body.lang : 'es' }}\nFecha: {{ $json.body ? $json.body.timestamp : '' }}"
             }
           ]
         },
@@ -101,11 +105,11 @@
           "string": [
             {
               "name": "titulo",
-              "value": "=💰 PAGO O RESERVA CAPTURADA ({{ $json.body.ticketId }})"
+              "value": "=💰 PAGO O RESERVA CAPTURADA ({{ $json.body ? $json.body.ticketId : 'EXE-PAY' }})"
             },
             {
               "name": "mensaje_formateado",
-              "value": "=Tipo: {{ $json.body.event }}\nTicket: {{ $json.body.ticketId }}\nCliente: {{ $json.body.email }}\nFecha: {{ $json.body.timestamp }}"
+              "value": "=Tipo: {{ $json.body ? $json.body.event : 'pago' }}\nTicket: {{ $json.body ? $json.body.ticketId : '' }}\nCliente: {{ $json.body ? $json.body.email : 'N/A' }}\nFecha: {{ $json.body ? $json.body.timestamp : '' }}"
             }
           ]
         },
@@ -123,11 +127,11 @@
           "string": [
             {
               "name": "titulo",
-              "value": "=⚡ AUTOMATIZACIÓN n8n EN VIVO ({{ $json.body.ticketId }})"
+              "value": "=⚡ AUTOMATIZACIÓN n8n EN VIVO ({{ $json.body ? $json.body.ticketId : 'EXE-N8N' }})"
             },
             {
               "name": "mensaje_formateado",
-              "value": "=Solicitante: {{ $json.body.name }}\nAcción: {{ $json.body.metadata.automationType }}\nEmail: {{ $json.body.email || 'N/A' }}\nTicket: {{ $json.body.ticketId }}\nDetalles: {{ $json.body.message }}\nFecha: {{ $json.body.timestamp }}"
+              "value": "=Solicitante: {{ $json.body ? $json.body.name : 'Cliente' }}\nAcción: {{ ($json.body && $json.body.metadata && $json.body.metadata.automationType) || 'cotizacion_express' }}\nEmail: {{ ($json.body && $json.body.email) || 'N/A' }}\nTicket: {{ $json.body ? $json.body.ticketId : '' }}\nDetalles: {{ $json.body ? $json.body.message : '' }}\nFecha: {{ $json.body ? $json.body.timestamp : '' }}"
             }
           ]
         },
@@ -138,6 +142,28 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.2,
       "position": [760, 600]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "keepalive_ok"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-68ff-45a7-89fa-112233445566",
+      "name": "Keep-Alive Ping Handler",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [760, 740]
     }
   ],
   "connections": {
@@ -185,6 +211,13 @@
         [
           {
             "node": "Formatear Automatizacion n8n",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Keep-Alive Ping Handler",
             "type": "main",
             "index": 0
           }

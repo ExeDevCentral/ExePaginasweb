@@ -163,11 +163,11 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
         header: t('services.col_servicio', 'Servicio'),
         cell: ({ row }) => (
           <div>
-            <span className="font-bold text-white text-xs sm:text-sm">
+            <span className="font-bold text-foreground text-xs sm:text-sm">
               {row.original.service?.nombre || 'Servicio General'}
             </span>
             {row.original.service?.descripcion && (
-              <p className="text-[11px] text-[#8C9BB0] truncate max-w-xs mt-0.5 font-medium">
+              <p className="text-[11px] text-muted-foreground truncate max-w-xs mt-0.5 font-medium">
                 {row.original.service.descripcion}
               </p>
             )}
@@ -178,7 +178,7 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
         accessorKey: 'service.tipo',
         header: t('services.col_tipo', 'Tipo'),
         cell: ({ row }) => (
-          <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-[#1C2438] text-[#38BDF8] border border-[#232D42] uppercase tracking-wider">
+          <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-muted/60 text-[#38BDF8] border border-border uppercase tracking-wider">
             {tipoLabels[row.original.service?.tipo || ''] || row.original.service?.tipo || '—'}
           </span>
         ),
@@ -187,9 +187,9 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
         accessorKey: 'precio_actual',
         header: t('services.col_precio', 'Precio'),
         cell: ({ row }) => (
-          <div className="font-bold font-mono text-white text-xs sm:text-sm">
+          <div className="font-bold font-mono text-foreground text-xs sm:text-sm">
             ${row.original.precio_actual.toLocaleString(i18n.language || 'es-AR')}
-            <span className="ml-1 text-[10px] text-[#64748B] font-sans font-normal">
+            <span className="ml-1 text-[10px] text-muted-foreground font-sans font-normal">
               {row.original.moneda}
             </span>
           </div>
@@ -215,8 +215,8 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
         accessorKey: 'started_at',
         header: t('services.col_inicio', 'Inicio'),
         cell: ({ row }) => (
-          <span className="text-xs text-[#8C9BB0] flex items-center gap-1 font-medium">
-            <Calendar className="w-3.5 h-3.5 text-[#64748B]" />
+          <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
+            <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
             {new Date(row.original.started_at).toLocaleDateString(i18n.language || 'es-AR')}
           </span>
         ),
@@ -238,13 +238,13 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
   return (
     <div className="space-y-8 font-sans">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1E2638]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2.5">
             <Package className="w-6 h-6 text-[#38BDF8]" />
             <span>{t('services.titulo', 'Servicios y Servidores')}</span>
           </h2>
-          <p className="text-xs sm:text-sm text-[#8C9BB0] mt-1 font-medium">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1 font-medium">
             {activeServices.length} {t('services.servidores_online', 'Servicios Activos')}
           </p>
         </div>
@@ -262,7 +262,7 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
       </div>
 
       {/* Services Table */}
-      <div className="rounded-2xl border border-[#1E2638] bg-[#111622] p-4 overflow-hidden shadow-sm">
+      <div className="rounded-2xl border border-border bg-card p-4 overflow-hidden shadow-sm">
         <DataTable
           columns={columns}
           data={services}
@@ -273,8 +273,8 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
       </div>
 
       {/* Available Addons */}
-      <div className="pt-4 border-t border-[#1E2638]">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#8C9BB0] mb-4">
+      <div className="pt-4 border-t border-border">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">
           {t('services.disponible_agregar', 'Disponible para agregar')}
         </h3>
 
@@ -291,25 +291,25 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
                 key={item.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-2xl border border-[#1E2638] bg-[#111622] p-5 hover:border-[#2C3852] transition-all shadow-sm flex flex-col justify-between"
+                className="rounded-2xl border border-border bg-card p-5 hover:border-primary/40 transition-all shadow-sm flex flex-col justify-between"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-[10px] font-bold text-[#38BDF8] uppercase tracking-wider">
                       {tipoLabels[item.tipo] || item.tipo}
                     </p>
-                    <p className="text-sm font-bold text-white mt-1">{item.nombre}</p>
+                    <p className="text-sm font-bold text-foreground mt-1">{item.nombre}</p>
                     {item.descripcion && (
-                      <p className="text-xs text-[#8C9BB0] mt-1 font-medium leading-relaxed">
+                      <p className="text-xs text-muted-foreground mt-1 font-medium leading-relaxed">
                         {item.descripcion}
                       </p>
                     )}
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-lg font-bold font-mono text-white">
+                    <p className="text-lg font-bold font-mono text-foreground">
                       ${item.precio_base.toLocaleString(i18n.language || 'es-AR')}
                     </p>
-                    <p className="text-[10px] text-[#64748B] uppercase font-bold">
+                    <p className="text-[10px] text-muted-foreground uppercase font-bold">
                       {item.moneda} / {getIntervalLabel(item.intervalo)}
                     </p>
                   </div>

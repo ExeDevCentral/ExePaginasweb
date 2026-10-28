@@ -1,70 +1,54 @@
-# Integración n8n & ExePaginasWeb
+# Integración n8n & ExePaginasWeb (Modo Gratis & Resiliencia Total)
 
-Este documento detalla la integración bidireccional entre **ExePaginasWeb** y tu instancia de **n8n Cloud** (`https://exedevcentral.app.n8n.cloud`).
+Este documento detalla la integración bidireccional entre **ExePaginasWeb** y tu instancia de **n8n Cloud** (`https://exedevcentral.app.n8n.cloud`) con protección contra desactivación de webhooks y motor de respaldo 100% gratuito.
 
 ---
 
-## 1. Conector de Automatización Webhook (Web -> n8n)
+## 1. Conector de Automatización y Auto-Sanador Webhook
 
-El proyecto cuenta con un conector asíncrono y resiliente en [`lib/server/n8n.ts`](../../lib/server/n8n.ts) que despacha automáticamente eventos comerciales y operativos a tu n8n sin bloquear la interfaz ni retrasar al usuario.
+El conector en [`lib/server/n8n.ts`](../../lib/server/n8n.ts) cuenta con:
+1. **Auto-Activación vía API n8n:** Si el webhook devuelve `404` (workflow desactivado tras inactividad o edición), consulta automáticamente la API de n8n y vuelve a activar el workflow sin que tengas que entrar al panel.
+2. **Motor Serverless de Respaldo (100% Gratis):** Si la instancia de n8n está apagada, pausada o sin ejecuciones, el servidor Next.js procesa la automatización localmente, despacha el recibo interactivo por Resend y notifica al administrador en `Exemetal@hotmail.com`.
+3. **Keep-Alive Ping (`ping.keepalive`):** Permite mantener la instancia activa evitando que se suspenda por desuso.
 
 ### Eventos Despachados Automáticamente:
 1. `lead.contact`: Formulario de contacto enviado (nombre, email, ticket `EXE-CNT-...`, mensaje, idioma).
 2. `lead.chat`: Captura de email en el chatbot de IA (ticket `EXE-CHT-...`, email, idioma).
 3. `payment.captured`: Confirmación de pago online con PayPal.
 4. `transfer.registered`: Registro de comprobante de transferencia bancaria.
+5. `automation.trigger`: Disparador en vivo de cotización express, auditoría o demo.
+6. `ping.keepalive`: Verificación de salud y mantenimiento activo.
 
-### Variables de Entorno Requeridas:
+### Variables de Entorno:
 En `.env.local` y en **Vercel Project Settings > Environment Variables**:
 ```bash
 N8N_WEBHOOK_URL=https://exedevcentral.app.n8n.cloud/webhook/exepaginasweb-leads
 N8N_WEBHOOK_SECRET=tu_secreto_seguro_opcional
+N8N_API_KEY=tu_n8n_api_key_para_auto_activacion
 ```
 
 ---
 
-## 2. Plantilla de Workflow Lista para Importar en n8n
+## 2. Comando de Auto-Sanación y Diagnóstico (1-Click)
 
-En este directorio se incluye [`n8n-leads-workflow.json`](./n8n-leads-workflow.json).
+Para verificar y reactivar cualquier webhook deshabilitado (tanto en Resend como en n8n) sin entrar a las plataformas web:
+
+```bash
+npm run webhooks:heal
+```
+
+O haciendo una petición GET a cualquiera de los endpoints de la API:
+- `GET /api/automation/n8n`: Realiza un keep-alive ping a n8n y verifica Resend.
+- `GET /api/webhooks/resend`: Auto-reactiva webhooks deshabilitados vía la API de Resend.
+
+---
+
+## 3. Plantilla de Workflow Lista para Importar
+
+En este directorio se incluye [`n8n-leads-workflow.json`](./n8n-leads-workflow.json) actualizado y compatible con la última versión de n8n.
 
 ### Pasos para Activar en n8n:
-1. Entrá a tu panel de n8n: [https://exedevcentral.app.n8n.cloud](https://exedevcentral.app.n8n.cloud)
-2. En el menú superior izquierdo, hacé clic en **Workflows** > **Add workflow**.
-3. Abrí el menú contextual de tres puntos `...` (arriba a la derecha) y seleccioná **Import from File...** (o abrí el archivo `.json` y pegalo en el lienzo).
-4. El workflow incluye:
-   - **Nodo Webhook** configurado en el endpoint `/webhook/exepaginasweb-leads`.
-   - **Switch Clasificador** de eventos (`lead.contact`, `lead.chat`, `payment.captured`).
-   - Nodos de formateo de datos listos para conectar a **Telegram**, **WhatsApp**, **Google Sheets** o **Notion**.
-5. Activá el switch superior a **Active**.
-
----
-
-## 3. Servidor MCP de n8n (AI Agent <-> n8n)
-
-Tu instancia expone el servidor MCP en:
-```
-https://exedevcentral.app.n8n.cloud/mcp-server/http
-```
-
-El servidor MCP permite que el asistente de IA pueda inspeccionar, crear y ejecutar workflows directamente desde la consola o el editor.
-
-### Para autenticarlo con tu API Key:
-1. En tu n8n, dirigite a **Settings** > **n8n API** y creá una nueva API Key.
-2. Agregá la cabecera en [`.agents/mcp_config.json`](../../.agents/mcp_config.json):
-```json
-{
-  "mcpServers": {
-    "n8n": {
-      "httpUrl": "https://exedevcentral.app.n8n.cloud/mcp-server/http",
-      "serverUrl": "https://exedevcentral.app.n8n.cloud/mcp-server/http",
-      "headers": {
-        "Authorization": "Bearer TU_API_KEY_AQUI"
-      }
-    }
-  }
-}
-```
-3. O mediante la CLI de Gemini:
-```bash
-gemini mcp add --transport http -H "Authorization: Bearer TU_API_KEY_AQUI" n8n https://exedevcentral.app.n8n.cloud/mcp-server/http
-```
+1. Entrá a tu panel: [https://exedevcentral.app.n8n.cloud](https://exedevcentral.app.n8n.cloud)
+2. En **Workflows** > **Add workflow** > menú `...` > **Import from File...**.
+3. Seleccioná `docs/n8n/n8n-leads-workflow.json`.
+4. Activá el switch superior a **Active**.

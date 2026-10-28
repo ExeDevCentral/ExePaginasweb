@@ -64,7 +64,7 @@ export const Logo: React.FC<LogoProps> = ({
           width={size}
           height={size}
           style={commonImgStyle}
-          className="object-contain filter drop-shadow-[0_0_10px_rgba(250,204,21,0.4)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
+          className="object-contain filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.08)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
         />
       )
     }
@@ -79,7 +79,7 @@ export const Logo: React.FC<LogoProps> = ({
           width={size}
           height={size}
           style={commonImgStyle}
-          className="object-contain dark:hidden filter drop-shadow-[0_0_10px_rgba(250,204,21,0.4)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
+          className="object-contain dark:hidden filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.08)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
         />
         <img
           src={darkSrc}

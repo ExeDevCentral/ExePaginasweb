@@ -65,17 +65,17 @@ export function MetricGrid({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="rounded-2xl bg-[#111622] border border-[#1E2638] p-5 shadow-sm hover:border-[#2C3852] transition-all"
+            className="rounded-2xl bg-card border border-border p-5 shadow-sm hover:border-primary/40 transition-all"
           >
             {/* Top row: Icon + Label + Menu */}
-            <div className="flex items-center justify-between text-[#8C9BB0]">
+            <div className="flex items-center justify-between text-muted-foreground">
               <div className="flex items-center gap-2 text-xs font-medium">
-                <IconComponent className="w-4 h-4 text-[#8C9BB0]" />
+                <IconComponent className="w-4 h-4 text-muted-foreground" />
                 <span className="truncate">{m.label}</span>
               </div>
               <button
                 type="button"
-                className="text-[#64748B] hover:text-white transition-colors p-1"
+                className="text-muted-foreground hover:text-foreground transition-colors p-1"
                 aria-label="Options"
               >
                 <MoreHorizontal className="w-4 h-4" />
@@ -84,7 +84,7 @@ export function MetricGrid({
 
             {/* Middle row: Large Value & Percentage Badge */}
             <div className="mt-4 flex items-baseline justify-between gap-3">
-              <span className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              <span className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
                 {m.value}
               </span>
               <span
@@ -133,16 +133,16 @@ export function DashdarkRevenueChart({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm flex flex-col justify-between"
+      className="rounded-2xl bg-card border border-border p-6 shadow-sm flex flex-col justify-between"
     >
       {/* Header Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#1E2638]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
         <div>
-          <p className="text-xs text-[#8C9BB0] font-medium uppercase tracking-wider">
+          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
             {t('dashboard.total_revenue', 'Tráfico Web & Rendimiento de tu Sistema')}
           </p>
           <div className="flex items-center gap-3 mt-1.5">
-            <span className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            <span className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               48.5K Visitas
             </span>
             <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 inline-flex items-center gap-0.5">
@@ -153,7 +153,7 @@ export function DashdarkRevenueChart({
 
         {/* Right side: Legend & Date selector */}
         <div className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-3 text-xs text-[#8C9BB0] font-medium">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground font-medium">
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-[#4361EE]" />
               {t('dashboard.revenue', 'Tráfico Web')}
@@ -164,10 +164,10 @@ export function DashdarkRevenueChart({
             </span>
           </div>
 
-          <div className="flex items-center gap-2 bg-[#151B28] border border-[#1E2638] px-3 py-1.5 rounded-xl text-xs text-slate-300 font-medium cursor-pointer hover:border-[#2C3852] transition-colors">
-            <Calendar className="w-3.5 h-3.5 text-[#8C9BB0]" />
+          <div className="flex items-center gap-2 bg-muted/40 border border-border px-3 py-1.5 rounded-xl text-xs text-muted-foreground font-medium cursor-pointer hover:border-primary/40 transition-colors">
+            <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
             <span>{dateRange}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-[#8C9BB0]" />
+            <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
           </div>
         </div>
       </div>
@@ -175,7 +175,7 @@ export function DashdarkRevenueChart({
       {/* SVG Curved Graph Area */}
       <div className="relative pt-6 min-h-[260px] sm:min-h-[290px] w-full flex">
         {/* Y-Axis Labels */}
-        <div className="flex flex-col justify-between text-[11px] font-mono text-[#64748B] pr-3 select-none">
+        <div className="flex flex-col justify-between text-[11px] font-mono text-muted-foreground pr-3 select-none">
           {yLabels.map((yl) => (
             <span key={yl} className="text-right leading-none">
               {yl}
@@ -233,16 +233,16 @@ export function DashdarkRevenueChart({
           </svg>
 
           {/* Active Hover Tooltip Card */}
-          <div className="absolute left-[42%] sm:left-[45%] top-[12%] sm:top-[16%] -translate-x-1/2 p-2.5 rounded-xl bg-[#151B28] border border-[#232D42] shadow-xl text-center pointer-events-none z-10">
+          <div className="absolute left-[42%] sm:left-[45%] top-[12%] sm:top-[16%] -translate-x-1/2 p-2.5 rounded-xl bg-muted/40 border border-border shadow-xl text-center pointer-events-none z-10">
             <div className="flex items-center justify-center gap-2">
-              <span className="text-xs sm:text-sm font-bold text-white">
+              <span className="text-xs sm:text-sm font-bold text-foreground">
                 1.450 visitas · 48 turnos
               </span>
               <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 +14.5% ↗
               </span>
             </div>
-            <span className="text-[10px] text-[#8C9BB0] font-medium mt-0.5 block">
+            <span className="text-[10px] text-muted-foreground font-medium mt-0.5 block">
               Semana de pico · Agosto 2025
             </span>
           </div>
@@ -250,7 +250,7 @@ export function DashdarkRevenueChart({
       </div>
 
       {/* X-Axis Month Labels */}
-      <div className="flex justify-between text-[11px] font-mono text-[#64748B] pt-4 pl-8 select-none">
+      <div className="flex justify-between text-[11px] font-mono text-muted-foreground pt-4 pl-8 select-none">
         {months.map((m) => (
           <span key={m}>{m}</span>
         ))}
@@ -273,15 +273,15 @@ export function DashdarkProfitCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.12 }}
-      className="rounded-2xl bg-[#111622] border border-[#1E2638] p-5 shadow-sm flex flex-col justify-between"
+      className="rounded-2xl bg-card border border-border p-5 shadow-sm flex flex-col justify-between"
     >
       <div>
-        <div className="flex items-center gap-2 text-xs text-[#8C9BB0] font-medium">
-          <TrendingUp className="w-4 h-4 text-[#8C9BB0]" />
+        <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
+          <TrendingUp className="w-4 h-4 text-muted-foreground" />
           <span>{t('dashboard.total_profit', 'Inversión de tu Abono')}</span>
         </div>
         <div className="flex items-baseline gap-2.5 mt-2">
-          <span className="text-2xl font-bold text-white tracking-tight">{amountText}</span>
+          <span className="text-2xl font-bold text-foreground tracking-tight">{amountText}</span>
           <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             Al Día ●
           </span>
@@ -301,7 +301,7 @@ export function DashdarkProfitCard({
         </div>
 
         {/* Time markers */}
-        <div className="flex justify-between text-[10px] font-mono text-[#64748B] pt-1">
+        <div className="flex justify-between text-[10px] font-mono text-muted-foreground pt-1">
           <span>00:00</span>
           <span>08:00</span>
           <span>16:00</span>
@@ -310,8 +310,8 @@ export function DashdarkProfitCard({
       </div>
 
       {/* Footer Link */}
-      <div className="mt-4 pt-3 border-t border-[#1E2638] flex items-center justify-between text-xs">
-        <span className="text-[#8C9BB0]">
+      <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs">
+        <span className="text-muted-foreground">
           {t('dashboard.last_12_months', 'Historial de 12 meses')}
         </span>
         <Link href="/dashboard?tab=invoices" className="text-[#38BDF8] hover:underline font-medium">
@@ -331,15 +331,15 @@ export function DashdarkSessionsCard() {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.15 }}
-      className="rounded-2xl bg-[#111622] border border-[#1E2638] p-5 shadow-sm flex flex-col justify-between"
+      className="rounded-2xl bg-card border border-border p-5 shadow-sm flex flex-col justify-between"
     >
       <div>
-        <div className="flex items-center gap-2 text-xs text-[#8C9BB0] font-medium">
-          <Activity className="w-4 h-4 text-[#8C9BB0]" />
+        <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
+          <Activity className="w-4 h-4 text-muted-foreground" />
           <span>{t('dashboard.total_sessions', 'Actividad en Tiempo Real')}</span>
         </div>
         <div className="flex items-baseline gap-2.5 mt-2">
-          <span className="text-2xl font-bold text-white tracking-tight">400 req/s</span>
+          <span className="text-2xl font-bold text-foreground tracking-tight">400 req/s</span>
           <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             99.99% Uptime
           </span>
@@ -372,7 +372,7 @@ export function DashdarkSessionsCard() {
         </div>
 
         {/* Time markers */}
-        <div className="flex justify-between text-[10px] font-mono text-[#64748B] pt-1">
+        <div className="flex justify-between text-[10px] font-mono text-muted-foreground pt-1">
           <span>00:00</span>
           <span>08:00</span>
           <span>16:00</span>
@@ -381,7 +381,7 @@ export function DashdarkSessionsCard() {
       </div>
 
       {/* Footer Link */}
-      <div className="mt-4 pt-3 border-t border-[#1E2638] flex items-center justify-between text-xs">
+      <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs">
         <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span>Vercel Edge & Supabase OK</span>
@@ -402,7 +402,7 @@ export function LiveHealthCard({ theme: _theme }: Readonly<{ theme: PlanDashboar
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm space-y-4"
+      className="rounded-2xl bg-card border border-border p-6 shadow-sm space-y-4"
     >
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-wider text-emerald-400">
@@ -417,45 +417,45 @@ export function LiveHealthCard({ theme: _theme }: Readonly<{ theme: PlanDashboar
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-        <div className="p-3.5 rounded-xl bg-[#151B28] border border-[#1E2638]">
-          <p className="text-[11px] font-medium text-[#8C9BB0] flex items-center gap-1.5">
+        <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
+          <p className="text-[11px] font-medium text-muted-foreground flex items-center gap-1.5">
             <Activity className="w-3.5 h-3.5 text-emerald-400" />
             <span>{t('dashboard.latencia', 'Latencia')}</span>
           </p>
-          <p className="text-lg font-bold font-mono text-white mt-1">14 ms</p>
+          <p className="text-lg font-bold font-mono text-foreground mt-1">14 ms</p>
           <p className="text-xs text-emerald-400 font-medium mt-0.5">
             {t('dashboard.excelente', 'Excelente')}
           </p>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-[#151B28] border border-[#1E2638]">
-          <p className="text-[11px] font-medium text-[#8C9BB0] flex items-center gap-1.5">
+        <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
+          <p className="text-[11px] font-medium text-muted-foreground flex items-center gap-1.5">
             <Lock className="w-3.5 h-3.5 text-[#38BDF8]" />
             <span>SSL / TLS</span>
           </p>
-          <p className="text-lg font-bold font-mono text-white mt-1">TLS 1.3</p>
+          <p className="text-lg font-bold font-mono text-foreground mt-1">TLS 1.3</p>
           <p className="text-xs text-[#38BDF8] font-medium mt-0.5">
             {t('dashboard.valido_seguro', 'Válido & Seguro')}
           </p>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-[#151B28] border border-[#1E2638]">
-          <p className="text-[11px] font-medium text-[#8C9BB0] flex items-center gap-1.5">
+        <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
+          <p className="text-[11px] font-medium text-muted-foreground flex items-center gap-1.5">
             <Database className="w-3.5 h-3.5 text-[#818CF8]" />
             <span>{t('dashboard.respaldo_bd', 'Respaldo BD')}</span>
           </p>
-          <p className="text-lg font-bold font-mono text-white mt-1">03:00 UTC</p>
+          <p className="text-lg font-bold font-mono text-foreground mt-1">03:00 UTC</p>
           <p className="text-xs text-[#818CF8] font-medium mt-0.5">
             {t('dashboard.auto_backup_ok', 'Auto Backup OK')}
           </p>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-[#151B28] border border-[#1E2638]">
-          <p className="text-[11px] font-medium text-[#8C9BB0] flex items-center gap-1.5">
+        <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
+          <p className="text-[11px] font-medium text-muted-foreground flex items-center gap-1.5">
             <Zap className="w-3.5 h-3.5 text-amber-400" />
             <span>WAF Firewall</span>
           </p>
-          <p className="text-lg font-bold font-mono text-white mt-1">
+          <p className="text-lg font-bold font-mono text-foreground mt-1">
             {t('dashboard.protegido', 'Protegido')}
           </p>
           <p className="text-xs text-amber-400 font-medium mt-0.5">
@@ -478,21 +478,21 @@ export function QuickActionsHub({
   const { t } = useTranslation()
 
   return (
-    <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 space-y-4 shadow-sm">
-      <p className="text-xs font-bold uppercase tracking-wider text-[#8C9BB0]">
+    <div className="rounded-2xl bg-card border border-border p-6 space-y-4 shadow-sm">
+      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
         {t('dashboard.acciones_rapidas', 'Acciones Rápidas (1-Clic)')}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <button
           type="button"
           onClick={onOpenTicket}
-          className="p-4 rounded-xl bg-[#151B28] border border-[#1E2638] hover:border-[#4361EE]/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
+          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-[#4361EE]/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
           <Zap className="w-5 h-5 text-[#38BDF8] mb-2 group-hover:scale-110 transition-transform" />
-          <p className="text-xs font-bold text-white">
+          <p className="text-xs font-bold text-foreground">
             {t('dashboard.solicitar_mejora', 'Solicitar Mejora')}
           </p>
-          <p className="text-xs text-[#8C9BB0] mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             {t('dashboard.abrir_ticket_prioritario', 'Abrir ticket prioritario')}
           </p>
         </button>
@@ -500,39 +500,39 @@ export function QuickActionsHub({
         <button
           type="button"
           onClick={onOpenTicket}
-          className="p-4 rounded-xl bg-[#151B28] border border-[#1E2638] hover:border-emerald-500/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
+          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-emerald-500/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
           <MessageSquare className="w-5 h-5 text-emerald-400 mb-2 group-hover:scale-110 transition-transform" />
-          <p className="text-xs font-bold text-white">
+          <p className="text-xs font-bold text-foreground">
             {t('dashboard.soporte_interno', 'Mesa de Ayuda')}
           </p>
-          <p className="text-xs text-[#8C9BB0] mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             {t('dashboard.tickets_canal_oficial', 'Crear ticket de soporte')}
           </p>
         </button>
 
         <Link
           href="/dashboard?tab=invoices"
-          className="p-4 rounded-xl bg-[#151B28] border border-[#1E2638] hover:border-[#818CF8]/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
+          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-[#818CF8]/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
           <FileText className="w-5 h-5 text-[#818CF8] mb-2 group-hover:scale-110 transition-transform" />
-          <p className="text-xs font-bold text-white">
+          <p className="text-xs font-bold text-foreground">
             {t('dashboard.descargar_factura', 'Descargar Factura')}
           </p>
-          <p className="text-xs text-[#8C9BB0] mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             {t('dashboard.pdfs_historial', 'PDFs e historial')}
           </p>
         </Link>
 
         <Link
           href="/cotizador"
-          className="p-4 rounded-xl bg-[#151B28] border border-[#1E2638] hover:border-amber-500/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
+          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-amber-500/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
           <ArrowUpRight className="w-5 h-5 text-amber-400 mb-2 group-hover:scale-110 transition-transform" />
-          <p className="text-xs font-bold text-white">
+          <p className="text-xs font-bold text-foreground">
             {t('dashboard.upgrade_plan', 'Upgrade de Plan')}
           </p>
-          <p className="text-xs text-[#8C9BB0] mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             {t('dashboard.escalar_recursos', 'Escalar recursos')}
           </p>
         </Link>
@@ -559,10 +559,10 @@ export function WeeklyChart({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.15 }}
-      className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm"
+      className="rounded-2xl bg-card border border-border p-6 shadow-sm"
     >
       <div className="flex items-center justify-between mb-5">
-        <p className="text-xs font-bold uppercase tracking-wider text-white">{label}</p>
+        <p className="text-xs font-bold uppercase tracking-wider text-foreground">{label}</p>
         <span className="font-mono text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
           {t('dashboard.en_vivo_7d', 'live · 7d')}
         </span>
@@ -578,7 +578,7 @@ export function WeeklyChart({
           />
         ))}
       </div>
-      <div className="mt-3 pt-2 border-t border-[#1E2638] flex justify-between font-mono text-xs font-medium text-[#8C9BB0]">
+      <div className="mt-3 pt-2 border-t border-border flex justify-between font-mono text-xs font-medium text-muted-foreground">
         {days.map((d) => (
           <span key={d}>{d}</span>
         ))}
@@ -603,24 +603,26 @@ export function ActivityTimeline({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm"
+      className="rounded-2xl bg-card border border-border p-6 shadow-sm"
     >
-      <p className="text-xs font-bold uppercase tracking-wider text-white mb-4">
+      <p className="text-xs font-bold uppercase tracking-wider text-foreground mb-4">
         {t('dashboard.actividad_reciente', 'Actividad Reciente')}
       </p>
       <div className="space-y-2.5">
         {items.map((item, i) => (
           <div
             key={`activity-${item.label}-${i}`}
-            className="flex items-center justify-between gap-3 rounded-xl bg-[#151B28] border border-[#1E2638] px-4 py-3 hover:border-[#2C3852] transition-colors"
+            className="flex items-center justify-between gap-3 rounded-xl bg-muted/40 border border-border px-4 py-3 hover:border-primary/40 transition-colors"
           >
             <div className="flex items-center gap-3 min-w-0">
               <span className={`h-2 w-2 shrink-0 rounded-full ${dotColor[item.status]}`} />
-              <span className="text-xs sm:text-sm font-medium text-slate-200 truncate">
+              <span className="text-xs sm:text-sm font-medium text-foreground truncate">
                 {item.label}
               </span>
             </div>
-            <span className="shrink-0 font-mono text-[11px] text-[#8C9BB0]">{item.time}</span>
+            <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
+              {item.time}
+            </span>
           </div>
         ))}
       </div>
@@ -639,15 +641,15 @@ export function PerksPanel({
   const { t } = useTranslation()
 
   return (
-    <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-      <p className="text-xs font-bold uppercase tracking-wider text-white mb-4">
+    <div className="rounded-2xl bg-card border border-border p-6 shadow-sm">
+      <p className="text-xs font-bold uppercase tracking-wider text-foreground mb-4">
         {t('dashboard.beneficios_incluidos', 'Beneficios Incluidos')}
       </p>
       <ul className="space-y-2.5">
         {perks.map((p) => (
           <li
             key={p}
-            className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-300"
+            className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-muted-foreground"
           >
             <span className="text-[#38BDF8] font-bold">✦</span>
             <span>{p}</span>
@@ -671,12 +673,12 @@ export function SupportCard({
   const { t } = useTranslation()
 
   return (
-    <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm">
-      <p className="text-xs uppercase tracking-wider text-[#8C9BB0] font-bold">
+    <div className="rounded-2xl bg-card border border-border p-6 shadow-sm">
+      <p className="text-xs uppercase tracking-wider text-muted-foreground font-bold">
         {t('dash.chat', 'Chat de Soporte')}
       </p>
-      <p className="mt-2 text-xl font-bold text-white">{theme.supportLabel}</p>
-      <p className="mt-1 text-xs sm:text-sm text-[#8C9BB0]">{theme.supportDetail}</p>
+      <p className="mt-2 text-xl font-bold text-foreground">{theme.supportLabel}</p>
+      <p className="mt-1 text-xs sm:text-sm text-muted-foreground">{theme.supportDetail}</p>
       {openCount > 0 && (
         <p className="mt-2.5 text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full inline-block">
           {openCount} {t('dashboard.tickets_abiertos_badge', 'ticket(s) activos')}

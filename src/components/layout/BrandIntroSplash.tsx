@@ -54,9 +54,9 @@ export default function BrandIntroSplash() {
             duration: 0.35,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="fixed inset-0 z-99999 flex flex-col items-center justify-center bg-[#070b16] select-none pointer-events-none"
+          className="fixed inset-0 z-99999 flex flex-col items-center justify-center bg-background dark:bg-[#070b16] select-none pointer-events-none transition-colors"
         >
-          <BrandLoader size="lg" text="EXEPAGINASWEB" subtext="ARQUITECTURA DE SOFTWARE · 2025" />
+          <BrandLoader size="lg" text="EXEPAGINASWEB" subtext="ARQUITECTURA DE SOFTWARE · 2026" />
         </motion.div>
       )}
     </AnimatePresence>

@@ -353,7 +353,7 @@ export function paymentNotification({
 }: PaymentNotificationInput): string {
   const body = `
     <span class="badge badge-green">💰 ALERTA COMERCIAL · PAGO CAPTURADO</span>
-    <h1 style="margin-top:12px;">🚀 ¡Nueva venta registrada!</h1>
+    <h1 style="margin-top:12px;">🚀 ¡Nueva venta!</h1>
     <div class="hud-box" style="border-color:rgba(16,185,129,0.4);">
       <div class="label">Cliente</div>
       <div class="value">${escapeHtml(name || 'N/A')}</div>

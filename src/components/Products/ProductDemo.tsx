@@ -233,7 +233,9 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 <p className="text-xs font-bold text-pink-300">
                   Barbería & Salón Beauty - Modo En Vivo
                 </p>
-                <p className="text-[11px] text-slate-300">Estilista activo: {selectedStylist}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Estilista activo: {selectedStylist}
+                </p>
               </div>
               <button
                 type="button"
@@ -248,15 +250,15 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               {appointmentsList.map((app, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-3.5 rounded-xl border border-white/15 bg-slate-900/60"
+                  className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-muted/40"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-pink-500/20 border border-pink-500/40 flex items-center justify-center">
                       <Scissors className="w-4 h-4 text-pink-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-white">{app.name}</p>
-                      <p className="text-xs text-slate-300">
+                      <p className="text-sm font-bold text-foreground">{app.name}</p>
+                      <p className="text-xs text-muted-foreground">
                         {app.service} · Profesional: {app.stylist}
                       </p>
                     </div>
@@ -284,11 +286,11 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
             ].map((s, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl border border-white/15 bg-slate-900/60 flex items-center justify-between"
+                className="p-4 rounded-xl border border-border bg-muted/40 flex items-center justify-between"
               >
                 <div>
-                  <p className="text-sm font-bold text-white">{s.name}</p>
-                  <p className="text-xs text-slate-300">Duración estimada: {s.duration}</p>
+                  <p className="text-sm font-bold text-foreground">{s.name}</p>
+                  <p className="text-xs text-muted-foreground">Duración estimada: {s.duration}</p>
                 </div>
                 <span className="text-sm font-bold font-mono text-pink-400">{s.price}</span>
               </div>
@@ -327,7 +329,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
         pos: (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2 space-y-3">
-              <p className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Productos de Panadería & Confitería:
               </p>
               <div className="grid grid-cols-3 gap-2">
@@ -370,7 +372,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 <div className="divide-y divide-white/10 mt-3 space-y-2 max-h-36 overflow-y-auto">
                   {bakeryCart.map((i, idx) => (
                     <div key={idx} className="pt-2 flex justify-between text-xs font-medium">
-                      <span className="text-slate-200">{i.name}</span>
+                      <span className="text-foreground">{i.name}</span>
                       <span className="font-mono font-bold text-amber-400">
                         ${i.price.toLocaleString('es-AR')}
                       </span>
@@ -423,11 +425,11 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
             ].map((b, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between p-3.5 rounded-xl border border-white/15 bg-slate-900/60"
+                className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-muted/40"
               >
                 <div>
-                  <p className="text-sm font-bold text-white">{b.batch}</p>
-                  <p className="text-xs text-slate-300">
+                  <p className="text-sm font-bold text-foreground">{b.batch}</p>
+                  <p className="text-xs text-muted-foreground">
                     Volumen: {b.qty} · Encargado: {b.chef}
                   </p>
                 </div>
@@ -469,8 +471,8 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
       content: {
         stock: (
           <div className="space-y-4">
-            <div className="flex justify-between items-center bg-slate-900/60 p-3 rounded-xl border border-white/15">
-              <span className="text-xs font-bold text-white">
+            <div className="flex justify-between items-center bg-muted/40 p-3 rounded-xl border border-border">
+              <span className="text-xs font-bold text-foreground">
                 Matriz de Inventario en Tiempo Real
               </span>
               <button
@@ -486,14 +488,14 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               {clothingItems.map((item) => (
                 <div
                   key={item.code}
-                  className="flex items-center justify-between p-3.5 rounded-xl border border-white/15 bg-slate-900/60"
+                  className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-muted/40"
                 >
                   <div>
                     <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase">
                       {item.code}
                     </span>
-                    <p className="text-sm font-bold text-white">{item.name}</p>
-                    <p className="text-xs text-slate-300">
+                    <p className="text-sm font-bold text-foreground">{item.name}</p>
+                    <p className="text-xs text-muted-foreground">
                       Talle: <strong className="text-emerald-300">{item.size}</strong> · Color:{' '}
                       <strong className="text-emerald-300">{item.color}</strong>
                     </p>
@@ -502,7 +504,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                     <p className="text-sm font-bold font-mono text-emerald-400">
                       ${item.price.toLocaleString('es-AR')}
                     </p>
-                    <p className="text-xs font-bold text-white">Stock: {item.stock} un.</p>
+                    <p className="text-xs font-bold text-foreground">Stock: {item.stock} un.</p>
                   </div>
                 </div>
               ))}
@@ -521,8 +523,8 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-center"
               >
                 <ShoppingBag className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
-                <p className="text-xs font-bold text-white">{cat.title}</p>
-                <p className="text-[10px] text-slate-300 mt-0.5">{cat.items}</p>
+                <p className="text-xs font-bold text-foreground">{cat.title}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{cat.items}</p>
               </div>
             ))}
           </div>
@@ -582,7 +584,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                           className={`py-2 px-2 rounded-xl text-xs font-bold transition-all border ${
                             isSelected
                               ? 'bg-emerald-500 text-slate-950 border-emerald-400'
-                              : 'bg-slate-900/60 border-white/15 text-slate-200 hover:border-cyan-400'
+                              : 'bg-muted/40 border-border text-foreground hover:border-cyan-400'
                           }`}
                         >
                           {slot} {isSelected ? '✅' : ''}
@@ -613,11 +615,11 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
             ].map((r, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between p-3.5 rounded-xl border border-white/15 bg-slate-900/60"
+                className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-muted/40"
               >
                 <div>
-                  <p className="text-sm font-bold text-white">{r.player}</p>
-                  <p className="text-xs text-slate-300">
+                  <p className="text-sm font-bold text-foreground">{r.player}</p>
+                  <p className="text-xs text-muted-foreground">
                     {r.court} · Horario: {r.time}
                   </p>
                 </div>
@@ -633,7 +635,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
             <h4 className="text-xs font-bold text-cyan-400 uppercase">
               Módulo de Encendido Automático de Luces
             </h4>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-muted-foreground">
               Las luces de cada cancha se encienden automáticamente 10 minutos antes del turno y se
               apagan al finalizar el horario contratado.
             </p>
@@ -673,10 +675,10 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               role="dialog"
               aria-modal="true"
               data-lenis-prevent
-              className={`dark relative w-full max-w-5xl max-h-[92vh] bg-[#0c0d16] text-slate-100 border ${config.borderClass} rounded-3xl shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col`}
+              className={`relative w-full max-w-5xl max-h-[92vh] bg-card text-foreground border ${config.borderClass} rounded-3xl shadow-lg overflow-hidden flex flex-col`}
             >
               {/* Browser Window Header */}
-              <div className="flex items-center justify-between px-4 py-3 bg-[#131522] border-b border-white/10 select-none">
+              <div className="flex items-center justify-between px-4 py-3 bg-muted/40 border-b border-border select-none">
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1.5">
                     <button
@@ -697,7 +699,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 </div>
 
                 {/* Simulated URL Bar */}
-                <div className="hidden sm:flex items-center gap-2 px-4 py-1 rounded-xl bg-slate-950/80 border border-white/10 text-xs font-mono text-slate-200 max-w-md w-full justify-center">
+                <div className="hidden sm:flex items-center gap-2 px-4 py-1 rounded-xl bg-muted/40 border border-white/10 text-xs font-mono text-foreground max-w-md w-full justify-center">
                   <Lock className={`w-3 h-3 ${config.accentColor}`} />
                   <span className="truncate">{config.url}</span>
                 </div>
@@ -706,7 +708,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                   type="button"
                   onClick={onClose}
                   aria-label="Cerrar demostración"
-                  className="p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  className="p-1.5 rounded-xl bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -717,18 +719,18 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                 className={`p-5 border-b border-white/10 bg-gradient-to-r ${config.themeGradient} flex items-center justify-between bg-slate-900/40`}
               >
                 <div>
-                  <h2 className="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2 drop-shadow">
+                  <h2 className="text-lg sm:text-xl font-extrabold text-foreground flex items-center gap-2">
                     <Sparkles className={`w-5 h-5 ${config.accentColor}`} />
                     {config.title}
                   </h2>
-                  <p className="text-xs text-slate-300 font-medium mt-0.5">
+                  <p className="text-xs text-muted-foreground font-medium mt-0.5">
                     Demostración interactiva en vivo creada para este rubro específico.
                   </p>
                 </div>
               </div>
 
               {/* Demo Tabs Navigation */}
-              <div className="flex border-b border-white/10 bg-slate-950/80 px-4 overflow-x-auto">
+              <div className="flex border-b border-white/10 bg-muted/40 px-4 overflow-x-auto">
                 {currentDemo.tabs.map((tab) => {
                   const Icon = tab.icon
                   const isActive = activeTab === tab.id
@@ -740,7 +742,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                       className={`flex items-center gap-2 px-5 py-3.5 text-xs font-bold transition-all whitespace-nowrap relative cursor-pointer ${
                         isActive
                           ? `${config.activeTabClass} font-extrabold`
-                          : 'text-slate-400 hover:text-white'
+                          : 'text-muted-foreground hover:text-foreground'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -757,7 +759,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               </div>
 
               {/* Interactive Sandbox Body */}
-              <div data-lenis-prevent className="p-6 overflow-y-auto flex-1 bg-slate-950/50">
+              <div data-lenis-prevent className="p-6 overflow-y-auto flex-1 bg-muted/30">
                 <motion.div
                   key={activeTab}
                   initial={{ opacity: 0, y: 8 }}
@@ -769,15 +771,15 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               </div>
 
               {/* Demo Footer CTA */}
-              <div className="p-4 sm:p-5 border-t border-white/10 bg-[#131522] flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-xs text-slate-300 font-medium">
+              <div className="p-4 sm:p-5 border-t border-border bg-muted/40 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
                   <ShieldCheck className={`w-4 h-4 ${config.accentColor}`} />
                   <span>¿Querés este sistema personalizado con tu marca y dominio propio?</span>
                 </div>
                 <a
                   href="#contact"
                   onClick={onClose}
-                  className={`px-6 py-2.5 rounded-xl bg-gradient-to-r ${config.themeGradient} text-white font-black text-xs hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] transition-all border border-white/30 flex items-center gap-2 cursor-pointer`}
+                  className={`px-6 py-2.5 rounded-xl bg-gradient-to-r ${config.themeGradient} text-foreground font-black text-xs hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] transition-all border border-white/30 flex items-center gap-2 cursor-pointer`}
                 >
                   Solicitar sistema para este rubro <ArrowRight className="w-4 h-4" />
                 </a>

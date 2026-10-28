@@ -31,27 +31,27 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
     () => ({
       borrador: {
         icon: Clock,
-        color: 'text-[#8C9BB0]',
+        color: 'text-muted-foreground',
         label: t('invoices.estado_borrador', 'Borrador'),
       },
       emitida: {
         icon: AlertCircle,
-        color: 'text-amber-400',
+        color: 'text-amber-600 dark:text-amber-400',
         label: t('invoices.estado_emitida', 'Emitida'),
       },
       pagada: {
         icon: CheckCircle,
-        color: 'text-emerald-400',
+        color: 'text-emerald-600 dark:text-emerald-400',
         label: t('invoices.estado_pagada', 'Pagada'),
       },
       vencida: {
         icon: XCircle,
-        color: 'text-rose-400',
+        color: 'text-rose-600 dark:text-rose-400',
         label: t('invoices.estado_vencida', 'Vencida'),
       },
       cancelada: {
         icon: XCircle,
-        color: 'text-[#64748B]',
+        color: 'text-muted-foreground',
         label: t('invoices.estado_cancelada', 'Cancelada'),
       },
     }),
@@ -65,10 +65,10 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
         header: t('invoices.col_numero', 'Número'),
         cell: ({ row }) => (
           <div>
-            <span className="font-mono font-bold text-white text-xs sm:text-sm">
+            <span className="font-mono font-bold text-foreground text-xs sm:text-sm">
               {row.original.numero}
             </span>
-            <span className="ml-2 text-[10px] text-[#38BDF8] font-bold uppercase bg-[#151B28] border border-[#1E2638] px-2 py-0.5 rounded-md">
+            <span className="ml-2 text-[10px] text-[#38BDF8] font-bold uppercase bg-muted/40 border border-border px-2 py-0.5 rounded-md">
               {row.original.tipo}
             </span>
           </div>
@@ -78,7 +78,7 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
         accessorKey: 'concepto',
         header: t('invoices.col_concepto', 'Concepto'),
         cell: ({ row }) => (
-          <span className="text-xs text-[#8C9BB0] font-medium block max-w-sm sm:max-w-md truncate">
+          <span className="text-xs text-muted-foreground font-medium block max-w-sm sm:max-w-md truncate">
             {row.original.concepto}
           </span>
         ),
@@ -87,12 +87,12 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
         accessorKey: 'total',
         header: t('invoices.col_total', 'Total'),
         cell: ({ row }) => (
-          <div className="font-bold font-mono text-white text-xs sm:text-sm">
+          <div className="font-bold font-mono text-foreground text-xs sm:text-sm">
             $
             {row.original.total.toLocaleString(i18n.language || 'es-AR', {
               minimumFractionDigits: 2,
             })}
-            <span className="ml-1 text-[10px] text-[#64748B] font-sans font-normal">
+            <span className="ml-1 text-[10px] text-muted-foreground font-sans font-normal">
               {row.original.moneda}
             </span>
           </div>
@@ -118,7 +118,7 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
         accessorKey: 'fecha_emision',
         header: t('invoices.col_fecha', 'Fecha'),
         cell: ({ row }) => (
-          <span className="text-xs text-[#8C9BB0] font-medium">
+          <span className="text-xs text-muted-foreground font-medium">
             {row.original.fecha_emision
               ? new Date(row.original.fecha_emision).toLocaleDateString(i18n.language || 'es-AR')
               : '—'}
@@ -154,13 +154,13 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
   return (
     <div className="space-y-8 font-sans">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1E2638]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2.5">
             <FileText className="w-6 h-6 text-[#38BDF8]" />
             <span>{t('invoices.titulo', 'Facturación & Comprobantes')}</span>
           </h2>
-          <p className="text-xs sm:text-sm text-[#8C9BB0] mt-1 font-medium">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1 font-medium">
             {invoices.length > 0
               ? `${invoices.length} ${t('invoices.facturas_registradas', 'facturas registradas')}`
               : 'Control de abonos mensuales y estado de cuenta contable'}
@@ -182,24 +182,28 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-[#1E2638] bg-[#111622] p-6 shadow-sm">
-          <p className="text-xs text-[#8C9BB0] uppercase tracking-wider font-bold">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
             {t('invoices.total_pagado', 'Total Abonado')}
           </p>
-          <p className="text-2xl sm:text-3xl font-bold font-mono text-white mt-2">
+          <p className="text-2xl sm:text-3xl font-bold font-mono text-foreground mt-2">
             $
             {effectiveTotalPaid.toLocaleString(i18n.language || 'es-AR', {
               minimumFractionDigits: 2,
             })}
           </p>
-          <p className="text-xs text-emerald-400 font-semibold mt-1">Cuenta al día · Sin deudas</p>
+          <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-1">
+            Cuenta al día · Sin deudas
+          </p>
         </div>
-        <div className="rounded-2xl border border-[#1E2638] bg-[#111622] p-6 shadow-sm">
-          <p className="text-xs text-[#8C9BB0] uppercase tracking-wider font-bold">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
             {t('invoices.pendientes', 'Facturas Pendientes')}
           </p>
-          <p className="text-2xl sm:text-3xl font-bold font-mono text-white mt-2">{pendingCount}</p>
-          <p className="text-xs text-[#8C9BB0] font-medium mt-1">
+          <p className="text-2xl sm:text-3xl font-bold font-mono text-foreground mt-2">
+            {pendingCount}
+          </p>
+          <p className="text-xs text-muted-foreground font-medium mt-1">
             {pendingCount === 0 ? 'Sin importes pendientes de pago' : 'Facturas por abonar'}
           </p>
         </div>
@@ -207,7 +211,7 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
 
       {/* Invoice Table or Informative Empty State */}
       {invoices.length > 0 ? (
-        <div className="rounded-2xl border border-[#1E2638] bg-[#111622] p-4 overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-border bg-card p-4 overflow-hidden shadow-sm">
           <DataTable
             columns={columns}
             data={invoices}
@@ -223,15 +227,15 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
           />
         </div>
       ) : (
-        <div className="text-center py-14 border border-dashed border-[#1E2638] bg-[#111622] rounded-2xl p-8 shadow-sm space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-[#151B28] border border-[#1E2638] flex items-center justify-center mx-auto text-[#38BDF8]">
+        <div className="text-center py-14 border border-dashed border-border bg-card rounded-2xl p-8 shadow-sm space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-muted/40 border border-border flex items-center justify-center mx-auto text-[#38BDF8]">
             <FileText className="w-7 h-7" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold text-foreground">
               No hay facturas creadas por el momento
             </h3>
-            <p className="text-xs sm:text-sm text-[#8C9BB0] mt-1.5 max-w-md mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 max-w-md mx-auto leading-relaxed">
               Actualmente no registrás facturas pendientes ni emitidas. Cuando se emitan tus
               comprobantes fiscales o abonos mensuales, los verás reflejados automáticamente aquí.
             </p>
@@ -245,20 +249,20 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
 
       {/* Historial de Pagos si existen registros en la base de datos */}
       {pagos.length > 0 && (
-        <div className="rounded-2xl border border-[#1E2638] bg-[#111622] p-6 shadow-sm space-y-4">
-          <div className="flex items-center gap-2.5 pb-2 border-b border-[#1E2638]">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4">
+          <div className="flex items-center gap-2.5 pb-2 border-b border-border">
             <CreditCard className="w-5 h-5 text-emerald-400" />
-            <h3 className="text-sm font-bold text-white">Comprobantes y Pagos Registrados</h3>
+            <h3 className="text-sm font-bold text-foreground">Comprobantes y Pagos Registrados</h3>
           </div>
 
           <div className="divide-y divide-[#1E2638]">
             {pagos.map((p) => (
               <div key={p.id} className="py-3 flex items-center justify-between gap-4 text-xs">
                 <div>
-                  <p className="font-semibold text-white">
+                  <p className="font-semibold text-foreground">
                     {p.plan_nombre || 'Abono de Servicios'}
                   </p>
-                  <p className="text-[11px] text-[#8C9BB0] mt-0.5">
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
                     {new Date(p.created_at).toLocaleDateString(i18n.language || 'es-AR', {
                       day: '2-digit',
                       month: 'short',
@@ -267,7 +271,7 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="font-mono font-bold text-white text-sm">
+                  <span className="font-mono font-bold text-foreground text-sm">
                     ${p.monto} {p.moneda}
                   </span>
                   <span className="block text-[10px] font-semibold text-emerald-400 uppercase">

@@ -43,7 +43,7 @@ export interface WebhookStatusReport {
   total: number
   enabled: number
   reactivated: number
-  errors?: string[]
+  errors?: string[] | undefined
 }
 
 function getConfig() {

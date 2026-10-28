@@ -42,7 +42,7 @@ export function AdminClientesTable({ clientes, suscripciones }: AdminClientesTab
                   className="w-10 h-10 rounded-xl object-cover border border-border"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-accent-cyan to-accent-magenta flex items-center justify-center font-bold text-primary-bg">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-accent-cyan to-accent-magenta flex items-center justify-center font-bold text-white shadow-sm">
                   {(c.full_name ?? c.email).charAt(0).toUpperCase()}
                 </div>
               )}
@@ -73,7 +73,7 @@ export function AdminClientesTable({ clientes, suscripciones }: AdminClientesTab
           const currentSlug = getActiveSubscriptionSlug(row.original.id)
           if (!currentSlug) {
             return (
-              <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-muted text-muted-foreground border border-border">
+              <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-muted/70 text-muted-foreground border border-border/80">
                 Sin abono
               </span>
             )
@@ -83,10 +83,10 @@ export function AdminClientesTable({ clientes, suscripciones }: AdminClientesTab
             <span
               className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
                 currentSlug.includes('premium')
-                  ? 'bg-accent-magenta/10 text-accent-magenta border-accent-magenta/20'
+                  ? 'bg-accent-magenta/10 text-purple-700 dark:text-accent-magenta border-accent-magenta/30'
                   : currentSlug.includes('avanzado')
-                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                    : 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan/20'
+                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
+                    : 'bg-accent-cyan/10 text-cyan-700 dark:text-accent-cyan border-accent-cyan/30'
               }`}
             >
               {currentSlug.replace('mantenimiento-', '')}

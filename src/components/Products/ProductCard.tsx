@@ -150,7 +150,7 @@ export default function ProductCard({
             <h3 className="text-xl sm:text-2xl font-semibold mb-2 font-display leading-tight text-foreground group-hover:text-accent-cyan transition-colors duration-300">
               {t(`products.${product.tKey}_titulo`)}
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-5 sm:mb-6 leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-foreground mb-5 sm:mb-6 leading-relaxed">
               {t(`products.${product.tKey}_desc`)}
             </p>
 
@@ -308,7 +308,7 @@ export default function ProductCard({
               {product.features.map((feature, idx) => (
                 <li
                   key={`${product.anchorId}-${feature}`}
-                  className="flex items-start gap-2.5 text-xs text-slate-600 dark:text-slate-300 font-medium"
+                  className="flex items-start gap-2.5 text-xs text-muted-foreground font-medium"
                 >
                   <CyberCheckMark size={16} className="mt-0.5 shrink-0" />
                   <span>{t(`products.${product.tKey}_feat_${idx + 1}`)}</span>
@@ -388,7 +388,7 @@ export default function ProductCard({
             {/* Bottom Actions Bar */}
             <div className="flex items-center justify-between pt-4 border-t border-border dark:border-white/10 gap-2">
               <div>
-                <p className="text-[10px] text-[#6b6152] dark:text-slate-400/90 uppercase tracking-wider mb-0.5 font-bold">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5 font-bold">
                   {t('products.inversion')}
                 </p>
                 <p className="text-lg font-extrabold text-accent-cyan">{product.price}</p>

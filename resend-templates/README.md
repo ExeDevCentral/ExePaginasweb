@@ -26,3 +26,8 @@ Estas plantillas están listas para ser cargadas en tu panel de Resend (https://
 - **Name:** `email-verification`
 - **Subject:** `🔒 Confirma tu cuenta de correo electrónico — ExeSistemasWEB`
 - **Variables:** `name`, `verificationUrl`
+
+### 6. `06-n8n-automation-live.html`
+- **Name:** `n8n-automation-live`
+- **Subject:** `⚡ Automatización Ejecutada [Ticket: {{{ticketId}}}] - ExeSistemasWEB`
+- **Variables:** `name`, `email`, `automationType`, `details`, `ticketId`

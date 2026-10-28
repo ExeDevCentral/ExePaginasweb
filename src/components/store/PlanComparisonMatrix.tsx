@@ -299,20 +299,20 @@ export const PlanComparisonMatrix: React.FC = () => {
                       {t('store.matrix_col_features', 'Prestaciones y Cobertura')}
                     </th>
                     <th className="py-4 px-4 text-center font-black text-slate-900 dark:text-white text-base w-1/5">
-                      <span className="text-cyan-500">
+                      <span className="text-cyan-700 dark:text-cyan-400">
                         {t('store.abono_basico_title', 'Abono Básico')}
                       </span>
                     </th>
                     <th className="py-4 px-4 text-center font-black text-slate-900 dark:text-white text-base w-1/5 bg-purple-500/10 rounded-t-2xl">
-                      <span className="text-purple-400">
+                      <span className="text-purple-700 dark:text-purple-400">
                         {t('store.abono_avanzado_title', 'Abono Avanzado')}
                       </span>
-                      <span className="block text-[10px] font-mono text-purple-300 font-bold uppercase mt-0.5">
+                      <span className="block text-[10px] font-mono text-purple-700 dark:text-purple-300 font-bold uppercase mt-0.5">
                         {t('store.mas_elegido', 'Más Elegido')}
                       </span>
                     </th>
                     <th className="py-4 px-4 text-center font-black text-slate-900 dark:text-white text-base w-1/5">
-                      <span className="text-pink-500">
+                      <span className="text-pink-700 dark:text-pink-400">
                         {t('store.abono_premium_title', 'Abono Premium')}
                       </span>
                     </th>

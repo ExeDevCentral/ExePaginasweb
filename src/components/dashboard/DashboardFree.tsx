@@ -89,11 +89,11 @@ export default function DashboardFree({
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-3xl border border-[#1E2638] bg-[#111622] p-6 sm:p-8 shadow-sm"
+        className="rounded-3xl border border-border bg-card p-6 sm:p-8 shadow-sm"
       >
         <div className="flex flex-col md:flex-row items-start justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#151B28] border border-[#1E2638] flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-muted/40 border border-border flex items-center justify-center shrink-0">
               <Sparkles className="w-6 h-6 text-[#38BDF8]" />
             </div>
             <div>
@@ -103,17 +103,17 @@ export default function DashboardFree({
                     ? t('dash.suscripcion_en_revision', 'Cuenta Registrada')
                     : t('dash.sin_suscripcion', 'Sin Suscripción Activa')}
                 </p>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
                   <CheckCircle2 className="w-3 h-3" />
                   {t('dash.cuenta_activa', 'Sesión Activa')}
                 </span>
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-bold text-white mt-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground mt-1">
                 {t('dashboard.hola', 'Hola')}, {nombre}
               </h1>
 
-              <p className="mt-2 text-sm text-[#8C9BB0] max-w-xl font-medium leading-relaxed">
+              <p className="mt-2 text-sm text-muted-foreground max-w-xl font-medium leading-relaxed">
                 {suscripciones.length > 0
                   ? t(
                       'dash.panel_cliente_desc',
@@ -125,13 +125,13 @@ export default function DashboardFree({
                     )}
               </p>
 
-              <div className="mt-4 flex items-center gap-4 text-xs font-semibold text-[#8C9BB0]">
+              <div className="mt-4 flex items-center gap-4 text-xs font-semibold text-muted-foreground">
                 <span>Email: {cliente?.email ?? '—'}</span>
                 <span>•</span>
                 <button
                   type="button"
                   onClick={onLogout}
-                  className="hover:text-rose-400 transition-colors cursor-pointer"
+                  className="hover:text-destructive transition-colors cursor-pointer"
                 >
                   {t('dashboard.salir', 'Cerrar Sesión')}
                 </button>
@@ -143,7 +143,7 @@ export default function DashboardFree({
             <button
               type="button"
               onClick={() => setTicketPanelOpen(true)}
-              className="flex-1 md:flex-initial px-4 py-3 rounded-xl bg-[#151B28] hover:bg-[#1C2438] text-slate-300 border border-[#1E2638] font-semibold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-1 md:flex-initial px-4 py-3 rounded-xl bg-muted/40 hover:bg-muted text-foreground border border-border font-semibold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plus size={16} />
               <span>{t('dashboard.abrir_ticket', 'Abrir Ticket')}</span>
@@ -163,11 +163,11 @@ export default function DashboardFree({
 
       {/* 2. Key Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-[#1E2638] bg-[#111622] p-5 shadow-sm">
-          <p className="text-xs text-[#8C9BB0] font-semibold uppercase tracking-wider">
+        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+          <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             Plan Actual
           </p>
-          <p className="text-lg font-bold text-white mt-1 truncate">
+          <p className="text-lg font-bold text-foreground mt-1 truncate">
             {suscripciones[0]?.plan?.nombre ?? 'Plan Básico (Web)'}
           </p>
           <span className="text-xs text-emerald-400 font-medium mt-1 inline-block">
@@ -175,31 +175,31 @@ export default function DashboardFree({
           </span>
         </div>
 
-        <div className="rounded-2xl border border-[#1E2638] bg-[#111622] p-5 shadow-sm">
-          <p className="text-xs text-[#8C9BB0] font-semibold uppercase tracking-wider">
+        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+          <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             Disponibilidad
           </p>
-          <p className="text-lg font-bold text-white mt-1 font-mono">99.99%</p>
+          <p className="text-lg font-bold text-foreground mt-1 font-mono">99.99%</p>
           <span className="text-xs text-[#38BDF8] font-medium mt-1 inline-block">
             Edge CDN Online
           </span>
         </div>
 
-        <div className="rounded-2xl border border-[#1E2638] bg-[#111622] p-5 shadow-sm">
-          <p className="text-xs text-[#8C9BB0] font-semibold uppercase tracking-wider">
+        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+          <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             Tickets Soporte
           </p>
-          <p className="text-lg font-bold text-white mt-1 font-mono">{openCount}</p>
-          <span className="text-xs text-[#8C9BB0] font-medium mt-1 inline-block">
+          <p className="text-lg font-bold text-foreground mt-1 font-mono">{openCount}</p>
+          <span className="text-xs text-muted-foreground font-medium mt-1 inline-block">
             {openCount === 0 ? 'Sin pendientes' : `${openCount} en gestión`}
           </span>
         </div>
 
-        <div className="rounded-2xl border border-[#1E2638] bg-[#111622] p-5 shadow-sm">
-          <p className="text-xs text-[#8C9BB0] font-semibold uppercase tracking-wider">
+        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+          <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             Comprobantes
           </p>
-          <p className="text-lg font-bold text-white mt-1 font-mono">{pagos.length}</p>
+          <p className="text-lg font-bold text-foreground mt-1 font-mono">{pagos.length}</p>
           <span className="text-xs text-emerald-400 font-medium mt-1 inline-block">
             {pagos.length > 0
               ? `$${totalPaid.toLocaleString(i18n.language || 'es-AR')} registrado`
@@ -210,37 +210,39 @@ export default function DashboardFree({
 
       {/* 3. Pagos Registrados (si existen) */}
       {pagos.length > 0 && (
-        <div className="rounded-2xl border border-[#1E2638] bg-[#111622] p-6 shadow-sm">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <div className="flex items-center justify-between gap-4 mb-4">
             <div className="flex items-center gap-2.5">
               <Receipt className="w-5 h-5 text-[#38BDF8]" />
-              <h3 className="text-base font-bold text-white">Comprobantes y Pagos Registrados</h3>
+              <h3 className="text-base font-bold text-foreground">
+                Comprobantes y Pagos Registrados
+              </h3>
             </div>
             <button
               type="button"
               onClick={handleRefresh}
-              className="text-xs font-semibold text-[#8C9BB0] hover:text-white transition-colors cursor-pointer"
+              className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Actualizar
             </button>
           </div>
 
-          <div className="divide-y divide-[#1E2638] border-t border-[#1E2638]">
+          <div className="divide-y divide-border border-t border-border">
             {pagos.map((p) => (
               <div
                 key={p.id}
                 className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
               >
                 <div>
-                  <span className="font-bold text-white">
+                  <span className="font-bold text-foreground">
                     {p.plan_nombre || 'Pago de Servicio / Abono'}
                   </span>
-                  <p className="text-[#8C9BB0] text-[11px] mt-0.5">
+                  <p className="text-muted-foreground text-[11px] mt-0.5">
                     Comprobante ID: {p.id.slice(0, 8)}...
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="font-mono font-bold text-white text-sm">
+                  <span className="font-mono font-bold text-foreground text-sm">
                     ${Number(p.monto).toLocaleString(i18n.language || 'es-AR')} {p.moneda}
                   </span>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase">
@@ -272,7 +274,7 @@ export default function DashboardFree({
 
       {/* 5. Vista Previa de Planes Disponibles */}
       <div className="pt-2">
-        <p className="mb-4 text-xs font-bold uppercase tracking-wider text-[#8C9BB0]">
+        <p className="mb-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
           {t('dashboard.vista_previa_planes', 'Soluciones y Planes Disponibles')}
         </p>
 
@@ -285,19 +287,21 @@ export default function DashboardFree({
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.08 }}
-                className="rounded-2xl border border-[#1E2638] bg-[#111622] p-6 shadow-sm flex flex-col justify-between"
+                className="rounded-2xl border border-border bg-card p-6 shadow-sm flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-10 h-10 rounded-xl border border-[#1E2638] bg-[#151B28] flex items-center justify-center mb-3.5">
+                  <div className="w-10 h-10 rounded-xl border border-border bg-muted/40 flex items-center justify-center mb-3.5">
                     <Icon className={`w-5 h-5 ${planTheme.accent}`} />
                   </div>
-                  <h3 className="text-lg font-bold text-white">{planTheme.badge}</h3>
-                  <p className="mt-1 text-xs text-[#8C9BB0] font-medium">{planTheme.subtitle}</p>
+                  <h3 className="text-lg font-bold text-foreground">{planTheme.badge}</h3>
+                  <p className="mt-1 text-xs text-muted-foreground font-medium">
+                    {planTheme.subtitle}
+                  </p>
                   <ul className="mt-4 space-y-2">
                     {planTheme.perks.slice(0, 3).map((p) => (
                       <li
                         key={p}
-                        className="text-xs text-slate-300 font-medium flex items-center gap-2"
+                        className="text-xs text-muted-foreground font-medium flex items-center gap-2"
                       >
                         <span className="text-[#38BDF8]">✦</span>
                         <span>{p}</span>
@@ -306,8 +310,10 @@ export default function DashboardFree({
                   </ul>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[#1E2638] flex items-center justify-between">
-                  <span className="text-[10px] font-mono text-[#64748B]">dashboard.{tier}.exe</span>
+                <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-muted-foreground">
+                    dashboard.{tier}.exe
+                  </span>
                   <button
                     type="button"
                     onClick={() => navigate('/tienda')}

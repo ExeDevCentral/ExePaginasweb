@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Webhook } from 'svix'
 import { z } from 'zod'
-import { sendEmail } from '@/lib/email/send'
+import { sendEmail, ensureResendWebhooksActive } from '@/lib/email/send'
 import { inboundEmailNotification, contactAutoReply } from '@/lib/email/templates'
 import { detectLanguage } from '@/lib/server/language'
 import {
@@ -15,38 +15,76 @@ import {
   markWebhookProcessed,
 } from '@/lib/server/webhookEvents'
 
+// Esquemas tolerantes con soporte completo para nullish y estructuras variadas de Resend
 const ResendAddressSchema = z.union([
   z.string(),
-  z.array(z.string()),
-  z.object({ email: z.string().optional() }).catchall(z.unknown()),
+  z.array(z.union([z.string(), z.object({ email: z.string().nullish() }).passthrough()])),
+  z.object({ email: z.string().nullish() }).passthrough(),
 ])
-const ResendEventDataSchema = z.object({
-  id: z.string().optional(),
-  email_id: z.string().optional(),
-  to: ResendAddressSchema.optional(),
-  recipient: ResendAddressSchema.optional(),
-  from: ResendAddressSchema.optional(),
-  subject: z.string().optional(),
-  text: z.string().optional(),
-  html: z.string().optional(),
-  bounce_type: z.string().optional(),
-  message: z.string().optional(),
-  click: z.object({ link: z.string().optional() }).optional(),
-})
-const ResendEventSchema = z.object({
-  type: z.string().optional(),
-  event: z.string().optional(),
-  data: ResendEventDataSchema.optional(),
-})
+
+const ResendEventDataSchema = z
+  .object({
+    id: z.string().nullish(),
+    email_id: z.string().nullish(),
+    to: ResendAddressSchema.nullish(),
+    recipient: ResendAddressSchema.nullish(),
+    from: ResendAddressSchema.nullish(),
+    subject: z.string().nullish(),
+    text: z.string().nullish(),
+    html: z.string().nullish(),
+    bounce_type: z.string().nullish(),
+    message: z.string().nullish(),
+    click: z.object({ link: z.string().nullish() }).nullish(),
+  })
+  .passthrough()
+
+const ResendEventSchema = z
+  .object({
+    type: z.string().nullish(),
+    event: z.string().nullish(),
+    data: ResendEventDataSchema.nullish(),
+  })
+  .passthrough()
 
 type ResendAddress = z.infer<typeof ResendAddressSchema>
 type ResendEvent = z.infer<typeof ResendEventSchema>
 type ResendEventData = z.infer<typeof ResendEventDataSchema>
 
-function addressText(value: ResendAddress | undefined, fallback: string): string {
+function addressText(value: ResendAddress | null | undefined, fallback: string): string {
+  if (!value) return fallback
   if (typeof value === 'string') return value
-  if (Array.isArray(value)) return value.join(', ')
-  return value?.email || fallback
+  if (Array.isArray(value)) {
+    return (
+      value
+        .map((item) => (typeof item === 'string' ? item : item?.email || ''))
+        .filter(Boolean)
+        .join(', ') || fallback
+    )
+  }
+  return value.email || fallback
+}
+
+/**
+ * Health-Check & Auto-Healer Endpoint (GET):
+ * Permite verificar el estado del webhook y reactivar automáticamente
+ * cualquier webhook deshabilitado en el panel de Resend vía API.
+ */
+export async function GET() {
+  const secret =
+    process.env.RESEND_WEBHOOK_SIGNING_SECRET ||
+    process.env.RESEND_WEBHOOK_SECRET ||
+    process.env.SVIX_SECRET
+
+  const autoHealReport = await ensureResendWebhooksActive()
+
+  return NextResponse.json({
+    status: 'ok',
+    endpoint: '/api/webhooks/resend',
+    secretConfigured: Boolean(secret),
+    provider: 'resend_svix',
+    autoHeal: autoHealReport,
+    timestamp: new Date().toISOString(),
+  })
 }
 
 export async function POST(req: NextRequest) {
@@ -103,14 +141,22 @@ export async function POST(req: NextRequest) {
   const eventType = event.type || event.event || 'unknown'
   const eventData: ResendEventData = event.data || {}
 
+  // Idempotencia tolerante: Si Supabase no está configurado, continuar sin romper el webhook
   try {
-    const claimed = await claimWebhookEvent('resend', svixId, eventType, event)
+    const claimed = await claimWebhookEvent(
+      'resend',
+      svixId,
+      eventType,
+      event as Record<string, unknown>
+    )
     if (!claimed) {
       return NextResponse.json({ received: true, type: eventType, duplicate: true })
     }
   } catch (claimError) {
-    console.error('[resend-webhook] Failed to claim event:', claimError)
-    return NextResponse.json({ error: 'Webhook storage unavailable' }, { status: 503 })
+    console.warn(
+      '[resend-webhook] Webhook storage no disponible, continuando en modo tolerante:',
+      claimError
+    )
   }
 
   console.log(`[resend-webhook] ✅ Webhook Svix verificado. Evento: ${eventType}`)
@@ -179,52 +225,63 @@ export async function POST(req: NextRequest) {
           throw new Error('RESEND_API_KEY is not configured')
         }
 
-        {
-          const inboundTasks = [
-            // 1. Reenvío al Administrador (Exemetal@hotmail.com)
-            sendEmail({
-              to: adminDestination,
-              subject: `[${ticketId}] [${isSales ? 'Ventas' : 'Contacto'}] ${subject}`,
-              replyTo: fromEmail,
-              html: inboundEmailNotification({
-                fromEmail,
-                toEmail,
-                subject,
-                html: eventData.html,
-                text: eventData.text,
-                ticketId,
-              }),
-            }),
-            // 2. Auto-respuesta instantánea al remitente si no es el admin
-            fromEmail !== adminDestination
-              ? sendEmail({
-                  to: fromEmail,
-                  subject:
-                    detectedLang === 'en'
-                      ? `✨ We received your email [Ticket: ${ticketId}] - ExeSistemasWEB`
-                      : `✨ Recibimos tu correo [Ticket: ${ticketId}] - ExeSistemasWEB`,
-                  html: contactAutoReply({
-                    name: fromEmail.split('@')[0],
-                    message: subject + '\n' + (eventData.text || ''),
-                    ticketId,
-                    lang: detectedLang,
-                  }),
-                })
-              : Promise.resolve(null),
-          ]
+        const isSystemSender =
+          fromEmail === adminDestination ||
+          fromEmail.includes('noreply') ||
+          fromEmail.includes('no-reply') ||
+          fromEmail.includes('mailer-daemon')
 
-          const results = await Promise.allSettled(inboundTasks)
-          const failedTasks = results.filter((result) => result.status === 'rejected')
-          if (failedTasks.length > 0) {
-            throw new Error(`${failedTasks.length} inbound email task(s) failed`)
-          }
-          console.log(
-            `[resend-webhook] 📩 Email entrante ${ticketId} (${toEmail}) procesado con éxito (Lang: ${detectedLang})`
-          )
+        const inboundTasks = [
+          // 1. Reenvío obligatorio al Administrador (Exemetal@hotmail.com)
+          sendEmail({
+            to: adminDestination,
+            subject: `[${ticketId}] [${isSales ? 'Ventas' : 'Contacto'}] ${subject}`,
+            replyTo: fromEmail,
+            html: inboundEmailNotification({
+              fromEmail,
+              toEmail,
+              subject,
+              html: eventData.html ?? undefined,
+              text: eventData.text ?? undefined,
+              ticketId,
+            }),
+          }),
+          // 2. Auto-respuesta instantánea al remitente si es un usuario humano real
+          !isSystemSender
+            ? sendEmail({
+                to: fromEmail,
+                subject:
+                  detectedLang === 'en'
+                    ? `✨ We received your email [Ticket: ${ticketId}] - ExeSistemasWEB`
+                    : `✨ Recibimos tu correo [Ticket: ${ticketId}] - ExeSistemasWEB`,
+                html: contactAutoReply({
+                  name: fromEmail.split('@')[0],
+                  message: subject + '\n' + (eventData.text || ''),
+                  ticketId,
+                  lang: detectedLang,
+                }),
+              }).catch((clientErr) => {
+                console.warn(
+                  '[resend-webhook] No se pudo enviar auto-reply al cliente (ignorado para evitar loop):',
+                  clientErr
+                )
+                return null
+              })
+            : Promise.resolve(null),
+        ]
+
+        const results = await Promise.allSettled(inboundTasks)
+        const adminTask = results[0]
+        if (adminTask && adminTask.status === 'rejected') {
+          throw new Error(`Inbound admin forward failed: ${String(adminTask.reason)}`)
         }
+
+        console.log(
+          `[resend-webhook] 📩 Email entrante ${ticketId} (${toEmail}) procesado con éxito (Lang: ${detectedLang})`
+        )
       } catch (forwardErr: unknown) {
         console.error('[resend-webhook] Error reenviando email entrante:', forwardErr)
-        await markWebhookFailed('resend', svixId, forwardErr)
+        await markWebhookFailed('resend', svixId, forwardErr).catch(() => {})
         return NextResponse.json({ error: 'Inbound email processing failed' }, { status: 503 })
       }
       break
@@ -237,11 +294,8 @@ export async function POST(req: NextRequest) {
   try {
     await markWebhookProcessed('resend', svixId)
   } catch (processError) {
-    await markWebhookFailed('resend', svixId, processError)
-    return NextResponse.json(
-      { error: 'Webhook processing could not be confirmed' },
-      { status: 503 }
-    )
+    // Si la marca en base de datos falla pero el webhook se procesó, no romper la respuesta con 503
+    console.warn('[resend-webhook] No se pudo actualizar estado en Supabase:', processError)
   }
 
   return NextResponse.json({

@@ -75,7 +75,7 @@ export const StoreGuarantees: React.FC = () => {
           className="rounded-3xl bg-card/70 backdrop-blur-xl border border-border/80 p-6 sm:p-8 shadow-xl relative overflow-hidden group hover:border-accent-cyan/50 transition-all duration-300"
         >
           <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-            <CyberRocketLaunch size={24} className="text-cyan-400" />
+            <CyberRocketLaunch size={24} className="text-cyan-600 dark:text-cyan-400" />
           </div>
           <h4 className="text-xl font-bold text-foreground mb-2">
             {t('store.pillar1_title', 'Migración 100% Bonificada')}
@@ -96,7 +96,7 @@ export const StoreGuarantees: React.FC = () => {
           className="rounded-3xl bg-card/70 backdrop-blur-xl border border-border/80 p-6 sm:p-8 shadow-xl relative overflow-hidden group hover:border-emerald-500/50 transition-all duration-300"
         >
           <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-            <CyberServerUptime size={24} className="text-emerald-400" />
+            <CyberServerUptime size={24} className="text-emerald-600 dark:text-emerald-400" />
           </div>
           <h4 className="text-xl font-bold text-foreground mb-2">
             {t('store.pillar2_title', 'Uptime Garantizado 99.98%')}
@@ -117,7 +117,7 @@ export const StoreGuarantees: React.FC = () => {
           className="rounded-3xl bg-card/70 backdrop-blur-xl border border-border/80 p-6 sm:p-8 shadow-xl relative overflow-hidden group hover:border-pink-500/50 transition-all duration-300"
         >
           <div className="w-12 h-12 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-            <CyberRealPropertyShield size={24} className="text-pink-400" />
+            <CyberRealPropertyShield size={24} className="text-pink-600 dark:text-pink-400" />
           </div>
           <h4 className="text-xl font-bold text-foreground mb-2">
             {t('store.pillar3_title', 'Sin Permanencias')}

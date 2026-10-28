@@ -45,20 +45,20 @@ export default function ServicePulseHub({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.12 }}
-      className="rounded-2xl bg-[#111622] border border-[#1E2638] p-6 shadow-sm relative overflow-hidden"
+      className="rounded-2xl bg-card border border-border p-6 shadow-sm relative overflow-hidden"
     >
       <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <Zap className="w-4 h-4 text-[#38BDF8]" />
-            <p className="text-[11px] font-bold uppercase tracking-wider text-[#8C9BB0]">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
               {t('dashboard.pulse_servicio', 'Pulse del Servicio')}
             </p>
           </div>
-          <h3 className="text-lg sm:text-xl font-bold text-white">
+          <h3 className="text-lg sm:text-xl font-bold text-foreground">
             {t('dashboard.operacion_un_lugar', 'Tu operación en un solo lugar')}
           </h3>
-          <p className="mt-1 text-xs sm:text-sm text-[#8C9BB0] font-medium max-w-lg">
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground font-medium max-w-lg">
             {defaultSla}
           </p>
         </div>
@@ -81,9 +81,9 @@ export default function ServicePulseHub({
           icon={LifeBuoy}
           accent="text-[#38BDF8]"
         />
-        <div className="rounded-xl border border-[#1E2638] bg-[#151B28] p-3.5 shadow-sm">
+        <div className="rounded-xl border border-border bg-muted/40 p-3.5 shadow-sm">
           <div
-            className={`mb-1.5 ${unreadNotifications > 0 ? 'text-amber-400' : 'text-emerald-400'}`}
+            className={`mb-1.5 ${unreadNotifications > 0 ? 'text-amber-500' : 'text-emerald-500'}`}
           >
             <MorphIcon
               icon={unreadNotifications > 0 ? BellData : CheckData}
@@ -91,10 +91,10 @@ export default function ServicePulseHub({
               spring="snappy"
             />
           </div>
-          <p className="text-xl font-bold font-mono text-white leading-none">
+          <p className="text-xl font-bold font-mono text-foreground leading-none">
             {unreadNotifications}
           </p>
-          <p className="text-[10px] uppercase tracking-wider text-[#8C9BB0] mt-1.5 font-bold">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1.5 font-bold">
             {t('dashboard.alertas', 'Alertas')}
           </p>
         </div>
@@ -102,13 +102,13 @@ export default function ServicePulseHub({
           label={t('dashboard.infra', 'Infra')}
           value="Vercel Edge"
           icon={Shield}
-          accent="text-emerald-400"
+          accent="text-emerald-600 dark:text-emerald-400"
         />
         <PulseStat
           label={t('dashboard.estado', 'Estado')}
           value="Online"
           icon={Zap}
-          accent="text-emerald-400"
+          accent="text-emerald-600 dark:text-emerald-400"
         />
       </div>
 
@@ -118,18 +118,18 @@ export default function ServicePulseHub({
             <li
               key={n.id}
               className={`flex items-start justify-between gap-3 rounded-xl border p-3 shadow-sm transition-all ${
-                n.leida ? 'border-[#1E2638] bg-[#151B28]' : 'border-amber-500/30 bg-amber-500/10'
+                n.leida ? 'border-border bg-muted/40' : 'border-amber-500/30 bg-amber-500/10'
               }`}
             >
               <div className="min-w-0">
-                <p className="text-xs sm:text-sm font-bold text-white truncate">{n.titulo}</p>
-                <p className="text-xs text-[#8C9BB0] line-clamp-1 mt-0.5">{n.mensaje}</p>
+                <p className="text-xs sm:text-sm font-bold text-foreground truncate">{n.titulo}</p>
+                <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{n.mensaje}</p>
               </div>
               {!n.leida && (
                 <button
                   type="button"
                   onClick={() => onMarkRead(n.id)}
-                  className="shrink-0 text-[10px] font-bold uppercase text-amber-400 hover:underline px-2 py-1 rounded-md bg-amber-500/10"
+                  className="shrink-0 text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400 hover:underline px-2 py-1 rounded-md bg-amber-500/10"
                 >
                   {t('dashboard.marcar_leida', 'Marcar leída')}
                 </button>
@@ -154,10 +154,10 @@ function PulseStat({
   accent: string
 }>) {
   return (
-    <div className="rounded-xl border border-[#1E2638] bg-[#151B28] p-3.5 shadow-sm">
+    <div className="rounded-xl border border-border bg-muted/40 p-3.5 shadow-sm">
       <Icon className={`w-4 h-4 mb-1.5 ${accent}`} />
-      <p className="text-xl font-bold font-mono text-white leading-none">{value}</p>
-      <p className="text-[10px] uppercase tracking-wider text-[#8C9BB0] mt-1.5 font-bold">
+      <p className="text-xl font-bold font-mono text-foreground leading-none">{value}</p>
+      <p className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1.5 font-bold">
         {label}
       </p>
     </div>

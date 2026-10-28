@@ -35,6 +35,8 @@
     "prepare": "husky",
     "audit:sec": "npm audit --audit-level=high",
     "audit:keys": "node scripts/audit-apikeys.mjs",
+    "webhooks:heal": "node scripts/heal-webhooks.mjs",
+    "export:templates": "jiti scripts/export-resend-templates.mjs",
     "check:deps": "npx npm-check-updates"
   },
   "dependencies": {

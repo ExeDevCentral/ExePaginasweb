@@ -140,7 +140,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
                 : 'bg-linear-to-r from-cyan-500/30 via-purple-500/40 to-pink-500/30 opacity-90 group-hover:opacity-100 group-hover:scale-105'
               : isButtonHovered
                 ? 'bg-linear-to-r from-cyan-500/50 via-indigo-500/40 to-fuchsia-500/50 opacity-100 scale-110'
-                : 'bg-black/40 dark:bg-accent-cyan/10 opacity-40 group-hover:opacity-80 group-hover:scale-105'
+                : 'bg-cyan-500/10 dark:bg-accent-cyan/10 opacity-40 group-hover:opacity-80 group-hover:scale-105'
           }`}
         />
 
@@ -225,7 +225,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
               <span className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white font-montserrat tracking-tight">
                 {formattedPrice}
               </span>
-              <span className="text-cyan-600 dark:text-cyan-400 font-extrabold text-sm">
+              <span className="text-cyan-700 dark:text-cyan-400 font-extrabold text-sm">
                 {currency}
                 {t('store.period_month', '/mes')}
               </span>
@@ -233,7 +233,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
 
             {isAnnual ? (
               <div className="mt-2 flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-500 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full">
                   <CyberMetricLightning size={14} />
                   {t('store.ahorras_anual', 'Ahorrás {{amount}}/año', {
                     amount: currency === 'ARS' ? `$${savingsARS}` : `$${savingsUSD}`,

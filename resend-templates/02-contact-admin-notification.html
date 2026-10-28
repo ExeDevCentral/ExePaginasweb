@@ -1,75 +1,168 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" dir="ltr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="supported-color-schemes" content="dark light">
   <title>[{{{ticketId}}}] Nuevo contacto de {{{name}}} - ExeSistemasWEB</title>
   <style>
     .btn {
       display:inline-block;padding:14px 32px;border-radius:12px;
-      font-weight:700;font-size:15px;text-decoration:none;
-      background:linear-gradient(135deg,#00d4ff,#ff00ff);
-      color:#000;margin:16px 0;
+      font-weight:800;font-size:14px;text-decoration:none;
+      background:linear-gradient(135deg,#00d4ff,#10b981);
+      color:#041019 !important;margin:14px 0;letter-spacing:0.3px;
+      box-shadow:0 8px 24px rgba(0,212,255,0.25);
     }
-    h1 {color:#fff;font-size:24px;margin:0 0 16px}
-    h2 {color:#fff;font-size:18px;margin:24px 0 8px}
-    p {color:#aaa;font-size:14px;line-height:1.6;margin:0 0 12px}
-    .label {color:#666;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin:0 0 2px}
-    .value {color:#fff;font-size:15px;font-weight:600;margin:0 0 12px}
+    .btn-secondary {
+      display:inline-block;padding:12px 24px;border-radius:12px;
+      font-weight:700;font-size:13px;text-decoration:none;
+      background-color:#131c31;border:1px solid rgba(0,212,255,0.35);
+      color:#00d4ff !important;margin:8px 4px;
+    }
+    h1 {color:#ffffff;font-size:24px;font-weight:800;margin:0 0 14px;line-height:1.25;letter-spacing:-0.3px;}
+    h2 {color:#ffffff;font-size:17px;font-weight:700;margin:22px 0 8px;}
+    p {color:#94a3b8;font-size:14px;line-height:1.65;margin:0 0 12px;}
+    .label {
+      color:#64748b;font-size:11px;text-transform:uppercase;
+      letter-spacing:1.2px;font-weight:700;margin:0 0 3px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    }
+    .value {color:#f8fafc;font-size:15px;font-weight:600;margin:0 0 12px;}
     .badge {
-      display:inline-block;padding:4px 12px;border-radius:20px;
-      font-size:12px;font-weight:600;
+      display:inline-block;padding:5px 12px;border-radius:999px;
+      font-size:11px;font-weight:700;letter-spacing:0.5px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
     }
-    .badge-green {background:#065f4620;color:#22c55e;border:1px solid #22c55e40}
-    .badge-blue {background:#00d4ff10;color:#00d4ff;border:1px solid #00d4ff30}
-    .badge-magenta {background:#ec489915;color:#ec4899;border:1px solid #ec489940}
-    .divider {border:none;border-top:1px solid #1e1e2e;margin:24px 0}
+    .badge-green {background-color:rgba(16,185,129,0.14);color:#34d399;border:1px solid rgba(16,185,129,0.35);}
+    .badge-blue {background-color:rgba(0,212,255,0.12);color:#00d4ff;border:1px solid rgba(0,212,255,0.35);}
+    .badge-magenta {background-color:rgba(236,72,153,0.14);color:#f472b6;border:1px solid rgba(236,72,153,0.35);}
+    .divider {border:none;border-top:1px solid #1e293b;margin:22px 0;}
+    .hud-box {
+      background-color:#080c17;border-radius:14px;padding:20px;
+      margin:18px 0;border:1px solid #1e293b;
+    }
+    .pipeline-step {
+      display:inline-block;padding:6px 10px;border-radius:8px;
+      background-color:#0c1424;border:1px solid #1e293b;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font-size:11px;color:#cbd5e1;margin:3px 2px;
+    }
   </style>
 </head>
-<body style="margin:0;padding:0;background:#0a0a0f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0f">
-    <tr><td align="center" style="padding:40px 16px">
-      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%">
+<body style="margin:0;padding:0;background-color:#05070d;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+  <!-- Preheader oculto para vista previa en bandeja de entrada -->
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;color:#05070d;">
+    [{{{ticketId}}}] Nuevo contacto de {{{name}}} — ExeSistemasWEB · Ingeniería de Software &amp; Automatización &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847;
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#05070d;background-image:radial-gradient(circle at 50% 0%,rgba(0,212,255,0.10),transparent 65%);">
+    <tr>
+      <td align="center" style="padding:36px 14px 48px;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+          
+          <!-- Cabecera Cyber-HUD Ciudad de Servidores -->
+          <tr>
+            <td style="padding-bottom:20px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0b101e;border:1px solid #1e293b;border-radius:16px;padding:16px 22px;">
+                <tr>
+                  <td align="left" valign="middle">
+                    <table role="presentation" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td valign="middle" style="padding-right:12px;">
+                          <img src="https://exepaginasweb.com/logo.webp" alt="ExeSistemasWEB" width="42" height="42" style="display:block;border-radius:10px;border:1px solid rgba(0,212,255,0.4);background-color:#060a12;">
+                        </td>
+                        <td valign="middle">
+                          <div style="font-size:15px;font-weight:800;color:#ffffff;letter-spacing:0.5px;">ExeSistemasWEB</div>
+                          <div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:10px;color:#00d4ff;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;">
+                            SYS // CLOUD &amp; AUTOMATION ENGINE
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td align="right" valign="middle">
+                    <span style="display:inline-block;padding:5px 10px;border-radius:999px;background-color:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.35);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:10px;font-weight:700;color:#34d399;letter-spacing:0.8px;">
+                      ● ONLINE 24/7
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Contenedor Principal con Haz Láser Superior -->
+          <tr>
+            <td style="background-color:#0c1120;border-radius:20px;border:1px solid #1e293b;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.65);">
+              <!-- Haz láser tricolor -->
+              <div style="height:4px;width:100%;background:linear-gradient(90deg,#00d4ff 0%,#10b981 50%,#ec4899 100%);"></div>
+              <div style="padding:32px 28px;">
+                
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
+      <tr>
+        <td align="left" valign="middle">
+          <h1 style="margin:0;font-size:21px;color:#fff;">💬 Nuevo mensaje de contacto</h1>
+        </td>
+        <td align="right" valign="middle">
+          <span class="badge badge-blue" style="font-family:monospace;font-size:12px;">{{{ticketId}}}</span>
+        </td>
+      </tr>
+    </table>
+
+    <div class="hud-box" style="border-color:rgba(0,212,255,0.35);">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <td style="text-align:center;padding-bottom:32px">
-            <img src="https://exepaginasweb.com/logo.webp" alt="ExeSistemasWEB" width="48" height="48" style="border-radius:12px">
-            <p style="margin:8px 0 0;font-size:13px;color:#888;letter-spacing:2px;text-transform:uppercase">ExeSistemasWEB</p>
+          <td width="50%" valign="top">
+            <div class="label">Remitente</div>
+            <div class="value">{{{name}}}</div>
           </td>
-        </tr>
-        <tr>
-          <td style="background:#12121a;border-radius:16px;border:1px solid #1e1e2e;padding:32px">
-            
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <h1 style="margin:0;font-size:22px;color:#fff;">💬 Nuevo mensaje de contacto</h1>
-      <span class="badge badge-blue" style="font-family:monospace;font-size:12px;">{{{ticketId}}}</span>
-    </div>
-    <div style="background:#0d0d14;border-radius:12px;padding:20px;margin:20px 0;border:1px solid #00d4ff30">
-      <div class="label">Remitente</div>
-      <div class="value">{{{name}}}</div>
-      <div class="label">Correo Electrónico</div>
-      <div class="value"><a href="mailto:{{{email}}}" style="color:#00d4ff;text-decoration:none">{{{email}}}</a></div>
-      <hr class="divider" style="margin:12px 0">
-      <div class="label">Mensaje del Cliente</div>
-      <div style="color:#e2e8f0;background:#0a0a0f;padding:16px;border-radius:10px;margin:8px 0 0;font-size:14px;line-height:1.6;border:1px solid #1e1e2e;">
-        {{{message}}}
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:24px;">
-      <a href="mailto:{{{email}}}?subject=Re:%20[{{{ticketId}}}]%20Tu%20consulta%20en%20ExeSistemasWEB" class="btn">Responder al Cliente</a>
-    </div>
-  
-          </td>
-        </tr>
-        <tr>
-          <td style="text-align:center;padding:24px 0 0;font-size:12px;color:#555">
-            <p>ExeSistemasWEB — Estudio Premium de Sistemas y Automatización</p>
-            <p style="margin:4px 0">
-              <a href="https://exepaginasweb.com" style="color:#00d4ff;text-decoration:none">exepaginasweb.com</a>
-            </p>
+          <td width="50%" valign="top">
+            <div class="label">Correo Electrónico</div>
+            <div class="value"><a href="mailto:{{{email}}}" style="color:#00d4ff;text-decoration:none">{{{email}}}</a></div>
           </td>
         </tr>
       </table>
-    </td></tr>
+      <hr class="divider" style="margin:12px 0">
+      <div class="label">Mensaje del Cliente</div>
+      <div style="color:#e2e8f0;background:#050811;padding:16px;border-radius:12px;margin:8px 0 0;font-size:14px;line-height:1.65;border:1px solid #1e293b;">
+        {{{message}}}
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px;">
+      <a href="mailto:{{{email}}}?subject=Re:%20[{{{ticketId}}}]%20Tu%20consulta%20en%20ExeSistemasWEB" class="btn">Responder por Email</a>
+      <br>
+      <a href="https://wa.me/5493416874786?text=Hola%20%7B%7B%7Bname%7D%7D%7D,%20recibimos%20tu%20consulta%20[{{{ticketId}}}]%20en%20ExePaginasWeb" class="btn-secondary">Abrir WhatsApp</a>
+    </div>
+  
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer Técnico con Canales Directos -->
+          <tr>
+            <td style="padding:24px 12px 0;text-align:center;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#090d18;border:1px solid #162032;border-radius:14px;padding:16px;margin-bottom:16px;">
+                <tr>
+                  <td align="center" style="font-size:12px;color:#94a3b8;line-height:1.6;">
+                    <strong style="color:#ffffff;">ExeSistemasWEB</strong> — Desarrollo Web a Medida, SaaS &amp; Automatización n8n<br>
+                    <a href="https://exepaginasweb.com" style="color:#00d4ff;text-decoration:none;font-weight:600;">exepaginasweb.com</a>
+                    &nbsp;·&nbsp;
+                    <a href="https://wa.me/5493416874786" style="color:#34d399;text-decoration:none;font-weight:600;">WhatsApp +54 9 341 687-4786</a>
+                    &nbsp;·&nbsp;
+                    <a href="https://exepaginasweb.com/cotizador" style="color:#cbd5e1;text-decoration:none;">Cotizador Online</a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0;font-size:11px;color:#475569;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;">
+                100% CÓDIGO PROPIO · ARQUITECTURA HEXAGONAL · VERIFICACIÓN CRIPTOGRÁFICA SVIX
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
   </table>
 </body>
 </html>

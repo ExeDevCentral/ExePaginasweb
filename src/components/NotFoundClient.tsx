@@ -25,7 +25,7 @@ export default function NotFoundClient() {
 
       {/* Retícula sutil de fondo */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-40 dark:opacity-20"
+        className="pointer-events-none absolute inset-0 opacity-20"
         style={{
           backgroundImage: `
             linear-gradient(to right, rgba(148, 163, 184, 0.15) 1px, transparent 1px),
@@ -40,19 +40,19 @@ export default function NotFoundClient() {
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="relative z-10 w-full max-w-lg rounded-sm border border-slate-300 dark:border-white/10 bg-white dark:bg-[#0c0f1d] p-8 sm:p-10 shadow-xl text-center overflow-hidden"
+        className="relative z-10 w-full max-w-lg rounded-sm border border-border bg-card p-8 sm:p-10 shadow-xl text-center overflow-hidden"
       >
         {/* Marcas de esquina técnicas (+) */}
-        <span className="absolute top-2 left-2 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none">
+        <span className="absolute top-2 left-2 font-mono text-[10px] text-muted-foreground/60 select-none">
           +
         </span>
-        <span className="absolute top-2 right-2 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none">
+        <span className="absolute top-2 right-2 font-mono text-[10px] text-muted-foreground/60 select-none">
           +
         </span>
-        <span className="absolute bottom-2 left-2 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none">
+        <span className="absolute bottom-2 left-2 font-mono text-[10px] text-muted-foreground/60 select-none">
           +
         </span>
-        <span className="absolute bottom-2 right-2 font-mono text-[10px] text-slate-400 dark:text-white/20 select-none">
+        <span className="absolute bottom-2 right-2 font-mono text-[10px] text-muted-foreground/60 select-none">
           +
         </span>
 
@@ -63,18 +63,15 @@ export default function NotFoundClient() {
         </div>
 
         {/* 404 Técnico Mono */}
-        <div className="font-mono text-7xl sm:text-8xl font-black text-slate-900 dark:text-white tracking-widest select-none mb-2">
+        <div className="font-mono text-7xl sm:text-8xl font-black text-foreground tracking-widest select-none mb-2">
           404
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-display">
-          Plano no{' '}
-          <span className="font-serif italic font-normal text-brand dark:text-emerald-400">
-            encontrado
-          </span>
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
+          Plano no <span className="font-serif italic font-normal text-primary">encontrado</span>
         </h1>
 
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-3 max-w-sm mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-muted-foreground mt-3 max-w-sm mx-auto leading-relaxed">
           {t(
             'notfound.descripcion',
             'La coordenada solicitada no se encuentra proyectada en los planos de arquitectura del sistema.'
@@ -82,20 +79,18 @@ export default function NotFoundClient() {
         </p>
 
         {/* Cajetín técnico de diagnóstico */}
-        <div className="mt-6 mb-8 text-left rounded-sm border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 p-4 font-mono text-[11px] space-y-1.5">
-          <div className="flex items-center justify-between text-slate-500 dark:text-white/40">
+        <div className="mt-6 mb-8 text-left rounded-sm border border-border bg-muted/40 p-4 font-mono text-[11px] space-y-1.5">
+          <div className="flex items-center justify-between text-muted-foreground">
             <span>ESTADO:</span>
             <span className="text-signal font-bold">DESVIACIÓN DE RUTA</span>
           </div>
-          <div className="flex items-center justify-between text-slate-500 dark:text-white/40">
+          <div className="flex items-center justify-between text-muted-foreground">
             <span>SISTEMA:</span>
-            <span className="text-slate-800 dark:text-slate-200">EXEPAGINASWEB // 2025</span>
+            <span className="text-foreground">EXEPAGINASWEB // 2025</span>
           </div>
-          <div className="flex items-center justify-between text-slate-500 dark:text-white/40">
+          <div className="flex items-center justify-between text-muted-foreground">
             <span>PROTOCOLO:</span>
-            <span className="text-brand dark:text-emerald-400 font-bold">
-              RETORNO A PLANO MATRIZ
-            </span>
+            <span className="text-primary font-bold">RETORNO A PLANO MATRIZ</span>
           </div>
         </div>
 

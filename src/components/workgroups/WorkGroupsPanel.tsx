@@ -26,7 +26,7 @@ const ROL_COLORS: Record<WorkMemberRol, string> = {
   owner: 'bg-amber-500/10 text-amber-400 border-amber-500/20 font-bold',
   admin: 'bg-[#4361EE]/10 text-[#38BDF8] border-[#4361EE]/20 font-bold',
   member: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-bold',
-  viewer: 'bg-slate-500/10 text-slate-400 border-slate-500/20 font-bold',
+  viewer: 'bg-slate-500/10 text-muted-foreground border-slate-500/20 font-bold',
 }
 
 interface Props {
@@ -160,9 +160,9 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
               {row.original.nombre.charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="text-xs sm:text-sm font-bold text-white">{row.original.nombre}</p>
+              <p className="text-xs sm:text-sm font-bold text-foreground">{row.original.nombre}</p>
               {row.original.telefono && (
-                <p className="text-[11px] text-[#8C9BB0] flex items-center gap-1 font-mono mt-0.5">
+                <p className="text-[11px] text-muted-foreground flex items-center gap-1 font-mono mt-0.5">
                   <Phone className="w-3 h-3 text-[#38BDF8]" />
                   {row.original.telefono}
                 </p>
@@ -175,8 +175,8 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
         accessorKey: 'email',
         header: t('workgroups.col_email', 'Email de Contacto'),
         cell: ({ row }) => (
-          <span className="text-xs text-[#8C9BB0] font-mono flex items-center gap-1.5">
-            <Mail className="w-3.5 h-3.5 text-[#64748B]" />
+          <span className="text-xs text-muted-foreground font-mono flex items-center gap-1.5">
+            <Mail className="w-3.5 h-3.5 text-muted-foreground" />
             {row.original.email}
           </span>
         ),
@@ -200,7 +200,7 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
         cell: ({ row }) => {
           const grp = groups.find((g) => g.id === row.original.work_group_id)
           return (
-            <span className="text-xs font-medium text-slate-300">
+            <span className="text-xs font-medium text-muted-foreground">
               {grp ? grp.nombre : 'Sede Principal'}
             </span>
           )
@@ -213,7 +213,7 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
           <button
             type="button"
             onClick={() => handleDeleteMember(row.original)}
-            className="p-1.5 rounded-lg hover:bg-rose-500/10 text-[#64748B] hover:text-rose-400 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-rose-500/10 text-muted-foreground hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
             title={t('workgroups.eliminar_miembro', 'Eliminar miembro')}
           >
             <Trash2 className="w-4 h-4" />
@@ -235,13 +235,13 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
   return (
     <div className="space-y-8 font-sans">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-[#1E2638]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-border">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2.5">
             <Users className="w-6 h-6 text-[#38BDF8]" />
             <span>{t('workgroups.titulo', 'Equipo de Trabajo & Sedes')}</span>
           </h2>
-          <p className="text-xs sm:text-sm text-[#8C9BB0] mt-1 font-medium">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1 font-medium">
             Personal autorizado para administrar turnos, atención de clientes y canales de soporte.
           </p>
         </div>
@@ -276,8 +276,8 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="rounded-2xl border border-[#1E2638] bg-[#151B28] p-5 space-y-4 shadow-sm">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <div className="rounded-2xl border border-border bg-muted/40 p-5 space-y-4 shadow-sm">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Users className="w-4 h-4 text-[#38BDF8]" />
                 <span>Crear Nueva Sede o Área de Trabajo</span>
               </h3>
@@ -287,21 +287,21 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
                   placeholder="Nombre de la sede (ej. Sede Centro, Consultorios Norte)"
                   value={newGroupName}
                   onChange={(e) => setNewGroupName(e.target.value)}
-                  className="px-3.5 py-2 rounded-xl border border-[#1E2638] bg-[#111622] text-xs text-white placeholder:text-[#64748B] focus:border-[#4361EE] focus:outline-none"
+                  className="px-3.5 py-2 rounded-xl border border-border bg-card text-xs text-foreground placeholder:text-muted-foreground focus:border-[#4361EE] focus:outline-none"
                 />
                 <input
                   type="text"
                   placeholder="Descripción opcional"
                   value={newGroupDesc}
                   onChange={(e) => setNewGroupDesc(e.target.value)}
-                  className="px-3.5 py-2 rounded-xl border border-[#1E2638] bg-[#111622] text-xs text-white placeholder:text-[#64748B] focus:border-[#4361EE] focus:outline-none"
+                  className="px-3.5 py-2 rounded-xl border border-border bg-card text-xs text-foreground placeholder:text-muted-foreground focus:border-[#4361EE] focus:outline-none"
                 />
               </div>
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowNewGroup(false)}
-                  className="px-4 py-2 rounded-xl text-xs text-[#8C9BB0] hover:text-white"
+                  className="px-4 py-2 rounded-xl text-xs text-muted-foreground hover:text-foreground"
                 >
                   Cancelar
                 </button>
@@ -309,7 +309,7 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
                   type="button"
                   onClick={handleCreateGroup}
                   disabled={!newGroupName.trim() || createGroup.isPending}
-                  className="px-4 py-2 rounded-xl bg-[#4361EE] text-white text-xs font-semibold disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white text-xs font-semibold disabled:opacity-50 transition-all cursor-pointer"
                 >
                   Guardar Sede
                 </button>
@@ -382,8 +382,8 @@ function NewMemberForm({
   }
 
   return (
-    <div className="rounded-2xl border border-[#1E2638] bg-[#151B28] p-5 space-y-4 shadow-sm">
-      <h3 className="text-sm font-bold text-white flex items-center gap-2">
+    <div className="rounded-2xl border border-border bg-muted/40 p-5 space-y-4 shadow-sm">
+      <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
         <UserPlus className="w-4 h-4 text-[#38BDF8]" />
         <span>Invitar Nuevo Miembro o Empleado</span>
       </h3>
@@ -393,26 +393,26 @@ function NewMemberForm({
           placeholder="Nombre y Apellido"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
-          className="px-3.5 py-2 rounded-xl border border-[#1E2638] bg-[#111622] text-xs text-white placeholder:text-[#64748B] focus:border-[#4361EE] focus:outline-none"
+          className="px-3.5 py-2 rounded-xl border border-border bg-card text-xs text-foreground placeholder:text-muted-foreground focus:border-[#4361EE] focus:outline-none"
         />
         <input
           type="email"
           placeholder="Email de acceso"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="px-3.5 py-2 rounded-xl border border-[#1E2638] bg-[#111622] text-xs text-white placeholder:text-[#64748B] focus:border-[#4361EE] focus:outline-none"
+          className="px-3.5 py-2 rounded-xl border border-border bg-card text-xs text-foreground placeholder:text-muted-foreground focus:border-[#4361EE] focus:outline-none"
         />
         <input
           type="tel"
           placeholder="Teléfono / WhatsApp"
           value={telefono}
           onChange={(e) => setTelefono(e.target.value)}
-          className="px-3.5 py-2 rounded-xl border border-[#1E2638] bg-[#111622] text-xs text-white placeholder:text-[#64748B] focus:border-[#4361EE] focus:outline-none"
+          className="px-3.5 py-2 rounded-xl border border-border bg-card text-xs text-foreground placeholder:text-muted-foreground focus:border-[#4361EE] focus:outline-none"
         />
         <select
           value={rol}
           onChange={(e) => setRol(e.target.value as WorkMemberRol)}
-          className="px-3.5 py-2 rounded-xl border border-[#1E2638] bg-[#111622] text-xs text-white focus:border-[#4361EE] focus:outline-none"
+          className="px-3.5 py-2 rounded-xl border border-border bg-card text-xs text-foreground focus:border-[#4361EE] focus:outline-none"
         >
           <option value="member">Miembro / Operador de Turnos</option>
           <option value="admin">Administrador de Sede</option>
@@ -422,7 +422,7 @@ function NewMemberForm({
           <select
             value={groupId}
             onChange={(e) => setGroupId(e.target.value)}
-            className="px-3.5 py-2 rounded-xl border border-[#1E2638] bg-[#111622] text-xs text-white focus:border-[#4361EE] focus:outline-none sm:col-span-2"
+            className="px-3.5 py-2 rounded-xl border border-border bg-card text-xs text-foreground focus:border-[#4361EE] focus:outline-none sm:col-span-2"
           >
             <option value="">Sede Principal (Por Defecto)</option>
             {groups.map((g) => (

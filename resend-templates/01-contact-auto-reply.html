@@ -1,95 +1,194 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" dir="ltr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="supported-color-schemes" content="dark light">
   <title>Confirmación de Contacto [{{{ticketId}}}] - ExeSistemasWEB</title>
   <style>
     .btn {
       display:inline-block;padding:14px 32px;border-radius:12px;
-      font-weight:700;font-size:15px;text-decoration:none;
-      background:linear-gradient(135deg,#00d4ff,#ff00ff);
-      color:#000;margin:16px 0;
+      font-weight:800;font-size:14px;text-decoration:none;
+      background:linear-gradient(135deg,#00d4ff,#10b981);
+      color:#041019 !important;margin:14px 0;letter-spacing:0.3px;
+      box-shadow:0 8px 24px rgba(0,212,255,0.25);
     }
-    h1 {color:#fff;font-size:24px;margin:0 0 16px}
-    h2 {color:#fff;font-size:18px;margin:24px 0 8px}
-    p {color:#aaa;font-size:14px;line-height:1.6;margin:0 0 12px}
-    .label {color:#666;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin:0 0 2px}
-    .value {color:#fff;font-size:15px;font-weight:600;margin:0 0 12px}
+    .btn-secondary {
+      display:inline-block;padding:12px 24px;border-radius:12px;
+      font-weight:700;font-size:13px;text-decoration:none;
+      background-color:#131c31;border:1px solid rgba(0,212,255,0.35);
+      color:#00d4ff !important;margin:8px 4px;
+    }
+    h1 {color:#ffffff;font-size:24px;font-weight:800;margin:0 0 14px;line-height:1.25;letter-spacing:-0.3px;}
+    h2 {color:#ffffff;font-size:17px;font-weight:700;margin:22px 0 8px;}
+    p {color:#94a3b8;font-size:14px;line-height:1.65;margin:0 0 12px;}
+    .label {
+      color:#64748b;font-size:11px;text-transform:uppercase;
+      letter-spacing:1.2px;font-weight:700;margin:0 0 3px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    }
+    .value {color:#f8fafc;font-size:15px;font-weight:600;margin:0 0 12px;}
     .badge {
-      display:inline-block;padding:4px 12px;border-radius:20px;
-      font-size:12px;font-weight:600;
+      display:inline-block;padding:5px 12px;border-radius:999px;
+      font-size:11px;font-weight:700;letter-spacing:0.5px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
     }
-    .badge-green {background:#065f4620;color:#22c55e;border:1px solid #22c55e40}
-    .badge-blue {background:#00d4ff10;color:#00d4ff;border:1px solid #00d4ff30}
-    .badge-magenta {background:#ec489915;color:#ec4899;border:1px solid #ec489940}
-    .divider {border:none;border-top:1px solid #1e1e2e;margin:24px 0}
+    .badge-green {background-color:rgba(16,185,129,0.14);color:#34d399;border:1px solid rgba(16,185,129,0.35);}
+    .badge-blue {background-color:rgba(0,212,255,0.12);color:#00d4ff;border:1px solid rgba(0,212,255,0.35);}
+    .badge-magenta {background-color:rgba(236,72,153,0.14);color:#f472b6;border:1px solid rgba(236,72,153,0.35);}
+    .divider {border:none;border-top:1px solid #1e293b;margin:22px 0;}
+    .hud-box {
+      background-color:#080c17;border-radius:14px;padding:20px;
+      margin:18px 0;border:1px solid #1e293b;
+    }
+    .pipeline-step {
+      display:inline-block;padding:6px 10px;border-radius:8px;
+      background-color:#0c1424;border:1px solid #1e293b;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font-size:11px;color:#cbd5e1;margin:3px 2px;
+    }
   </style>
 </head>
-<body style="margin:0;padding:0;background:#0a0a0f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0f">
-    <tr><td align="center" style="padding:40px 16px">
-      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%">
-        <tr>
-          <td style="text-align:center;padding-bottom:32px">
-            <img src="https://exepaginasweb.com/logo.webp" alt="ExeSistemasWEB" width="48" height="48" style="border-radius:12px">
-            <p style="margin:8px 0 0;font-size:13px;color:#888;letter-spacing:2px;text-transform:uppercase">ExeSistemasWEB</p>
-          </td>
-        </tr>
-        <tr>
-          <td style="background:#12121a;border-radius:16px;border:1px solid #1e1e2e;padding:32px">
-            
-    <div style="text-align:center;padding-bottom:12px;">
+<body style="margin:0;padding:0;background-color:#05070d;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+  <!-- Preheader oculto para vista previa en bandeja de entrada -->
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;color:#05070d;">
+    ¡Hola {{{name}}}! Recibimos tu mensaje ✨ &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847;
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#05070d;background-image:radial-gradient(circle at 50% 0%,rgba(0,212,255,0.10),transparent 65%);">
+    <tr>
+      <td align="center" style="padding:36px 14px 48px;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+          
+          <!-- Cabecera Cyber-HUD Ciudad de Servidores -->
+          <tr>
+            <td style="padding-bottom:20px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0b101e;border:1px solid #1e293b;border-radius:16px;padding:16px 22px;">
+                <tr>
+                  <td align="left" valign="middle">
+                    <table role="presentation" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td valign="middle" style="padding-right:12px;">
+                          <img src="https://exepaginasweb.com/logo.webp" alt="ExeSistemasWEB" width="42" height="42" style="display:block;border-radius:10px;border:1px solid rgba(0,212,255,0.4);background-color:#060a12;">
+                        </td>
+                        <td valign="middle">
+                          <div style="font-size:15px;font-weight:800;color:#ffffff;letter-spacing:0.5px;">ExeSistemasWEB</div>
+                          <div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:10px;color:#00d4ff;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;">
+                            SYS // CLOUD &amp; AUTOMATION ENGINE
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td align="right" valign="middle">
+                    <span style="display:inline-block;padding:5px 10px;border-radius:999px;background-color:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.35);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:10px;font-weight:700;color:#34d399;letter-spacing:0.8px;">
+                      ● ONLINE 24/7
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Contenedor Principal con Haz Láser Superior -->
+          <tr>
+            <td style="background-color:#0c1120;border-radius:20px;border:1px solid #1e293b;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.65);">
+              <!-- Haz láser tricolor -->
+              <div style="height:4px;width:100%;background:linear-gradient(90deg,#00d4ff 0%,#10b981 50%,#ec4899 100%);"></div>
+              <div style="padding:32px 28px;">
+                
+    <div style="text-align:center;padding-bottom:10px;">
       <div class="badge badge-blue" style="font-family:monospace;font-size:12px;letter-spacing:1px;margin-bottom:12px;">TICKET DE ATENCIÓN: {{{ticketId}}}</div>
-      <h1 style="font-size:26px;color:#fff;margin:8px 0;">¡Hola {{{name}}}! Recibimos tu mensaje ✨</h1>
-      <p style="color:#94a3b8;font-size:15px;max-width:480px;margin:0 auto 20px;line-height:1.6;">
-        Gracias por contactar a <strong>ExeSistemasWEB</strong>. Tu consulta ha sido registrada exitosamente y nuestro equipo técnico y comercial la está revisando.
+      <h1 style="font-size:25px;color:#fff;margin:6px 0 10px;">¡Hola {{{name}}}! Recibimos tu mensaje ✨</h1>
+      <p style="color:#94a3b8;font-size:14px;max-width:490px;margin:0 auto 14px;line-height:1.6;">
+        Gracias por contactar a <strong>ExeSistemasWEB</strong>. Tu consulta fue registrada en nuestro motor automático y nuestro equipo de ingeniería la está revisando.
       </p>
     </div>
 
-    <div style="background:#0d0d14;border-radius:14px;padding:24px;margin:20px 0;border:1px solid #00d4ff30;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <span class="label" style="color:#00d4ff;">Estado de la Petición</span>
-        <span class="badge badge-green">En Revisión</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-        <span class="label">Tiempo Estimado de Respuesta</span>
-        <span class="badge badge-blue">Menos de 2 Horas</span>
-      </div>
+    
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 8px;">
+      <tr>
+        <td width="32%" align="center" style="background-color:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);border-radius:10px;padding:8px 4px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:10px;font-weight:700;color:#34d399;">
+              ✓ 01. Ingresado
+            </td><td width="2%"></td><td width="32%" align="center" style="background-color:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);border-radius:10px;padding:8px 4px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:10px;font-weight:700;color:#34d399;">
+              ✓ 02. Enrutado n8n / IA
+            </td><td width="2%"></td><td width="32%" align="center" style="background-color:#080c17;border:1px solid #1e293b;border-radius:10px;padding:8px 4px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:10px;font-weight:700;color:#64748b;">
+              ◎ 03. Especialista Asignado
+            </td>
+      </tr>
+    </table>
+  
 
-      <hr class="divider" style="margin:16px 0;">
+    <div class="hud-box" style="border-color:rgba(0,212,255,0.35);box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;">
+        <tr>
+          <td align="left" valign="middle" style="padding-bottom:8px;">
+            <span class="label" style="color:#00d4ff;">Estado de la Petición</span>
+          </td>
+          <td align="right" valign="middle" style="padding-bottom:8px;">
+            <span class="badge badge-green">En Revisión Activa</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="left" valign="middle">
+            <span class="label">Tiempo Estimado de Respuesta</span>
+          </td>
+          <td align="right" valign="middle">
+            <span class="badge badge-blue">Menos de 2 Horas</span>
+          </td>
+        </tr>
+      </table>
+
+      <hr class="divider" style="margin:14px 0;">
 
       <div class="label" style="margin-bottom:8px;">Resumen de tu mensaje enviado</div>
-      <div style="color:#cbd5e1;background:#0a0a0f;padding:14px 16px;border-radius:10px;font-size:13px;line-height:1.5;border:1px solid #1e1e2e;font-style:italic;">
+      <div style="color:#cbd5e1;background:#050811;padding:14px 16px;border-radius:10px;font-size:13px;line-height:1.55;border:1px solid #1e293b;font-style:italic;">
         "{{{message}}}"
       </div>
     </div>
 
-    <div style="text-align:center;margin:28px 0 16px;">
-      <p style="color:#fff;font-size:14px;font-weight:600;margin-bottom:12px;">¿Necesitás respuesta inmediata?</p>
-      <a href="https://wa.me/5493416874786?text=¡Hola!%20Tengo%20el%20ticket%20{{{ticketId}}}%20y%20quisiera%20consultar..." class="btn" style="background:linear-gradient(135deg,#22c55e,#00d4ff);color:#000;padding:14px 28px;font-size:14px;box-shadow:0 0 15px rgba(34,197,94,0.3);">
+    <div style="text-align:center;margin:26px 0 16px;">
+      <p style="color:#fff;font-size:14px;font-weight:700;margin-bottom:12px;">¿Necesitás respuesta inmediata o avanzar ahora mismo?</p>
+      <a href="https://wa.me/5493416874786?text=¡Hola!%20Tengo%20el%20ticket%20{{{ticketId}}}%20y%20quisiera%20consultar..." class="btn" style="background:linear-gradient(135deg,#22c55e,#00d4ff);color:#041019;padding:14px 30px;font-size:14px;">
         💬 Chatear por WhatsApp Directo
       </a>
     </div>
 
-    <div style="background:#0d0d14;border-radius:10px;padding:16px;margin-top:24px;border:1px solid #1e1e2e;text-align:center;">
-      <p style="font-size:12px;color:#64748b;margin:0;">
+    <div style="background:#080c17;border-radius:12px;padding:14px 16px;margin-top:20px;border:1px solid #1e293b;text-align:center;">
+      <p style="font-size:12px;color:#94a3b8;margin:0;">
         💡 Un especialista asignado a tu ticket <strong>{{{ticketId}}}</strong> responderá directamente a este correo.
       </p>
     </div>
   
-          </td>
-        </tr>
-        <tr>
-          <td style="text-align:center;padding:24px 0 0;font-size:12px;color:#555">
-            <p>ExeSistemasWEB — Estudio Premium de Sistemas y Automatización</p>
-            <p style="margin:4px 0">
-              <a href="https://exepaginasweb.com" style="color:#00d4ff;text-decoration:none">exepaginasweb.com</a>
-            </p>
-          </td>
-        </tr>
-      </table>
-    </td></tr>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer Técnico con Canales Directos -->
+          <tr>
+            <td style="padding:24px 12px 0;text-align:center;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#090d18;border:1px solid #162032;border-radius:14px;padding:16px;margin-bottom:16px;">
+                <tr>
+                  <td align="center" style="font-size:12px;color:#94a3b8;line-height:1.6;">
+                    <strong style="color:#ffffff;">ExeSistemasWEB</strong> — Desarrollo Web a Medida, SaaS &amp; Automatización n8n<br>
+                    <a href="https://exepaginasweb.com" style="color:#00d4ff;text-decoration:none;font-weight:600;">exepaginasweb.com</a>
+                    &nbsp;·&nbsp;
+                    <a href="https://wa.me/5493416874786" style="color:#34d399;text-decoration:none;font-weight:600;">WhatsApp +54 9 341 687-4786</a>
+                    &nbsp;·&nbsp;
+                    <a href="https://exepaginasweb.com/cotizador" style="color:#cbd5e1;text-decoration:none;">Cotizador Online</a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0;font-size:11px;color:#475569;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;">
+                100% CÓDIGO PROPIO · ARQUITECTURA HEXAGONAL · VERIFICACIÓN CRIPTOGRÁFICA SVIX
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
   </table>
 </body>
 </html>

@@ -13,7 +13,8 @@ import {
   aiDiagnosticAutoReply,
   paymentConfirmation,
   emailVerification,
-} from '../lib/email/templates'
+  n8nAutomationReceipt,
+} from '../lib/email/templates.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const outDir = path.resolve(__dirname, '../resend-templates')
@@ -68,6 +69,18 @@ const verificationHtml = emailVerification({
 })
 fs.writeFileSync(path.join(outDir, '05-email-verification.html'), verificationHtml, 'utf8')
 
+// 6. n8n Automation Live Receipt (Cliente)
+const n8nReceiptHtml = n8nAutomationReceipt({
+  name: '{{{name}}}',
+  email: '{{{email}}}',
+  automationType: '{{{automationType}}}',
+  details: '{{{details}}}',
+  ticketId: '{{{ticketId}}}',
+  engineMode: 'n8n_cloud',
+  lang: 'es',
+})
+fs.writeFileSync(path.join(outDir, '06-n8n-automation-live.html'), n8nReceiptHtml, 'utf8')
+
 // Generar README instructivo para el usuario
 const readmeContent = `# Plantillas Oficiales para Resend Templates
 
@@ -97,6 +110,11 @@ Estas plantillas están listas para ser cargadas en tu panel de Resend (https://
 - **Name:** \`email-verification\`
 - **Subject:** \`🔒 Confirma tu cuenta de correo electrónico — ExeSistemasWEB\`
 - **Variables:** \`name\`, \`verificationUrl\`
+
+### 6. \`06-n8n-automation-live.html\`
+- **Name:** \`n8n-automation-live\`
+- **Subject:** \`⚡ Automatización Ejecutada [Ticket: {{{ticketId}}}] - ExeSistemasWEB\`
+- **Variables:** \`name\`, \`email\`, \`automationType\`, \`details\`, \`ticketId\`
 `
 fs.writeFileSync(path.join(outDir, 'README.md'), readmeContent, 'utf8')
 

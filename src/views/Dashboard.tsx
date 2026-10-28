@@ -145,7 +145,7 @@ export default function Dashboard() {
 
   if (isGlobalLoading) {
     return (
-      <div className="bg-[#0B0E14] text-white flex items-center justify-center min-h-screen">
+      <div className="bg-background text-foreground flex items-center justify-center min-h-screen">
         <BrandLoader
           size="lg"
           text="EXESISTEMASWEB"
@@ -157,13 +157,13 @@ export default function Dashboard() {
 
   if (!isPreview && error) {
     return (
-      <div className="bg-[#0B0E14] text-white flex items-center justify-center min-h-screen px-4">
+      <div className="bg-background text-foreground flex items-center justify-center min-h-screen px-4">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className="relative z-10 max-w-xl w-full rounded-2xl border border-rose-500/30 bg-[#111622] p-8 shadow-2xl"
         >
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="text-2xl font-bold text-foreground">
             {t('dashboard.error_conexion_titulo', 'Error de conexión')}
           </h1>
           <p className="mt-3 text-rose-400 text-sm font-medium">{error}</p>
@@ -183,7 +183,7 @@ export default function Dashboard() {
   const userInitial = userName.charAt(0).toUpperCase()
 
   return (
-    <div className="min-h-screen bg-[#0B0E14] text-slate-100 flex flex-col md:flex-row overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row overflow-x-hidden font-sans">
       {sidebarOpen && (
         <button
           type="button"

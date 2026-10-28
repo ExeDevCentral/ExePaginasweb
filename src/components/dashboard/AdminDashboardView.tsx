@@ -94,7 +94,7 @@ export default function AdminDashboardView({
       <div className="border border-border bg-card rounded-3xl p-6 backdrop-blur-xl">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8 pb-6 border-b border-border">
           {/* Selector de Tabs */}
-          <div className="flex bg-muted p-1 rounded-2xl border border-border self-start">
+          <div className="flex bg-muted/50 p-1 rounded-2xl border border-border self-start">
             <button
               onClick={() => handleTabChange('clientes')}
               className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
@@ -151,7 +151,7 @@ export default function AdminDashboardView({
                 }
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-2xl bg-muted border border-border text-foreground placeholder-muted-foreground focus:border-accent-cyan focus:outline-none text-sm transition-colors"
+                className="w-full pl-11 pr-4 py-3 rounded-2xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:border-accent-cyan focus:outline-none text-sm transition-colors shadow-xs"
               />
             </div>
 
@@ -161,7 +161,7 @@ export default function AdminDashboardView({
                 <select
                   value={planFilter}
                   onChange={(e) => setPlanFilter(e.target.value)}
-                  className="bg-muted border border-border text-foreground rounded-2xl px-4 py-3 text-sm focus:border-accent-cyan focus:outline-none"
+                  className="bg-card border border-border text-foreground rounded-2xl px-4 py-3 text-sm focus:border-accent-cyan focus:outline-none shadow-xs cursor-pointer"
                 >
                   <option value="todos">Todos los Planes</option>
                   <option value="basico">Plan Básico</option>
@@ -178,7 +178,7 @@ export default function AdminDashboardView({
                 <select
                   value={ticketStatusFilter}
                   onChange={(e) => setTicketStatusFilter(e.target.value)}
-                  className="bg-muted border border-border text-foreground rounded-2xl px-4 py-3 text-sm focus:border-accent-cyan focus:outline-none"
+                  className="bg-card border border-border text-foreground rounded-2xl px-4 py-3 text-sm focus:border-accent-cyan focus:outline-none shadow-xs cursor-pointer"
                 >
                   <option value="todos">Todos los Estados</option>
                   <option value="abierto">Abiertos</option>

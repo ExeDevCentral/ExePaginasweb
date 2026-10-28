@@ -100,10 +100,10 @@ export function AdminPagosTable({ pagos, clientes }: AdminPagosTableProps) {
             <span
               className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border ${
                 isApproved
-                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
                   : isPending
-                    ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
-                    : 'bg-red-500/10 text-red-400 border-red-500/20'
+                    ? 'bg-amber-500/10 text-amber-700 dark:text-yellow-400 border-amber-500/30'
+                    : 'bg-red-500/10 text-rose-700 dark:text-red-400 border-red-500/30'
               }`}
             >
               <MorphIcon icon={icon} size={11} spring="snappy" />

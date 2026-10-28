@@ -110,19 +110,19 @@ export function DashboardViewport({
   return (
     <div className="flex-1 min-w-0 flex flex-col min-h-screen">
       {/* Mobile Header Bar */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-[#0D111A] border-b border-[#1E2638]">
+      <div className="md:hidden flex items-center justify-between p-4 bg-card border-b border-border">
         <button
           type="button"
           onClick={onOpenSidebar}
-          className="p-2 rounded-xl bg-[#151B28] text-white border border-[#1E2638]"
+          className="p-2 rounded-xl bg-muted/40 text-foreground border border-border"
         >
           <Menu className="w-5 h-5" />
         </button>
-        <span className="font-bold text-white text-sm">ExeSistemasWEB</span>
+        <span className="font-bold text-foreground text-sm">ExeSistemasWEB</span>
         <button
           type="button"
           onClick={onLogout}
-          className="text-xs font-semibold text-rose-400 bg-rose-500/10 px-3 py-1.5 rounded-xl border border-rose-500/20"
+          className="text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-500/10 px-3 py-1.5 rounded-xl border border-rose-500/20"
         >
           Salir
         </button>
@@ -142,19 +142,19 @@ export function DashboardViewport({
             animate={{ opacity: 1, y: 0 }}
             className="p-[1px] rounded-2xl bg-gradient-to-r from-amber-500/40 via-yellow-500/30 to-amber-500/40 mb-6"
           >
-            <div className="bg-[#111622] border border-[#1E2638] p-4 sm:p-5 rounded-2xl flex flex-wrap items-center justify-between gap-4 shadow-lg">
+            <div className="bg-card border border-border p-4 sm:p-5 rounded-2xl flex flex-wrap items-center justify-between gap-4 shadow-lg">
               <div className="flex items-center gap-3.5">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center">
-                  <Crown className="w-5 h-5 text-amber-400" />
+                  <Crown className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-amber-400 font-bold font-mono">
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-amber-600 dark:text-amber-400 font-bold font-mono">
                       {t('dashboard.super_admin', 'SUPER ADMIN')}
                     </span>
                     <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                   </div>
-                  <p className="text-[#8C9BB0] text-xs font-medium">
+                  <p className="text-muted-foreground text-xs font-medium">
                     {viewMode === 'admin'
                       ? t('dashboard.consola_central_operativa', 'Consola central operativa')
                       : t('dashboard.vista_cliente_activa', 'Vista de cliente activa')}
@@ -163,7 +163,7 @@ export function DashboardViewport({
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex bg-[#151B28] p-1 rounded-xl border border-[#1E2638]">
+                <div className="flex bg-muted/50 p-1 rounded-xl border border-border">
                   <button
                     type="button"
                     onClick={() => {
@@ -173,7 +173,7 @@ export function DashboardViewport({
                     className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       viewMode === 'admin' && activeView === 'overview'
                         ? 'bg-[#4361EE] text-white shadow-sm'
-                        : 'text-[#8C9BB0] hover:text-white'
+                        : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     {t('dashboard.consola_admin', 'Consola Admin')}
@@ -187,7 +187,7 @@ export function DashboardViewport({
                     className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       viewMode === 'client' && activeView === 'overview'
                         ? 'bg-[#4361EE] text-white shadow-sm'
-                        : 'text-[#8C9BB0] hover:text-white'
+                        : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     {t('dashboard.simular_cliente', 'Simular Cliente')}
@@ -198,14 +198,14 @@ export function DashboardViewport({
                   type="button"
                   onClick={() => (viewMode === 'admin' ? onRefreshAdmin() : onRefreshClient())}
                   disabled={clientLoading || adminLoading}
-                  className="p-2 rounded-xl border border-[#1E2638] bg-[#151B28] hover:bg-[#1C2438] text-slate-300 transition-all cursor-pointer"
+                  className="p-2 rounded-xl border border-border bg-muted/40 hover:bg-muted text-foreground transition-all cursor-pointer"
                 >
                   <RefreshCw
                     size={16}
                     className={
                       clientLoading || adminLoading
-                        ? 'animate-spin text-amber-400'
-                        : 'text-slate-300'
+                        ? 'animate-spin text-amber-500'
+                        : 'text-muted-foreground'
                     }
                   />
                 </button>
@@ -260,7 +260,7 @@ export function DashboardViewport({
                 }`}
               >
                 <PanelErrorBoundary panelName="Servicios">
-                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-4 sm:p-6 shadow-sm">
+                  <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-sm">
                     <ServicesPanel
                       tenantId={effectiveTenantId}
                       onOpenTicket={() => onNavigate('sla')}
@@ -278,7 +278,7 @@ export function DashboardViewport({
                 }`}
               >
                 <PanelErrorBoundary panelName="Equipo">
-                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-4 sm:p-6 shadow-sm">
+                  <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-sm">
                     <WorkGroupsPanel tenantId={effectiveTenantId} />
                   </div>
                 </PanelErrorBoundary>
@@ -293,7 +293,7 @@ export function DashboardViewport({
                 }`}
               >
                 <PanelErrorBoundary panelName="SLA">
-                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-4 sm:p-6 shadow-sm">
+                  <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-sm">
                     <SLADashboard tenantId={effectiveTenantId} />
                   </div>
                 </PanelErrorBoundary>
@@ -308,7 +308,7 @@ export function DashboardViewport({
                 }`}
               >
                 <PanelErrorBoundary panelName="Facturas">
-                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-4 sm:p-6 shadow-sm">
+                  <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-sm">
                     <InvoicesPanel
                       tenantId={effectiveTenantId}
                       pagos={effectivePagos}
@@ -327,7 +327,7 @@ export function DashboardViewport({
                 }`}
               >
                 <PanelErrorBoundary panelName="Configuración">
-                  <div className="rounded-2xl bg-[#111622] border border-[#1E2638] p-4 sm:p-6 shadow-sm">
+                  <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-sm">
                     <SettingsPanel
                       cliente={effectiveCliente}
                       userEmail={userEmail}

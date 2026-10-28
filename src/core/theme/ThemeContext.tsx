@@ -24,13 +24,18 @@ interface ThemeContextValue {
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  theme: 'dark',
+  theme: 'light',
   setTheme: () => {},
   toggleTheme: () => {},
 })
 
 export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
-  const [theme, setTheme] = useState<Theme>('dark')
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+    }
+    return 'light'
+  })
 
   useEffect(() => {
     try {
@@ -39,12 +44,13 @@ export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
         setTheme(saved)
         document.documentElement.classList.toggle('dark', saved === 'dark')
       } else {
-        setTheme('dark')
-        document.documentElement.classList.add('dark')
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        const initial = prefersDark ? 'dark' : 'light'
+        setTheme(initial)
+        document.documentElement.classList.toggle('dark', prefersDark)
       }
     } catch {
-      setTheme('dark')
-      document.documentElement.classList.add('dark')
+      // safe fallback
     }
   }, [])
 

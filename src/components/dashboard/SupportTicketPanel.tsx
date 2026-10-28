@@ -85,28 +85,28 @@ export default function SupportTicketPanel({
             initial={{ opacity: 0, y: 40, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.98 }}
-            className="relative w-full sm:max-w-lg max-h-[92dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-[#1E2638] bg-[#111622] text-white shadow-2xl"
+            className="relative w-full sm:max-w-lg max-h-[92dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-border bg-card text-foreground shadow-2xl"
           >
-            <div className="sticky top-0 z-10 border-b border-[#1E2638] bg-[#0D111A] px-6 py-4">
+            <div className="sticky top-0 z-10 border-b border-border bg-card px-6 py-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl border border-[#1E2638] bg-[#151B28] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl border border-border bg-muted/40 flex items-center justify-center">
                     <LifeBuoy className="w-5 h-5 text-[#38BDF8]" />
                   </div>
                   <div>
                     <h2
                       id="ticket-panel-title"
-                      className="text-base sm:text-lg font-bold text-white"
+                      className="text-base sm:text-lg font-bold text-foreground"
                     >
                       {t('tickets.titulo', 'Soporte y Tickets')}
                     </h2>
-                    <p className="text-xs text-[#8C9BB0] font-medium">{sla}</p>
+                    <p className="text-xs text-muted-foreground font-medium">{sla}</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-xl border border-[#1E2638] bg-[#151B28] p-1.5 text-[#8C9BB0] hover:text-white hover:bg-[#1C2438] transition-colors"
+                  className="rounded-xl border border-border bg-muted/40 p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   aria-label="Cerrar"
                 >
                   <X size={18} />
@@ -141,7 +141,7 @@ export default function SupportTicketPanel({
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label
-                    className="text-xs font-bold uppercase tracking-wider text-[#8C9BB0]"
+                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
                     htmlFor="ticket-cat"
                   >
                     Tipo de consulta
@@ -151,13 +151,13 @@ export default function SupportTicketPanel({
                     value={categoria}
                     onChange={(e) => setCategoria(e.target.value)}
                     required
-                    className="mt-1.5 w-full rounded-xl border border-[#1E2638] bg-[#151B28] px-3.5 py-2.5 text-white text-xs sm:text-sm focus:border-[#4361EE] focus:outline-none"
+                    className="mt-1.5 w-full rounded-xl border border-border bg-muted/40 px-3.5 py-2.5 text-foreground text-xs sm:text-sm focus:border-[#4361EE] focus:outline-none"
                   >
-                    <option value="" className="bg-[#151B28] text-white">
+                    <option value="" className="bg-muted/40 text-foreground">
                       Elegí una categoría
                     </option>
                     {categories.map((c) => (
-                      <option key={c.id} value={c.id} className="bg-[#151B28] text-white">
+                      <option key={c.id} value={c.id} className="bg-muted/40 text-foreground">
                         {c.label}
                       </option>
                     ))}
@@ -166,7 +166,7 @@ export default function SupportTicketPanel({
 
                 <div>
                   <label
-                    className="text-xs font-bold uppercase tracking-wider text-[#8C9BB0]"
+                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
                     htmlFor="ticket-asunto"
                   >
                     Asunto
@@ -178,13 +178,13 @@ export default function SupportTicketPanel({
                     required
                     maxLength={120}
                     placeholder="Ej: El formulario no envía emails"
-                    className="mt-1.5 w-full rounded-xl border border-[#1E2638] bg-[#151B28] px-3.5 py-2.5 text-white text-xs sm:text-sm placeholder:text-[#64748B] focus:border-[#4361EE] focus:outline-none"
+                    className="mt-1.5 w-full rounded-xl border border-border bg-muted/40 px-3.5 py-2.5 text-foreground text-xs sm:text-sm placeholder:text-muted-foreground focus:border-[#4361EE] focus:outline-none"
                   />
                 </div>
 
                 <div>
                   <label
-                    className="text-xs font-bold uppercase tracking-wider text-[#8C9BB0]"
+                    className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
                     htmlFor="ticket-msg"
                   >
                     Detalle
@@ -197,7 +197,7 @@ export default function SupportTicketPanel({
                     rows={4}
                     maxLength={2000}
                     placeholder="Contanos qué necesitás o qué falló..."
-                    className="mt-1.5 w-full rounded-xl border border-[#1E2638] bg-[#151B28] px-3.5 py-2.5 text-white text-xs sm:text-sm placeholder:text-[#64748B] focus:border-[#4361EE] focus:outline-none resize-none"
+                    className="mt-1.5 w-full rounded-xl border border-border bg-muted/40 px-3.5 py-2.5 text-foreground text-xs sm:text-sm placeholder:text-muted-foreground focus:border-[#4361EE] focus:outline-none resize-none"
                   />
                 </div>
 
@@ -223,25 +223,25 @@ export default function SupportTicketPanel({
               </form>
 
               {tickets.length > 0 && (
-                <div className="pt-2 border-t border-[#1E2638]">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#8C9BB0] mb-2.5">
+                <div className="pt-2 border-t border-border">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2.5">
                     Tus tickets
                   </p>
                   <ul className="space-y-2 max-h-48 overflow-y-auto pr-1">
                     {tickets.map((t) => (
                       <li
                         key={t.id}
-                        className="rounded-xl border border-[#1E2638] bg-[#151B28] px-3.5 py-2.5"
+                        className="rounded-xl border border-border bg-muted/40 px-3.5 py-2.5"
                       >
                         <div className="flex justify-between gap-2">
-                          <p className="text-xs sm:text-sm font-semibold text-white truncate">
+                          <p className="text-xs sm:text-sm font-semibold text-foreground truncate">
                             {t.asunto}
                           </p>
                           <span className="shrink-0 text-[10px] font-bold uppercase text-[#38BDF8]">
                             {ESTADO_LABEL[t.estado] ?? t.estado}
                           </span>
                         </div>
-                        <p className="text-[10px] text-[#64748B] mt-1 font-mono">
+                        <p className="text-[10px] text-muted-foreground mt-1 font-mono">
                           {new Date(t.created_at).toLocaleString('es-AR')}
                         </p>
                       </li>

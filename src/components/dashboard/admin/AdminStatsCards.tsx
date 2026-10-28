@@ -33,7 +33,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
             <Users className="w-6 h-6" />
           </div>
         </div>
-        <p className="text-xs text-accent-cyan mt-4 font-mono">
+        <p className="text-xs text-primary dark:text-accent-cyan mt-4 font-mono font-medium">
           {stats.sinPlan} sin plan activo · {stats.totalClientes - stats.sinPlan} activos
         </p>
       </motion.div>
@@ -53,14 +53,14 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
               {stats.planBasico + stats.planAvanzado + stats.planPremium}
             </h3>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-yellow-400 group-hover:scale-110 transition-transform">
             <TrendingUp className="w-6 h-6" />
           </div>
         </div>
-        <p className="text-xs text-muted-foreground mt-4 font-mono flex gap-2">
-          <span className="text-blue-400">B: {stats.planBasico}</span>
-          <span className="text-emerald-400">A: {stats.planAvanzado}</span>
-          <span className="text-accent-magenta">P: {stats.planPremium}</span>
+        <p className="text-xs text-muted-foreground mt-4 font-mono flex gap-2 font-semibold">
+          <span className="text-blue-600 dark:text-blue-400">B: {stats.planBasico}</span>
+          <span className="text-emerald-700 dark:text-emerald-400">A: {stats.planAvanzado}</span>
+          <span className="text-purple-700 dark:text-accent-magenta">P: {stats.planPremium}</span>
         </p>
       </motion.div>
 
@@ -83,7 +83,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
             <Ticket className="w-6 h-6" />
           </div>
         </div>
-        <p className="text-xs text-accent-magenta mt-4 font-mono">
+        <p className="text-xs text-accent-magenta mt-4 font-mono font-medium">
           {stats.ticketsAbiertos > 0 ? '⚠️ Requiere atención inmediata' : '✅ Soporte al día'}
         </p>
       </motion.div>
@@ -108,11 +108,13 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
               <span className="text-[10px] text-muted-foreground">USD</span>
             </h3>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
             <DollarSign className="w-6 h-6" />
           </div>
         </div>
-        <p className="text-xs text-emerald-400 mt-2 font-mono">Total acumulado histórico</p>
+        <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-2 font-mono font-medium">
+          Total acumulado histórico
+        </p>
       </motion.div>
     </div>
   )

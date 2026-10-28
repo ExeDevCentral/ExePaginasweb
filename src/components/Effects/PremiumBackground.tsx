@@ -103,9 +103,11 @@ const PremiumBackground = () => {
   const pathname = usePathname()
 
   const shouldRender =
-    !pathname?.startsWith('/tienda') &&
-    !pathname?.startsWith('/login') &&
-    !pathname?.startsWith('/cotizador')
+    pathname === '/' ||
+    (!pathname?.startsWith('/dashboard') &&
+      !pathname?.startsWith('/tienda') &&
+      !pathname?.startsWith('/login') &&
+      !pathname?.startsWith('/cotizador'))
 
   useEffect(() => {
     if (!shouldRender) return
@@ -115,7 +117,8 @@ const PremiumBackground = () => {
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const prefersReducedMotion =
+      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const isMobile = window.innerWidth < 768
 
     let w = (canvas.width = window.innerWidth)

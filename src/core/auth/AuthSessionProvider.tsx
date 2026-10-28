@@ -7,7 +7,6 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
-import * as Sentry from '@sentry/react'
 import { supabase, isSupabaseConfigured } from '../infra/supabase/client'
 import { isLocalDashboardPreview } from './siteUrl'
 
@@ -51,13 +50,21 @@ export function AuthSessionProvider({ children }: { readonly children: ReactNode
     }
 
     const syncSentryUser = (currentSession: Session | null) => {
-      if (currentSession?.user) {
-        Sentry.setUser({
-          id: currentSession.user.id,
-          ...(currentSession.user.email !== undefined ? { email: currentSession.user.email } : {}),
-        })
-      } else {
-        Sentry.setUser(null)
+      if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+        import('@sentry/react')
+          .then((Sentry) => {
+            if (currentSession?.user) {
+              Sentry.setUser({
+                id: currentSession.user.id,
+                ...(currentSession.user.email !== undefined
+                  ? { email: currentSession.user.email }
+                  : {}),
+              })
+            } else {
+              Sentry.setUser(null)
+            }
+          })
+          .catch(() => {})
       }
     }
 

@@ -358,7 +358,7 @@ export default function StorePage() {
             whileInView={{ scale: 1, opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative bg-card/85 backdrop-blur-2xl border border-border/80 rounded-3xl p-8 sm:p-12 shadow-2xl max-w-xl w-full text-center overflow-hidden"
+            className="relative bg-card/85 backdrop-blur-xl border border-border/80 rounded-2xl p-8 sm:p-12 shadow-xl max-w-xl w-full text-center overflow-hidden"
           >
             {/* Ambient Background Aura */}
             <div className="absolute -top-24 -left-24 w-48 h-48 bg-accent-cyan/15 rounded-full blur-3xl pointer-events-none" />
@@ -369,7 +369,7 @@ export default function StorePage() {
               whileInView={{ scale: 1, rotate: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1, type: 'spring', damping: 15 }}
-              className="mx-auto w-20 h-20 mb-6 bg-linear-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-3xl flex items-center justify-center shadow-xl shadow-purple-500/30"
+              className="mx-auto w-16 h-16 mb-6 bg-linear-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/25"
             >
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}

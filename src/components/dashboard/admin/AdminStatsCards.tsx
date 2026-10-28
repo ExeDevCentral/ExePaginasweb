@@ -4,7 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import { motion } from 'framer-motion'
-import { Users, TrendingUp, Ticket, DollarSign } from 'lucide-react'
+import { Users, TrendingUp, Ticket, DollarSign, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import type { AdminStats } from '../../../hooks/useAdminDashboard'
 
 interface AdminStatsCardsProps {
@@ -18,7 +18,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="rounded-3xl border border-border bg-card p-6 backdrop-blur-xl hover:border-accent-cyan/30 transition-all group"
+        className="rounded-xl border border-border bg-card p-6 shadow-sm hover:border-accent-cyan/30 transition-all group"
       >
         <div className="flex justify-between items-start">
           <div>
@@ -29,7 +29,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
               {stats.totalClientes}
             </h3>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-accent-cyan/10 border border-accent-cyan/20 flex items-center justify-center text-accent-cyan group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 rounded-lg bg-accent-cyan/10 border border-accent-cyan/20 flex items-center justify-center text-accent-cyan group-hover:scale-105 transition-transform">
             <Users className="w-6 h-6" />
           </div>
         </div>
@@ -42,7 +42,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.05 }}
-        className="rounded-3xl border border-border bg-card p-6 backdrop-blur-xl hover:border-yellow-500/30 transition-all group"
+        className="rounded-xl border border-border bg-card p-6 shadow-sm hover:border-yellow-500/30 transition-all group"
       >
         <div className="flex justify-between items-start">
           <div>
@@ -53,7 +53,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
               {stats.planBasico + stats.planAvanzado + stats.planPremium}
             </h3>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-yellow-400 group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-yellow-400 group-hover:scale-105 transition-transform">
             <TrendingUp className="w-6 h-6" />
           </div>
         </div>
@@ -68,7 +68,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
-        className="rounded-3xl border border-border bg-card p-6 backdrop-blur-xl hover:border-accent-magenta/30 transition-all group"
+        className="rounded-xl border border-border bg-card p-6 shadow-sm hover:border-accent-magenta/30 transition-all group"
       >
         <div className="flex justify-between items-start">
           <div>
@@ -79,20 +79,30 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
               {stats.ticketsAbiertos}
             </h3>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-accent-magenta/10 border border-accent-magenta/20 flex items-center justify-center text-accent-magenta group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 rounded-lg bg-accent-magenta/10 border border-accent-magenta/20 flex items-center justify-center text-accent-magenta group-hover:scale-105 transition-transform">
             <Ticket className="w-6 h-6" />
           </div>
         </div>
-        <p className="text-xs text-accent-magenta mt-4 font-mono font-medium">
-          {stats.ticketsAbiertos > 0 ? '⚠️ Requiere atención inmediata' : '✅ Soporte al día'}
-        </p>
+        <div className="text-xs text-accent-magenta mt-4 font-mono font-medium flex items-center gap-1.5">
+          {stats.ticketsAbiertos > 0 ? (
+            <>
+              <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <span>Requiere atención inmediata</span>
+            </>
+          ) : (
+            <>
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span className="text-emerald-700 dark:text-emerald-400">Soporte al día</span>
+            </>
+          )}
+        </div>
       </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.15 }}
-        className="rounded-3xl border border-border bg-card p-6 backdrop-blur-xl hover:border-emerald-500/30 transition-all group"
+        className="rounded-xl border border-border bg-card p-6 shadow-sm hover:border-emerald-500/30 transition-all group"
       >
         <div className="flex justify-between items-start">
           <div>
@@ -108,7 +118,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
               <span className="text-[10px] text-muted-foreground">USD</span>
             </h3>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-105 transition-transform">
             <DollarSign className="w-6 h-6" />
           </div>
         </div>

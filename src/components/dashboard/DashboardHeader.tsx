@@ -25,7 +25,7 @@ export function DashboardHeader({ userEmail, onLogout }: Readonly<DashboardHeade
   const prefersReducedMotion = useReducedMotion()
 
   return (
-    <header className="sticky top-0 z-50 mb-6 p-3 sm:p-4 rounded-2xl bg-card border border-border shadow-sm flex flex-wrap items-center justify-between gap-4 transition-all duration-300">
+    <header className="sticky top-0 z-50 mb-6 p-3 sm:p-4 rounded-xl bg-card border border-border shadow-sm flex flex-wrap items-center justify-between gap-4 transition-all duration-300">
       <div className="flex items-center gap-3 sm:gap-4">
         <motion.a
           href="/"
@@ -55,7 +55,7 @@ export function DashboardHeader({ userEmail, onLogout }: Readonly<DashboardHeade
             e.preventDefault()
             navigate('/')
           }}
-          className="hidden md:inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl bg-muted/40 hover:bg-muted border border-border text-foreground transition-all shadow-sm"
+          className="hidden md:inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-muted/40 hover:bg-muted border border-border text-foreground transition-all shadow-sm"
         >
           <ArrowLeft size={13} className="text-[#38BDF8]" />
           <span>{t('dashboard.volver_exepaginasweb', 'Volver al Sitio')}</span>
@@ -64,27 +64,23 @@ export function DashboardHeader({ userEmail, onLogout }: Readonly<DashboardHeade
 
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
         {/* Real-time SSL Security Badge */}
-        <div className="hidden lg:flex items-center gap-1.5 text-xs font-mono font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-xl border border-emerald-500/20 shadow-sm">
+        <div className="hidden lg:flex items-center gap-1.5 text-xs font-mono font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 shadow-sm">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
           <span>SSL 100% SECURE</span>
-          <span
-            className={`w-1.5 h-1.5 rounded-full bg-emerald-600 dark:bg-emerald-400 ${
-              prefersReducedMotion ? '' : 'animate-ping'
-            }`}
-          />
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 dark:bg-emerald-400" />
         </div>
 
         {/* Language Switcher Selector */}
         <LanguageSwitcher />
 
         {/* Theme Toggle Button */}
-        <div className="p-1 rounded-xl bg-muted/40 border border-border flex items-center justify-center shadow-sm">
+        <div className="p-1 rounded-lg bg-muted/40 border border-border flex items-center justify-center shadow-sm">
           <ThemeToggle />
         </div>
 
         {/* User Email Indicator */}
         {userEmail && (
-          <div className="hidden sm:block text-xs font-medium text-foreground bg-muted/40 px-3 py-1.5 rounded-xl border border-border shadow-sm max-w-[200px] truncate">
+          <div className="hidden sm:block text-xs font-medium text-foreground bg-muted/40 px-3 py-1.5 rounded-lg border border-border shadow-sm max-w-[200px] truncate">
             {userEmail}
           </div>
         )}
@@ -93,7 +89,7 @@ export function DashboardHeader({ userEmail, onLogout }: Readonly<DashboardHeade
         <button
           type="button"
           onClick={onLogout}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-rose-500/20 bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-400 text-xs font-semibold transition-all shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-rose-500/20 bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-400 text-xs font-semibold transition-all shadow-sm cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5" />
           <span>{t('dashboard.salir', 'Salir')}</span>

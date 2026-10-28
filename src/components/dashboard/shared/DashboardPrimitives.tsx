@@ -35,7 +35,6 @@ export function LiveBadge({ label }: Readonly<{ label: string }>) {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
       <span className="relative flex h-2 w-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-600 dark:bg-emerald-400 opacity-60" />
         <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-600 dark:bg-emerald-400" />
       </span>
       {label}
@@ -65,7 +64,7 @@ export function MetricGrid({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="rounded-2xl bg-card border border-border p-5 shadow-sm hover:border-primary/40 transition-all"
+            className="rounded-xl border border-border bg-card p-5 shadow-sm hover:border-primary/40 transition-all"
           >
             {/* Top row: Icon + Label + Menu */}
             <div className="flex items-center justify-between text-muted-foreground">
@@ -133,7 +132,7 @@ export function DashdarkRevenueChart({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="rounded-2xl bg-card border border-border p-6 shadow-sm flex flex-col justify-between"
+      className="rounded-xl border border-border bg-card p-6 shadow-sm flex flex-col justify-between"
     >
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
@@ -227,9 +226,9 @@ export function DashdarkRevenueChart({
               strokeWidth="3"
             />
 
-            {/* Glowing Active Marker Point */}
+            {/* Active Marker Point */}
             <circle cx="250" cy="95" r="5" fill="#4361EE" stroke="#FFFFFF" strokeWidth="2" />
-            <circle cx="250" cy="95" r="10" fill="#4361EE" opacity="0.3" className="animate-ping" />
+            <circle cx="250" cy="95" r="9" fill="#4361EE" opacity="0.2" />
           </svg>
 
           {/* Active Hover Tooltip Card */}
@@ -273,7 +272,7 @@ export function DashdarkProfitCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.12 }}
-      className="rounded-2xl bg-card border border-border p-5 shadow-sm flex flex-col justify-between"
+      className="rounded-xl border border-border bg-card p-5 shadow-sm flex flex-col justify-between"
     >
       <div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
@@ -331,7 +330,7 @@ export function DashdarkSessionsCard() {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.15 }}
-      className="rounded-2xl bg-card border border-border p-5 shadow-sm flex flex-col justify-between"
+      className="rounded-xl border border-border bg-card p-5 shadow-sm flex flex-col justify-between"
     >
       <div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
@@ -402,7 +401,7 @@ export function LiveHealthCard({ theme: _theme }: Readonly<{ theme: PlanDashboar
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl bg-card border border-border p-6 shadow-sm space-y-4"
+      className="rounded-xl border border-border bg-card p-6 shadow-sm space-y-4"
     >
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
@@ -478,7 +477,7 @@ export function QuickActionsHub({
   const { t } = useTranslation()
 
   return (
-    <div className="rounded-2xl bg-card border border-border p-6 space-y-4 shadow-sm">
+    <div className="rounded-xl border border-border bg-card p-6 space-y-4 shadow-sm">
       <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
         {t('dashboard.acciones_rapidas', 'Acciones Rápidas (1-Clic)')}
       </p>
@@ -559,7 +558,7 @@ export function WeeklyChart({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.15 }}
-      className="rounded-2xl bg-card border border-border p-6 shadow-sm"
+      className="rounded-xl border border-border bg-card p-6 shadow-sm"
     >
       <div className="flex items-center justify-between mb-5">
         <p className="text-xs font-bold uppercase tracking-wider text-foreground">{label}</p>

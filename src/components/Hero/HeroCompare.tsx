@@ -6,6 +6,7 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { AlertTriangle, Lock, Bot, Zap } from 'lucide-react'
 
 export default function HeroCompare() {
   const { t } = useTranslation()
@@ -193,9 +194,18 @@ export default function HeroCompare() {
               <p>{t('hero.compare_before_desc')}</p>
 
               <div className="hc-before-warnings">
-                <span className="hc-warning-item">⚠ Límite mensual de visitas</span>
-                <span className="hc-warning-item">⚠ Comisiones por venta</span>
-                <span className="hc-warning-item">⚠ Sin acceso al código fuente</span>
+                <span className="hc-warning-item flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span>Límite mensual de visitas</span>
+                </span>
+                <span className="hc-warning-item flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span>Comisiones por venta</span>
+                </span>
+                <span className="hc-warning-item flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span>Sin acceso al código fuente</span>
+                </span>
               </div>
 
               <div className="hc-spinner-wrapper">
@@ -268,10 +278,16 @@ export default function HeroCompare() {
 
               {/* Cyber Feature Badges */}
               <div className="hc-cyber-pills">
-                <span className="hc-pill">⚡ Edge CDN Global</span>
-                <span className="hc-pill">🔒 Cero Alquiler</span>
+                <span className="hc-pill flex items-center gap-1">
+                  <Zap className="w-3 h-3 text-cyan-400" /> Edge CDN Global
+                </span>
+                <span className="hc-pill flex items-center gap-1">
+                  <Lock className="w-3 h-3 text-cyan-400" /> Cero Alquiler
+                </span>
                 <span className="hc-pill">✦ PostgreSQL Nativo</span>
-                <span className="hc-pill">🤖 IA Ready</span>
+                <span className="hc-pill flex items-center gap-1">
+                  <Bot className="w-3 h-3 text-cyan-400" /> IA Ready
+                </span>
               </div>
             </div>
           </div>

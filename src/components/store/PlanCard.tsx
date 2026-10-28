@@ -131,42 +131,41 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
         }}
         className="relative transition-shadow duration-300"
       >
-        {/* Glow de fondo amplificado y destacado al interactuar con el botón */}
+        {/* Glow de fondo calibrado y nítido */}
         <div
-          className={`absolute -inset-4 rounded-[36px] blur-[36px] -z-10 pointer-events-none transition-all duration-500 ${
+          className={`absolute -inset-2 rounded-2xl blur-xl -z-10 pointer-events-none transition-all duration-300 ${
             plan.popular
               ? isButtonHovered
-                ? 'bg-linear-to-r from-cyan-400/60 via-purple-500/70 to-pink-500/60 opacity-100 scale-110'
-                : 'bg-linear-to-r from-cyan-500/30 via-purple-500/40 to-pink-500/30 opacity-90 group-hover:opacity-100 group-hover:scale-105'
+                ? 'bg-linear-to-r from-cyan-400/30 via-purple-500/40 to-pink-500/30 opacity-100'
+                : 'bg-linear-to-r from-cyan-500/20 via-purple-500/25 to-pink-500/20 opacity-80'
               : isButtonHovered
-                ? 'bg-linear-to-r from-cyan-500/50 via-indigo-500/40 to-fuchsia-500/50 opacity-100 scale-110'
-                : 'bg-cyan-500/10 dark:bg-accent-cyan/10 opacity-40 group-hover:opacity-80 group-hover:scale-105'
+                ? 'bg-cyan-500/20 dark:bg-accent-cyan/20 opacity-80'
+                : 'bg-cyan-500/5 dark:bg-accent-cyan/10 opacity-30'
           }`}
         />
 
-        {/* Badge "Más Elegido" con efecto de pulso */}
+        {/* Badge "Más Elegido" con acabado sobrio */}
         {plan.popular && (
-          <div className="absolute -top-5 left-0 right-0 flex justify-center z-30 pointer-events-none">
+          <div className="absolute -top-4 left-0 right-0 flex justify-center z-30 pointer-events-none">
             <div className="relative">
-              <div className="absolute inset-0 bg-linear-to-r from-cyan-500 via-purple-500 to-pink-500 blur-md opacity-90 rounded-full animate-pulse" />
-              <div className="relative bg-linear-to-r from-cyan-500 via-purple-600 to-pink-500 text-white text-[11px] font-black px-6 py-2 rounded-full shadow-2xl border border-white/50 tracking-widest uppercase flex items-center gap-1.5">
-                <CyberSparkleIcon size={14} className="text-yellow-300 animate-spin" />
+              <div className="relative bg-linear-to-r from-cyan-600 via-purple-600 to-pink-600 text-white text-[11px] font-bold px-4 py-1 rounded-full shadow-md border border-white/30 tracking-wider uppercase flex items-center gap-1.5">
+                <CyberSparkleIcon size={13} className="text-yellow-300" />
                 <span>{t('store.mas_elegido')}</span>
               </div>
             </div>
           </div>
         )}
 
-        {/* Tarjeta Principal Adaptativa con Alto Contraste y Vidrio Holográfico */}
+        {/* Tarjeta Principal Adaptativa con Alto Contraste */}
         <div
-          className={`relative rounded-3xl bg-white/95 dark:bg-[#0c0e1a]/90 border backdrop-blur-2xl p-7 sm:p-9 flex flex-col text-left transition-all duration-300 shadow-2xl overflow-hidden ${
+          className={`relative rounded-2xl bg-white/95 dark:bg-[#0c0e1a]/90 border backdrop-blur-xl p-6 sm:p-8 flex flex-col text-left transition-all duration-300 shadow-xl overflow-hidden ${
             isButtonHovered
               ? plan.popular
-                ? 'border-purple-400 ring-2 ring-purple-400/60 shadow-[0_25px_60px_rgba(168,85,247,0.4)]'
-                : 'border-cyan-400 ring-2 ring-cyan-400/60 shadow-[0_25px_60px_rgba(6,182,212,0.35)]'
+                ? 'border-purple-400 ring-1 ring-purple-400/50 shadow-purple-500/10'
+                : 'border-cyan-400 ring-1 ring-cyan-400/50 shadow-cyan-500/10'
               : plan.popular
-                ? 'border-purple-500/60 dark:border-purple-500/60 ring-2 ring-purple-500/30'
-                : 'border-slate-200/90 dark:border-white/15 hover:border-accent-cyan/60'
+                ? 'border-purple-500/50 ring-1 ring-purple-500/20'
+                : 'border-slate-200/90 dark:border-white/10 hover:border-accent-cyan/50'
           }`}
         >
           {/* Reflejo Especular Holográfico Interactivo */}
@@ -194,11 +193,11 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
 
           {/* Encabezado con Icono */}
           <div className="flex items-start justify-between mb-5 relative z-20">
-            <div className="w-14 h-14 rounded-2xl bg-linear-to-br p-0.5 shadow-lg">
+            <div className="w-12 h-12 rounded-xl bg-linear-to-br p-0.5 shadow-sm">
               <div
-                className={`w-full h-full bg-linear-to-br ${plan.color} rounded-[14px] flex items-center justify-center shadow-inner`}
+                className={`w-full h-full bg-linear-to-br ${plan.color} rounded-[10px] flex items-center justify-center shadow-inner`}
               >
-                <plan.icon className="w-7 h-7 text-white" />
+                <plan.icon className="w-6 h-6 text-white" />
               </div>
             </div>
 
@@ -211,7 +210,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
 
           {/* Título y Descripción */}
           <div className="relative z-20 mb-6">
-            <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">
               {plan.title}
             </h3>
             <p className="text-slate-600 dark:text-slate-300 text-sm h-11 leading-relaxed font-medium">
@@ -220,7 +219,7 @@ export default function PlanCard({ plan, index, currency, isAnnual, onSelect }: 
           </div>
 
           {/* Caja de Precio Dinámica */}
-          <div className="relative z-20 mb-6 p-5 rounded-2xl bg-slate-100/90 dark:bg-slate-950/80 border border-slate-200 dark:border-white/10 shadow-inner">
+          <div className="relative z-20 mb-6 p-4 rounded-xl bg-muted/40 border border-border shadow-xs">
             <div className="flex items-baseline gap-2">
               <span className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white font-montserrat tracking-tight">
                 {formattedPrice}

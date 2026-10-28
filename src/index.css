@@ -292,7 +292,7 @@
   --border: rgba(4, 120, 87, 0.22);
   --input: rgba(4, 120, 87, 0.22);
   --ring: #047857;
-  --radius: 0.25rem; /* Radios chicos de plano técnico (4px) */
+  --radius: 0.5rem; /* Radio coherente y sobrio (8px) */
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
   --font-heading: 'Space Grotesk', sans-serif;
@@ -400,7 +400,7 @@
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.08);
   --ring: #38bdf8;
-  --radius: 0.75rem;
+  --radius: 0.5rem;
 
   /* Identidad Futurista Suave y Moderna */
   --brand: #38bdf8;

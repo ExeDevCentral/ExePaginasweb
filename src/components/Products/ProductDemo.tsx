@@ -6,6 +6,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   X,
+  Check,
   Calendar,
   Clock,
   CreditCard,
@@ -581,13 +582,14 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                           key={slot}
                           type="button"
                           onClick={() => handleToggleCourtSlot(`${court}-${slot}`)}
-                          className={`py-2 px-2 rounded-xl text-xs font-bold transition-all border ${
+                          className={`py-2 px-2 rounded-xl text-xs font-bold transition-all border flex items-center justify-center gap-1 ${
                             isSelected
                               ? 'bg-emerald-500 text-slate-950 border-emerald-400'
                               : 'bg-muted/40 border-border text-foreground hover:border-cyan-400'
                           }`}
                         >
-                          {slot} {isSelected ? '✅' : ''}
+                          <span>{slot}</span>
+                          {isSelected && <Check className="w-3.5 h-3.5" />}
                         </button>
                       )
                     })}

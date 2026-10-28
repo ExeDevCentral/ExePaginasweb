@@ -11,10 +11,11 @@ import { getGlobalLenis, setGlobalLenis } from './scrollUtils'
 
 export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
-    // Respetar preferencia de accesibilidad para movimiento reducido
+    // Respetar preferencia de accesibilidad para movimiento reducido y evitar secuestro de scroll en pantallas táctiles móviles
     if (
       typeof window === 'undefined' ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      window.matchMedia('(pointer: coarse)').matches
     ) {
       return
     }

@@ -378,6 +378,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                       loop
                       muted={isMuted}
                       playsInline
+                      poster="/assets/noema-consultora.webp"
                       preload={activeTab === 'video' ? 'metadata' : 'none'}
                       onClick={togglePlay}
                       onTimeUpdate={handleTimeUpdate}

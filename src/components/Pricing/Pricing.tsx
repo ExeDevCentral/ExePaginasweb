@@ -100,9 +100,9 @@ const PricingCard = ({
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`group relative rounded-2xl sm:rounded-[2.5rem] bg-card backdrop-blur-xl border overflow-hidden transition-all duration-500 hover:-translate-y-2 p-5 sm:p-8 md:p-10 flex flex-col ${
+      className={`group relative rounded-2xl bg-card border overflow-hidden transition-all duration-300 hover:-translate-y-1.5 p-5 sm:p-8 md:p-10 flex flex-col ${
         plan.popular
-          ? 'border-accent-magenta/60 dark:border-emerald-400/60 shadow-2xl shadow-accent-magenta/10 dark:shadow-[0_0_35px_rgba(16,185,129,0.18)] hover:shadow-accent-magenta/20 dark:hover:border-emerald-300'
+          ? 'border-accent-magenta/60 dark:border-emerald-400/60 shadow-xl shadow-accent-magenta/10 dark:shadow-[0_0_35px_rgba(16,185,129,0.18)] hover:shadow-accent-magenta/20 dark:hover:border-emerald-300'
           : 'border-border dark:border-emerald-500/35 dark:shadow-[0_0_20px_rgba(16,185,129,0.08)] hover:border-border dark:hover:border-emerald-400/60 dark:hover:shadow-[0_0_30px_rgba(16,185,129,0.18)]'
       }`}
     >
@@ -111,7 +111,7 @@ const PricingCard = ({
       <div className="absolute bottom-0 inset-x-12 sm:inset-x-20 h-px bg-linear-to-r from-transparent via-emerald-500/50 to-transparent pointer-events-none" />
 
       <motion.div
-        className="pointer-events-none absolute -inset-px rounded-2xl sm:rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
           background: useMotionTemplate`
             radial-gradient(

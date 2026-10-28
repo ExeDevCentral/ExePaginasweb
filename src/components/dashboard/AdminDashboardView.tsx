@@ -91,13 +91,13 @@ export default function AdminDashboardView({
       <AdminStatsCards stats={stats} />
 
       {/* Tabs de Navegación y Filtros */}
-      <div className="border border-border bg-card rounded-3xl p-6 backdrop-blur-xl">
+      <div className="border border-border bg-card rounded-xl p-6 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8 pb-6 border-b border-border">
           {/* Selector de Tabs */}
-          <div className="flex bg-muted/50 p-1 rounded-2xl border border-border self-start">
+          <div className="flex bg-muted/50 p-1 rounded-xl border border-border self-start">
             <button
               onClick={() => handleTabChange('clientes')}
-              className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${
                 activeTab === 'clientes'
                   ? 'btn-soft-violet text-accent-violet'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -108,7 +108,7 @@ export default function AdminDashboardView({
             </button>
             <button
               onClick={() => handleTabChange('tickets')}
-              className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${
                 activeTab === 'tickets'
                   ? 'btn-soft-violet text-accent-violet'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -122,7 +122,7 @@ export default function AdminDashboardView({
             </button>
             <button
               onClick={() => handleTabChange('pagos')}
-              className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${
                 activeTab === 'pagos'
                   ? 'btn-soft-violet text-accent-violet'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'

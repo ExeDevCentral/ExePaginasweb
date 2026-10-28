@@ -65,7 +65,7 @@ export default function Login() {
   const [sentVerification, setSentVerification] = useState(false)
   const [sentReset, setSentReset] = useState(false)
 
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(() => searchParams.get('email') || '')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [name, setName] = useState('')

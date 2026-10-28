@@ -313,6 +313,7 @@ export function DashboardViewport({
                       tenantId={effectiveTenantId}
                       pagos={effectivePagos}
                       onOpenTicket={() => onNavigate('sla')}
+                      onRefresh={onRefreshClient}
                     />
                   </div>
                 </PanelErrorBoundary>

@@ -9,9 +9,9 @@ import { isSupabaseAdminConfigured, supabaseAdmin as db } from '@/lib/supabase/a
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 
 const PLAN_MONTOS_ARS: Record<string, number> = {
-  'mantenimiento-basico': 25000,
-  'mantenimiento-avanzado': 50000,
-  'mantenimiento-premium': 150000,
+  'mantenimiento-basico': 32000,
+  'mantenimiento-avanzado': 65000,
+  'mantenimiento-premium': 195000,
 }
 
 const RegisterTransferSchema = z.object({

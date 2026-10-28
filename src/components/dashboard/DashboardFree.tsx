@@ -18,6 +18,8 @@ import {
   Plus,
   Calendar,
   CheckCircle2,
+  Paperclip,
+  Clock,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { Cliente } from '../../core/domain/entities/Cliente'
@@ -27,6 +29,8 @@ import { useSupportTickets } from '../../hooks/useSupportTickets'
 import { PLAN_THEMES } from './planDashboardConfig'
 import ServicePulseHub from './ServicePulseHub'
 import SupportTicketPanel from './SupportTicketPanel'
+import AdjuntarComprobanteModal from './AdjuntarComprobanteModal'
+import HudButton from '../HudButton'
 
 const PREVIEW_TIERS = [
   { tier: 'basico' as const, icon: Monitor },
@@ -64,6 +68,8 @@ export default function DashboardFree({
   const nombre = cliente?.full_name?.split(' ')[0] ?? 'Cliente'
   const theme = PLAN_THEMES.basico
   const [ticketPanelOpen, setTicketPanelOpen] = useState(false)
+  const [comprobanteModalOpen, setComprobanteModalOpen] = useState(false)
+  const pendingPago = pagos.find((p) => p.estado === 'pendiente')
   const {
     tickets,
     notifications,
@@ -85,6 +91,35 @@ export default function DashboardFree({
 
   return (
     <div className="relative space-y-8 font-sans">
+      {/* Banner de transferencia registrada / pendiente */}
+      {pendingPago && (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+              <Clock className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-foreground">
+                Transferencia en proceso de verificación
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Registraste tu suscripción para {pendingPago.plan_nombre || 'tu abono'}. Adjuntá tu
+                comprobante de pago para acelerar la activación.
+              </p>
+            </div>
+          </div>
+          <HudButton
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={() => setComprobanteModalOpen(true)}
+            icon={<Paperclip className="w-3.5 h-3.5" />}
+          >
+            Adjuntar Comprobante
+          </HudButton>
+        </div>
+      )}
+
       {/* 1. Header Hero Card */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -342,6 +377,14 @@ export default function DashboardFree({
         onSubmit={async (a, m, c) => {
           await createTicket(a, m, c)
         }}
+      />
+
+      {/* Modal para adjuntar comprobante */}
+      <AdjuntarComprobanteModal
+        open={comprobanteModalOpen}
+        onClose={() => setComprobanteModalOpen(false)}
+        pagos={pagos}
+        onSuccess={handleRefresh}
       />
     </div>
   )

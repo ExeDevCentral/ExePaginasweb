@@ -24,7 +24,7 @@ export interface UseDashboardNavigationResult {
 
 export function useDashboardNavigation(): UseDashboardNavigationResult {
   const searchParams = useSearchParams()
-  const tabParam = searchParams.get('tab') as DashboardView | null
+  const tabParam = (searchParams.get('tab') || searchParams.get('view')) as DashboardView | null
 
   const [activeView, setActiveView] = useState<DashboardView>(
     isDashboardView(tabParam) ? tabParam : 'overview'
@@ -37,7 +37,7 @@ export function useDashboardNavigation(): UseDashboardNavigationResult {
 
   // Sync activeView with searchParams tab
   useEffect(() => {
-    const tab = searchParams.get('tab')
+    const tab = searchParams.get('tab') || searchParams.get('view')
     if (isDashboardView(tab)) {
       setActiveView(tab)
       setVisitedTabs((prev) => {

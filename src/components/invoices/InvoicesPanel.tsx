@@ -5,8 +5,17 @@
  */
 'use client'
 
-import { useMemo } from 'react'
-import { FileText, Clock, AlertCircle, CheckCircle, XCircle, CreditCard, Plus } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import {
+  FileText,
+  Clock,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  CreditCard,
+  Plus,
+  Paperclip,
+} from 'lucide-react'
 import { useInvoicesByTenant } from '../../hooks/useInvoices'
 import { useTranslation } from 'react-i18next'
 import type { Invoice, InvoiceEstado } from '../../core/domain/entities/Invoice'
@@ -14,16 +23,24 @@ import type { Pago } from '../../hooks/useDashboard'
 import { DataTable } from '../shared/DataTable'
 import type { ColumnDef } from '@tanstack/react-table'
 import HudButton from '../HudButton'
+import AdjuntarComprobanteModal from '../dashboard/AdjuntarComprobanteModal'
 
 interface Props {
   tenantId: string
   pagos?: Pago[]
   onOpenTicket?: () => void
+  onRefresh?: (() => void) | undefined
 }
 
-export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Readonly<Props>) {
+export default function InvoicesPanel({
+  tenantId,
+  pagos = [],
+  onOpenTicket,
+  onRefresh,
+}: Readonly<Props>) {
   const { t, i18n } = useTranslation()
   const { data: invoices = [], isLoading } = useInvoicesByTenant(tenantId)
+  const [comprobanteModalOpen, setComprobanteModalOpen] = useState(false)
 
   const estadoConfig = useMemo<
     Record<InvoiceEstado, { icon: typeof CheckCircle; color: string; label: string }>
@@ -167,18 +184,59 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
           </p>
         </div>
 
-        {onOpenTicket && (
+        <div className="flex items-center gap-2.5">
           <HudButton
             type="button"
             variant="primary"
             size="sm"
-            onClick={onOpenTicket}
-            icon={<Plus className="w-4 h-4" />}
+            onClick={() => setComprobanteModalOpen(true)}
+            icon={<Paperclip className="w-3.5 h-3.5" />}
           >
-            Consultar Facturación
+            Adjuntar Comprobante
           </HudButton>
-        )}
+
+          {onOpenTicket && (
+            <HudButton
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={onOpenTicket}
+              icon={<Plus className="w-4 h-4" />}
+            >
+              Consultar Facturación
+            </HudButton>
+          )}
+        </div>
       </div>
+
+      {/* Banner de transferencia pendiente */}
+      {pagos.some((p) => p.estado === 'pendiente') && (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+              <Clock className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-foreground">
+                Transferencia pendiente de acreditación
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Registraste tu suscripción por transferencia. Podés adjuntar tu comprobante de pago
+                para agilizar la activación de tu plan.
+              </p>
+            </div>
+          </div>
+          <HudButton
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={() => setComprobanteModalOpen(true)}
+            icon={<Paperclip className="w-3.5 h-3.5" />}
+          >
+            Adjuntar Comprobante
+          </HudButton>
+        </div>
+      )}
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -270,19 +328,46 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
                     })}
                   </p>
                 </div>
-                <div className="text-right">
-                  <span className="font-mono font-bold text-foreground text-sm">
-                    ${p.monto} {p.moneda}
-                  </span>
-                  <span className="block text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase">
-                    ● {p.estado}
-                  </span>
+                <div className="text-right flex items-center gap-3">
+                  <div>
+                    <span className="font-mono font-bold text-foreground text-sm">
+                      ${p.monto} {p.moneda}
+                    </span>
+                    <span
+                      className={`block text-[10px] font-semibold uppercase ${
+                        p.estado === 'pendiente'
+                          ? 'text-amber-600 dark:text-amber-400'
+                          : 'text-emerald-700 dark:text-emerald-400'
+                      }`}
+                    >
+                      ● {p.estado}
+                    </span>
+                  </div>
+                  {p.estado === 'pendiente' && (
+                    <HudButton
+                      type="button"
+                      variant="primary"
+                      size="sm"
+                      onClick={() => setComprobanteModalOpen(true)}
+                      icon={<Paperclip className="w-3 h-3" />}
+                    >
+                      Adjuntar
+                    </HudButton>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </div>
       )}
+
+      {/* Modal para adjuntar comprobante */}
+      <AdjuntarComprobanteModal
+        open={comprobanteModalOpen}
+        onClose={() => setComprobanteModalOpen(false)}
+        pagos={pagos}
+        onSuccess={onRefresh}
+      />
     </div>
   )
 }

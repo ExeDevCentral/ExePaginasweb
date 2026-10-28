@@ -33,10 +33,10 @@ import HudButton from '../../HudButton'
 // 1. Live Badge
 export function LiveBadge({ label }: Readonly<{ label: string }>) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 text-xs font-semibold text-emerald-400">
+    <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
       <span className="relative flex h-2 w-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-600 dark:bg-emerald-400 opacity-60" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-600 dark:bg-emerald-400" />
       </span>
       {label}
     </span>
@@ -90,8 +90,8 @@ export function MetricGrid({
               <span
                 className={`text-xs font-semibold px-2 py-0.5 rounded-md inline-flex items-center gap-0.5 shrink-0 ${
                   isNegative
-                    ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                    : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                    ? 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20'
+                    : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
                 }`}
               >
                 {m.delta}
@@ -145,7 +145,7 @@ export function DashdarkRevenueChart({
             <span className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               48.5K Visitas
             </span>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 inline-flex items-center gap-0.5">
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 inline-flex items-center gap-0.5">
               +24.6% ↗
             </span>
           </div>
@@ -238,7 +238,7 @@ export function DashdarkRevenueChart({
               <span className="text-xs sm:text-sm font-bold text-foreground">
                 1.450 visitas · 48 turnos
               </span>
-              <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                 +14.5% ↗
               </span>
             </div>
@@ -282,7 +282,7 @@ export function DashdarkProfitCard({
         </div>
         <div className="flex items-baseline gap-2.5 mt-2">
           <span className="text-2xl font-bold text-foreground tracking-tight">{amountText}</span>
-          <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
             Al Día ●
           </span>
         </div>
@@ -340,7 +340,7 @@ export function DashdarkSessionsCard() {
         </div>
         <div className="flex items-baseline gap-2.5 mt-2">
           <span className="text-2xl font-bold text-foreground tracking-tight">400 req/s</span>
-          <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
             99.99% Uptime
           </span>
         </div>
@@ -382,8 +382,8 @@ export function DashdarkSessionsCard() {
 
       {/* Footer Link */}
       <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs">
-        <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        <div className="flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
           <span>Vercel Edge & Supabase OK</span>
         </div>
         <Link href="/dashboard?tab=services" className="text-[#38BDF8] hover:underline font-medium">
@@ -405,13 +405,13 @@ export function LiveHealthCard({ theme: _theme }: Readonly<{ theme: PlanDashboar
       className="rounded-2xl bg-card border border-border p-6 shadow-sm space-y-4"
     >
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-wider text-emerald-400">
-          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+        <div className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+          <ShieldCheck className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0" />
           <span>
             {t('dashboard.salud_seguridad_tiempo_real', 'Salud y Seguridad en Tiempo Real')}
           </span>
         </div>
-        <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-0.5 rounded-full font-bold">
+        <span className="text-xs font-mono text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-0.5 rounded-full font-bold">
           {t('dashboard.uptime_stat', 'Uptime 99.99%')}
         </span>
       </div>
@@ -419,11 +419,11 @@ export function LiveHealthCard({ theme: _theme }: Readonly<{ theme: PlanDashboar
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
         <div className="p-3.5 rounded-xl bg-muted/40 border border-border">
           <p className="text-[11px] font-medium text-muted-foreground flex items-center gap-1.5">
-            <Activity className="w-3.5 h-3.5 text-emerald-400" />
+            <Activity className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
             <span>{t('dashboard.latencia', 'Latencia')}</span>
           </p>
           <p className="text-lg font-bold font-mono text-foreground mt-1">14 ms</p>
-          <p className="text-xs text-emerald-400 font-medium mt-0.5">
+          <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium mt-0.5">
             {t('dashboard.excelente', 'Excelente')}
           </p>
         </div>
@@ -486,7 +486,7 @@ export function QuickActionsHub({
         <button
           type="button"
           onClick={onOpenTicket}
-          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-[#4361EE]/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
+          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-[#4361EE]/50 hover:bg-muted dark:hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
           <Zap className="w-5 h-5 text-[#38BDF8] mb-2 group-hover:scale-110 transition-transform" />
           <p className="text-xs font-bold text-foreground">
@@ -500,9 +500,9 @@ export function QuickActionsHub({
         <button
           type="button"
           onClick={onOpenTicket}
-          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-emerald-500/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
+          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-emerald-500/50 hover:bg-muted dark:hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
-          <MessageSquare className="w-5 h-5 text-emerald-400 mb-2 group-hover:scale-110 transition-transform" />
+          <MessageSquare className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mb-2 group-hover:scale-110 transition-transform" />
           <p className="text-xs font-bold text-foreground">
             {t('dashboard.soporte_interno', 'Mesa de Ayuda')}
           </p>
@@ -513,7 +513,7 @@ export function QuickActionsHub({
 
         <Link
           href="/dashboard?tab=invoices"
-          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-[#818CF8]/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
+          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-[#818CF8]/50 hover:bg-muted dark:hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
           <FileText className="w-5 h-5 text-[#818CF8] mb-2 group-hover:scale-110 transition-transform" />
           <p className="text-xs font-bold text-foreground">
@@ -526,9 +526,9 @@ export function QuickActionsHub({
 
         <Link
           href="/cotizador"
-          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-amber-500/50 hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
+          className="p-4 rounded-xl bg-muted/40 border border-border hover:border-amber-500/50 hover:bg-muted dark:hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
-          <ArrowUpRight className="w-5 h-5 text-amber-400 mb-2 group-hover:scale-110 transition-transform" />
+          <ArrowUpRight className="w-5 h-5 text-amber-500 dark:text-amber-400 mb-2 group-hover:scale-110 transition-transform" />
           <p className="text-xs font-bold text-foreground">
             {t('dashboard.upgrade_plan', 'Upgrade de Plan')}
           </p>
@@ -563,7 +563,7 @@ export function WeeklyChart({
     >
       <div className="flex items-center justify-between mb-5">
         <p className="text-xs font-bold uppercase tracking-wider text-foreground">{label}</p>
-        <span className="font-mono text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
+        <span className="font-mono text-xs text-emerald-700 dark:text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
           {t('dashboard.en_vivo_7d', 'live · 7d')}
         </span>
       </div>

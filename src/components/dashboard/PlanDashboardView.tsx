@@ -183,7 +183,7 @@ export default function PlanDashboardView({
               {theme.badge}
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-[#8C9BB0] font-medium">
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium">
             {t(
               'dashboard.subtitulo_dashdark',
               'Monitoreá el rendimiento de tu sitio web, turnos y servicios contratados.'
@@ -266,14 +266,14 @@ export default function PlanDashboardView({
               </p>
               <div className="space-y-2.5 text-xs">
                 <div className="flex justify-between items-center gap-3 pb-2 border-b border-border">
-                  <span className="text-[#8C9BB0]">{t('dashboard.email', 'Email')}</span>
+                  <span className="text-muted-foreground">{t('dashboard.email', 'Email')}</span>
                   <span className="text-foreground font-medium truncate max-w-[190px]">
                     {cliente?.email ?? '—'}
                   </span>
                 </div>
                 {suscripciones[0] && (
                   <div className="flex justify-between items-center gap-3">
-                    <span className="text-[#8C9BB0]">{t('dashboard.desde', 'Desde')}</span>
+                    <span className="text-muted-foreground">{t('dashboard.desde', 'Desde')}</span>
                     <span className="text-foreground font-medium">
                       {formatDate(suscripciones[0].fecha_inicio, i18n.language)}
                     </span>

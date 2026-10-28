@@ -25,7 +25,8 @@ import HudButton from '../HudButton'
 const ROL_COLORS: Record<WorkMemberRol, string> = {
   owner: 'bg-amber-500/10 text-amber-400 border-amber-500/20 font-bold',
   admin: 'bg-[#4361EE]/10 text-[#38BDF8] border-[#4361EE]/20 font-bold',
-  member: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-bold',
+  member:
+    'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 font-bold',
   viewer: 'bg-slate-500/10 text-muted-foreground border-slate-500/20 font-bold',
 }
 

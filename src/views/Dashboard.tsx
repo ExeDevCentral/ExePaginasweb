@@ -161,7 +161,7 @@ export default function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 max-w-xl w-full rounded-2xl border border-rose-500/30 bg-[#111622] p-8 shadow-2xl"
+          className="relative z-10 max-w-xl w-full rounded-2xl border border-rose-500/30 bg-card p-8 shadow-2xl"
         >
           <h1 className="text-2xl font-bold text-foreground">
             {t('dashboard.error_conexion_titulo', 'Error de conexión')}

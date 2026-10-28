@@ -111,32 +111,32 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
   >(
     () => ({
       activo: {
-        color: 'text-emerald-400',
+        color: 'text-emerald-700 dark:text-emerald-400',
         label: t('services.estado_activo', 'Activo'),
         icon: CheckCircle,
       },
       suspendido: {
-        color: 'text-amber-400',
+        color: 'text-amber-700 dark:text-amber-400',
         label: t('services.estado_suspendido', 'Suspendido'),
         icon: Clock,
       },
       pausado: {
-        color: 'text-amber-400',
+        color: 'text-amber-700 dark:text-amber-400',
         label: t('services.estado_pausado', 'Pausado'),
         icon: Clock,
       },
       cancelado: {
-        color: 'text-rose-400',
+        color: 'text-rose-700 dark:text-rose-400',
         label: t('services.estado_cancelado', 'Cancelado'),
         icon: XCircle,
       },
       vencido: {
-        color: 'text-rose-400',
+        color: 'text-rose-700 dark:text-rose-400',
         label: t('services.estado_vencido', 'Vencido'),
         icon: XCircle,
       },
       pendiente: {
-        color: 'text-sky-400',
+        color: 'text-sky-700 dark:text-sky-400',
         label: t('services.estado_pendiente', 'Pendiente'),
         icon: ShieldAlert,
       },
@@ -254,8 +254,8 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
             Consultar Soporte
           </HudButton>
         ) : (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
             <span>Infraestructura Online</span>
           </span>
         )}

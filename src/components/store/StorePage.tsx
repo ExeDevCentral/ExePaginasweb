@@ -421,7 +421,7 @@ export default function StorePage() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
-                className="w-full sm:w-auto py-4 px-5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 rounded-2xl text-emerald-400 font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="w-full sm:w-auto py-4 px-5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 rounded-2xl text-emerald-700 dark:text-emerald-400 font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>WhatsApp Concierge</span>

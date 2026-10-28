@@ -170,7 +170,7 @@ export default function DashboardFree({
           <p className="text-lg font-bold text-foreground mt-1 truncate">
             {suscripciones[0]?.plan?.nombre ?? 'Plan Básico (Web)'}
           </p>
-          <span className="text-xs text-emerald-400 font-medium mt-1 inline-block">
+          <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium mt-1 inline-block">
             ● Cuenta verificada
           </span>
         </div>
@@ -200,7 +200,7 @@ export default function DashboardFree({
             Comprobantes
           </p>
           <p className="text-lg font-bold text-foreground mt-1 font-mono">{pagos.length}</p>
-          <span className="text-xs text-emerald-400 font-medium mt-1 inline-block">
+          <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium mt-1 inline-block">
             {pagos.length > 0
               ? `$${totalPaid.toLocaleString(i18n.language || 'es-AR')} registrado`
               : 'Al día'}
@@ -245,10 +245,10 @@ export default function DashboardFree({
                   <span className="font-mono font-bold text-foreground text-sm">
                     ${Number(p.monto).toLocaleString(i18n.language || 'es-AR')} {p.moneda}
                   </span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 uppercase">
                     {p.estado}
                   </span>
-                  <span className="text-[#64748B] flex items-center gap-1">
+                  <span className="text-muted-foreground flex items-center gap-1">
                     <Calendar className="w-3.5 h-3.5" />
                     {formatDate(p.created_at, i18n.language)}
                   </span>

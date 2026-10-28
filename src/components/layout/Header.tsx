@@ -306,7 +306,7 @@ const Header = () => {
                 className={`p-3.5 rounded-xl border transition-all flex items-center justify-between ${
                   activeId === 'home'
                     ? 'bg-cyan-500/15 dark:bg-cyan-500/20 border-cyan-500/50 dark:border-cyan-500/60 text-cyan-700 dark:text-cyan-300 font-bold'
-                    : 'bg-slate-50 dark:bg-[#111a2b] border-slate-200 dark:border-[#26344b] text-slate-800 dark:text-slate-100 hover:border-cyan-400/60 hover:bg-slate-900/80'
+                    : 'bg-slate-50 dark:bg-[#111a2b] border-slate-200 dark:border-[#26344b] text-slate-800 dark:text-slate-100 hover:border-cyan-400/60 hover:bg-slate-100 dark:hover:bg-[#152238]'
                 }`}
                 onClick={(e) => scrollToSection(e, 'home')}
                 whileTap={{ scale: 0.98 }}
@@ -332,7 +332,7 @@ const Header = () => {
                 className={`p-3.5 rounded-xl border transition-all flex items-center justify-between ${
                   activeId === 'products'
                     ? 'bg-cyan-500/15 dark:bg-cyan-500/20 border-cyan-500/50 dark:border-cyan-500/60 text-cyan-700 dark:text-cyan-300 font-bold'
-                    : 'bg-slate-50 dark:bg-[#111a2b] border-slate-200 dark:border-[#26344b] text-slate-800 dark:text-slate-100 hover:border-cyan-400/60 hover:bg-slate-900/80'
+                    : 'bg-slate-50 dark:bg-[#111a2b] border-slate-200 dark:border-[#26344b] text-slate-800 dark:text-slate-100 hover:border-cyan-400/60 hover:bg-slate-100 dark:hover:bg-[#152238]'
                 }`}
                 onClick={(e) => scrollToSection(e, 'products')}
                 whileTap={{ scale: 0.98 }}

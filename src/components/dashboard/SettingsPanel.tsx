@@ -269,7 +269,7 @@ export default function SettingsPanel({
         {/* 3. Espacio de Trabajo / Tenant */}
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-3 pb-3 border-b border-border">
-            <div className="w-10 h-10 rounded-xl bg-muted/40 border border-border flex items-center justify-center text-emerald-400">
+            <div className="w-10 h-10 rounded-xl bg-muted/40 border border-border flex items-center justify-center text-emerald-600 dark:text-emerald-400">
               <Building className="w-5 h-5" />
             </div>
             <div>
@@ -293,7 +293,7 @@ export default function SettingsPanel({
             </div>
             <div className="flex justify-between items-center py-1">
               <span className="text-muted-foreground">Estado del Entorno:</span>
-              <span className="inline-flex items-center gap-1.5 text-emerald-400 font-semibold">
+              <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-semibold">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 Operativo 24/7
               </span>
@@ -304,7 +304,7 @@ export default function SettingsPanel({
         {/* 4. Sesión y Cierre */}
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-3 pb-3 border-b border-border">
-            <div className="w-10 h-10 rounded-xl bg-muted/40 border border-border flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-xl bg-muted/40 border border-border flex items-center justify-center text-amber-600 dark:text-amber-400">
               <Laptop className="w-5 h-5" />
             </div>
             <div>

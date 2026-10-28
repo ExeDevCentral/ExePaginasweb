@@ -549,7 +549,7 @@ function PlanCard({
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
                   {t('cotizador.mantenimiento_mes')}
                 </p>
-                <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
                   {t('cotizador.monthly_opcional_badge')}
                 </span>
               </div>
@@ -828,7 +828,7 @@ export default function QuoteBuilder() {
                   onClick={() => setCurrency('USD')}
                   className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
                     currency === 'USD'
-                      ? 'bg-linear-to-r from-accent-magenta to-accent-magenta/80 text-foreground shadow-lg shadow-accent-magenta/25 bg-size-[200%_200%] animate-gradient-shift'
+                      ? 'bg-linear-to-r from-accent-magenta to-accent-magenta/80 text-white shadow-lg shadow-accent-magenta/25 bg-size-[200%_200%] animate-gradient-shift'
                       : 'text-foreground/60 hover:text-foreground'
                   }`}
                 >
@@ -852,8 +852,8 @@ export default function QuoteBuilder() {
 
             {/* Cartel Aclaratorio de Mantenimiento Opcional */}
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs md:text-sm font-semibold shadow-lg shadow-emerald-500/5">
-                <Check className="w-4 h-4 shrink-0 text-emerald-400" />
+              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs md:text-sm font-semibold shadow-lg shadow-emerald-500/5">
+                <Check className="w-4 h-4 shrink-0 text-emerald-700 dark:text-emerald-400" />
                 <span>{t('cotizador.opcional_nota')}</span>
               </div>
             </div>
@@ -1243,8 +1243,8 @@ export default function QuoteBuilder() {
                           </span>
                         </div>
 
-                        <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
-                          <Check className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+                        <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs flex items-center gap-2">
+                          <Check className="w-3.5 h-3.5 shrink-0 text-emerald-700 dark:text-emerald-400" />
                           <span>{t('cotizador.opcional_nota')}</span>
                         </div>
                       </div>
@@ -1307,9 +1307,9 @@ export default function QuoteBuilder() {
                             href={`https://wa.me/${WHAATSAPP_NUMBER}?text=${buildWhatsAppMessage()}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-3 w-full px-6 py-3.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 font-bold transition-all text-sm shadow-md"
+                            className="flex items-center justify-center gap-3 w-full px-6 py-3.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold transition-all text-sm shadow-md"
                           >
-                            <MessageCircle className="w-4 h-4 fill-emerald-500/20 text-emerald-400" />
+                            <MessageCircle className="w-4 h-4 fill-emerald-500/20 text-emerald-700 dark:text-emerald-400" />
                             {t('cotizador.enviar_whatsapp')}
                           </a>
                         </div>

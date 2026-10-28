@@ -240,8 +240,8 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
               comprobantes fiscales o abonos mensuales, los verás reflejados automáticamente aquí.
             </p>
           </div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
             Estado de cuenta al día · Sin saldos adeudados
           </div>
         </div>
@@ -251,11 +251,11 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
       {pagos.length > 0 && (
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2.5 pb-2 border-b border-border">
-            <CreditCard className="w-5 h-5 text-emerald-400" />
+            <CreditCard className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <h3 className="text-sm font-bold text-foreground">Comprobantes y Pagos Registrados</h3>
           </div>
 
-          <div className="divide-y divide-[#1E2638]">
+          <div className="divide-y divide-border">
             {pagos.map((p) => (
               <div key={p.id} className="py-3 flex items-center justify-between gap-4 text-xs">
                 <div>
@@ -274,7 +274,7 @@ export default function InvoicesPanel({ tenantId, pagos = [], onOpenTicket }: Re
                   <span className="font-mono font-bold text-foreground text-sm">
                     ${p.monto} {p.moneda}
                   </span>
-                  <span className="block text-[10px] font-semibold text-emerald-400 uppercase">
+                  <span className="block text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase">
                     ● {p.estado}
                   </span>
                 </div>

@@ -52,7 +52,7 @@ export function AuthGuard({
       <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
         <div className="text-center">
           <div className="w-10 h-10 border-2 border-[#4361EE] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-sm text-[#8C9BB0] font-mono">Verificando acceso...</p>
+          <p className="text-sm text-muted-foreground font-mono">Verificando acceso...</p>
         </div>
       </div>
     )

@@ -125,7 +125,7 @@ export default function SupportTicketPanel({
                 <motion.div
                   initial={{ opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400 font-semibold"
+                  className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-400 font-semibold"
                 >
                   <CheckCircle2 size={18} />
                   Ticket enviado. Te avisamos en el panel.
@@ -133,7 +133,7 @@ export default function SupportTicketPanel({
               )}
 
               {error && (
-                <p className="text-sm font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-xl px-4 py-3">
+                <p className="text-sm font-semibold text-rose-700 dark:text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-xl px-4 py-3">
                   {error}
                 </p>
               )}

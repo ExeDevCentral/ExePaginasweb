@@ -82,18 +82,18 @@ export function DataTable<TData, TValue>({
             value={globalFilter ?? ''}
             onChange={(e) => setGlobalFilter(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full pl-9 pr-4 py-2 text-sm bg-card/60 border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent-cyan/50 transition-all"
+            className="w-full pl-9 pr-4 py-2 text-sm bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all shadow-2xs"
           />
         </div>
       </div>
 
       {/* Table Container */}
-      <div className="overflow-hidden rounded-2xl border border-border bg-card/40 backdrop-blur-xl shadow-xl">
+      <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-xs">
         <div data-lenis-prevent className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="border-b border-border/60 bg-muted/20">
+                <tr key={headerGroup.id} className="border-b border-border/60 bg-muted/40">
                   {headerGroup.headers.map((header) => {
                     const canSort = header.column.getCanSort()
                     const isSorted = header.column.getIsSorted()

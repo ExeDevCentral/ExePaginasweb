@@ -520,6 +520,7 @@ export const AIChatWidget: React.FC = () => {
             } else {
               setIsOpen(true)
               setHubView('menu')
+              trackEvent('chat_widget_opened', { source: 'floating_dock' })
             }
             setHasUnread(false)
           }}

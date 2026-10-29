@@ -78,7 +78,28 @@ export default function Providers({ children }: { readonly children: React.React
         </ThemeProvider>
       </AuthSessionProvider>
       {enableVercelTelemetry && <SpeedInsights />}
-      {enableVercelAnalytics && <Analytics />}
+      {enableVercelAnalytics && (
+        <Analytics
+          beforeSend={(event) => {
+            if (typeof window !== 'undefined') {
+              try {
+                const search = window.location.search
+                if (search.includes('admin=true') || search.includes('va-disable=1')) {
+                  localStorage.setItem('va-disable', '1')
+                  return null
+                }
+                const vaDisable = localStorage.getItem('va-disable')
+                if (vaDisable === '1' || vaDisable === 'true') {
+                  return null
+                }
+              } catch {
+                // Silencioso ante restricciones de cookies/storage
+              }
+            }
+            return event
+          }}
+        />
+      )}
     </QueryClientProvider>
   )
 }

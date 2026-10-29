@@ -7,7 +7,7 @@
  * - Esfera 3D de glifos ocupando el 50% derecho de la pantalla con destellos reactivos
  * - Marquee ticker infinito en la base del Hero
  * - Consola interactiva de código con typewriter blur por carácter
- * - Sección de Capacidades con tarjetas Border Beam y Mouse Spotlight
+ * - Sección de Capacidades con soporte dual: Cards Cyber Clásicas (Producción) + Master Cards V2 (?showcase=v2)
  */
 'use client'
 
@@ -16,8 +16,6 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import HudButton from '@/components/HudButton'
 import {
-  CyberRatingStar,
-  CyberCheckMark,
   CyberMetricLightning,
   CyberMetricShield,
   CyberMetricProcessor,
@@ -28,26 +26,9 @@ import {
   RestoiaEngineIcon,
 } from '@/components/ui/MagnificentIcons'
 
-const Grid2x2Icon = ({ className = 'w-4 h-4' }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <rect x="3" y="3" width="7" height="7" rx="1.5" />
-    <rect x="14" y="3" width="7" height="7" rx="1.5" />
-    <rect x="14" y="14" width="7" height="7" rx="1.5" />
-    <rect x="3" y="14" width="7" height="7" rx="1.5" />
-  </svg>
-)
-
-const Columns4Icon = ({ className = 'w-4 h-4' }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <rect x="2" y="4" width="3.5" height="16" rx="1" />
-    <rect x="8" y="4" width="3.5" height="16" rx="1" />
-    <rect x="14" y="4" width="3.5" height="16" rx="1" />
-    <rect x="20" y="4" width="3.5" height="16" rx="1" />
-  </svg>
-)
-
 import HeroProductShowcase from './HeroProductShowcase'
 import CyberTerminalCard from '../shared/CyberTerminalCard'
+import InteractiveFeatureShowcase from '@/components/landing/InteractiveFeatureShowcase'
 import ConvergentTypewriterSubtitle from './ConvergentTypewriterSubtitle'
 import HeroNeonSignboard from './HeroNeonSignboard'
 import { trackEvent } from '@/core/analytics/trackEvent'
@@ -166,16 +147,23 @@ export const OptimusScaleHero: React.FC = () => {
   const { t } = useTranslation()
   const [wordIndex, setWordIndex] = useState(0)
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 })
-  const [desktopView, setDesktopView] = useState<'grid2x2' | 'row4'>('grid2x2')
-  const [activeMobileFilter, setActiveMobileFilter] = useState<'all' | '01' | '02' | '03' | '04'>(
-    'all'
-  )
+  const [showcaseV2, setShowcaseV2] = useState(false)
 
   const heroRef = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   })
+
+  // Permite activar la Master Card V2 pasando ?showcase=v2 en la URL mientras se termina
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('showcase') === 'v2') {
+        setShowcaseV2(true)
+      }
+    }
+  }, [])
 
   // Aura interactiva de fondo
   const auraIntensity = useTransform(scrollYProgress, [0, 0.5], [0.6, 0.15])
@@ -201,9 +189,6 @@ export const OptimusScaleHero: React.FC = () => {
   return (
     <div className="relative w-full bg-transparent text-foreground text-foreground transition-colors duration-300">
       {/* ========================================================
-          1. HERO PRINCIPAL (ESTRUCTURA EXACTA OPTIMUS DESAHOGADA)
-         ======================================================== */}
-      {/* ========================================================
           1. HERO PRINCIPAL (ESTRUCTURA ALINEADA CON EL NAVBAR)
          ======================================================== */}
       <section
@@ -213,7 +198,7 @@ export const OptimusScaleHero: React.FC = () => {
         onMouseMove={handleHeroMouseMove}
         className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between pt-24 sm:pt-28 pb-4 overflow-hidden"
       >
-        {/* Aura radial interactiva suave con decaimiento lumínico en scroll (Opción 2) */}
+        {/* Aura radial interactiva suave con decaimiento lumínico en scroll */}
         <motion.div
           className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300"
           style={{
@@ -222,12 +207,12 @@ export const OptimusScaleHero: React.FC = () => {
           }}
         />
 
-        {/* CONTENEDOR PRINCIPAL DEL HERO (FLUIDO, CERO RE-RASTERIZACIÓN DE COMPOSITOR EN SCROLL) */}
+        {/* CONTENEDOR PRINCIPAL DEL HERO */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center my-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center w-full my-auto">
-            {/* COLUMNA IZQUIERDA: CONTENIDO EDITORIAL LIMPIO (lg:col-span-6) */}
+            {/* COLUMNA IZQUIERDA: CONTENIDO EDITORIAL */}
             <div className="lg:col-span-6 flex flex-col items-start text-left z-20">
-              {/* 1. EYEBROW MONO, 1 LÍNEA, SIN CAJA */}
+              {/* Eyebrow */}
               <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted-foreground dark:text-muted-foreground select-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>
@@ -236,10 +221,10 @@ export const OptimusScaleHero: React.FC = () => {
                 </span>
               </div>
 
-              {/* CARTEL LUMINOSO NEÓN DEL LOGO (ALTO IMPACTO: SE ACHICA Y APAGA AL BAJAR) */}
+              {/* Cartel neón */}
               <HeroNeonSignboard className="mt-4 mb-2" />
 
-              {/* 2. TÍTULO H1: 100% SEO FRIENDLY PARA BUSCADORES (BRAVE, GOOGLE, BING) */}
+              {/* Título H1 */}
               <h1 className="mt-2 text-3xl sm:text-5xl xl:text-6xl font-display font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-foreground text-foreground">
                 <span className="sr-only">Exe Páginas Web - </span>
                 <span className="block font-semibold">
@@ -247,122 +232,102 @@ export const OptimusScaleHero: React.FC = () => {
                 </span>
 
                 <span className="inline-flex items-center gap-2 sm:gap-4 flex-wrap mt-1">
-                  <span className="text-muted-foreground dark:text-muted-foreground font-light">
-                    {t('hero.titulo_conector') || 'para'}
-                  </span>
-                  <span className="relative inline-block text-brand font-bold font-serif italic">
+                  <span>{t('hero.titulo_sufijo') || 'para'}</span>
+                  <span className="relative inline-block overflow-hidden py-1">
                     <AnimatePresence mode="wait">
                       <motion.span
-                        key={wordIndex}
-                        initial={false}
+                        key={rotatingWords[wordIndex]}
+                        initial={{ y: 28, opacity: 0, filter: 'blur(4px)' }}
                         animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-                        exit={{ y: -20, opacity: 0, filter: 'blur(6px)' }}
-                        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                        className="inline-block px-1"
+                        exit={{ y: -28, opacity: 0, filter: 'blur(4px)' }}
+                        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                        className="inline-block text-cyan-600 dark:text-cyan-400 font-bold drop-shadow-[0_0_24px_rgba(6,182,212,0.4)]"
                       >
-                        {rotatingWords[wordIndex] || ROTATING_WORDS[wordIndex]}
+                        {rotatingWords[wordIndex]}
                       </motion.span>
                     </AnimatePresence>
                   </span>
                 </span>
               </h1>
 
-              {/* 3. SUBTÍTULO HERO CON RENDERIZADO INMEDIATO PARA MÁXIMO LCP */}
-              <div className="mt-5 sm:mt-6 max-w-2xl min-h-26 sm:min-h-18">
-                <ConvergentTypewriterSubtitle />
-              </div>
+              {/* Bajada con typewriter */}
+              <ConvergentTypewriterSubtitle className="mt-4 sm:mt-5 text-base sm:text-lg text-muted-foreground dark:text-muted-foreground max-w-xl leading-relaxed" />
 
-              {/* 4. BOTONES PRINCIPALES DE ACCIÓN DIRECTA DE ALTA FIDELIDAD (HUD CHAFLANADO) */}
-              <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
+              {/* CTAs principales */}
+              <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto">
                 <HudButton
-                  label={t('hero.cta_comenzar') || 'Hablemos de tu proyecto'}
-                  href="/cotizador"
+                  label={t('hero.cta_cotizar') || 'Pedir Presupuesto por WhatsApp'}
+                  href="https://wa.me/5493412799385?text=Hola%20Exequiel!%20Quiero%20cotizar%20un%20proyecto%20web%20para%20mi%20negocio"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   variant="primary"
+                  size="lg"
+                  icon={<CyberArrowRight size={17} />}
                   onClick={() => trackEvent('hero_cta_contact_clicked', { source: 'optimus_hero' })}
+                  ariaLabel="Pedir presupuesto de desarrollo web por WhatsApp directo con Exequiel"
+                  className="w-full sm:w-auto shadow-lg shadow-cyan-500/15"
                 />
 
                 <HudButton
-                  label={t('hero.cta_ver_portafolio') || t('hero.cta_ver_demo') || 'Ver portafolio'}
+                  label={t('hero.cta_casos') || 'Ver Portafolio en Vivo'}
                   href="/portafolio"
                   variant="secondary"
+                  size="lg"
                   onClick={() =>
                     trackEvent('hero_cta_portfolio_clicked', { source: 'optimus_hero' })
                   }
+                  ariaLabel="Explorar portafolio de sistemas en producción"
+                  className="w-full sm:w-auto"
                 />
               </div>
-
-              {/* 5. CONFIANZA: mt-8 */}
-              <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-muted-foreground dark:text-muted-foreground">
-                <div className="flex items-center gap-1.5">
-                  <div className="flex items-center gap-0.5 text-amber-500">
-                    <CyberRatingStar size={14} />
-                    <CyberRatingStar size={14} />
-                    <CyberRatingStar size={14} />
-                    <CyberRatingStar size={14} />
-                    <CyberRatingStar size={14} />
-                  </div>
-                  <span className="font-sans font-bold text-foreground text-foreground">4.9/5</span>
-                  <span className="text-muted-foreground dark:text-muted-foreground">
-                    {t('hero.trust_proyectos') || '(+50 proyectos)'}
-                  </span>
-                </div>
-                <span className="text-slate-300 text-foreground/20 hidden sm:inline">•</span>
-                <div className="flex items-center gap-1.5 font-sans">
-                  <CyberCheckMark size={14} />
-                  <span>{t('hero.trust_sla') || 'SLA por contrato'}</span>
-                </div>
-                <span className="text-slate-300 text-foreground/20 hidden sm:inline">•</span>
-                <div className="flex items-center gap-1.5 font-sans">
-                  <CyberCheckMark size={14} />
-                  <span>{t('hero.trust_entrega') || 'Entrega en 7-15 días'}</span>
-                </div>
-              </div>
             </div>
 
-            {/* COLUMNA DERECHA: PANTALLA SHOWCASE INTERACTIVA Y VIDEO DEMO */}
-            <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end w-full py-4 lg:py-0">
-              <HeroProductShowcase className="w-full" />
+            {/* COLUMNA DERECHA: CINEMA DISPLAY */}
+            <div className="lg:col-span-6 w-full flex items-center justify-center z-10 mt-4 lg:mt-0">
+              <HeroProductShowcase className="w-full max-w-2xl" />
             </div>
           </div>
+        </div>
 
-          {/* TIRA DEBAJO DEL HERO: 3 CARDS SEPARADAS POR LÍNEAS VERTICALES FINAS CON ÍCONOS MAGNÍFICOS */}
-          <div className="w-full border-t border-slate-200/80 dark:border-white/10 pt-6 mt-12 sm:mt-16">
-            <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200/80 dark:divide-white/10 gap-4 md:gap-0">
+        {/* MÉTRICAS DE PIE DE HERO */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-8 sm:mt-12">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-white/[0.03] border border-slate-200/90 dark:border-white/10 backdrop-blur-md shadow-xs">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 divide-y md:divide-y-0 md:divide-x divide-slate-200/70 dark:divide-white/10">
               <div className="flex items-center gap-3.5 md:px-6 first:pl-0 py-2 md:py-0">
-                <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] shrink-0">
+                <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs shrink-0">
                   <CyberMetricLightning size={19} />
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-bold text-foreground text-foreground">
-                    {t('hero.metric_carga') || '0.38s Carga'}
+                  <span className="text-sm font-bold text-foreground">
+                    {t('hero.metric_velocidad') || '0.38s Carga'}
                   </span>
-                  <span className="text-xs text-muted-foreground dark:text-muted-foreground font-mono">
-                    {t('hero.metric_carga_sub') || 'Edge CDN Global'}
+                  <span className="text-xs text-muted-foreground font-mono">
+                    {t('hero.metric_velocidad_sub') || '100% Lighthouse'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-3.5 md:px-6 py-2 md:py-0">
-                <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] shrink-0">
+                <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs shrink-0">
                   <CyberMetricShield size={19} />
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-bold text-foreground text-foreground">
+                  <span className="text-sm font-bold text-foreground">
                     {t('hero.metric_tuyo') || '100% Tuyo'}
                   </span>
-                  <span className="text-xs text-muted-foreground dark:text-muted-foreground font-mono">
+                  <span className="text-xs text-muted-foreground font-mono">
                     {t('hero.metric_tuyo_sub') || 'Cero ataduras o cuotas'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-3.5 md:px-6 last:pr-0 py-2 md:py-0">
-                <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] shrink-0">
+                <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs shrink-0">
                   <CyberMetricProcessor size={19} />
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-bold text-foreground text-foreground">
+                  <span className="text-sm font-bold text-foreground">
                     {t('hero.metric_autonomo') || 'Autónomo 24/7'}
                   </span>
-                  <span className="text-xs text-muted-foreground dark:text-muted-foreground font-mono">
+                  <span className="text-xs text-muted-foreground font-mono">
                     {t('hero.metric_autonomo_sub') || 'WhatsApp & Cobros'}
                   </span>
                 </div>
@@ -371,7 +336,7 @@ export const OptimusScaleHero: React.FC = () => {
           </div>
         </div>
 
-        {/* TICKER / MARQUEE DE MÉTRICAS EN LA BASE DEL HERO (ESTILO EXACTO OPTIMUS) */}
+        {/* TICKER / MARQUEE DE MÉTRICAS */}
         <div className="relative z-10 w-full mt-8 sm:mt-10 py-4.5 border-t border-slate-200/80 dark:border-white/10 overflow-hidden bg-slate-100/60 dark:bg-black/40 backdrop-blur-xs select-none">
           <div className="flex w-max animate-marquee gap-10 sm:gap-14 items-center">
             {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
@@ -379,10 +344,10 @@ export const OptimusScaleHero: React.FC = () => {
                 key={'ticker-' + item.label + '-' + idx}
                 className="flex items-center gap-3 shrink-0"
               >
-                <span className="text-2xl sm:text-3xl font-extrabold text-foreground text-foreground tracking-tight">
+                <span className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                   {item.value}
                 </span>
-                <span className="text-xs sm:text-[13px] font-mono uppercase tracking-wider text-muted-foreground dark:text-muted-foreground">
+                <span className="text-xs sm:text-[13px] font-mono uppercase tracking-wider text-muted-foreground">
                   {item.label}{' '}
                   <strong className="text-foreground dark:text-[#f7f5ee] font-semibold">
                     {item.tag}
@@ -396,128 +361,66 @@ export const OptimusScaleHero: React.FC = () => {
       </section>
 
       {/* ========================================================
-          3. SECCIÓN CAPACIDADES (DUAL: MODO CELULAR + MODO PC)
+          3. SECCIÓN CAPACIDADES: DUAL (ESTABLE POR DEFECTO / V2 CON ?showcase=v2)
          ======================================================== */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-20 border-t border-slate-200/80 dark:border-white/10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
-          <div className="text-left">
-            <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground dark:text-muted-foreground mb-3">
-              {t('hero.capacidades_eyebrow') || '— Capacidades'}
-            </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold tracking-tight leading-tight">
-              <span className="block text-foreground text-foreground">
-                {t('hero.capacidades_titulo') || 'Todo lo que tu empresa necesita.'}
-              </span>
-              <span className="block text-muted-foreground dark:text-muted-foreground">
-                {t('hero.capacidades_subtitulo') || 'Nada de plantillas genéricas.'}
-              </span>
-            </h2>
+      {showcaseV2 ? (
+        <InteractiveFeatureShowcase className="border-t border-slate-200/80 dark:border-white/10" />
+      ) : (
+        <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-20 border-t border-slate-200/80 dark:border-white/10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
+            <div className="text-left">
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground mb-3">
+                {t('hero.capacidades_eyebrow') || '— Capacidades'}
+              </p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold tracking-tight leading-tight">
+                <span className="block text-foreground">
+                  {t('hero.capacidades_titulo') || 'Todo lo que tu empresa necesita.'}
+                </span>
+                <span className="block text-muted-foreground">
+                  {t('hero.capacidades_subtitulo') || 'Nada de plantillas genéricas.'}
+                </span>
+              </h2>
+            </div>
           </div>
 
-          {/* SELECTOR DE VISTA EN ESCRITORIO (PC) */}
-          <div className="hidden lg:flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-mono">
-            <button
-              type="button"
-              onClick={() => setDesktopView('grid2x2')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                desktopView === 'grid2x2'
-                  ? 'bg-white dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 font-bold shadow-xs border border-slate-200/80 dark:border-cyan-500/40'
-                  : 'text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-white'
-              }`}
-            >
-              <Grid2x2Icon className="w-3.5 h-3.5" />
-              <span>Cuadrícula 2x2 Amplia</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setDesktopView('row4')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                desktopView === 'row4'
-                  ? 'bg-white dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 font-bold shadow-xs border border-slate-200/80 dark:border-cyan-500/40'
-                  : 'text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-white'
-              }`}
-            >
-              <Columns4Icon className="w-3.5 h-3.5" />
-              <span>Panorámica 4x1</span>
-            </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7 xl:gap-8">
+            {CAPABILITIES.map((cap) => (
+              <CyberTerminalCard
+                key={'cap-card-' + cap.id}
+                id={cap.id}
+                code={cap.id === '04' ? t('hero.card_4_code', cap.code) : cap.code}
+                title={t(cap.titleKey) || cap.defaultTitle}
+                desc={t(cap.descKey) || cap.defaultDesc}
+                badge={cap.id === '04' ? t('hero.card_4_badge', cap.badge) : cap.badge}
+                tech={
+                  cap.id === '04'
+                    ? [
+                        t('hero.card_4_tech_1', 'Arranque en 4 Seg'),
+                        t('hero.card_4_tech_2', 'Revive PCs Lentas'),
+                        t('hero.card_4_tech_3', '$0 Licencias & Virus'),
+                      ]
+                    : cap.tech
+                }
+                cta={cap.id === '04' ? t('hero.card_4_cta', cap.cta) : cap.cta}
+                href={cap.href}
+                liveLauncher={
+                  cap.id === '04'
+                    ? {
+                        ...cap.liveLauncher,
+                        label: t('hero.card_4_launcher_label', cap.liveLauncher.label),
+                        sublabel: t('hero.card_4_launcher_sub', cap.liveLauncher.sublabel),
+                      }
+                    : cap.liveLauncher
+                }
+                color={cap.color}
+                icon={cap.icon}
+                ariaLabel={cap.ariaLabel}
+                className="h-full"
+              />
+            ))}
           </div>
-        </div>
-
-        {/* Barra táctil rápida de filtro para móviles */}
-        <div className="flex lg:hidden items-center gap-2 overflow-x-auto scrollbar-none pb-2 pt-1 mb-6 select-none">
-          <button
-            type="button"
-            onClick={() => setActiveMobileFilter('all')}
-            className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-mono transition-all touch-manipulation cursor-pointer ${
-              activeMobileFilter === 'all'
-                ? 'bg-cyan-500 text-foreground font-bold shadow-md shadow-cyan-500/30'
-                : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-muted-foreground dark:text-muted-foreground'
-            }`}
-          >
-            Todas (4)
-          </button>
-          {CAPABILITIES.map((cap) => (
-            <button
-              key={'mob-btn-' + cap.id}
-              type="button"
-              onClick={() => setActiveMobileFilter(cap.id as '01' | '02' | '03' | '04')}
-              className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-mono transition-all touch-manipulation cursor-pointer ${
-                activeMobileFilter === cap.id
-                  ? 'bg-cyan-500 text-foreground font-bold shadow-md shadow-cyan-500/30'
-                  : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-muted-foreground dark:text-muted-foreground'
-              }`}
-            >
-              {cap.code}
-            </button>
-          ))}
-        </div>
-
-        {/* UN SOLO GRID RESPONSIVO PARA MÓVIL Y ESCRITORIO (CERO DUPLICACIÓN DOM) */}
-        <div
-          className={`grid gap-6 sm:gap-7 xl:gap-8 ${
-            desktopView === 'row4'
-              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-              : 'grid-cols-1 md:grid-cols-2'
-          }`}
-        >
-          {CAPABILITIES.filter(
-            (cap) => activeMobileFilter === 'all' || activeMobileFilter === cap.id
-          ).map((cap) => (
-            <CyberTerminalCard
-              key={'cap-card-' + cap.id}
-              id={cap.id}
-              code={cap.id === '04' ? t('hero.card_4_code', cap.code) : cap.code}
-              title={t(cap.titleKey) || cap.defaultTitle}
-              desc={t(cap.descKey) || cap.defaultDesc}
-              badge={cap.id === '04' ? t('hero.card_4_badge', cap.badge) : cap.badge}
-              tech={
-                cap.id === '04'
-                  ? [
-                      t('hero.card_4_tech_1', 'Arranque en 4 Seg'),
-                      t('hero.card_4_tech_2', 'Revive PCs Lentas'),
-                      t('hero.card_4_tech_3', '$0 Licencias & Virus'),
-                    ]
-                  : cap.tech
-              }
-              cta={cap.id === '04' ? t('hero.card_4_cta', cap.cta) : cap.cta}
-              href={cap.href}
-              liveLauncher={
-                cap.id === '04'
-                  ? {
-                      ...cap.liveLauncher,
-                      label: t('hero.card_4_launcher_label', cap.liveLauncher.label),
-                      sublabel: t('hero.card_4_launcher_sub', cap.liveLauncher.sublabel),
-                    }
-                  : cap.liveLauncher
-              }
-              color={cap.color}
-              icon={cap.icon}
-              ariaLabel={cap.ariaLabel}
-              className="h-full"
-            />
-          ))}
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ESTILOS CSS PARA EL MARQUEE TICKER INFINITO */}
       <style jsx>{`
@@ -539,5 +442,21 @@ export const OptimusScaleHero: React.FC = () => {
     </div>
   )
 }
+
+const CyberArrowRight = ({ size = 16 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
+  </svg>
+)
 
 export default OptimusScaleHero

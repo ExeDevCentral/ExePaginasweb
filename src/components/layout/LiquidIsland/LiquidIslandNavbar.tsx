@@ -23,6 +23,7 @@ import LiquidFilter from './LiquidFilter'
 import LanguageSwitcher from '../LanguageSwitcher'
 import ThemeToggle from '../ThemeToggle'
 import { getGlobalLenis, smoothScrollTo } from '@/components/shared/scrollUtils'
+import { trackEvent } from '@/core/analytics/trackEvent'
 
 export interface LiquidIslandNavbarProps {
   expandOnScrollUp?: boolean
@@ -177,7 +178,10 @@ export default function LiquidIslandNavbar({
                 isHovered={hoveredLink === 'planes'}
                 onHover={() => setHoveredLink('planes')}
                 onLeave={() => setHoveredLink(null)}
-                onClick={() => setMegaPanelOpen(false)}
+                onClick={() => {
+                  setMegaPanelOpen(false)
+                  trackEvent('pricing_plan_clicked', { source: 'navbar' })
+                }}
               />
 
               {/* Contacto directo */}
@@ -189,6 +193,7 @@ export default function LiquidIslandNavbar({
                 onHover={() => setHoveredLink('contacto')}
                 onClick={(e) => {
                   setMegaPanelOpen(false)
+                  trackEvent('hero_cta_contact_clicked', { source: 'navbar' })
                   if (pathname === '/' || pathname === '') {
                     e.preventDefault()
                     smoothScrollTo('#contact', -88)
@@ -234,7 +239,10 @@ export default function LiquidIslandNavbar({
               <MagneticCTA
                 label={getNavLabel('nav.cotiza_tu_web', 'Cotizá tu web')}
                 href="/cotizador"
-                onClick={() => setMegaPanelOpen(false)}
+                onClick={() => {
+                  setMegaPanelOpen(false)
+                  trackEvent('cotizador_plan_selected', { source: 'navbar_magnetic_cta' })
+                }}
               />
             </motion.div>
           </motion.div>

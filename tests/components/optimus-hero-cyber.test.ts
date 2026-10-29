@@ -11,9 +11,11 @@ describe('OptimusScaleHero Cyber-Terminal Integration & Product Showcase', () =>
   const heroPath = path.resolve(process.cwd(), 'src/components/Hero/OptimusScaleHero.tsx')
   const content = fs.readFileSync(heroPath, 'utf-8')
 
-  it('debe importar y utilizar CyberTerminalCard en la cuadrícula de capacidades', () => {
-    expect(content).toContain("import CyberTerminalCard from '../shared/CyberTerminalCard'")
-    expect(content).toContain('<CyberTerminalCard')
+  it('debe importar y utilizar InteractiveFeatureShowcase en la sección de capacidades', () => {
+    expect(content).toContain(
+      "import InteractiveFeatureShowcase from '@/components/landing/InteractiveFeatureShowcase'"
+    )
+    expect(content).toContain('<InteractiveFeatureShowcase')
     expect(content).not.toContain('<SpotlightBorderCard')
   })
 

@@ -158,7 +158,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No se pudo registrar la transferencia.' }, { status: 500 })
     }
 
-    console.log(`[register-transfer] Transferencia pendiente registrada para ${email}:`, pago.id)
+    console.log('[register-transfer] Transferencia pendiente registrada:', pago.id)
     return NextResponse.json({ ok: true, pagoId: pago.id })
   } catch (err) {
     console.error('[register-transfer] Error:', err)

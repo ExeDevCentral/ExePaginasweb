@@ -35,7 +35,7 @@ export interface N8nDispatchResult {
  * Intenta reactivar workflows en n8n mediante la API pública de n8n
  * si se dispone de N8N_API_KEY y la URL de n8n.
  */
-async function tryAutoActivateN8nWorkflow(webhookPath = 'exepaginasweb-leads'): Promise<boolean> {
+async function tryAutoActivateN8nWorkflow(): Promise<boolean> {
   const apiKey = process.env.N8N_API_KEY?.trim()
   const webhookUrl = process.env.N8N_WEBHOOK_URL?.trim()
   if (!apiKey || !webhookUrl) return false

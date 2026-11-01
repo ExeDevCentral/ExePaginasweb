@@ -7,8 +7,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { dispatchN8nEvent } from '@/lib/server/n8n'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
-import { sendEmail, ensureResendWebhooksActive } from '@/lib/email/send'
+import { sendEmail } from '@/lib/email/send'
 import { n8nAutomationReceipt } from '@/lib/email/templates'
+import { readJsonBody } from '@/lib/server/requestSecurity'
 
 const AutomationRequestSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(100),
@@ -22,51 +23,9 @@ const AutomationRequestSchema = z.object({
   details: z.string().max(500).nullish(),
 })
 
-/**
- * Health & Keep-Alive Ping (GET):
- * Mantiene despierto el webhook en instancias gratuitas de n8n,
- * auto-reactiva webhooks de Resend y reporta el estado general del stack.
- */
+/** Public health response deliberately reveals no provider configuration or status. */
 export async function GET() {
-  const webhookUrl = process.env.N8N_WEBHOOK_URL?.trim()
-  const started = performance.now()
-  let n8nStatus = 'unconfigured'
-  let n8nLatency = 0
-
-  if (webhookUrl) {
-    try {
-      const pingPayload = {
-        event: 'ping.keepalive',
-        timestamp: new Date().toISOString(),
-        source: 'health_check',
-      }
-      const pingRes = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pingPayload),
-        signal: AbortSignal.timeout(4000),
-      })
-      n8nLatency = Math.round(performance.now() - started)
-      n8nStatus = pingRes.ok ? 'active' : `status_${pingRes.status}`
-    } catch (err) {
-      n8nLatency = Math.round(performance.now() - started)
-      n8nStatus = `unreachable: ${err instanceof Error ? err.message : String(err)}`
-    }
-  }
-
-  const resendHealth = await ensureResendWebhooksActive()
-
-  return NextResponse.json({
-    status: 'ok',
-    mode: 'free_tier_resilient',
-    n8n: {
-      status: n8nStatus,
-      latencyMs: n8nLatency,
-      configured: Boolean(webhookUrl),
-    },
-    resend: resendHealth,
-    timestamp: new Date().toISOString(),
-  })
+  return NextResponse.json({ status: 'ok' }, { headers: { 'Cache-Control': 'no-store' } })
 }
 
 export async function POST(req: NextRequest) {
@@ -79,16 +38,14 @@ export async function POST(req: NextRequest) {
         { status: 429, headers: { 'Retry-After': String(rl.retryAfterSeconds) } }
       )
     }
-  } catch {
-    // Si Supabase admin no está configurado o falla, continuar tolerante
+  } catch (rateLimitError) {
+    console.error('[automation/n8n] Rate limiter unavailable:', rateLimitError)
+    return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
-  let body: unknown
-  try {
-    body = await req.json()
-  } catch {
-    return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
-  }
+  const bodyResult = await readJsonBody(req, 10 * 1024)
+  if (bodyResult.errorResponse) return bodyResult.errorResponse
+  const body: unknown = bodyResult.body
 
   const parsed = AutomationRequestSchema.safeParse(body)
   if (!parsed.success) {

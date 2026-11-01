@@ -4,7 +4,8 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import { IReservationRepository } from '../../domain/reservations/reservationRepository.interface'
-import { ExistingReservation } from '../../domain/reservations/types'
+import { hasConflict } from '../../domain/reservations/conflictDetector'
+import { BookingRequest, ExistingReservation } from '../../domain/reservations/types'
 
 export class InMemoryReservationRepository implements IReservationRepository {
   private reservations: ExistingReservation[] = []
@@ -22,15 +23,33 @@ export class InMemoryReservationRepository implements IReservationRepository {
     )
   }
 
-  async save(reservation: Omit<ExistingReservation, 'id'>): Promise<ExistingReservation> {
-    // Simular latencia de red/DB para exponer condiciones de carrera
-    await new Promise((resolve) => setTimeout(resolve, 50))
+  async createIfAvailable(
+    reservation: Omit<ExistingReservation, 'id'>
+  ): Promise<ExistingReservation> {
+    const request: BookingRequest = {
+      employeeId: reservation.employeeId,
+      startTime: reservation.startTime,
+      endTime: reservation.endTime,
+    }
+    const startOfDay = new Date(reservation.startTime)
+    startOfDay.setUTCHours(0, 0, 0, 0)
+    const endOfDay = new Date(reservation.startTime)
+    endOfDay.setUTCHours(23, 59, 59, 999)
+    const sameDayReservations = this.reservations.filter(
+      (existing) =>
+        existing.employeeId === reservation.employeeId &&
+        existing.startTime >= startOfDay &&
+        existing.startTime <= endOfDay
+    )
 
-    const newReservation: ExistingReservation = {
-      id: Math.random().toString(36).substring(2, 9),
-      ...reservation,
+    if (hasConflict(request, sameDayReservations)) {
+      throw new Error('CONFLICT_DETECTED: El horario ya está ocupado.')
     }
 
+    const newReservation: ExistingReservation = {
+      id: globalThis.crypto.randomUUID(),
+      ...reservation,
+    }
     this.reservations.push(newReservation)
     return newReservation
   }

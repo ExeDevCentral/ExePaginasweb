@@ -185,10 +185,14 @@ export default function AdjuntarComprobanteModal({
             <form onSubmit={handleSubmit} className="space-y-4">
               {availablePagos.length > 1 && (
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-muted-foreground">
+                  <label
+                    htmlFor="payment-selection"
+                    className="text-xs font-medium text-muted-foreground"
+                  >
                     Seleccionar Abono / Pago
                   </label>
                   <select
+                    id="payment-selection"
                     value={selectedPagoId}
                     onChange={(e) => setSelectedPagoId(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl bg-muted/40 border border-border text-xs text-foreground focus:outline-none focus:border-primary"
@@ -220,10 +224,16 @@ export default function AdjuntarComprobanteModal({
 
               {/* Upload Dropzone */}
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground block">
+                <label
+                  htmlFor="receipt-upload"
+                  className="text-xs font-medium text-muted-foreground block"
+                >
                   Archivo del comprobante (Captura o PDF)
                 </label>
-                <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-border hover:border-primary rounded-2xl bg-muted/20 hover:bg-muted/30 cursor-pointer transition-colors group">
+                <label
+                  htmlFor="receipt-upload"
+                  className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-border hover:border-primary rounded-2xl bg-muted/20 hover:bg-muted/30 cursor-pointer transition-colors group"
+                >
                   <Upload className="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors mb-1.5" />
                   <span className="text-xs font-medium text-foreground">
                     {fileName ? fileName : 'Hacé clic para seleccionar o arrastrá el archivo'}
@@ -232,6 +242,7 @@ export default function AdjuntarComprobanteModal({
                     JPG, PNG o PDF hasta 10MB
                   </span>
                   <input
+                    id="receipt-upload"
                     type="file"
                     accept="image/png,image/jpeg,image/webp,application/pdf"
                     className="hidden"

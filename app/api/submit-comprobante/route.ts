@@ -8,6 +8,7 @@ import { z } from 'zod'
 import { isSupabaseAdminConfigured, supabaseAdmin as db } from '@/lib/supabase/admin'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 import { requireAuthUser } from '@/lib/server/apiAuth'
+import { readJsonBody } from '@/lib/server/requestSecurity'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,8 +37,12 @@ export async function POST(req: NextRequest) {
       )
     }
   } catch (rateLimitError) {
-    console.error('[submit-comprobante] Rate limiter error:', rateLimitError)
+    console.error('[submit-comprobante] Rate limiter unavailable:', rateLimitError)
+    return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
+
+  const bodyResult = await readJsonBody(req, 10 * 1024)
+  if (bodyResult.errorResponse) return bodyResult.errorResponse
 
   if (!isSupabaseAdminConfigured()) {
     return NextResponse.json({ error: 'Supabase no configurado' }, { status: 500 })
@@ -48,14 +53,7 @@ export async function POST(req: NextRequest) {
     return authError ?? NextResponse.json({ error: 'Autenticación requerida.' }, { status: 401 })
   }
 
-  let body: unknown = null
-  try {
-    body = await req.json()
-  } catch {
-    return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
-  }
-
-  const parseResult = SubmitComprobanteSchema.safeParse(body)
+  const parseResult = SubmitComprobanteSchema.safeParse(bodyResult.body)
   if (!parseResult.success) {
     return NextResponse.json(
       { error: 'Datos inválidos.', details: parseResult.error.flatten() },
@@ -75,9 +73,15 @@ export async function POST(req: NextRequest) {
         .eq('id', pagoId)
         .eq('cliente_id', user.id)
         .maybeSingle()
-      if (!error && data) {
-        targetPago = data as unknown as TargetPago
-      }
+      if (error) throw error
+      if (data) targetPago = data as unknown as TargetPago
+    }
+
+    if (!targetPago && pagoId) {
+      return NextResponse.json(
+        { error: 'El pago seleccionado no pertenece a tu cuenta.' },
+        { status: 404 }
+      )
     }
 
     if (!targetPago) {
@@ -88,9 +92,8 @@ export async function POST(req: NextRequest) {
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle()
-      if (!error && data) {
-        targetPago = data as unknown as TargetPago
-      }
+      if (error) throw error
+      if (data) targetPago = data as unknown as TargetPago
     }
 
     const fechaStr = new Date().toISOString()
@@ -108,7 +111,7 @@ export async function POST(req: NextRequest) {
           ? targetPago.detalles
           : {}
 
-      await db
+      const { error } = await db
         .from('pagos')
         .update({
           detalles: {
@@ -117,12 +120,13 @@ export async function POST(req: NextRequest) {
           },
         })
         .eq('id', targetPago.id)
+      if (error) throw error
     }
 
     const planName = targetPago?.plan_nombre || 'Abono de Servicios'
     const planSlug = targetPago?.plan_slug || null
 
-    await db.from('tickets').insert({
+    const { error: ticketError } = await db.from('tickets').insert({
       cliente_id: user.id,
       asunto: `Comprobante de pago: ${planName}`,
       mensaje: `El cliente adjuntó datos del comprobante de transferencia.\n• Plan: ${planName}\n• Operación: ${numeroOperacion || 'N/A'}\n• Entidad/Banco: ${bancoOrigen || 'N/A'}\n• Archivo: ${fileName || 'Sin archivo adjunto'}\n• Notas: ${notas || 'Ninguna'}`,
@@ -131,6 +135,7 @@ export async function POST(req: NextRequest) {
       estado: 'abierto',
       plan_slug: planSlug,
     })
+    if (ticketError) throw ticketError
 
     return NextResponse.json({
       ok: true,

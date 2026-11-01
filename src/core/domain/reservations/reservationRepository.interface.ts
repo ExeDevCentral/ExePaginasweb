@@ -12,7 +12,7 @@ export interface IReservationRepository {
   findByEmployeeAndDate(employeeId: string, date: Date): Promise<ExistingReservation[]>
 
   /**
-   * Guarda una nueva reserva.
+   * Valida conflictos y guarda en una operación atómica. Debe rechazar reservas solapadas.
    */
-  save(reservation: Omit<ExistingReservation, 'id'>): Promise<ExistingReservation>
+  createIfAvailable(reservation: Omit<ExistingReservation, 'id'>): Promise<ExistingReservation>
 }

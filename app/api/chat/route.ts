@@ -293,9 +293,7 @@ export async function POST(req: NextRequest) {
     const capturedEmail = emailMatch[0]
     const detectedLang = detectLanguage(userMessage, '')
     const ticketId = `EXE-CHT-${Date.now().toString(36).toUpperCase().slice(-5)}`
-    console.log(
-      `[chat] 📧 Email capturado en chat: ${capturedEmail} (Ticket: ${ticketId}, Lang: ${detectedLang})`
-    )
+    console.log(`[chat] Email capturado en chat (Ticket: ${ticketId}, Lang: ${detectedLang})`)
 
     if (process.env.RESEND_API_KEY) {
       // Sincronizar lead capturado desde el chat con la audiencia de Resend

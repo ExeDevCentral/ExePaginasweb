@@ -195,7 +195,7 @@ export async function POST(req: NextRequest) {
           payments: {
             captures: resource.id
               ? [{ id: resource.id, status: 'COMPLETED' }]
-              : [{ status: 'COMPLETED' }],
+              : [{ id: orderId || '', status: 'COMPLETED' }],
           },
         },
       ],
@@ -272,8 +272,8 @@ export async function POST(req: NextRequest) {
       return failProcessing('PayPal capture failed')
     }
 
-    if (captured.status !== 'COMPLETED') {
-      console.error('[paypal-webhook] captured order not completed:', captured.status)
+    if (captured.id !== orderId || captured.status !== 'COMPLETED') {
+      console.error('[paypal-webhook] captured order id/status mismatch:', orderId)
       return failProcessing('PayPal capture failed')
     }
 

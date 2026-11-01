@@ -133,22 +133,48 @@ describe('n8n Webhook Dispatcher', () => {
 })
 
 describe('POST /api/automation/n8n route handler', () => {
-  it('responde 400 si el nombre está ausente o los datos son inválidos', async () => {
+  it('GET devuelve una respuesta genérica sin llamar servicios externos', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+    const { GET } = await import('../../app/api/automation/n8n/route')
+    const res = await GET()
+
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ status: 'ok' })
+    expect(res.headers.get('cache-control')).toBe('no-store')
+    expect(fetchSpy).not.toHaveBeenCalled()
+  })
+
+  it('responde 503 si el servicio de rate limit no está disponible', async () => {
+    const { NextRequest } = await import('next/server')
+    vi.spyOn(await import('@/lib/server/rateLimit'), 'checkRateLimit').mockRejectedValueOnce(
+      new Error('database unavailable')
+    )
+    const { POST } = await import('../../app/api/automation/n8n/route')
+    const req = new NextRequest('http://localhost:3000/api/automation/n8n', {
+      method: 'POST',
+      body: JSON.stringify({ name: 'Test', automationType: 'demo_sistema' }),
+      headers: { 'content-type': 'application/json' },
+    })
+
+    expect((await POST(req)).status).toBe(503)
+  })
+
+  it('rechaza payloads mayores al límite antes del parseo', async () => {
+    vi.spyOn(await import('@/lib/server/rateLimit'), 'checkRateLimit').mockResolvedValueOnce({
+      allowed: true,
+      retryAfterSeconds: 60,
+    })
     const { POST } = await import('../../app/api/automation/n8n/route')
     const { NextRequest } = await import('next/server')
 
     const req = new NextRequest('http://localhost:3000/api/automation/n8n', {
       method: 'POST',
-      body: JSON.stringify({
-        automationType: 'cotizacion_express',
-      }),
-      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name: 'x'.repeat(11 * 1024), automationType: 'cotizacion_express' }),
+      headers: { 'content-type': 'application/json', 'content-length': String(11 * 1024) },
     })
 
     const res = await POST(req)
-    expect(res.status).toBe(400)
-    const json = await res.json()
-    expect(json.error).toBe('Datos inválidos')
+    expect(res.status).toBe(413)
   })
 
   it('procesa correctamente la solicitud con nombre y tipo de automatización', async () => {

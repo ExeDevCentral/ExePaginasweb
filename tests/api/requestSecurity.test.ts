@@ -6,6 +6,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   maskEmail,
+  readJsonBody,
   validateContentLength,
   validateFetchMetadata,
 } from '../../lib/server/requestSecurity'
@@ -28,6 +29,13 @@ describe('lib/server/requestSecurity', () => {
       expect(result.errorResponse).toBeUndefined()
     })
 
+    it('rechaza cabeceras Content-Length malformadas', () => {
+      const req = new Request('http://localhost:3000/api/contact', {
+        headers: { 'content-length': '12junk' },
+      })
+      expect(validateContentLength(req, 100).allowed).toBe(false)
+    })
+
     it('rechaza solicitudes que superan el límite con status 413', async () => {
       const req = new Request('http://localhost:3000/api/contact', {
         headers: { 'content-length': '60000' },
@@ -39,6 +47,25 @@ describe('lib/server/requestSecurity', () => {
 
       const body = await result.errorResponse?.json()
       expect(body.error).toMatch(/excede el límite/)
+    })
+  })
+
+  describe('readJsonBody', () => {
+    it('rechaza un cuerpo que excede el límite aunque no anuncie Content-Length', async () => {
+      const req = new Request('http://localhost:3000/api/test', {
+        method: 'POST',
+        body: JSON.stringify({ value: 'x'.repeat(100) }),
+      })
+      const result = await readJsonBody(req, 40)
+      expect(result.errorResponse?.status).toBe(413)
+    })
+
+    it('devuelve JSON parseado para cuerpos pequeños', async () => {
+      const req = new Request('http://localhost:3000/api/test', {
+        method: 'POST',
+        body: JSON.stringify({ ok: true }),
+      })
+      await expect(readJsonBody(req, 100)).resolves.toMatchObject({ body: { ok: true } })
     })
   })
 

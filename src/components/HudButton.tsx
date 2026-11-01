@@ -47,6 +47,7 @@ export interface HudButtonProps {
   title?: string | undefined
   /** Atributos de accesibilidad */
   'aria-label'?: string | undefined
+  ariaLabel?: string | undefined
 }
 
 const GLYPHS = '0123456789ABCDEF!<>-_/[]{}—=+*^?#~'
@@ -92,8 +93,10 @@ export default function HudButton({
   type = 'button',
   style,
   title,
-  'aria-label': ariaLabel,
+  'aria-label': ariaLabelAttr,
+  ariaLabel: ariaLabelProp,
 }: Readonly<HudButtonProps>) {
+  const ariaLabel = ariaLabelProp ?? ariaLabelAttr
   const effectiveLabel = label ?? (typeof children === 'string' ? children : '')
   const [displayText, setDisplayText] = useState(effectiveLabel)
   const animFrameRef = useRef<number | null>(null)

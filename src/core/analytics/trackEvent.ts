@@ -20,6 +20,7 @@ export type AnalyticsEventName =
   | 'pricing_section_viewed'
   | 'pricing_plan_clicked'
   | 'demo_interactive_used'
+  | 'main_step_selected'
 
 export interface TrackEventOptions {
   flags?: string[]

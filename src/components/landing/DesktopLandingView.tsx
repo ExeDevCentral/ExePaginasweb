@@ -10,8 +10,6 @@
 
 import React from 'react'
 import OptimusScaleHero from '@/components/Hero/OptimusScaleHero'
-import LinuxBusinessSection from '@/components/landing/LinuxBusinessSection'
-import HowWeWorkSection from '@/components/landing/HowWeWorkSection'
 import OwnershipVsSubscription from '@/components/shared/OwnershipVsSubscription'
 import PortfolioSection from '@/components/Portfolio/PortfolioSection'
 import ContactSection from '@/components/landing/ContactSection'
@@ -21,8 +19,6 @@ export default function DesktopLandingView() {
   return (
     <>
       <OptimusScaleHero />
-      <LinuxBusinessSection />
-      <HowWeWorkSection />
       <OwnershipVsSubscription />
       <PortfolioSection featuredOnly />
       <ContactSection />

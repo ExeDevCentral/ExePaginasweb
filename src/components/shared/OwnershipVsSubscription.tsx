@@ -358,7 +358,7 @@ function TacticalEngineeringMatrix() {
       rental:
         'Código cerrado en servidores ajenos. Si dejás de pagar, tu inversión se pierde al 100%.',
       exepaginas:
-        'Repositorio Git privado transferido a tu nombre. Código TypeScript/Next.js 100% tuyo.',
+        'Repositorio en GitHub con control de versiones. Código TypeScript/Next.js 100% de tu propiedad.',
     },
     {
       axis: 'Base de Datos y Tus Clientes',

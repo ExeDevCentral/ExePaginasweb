@@ -361,66 +361,9 @@ export const OptimusScaleHero: React.FC = () => {
       </section>
 
       {/* ========================================================
-          3. SECCIÓN CAPACIDADES: DUAL (ESTABLE POR DEFECTO / V2 CON ?showcase=v2)
+          3. SUPER CARD INTERACTIVA UNIFICADA (PASO A PASO Y SISTEMAS EN VIVO)
          ======================================================== */}
-      {showcaseV2 ? (
-        <InteractiveFeatureShowcase className="border-t border-slate-200/80 dark:border-white/10" />
-      ) : (
-        <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-20 border-t border-slate-200/80 dark:border-white/10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
-            <div className="text-left">
-              <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground mb-3">
-                {t('hero.capacidades_eyebrow') || '— Capacidades'}
-              </p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-bold tracking-tight leading-tight">
-                <span className="block text-foreground">
-                  {t('hero.capacidades_titulo') || 'Todo lo que tu empresa necesita.'}
-                </span>
-                <span className="block text-muted-foreground">
-                  {t('hero.capacidades_subtitulo') || 'Nada de plantillas genéricas.'}
-                </span>
-              </h2>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7 xl:gap-8">
-            {CAPABILITIES.map((cap) => (
-              <CyberTerminalCard
-                key={'cap-card-' + cap.id}
-                id={cap.id}
-                code={cap.id === '04' ? t('hero.card_4_code', cap.code) : cap.code}
-                title={t(cap.titleKey) || cap.defaultTitle}
-                desc={t(cap.descKey) || cap.defaultDesc}
-                badge={cap.id === '04' ? t('hero.card_4_badge', cap.badge) : cap.badge}
-                tech={
-                  cap.id === '04'
-                    ? [
-                        t('hero.card_4_tech_1', 'Arranque en 4 Seg'),
-                        t('hero.card_4_tech_2', 'Revive PCs Lentas'),
-                        t('hero.card_4_tech_3', '$0 Licencias & Virus'),
-                      ]
-                    : cap.tech
-                }
-                cta={cap.id === '04' ? t('hero.card_4_cta', cap.cta) : cap.cta}
-                href={cap.href}
-                liveLauncher={
-                  cap.id === '04'
-                    ? {
-                        ...cap.liveLauncher,
-                        label: t('hero.card_4_launcher_label', cap.liveLauncher.label),
-                        sublabel: t('hero.card_4_launcher_sub', cap.liveLauncher.sublabel),
-                      }
-                    : cap.liveLauncher
-                }
-                color={cap.color}
-                icon={cap.icon}
-                ariaLabel={cap.ariaLabel}
-                className="h-full"
-              />
-            ))}
-          </div>
-        </section>
-      )}
+      <InteractiveFeatureShowcase className="border-t border-slate-200/80 dark:border-white/10" />
 
       {/* ESTILOS CSS PARA EL MARQUEE TICKER INFINITO */}
       <style jsx>{`

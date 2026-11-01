@@ -40,7 +40,7 @@
     "compare_stat_duracion": "duração",
     "compare_fast": "online agora mesmo",
     "eyebrow_plataforma": "Arquitetura Web & Sistemas Cloud · Europa · EUA · América do Sul · China · Austrália",
-    "titulo_prefijo": "A plataforma para",
+    "titulo_prefijo": "Sistemas web sob medida",
     "palabras_rotativas": [
       "automatizar",
       "escalar",
@@ -62,10 +62,10 @@
     "trust_entrega": "Entrega em 7-15 dias",
     "metric_carga": "0.38s Carga",
     "metric_carga_sub": "Edge CDN Global",
-    "metric_tuyo": "100% Seu",
-    "metric_tuyo_sub": "Zero taxas recorrentes",
+    "metric_tuyo": "100% Próprio",
+    "metric_tuyo_sub": "Sem taxas ou licenças",
     "metric_autonomo": "Autônomo 24/7",
-    "metric_autonomo_sub": "WhatsApp & Pagamentos",
+    "metric_autonomo_sub": "Gestão Cloud & Pagamentos",
     "ticker_turnos": "AGENDAMENTOS E PAGAMENTOS AUTOMÁTICOS",
     "ticker_senas": "SINAIS DIRETOS NA SUA CONTA",
     "ticker_codigo": "100% CÓDIGO PRÓPRIO SEM MODELOS",
@@ -98,7 +98,11 @@
     "card_4_tech_2": "Revive PCs Lentos",
     "card_4_tech_3": "$0 Licenças & Vírus",
     "titulo_sufijo": "para",
-    "titulo_conector": "para"
+    "titulo_conector": "para",
+    "cta_cotizar": "Solicitar Orçamento sob Medida",
+    "cta_casos": "Ver Portfólio em Produção",
+    "metric_velocidad": "0.38s Carga",
+    "metric_velocidad_sub": "100% Core Web Vitals"
   },
   "features": {
     "seccion_titulo": "Por que ExeSistemasWEB?",

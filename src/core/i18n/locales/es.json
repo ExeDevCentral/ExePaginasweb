@@ -67,7 +67,7 @@
     "metric_tuyo": "100% Tuyo",
     "metric_tuyo_sub": "Cero ataduras o cuotas",
     "metric_autonomo": "Autónomo 24/7",
-    "metric_autonomo_sub": "WhatsApp & Cobros",
+    "metric_autonomo_sub": "Gestión Cloud & Pagos",
     "ticker_turnos": "TURNOS Y COBROS AUTOMÁTICOS",
     "ticker_senas": "SEÑAS DIRECTAS A TU BANCO",
     "ticker_codigo": "100% CÓDIGO PROPIO SIN PLANTILLAS",
@@ -98,7 +98,11 @@
     "card_4_badge": "Cero Cuelgues",
     "card_4_tech_1": "Arranque en 4 Seg",
     "card_4_tech_2": "Revive PCs Lentas",
-    "card_4_tech_3": "$0 Licencias & Virus"
+    "card_4_tech_3": "$0 Licencias & Virus",
+    "cta_cotizar": "Cotizar Proyecto a Medida",
+    "cta_casos": "Ver Portafolio en Vivo",
+    "metric_velocidad": "0.38s Carga",
+    "metric_velocidad_sub": "100% Core Web Vitals"
   },
   "features": {
     "seccion_titulo": "PILARES DE TECNOLOGÍA 2026",

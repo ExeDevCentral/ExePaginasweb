@@ -41,7 +41,7 @@
     "compare_stat_duracion": "ownership",
     "compare_fast": "2026 tech stack",
     "eyebrow_plataforma": "Software Architecture & Cloud Systems · Global Scale",
-    "titulo_prefijo": "The platform to",
+    "titulo_prefijo": "Custom web platforms",
     "palabras_rotativas": [
       "automate",
       "scale",
@@ -64,9 +64,9 @@
     "metric_carga": "0.38s Load",
     "metric_carga_sub": "Global Edge CDN",
     "metric_tuyo": "100% Yours",
-    "metric_tuyo_sub": "Zero lock-in or recurring fees",
-    "metric_autonomo": "24/7 Autonomous",
-    "metric_autonomo_sub": "WhatsApp & Billing",
+    "metric_tuyo_sub": "Zero vendor lock-in",
+    "metric_autonomo": "Autonomous 24/7",
+    "metric_autonomo_sub": "Cloud & Payment Systems",
     "ticker_turnos": "AUTOMATED APPOINTMENTS & BILLING",
     "ticker_senas": "DEPOSITS DIRECT TO YOUR BANK",
     "ticker_codigo": "100% OWNED CODE WITHOUT TEMPLATES",
@@ -99,7 +99,11 @@
     "card_4_tech_2": "Revives Slow PCs",
     "card_4_tech_3": "$0 Licenses & Viruses",
     "titulo_sufijo": "to",
-    "titulo_conector": "to"
+    "titulo_conector": "to",
+    "cta_cotizar": "Request Custom Quote",
+    "cta_casos": "View Live Portfolio",
+    "metric_velocidad": "0.38s Load",
+    "metric_velocidad_sub": "100% Core Web Vitals"
   },
   "features": {
     "seccion_titulo": "2026 TECHNOLOGY PILLARS",

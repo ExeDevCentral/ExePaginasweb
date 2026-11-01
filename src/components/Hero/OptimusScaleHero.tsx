@@ -149,6 +149,14 @@ export const OptimusScaleHero: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 })
   const [showcaseV2, setShowcaseV2] = useState(false)
 
+  const safeT = (key: string, fallback: string): string => {
+    const res = t(key, fallback)
+    if (!res || res === key || res.startsWith('hero.')) {
+      return fallback
+    }
+    return res
+  }
+
   const heroRef = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -228,19 +236,11 @@ export const OptimusScaleHero: React.FC = () => {
               <h1 className="mt-2 text-3xl sm:text-5xl xl:text-6xl font-display font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-foreground text-foreground">
                 <span className="sr-only">Exe Páginas Web - </span>
                 <span className="block font-semibold">
-                  {t('hero.titulo_prefijo') !== 'hero.titulo_prefijo'
-                    ? t('hero.titulo_prefijo')
-                    : 'Páginas web y sistemas a medida'}
+                  {safeT('hero.titulo_prefijo', 'Páginas web y sistemas a medida')}
                 </span>
 
                 <span className="inline-flex items-center gap-2 sm:gap-4 flex-wrap mt-1">
-                  <span>
-                    {t('hero.titulo_sufijo') !== 'hero.titulo_sufijo'
-                      ? t('hero.titulo_sufijo')
-                      : t('hero.titulo_conector') !== 'hero.titulo_conector'
-                        ? t('hero.titulo_conector')
-                        : 'para'}
-                  </span>
+                  <span>{safeT('hero.titulo_sufijo', 'para')}</span>
                   <span className="relative inline-block overflow-hidden py-1">
                     <AnimatePresence mode="wait">
                       <motion.span
@@ -264,7 +264,7 @@ export const OptimusScaleHero: React.FC = () => {
               {/* CTAs principales */}
               <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto">
                 <HudButton
-                  label={t('hero.cta_cotizar') || 'Pedir Presupuesto por WhatsApp'}
+                  label={safeT('hero.cta_cotizar', 'Cotizar Proyecto a Medida')}
                   href="https://wa.me/5493412799385?text=Hola%20Exequiel!%20Quiero%20cotizar%20un%20proyecto%20web%20para%20mi%20negocio"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -272,12 +272,12 @@ export const OptimusScaleHero: React.FC = () => {
                   size="lg"
                   icon={<CyberArrowRight size={17} />}
                   onClick={() => trackEvent('hero_cta_contact_clicked', { source: 'optimus_hero' })}
-                  ariaLabel="Pedir presupuesto de desarrollo web por WhatsApp directo con Exequiel"
+                  ariaLabel="Pedir presupuesto de desarrollo web"
                   className="w-full sm:w-auto shadow-lg shadow-cyan-500/15"
                 />
 
                 <HudButton
-                  label={t('hero.cta_casos') || 'Ver Portafolio en Vivo'}
+                  label={safeT('hero.cta_casos', 'Ver Portafolio en Vivo')}
                   href="/portafolio"
                   variant="secondary"
                   size="lg"
@@ -307,10 +307,10 @@ export const OptimusScaleHero: React.FC = () => {
                 </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-sm font-bold text-foreground">
-                    {t('hero.metric_velocidad') || '0.38s Carga'}
+                    {safeT('hero.metric_velocidad', '0.38s Carga')}
                   </span>
                   <span className="text-xs text-muted-foreground font-mono">
-                    {t('hero.metric_velocidad_sub') || '100% Lighthouse'}
+                    {safeT('hero.metric_velocidad_sub', '100% Core Web Vitals')}
                   </span>
                 </div>
               </div>
@@ -320,10 +320,10 @@ export const OptimusScaleHero: React.FC = () => {
                 </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-sm font-bold text-foreground">
-                    {t('hero.metric_tuyo') || '100% Tuyo'}
+                    {safeT('hero.metric_tuyo', '100% Tuyo')}
                   </span>
                   <span className="text-xs text-muted-foreground font-mono">
-                    {t('hero.metric_tuyo_sub') || 'Cero ataduras o cuotas'}
+                    {safeT('hero.metric_tuyo_sub', 'Cero ataduras o cuotas')}
                   </span>
                 </div>
               </div>
@@ -333,10 +333,10 @@ export const OptimusScaleHero: React.FC = () => {
                 </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-sm font-bold text-foreground">
-                    {t('hero.metric_autonomo') || 'Autónomo 24/7'}
+                    {safeT('hero.metric_autonomo', 'Autónomo 24/7')}
                   </span>
                   <span className="text-xs text-muted-foreground font-mono">
-                    {t('hero.metric_autonomo_sub') || 'WhatsApp & Cobros'}
+                    {safeT('hero.metric_autonomo_sub', 'Gestión Cloud & Pagos')}
                   </span>
                 </div>
               </div>

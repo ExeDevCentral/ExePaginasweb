@@ -324,7 +324,7 @@ const Pricing = () => {
                 />
                 <HudButton
                   label={t('pricing.linux_banner_cta_specs', 'Ver Especificación')}
-                  href="/#sistemas-linux"
+                  href="/linux"
                   variant="secondary"
                   size="sm"
                 />

@@ -253,7 +253,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href="/#sistemas-linux"
+                    href="/linux"
                     className="text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                   >
                     {t('footer.nav_linux') || 'Terminales Linux POS & Nodos'}

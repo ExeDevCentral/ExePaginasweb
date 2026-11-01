@@ -18,6 +18,8 @@ import {
   X,
   LayoutDashboard,
   ArrowRight,
+  Terminal,
+  ShoppingBag,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { DashboardView } from './DashboardView'
@@ -181,6 +183,28 @@ export function DashboardSidebar({
 
           {/* Bottom Pages */}
           <div className="space-y-1 pt-2 border-t border-border mb-4">
+            <a
+              href="/tienda"
+              className="w-full text-left px-3 py-2 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-muted font-medium transition-colors flex items-center justify-between"
+            >
+              <span className="flex items-center gap-2.5">
+                <ShoppingBag className="w-3.5 h-3.5 text-[#38BDF8]" />
+                Tienda de Abonos
+              </span>
+              <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+            </a>
+
+            <a
+              href="/linux"
+              className="w-full text-left px-3 py-2 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-muted font-medium transition-colors flex items-center justify-between"
+            >
+              <span className="flex items-center gap-2.5">
+                <Terminal className="w-3.5 h-3.5 text-emerald-500" />
+                División Linux & POS
+              </span>
+              <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+            </a>
+
             <button
               type="button"
               onClick={() => onNavigate('settings')}

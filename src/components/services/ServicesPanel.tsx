@@ -15,6 +15,8 @@ import {
   ExternalLink,
   ShieldAlert,
   XCircle,
+  Terminal,
+  Server,
 } from 'lucide-react'
 import { useTenantServices, useServiceCatalog } from '../../hooks/useServices'
 import { useTranslation } from 'react-i18next'
@@ -327,6 +329,98 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
                 </button>
               </motion.div>
             ))}
+        </div>
+      </div>
+
+      {/* División Infraestructura Física & Servicios Linux (#linux en Dashboard Clientes) */}
+      <div id="linux" className="pt-4 border-t border-border">
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+            <Terminal className="w-3.5 h-3.5" />
+            <span>Infraestructura Física & Terminales Linux (#Linux)</span>
+          </h3>
+          <a
+            href="/linux"
+            className="text-[11px] font-mono font-bold text-[#38BDF8] hover:underline"
+          >
+            Ver especificaciones /linux →
+          </a>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-emerald-500/25 bg-card p-5 hover:border-emerald-500/50 transition-all shadow-sm flex flex-col justify-between">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                  <Terminal className="w-3 h-3" />
+                  <span>HARDWARE & CAJAS POS</span>
+                </p>
+                <p className="text-sm font-bold text-foreground mt-1">
+                  Terminal Linux POS / Migración de PCs
+                </p>
+                <p className="text-xs text-muted-foreground mt-1 font-medium leading-relaxed">
+                  Blindamos tus PCs actuales de mostrador u oficina: arranque en 4.5s, drivers
+                  térmicos ESC/POS, $0 licencias y llave USB de rescate.
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                <p className="text-lg font-bold font-mono text-foreground">$350.000</p>
+                <p className="text-[10px] text-muted-foreground uppercase font-bold">ARS / único</p>
+              </div>
+            </div>
+            <div className="mt-4 flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  if (onOpenTicket) onOpenTicket()
+                  else window.location.href = '/cotizador?plan=linux&type=linux-pos'
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Solicitar Despliegue</span>
+              </button>
+              <a
+                href="/tienda#linux"
+                className="text-xs font-mono text-muted-foreground hover:text-foreground"
+              >
+                Guardia SSH ($32k/mes)
+              </a>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-card p-5 hover:border-primary/40 transition-all shadow-sm flex flex-col justify-between">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-bold text-[#38BDF8] uppercase tracking-wider flex items-center gap-1">
+                  <Server className="w-3 h-3" />
+                  <span>ALTA DISPONIBILIDAD LAN</span>
+                </p>
+                <p className="text-sm font-bold text-foreground mt-1">
+                  Nodo Servidor Local PostgreSQL Offline-First
+                </p>
+                <p className="text-xs text-muted-foreground mt-1 font-medium leading-relaxed">
+                  Servidor Linux dedicado en tu sucursal con latencia &lt;0.4ms y réplica asíncrona
+                  para seguir facturando aunque se corte internet.
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                <p className="text-lg font-bold font-mono text-foreground">$680.000</p>
+                <p className="text-[10px] text-muted-foreground uppercase font-bold">ARS / único</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpenTicket) onOpenTicket()
+                else window.location.href = '/cotizador?plan=linux&type=edge-server'
+              }}
+              className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#38BDF8] hover:underline w-fit cursor-pointer"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Solicitar Evaluación LAN</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -17,6 +17,9 @@ import {
   Calendar,
   MessageCircle,
   ShieldCheck,
+  Terminal,
+  Server,
+  HardDrive,
 } from 'lucide-react'
 import {
   CyberPlanBasic,
@@ -346,6 +349,140 @@ export default function StorePage() {
 
           {/* DETAILED COMPARISON MATRIX */}
           <PlanComparisonMatrix />
+        </section>
+
+        {/* SECCIÓN #LINUX EN TIENDA ONLINE: GUARDIA SSH, TERMINALES POS & SERVIDORES LOCALES */}
+        <section id="linux" className="scroll-mt-24 max-w-6xl mx-auto">
+          <div className="rounded-3xl border border-emerald-500/30 bg-card/90 backdrop-blur-xl p-6 sm:p-8 shadow-xl">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 mb-6 border-b border-border">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-400 font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
+                  <Terminal className="w-3.5 h-3.5" />
+                  <span>DIVISIÓN #LINUX // HARDWARE LOCAL, CAJAS POS & GUARDIA SSH</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground tracking-tight">
+                  Infraestructura Linux para Comercios y Oficinas
+                </h2>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-2xl">
+                  Complementá tu plataforma web blindando las PCs físicas de tu mostrador o sumando
+                  un servidor local PostgreSQL para seguir facturando sin cortes de internet.
+                </p>
+              </div>
+              <HudButton
+                label="Portal Completo /linux"
+                variant="secondary"
+                size="sm"
+                onClick={() => navigate('/linux')}
+                icon={<Terminal className="w-4 h-4 text-emerald-500" />}
+                iconPosition="left"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {/* Módulo 1: Guardia Remota SSH (Mensual) */}
+              <div className="rounded-2xl border border-border bg-background/60 p-5 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase text-emerald-600 dark:text-emerald-400 mb-2">
+                    <span>ABONO GUARDIA LINUX</span>
+                    <span>MENSUAL</span>
+                  </div>
+                  <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                    <HardDrive className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span>Guardia SSH & S.M.A.R.T.</span>
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                    Monitoreo predictivo de discos SSD/NVMe, parches de seguridad en horario
+                    nocturno y soporte remoto por túnel encriptado.
+                  </p>
+                  <div className="mt-4 text-2xl font-mono font-black text-foreground">
+                    {currency === 'ARS'
+                      ? formatARS(isAnnual ? Math.round(32000 * 0.8) : 32000)
+                      : formatUSD(isAnnual ? Math.round(28 * 0.8) : 28)}
+                    <span className="text-xs font-normal text-muted-foreground"> /mes</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const basePlan = plans[0]
+                    if (basePlan) {
+                      setSelectedPlan({
+                        ...basePlan,
+                        title: 'Guardia Linux SSH & Salud S.M.A.R.T.',
+                        description:
+                          'Monitoreo preventivo de terminales Linux POS, parches nocturnos y soporte remoto.',
+                      })
+                    }
+                  }}
+                  className="mt-5 w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-slate-950 font-mono text-xs font-bold transition-colors cursor-pointer"
+                >
+                  Activar Guardia Linux
+                </button>
+              </div>
+
+              {/* Módulo 2: Terminal Linux POS / Migración PC */}
+              <div className="rounded-2xl border border-border bg-background/60 p-5 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase text-cyan-600 dark:text-cyan-400 mb-2">
+                    <span>APROVISIONAMIENTO</span>
+                    <span>PAGO ÚNICO</span>
+                  </div>
+                  <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                    <Terminal className="w-4 h-4 text-cyan-500 shrink-0" />
+                    <span>Terminal POS / Rescate PC</span>
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                    Modo quiosco en 4.5s sobre tu PC actual, reglas fijas para impresoras térmicas
+                    ESC/POS, $0 licencias y pendrive físico de rescate.
+                  </p>
+                  <div className="mt-4 text-2xl font-mono font-black text-foreground">
+                    {currency === 'ARS' ? '$350.000' : 'u$s 320'}
+                    <span className="text-xs font-normal text-muted-foreground"> único</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate(`/cotizador?plan=linux&type=linux-pos&currency=${currency}`)
+                  }
+                  className="mt-5 w-full py-2.5 rounded-xl border border-border hover:border-cyan-500 text-foreground font-mono text-xs font-bold transition-colors cursor-pointer"
+                >
+                  Cotizar Flota / Caja
+                </button>
+              </div>
+
+              {/* Módulo 3: Nodo Servidor Local LAN */}
+              <div className="rounded-2xl border border-border bg-background/60 p-5 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase text-purple-600 dark:text-purple-400 mb-2">
+                    <span>CONTINUIDAD 24/7</span>
+                    <span>PAGO ÚNICO</span>
+                  </div>
+                  <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                    <Server className="w-4 h-4 text-purple-500 shrink-0" />
+                    <span>Servidor Local LAN Offline</span>
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                    Nodo Linux en tu local con PostgreSQL (&lt;0.4ms) y réplica asíncrona hacia la
+                    nube para operar sin depender de internet.
+                  </p>
+                  <div className="mt-4 text-2xl font-mono font-black text-foreground">
+                    {currency === 'ARS' ? '$680.000' : 'u$s 620'}
+                    <span className="text-xs font-normal text-muted-foreground"> único</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate(`/cotizador?plan=linux&type=edge-server&currency=${currency}`)
+                  }
+                  className="mt-5 w-full py-2.5 rounded-xl border border-border hover:border-purple-500 text-foreground font-mono text-xs font-bold transition-colors cursor-pointer"
+                >
+                  Configurar Nodo LAN
+                </button>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* TRUST GUARANTEES & FAQS */}

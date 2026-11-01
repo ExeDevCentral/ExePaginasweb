@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const routes = [
     '',
+    '/linux',
     '/soluciones',
     '/portafolio',
     '/demos',

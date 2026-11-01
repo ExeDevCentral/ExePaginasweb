@@ -29,6 +29,7 @@ import {
   Database,
   Cpu,
   Globe,
+  Terminal,
   ArrowUpRight,
 } from 'lucide-react'
 import { trackEvent } from '@/core/analytics/trackEvent'
@@ -355,6 +356,31 @@ const STEPS: MainStep[] = [
           secondaryMetrics: [
             { label: 'Latencia promedio', value: '14 ms', accent: true },
             { label: 'Certificado SSL', value: 'Renovación Auto' },
+          ],
+        },
+      },
+      {
+        id: 'linux-pos',
+        label: 'Linux POS · 4.5s',
+        icon: Terminal,
+        eyebrow: 'PASO 03 · INFRAESTRUCTURA FÍSICA & LINUX',
+        title: 'Tus PCs de caja u oficina blindadas con Linux',
+        description:
+          'Recuperamos tus computadoras actuales con imágenes Linux deterministas: arranque en 4.5s directo al sistema, $0 en licencias y servidor local LAN sin cortes.',
+        tags: ['Arranque 4.5s', '$0 Licencias', 'USB Rescate 3 min'],
+        visual: {
+          type: 'code',
+          primaryMetric: '480 MB',
+          primaryLabel: 'Consumo RAM · Kernel LTS',
+          codeSnippet: [
+            { line: '$ systemd-analyze -> boot in 4.48s', highlight: true },
+            { line: '[UDEV] ESC/POS Thermal Printer: READY' },
+            { line: '[LAN] PostgreSQL Local Replica: 0.4ms' },
+            { line: '[GUARD] S.M.A.R.T. Disk Health: 100% OK' },
+          ],
+          secondaryMetrics: [
+            { label: 'Costo en licencias', value: '$0 Vitalicio', accent: true },
+            { label: 'Continuidad sin fibra', value: '100% Offline LAN' },
           ],
         },
       },
@@ -887,10 +913,12 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
             <div className="flex items-center gap-4">
               <Link
-                href="/soluciones"
+                href={currentStage.id === 'linux-pos' ? '/linux' : '/soluciones'}
                 className="font-mono text-xs text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white flex items-center gap-1 transition-colors"
               >
-                <span>Ver arquitectura</span>
+                <span>
+                  {currentStage.id === 'linux-pos' ? 'Portal /linux' : 'Ver arquitectura'}
+                </span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <a

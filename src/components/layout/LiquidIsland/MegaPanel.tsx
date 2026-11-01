@@ -90,7 +90,7 @@ const paletteItems: PaletteItem[] = [
   {
     id: 'linux-pos',
     shortcutNumber: 7,
-    href: '/#sistemas-linux',
+    href: '/linux',
     label: 'Terminales Linux POS & Cajas para Negocios',
     detail: 'Blindamos las PCs de tu mostrador o caja: arranque en 4s, cero virus y $0 licencias.',
     techFact: 'Kiosk Mode · 480MB RAM · USB Rescue Key · Offline-First',
@@ -199,7 +199,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
       {
         id: 'linux-pos',
         shortcutNumber: 7,
-        href: '/#sistemas-linux',
+        href: '/linux',
         label: t('megapanel.item_7_label', 'Terminales Linux POS & Arquitectura B2B'),
         detail: t(
           'megapanel.item_7_detail',
@@ -728,7 +728,7 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
                 {/* Banner destacado: Arquitectura completa & casos reales de software */}
                 <div className="pt-0.5">
                   <Link
-                    href="/#sistemas-linux"
+                    href="/linux"
                     onClick={onClose}
                     className="group flex items-center justify-between px-3 py-2 rounded-xl border border-black/7 dark:border-white/8 bg-black/1.5 dark:bg-white/2 hover:border-emerald-500/40 dark:hover:border-emerald-500/40 hover:bg-emerald-500/3 transition-all"
                   >

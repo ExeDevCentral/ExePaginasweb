@@ -658,6 +658,23 @@ export const OwnershipVsSubscription: React.FC = () => {
 
         {/* 3. Sello Notarial Criptográfico */}
         <NotarialAuthorshipSeal />
+
+        {/* Extensión natural hacia Propiedad en Hardware Físico (División Linux) */}
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3.5 rounded-xl border border-emerald-500/25 bg-emerald-500/[0.05] dark:bg-emerald-500/[0.06] font-mono text-xs">
+          <span className="text-slate-700 dark:text-slate-300 text-center sm:text-left">
+            <strong className="text-emerald-700 dark:text-emerald-400">
+              Soberanía en Hardware:
+            </strong>{' '}
+            También eliminamos licencias y lentitud en tus PCs de mostrador u oficina con Linux POS
+            dedicado.
+          </span>
+          <a
+            href="/linux"
+            className="shrink-0 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-slate-950 font-bold transition-colors"
+          >
+            Explorar División /linux →
+          </a>
+        </div>
       </div>
     </section>
   )

@@ -336,6 +336,47 @@ const ContactSection = () => {
                   </div>
                 </div>
 
+                {/* Chips rápidos de preselección técnica (incluyendo División Linux) */}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {[
+                    { label: 'Web / SaaS a Medida', tag: '[PROYECTO: WEB / SAAS A MEDIDA]' },
+                    { label: 'E-Commerce / Turnos', tag: '[PROYECTO: E-COMMERCE / TURNOS]' },
+                    {
+                      label: 'Linux POS / Rescate PCs',
+                      tag: '[DIVISIÓN LINUX: TERMINALES POS / MIGRACIÓN PCS]',
+                    },
+                    {
+                      label: 'Servidor Local LAN',
+                      tag: '[DIVISIÓN LINUX: SERVIDOR LOCAL OFFLINE-FIRST]',
+                    },
+                  ].map((topic) => {
+                    const isSelected = message.includes(topic.tag)
+                    const isLinux = topic.tag.includes('LINUX')
+                    return (
+                      <button
+                        key={topic.tag}
+                        type="button"
+                        onClick={() => {
+                          setMessage((prev) =>
+                            prev.includes(topic.tag)
+                              ? prev.replace(`${topic.tag}\n`, '').replace(topic.tag, '')
+                              : `${topic.tag}\n${prev}`
+                          )
+                        }}
+                        className={`px-2.5 py-1 rounded-lg font-mono text-[10px] font-semibold border transition-colors cursor-pointer ${
+                          isSelected
+                            ? isLinux
+                              ? 'bg-emerald-500/15 border-emerald-500/50 text-emerald-700 dark:text-emerald-300'
+                              : 'bg-cyan-500/15 border-cyan-500/50 text-cyan-700 dark:text-cyan-300'
+                            : 'bg-slate-50 dark:bg-white/[0.03] border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/25'
+                        }`}
+                      >
+                        {topic.label}
+                      </button>
+                    )
+                  })}
+                </div>
+
                 <div className="relative flex-1">
                   <textarea
                     id="contact-message"

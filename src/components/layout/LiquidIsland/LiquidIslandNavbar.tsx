@@ -159,6 +159,17 @@ export default function LiquidIslandNavbar({
                 </button>
               </div>
 
+              {/* Servicios Linux Empresariales */}
+              <NavLink
+                href="/linux"
+                label={getNavLabel('nav.linux', 'Linux')}
+                isActive={pathname === '/linux'}
+                isHovered={hoveredLink === 'linux'}
+                onHover={() => setHoveredLink('linux')}
+                onLeave={() => setHoveredLink(null)}
+                onClick={() => setMegaPanelOpen(false)}
+              />
+
               {/* Casos / Portafolio */}
               <NavLink
                 href="/portafolio"

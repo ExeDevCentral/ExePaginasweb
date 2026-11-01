@@ -36,7 +36,13 @@ type OsComparisonMode = 'linux' | 'windows'
 type ProfileId = 'caja-pos' | 'reciclaje-pc' | 'servidor-local'
 type SpecDepthMode = 'executive' | 'architect'
 
-export default function LinuxBusinessSection() {
+export interface LinuxBusinessSectionProps {
+  hidePortalLink?: boolean
+}
+
+export default function LinuxBusinessSection({
+  hidePortalLink = false,
+}: Readonly<LinuxBusinessSectionProps> = {}) {
   const { t } = useTranslation()
   const [osMode, setOsMode] = useState<OsComparisonMode>('linux')
   const [selectedProfile, setSelectedProfile] = useState<ProfileId>('caja-pos')
@@ -188,6 +194,7 @@ export default function LinuxBusinessSection() {
       data-linux-business="true"
       className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20 sm:py-24"
     >
+      <span id="linux" className="absolute -top-20 pointer-events-none" />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute top-0 inset-x-0 h-px max-w-xl mx-auto bg-gradient-to-r from-transparent via-slate-300/70 dark:via-white/10 to-transparent"
@@ -562,6 +569,15 @@ export default function LinuxBusinessSection() {
               </div>
 
               <div className="flex flex-wrap items-center gap-2.5">
+                {!hidePortalLink && (
+                  <HudButton
+                    label="Portal Linux & Simulador"
+                    href="/linux"
+                    variant="secondary"
+                    size="sm"
+                    icon={<Terminal className="w-4 h-4 text-emerald-500" />}
+                  />
+                )}
                 <HudButton
                   label={t('linux_pos.cta_quote', 'Cotizar en línea')}
                   href={

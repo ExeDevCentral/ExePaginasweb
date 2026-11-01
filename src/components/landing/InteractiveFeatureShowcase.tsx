@@ -429,7 +429,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   }}
                   className={`relative flex items-center justify-between p-4 sm:p-4.5 rounded-2xl transition-all duration-300 cursor-pointer text-left overflow-hidden ${
                     isActive
-                      ? 'bg-cyan-50/90 dark:bg-gradient-to-r dark:from-[#0c2438] dark:via-[#0c1e30] dark:to-[#08121f] border-2 border-cyan-600 dark:border-cyan-400/90 shadow-md shadow-cyan-600/10 dark:shadow-[0_0_30px_rgba(6,182,212,0.25)] ring-1 ring-cyan-600/20 dark:ring-cyan-400/20 scale-[1.01]'
+                      ? 'bg-cyan-50/90 dark:bg-[#0c2438] dark:bg-gradient-to-r dark:from-[#0c2438] dark:via-[#0c1e30] dark:to-[#08121f] border-2 border-cyan-600 dark:border-cyan-400/90 shadow-md shadow-cyan-600/10 dark:shadow-[0_0_30px_rgba(6,182,212,0.25)] ring-1 ring-cyan-600/20 dark:ring-cyan-400/20 scale-[1.01]'
                       : 'bg-white dark:bg-[#091122]/70 hover:bg-[#FAF7F2] dark:hover:bg-[#0d1830] border-2 border-slate-300 dark:border-neutral-800/80 hover:border-slate-400 dark:hover:border-neutral-700/90 text-slate-700 dark:text-neutral-300 hover:scale-[1.005] group'
                   }`}
                 >
@@ -526,7 +526,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
         <div
           onMouseEnter={() => setIsLaserPaused(true)}
           onMouseLeave={() => setIsLaserPaused(false)}
-          className="relative w-full lg:flex-[1_1_64%] p-6 sm:p-8 lg:p-9 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#FAF7F2] via-white to-[#F2ECE1] dark:from-[#0a0f20] dark:via-[#070c18] dark:to-[#04060c]"
+          className="relative w-full lg:flex-[1_1_64%] p-6 sm:p-8 lg:p-9 flex flex-col justify-between overflow-hidden bg-[#FAF7F2] dark:bg-[#070c18] bg-gradient-to-b from-[#FAF7F2] via-white to-[#F2ECE1] dark:from-[#0a0f20] dark:via-[#070c18] dark:to-[#04060c]"
         >
           {/* LUZ AMBIENTAL AMBILIGHT VIBRANTE */}
           <div
@@ -649,7 +649,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                     }}
                     className={`relative flex items-center justify-center gap-1 sm:gap-1.5 px-2 py-1.5 sm:py-2 rounded-full font-mono text-[11px] sm:text-xs transition-all duration-300 cursor-pointer min-w-0 ${
                       isCurrent
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-black shadow-md shadow-slate-900/20 dark:shadow-white/20 scale-[1.02]'
+                        ? 'bg-slate-900 text-white dark:bg-cyan-500 dark:text-slate-950 font-black shadow-md shadow-slate-900/20 dark:shadow-[0_0_16px_rgba(6,182,212,0.5)] scale-[1.02]'
                         : 'text-slate-800 hover:text-slate-950 hover:bg-slate-300/80 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-white/5 font-medium'
                     }`}
                   >
@@ -688,16 +688,16 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               {activeMainStep === 0 && (
                 <motion.div
                   key={`p0-${laserIdx}`}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.3 }}
-                  className="rounded-2xl border border-cyan-500/30 bg-white dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-md dark:shadow-2xl border-2 border-slate-300 dark:border-cyan-500/30"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="rounded-2xl border-2 border-slate-300 dark:border-cyan-500/30 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
                       {/* Lado Izquierdo: Mockup Visual ImagineArt */}
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-cyan-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#09182d] dark:to-[#040d1a] p-4.5 space-y-3 shadow-inner">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-cyan-500/40 bg-[#FAF7F2] dark:bg-[#09182d] dark:bg-gradient-to-br dark:from-[#09182d] dark:to-[#040d1a] p-4.5 space-y-3 shadow-inner">
                         <div className="flex items-center justify-between text-xs font-mono pb-2 border-b border-cyan-500/20">
                           <span className="text-cyan-400 font-bold flex items-center gap-1.5">
                             <PhoneCall className="w-3.5 h-3.5" />
@@ -767,7 +767,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 1 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Award className="w-3.5 h-3.5" />
@@ -826,7 +826,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
                           <span className="text-amber-400 font-bold flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5" />
@@ -940,7 +940,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <Rocket className="w-3.5 h-3.5" />
@@ -1008,15 +1008,15 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               {activeMainStep === 1 && (
                 <motion.div
                   key={`p1-${laserIdx}`}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.3 }}
-                  className="rounded-2xl border border-emerald-500/30 bg-white dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-md dark:shadow-2xl border-2 border-slate-300 dark:border-cyan-500/30"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="rounded-2xl border-2 border-slate-300 dark:border-emerald-500/40 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Cpu className="w-3.5 h-3.5" />
@@ -1133,7 +1133,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
                           <span className="text-amber-400 font-bold flex items-center gap-1.5">
                             <CreditCard className="w-3.5 h-3.5" />
@@ -1186,7 +1186,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 3 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
                             <Activity className="w-3.5 h-3.5" />
@@ -1237,7 +1237,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <Server className="w-3.5 h-3.5" />
@@ -1307,15 +1307,15 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               {activeMainStep === 2 && (
                 <motion.div
                   key={`p2-${laserIdx}`}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.3 }}
-                  className="rounded-2xl border border-amber-500/30 bg-white dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-md dark:shadow-2xl border-2 border-slate-300 dark:border-cyan-500/30"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="rounded-2xl border-2 border-slate-300 dark:border-amber-500/40 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
                           <span className="text-amber-400 font-bold flex items-center gap-1.5">
                             <Search className="w-3.5 h-3.5" />
@@ -1441,7 +1441,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Lock className="w-3.5 h-3.5" />
@@ -1503,7 +1503,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 3 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <ShieldCheck className="w-3.5 h-3.5" />
@@ -1566,7 +1566,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Award className="w-3.5 h-3.5" />
@@ -1626,15 +1626,15 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               {activeMainStep === 3 && (
                 <motion.div
                   key={`p3-${laserIdx}`}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.3 }}
-                  className="rounded-2xl border border-purple-500/30 bg-white dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-md dark:shadow-2xl border-2 border-slate-300 dark:border-cyan-500/30"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="rounded-2xl border-2 border-slate-300 dark:border-purple-500/40 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <Target className="w-3.5 h-3.5" />
@@ -1752,7 +1752,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <TrendingUp className="w-3.5 h-3.5" />
@@ -1808,7 +1808,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 3 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
                             <Target className="w-3.5 h-3.5" />
@@ -1859,7 +1859,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <BarChart3 className="w-3.5 h-3.5" />

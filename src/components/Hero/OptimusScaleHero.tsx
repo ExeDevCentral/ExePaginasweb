@@ -126,11 +126,11 @@ const CAPABILITIES = [
     defaultDesc:
       'Transformamos las PCs actuales de tu mostrador o caja en terminales Linux dedicadas: arranque en 4s, cero virus, modo quiosco blindado y $0 en licencias.',
     cta: 'Ver Terminales Linux para Comercios',
-    href: '#sistemas-linux',
+    href: '/linux',
     liveLauncher: {
       label: 'VER TERMINALES LINUX POS',
       sublabel: '0% LICENCIAS · ANTI-CUELGUES',
-      href: '#sistemas-linux',
+      href: '/linux',
       icon: <CyberMetricProcessor size={18} />,
       color: 'emerald' as const,
     },
@@ -301,8 +301,8 @@ export const OptimusScaleHero: React.FC = () => {
 
         {/* MÉTRICAS DE PIE DE HERO */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-8 sm:mt-12">
-          <div className="p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-white/[0.03] border border-slate-200/90 dark:border-white/10 backdrop-blur-md shadow-xs">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 divide-y md:divide-y-0 md:divide-x divide-slate-200/70 dark:divide-white/10">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white/95 dark:bg-white/[0.03] border border-slate-300/90 dark:border-white/10 backdrop-blur-md shadow-[0_8px_24px_-8px_rgba(15,23,42,0.08)] dark:shadow-xs">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-white/10">
               <div className="flex items-center gap-3.5 md:px-6 first:pl-0 py-2 md:py-0">
                 <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs shrink-0">
                   <CyberMetricLightning size={19} />

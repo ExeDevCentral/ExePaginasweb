@@ -20,13 +20,47 @@ import {
   Sliders,
   Lock,
   Activity,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react'
 import SiteHeader from '@/components/layout/SiteHeader'
-import LinuxBusinessSection from '@/components/landing/LinuxBusinessSection'
 import ContactSection from '@/components/landing/ContactSection'
 import Footer from '@/components/layout/Footer'
 import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
+
+const KERNEL_SNIPPETS = {
+  pos: {
+    label: 'tty1:pos-kiosk',
+    path: '/etc/udev/rules.d/99-escpos.rules',
+    lines: [
+      '# Puerto fijo permanente para impresora térmica ESC/POS y lector láser',
+      'SUBSYSTEM=="usb", ATTR{idVendor}=="04b8", MODE="0660", GROUP="lp", SYMLINK+="escpos0"',
+      '# Servicio gráfico aislado (Wayland Cage · reinicio automático en 5s)',
+      'ExecStart=/usr/bin/cage -s -- chromium --kiosk --noerrdialogs --app=https://pos.local',
+    ],
+  },
+  fleet: {
+    label: 'tty2:zram-fleet',
+    path: '/etc/systemd/zram-generator.conf',
+    lines: [
+      '# Compresión zstd en memoria RAM: multiplica fluidez en PCs de 4GB / 8GB',
+      '[zram0] zram-size = ram / 2 | compression-algorithm = zstd',
+      '# Snapshot automático en disco previo a cualquier parche nocturno',
+      'timeshift --create --comments "Nightly Atomic Point" --scripted',
+    ],
+  },
+  lan: {
+    label: 'tty3:lan-postgres',
+    path: '/etc/systemd/system/exe-outbox-sync.service',
+    lines: [
+      '# PostgreSQL 15 en red local LAN (<0.3ms) + réplica asíncrona hacia la nube',
+      'pg_isready -h 127.0.0.1 -p 5432 && systemctl status exe-outbox-sync.service',
+      '# Respuesta local ininterrumpida ante corte total de fibra óptica:',
+      '64 bytes from 192.168.1.10 (pos-server.local): icmp_seq=1 ttl=64 time=0.19 ms',
+    ],
+  },
+} as const
 
 interface LinuxServiceItem {
   id: string
@@ -120,6 +154,8 @@ const LINUX_SERVICES: LinuxServiceItem[] = [
 export default function LinuxPage() {
   const [currency, setCurrency] = useState<'ARS' | 'USD'>('ARS')
   const [pcCount, setPcCount] = useState<number>(4)
+  const [osMode, setOsMode] = useState<'linux' | 'comercial'>('linux')
+  const [snippetKey, setSnippetKey] = useState<keyof typeof KERNEL_SNIPPETS>('pos')
 
   // Cálculo conservador y transparente de ahorro de CAPEX/OPEX frente a recambio de hardware + licencias
   const newPcCostUSD = 620 // PC comercial nueva + licencia Pro + setup
@@ -171,22 +207,28 @@ export default function LinuxPage() {
                 href="#catalogo-linux"
                 className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-slate-950 font-mono text-xs font-bold transition-colors shadow-sm"
               >
-                Explorar Servicios Linux
+                1. Servicios Linux
               </a>
               <a
                 href="#simulador-ahorro"
-                className="px-4 py-2 rounded-xl bg-white/90 dark:bg-white/[0.05] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-emerald-500/50 font-mono text-xs font-semibold transition-colors"
+                className="px-4 py-2 rounded-xl bg-white dark:bg-white/[0.05] border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-emerald-500/60 font-mono text-xs font-semibold transition-colors shadow-2xs"
               >
-                Simular Ahorro de Flota
+                2. Simulador de Flota
               </a>
               <a
                 href="#consola-tecnica"
-                className="px-4 py-2 rounded-xl bg-white/90 dark:bg-white/[0.05] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-cyan-500/50 font-mono text-xs font-semibold transition-colors"
+                className="px-4 py-2 rounded-xl bg-white dark:bg-white/[0.05] border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-cyan-500/60 font-mono text-xs font-semibold transition-colors shadow-2xs"
               >
-                Especificación Kernel / TTY
+                3. Telemetría Kernel
+              </a>
+              <a
+                href="#planes-linux"
+                className="px-4 py-2 rounded-xl bg-white dark:bg-white/[0.05] border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-violet-500/60 font-mono text-xs font-semibold transition-colors shadow-2xs"
+              >
+                4. Planes & Precios
               </a>
 
-              <div className="inline-flex items-center rounded-xl bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/10 p-1 ml-0 sm:ml-2 font-mono text-xs">
+              <div className="inline-flex items-center rounded-xl bg-slate-200/80 dark:bg-white/[0.05] border border-slate-300 dark:border-white/10 p-1 ml-0 sm:ml-2 font-mono text-xs">
                 <button
                   type="button"
                   onClick={() => setCurrency('ARS')}
@@ -217,7 +259,10 @@ export default function LinuxPage() {
         {/* ==============================================================
             2. CATÁLOGO DE LOS 4 SERVICIOS LINUX EMPRESARIALES
            ============================================================== */}
-        <section id="catalogo-linux" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section
+          id="catalogo-linux"
+          className="scroll-mt-28 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {LINUX_SERVICES.map((srv, idx) => {
               const Icon = srv.icon
@@ -228,7 +273,7 @@ export default function LinuxPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.35, delay: idx * 0.06 }}
-                  className={`rounded-2xl p-6 sm:p-7 bg-white/95 dark:bg-[#070b14]/90 backdrop-blur-xl border border-slate-200/90 dark:border-white/[0.08] ${srv.accentBorder} shadow-[0_14px_34px_-12px_rgba(15,23,42,0.06)] dark:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.75)] flex flex-col justify-between transition-all duration-300`}
+                  className={`rounded-2xl p-6 sm:p-7 bg-white dark:bg-[#070b14]/90 backdrop-blur-xl border border-slate-300 dark:border-white/[0.08] ${srv.accentBorder} shadow-[0_14px_34px_-12px_rgba(15,23,42,0.1)] dark:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.75)] flex flex-col justify-between transition-all duration-300`}
                 >
                   <div>
                     <div className="flex items-center justify-between gap-3 mb-4">
@@ -298,8 +343,11 @@ export default function LinuxPage() {
         {/* ==============================================================
             3. SIMULADOR INTERACTIVO DE AHORRO EN FLOTA DE PCS / CAJAS
            ============================================================== */}
-        <section id="simulador-ahorro" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-emerald-500/25 bg-white/95 dark:bg-[#070b14]/95 backdrop-blur-xl p-6 sm:p-8 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.06)] dark:shadow-[0_24px_70px_-15px_rgba(0,0,0,0.8)]">
+        <section
+          id="simulador-ahorro"
+          className="scroll-mt-28 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+        >
+          <div className="rounded-2xl sm:rounded-3xl border border-slate-300 dark:border-emerald-500/25 bg-white dark:bg-[#070b14]/95 backdrop-blur-xl p-6 sm:p-8 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.12)] dark:shadow-[0_24px_70px_-15px_rgba(0,0,0,0.8)]">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
               <div className="lg:w-7/12 space-y-4">
                 <div className="inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
@@ -392,16 +440,181 @@ export default function LinuxPage() {
         </section>
 
         {/* ==============================================================
-            4. CONSOLA INTERACTIVA DE ARQUITECTURA LINUX (WORKBENCH TTY1)
+            4. TELEMETRÍA KERNEL & BENCHMARK COMPACTO (CERO REPETICIÓN)
            ============================================================== */}
-        <div id="consola-tecnica">
-          <LinuxBusinessSection hidePortalLink />
-        </div>
+        <section
+          id="consola-tecnica"
+          className="scroll-mt-28 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+        >
+          <div className="rounded-2xl border border-slate-300 dark:border-emerald-500/30 bg-[#05080f] text-slate-100 shadow-[0_24px_60px_-15px_rgba(15,23,42,0.22)] dark:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.85)] overflow-hidden font-mono">
+            {/* Barra de ventana TTY */}
+            <div className="px-4 sm:px-6 py-3 bg-[#0a101d] border-b border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5">
+                <span className="flex gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
+                </span>
+                <span className="text-emerald-400 font-bold text-[11px]">
+                  root@exe-pos-node:~ (Linux 6.12-LTS x86_64 · Benchmark en mismo hardware 8GB NVMe)
+                </span>
+              </div>
+
+              <div className="inline-flex rounded-lg bg-black/50 p-1 border border-white/10 text-[11px]">
+                <button
+                  type="button"
+                  onClick={() => setOsMode('linux')}
+                  className={`px-3 py-1 rounded font-bold transition-colors cursor-pointer ${
+                    osMode === 'linux'
+                      ? 'bg-emerald-500 text-slate-950'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  LINUX LTS DEDICADO
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOsMode('comercial')}
+                  className={`px-3 py-1 rounded font-bold transition-colors cursor-pointer ${
+                    osMode === 'comercial'
+                      ? 'bg-rose-600 text-white'
+                      : 'text-slate-400 hover:text-rose-300'
+                  }`}
+                >
+                  OS COMERCIAL ESTÁNDAR
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-white/10">
+              {/* Barras htop comparativas */}
+              <div className="lg:col-span-6 p-5 sm:p-6 space-y-4 text-xs bg-[#03060c]">
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <span className="text-slate-400">MEM[||] Consumo RAM en reposo</span>
+                    <span
+                      className={`font-bold ${
+                        osMode === 'linux' ? 'text-emerald-400' : 'text-rose-400'
+                      }`}
+                    >
+                      {osMode === 'linux' ? '480 MB / 8192 MB (5.8%)' : '4310 MB / 8192 MB (52.6%)'}
+                    </span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-500 ${
+                        osMode === 'linux' ? 'w-[7%] bg-emerald-400' : 'w-[54%] bg-rose-500'
+                      }`}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <span className="text-slate-400">BOOT[|] Encendido → Caja lista</span>
+                    <span
+                      className={`font-bold ${
+                        osMode === 'linux' ? 'text-cyan-400' : 'text-amber-400'
+                      }`}
+                    >
+                      {osMode === 'linux' ? '4.5s (systemd-analyze)' : '48s – 90s (I/O bloqueante)'}
+                    </span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-500 ${
+                        osMode === 'linux' ? 'w-[9%] bg-cyan-400' : 'w-[82%] bg-amber-500'
+                      }`}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <span className="text-slate-400">IRQ[0] Reinicios en horario comercial</span>
+                    <span
+                      className={`font-bold ${
+                        osMode === 'linux' ? 'text-emerald-400' : 'text-rose-400'
+                      }`}
+                    >
+                      {osMode === 'linux' ? '0 (Ventana nocturna)' : 'Actualizaciones forzadas'}
+                    </span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-500 ${
+                        osMode === 'linux' ? 'w-[2%] bg-emerald-400' : 'w-[88%] bg-rose-500'
+                      }`}
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-white/10">
+                  {osMode === 'linux' ? (
+                    <div className="flex items-center gap-2 text-emerald-400 font-bold text-[11px]">
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
+                      <span>NODO DETERMINISTA ACTIVO · UPTIME 99.98% · INMUNE A .EXE</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-rose-400 font-bold text-[11px]">
+                      <XCircle className="w-4 h-4 shrink-0" />
+                      <span>DEGRADACIÓN DE I/O Y RIESGO DE BLOQUEO EN HORA PICO</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Inspector de configuración auditable */}
+              <div className="lg:col-span-6 p-5 sm:p-6 bg-[#070b14] flex flex-col justify-between space-y-4">
+                <div>
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span className="text-[11px] text-cyan-400 font-bold">
+                      CONFIGURACIÓN AUDITABLE:
+                    </span>
+                    <div className="flex items-center gap-1">
+                      {(Object.keys(KERNEL_SNIPPETS) as Array<keyof typeof KERNEL_SNIPPETS>).map(
+                        (k) => (
+                          <button
+                            key={k}
+                            type="button"
+                            onClick={() => setSnippetKey(k)}
+                            className={`px-2.5 py-1 rounded text-[10px] font-bold transition-colors cursor-pointer ${
+                              snippetKey === k
+                                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/40'
+                                : 'text-slate-400 hover:text-white border border-transparent'
+                            }`}
+                          >
+                            {KERNEL_SNIPPETS[k].label}
+                          </button>
+                        )
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-[10px] text-slate-400 mb-2">
+                    $ cat {KERNEL_SNIPPETS[snippetKey].path}
+                  </div>
+                  <pre className="p-3.5 rounded-xl bg-black/80 border border-white/10 text-[11px] text-emerald-300/95 overflow-x-auto leading-relaxed">
+                    {KERNEL_SNIPPETS[snippetKey].lines.join('\n')}
+                  </pre>
+                </div>
+
+                <p className="text-[11px] text-slate-400 font-sans leading-relaxed">
+                  Código y scripts bash 100% documentados y transferidos con acceso root completo a
+                  tu comercio o equipo IT, sin cajas negras ni ataduras.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* ==============================================================
             5. PLANES CLAROS DE DESPLIEGUE Y GUARDIA LINUX
            ============================================================== */}
-        <section id="planes-linux" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <section
+          id="planes-linux"
+          className="scroll-mt-28 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14"
+        >
           <div className="text-center max-w-2xl mx-auto mb-10">
             <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">
               ESQUEMA TRANSPARENTE // SIN COSTOS OCULTOS
@@ -413,7 +626,7 @@ export default function LinuxPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Plan 1: Estación POS / PC */}
-            <div className="rounded-2xl p-6 bg-white/95 dark:bg-[#070b14]/90 border border-slate-200/90 dark:border-white/[0.08] flex flex-col justify-between">
+            <div className="rounded-2xl p-6 bg-white dark:bg-[#070b14]/90 border border-slate-300 dark:border-white/[0.08] shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between font-mono text-[11px] text-cyan-700 dark:text-cyan-400 font-bold mb-2">
                   <span>ESTACIÓN INDIVIDUAL</span>
@@ -488,7 +701,7 @@ export default function LinuxPage() {
             </div>
 
             {/* Plan 3: Guardia Remota SSH & Monitoreo S.M.A.R.T. */}
-            <div className="rounded-2xl p-6 bg-white/95 dark:bg-[#070b14]/90 border border-slate-200/90 dark:border-white/[0.08] flex flex-col justify-between">
+            <div className="rounded-2xl p-6 bg-white dark:bg-[#070b14]/90 border border-slate-300 dark:border-white/[0.08] shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between font-mono text-[11px] text-violet-700 dark:text-violet-400 font-bold mb-2">
                   <span className="inline-flex items-center gap-1">

@@ -60,7 +60,10 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
     : filteredProjects
 
   return (
-    <section id="portafolio" className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
+    <section
+      id="portafolio"
+      className="scroll-mt-24 py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10"
+    >
       {/* Glows de fondo con transición difuminada vertical para evitar cortes entre secciones */}
       <div
         className="pointer-events-none absolute inset-0"

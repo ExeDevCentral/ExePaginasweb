@@ -333,7 +333,7 @@ export default function ServicesPanel({ tenantId, onOpenTicket }: Readonly<Props
       </div>
 
       {/* División Infraestructura Física & Servicios Linux (#linux en Dashboard Clientes) */}
-      <div id="linux" className="pt-4 border-t border-border">
+      <div id="linux" className="scroll-mt-24 pt-4 border-t border-border">
         <div className="flex items-center justify-between gap-2 mb-4">
           <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
             <Terminal className="w-3.5 h-3.5" />

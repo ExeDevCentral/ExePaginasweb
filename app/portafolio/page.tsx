@@ -4,6 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import SiteHeader from '@/components/layout/SiteHeader'
+import Footer from '@/components/layout/Footer'
 import type { Metadata } from 'next'
 import PortfolioSection from '@/components/Portfolio/PortfolioSection'
 
@@ -21,6 +22,7 @@ export default function PortafolioPage() {
       <main className="pt-16">
         <PortfolioSection />
       </main>
+      <Footer />
     </>
   )
 }

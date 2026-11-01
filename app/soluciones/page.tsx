@@ -6,6 +6,7 @@
 import dynamic from 'next/dynamic'
 import type { Metadata } from 'next'
 import SiteHeader from '@/components/layout/SiteHeader'
+import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
   title: 'Soluciones Web para Negocios',
@@ -19,9 +20,6 @@ const Products = dynamic(() => import('@/components/Products/Products'), {
 })
 const DemoZone = dynamic(() => import('@/components/DemoZone/DemoZone'), {
   loading: () => <PageLoading />,
-})
-const LinuxBusinessSection = dynamic(() => import('@/components/landing/LinuxBusinessSection'), {
-  loading: () => <div className="h-40" />,
 })
 const ContactSection = dynamic(() => import('@/components/landing/ContactSection'), {
   loading: () => <div className="h-40" />,
@@ -42,9 +40,9 @@ export default function SolucionesPage() {
       <main className="pt-20">
         <Products />
         <DemoZone />
-        <LinuxBusinessSection />
         <ContactSection />
       </main>
+      <Footer />
     </>
   )
 }

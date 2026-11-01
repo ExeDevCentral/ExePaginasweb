@@ -224,7 +224,7 @@ export default function MobileLandingView() {
          ============================================================== */}
       <section
         id="demos-mobile"
-        className="relative py-10 px-4 space-y-8 bg-linear-to-b from-background via-surface-1/30 to-background [content-visibility:auto] [contain-intrinsic-size:1px_800px]"
+        className="scroll-mt-20 relative py-10 px-4 space-y-8 bg-linear-to-b from-background via-surface-1/30 to-background [content-visibility:auto] [contain-intrinsic-size:1px_800px]"
       >
         {/* Cabecera Demos */}
         <div className="text-center max-w-sm mx-auto">

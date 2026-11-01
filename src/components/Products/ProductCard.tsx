@@ -88,13 +88,13 @@ export default function ProductCard({
   const estimatedTotal = basePriceNum * sucursales + (includeWhatsAppBot ? 80 : 0)
 
   return (
-    <div id={product.anchorId} className="relative w-full scroll-mt-24 group">
+    <div id={product.anchorId} className="relative w-full scroll-mt-28 group">
       <div className="relative">
         {/* Sombra Glow adaptada al color */}
         <div className="absolute -inset-4 rounded-[28px] bg-black/40 dark:bg-black/70 blur-[25px] -z-10 pointer-events-none transition-opacity duration-300 group-hover:opacity-100 opacity-60" />
 
         {/* Cuerpo Principal de la Tarjeta */}
-        <div className="h-full p-4.5 sm:p-7 md:p-8 bg-linear-to-br from-white via-slate-50 to-slate-100 dark:from-[#171729] dark:via-[#111122] dark:to-[#0c0c15] backdrop-blur-xl border border-border rounded-2xl transition-all duration-300 relative shadow-xl overflow-hidden dark:border-white/10 dark:shadow-[0_0_60px_rgba(14,165,233,0.07)]">
+        <div className="h-full p-4.5 sm:p-7 md:p-8 bg-linear-to-br from-white via-slate-50 to-slate-100 dark:from-[#171729] dark:via-[#111122] dark:to-[#0c0c15] backdrop-blur-xl border border-slate-300 dark:border-white/10 rounded-2xl transition-all duration-300 relative shadow-xl overflow-hidden dark:shadow-[0_0_60px_rgba(14,165,233,0.07)]">
           {/* Línea de acento superior */}
           <div className={`absolute inset-x-0 top-0 h-px bg-linear-to-r ${product.color}`} />
 

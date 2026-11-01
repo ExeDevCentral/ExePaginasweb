@@ -27,6 +27,7 @@ import {
 import LanguageSwitcher from '../LanguageSwitcher'
 import ThemeToggle from '../ThemeToggle'
 import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
+import { smoothScrollTo } from '@/components/shared/scrollUtils'
 
 export interface MegaPanelProps {
   isOpen: boolean
@@ -364,8 +365,18 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
         const item = filteredItems[selectedIndex]
         if (item) {
           event.preventDefault()
-          router.push(item.href)
           onClose()
+          const hashIdx = item.href.indexOf('#')
+          if (hashIdx !== -1 && typeof window !== 'undefined') {
+            const targetPath = item.href.slice(0, hashIdx) || '/'
+            const targetHash = item.href.slice(hashIdx)
+            if (targetPath === window.location.pathname && document.querySelector(targetHash)) {
+              window.history.pushState(null, '', item.href)
+              smoothScrollTo(targetHash, -92)
+              return
+            }
+          }
+          router.push(item.href)
           return
         }
       }
@@ -377,8 +388,18 @@ export default function MegaPanel({ isOpen, onClose, anchorRef }: Readonly<MegaP
         const target = localizedPaletteItems.find((item) => item.shortcutNumber === num)
         if (target) {
           event.preventDefault()
-          router.push(target.href)
           onClose()
+          const hashIdx = target.href.indexOf('#')
+          if (hashIdx !== -1 && typeof window !== 'undefined') {
+            const targetPath = target.href.slice(0, hashIdx) || '/'
+            const targetHash = target.href.slice(hashIdx)
+            if (targetPath === window.location.pathname && document.querySelector(targetHash)) {
+              window.history.pushState(null, '', target.href)
+              smoothScrollTo(targetHash, -92)
+              return
+            }
+          }
+          router.push(target.href)
         }
       }
     }

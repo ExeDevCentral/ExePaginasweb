@@ -509,7 +509,10 @@ export const OwnershipVsSubscription: React.FC = () => {
   const [decisionPhase, setDecisionPhase] = React.useState<'experimental' | 'escala'>('escala')
 
   return (
-    <section id="comparativa" className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
+    <section
+      id="comparativa"
+      className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10"
+    >
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_45%_at_25%_50%,color-mix(in_oklab,var(--own-500)_4.5%,transparent),transparent_70%),radial-gradient(55%_45%_at_75%_50%,color-mix(in_oklab,var(--rent-500)_4.5%,transparent),transparent_70%)]"
         style={{
@@ -557,7 +560,7 @@ export const OwnershipVsSubscription: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-12 text-center"
         >
-          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#060b14]/90 border border-slate-200/90 dark:border-cyan-500/30 shadow-xl shadow-slate-900/5 dark:shadow-[0_0_25px_rgba(6,182,212,0.12)] backdrop-blur-xl relative overflow-hidden">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#060b14]/90 border border-slate-300 dark:border-cyan-500/30 shadow-[0_18px_45px_-12px_rgba(15,23,42,0.12)] dark:shadow-[0_0_25px_rgba(6,182,212,0.12)] backdrop-blur-xl relative overflow-hidden">
             {/* Línea láser de barrido holográfico */}
             <div className="pointer-events-none absolute inset-x-0 h-0.5 bg-linear-to-r from-transparent via-cyan-500 dark:via-cyan-400 to-transparent animate-pulse opacity-70" />
 

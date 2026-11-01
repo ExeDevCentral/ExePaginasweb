@@ -162,7 +162,10 @@ const ContactSection = () => {
   }
 
   return (
-    <section id="contact" className="relative px-4 py-20 sm:px-6 lg:px-8 overflow-hidden z-10">
+    <section
+      id="contact"
+      className="scroll-mt-24 relative px-4 py-20 sm:px-6 lg:px-8 overflow-hidden z-10"
+    >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute top-0 inset-x-0 h-px max-w-xl mx-auto bg-gradient-to-r from-transparent via-slate-300/70 dark:via-white/10 to-transparent"
@@ -199,7 +202,7 @@ const ContactSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-2 rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white/95 dark:bg-[#0c1224]/90 backdrop-blur-xl p-6 sm:p-8 shadow-[0_12px_32px_-10px_rgba(0,0,0,0.06),0_4px_16px_rgba(6,182,212,0.06)] hover:border-cyan-500/50 hover:shadow-[0_24px_50px_-12px_rgba(6,182,212,0.18)] transition-all duration-300 relative overflow-hidden"
+            className="lg:col-span-2 rounded-2xl border border-slate-300 dark:border-white/10 bg-white dark:bg-[#0c1224]/90 backdrop-blur-xl p-6 sm:p-8 shadow-[0_16px_40px_-10px_rgba(15,23,42,0.12),0_4px_16px_rgba(6,182,212,0.06)] hover:border-cyan-500/60 hover:shadow-[0_24px_50px_-12px_rgba(6,182,212,0.18)] transition-all duration-300 relative overflow-hidden"
           >
             {/* Haz láser perimetral superior */}
             <div className="pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent via-cyan-500/80 to-transparent" />
@@ -437,7 +440,7 @@ const ContactSection = () => {
                   href={ch.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`group relative flex flex-1 flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white/95 dark:bg-[#0c1224]/90 backdrop-blur-xl p-5.5 ${styles.hoverBorder} shadow-[0_8px_24px_-8px_rgba(0,0,0,0.06)] ${styles.hoverShadow} transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
+                  className={`group relative flex flex-1 flex-col justify-between rounded-2xl border border-slate-300 dark:border-white/10 bg-white dark:bg-[#0c1224]/90 backdrop-blur-xl p-5.5 ${styles.hoverBorder} shadow-[0_12px_30px_-8px_rgba(15,23,42,0.1)] ${styles.hoverShadow} transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
                   initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}

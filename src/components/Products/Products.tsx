@@ -81,7 +81,10 @@ const Products = () => {
   }
 
   return (
-    <section id="products" className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section
+      id="products"
+      className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+    >
       {/* Background */}
       <div className="absolute inset-0 bg-transparent">
         <div className="absolute inset-0 opacity-5">

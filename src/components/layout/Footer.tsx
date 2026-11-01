@@ -93,9 +93,9 @@ const Footer = () => {
       />
 
       {/* Contenedor Arquitectónico Compacto (max-w-5xl) */}
-      <div className="max-w-5xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-white/[0.08] bg-white/90 dark:bg-[#070b14]/90 backdrop-blur-xl shadow-[0_20px_60px_-15px_rgba(15,23,42,0.06)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.8)] overflow-hidden">
+      <div className="max-w-5xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-300 dark:border-white/[0.08] bg-white dark:bg-[#070b14]/90 backdrop-blur-xl shadow-[0_24px_60px_-15px_rgba(15,23,42,0.12)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.8)] overflow-hidden">
         {/* 1. BARRA SUPERIOR COMPACTA DE TELEMETRÍA Y AUTORÍA (1 SOLA LÍNEA LIMPIA) */}
-        <div className="px-5 sm:px-7 py-3 bg-slate-50/90 dark:bg-[#050811]/90 border-b border-slate-200/80 dark:border-white/[0.06] flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-[11px] font-mono">
+        <div className="px-5 sm:px-7 py-3 bg-slate-100/95 dark:bg-[#050811]/90 border-b border-slate-300/85 dark:border-white/[0.06] flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-[11px] font-mono">
           {/* Estado Operativo */}
           <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200 font-semibold">
             <span className="relative flex h-2 w-2 shrink-0">

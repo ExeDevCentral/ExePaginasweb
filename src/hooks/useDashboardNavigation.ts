@@ -35,7 +35,7 @@ export function useDashboardNavigation(): UseDashboardNavigationResult {
   )
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  // Sync activeView with searchParams tab
+  // Sync activeView with searchParams tab or #linux anchor
   useEffect(() => {
     const tab = searchParams.get('tab') || searchParams.get('view')
     if (isDashboardView(tab)) {
@@ -44,6 +44,17 @@ export function useDashboardNavigation(): UseDashboardNavigationResult {
         if (prev.has(tab)) return prev
         const next = new Set(prev)
         next.add(tab)
+        return next
+      })
+      return
+    }
+
+    if (typeof window !== 'undefined' && window.location.hash === '#linux') {
+      setActiveView('services')
+      setVisitedTabs((prev) => {
+        if (prev.has('services')) return prev
+        const next = new Set(prev)
+        next.add('services')
         return next
       })
     }

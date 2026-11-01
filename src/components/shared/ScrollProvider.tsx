@@ -5,11 +5,64 @@
  */
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import Lenis from 'lenis'
-import { getGlobalLenis, setGlobalLenis } from './scrollUtils'
+import { getGlobalLenis, resetScrollToTop, setGlobalLenis, smoothScrollTo } from './scrollUtils'
+
+const NAVBAR_SCROLL_OFFSET = -92
+
+function scrollElementIntoClearView(el: HTMLElement) {
+  const lenis = getGlobalLenis()
+  if (lenis) {
+    lenis.scrollTo(el, { offset: NAVBAR_SCROLL_OFFSET, duration: 0.75 })
+  } else {
+    const top = el.getBoundingClientRect().top + (window.scrollY || 0) + NAVBAR_SCROLL_OFFSET
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+  }
+}
+
+function scheduleHashScrollWithRetry(rawHash: string): () => void {
+  const cleanId = decodeURIComponent(rawHash.replace(/^#/, '')).trim()
+  if (!cleanId || typeof document === 'undefined') return () => {}
+
+  let cancelled = false
+  let attempts = 0
+  let timerId: ReturnType<typeof setTimeout> | null = null
+  let rafId: number | null = null
+
+  const tryScroll = () => {
+    if (cancelled) return
+    const target = document.getElementById(cleanId)
+    if (target && target.getBoundingClientRect().height > 0) {
+      rafId = requestAnimationFrame(() => {
+        if (!cancelled) {
+          scrollElementIntoClearView(target)
+        }
+      })
+      return
+    }
+
+    attempts += 1
+    if (attempts < 25) {
+      timerId = setTimeout(tryScroll, 80)
+    }
+  }
+
+  // Primer intento tras el pintado inicial de la ruta
+  timerId = setTimeout(tryScroll, 30)
+
+  return () => {
+    cancelled = true
+    if (timerId !== null) clearTimeout(timerId)
+    if (rafId !== null) cancelAnimationFrame(rafId)
+  }
+}
 
 export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const pathname = usePathname()
+  const prevPathnameRef = useRef<string | null>(null)
+
   useEffect(() => {
     // Respetar preferencia de accesibilidad para movimiento reducido y evitar secuestro de scroll en pantallas táctiles móviles
     if (
@@ -56,6 +109,87 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (getGlobalLenis() === lenis) {
         setGlobalLenis(null)
       }
+    }
+  }, [])
+
+  // Sincronización de scroll al cambiar de ruta o aterrizar con #hash (incluyendo componentes lazy/dynamic)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const currentHash = window.location.hash
+    const prevPath = prevPathnameRef.current
+    prevPathnameRef.current = pathname
+
+    if (currentHash && currentHash.length > 1) {
+      return scheduleHashScrollWithRetry(currentHash)
+    }
+
+    if (prevPath !== null && prevPath !== pathname) {
+      resetScrollToTop()
+    }
+    return undefined
+  }, [pathname])
+
+  // Delegación universal para clics en anchors (#id o /ruta#id en la misma ruta) y cambios de historial
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
+    const normalizePath = (p: string) => p.replace(/\/+$/, '') || '/'
+
+    const handleDocumentClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0) return
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+
+      const targetNode = e.target as Element | null
+      const anchor = targetNode?.closest?.('a[href]') as HTMLAnchorElement | null
+      if (!anchor) return
+      if (anchor.target === '_blank' || anchor.hasAttribute('download')) return
+
+      const rawHref = anchor.getAttribute('href')
+      if (
+        !rawHref ||
+        rawHref === '#' ||
+        rawHref.startsWith('mailto:') ||
+        rawHref.startsWith('tel:') ||
+        rawHref.startsWith('javascript:')
+      ) {
+        return
+      }
+
+      let resolved: URL
+      try {
+        resolved = new URL(rawHref, window.location.origin)
+      } catch {
+        return
+      }
+
+      if (resolved.origin !== window.location.origin || resolved.hash.length <= 1) {
+        return
+      }
+
+      if (normalizePath(resolved.pathname) === normalizePath(window.location.pathname)) {
+        const cleanId = decodeURIComponent(resolved.hash.slice(1)).trim()
+        const targetEl = cleanId ? document.getElementById(cleanId) : null
+        if (targetEl) {
+          e.preventDefault()
+          window.history.pushState(null, '', resolved.pathname + resolved.search + resolved.hash)
+          smoothScrollTo(`#${cleanId}`, NAVBAR_SCROLL_OFFSET)
+        }
+      }
+    }
+
+    const handleHashChange = () => {
+      if (window.location.hash && window.location.hash.length > 1) {
+        scheduleHashScrollWithRetry(window.location.hash)
+      }
+    }
+
+    document.addEventListener('click', handleDocumentClick)
+    window.addEventListener('hashchange', handleHashChange)
+
+    return () => {
+      document.removeEventListener('click', handleDocumentClick)
+      window.removeEventListener('hashchange', handleHashChange)
     }
   }, [])
 

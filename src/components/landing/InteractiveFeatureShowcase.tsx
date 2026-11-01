@@ -527,25 +527,30 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
     <section
       id="arquitectura-en-vivo"
       aria-label="Recorrido interactivo de arquitectura y metodología"
-      className={`scroll-mt-24 relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 ${className}`}
+      className={`scroll-mt-24 relative w-full max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 py-20 sm:py-24 ${className}`}
     >
-      {/* CABECERA MINIMALISTA */}
-      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-300/90 dark:border-white/10 bg-white dark:bg-white/[0.03] font-mono text-[11px] uppercase tracking-widest mb-3 shadow-xs transition-colors duration-300">
-          <ShieldCheck
-            className={`w-3.5 h-3.5 transition-colors duration-300 ${theme.checkIcon}`}
-          />
-          <span className="text-slate-700 dark:text-neutral-300 font-semibold">
-            Ingeniería Transparente
-          </span>
+      {/* CABECERA EDITORIAL ASIMÉTRICA */}
+      <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="max-w-2xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-300/90 dark:border-white/10 bg-white dark:bg-white/[0.03] font-mono text-[11px] uppercase tracking-widest mb-3 shadow-xs transition-colors duration-300">
+            <ShieldCheck
+              className={`w-3.5 h-3.5 transition-colors duration-300 ${theme.checkIcon}`}
+            />
+            <span className="text-slate-700 dark:text-neutral-300 font-semibold">
+              Ingeniería Transparente
+            </span>
+          </div>
+
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+            Cómo construimos y escalamos tu{' '}
+            <span className="text-cyan-600 dark:text-cyan-400">activo digital</span>
+          </h2>
         </div>
 
-        <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
-          Cómo construimos y escalamos tu{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-emerald-600 to-violet-600 dark:from-cyan-400 dark:via-emerald-400 dark:to-violet-400">
-            activo digital
-          </span>
-        </h2>
+        <p className="max-w-sm text-sm text-muted-foreground leading-relaxed md:text-right">
+          Cuatro etapas, una sola persona responsable. Sin intermediarios ni capas que diluyan
+          decisiones.
+        </p>
       </div>
 
       {/* ==============================================================

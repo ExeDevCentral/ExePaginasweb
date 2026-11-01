@@ -30,19 +30,9 @@ import HeroProductShowcase from './HeroProductShowcase'
 import CyberTerminalCard from '../shared/CyberTerminalCard'
 import InteractiveFeatureShowcase from '@/components/landing/InteractiveFeatureShowcase'
 import ConvergentTypewriterSubtitle from './ConvergentTypewriterSubtitle'
-import HeroNeonSignboard from './HeroNeonSignboard'
 import { trackEvent } from '@/core/analytics/trackEvent'
 
 const ROTATING_WORDS = ['escalar', 'vender 24/7', 'automatizar', 'innovar']
-
-const TICKER_ITEMS = [
-  { value: '0%', label: 'comisiones por ventas', tag: 'GANANCIA 100% TUYA' },
-  { value: '< 1s', label: 'velocidad de carga móvil', tag: 'CERO CLIENTES PERDIDOS' },
-  { value: '24/7', label: 'turnos y cobros automáticos', tag: 'SEÑAS DIRECTAS A TU BANCO' },
-  { value: '100%', label: 'código propio sin plantillas', tag: 'DISEÑO EXCLUSIVO' },
-  { value: '+85%', label: 'más consultas calificadas', tag: 'CIERRES POR WHATSAPP' },
-  { value: '7 a 15', label: 'días puesta en marcha', tag: 'ENTREGA LLAVE EN MANO' },
-]
 
 const CAPABILITIES = [
   {
@@ -204,7 +194,7 @@ export const OptimusScaleHero: React.FC = () => {
         ref={heroRef}
         aria-label="Hero principal"
         onMouseMove={handleHeroMouseMove}
-        className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between pt-24 sm:pt-28 pb-4 overflow-hidden"
+        className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between pt-24 sm:pt-28 pb-24 sm:pb-20 lg:pb-16 overflow-hidden"
       >
         {/* Aura radial interactiva suave con decaimiento lumínico en scroll y máscara vertical sin cortes */}
         <motion.div
@@ -218,12 +208,12 @@ export const OptimusScaleHero: React.FC = () => {
         />
 
         {/* CONTENEDOR PRINCIPAL DEL HERO */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center my-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center w-full my-auto">
+        <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 sm:px-8 lg:px-12 flex-1 flex flex-col justify-center my-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center w-full my-auto">
             {/* COLUMNA IZQUIERDA: CONTENIDO EDITORIAL */}
-            <div className="lg:col-span-6 flex flex-col items-start text-left z-20">
+            <div className="lg:col-span-6 min-w-0 flex flex-col items-start text-left z-20">
               {/* Eyebrow */}
-              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted-foreground dark:text-muted-foreground select-none">
+              <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground dark:text-muted-foreground select-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>
                   {t('hero.eyebrow_plataforma') ||
@@ -231,27 +221,26 @@ export const OptimusScaleHero: React.FC = () => {
                 </span>
               </div>
 
-              {/* Cartel neón */}
-              <HeroNeonSignboard className="mt-4 mb-2" />
-
               {/* Título H1 */}
-              <h1 className="mt-2 text-3xl sm:text-5xl xl:text-6xl font-display font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-foreground text-foreground">
+              <h1 className="mt-5 text-4xl sm:text-5xl xl:text-[3.5rem] font-display font-semibold tracking-[-0.02em] leading-[1.06] text-foreground">
                 <span className="sr-only">Exe Páginas Web - </span>
-                <span className="block font-semibold">
+                <span className="block">
                   {safeT('hero.titulo_prefijo', 'Páginas web y sistemas a medida')}
                 </span>
 
-                <span className="inline-flex items-center gap-2 sm:gap-4 flex-wrap mt-1">
-                  <span>{safeT('hero.titulo_sufijo', 'para')}</span>
-                  <span className="relative inline-block overflow-hidden py-1">
+                <span className="mt-1 inline-flex items-center gap-2 sm:gap-3 flex-wrap">
+                  <span className="font-normal text-muted-foreground">
+                    {safeT('hero.titulo_sufijo', 'para')}
+                  </span>
+                  <span className="relative inline-block overflow-hidden py-0.5">
                     <AnimatePresence mode="wait">
                       <motion.span
                         key={rotatingWords[wordIndex]}
-                        initial={{ y: 28, opacity: 0, filter: 'blur(4px)' }}
+                        initial={{ y: 22, opacity: 0, filter: 'blur(4px)' }}
                         animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-                        exit={{ y: -28, opacity: 0, filter: 'blur(4px)' }}
+                        exit={{ y: -22, opacity: 0, filter: 'blur(4px)' }}
                         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                        className="inline-block text-cyan-600 dark:text-cyan-400 font-bold drop-shadow-[0_0_24px_rgba(6,182,212,0.4)]"
+                        className="inline-block text-cyan-600 dark:text-cyan-400"
                       >
                         {rotatingWords[wordIndex]}
                       </motion.span>
@@ -261,119 +250,73 @@ export const OptimusScaleHero: React.FC = () => {
               </h1>
 
               {/* Bajada con typewriter */}
-              <ConvergentTypewriterSubtitle className="mt-4 sm:mt-5 text-base sm:text-lg text-muted-foreground dark:text-muted-foreground max-w-xl leading-relaxed" />
+              <ConvergentTypewriterSubtitle className="mt-5 text-base sm:text-lg text-muted-foreground dark:text-muted-foreground max-w-[54ch] leading-relaxed" />
 
-              {/* CTAs principales */}
-              <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto">
-                <HudButton
-                  label={safeT('hero.cta_cotizar', 'Cotizar Proyecto a Medida')}
-                  href="https://wa.me/5493412799385?text=Hola%20Exequiel!%20Quiero%20cotizar%20un%20proyecto%20web%20para%20mi%20negocio"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="primary"
-                  size="lg"
-                  icon={<CyberArrowRight size={17} />}
-                  onClick={() => trackEvent('hero_cta_contact_clicked', { source: 'optimus_hero' })}
-                  ariaLabel="Pedir presupuesto de desarrollo web"
-                  className="w-full sm:w-auto shadow-lg shadow-cyan-500/15"
-                />
-
+              {/* CTA principal */}
+              <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto max-w-full">
                 <HudButton
                   label={safeT('hero.cta_casos', 'Ver Portafolio en Vivo')}
                   href="/portafolio"
-                  variant="secondary"
+                  variant="primary"
                   size="lg"
                   onClick={() =>
                     trackEvent('hero_cta_portfolio_clicked', { source: 'optimus_hero' })
                   }
                   ariaLabel="Explorar portafolio de sistemas en producción"
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto max-w-full"
                 />
               </div>
             </div>
 
             {/* COLUMNA DERECHA: CINEMA DISPLAY */}
-            <div className="lg:col-span-6 w-full flex items-center justify-center z-10 mt-4 lg:mt-0">
+            <div className="lg:col-span-6 min-w-0 w-full flex items-center justify-center z-10 mt-4 lg:mt-0">
               <HeroProductShowcase className="w-full max-w-2xl" />
             </div>
           </div>
         </div>
 
         {/* MÉTRICAS DE PIE DE HERO */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-8 sm:mt-12">
-          <div className="p-4 sm:p-5 rounded-2xl bg-white/95 dark:bg-white/[0.03] border border-slate-300/90 dark:border-white/10 backdrop-blur-md shadow-[0_8px_24px_-8px_rgba(15,23,42,0.08)] dark:shadow-xs">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-white/10">
-              <div className="flex items-center gap-3.5 md:px-6 first:pl-0 py-2 md:py-0">
-                <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs shrink-0">
-                  <CyberMetricLightning size={19} />
-                </div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-bold text-foreground">
-                    {safeT('hero.metric_velocidad', '0.38s Carga')}
-                  </span>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    {safeT('hero.metric_velocidad_sub', '100% Core Web Vitals')}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3.5 md:px-6 py-2 md:py-0">
-                <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs shrink-0">
-                  <CyberMetricShield size={19} />
-                </div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-bold text-foreground">
-                    {safeT('hero.metric_tuyo', '100% Tuyo')}
-                  </span>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    {safeT('hero.metric_tuyo_sub', 'Cero ataduras o cuotas')}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3.5 md:px-6 last:pr-0 py-2 md:py-0">
-                <div className="relative w-9 h-9 rounded-xl bg-linear-to-b from-slate-100 to-slate-200/90 dark:from-slate-800/90 dark:to-slate-950 border border-slate-200 dark:border-white/10 border-t-slate-300 dark:border-t-white/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-xs shrink-0">
-                  <CyberMetricProcessor size={19} />
-                </div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-bold text-foreground">
-                    {safeT('hero.metric_autonomo', 'Autónomo 24/7')}
-                  </span>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    {safeT('hero.metric_autonomo_sub', 'Gestión Cloud & Pagos')}
-                  </span>
-                </div>
+        <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 sm:px-8 lg:px-12 mt-10 sm:mt-14">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0 border-t border-slate-200/80 dark:border-white/10 pt-6">
+            <div className="flex items-center gap-3 md:px-8 first:md:pl-0">
+              <CyberMetricLightning
+                size={17}
+                className="text-cyan-600 dark:text-cyan-400 shrink-0"
+              />
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-sm font-semibold text-foreground">
+                  {safeT('hero.metric_velocidad', '0.38s Carga')}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {safeT('hero.metric_velocidad_sub', '100% Core Web Vitals')}
+                </span>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* TICKER / MARQUEE DE MÉTRICAS */}
-        <div
-          className="relative z-10 w-full mt-8 sm:mt-10 py-4.5 border-y border-slate-200/60 dark:border-white/[0.06] overflow-hidden bg-slate-100/40 dark:bg-white/[0.015] backdrop-blur-xs select-none"
-          style={{
-            maskImage:
-              'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
-            WebkitMaskImage:
-              'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
-          }}
-        >
-          <div className="flex w-max animate-marquee gap-10 sm:gap-14 items-center">
-            {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
-              <div
-                key={'ticker-' + item.label + '-' + idx}
-                className="flex items-center gap-3 shrink-0"
-              >
-                <span className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
-                  {item.value}
+            <div className="flex items-center gap-3 md:px-8 md:border-l md:border-slate-200/80 dark:md:border-white/10">
+              <CyberMetricShield size={17} className="text-cyan-600 dark:text-cyan-400 shrink-0" />
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-sm font-semibold text-foreground">
+                  {safeT('hero.metric_tuyo', '100% Tuyo')}
                 </span>
-                <span className="text-xs sm:text-[13px] font-mono uppercase tracking-wider text-muted-foreground">
-                  {item.label}{' '}
-                  <strong className="text-foreground dark:text-[#f7f5ee] font-semibold">
-                    {item.tag}
-                  </strong>
+                <span className="text-xs text-muted-foreground">
+                  {safeT('hero.metric_tuyo_sub', 'Cero ataduras o cuotas')}
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-white/20 ml-2 sm:ml-4" />
               </div>
-            ))}
+            </div>
+            <div className="flex items-center gap-3 md:px-8 md:border-l md:border-slate-200/80 dark:md:border-white/10">
+              <CyberMetricProcessor
+                size={17}
+                className="text-cyan-600 dark:text-cyan-400 shrink-0"
+              />
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-sm font-semibold text-foreground">
+                  {safeT('hero.metric_autonomo', 'Autónomo 24/7')}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {safeT('hero.metric_autonomo_sub', 'Gestión Cloud & Pagos')}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -382,42 +325,8 @@ export const OptimusScaleHero: React.FC = () => {
           3. SUPER CARD INTERACTIVA UNIFICADA (PASO A PASO Y SISTEMAS EN VIVO)
          ======================================================== */}
       <InteractiveFeatureShowcase />
-
-      {/* ESTILOS CSS PARA EL MARQUEE TICKER INFINITO */}
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .animate-marquee {
-          animation: marquee 32s linear infinite;
-        }
-        .animate-marquee:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
     </div>
   )
 }
-
-const CyberArrowRight = ({ size = 16 }: { size?: number }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="5" y1="12" x2="19" y2="12" />
-    <polyline points="12 5 19 12 12 19" />
-  </svg>
-)
 
 export default OptimusScaleHero

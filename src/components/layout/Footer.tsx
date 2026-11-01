@@ -127,7 +127,7 @@ const Footer = () => {
             <span className="hidden lg:inline text-slate-300 dark:text-white/10">·</span>
             <span className="hidden lg:inline-flex items-center gap-1 text-slate-500 dark:text-slate-400">
               <MapPin className="w-3 h-3 text-violet-500 dark:text-violet-400 shrink-0" />
-              <span>Exequiel Echevarría — Architect (Bs. As., AR)</span>
+              <span>Exequiel Echevarría — Architect (Rosario, AR)</span>
             </span>
           </div>
         </div>
@@ -279,6 +279,15 @@ const Footer = () => {
               <ul className="space-y-2 text-xs sm:text-[13px]">
                 <li>
                   <Link
+                    href="/dashboard"
+                    className="inline-flex items-center gap-1.5 font-semibold text-cyan-700 dark:text-cyan-400 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    {t('footer.nav_dashboard') || 'Panel de Clientes'}
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/"
                     className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                   >
@@ -396,11 +405,11 @@ const Footer = () => {
 
           {/* 3. BARRA INFERIOR: COPYRIGHT, FIRMA INTERACTIVA MATRIX Y SELECTOR DE IDIOMA */}
           <div className="mt-7 pt-5 border-t border-slate-200/80 dark:border-white/[0.07]">
-            <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-4 text-xs">
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 text-xs">
               {/* Izquierda: Copyright */}
-              <div className="flex items-center justify-center lg:justify-start gap-2 text-slate-500 dark:text-slate-400 text-[11px] font-mono tracking-wide shrink-0">
+              <div className="flex items-center justify-center lg:justify-start gap-2 text-slate-500 dark:text-slate-400 text-[11px] font-mono tracking-wide min-w-0">
                 <Logo size={18} variant="auto" />
-                <p className="whitespace-nowrap select-none">
+                <p className="select-none leading-snug">
                   © 2025{' '}
                   <span className="text-slate-900 dark:text-white font-semibold">
                     ExePaginasWEB.com

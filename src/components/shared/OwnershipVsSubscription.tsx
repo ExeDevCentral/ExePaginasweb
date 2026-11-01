@@ -22,6 +22,9 @@ import {
 /* ============================================================
    Terminal de liberación del código
    ============================================================ */
+const AUDIT_TITLE =
+  'Software Diseñado Alrededor de Tu Negocio: ¿Cuándo Conviene Alquilar y Cuándo Ser Dueño?'
+
 type TermMode = 'tuyo' | 'suspendido'
 
 type TermPart = { text: string; strike?: boolean }
@@ -523,27 +526,29 @@ export const OwnershipVsSubscription: React.FC = () => {
         }}
       />
 
-      <div className="max-w-5xl mx-auto relative z-10">
-        {/* Header con Honestidad Brutal */}
+      <div className="max-w-[1400px] mx-auto relative z-10">
+        {/* Header editorial asimétrico */}
         <motion.div
-          className="text-center mb-10"
+          className="mb-12 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-sm border border-brand/25 bg-brand/10 backdrop-blur-md mb-3 font-mono">
-            <CyberInsignia size={14} className="text-brand dark:text-emerald-400" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand dark:text-emerald-400">
-              AUDITORÍA DE ARQUITECTURA // HONESTIDAD BRUTAL
-            </span>
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-sm border border-brand/25 bg-brand/10 backdrop-blur-md mb-3 font-mono">
+              <CyberInsignia size={14} className="text-brand dark:text-emerald-400" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand dark:text-emerald-400">
+                AUDITORÍA DE ARQUITECTURA // HONESTIDAD BRUTAL
+              </span>
+            </div>
+
+            <h2 className="text-2xl sm:text-4xl font-black font-montserrat tracking-tight text-foreground">
+              {AUDIT_TITLE}
+            </h2>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl font-black font-montserrat tracking-tight text-foreground mb-3">
-            Software Diseñado Alrededor de Tu Negocio: ¿Cuándo Conviene Alquilar y Cuándo Ser Dueño?
-          </h2>
-
-          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="max-w-md text-sm sm:text-base text-muted-foreground leading-relaxed lg:text-right lg:pb-1">
             Si estás experimentando sin ventas validadas: alquilá Shopify o Wix. No gastes en
             arquitectura a medida todavía. Pero si tu negocio ya factura y pagar comisiones
             mensuales drena tu margen: el alquiler es un impuesto silencioso a tu propio
@@ -558,7 +563,7 @@ export const OwnershipVsSubscription: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
+          className="mb-12"
         >
           <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#060b14]/90 border border-slate-300 dark:border-cyan-500/30 shadow-[0_18px_45px_-12px_rgba(15,23,42,0.12)] dark:shadow-[0_0_25px_rgba(6,182,212,0.12)] backdrop-blur-xl relative overflow-hidden">
             {/* Línea láser de barrido holográfico */}

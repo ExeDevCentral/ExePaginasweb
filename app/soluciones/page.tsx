@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import type { Metadata } from 'next'
 import SiteHeader from '@/components/layout/SiteHeader'
 import Footer from '@/components/layout/Footer'
+import Products from '@/components/Products/Products'
 
 export const metadata: Metadata = {
   title: 'Soluciones Web para Negocios',
@@ -15,9 +16,6 @@ export const metadata: Metadata = {
   alternates: { canonical: '/soluciones' },
 }
 
-const Products = dynamic(() => import('@/components/Products/Products'), {
-  loading: () => <PageLoading />,
-})
 const DemoZone = dynamic(() => import('@/components/DemoZone/DemoZone'), {
   loading: () => <PageLoading />,
 })

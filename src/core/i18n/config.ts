@@ -13,15 +13,13 @@ import ar from './locales/ar.json'
 import ptBR from './locales/pt-BR.json'
 import zhCN from './locales/zh-CN.json'
 
-const getInitialLang = () => {
-  if (typeof window !== 'undefined') {
-    try {
-      return localStorage.getItem('lang') || 'es'
-    } catch {
-      return 'es'
-    }
-  }
-  return 'es'
+const RTL_LANGS = new Set(['ar'])
+
+export function syncHtmlLangAttributes(lng: string) {
+  if (typeof document === 'undefined') return
+  const normalized = lng || 'es'
+  document.documentElement.lang = normalized
+  document.documentElement.dir = RTL_LANGS.has(normalized) ? 'rtl' : 'ltr'
 }
 
 if (!i18n.isInitialized) {
@@ -35,17 +33,16 @@ if (!i18n.isInitialized) {
       'pt-BR': { translation: ptBR },
       'zh-CN': { translation: zhCN },
     },
-    lng: getInitialLang(),
+    lng: 'es',
     fallbackLng: 'es',
     interpolation: { escapeValue: false },
   })
 
-  const RTL_LANGS = new Set(['ar'])
   if (typeof window !== 'undefined') {
     i18n.on('languageChanged', (lng) => {
-      document.documentElement.dir = RTL_LANGS.has(lng) ? 'rtl' : 'ltr'
+      syncHtmlLangAttributes(lng)
     })
-    document.documentElement.dir = RTL_LANGS.has(i18n.language) ? 'rtl' : 'ltr'
+    syncHtmlLangAttributes(i18n.language)
   }
 }
 

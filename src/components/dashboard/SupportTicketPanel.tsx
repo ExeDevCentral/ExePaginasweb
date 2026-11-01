@@ -6,7 +6,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, LifeBuoy, CheckCircle2 } from 'lucide-react'
 import { MorphIcon } from 'morphicons/react'
 import { Send as SendData, CheckCircle2 as CheckCircle2Data } from 'lucide'
@@ -17,6 +17,12 @@ import { TICKET_CATEGORIES, SLA_BY_TIER } from '../../core/domain/ticketConfig'
 import type { Ticket } from '../../core/domain/entities/Ticket'
 import type { PlanDashboardTheme } from './planDashboardConfig'
 
+export interface TicketDraft {
+  asunto?: string
+  mensaje?: string
+  categoria?: string
+}
+
 type SupportTicketPanelProps = {
   open: boolean
   onClose: () => void
@@ -26,6 +32,7 @@ type SupportTicketPanelProps = {
   openCount: number
   submitting: boolean
   error: string | null
+  initialDraft?: TicketDraft | null | undefined
   onSubmit: (asunto: string, mensaje: string, categoria: string) => Promise<void>
 }
 
@@ -45,6 +52,7 @@ export default function SupportTicketPanel({
   openCount,
   submitting,
   error,
+  initialDraft,
   onSubmit,
 }: Readonly<SupportTicketPanelProps>) {
   const { t } = useTranslation()
@@ -55,6 +63,17 @@ export default function SupportTicketPanel({
 
   const categories = tier !== 'none' ? TICKET_CATEGORIES[tier] : TICKET_CATEGORIES.basico
   const sla = tier !== 'none' ? SLA_BY_TIER[tier] : SLA_BY_TIER.basico
+
+  useEffect(() => {
+    if (!open || !initialDraft) return
+    if (initialDraft.asunto !== undefined) setAsunto(initialDraft.asunto)
+    if (initialDraft.mensaje !== undefined) setMensaje(initialDraft.mensaje)
+    const fallbackCat = categories[0]?.id ?? 'consulta'
+    const validCat = categories.some((c) => c.id === initialDraft.categoria)
+      ? initialDraft.categoria!
+      : fallbackCat
+    setCategoria(validCat)
+  }, [open, initialDraft, categories])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -72,20 +91,22 @@ export default function SupportTicketPanel({
       {open && (
         <div className="fixed inset-0 z-[90] flex items-end sm:items-center justify-center p-0 sm:p-4">
           <motion.div
-            className="absolute inset-0 bg-black/75 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/70 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             onClick={onClose}
           />
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-labelledby="ticket-panel-title"
-            initial={{ opacity: 0, y: 40, scale: 0.98 }}
+            initial={{ opacity: 0, y: 28, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.98 }}
-            className="relative w-full sm:max-w-lg max-h-[92dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-border bg-card text-foreground shadow-2xl"
+            exit={{ opacity: 0, y: 20, scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+            className="relative w-full sm:max-w-lg max-h-[92dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-slate-300 dark:border-border bg-card text-foreground shadow-2xl"
           >
             <div className="sticky top-0 z-10 border-b border-border bg-card px-6 py-4">
               <div className="flex items-start justify-between gap-4">

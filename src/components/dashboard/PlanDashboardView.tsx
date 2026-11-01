@@ -6,15 +6,29 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Crown, Monitor, Building, Building2, Download, Plus, Paperclip, Clock } from 'lucide-react'
+import {
+  Crown,
+  Monitor,
+  Building,
+  Building2,
+  Download,
+  Plus,
+  Paperclip,
+  Clock,
+  RefreshCw,
+} from 'lucide-react'
+import { toast } from 'sonner'
 import type { Cliente } from '../../core/domain/entities/Cliente'
 import type { Suscripcion } from '../../core/domain/entities/Suscripcion'
 import type { Pago } from '../../hooks/useDashboard'
 import { useSupportTickets } from '../../hooks/useSupportTickets'
 import { PLAN_THEMES } from './planDashboardConfig'
 import type { PlanTier } from './resolvePlanTier'
+import type { DashboardView } from './DashboardView'
+import type { EcosystemSubTab } from '../services/ServicesPanel'
+import type { PlanData } from '../store/PlanCard'
 import ServicePulseHub from './ServicePulseHub'
-import SupportTicketPanel from './SupportTicketPanel'
+import SupportTicketPanel, { type TicketDraft } from './SupportTicketPanel'
 import AdjuntarComprobanteModal from './AdjuntarComprobanteModal'
 import HudButton from '../HudButton'
 import { useTranslation } from 'react-i18next'
@@ -51,6 +65,10 @@ type PlanDashboardViewProps = {
   onRefresh: () => void
   refreshing: boolean
   onLogout: () => void
+  onNavigate?: ((tab: DashboardView) => void) | undefined
+  onOpenEcosystemSubTab?: ((subTab: EcosystemSubTab) => void) | undefined
+  onOpenTicketModal?: ((draft?: TicketDraft) => void) | undefined
+  onSelectCheckoutPlan?: ((plan: PlanData) => void) | undefined
 }
 
 export default function PlanDashboardView({
@@ -61,13 +79,17 @@ export default function PlanDashboardView({
   onRefresh,
   refreshing,
   onLogout: _onLogout,
+  onNavigate,
+  onOpenEcosystemSubTab,
+  onOpenTicketModal,
 }: Readonly<PlanDashboardViewProps>) {
   const { t, i18n } = useTranslation()
   const theme = PLAN_THEMES[tier]
   const Icon = tier === 'premium' ? Crown : TIER_ICONS[tier]
-  const nombre = cliente?.full_name?.split(' ')[0] ?? 'John'
+  const nombre = cliente?.full_name?.split(' ')[0] ?? 'Cliente'
   const planSlug = suscripciones[0]?.plan?.slug ?? pagos[0]?.plan_slug ?? null
-  const [ticketPanelOpen, setTicketPanelOpen] = useState(false)
+  const [localTicketOpen, setLocalTicketOpen] = useState(false)
+  const [localTicketDraft, setLocalTicketDraft] = useState<TicketDraft | null>(null)
   const [comprobanteModalOpen, setComprobanteModalOpen] = useState(false)
   const pendingPago = pagos.find((p) => p.estado === 'pendiente')
 
@@ -81,6 +103,15 @@ export default function PlanDashboardView({
     markRead,
     refresh: refreshTickets,
   } = useSupportTickets(true, cliente, tier, planSlug)
+
+  const triggerOpenTicket = (draft?: TicketDraft) => {
+    if (onOpenTicketModal) {
+      onOpenTicketModal(draft)
+      return
+    }
+    setLocalTicketDraft(draft ?? null)
+    setLocalTicketOpen(true)
+  }
 
   const activePlanName =
     suscripciones[0]?.plan?.nombre ??
@@ -167,6 +198,36 @@ export default function PlanDashboardView({
     refreshTickets()
   }
 
+  const handleExportSummary = () => {
+    if (typeof window === 'undefined') return
+    const lines = [
+      'EXEPAGINASWEB — RESUMEN EJECUTIVO DE CUENTA',
+      `Fecha de emisión: ${new Date().toLocaleString('es-AR')}`,
+      `Cliente: ${cliente?.full_name || nombre} (${cliente?.email || '—'})`,
+      `Plan vigente: ${activePlanName} (${theme.badge})`,
+      `Disponibilidad Edge / DB: 99.99% Online · TLS 1.3`,
+      `Tickets activos: ${openCount}`,
+      `Comprobantes registrados: ${pagos.length} (Total abonado: $${totalPaid.toLocaleString('es-AR')})`,
+    ]
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `resumen-exepaginasweb-${new Date().toISOString().slice(0, 10)}.txt`
+    link.click()
+    URL.revokeObjectURL(url)
+    toast.success('Resumen exportado', {
+      description: 'Se descargó el estado ejecutivo de tu cuenta.',
+    })
+  }
+
+  const handleMetricShortcut = (index: number) => {
+    if (index === 0) onOpenEcosystemSubTab?.('store')
+    else if (index === 1) onOpenEcosystemSubTab?.('active')
+    else if (index === 2) triggerOpenTicket({ categoria: 'consulta' })
+    else if (index === 3) onNavigate?.('invoices')
+  }
+
   const investmentText = suscripciones[0]?.plan?.precio
     ? `$${suscripciones[0].plan.precio} / mes`
     : pagos[0]
@@ -175,14 +236,14 @@ export default function PlanDashboardView({
 
   return (
     <div className="relative space-y-6">
-      {/* 1. Header Welcome Section with Action Buttons (Dashdark X Top Bar) */}
+      {/* 1. Header Welcome Section with Direct Action Buttons */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               {t('dashboard.hola', 'Hola')}, {nombre}
             </h1>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-muted/40 border border-border text-[#38BDF8] flex items-center gap-1">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-muted/50 border border-border text-[#4361EE] dark:text-[#38BDF8] flex items-center gap-1">
               <Icon size={12} />
               {theme.badge}
             </span>
@@ -190,27 +251,38 @@ export default function PlanDashboardView({
           <p className="text-xs sm:text-sm text-muted-foreground font-medium">
             {t(
               'dashboard.subtitulo_dashdark',
-              'Monitoreá el rendimiento de tu sitio web, turnos y servicios contratados.'
+              'Todo tu ecosistema web, turnos, terminales Linux y facturación unificados en un clic.'
             )}
           </p>
         </div>
 
-        {/* Action buttons on top right */}
-        <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
             onClick={handleRefresh}
             disabled={refreshing}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-muted/40 hover:bg-muted text-muted-foreground border border-border text-xs sm:text-sm font-medium transition-all shadow-sm cursor-pointer disabled:opacity-50"
+            title="Sincronizar datos en vivo"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground border border-slate-300/80 dark:border-border text-xs font-semibold transition-all cursor-pointer disabled:opacity-50"
           >
-            <Download className="w-3.5 h-3.5 text-muted-foreground" />
-            <span>{t('dashboard.export_data', 'Descargar Reporte')}</span>
+            <RefreshCw
+              className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-[#4361EE]' : ''}`}
+            />
+            <span className="hidden sm:inline">Sincronizar</span>
           </button>
 
           <button
             type="button"
-            onClick={() => setTicketPanelOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white text-xs sm:text-sm font-semibold transition-all shadow-sm cursor-pointer active:scale-95"
+            onClick={handleExportSummary}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-muted/40 hover:bg-muted text-foreground border border-slate-300/80 dark:border-border text-xs font-semibold transition-all cursor-pointer active:scale-95"
+          >
+            <Download className="w-3.5 h-3.5 text-[#38BDF8]" />
+            <span>{t('dashboard.export_data', 'Exportar Resumen')}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => triggerOpenTicket({ categoria: 'consulta' })}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white text-xs sm:text-sm font-semibold transition-all shadow-sm cursor-pointer active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>{t('dashboard.create_report', 'Solicitar Mejora / Ticket')}</span>
@@ -247,38 +319,45 @@ export default function PlanDashboardView({
         </div>
       )}
 
-      {/* 2. Top 4 Metric Cards (Plan, Availability, Tickets, Invoices) */}
-      <MetricGrid metrics={realMetrics} theme={theme} />
+      {/* 2. Top 4 Metric Cards (1-Click Direct Shortcuts) */}
+      <MetricGrid metrics={realMetrics} theme={theme} onMetricClick={handleMetricShortcut} />
 
-      {/* 3. Main Analytics Grid (2/3 Main Curve Chart + 1/3 Side Profit & Sessions Cards) */}
+      {/* 3. Main Analytics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <DashdarkRevenueChart theme={theme} />
         </div>
         <div className="space-y-6 flex flex-col justify-between">
-          <DashdarkProfitCard amountText={investmentText} />
-          <DashdarkSessionsCard />
+          <DashdarkProfitCard
+            amountText={investmentText}
+            onViewInvoices={() => onNavigate?.('invoices')}
+          />
+          <DashdarkSessionsCard onViewServices={() => onOpenEcosystemSubTab?.('active')} />
         </div>
       </div>
 
-      {/* 4. Reports Overview Section & Quick Actions */}
-      <div className="space-y-6 pt-2">
-        <QuickActionsHub onOpenTicket={() => setTicketPanelOpen(true)} userEmail={cliente?.email} />
+      {/* 4. Quick Actions & Live Pulse */}
+      <div className="space-y-6 pt-1">
+        <QuickActionsHub
+          onOpenTicket={(draft) => triggerOpenTicket(draft)}
+          onOpenQuoter={() => onOpenEcosystemSubTab?.('quoter')}
+          onOpenLinux={() => onOpenEcosystemSubTab?.('linux')}
+          onOpenInvoices={() => onNavigate?.('invoices')}
+          userEmail={cliente?.email}
+        />
 
         <LiveHealthCard theme={theme} />
 
-        {/* Service Pulse & Support Hub */}
         <ServicePulseHub
           theme={theme}
           tier={tier}
           openTickets={openCount}
           unreadNotifications={unreadCount}
           notifications={notifications}
-          onOpenTickets={() => setTicketPanelOpen(true)}
+          onOpenTickets={() => triggerOpenTicket({ categoria: 'consulta' })}
           onMarkRead={markRead}
         />
 
-        {/* Activity & Account Meta Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <ActivityTimeline items={realActivities} theme={theme} />
@@ -289,14 +368,22 @@ export default function PlanDashboardView({
             <SupportCard
               theme={theme}
               openCount={openCount}
-              onOpenTicket={() => setTicketPanelOpen(true)}
+              onOpenTicket={() => triggerOpenTicket({ categoria: 'consulta' })}
             />
 
-            {/* Account Profile Card */}
-            <div className="rounded-2xl bg-card border border-border p-5 shadow-sm space-y-3">
-              <p className="text-xs font-bold uppercase tracking-wider text-foreground">
-                {t('dashboard.tu_cuenta', 'Tu cuenta')}
-              </p>
+            <div className="rounded-2xl bg-card border border-slate-300/85 dark:border-border p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-bold uppercase tracking-wider text-foreground">
+                  {t('dashboard.tu_cuenta', 'Tu cuenta')}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => onNavigate?.('settings')}
+                  className="text-[11px] font-bold text-[#4361EE] dark:text-[#38BDF8] hover:underline cursor-pointer"
+                >
+                  Editar →
+                </button>
+              </div>
               <div className="space-y-2.5 text-xs">
                 <div className="flex justify-between items-center gap-3 pb-2 border-b border-border">
                   <span className="text-muted-foreground">{t('dashboard.email', 'Email')}</span>
@@ -315,9 +402,8 @@ export default function PlanDashboardView({
               </div>
             </div>
 
-            {/* Last Payment Card */}
             {pagos.length > 0 && (
-              <div className="rounded-2xl bg-card border border-border p-5 shadow-sm space-y-1.5">
+              <div className="rounded-2xl bg-card border border-slate-300/85 dark:border-border p-5 shadow-xs space-y-1.5">
                 <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   {t('dashboard.ultimo_pago', 'Último pago')}
                 </p>
@@ -333,22 +419,24 @@ export default function PlanDashboardView({
         </div>
       </div>
 
-      {/* Support Ticket Modal / Drawer */}
-      <SupportTicketPanel
-        open={ticketPanelOpen}
-        onClose={() => setTicketPanelOpen(false)}
-        theme={theme}
-        tier={tier}
-        tickets={tickets}
-        openCount={openCount}
-        submitting={submitting}
-        error={ticketError}
-        onSubmit={async (asunto, mensaje, categoria) => {
-          await createTicket(asunto, mensaje, categoria)
-        }}
-      />
+      {/* Fallback local modal si se usa fuera de DashboardViewport */}
+      {!onOpenTicketModal && (
+        <SupportTicketPanel
+          open={localTicketOpen}
+          onClose={() => setLocalTicketOpen(false)}
+          theme={theme}
+          tier={tier}
+          tickets={tickets}
+          openCount={openCount}
+          submitting={submitting}
+          error={ticketError}
+          initialDraft={localTicketDraft}
+          onSubmit={async (asunto, mensaje, categoria) => {
+            await createTicket(asunto, mensaje, categoria)
+          }}
+        />
+      )}
 
-      {/* Modal para adjuntar comprobante */}
       <AdjuntarComprobanteModal
         open={comprobanteModalOpen}
         onClose={() => setComprobanteModalOpen(false)}

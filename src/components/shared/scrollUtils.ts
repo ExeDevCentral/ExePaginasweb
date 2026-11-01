@@ -102,6 +102,40 @@ export function navigateSection(direction: 1 | -1, offset = 80) {
   }
 }
 
+export function resolveAnchorElement(rawSelectorOrId: string): HTMLElement | null {
+  if (typeof document === 'undefined') return null
+  const idOnly = rawSelectorOrId.replace(/^#/, '').trim()
+  if (!idOnly) return null
+
+  const cleanSelector = `#${idOnly}`
+  const primary =
+    typeof document.querySelector === 'function'
+      ? (document.querySelector(cleanSelector) as HTMLElement | null)
+      : null
+
+  if (primary) {
+    const rect =
+      typeof primary.getBoundingClientRect === 'function' ? primary.getBoundingClientRect() : null
+    if (!rect || rect.height !== 0) {
+      return primary
+    }
+  }
+
+  if (typeof document.querySelectorAll === 'function') {
+    const candidates = document.querySelectorAll<HTMLElement>(
+      `[id="${idOnly}"], [data-anchor="${idOnly}"]`
+    )
+    for (const candidate of Array.from(candidates)) {
+      const rect = candidate.getBoundingClientRect()
+      if (rect.height > 0) {
+        return candidate
+      }
+    }
+  }
+
+  return primary
+}
+
 /**
  * Navegación suave universal de alta ingeniería con compensación exacta de offset para el Navbar
  * Por defecto offset = -88px para despejar el LiquidIslandNavbar.
@@ -119,13 +153,13 @@ export function smoothScrollTo(targetSelectorOrY: string | number, offset = -88)
   }
 
   const cleanId = targetSelectorOrY.startsWith('#') ? targetSelectorOrY : `#${targetSelectorOrY}`
-  const el = typeof document !== 'undefined' ? document.querySelector(cleanId) : null
+  const el = resolveAnchorElement(cleanId)
 
   if (el) {
     if (globalLenis) {
-      globalLenis.scrollTo(el as HTMLElement, { offset, duration: 0.85 })
+      globalLenis.scrollTo(el, { offset, duration: 0.85 })
     } else {
-      const top = (el as HTMLElement).getBoundingClientRect().top + (window.scrollY || 0) + offset
+      const top = el.getBoundingClientRect().top + (window.scrollY || 0) + offset
       window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
     }
   } else {

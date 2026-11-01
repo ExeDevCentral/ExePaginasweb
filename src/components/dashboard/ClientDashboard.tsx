@@ -9,6 +9,10 @@ import type { PlanTier } from './resolvePlanTier'
 import type { Cliente } from '../../core/domain/entities/Cliente'
 import type { Suscripcion } from '../../core/domain/entities/Suscripcion'
 import type { Pago } from '../../hooks/useDashboard'
+import type { DashboardView } from './DashboardView'
+import type { EcosystemSubTab } from '../services/ServicesPanel'
+import type { TicketDraft } from './SupportTicketPanel'
+import type { PlanData } from '../store/PlanCard'
 
 type ClientDashboardProps = {
   planTier: PlanTier
@@ -18,6 +22,10 @@ type ClientDashboardProps = {
   onRefresh: () => void
   refreshing: boolean
   onLogout: () => void
+  onNavigate?: ((tab: DashboardView) => void) | undefined
+  onOpenEcosystemSubTab?: ((subTab: EcosystemSubTab) => void) | undefined
+  onOpenTicketModal?: ((draft?: TicketDraft) => void) | undefined
+  onSelectCheckoutPlan?: ((plan: PlanData) => void) | undefined
 }
 
 export default function ClientDashboard(props: Readonly<ClientDashboardProps>) {

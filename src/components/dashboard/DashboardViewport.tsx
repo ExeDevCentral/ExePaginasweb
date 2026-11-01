@@ -5,7 +5,8 @@
  */
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState, useCallback } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Crown, RefreshCw, Menu } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { Cliente } from '../../core/domain/entities/Cliente'
@@ -21,16 +22,21 @@ import type {
 import type { PlanTier } from '../../core/domain/planCatalog'
 import type { DashboardView, DashboardMode } from '../../hooks/useDashboardNavigation'
 import type { EffectiveTenant } from '../../hooks/useDemoData'
+import { useSupportTickets } from '../../hooks/useSupportTickets'
+import { getLocalizedPlanTheme } from './planDashboardConfig'
 import ClientDashboard from './ClientDashboard'
 import AdminDashboardView from './AdminDashboardView'
 import OnboardingWizard from './OnboardingWizard'
 import DashboardHeader from './DashboardHeader'
 import PanelErrorBoundary from './PanelErrorBoundary'
 import WorkGroupsPanel from '../workgroups/WorkGroupsPanel'
-import ServicesPanel from '../services/ServicesPanel'
+import ServicesPanel, { type EcosystemSubTab } from '../services/ServicesPanel'
 import SLADashboard from '../sla/SLADashboard'
 import InvoicesPanel from '../invoices/InvoicesPanel'
 import SettingsPanel from './SettingsPanel'
+import SupportTicketPanel, { type TicketDraft } from './SupportTicketPanel'
+import CheckoutModal from '../store/CheckoutModal'
+import type { PlanData } from '../store/PlanCard'
 
 interface DashboardViewportProps {
   userEmail?: string | null | undefined
@@ -40,7 +46,9 @@ interface DashboardViewportProps {
   viewMode: DashboardMode
   activeView: DashboardView
   visitedTabs: Set<DashboardView>
+  activeEcosystemTab?: EcosystemSubTab | undefined
   onNavigate: (tab: DashboardView) => void
+  onOpenEcosystemSubTab?: ((subTab: EcosystemSubTab) => void) | undefined
   onToggleViewMode: (mode: DashboardMode) => void
   onOpenSidebar: () => void
   onLogout: () => void
@@ -60,6 +68,15 @@ interface DashboardViewportProps {
   adminStats: AdminStats
   onRefreshAdmin: () => void
   onOnboardingComplete: () => void
+  ticketPanelOpen?: boolean | undefined
+  onSetTicketPanelOpen?: ((open: boolean) => void) | undefined
+}
+
+const VIEW_TRANSITION = {
+  initial: { opacity: 0, y: 10, scale: 0.996 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: -8, scale: 0.996 },
+  transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] as const },
 }
 
 export function DashboardViewport({
@@ -69,8 +86,9 @@ export function DashboardViewport({
   isAdmin,
   viewMode,
   activeView,
-  visitedTabs,
+  activeEcosystemTab = 'active',
   onNavigate,
+  onOpenEcosystemSubTab,
   onToggleViewMode,
   onOpenSidebar,
   onLogout,
@@ -90,11 +108,55 @@ export function DashboardViewport({
   adminStats,
   onRefreshAdmin,
   onOnboardingComplete,
+  ticketPanelOpen: controlledTicketOpen,
+  onSetTicketPanelOpen,
 }: DashboardViewportProps) {
   const { t } = useTranslation()
 
+  const [internalTicketOpen, setInternalTicketOpen] = useState(false)
+  const [ticketDraft, setTicketDraft] = useState<TicketDraft | null>(null)
+  const [selectedCheckoutPlan, setSelectedCheckoutPlan] = useState<PlanData | null>(null)
+
+  const isTicketModalOpen = controlledTicketOpen ?? internalTicketOpen
+  const setTicketModalOpen = useCallback(
+    (open: boolean) => {
+      if (onSetTicketPanelOpen) onSetTicketPanelOpen(open)
+      else setInternalTicketOpen(open)
+    },
+    [onSetTicketPanelOpen]
+  )
+
+  const resolvedTier: PlanTier = effectiveTier ?? 'none'
+  const planSlug = effectiveSuscripciones[0]?.plan?.slug ?? effectivePagos[0]?.plan_slug ?? null
+  const activeTheme =
+    resolvedTier !== 'none'
+      ? getLocalizedPlanTheme(resolvedTier, t)
+      : getLocalizedPlanTheme('basico', t)
+
+  const {
+    tickets,
+    openCount,
+    submitting,
+    error: ticketError,
+    createTicket,
+    refresh: refreshTickets,
+  } = useSupportTickets(true, effectiveCliente, resolvedTier, planSlug)
+
+  const openTicketWithDraft = useCallback(
+    (draft?: TicketDraft) => {
+      setTicketDraft(draft ?? null)
+      setTicketModalOpen(true)
+    },
+    [setTicketModalOpen]
+  )
+
+  const handleGlobalRefresh = useCallback(() => {
+    onRefreshClient()
+    refreshTickets()
+  }, [onRefreshClient, refreshTickets])
+
   const adminPanel = (
-    <PanelErrorBoundary panelName="Admin Dashboard">
+    <PanelErrorBoundary panelName={t('dashboard.panel_admin', 'Admin Dashboard')}>
       <AdminDashboardView
         clientes={adminClientes}
         suscripciones={adminSuscripciones}
@@ -110,21 +172,23 @@ export function DashboardViewport({
   return (
     <div className="flex-1 min-w-0 flex flex-col min-h-screen">
       {/* Mobile Header Bar */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-card border-b border-border">
+      <div className="md:hidden flex items-center justify-between p-3.5 bg-card border-b border-border sticky top-0 z-40">
         <button
           type="button"
           onClick={onOpenSidebar}
-          className="p-2 rounded-xl bg-muted/40 text-foreground border border-border"
+          aria-label={t('dashboard.abrir_navegacion', 'Abrir navegación')}
+          className="p-2 rounded-xl bg-muted/40 text-foreground border border-border cursor-pointer"
         >
           <Menu className="w-5 h-5" />
         </button>
-        <span className="font-bold text-foreground text-sm">ExeSistemasWEB</span>
+        <span className="font-bold text-foreground text-sm tracking-tight">ExeSistemasWEB</span>
         <button
           type="button"
           onClick={onLogout}
-          className="text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-500/10 px-3 py-1.5 rounded-xl border border-rose-500/20"
+          aria-label={t('dashboard.salir', 'Salir')}
+          className="text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-500/10 px-3 py-1.5 rounded-xl border border-rose-500/20 cursor-pointer"
         >
-          Salir
+          {t('dashboard.salir', 'Salir')}
         </button>
       </div>
 
@@ -132,6 +196,10 @@ export function DashboardViewport({
       <main className="min-w-0 flex-1 space-y-4 p-3 sm:space-y-6 sm:p-6 lg:p-8 xl:px-10 2xl:px-12 w-full">
         <DashboardHeader
           userEmail={isPreview ? 'john.carter@dashdark.io' : userEmail}
+          activeView={activeView}
+          activeEcosystemTab={activeEcosystemTab}
+          onNavigate={onNavigate}
+          onOpenEcosystemSubTab={onOpenEcosystemSubTab}
           onLogout={onLogout}
         />
 
@@ -140,9 +208,9 @@ export function DashboardViewport({
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-[1px] rounded-2xl bg-gradient-to-r from-amber-500/40 via-yellow-500/30 to-amber-500/40 mb-6"
+            className="p-[1px] rounded-2xl bg-gradient-to-r from-amber-500/40 via-yellow-500/30 to-amber-500/40 mb-5"
           >
-            <div className="bg-card border border-border p-4 sm:p-5 rounded-2xl flex flex-wrap items-center justify-between gap-4 shadow-lg">
+            <div className="bg-card border border-border p-4 sm:p-5 rounded-2xl flex flex-wrap items-center justify-between gap-4 shadow-md">
               <div className="flex items-center gap-3.5">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center">
                   <Crown className="w-5 h-5 text-amber-600 dark:text-amber-400" />
@@ -196,7 +264,7 @@ export function DashboardViewport({
 
                 <button
                   type="button"
-                  onClick={() => (viewMode === 'admin' ? onRefreshAdmin() : onRefreshClient())}
+                  onClick={() => (viewMode === 'admin' ? onRefreshAdmin() : handleGlobalRefresh())}
                   disabled={clientLoading || adminLoading}
                   className="p-2 rounded-xl border border-border bg-muted/40 hover:bg-muted text-foreground transition-all cursor-pointer"
                 >
@@ -214,7 +282,7 @@ export function DashboardViewport({
           </motion.div>
         )}
 
-        {/* Main Dashboard Views */}
+        {/* Main Dashboard Views con Suavizado Premium AnimatePresence */}
         {!isPreview && isAdmin && viewMode === 'admin' && activeView === 'overview' ? (
           adminPanel
         ) : !isPreview &&
@@ -230,119 +298,137 @@ export function DashboardViewport({
             />
           </PanelErrorBoundary>
         ) : (
-          <div className="space-y-6">
-            {activeView === 'admin' && adminPanel}
+          <AnimatePresence mode="wait">
+            {activeView === 'admin' && (
+              <motion.div key="view-admin" {...VIEW_TRANSITION}>
+                {adminPanel}
+              </motion.div>
+            )}
 
-            {/* Overview (Resumen) Panel */}
-            <div
-              className={`transition-opacity duration-150 ${
-                activeView === 'overview' ? 'block opacity-100' : 'hidden opacity-0'
-              }`}
-            >
-              <PanelErrorBoundary panelName="Resumen Cliente">
-                <ClientDashboard
-                  planTier={effectiveTier ?? 'none'}
-                  cliente={effectiveCliente}
-                  suscripciones={effectiveSuscripciones}
-                  pagos={effectivePagos}
-                  onRefresh={onRefreshClient}
-                  refreshing={clientLoading}
-                  onLogout={onLogout}
-                />
-              </PanelErrorBoundary>
-            </div>
+            {activeView === 'overview' && (
+              <motion.div key="view-overview" {...VIEW_TRANSITION}>
+                <PanelErrorBoundary panelName="Resumen Cliente">
+                  <ClientDashboard
+                    planTier={resolvedTier}
+                    cliente={effectiveCliente}
+                    suscripciones={effectiveSuscripciones}
+                    pagos={effectivePagos}
+                    onRefresh={handleGlobalRefresh}
+                    refreshing={clientLoading}
+                    onLogout={onLogout}
+                    onNavigate={onNavigate}
+                    onOpenEcosystemSubTab={onOpenEcosystemSubTab}
+                    onOpenTicketModal={openTicketWithDraft}
+                    onSelectCheckoutPlan={(plan) => setSelectedCheckoutPlan(plan)}
+                  />
+                </PanelErrorBoundary>
+              </motion.div>
+            )}
 
-            {/* Services (Servicios) Panel */}
-            {(visitedTabs.has('services') || activeView === 'services') && (
-              <div
-                className={`transition-opacity duration-150 ${
-                  activeView === 'services' ? 'block opacity-100' : 'hidden opacity-0'
-                }`}
-              >
+            {activeView === 'services' && (
+              <motion.div key="view-services" {...VIEW_TRANSITION}>
                 <PanelErrorBoundary panelName="Servicios">
-                  <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-sm">
+                  <div className="rounded-2xl bg-card border border-slate-300/85 dark:border-border p-4 sm:p-6 shadow-xs">
                     <ServicesPanel
                       tenantId={effectiveTenantId}
-                      onOpenTicket={() => onNavigate('sla')}
+                      initialSubTab={activeEcosystemTab}
+                      onOpenTicket={openTicketWithDraft}
+                      onSelectCheckoutPlan={(plan) => setSelectedCheckoutPlan(plan)}
                     />
                   </div>
                 </PanelErrorBoundary>
-              </div>
+              </motion.div>
             )}
 
-            {/* Workgroups (Equipo) Panel */}
-            {(visitedTabs.has('workgroups') || activeView === 'workgroups') && (
-              <div
-                className={`transition-opacity duration-150 ${
-                  activeView === 'workgroups' ? 'block opacity-100' : 'hidden opacity-0'
-                }`}
-              >
+            {activeView === 'workgroups' && (
+              <motion.div key="view-workgroups" {...VIEW_TRANSITION}>
                 <PanelErrorBoundary panelName="Equipo">
-                  <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-sm">
+                  <div className="rounded-2xl bg-card border border-slate-300/85 dark:border-border p-4 sm:p-6 shadow-xs">
                     <WorkGroupsPanel tenantId={effectiveTenantId} />
                   </div>
                 </PanelErrorBoundary>
-              </div>
+              </motion.div>
             )}
 
-            {/* SLA Panel */}
-            {(visitedTabs.has('sla') || activeView === 'sla') && (
-              <div
-                className={`transition-opacity duration-150 ${
-                  activeView === 'sla' ? 'block opacity-100' : 'hidden opacity-0'
-                }`}
-              >
+            {activeView === 'sla' && (
+              <motion.div key="view-sla" {...VIEW_TRANSITION}>
                 <PanelErrorBoundary panelName="SLA">
-                  <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-sm">
-                    <SLADashboard tenantId={effectiveTenantId} />
-                  </div>
-                </PanelErrorBoundary>
-              </div>
-            )}
-
-            {/* Invoices (Facturas) Panel */}
-            {(visitedTabs.has('invoices') || activeView === 'invoices') && (
-              <div
-                className={`transition-opacity duration-150 ${
-                  activeView === 'invoices' ? 'block opacity-100' : 'hidden opacity-0'
-                }`}
-              >
-                <PanelErrorBoundary panelName="Facturas">
-                  <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-sm">
-                    <InvoicesPanel
+                  <div className="rounded-2xl bg-card border border-slate-300/85 dark:border-border p-4 sm:p-6 shadow-xs">
+                    <SLADashboard
                       tenantId={effectiveTenantId}
-                      pagos={effectivePagos}
-                      onOpenTicket={() => onNavigate('sla')}
-                      onRefresh={onRefreshClient}
+                      tickets={tickets}
+                      openCount={openCount}
+                      onOpenTicket={openTicketWithDraft}
                     />
                   </div>
                 </PanelErrorBoundary>
-              </div>
+              </motion.div>
             )}
 
-            {/* Settings (Configuración) Panel */}
-            {(visitedTabs.has('settings') || activeView === 'settings') && (
-              <div
-                className={`transition-opacity duration-150 ${
-                  activeView === 'settings' ? 'block opacity-100' : 'hidden opacity-0'
-                }`}
-              >
+            {activeView === 'invoices' && (
+              <motion.div key="view-invoices" {...VIEW_TRANSITION}>
+                <PanelErrorBoundary panelName="Facturas">
+                  <div className="rounded-2xl bg-card border border-slate-300/85 dark:border-border p-4 sm:p-6 shadow-xs">
+                    <InvoicesPanel
+                      tenantId={effectiveTenantId}
+                      pagos={effectivePagos}
+                      onOpenTicket={() =>
+                        openTicketWithDraft({
+                          asunto: 'Consulta sobre facturación / comprobantes',
+                          categoria: 'consulta',
+                        })
+                      }
+                      onRefresh={handleGlobalRefresh}
+                    />
+                  </div>
+                </PanelErrorBoundary>
+              </motion.div>
+            )}
+
+            {activeView === 'settings' && (
+              <motion.div key="view-settings" {...VIEW_TRANSITION}>
                 <PanelErrorBoundary panelName="Configuración">
-                  <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-sm">
+                  <div className="rounded-2xl bg-card border border-slate-300/85 dark:border-border p-4 sm:p-6 shadow-xs">
                     <SettingsPanel
                       cliente={effectiveCliente}
                       userEmail={userEmail}
                       role={role}
                       currentTenant={currentTenant}
                       onLogout={onLogout}
-                      onRefreshProfile={onRefreshClient}
+                      onRefreshProfile={handleGlobalRefresh}
                     />
                   </div>
                 </PanelErrorBoundary>
-              </div>
+              </motion.div>
             )}
-          </div>
+          </AnimatePresence>
         )}
+
+        {/* Modal Global de Soporte y Tickets (disponible en 1 clic desde cualquier pestaña) */}
+        <SupportTicketPanel
+          open={isTicketModalOpen}
+          onClose={() => setTicketModalOpen(false)}
+          theme={activeTheme}
+          tier={resolvedTier}
+          tickets={tickets}
+          openCount={openCount}
+          submitting={submitting}
+          error={ticketError}
+          initialDraft={ticketDraft}
+          onSubmit={async (asunto, mensaje, categoria) => {
+            await createTicket(asunto, mensaje, categoria)
+          }}
+        />
+
+        {/* Modal Global de Checkout / Activación de Abono sin Salir del Dashboard */}
+        <AnimatePresence>
+          {selectedCheckoutPlan && (
+            <CheckoutModal
+              plan={selectedCheckoutPlan}
+              onClose={() => setSelectedCheckoutPlan(null)}
+            />
+          )}
+        </AnimatePresence>
       </main>
     </div>
   )

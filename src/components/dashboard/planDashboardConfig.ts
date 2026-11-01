@@ -152,3 +152,186 @@ export const PLAN_THEMES: Record<Exclude<PlanTier, 'none'>, PlanDashboardTheme> 
     supportDetail: 'Línea directa y llamadas privadas · Respuesta inmediata',
   },
 }
+
+export function getLocalizedPlanTheme(
+  tier: Exclude<PlanTier, 'none'>,
+  t: (key: string, defaultValue: string) => string
+): PlanDashboardTheme {
+  const base = PLAN_THEMES[tier]
+
+  if (tier === 'basico') {
+    return {
+      ...base,
+      title: t('dash.theme_basico_title', base.title),
+      subtitle: t('dash.theme_basico_subtitle', base.subtitle),
+      badge: t('dash.theme_basico_badge', base.badge),
+      chartLabel: t('dash.theme_basico_chart', base.chartLabel),
+      metrics: [
+        {
+          ...base.metrics[0]!,
+          label: t('dash.theme_basico_m1_label', base.metrics[0]!.label),
+        },
+        {
+          ...base.metrics[1]!,
+          label: t('dash.theme_basico_m2_label', base.metrics[1]!.label),
+        },
+        {
+          ...base.metrics[2]!,
+          label: t('dash.theme_basico_m3_label', base.metrics[2]!.label),
+          delta: t('dash.theme_basico_m3_delta', base.metrics[2]!.delta),
+        },
+        {
+          ...base.metrics[3]!,
+          label: t('dash.theme_basico_m4_label', base.metrics[3]!.label),
+          delta: t('dash.theme_basico_m4_delta', base.metrics[3]!.delta),
+        },
+      ],
+      activities: [
+        {
+          ...base.activities[0]!,
+          label: t('dash.theme_basico_act_1', base.activities[0]!.label),
+          time: t('dash.theme_basico_act_1_time', base.activities[0]!.time),
+        },
+        {
+          ...base.activities[1]!,
+          label: t('dash.theme_basico_act_2', base.activities[1]!.label),
+          time: t('dash.theme_basico_act_2_time', base.activities[1]!.time),
+        },
+        {
+          ...base.activities[2]!,
+          label: t('dash.theme_basico_act_3', base.activities[2]!.label),
+          time: t('dash.theme_basico_act_3_time', base.activities[2]!.time),
+        },
+        {
+          ...base.activities[3]!,
+          label: t('dash.theme_basico_act_4', base.activities[3]!.label),
+          time: t('dash.theme_basico_act_4_time', base.activities[3]!.time),
+        },
+      ],
+      perks: [
+        t('dash.theme_basico_perk_1', base.perks[0]!),
+        t('dash.theme_basico_perk_2', base.perks[1]!),
+        t('dash.theme_basico_perk_3', base.perks[2]!),
+        t('dash.theme_basico_perk_4', base.perks[3]!),
+      ],
+      supportLabel: t('dash.theme_basico_support_label', base.supportLabel),
+      supportDetail: t('dash.theme_basico_support_detail', base.supportDetail),
+    }
+  }
+
+  if (tier === 'avanzado') {
+    return {
+      ...base,
+      title: t('dash.theme_avanzado_title', base.title),
+      subtitle: t('dash.theme_avanzado_subtitle', base.subtitle),
+      badge: t('dash.theme_avanzado_badge', base.badge),
+      chartLabel: t('dash.theme_avanzado_chart', base.chartLabel),
+      metrics: [
+        {
+          ...base.metrics[0]!,
+          label: t('dash.theme_avanzado_m1_label', base.metrics[0]!.label),
+        },
+        {
+          ...base.metrics[1]!,
+          label: t('dash.theme_avanzado_m2_label', base.metrics[1]!.label),
+        },
+        {
+          ...base.metrics[2]!,
+          label: t('dash.theme_avanzado_m3_label', base.metrics[2]!.label),
+        },
+        {
+          ...base.metrics[3]!,
+          label: t('dash.theme_avanzado_m4_label', base.metrics[3]!.label),
+        },
+      ],
+      activities: [
+        {
+          ...base.activities[0]!,
+          label: t('dash.theme_avanzado_act_1', base.activities[0]!.label),
+          time: t('dash.theme_avanzado_act_1_time', base.activities[0]!.time),
+        },
+        {
+          ...base.activities[1]!,
+          label: t('dash.theme_avanzado_act_2', base.activities[1]!.label),
+          time: t('dash.theme_avanzado_act_2_time', base.activities[1]!.time),
+        },
+        {
+          ...base.activities[2]!,
+          label: t('dash.theme_avanzado_act_3', base.activities[2]!.label),
+          time: t('dash.theme_avanzado_act_3_time', base.activities[2]!.time),
+        },
+        {
+          ...base.activities[3]!,
+          label: t('dash.theme_avanzado_act_4', base.activities[3]!.label),
+          time: t('dash.theme_avanzado_act_4_time', base.activities[3]!.time),
+        },
+      ],
+      perks: [
+        t('dash.theme_avanzado_perk_1', base.perks[0]!),
+        t('dash.theme_avanzado_perk_2', base.perks[1]!),
+        t('dash.theme_avanzado_perk_3', base.perks[2]!),
+        t('dash.theme_avanzado_perk_4', base.perks[3]!),
+        t('dash.theme_avanzado_perk_5', base.perks[4]!),
+      ],
+      supportLabel: t('dash.theme_avanzado_support_label', base.supportLabel),
+      supportDetail: t('dash.theme_avanzado_support_detail', base.supportDetail),
+    }
+  }
+
+  return {
+    ...base,
+    title: t('dash.theme_premium_title', base.title),
+    subtitle: t('dash.theme_premium_subtitle', base.subtitle),
+    badge: t('dash.theme_premium_badge', base.badge),
+    chartLabel: t('dash.theme_premium_chart', base.chartLabel),
+    metrics: [
+      {
+        ...base.metrics[0]!,
+        label: t('dash.theme_premium_m1_label', base.metrics[0]!.label),
+      },
+      {
+        ...base.metrics[1]!,
+        label: t('dash.theme_premium_m2_label', base.metrics[1]!.label),
+      },
+      {
+        ...base.metrics[2]!,
+        label: t('dash.theme_premium_m3_label', base.metrics[2]!.label),
+      },
+      {
+        ...base.metrics[3]!,
+        label: t('dash.theme_premium_m4_label', base.metrics[3]!.label),
+      },
+    ],
+    activities: [
+      {
+        ...base.activities[0]!,
+        label: t('dash.theme_premium_act_1', base.activities[0]!.label),
+        time: t('dash.theme_premium_act_1_time', base.activities[0]!.time),
+      },
+      {
+        ...base.activities[1]!,
+        label: t('dash.theme_premium_act_2', base.activities[1]!.label),
+        time: t('dash.theme_premium_act_2_time', base.activities[1]!.time),
+      },
+      {
+        ...base.activities[2]!,
+        label: t('dash.theme_premium_act_3', base.activities[2]!.label),
+        time: t('dash.theme_premium_act_3_time', base.activities[2]!.time),
+      },
+      {
+        ...base.activities[3]!,
+        label: t('dash.theme_premium_act_4', base.activities[3]!.label),
+        time: t('dash.theme_premium_act_4_time', base.activities[3]!.time),
+      },
+    ],
+    perks: [
+      t('dash.theme_premium_perk_1', base.perks[0]!),
+      t('dash.theme_premium_perk_2', base.perks[1]!),
+      t('dash.theme_premium_perk_3', base.perks[2]!),
+      t('dash.theme_premium_perk_4', base.perks[3]!),
+      t('dash.theme_premium_perk_5', base.perks[4]!),
+    ],
+    supportLabel: t('dash.theme_premium_support_label', base.supportLabel),
+    supportDetail: t('dash.theme_premium_support_detail', base.supportDetail),
+  }
+}

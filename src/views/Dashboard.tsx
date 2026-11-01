@@ -5,7 +5,7 @@
  */
 'use client'
 
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
@@ -23,6 +23,7 @@ import { useTenant } from '../hooks/useTenant'
 import { isLocalDashboardPreview } from '../core/auth/siteUrl'
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar'
 import { DashboardViewport } from '../components/dashboard/DashboardViewport'
+import type { EcosystemSubTab } from '../components/services/ServicesPanel'
 import BrandLoader from '../components/layout/BrandLoader'
 
 export default function Dashboard() {
@@ -83,6 +84,23 @@ export default function Dashboard() {
     setSidebarOpen,
   } = useDashboardNavigation()
 
+  const [ecosystemSubTab, setEcosystemSubTab] = useState<EcosystemSubTab>('active')
+  const [ticketPanelOpen, setTicketPanelOpen] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash === '#linux') {
+      setEcosystemSubTab('linux')
+    }
+  }, [])
+
+  const handleOpenEcosystemSubTab = useCallback(
+    (subTab: EcosystemSubTab) => {
+      setEcosystemSubTab(subTab)
+      handleTabChange('services')
+    },
+    [handleTabChange]
+  )
+
   const {
     loading: adminLoading,
     clientes: adminClientes,
@@ -108,14 +126,14 @@ export default function Dashboard() {
         window.history.replaceState(null, '', url.pathname + (url.search ? url.search : ''))
       }
       refresh()
-      toast.success('Pago aprobado', {
+      toast.success(t('dashboard.pago_aprobado_titulo', 'Pago aprobado'), {
         description:
           payment === 'paypal_ok'
-            ? 'Pago con PayPal confirmado'
-            : 'Suscripción activada correctamente',
+            ? t('dashboard.pago_aprobado_paypal', 'Pago con PayPal confirmado')
+            : t('dashboard.pago_aprobado_suscripcion', 'Suscripción activada correctamente'),
       })
     }
-  }, [searchParams, refresh])
+  }, [searchParams, refresh, t])
 
   // Auth guard
   useEffect(() => {
@@ -131,7 +149,9 @@ export default function Dashboard() {
     }
     await supabase.auth.signOut()
     queryClient.clear()
-    toast.success('Sesión cerrada', { description: 'Has cerrado sesión correctamente' })
+    toast.success(t('dashboard.sesion_cerrada_titulo', 'Sesión cerrada'), {
+      description: t('dashboard.sesion_cerrada_desc', 'Has cerrado sesión correctamente'),
+    })
     navigate('/login')
   }
 
@@ -149,7 +169,7 @@ export default function Dashboard() {
         <BrandLoader
           size="lg"
           text="EXESISTEMASWEB"
-          subtext={t('dashboard.sincronizando') || 'Sincronizando panel...'}
+          subtext={t('dashboard.sincronizando', 'Sincronizando panel...')}
         />
       </div>
     )
@@ -187,7 +207,7 @@ export default function Dashboard() {
       {sidebarOpen && (
         <button
           type="button"
-          aria-label="Cerrar barra lateral"
+          aria-label={t('dashboard.cerrar_sidebar', 'Cerrar barra lateral')}
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden border-none w-full h-full cursor-default"
           onClick={() => setSidebarOpen(false)}
         />
@@ -197,7 +217,10 @@ export default function Dashboard() {
         sidebarOpen={sidebarOpen}
         onCloseSidebar={() => setSidebarOpen(false)}
         activeView={activeView}
+        activeEcosystemTab={ecosystemSubTab}
         onNavigate={handleTabChange}
+        onOpenEcosystemSubTab={handleOpenEcosystemSubTab}
+        onOpenTicketModal={() => setTicketPanelOpen(true)}
         onHome={() => navigate('/')}
         userName={userName}
         userInitial={userInitial}
@@ -211,7 +234,9 @@ export default function Dashboard() {
         viewMode={viewMode}
         activeView={activeView}
         visitedTabs={visitedTabs}
+        activeEcosystemTab={ecosystemSubTab}
         onNavigate={handleTabChange}
+        onOpenEcosystemSubTab={handleOpenEcosystemSubTab}
         onToggleViewMode={setViewMode}
         onOpenSidebar={() => setSidebarOpen(true)}
         onLogout={handleLogout}
@@ -231,6 +256,8 @@ export default function Dashboard() {
         adminStats={adminStats}
         onRefreshAdmin={refreshAdmin}
         onOnboardingComplete={onOnboardingComplete}
+        ticketPanelOpen={ticketPanelOpen}
+        onSetTicketPanelOpen={setTicketPanelOpen}
       />
     </div>
   )

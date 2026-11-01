@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { isDashboardView, setTabInUrl, DashboardView } from '../components/dashboard/DashboardView'
+import { smoothScrollTo } from '../components/shared/scrollUtils'
 
 export type { DashboardView }
 export type DashboardMode = 'admin' | 'client'
@@ -74,6 +75,9 @@ export function useDashboardNavigation(): UseDashboardNavigationResult {
     if (typeof window !== 'undefined') {
       const { pathname, search } = setTabInUrl(tabId, window.location.href)
       window.history.replaceState(null, '', pathname + search)
+      if (window.scrollY > 120) {
+        smoothScrollTo(0, 0)
+      }
     }
     setSidebarOpen(false)
   }, [])

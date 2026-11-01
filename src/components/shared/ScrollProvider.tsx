@@ -8,7 +8,12 @@
 import React, { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import Lenis from 'lenis'
-import { getGlobalLenis, resetScrollToTop, setGlobalLenis, smoothScrollTo } from './scrollUtils'
+import {
+  getGlobalLenis,
+  resetScrollToTop,
+  resolveAnchorElement,
+  setGlobalLenis,
+} from './scrollUtils'
 
 const NAVBAR_SCROLL_OFFSET = -92
 
@@ -29,22 +34,35 @@ function scheduleHashScrollWithRetry(rawHash: string): () => void {
   let cancelled = false
   let attempts = 0
   let timerId: ReturnType<typeof setTimeout> | null = null
+  let settleTimerId: ReturnType<typeof setTimeout> | null = null
   let rafId: number | null = null
 
   const tryScroll = () => {
     if (cancelled) return
-    const target = document.getElementById(cleanId)
+    const target = resolveAnchorElement(cleanId)
     if (target && target.getBoundingClientRect().height > 0) {
       rafId = requestAnimationFrame(() => {
-        if (!cancelled) {
-          scrollElementIntoClearView(target)
-        }
+        if (cancelled) return
+        scrollElementIntoClearView(target)
+        // Re-estabilización suave si animaciones de entrada o chunks dinámicos desplazan el layout
+        settleTimerId = setTimeout(() => {
+          if (cancelled) return
+          const settled = resolveAnchorElement(cleanId)
+          if (settled && settled.getBoundingClientRect().height > 0) {
+            const deltaFromDesired = Math.abs(
+              settled.getBoundingClientRect().top + NAVBAR_SCROLL_OFFSET
+            )
+            if (deltaFromDesired > 28) {
+              scrollElementIntoClearView(settled)
+            }
+          }
+        }, 380)
       })
       return
     }
 
     attempts += 1
-    if (attempts < 25) {
+    if (attempts < 35) {
       timerId = setTimeout(tryScroll, 80)
     }
   }
@@ -55,6 +73,7 @@ function scheduleHashScrollWithRetry(rawHash: string): () => void {
   return () => {
     cancelled = true
     if (timerId !== null) clearTimeout(timerId)
+    if (settleTimerId !== null) clearTimeout(settleTimerId)
     if (rafId !== null) cancelAnimationFrame(rafId)
   }
 }
@@ -137,13 +156,19 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const normalizePath = (p: string) => p.replace(/\/+$/, '') || '/'
 
     const handleDocumentClick = (e: MouseEvent) => {
-      if (e.defaultPrevented || e.button !== 0) return
+      if (e.button !== 0) return
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
 
       const targetNode = e.target as Element | null
       const anchor = targetNode?.closest?.('a[href]') as HTMLAnchorElement | null
       if (!anchor) return
-      if (anchor.target === '_blank' || anchor.hasAttribute('download')) return
+      if (
+        anchor.target === '_blank' ||
+        anchor.hasAttribute('download') ||
+        anchor.dataset.customScroll === 'true'
+      ) {
+        return
+      }
 
       const rawHref = anchor.getAttribute('href')
       if (
@@ -169,11 +194,19 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
       if (normalizePath(resolved.pathname) === normalizePath(window.location.pathname)) {
         const cleanId = decodeURIComponent(resolved.hash.slice(1)).trim()
-        const targetEl = cleanId ? document.getElementById(cleanId) : null
+        const targetEl = cleanId ? resolveAnchorElement(cleanId) : null
         if (targetEl) {
-          e.preventDefault()
-          window.history.pushState(null, '', resolved.pathname + resolved.search + resolved.hash)
-          smoothScrollTo(`#${cleanId}`, NAVBAR_SCROLL_OFFSET)
+          if (!e.defaultPrevented) {
+            e.preventDefault()
+          }
+          const nextUrl = resolved.pathname + resolved.search + resolved.hash
+          if (
+            window.location.pathname + window.location.search + window.location.hash !==
+            nextUrl
+          ) {
+            window.history.pushState(null, '', nextUrl)
+          }
+          scheduleHashScrollWithRetry(resolved.hash)
         }
       }
     }

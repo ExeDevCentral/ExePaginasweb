@@ -22,7 +22,11 @@ import SpotlightGlass from './SpotlightGlass'
 import LiquidFilter from './LiquidFilter'
 import LanguageSwitcher from '../LanguageSwitcher'
 import ThemeToggle from '../ThemeToggle'
-import { getGlobalLenis, smoothScrollTo } from '@/components/shared/scrollUtils'
+import {
+  getGlobalLenis,
+  resolveAnchorElement,
+  smoothScrollTo,
+} from '@/components/shared/scrollUtils'
 import { trackEvent } from '@/core/analytics/trackEvent'
 
 export interface LiquidIslandNavbarProps {
@@ -45,6 +49,7 @@ export default function LiquidIslandNavbar({
   // Referencias para accesibilidad y spotlight
   const navRef = useRef<HTMLElement>(null)
   const solutionsBtnRef = useRef<HTMLButtonElement>(null)
+  const mobileBtnRef = useRef<HTMLButtonElement>(null)
 
   // Spotlight interactivo que sigue al cursor (MotionValues: 0 re-renders)
   const mouseX = useMotionValue(-500)
@@ -94,7 +99,7 @@ export default function LiquidIslandNavbar({
         <motion.nav
           ref={navRef}
           role="navigation"
-          aria-label="Navegación principal"
+          aria-label={getNavLabel('nav.aria_main_nav', 'Navegación principal')}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           className="relative pointer-events-auto w-full max-w-275 mx-auto h-14 sm:h-14.5 rounded-full border border-slate-200/90 dark:border-cyan-400/30 bg-white/90 dark:bg-[#0c1224]/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 dark:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6),0_0_16px_rgba(6,182,212,0.1)] flex items-center justify-between px-3 sm:px-4 gap-2 transition-colors duration-200 hover:border-slate-300 dark:hover:border-cyan-400/60"
@@ -137,15 +142,17 @@ export default function LiquidIslandNavbar({
                   onMouseEnter={() => setHoveredLink('soluciones')}
                   onMouseLeave={() => setHoveredLink(null)}
                   aria-expanded={megaPanelOpen}
-                  aria-controls="mega-panel-menu"
+                  aria-controls="mega-panel-palette"
                   className={`relative inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full select-none transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 cursor-pointer ${
-                    megaPanelOpen || hoveredLink === 'soluciones'
+                    megaPanelOpen || hoveredLink === 'soluciones' || pathname === '/soluciones'
                       ? 'text-cyan-600 dark:text-cyan-300 font-bold'
                       : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
                   }`}
                 >
                   {/* Blob compartido layoutId="nav-blob" */}
-                  {(hoveredLink === 'soluciones' || megaPanelOpen) && (
+                  {(hoveredLink === 'soluciones' ||
+                    megaPanelOpen ||
+                    pathname === '/soluciones') && (
                     <motion.span
                       {...(!reduceMotion ? { layoutId: 'nav-blob' } : {})}
                       className="pointer-events-none absolute inset-0 rounded-full bg-cyan-500/10 dark:bg-white/10 border border-cyan-500/25 dark:border-cyan-400/20 shadow-xs -z-10"
@@ -202,10 +209,11 @@ export default function LiquidIslandNavbar({
                 isActive={false}
                 isHovered={hoveredLink === 'contacto'}
                 onHover={() => setHoveredLink('contacto')}
+                onLeave={() => setHoveredLink(null)}
                 onClick={(e) => {
                   setMegaPanelOpen(false)
                   trackEvent('hero_cta_contact_clicked', { source: 'navbar' })
-                  if (pathname === '/' || pathname === '') {
+                  if (resolveAnchorElement('contact')) {
                     e.preventDefault()
                     smoothScrollTo('#contact', -88)
                   }
@@ -219,7 +227,7 @@ export default function LiquidIslandNavbar({
             {/* Disponibilidad en tiempo real */}
             <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 dark:border-cyan-400/30 text-[10px] font-mono font-bold tracking-wider text-cyan-800 dark:text-cyan-300 select-none shrink-0">
               <CyberRadarBeacon size={9} />
-              <span>ABRIL // DISPONIBLE</span>
+              <span>{getNavLabel('nav.disponible_badge', 'DISPONIBLE // 2026')}</span>
             </div>
 
             {/* Selector de idioma */}
@@ -234,12 +242,17 @@ export default function LiquidIslandNavbar({
 
             {/* Botón de Menú rápido en mobile/tablet para desplegar MegaPanel */}
             <motion.button
+              ref={mobileBtnRef}
               type="button"
               layout="position"
               onClick={() => setMegaPanelOpen((prev) => !prev)}
               aria-expanded={megaPanelOpen}
-              aria-controls="mega-panel-menu"
-              aria-label={megaPanelOpen ? 'Cerrar menú' : 'Abrir menú de navegación'}
+              aria-controls="mega-panel-palette"
+              aria-label={
+                megaPanelOpen
+                  ? getNavLabel('nav.aria_close_menu', 'Cerrar menú')
+                  : getNavLabel('nav.aria_open_menu', 'Abrir menú de navegación')
+              }
               className="p-2 rounded-full border border-cyan-500/30 dark:border-cyan-400/35 bg-cyan-500/5 hover:bg-cyan-500/15 hover:border-cyan-400/60 transition-colors cursor-pointer flex lg:hidden"
             >
               <CyberBurgerIcon isOpen={megaPanelOpen} size={17} />
@@ -265,6 +278,7 @@ export default function LiquidIslandNavbar({
         isOpen={megaPanelOpen}
         onClose={() => setMegaPanelOpen(false)}
         anchorRef={solutionsBtnRef}
+        mobileAnchorRef={mobileBtnRef}
       />
     </>
   )

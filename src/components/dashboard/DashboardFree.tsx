@@ -7,7 +7,6 @@
 
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { useRouter } from 'next/navigation'
 import {
   Monitor,
   Building,
@@ -20,22 +19,48 @@ import {
   CheckCircle2,
   Paperclip,
   Clock,
+  Terminal,
+  Calculator,
 } from 'lucide-react'
+import {
+  CyberPlanBasic,
+  CyberPlanAdvanced,
+  CyberPlanPremium,
+} from '@/components/ui/MagnificentIcons'
 import { useTranslation } from 'react-i18next'
 import type { Cliente } from '../../core/domain/entities/Cliente'
 import type { Suscripcion } from '../../core/domain/entities/Suscripcion'
 import type { Pago } from '../../hooks/useDashboard'
+import { PLAN_CATALOG } from '../../core/domain/planCatalog'
 import { useSupportTickets } from '../../hooks/useSupportTickets'
 import { PLAN_THEMES } from './planDashboardConfig'
+import type { DashboardView } from './DashboardView'
+import type { EcosystemSubTab } from '../services/ServicesPanel'
+import type { PlanData } from '../store/PlanCard'
 import ServicePulseHub from './ServicePulseHub'
-import SupportTicketPanel from './SupportTicketPanel'
+import SupportTicketPanel, { type TicketDraft } from './SupportTicketPanel'
 import AdjuntarComprobanteModal from './AdjuntarComprobanteModal'
 import HudButton from '../HudButton'
 
 const PREVIEW_TIERS = [
-  { tier: 'basico' as const, icon: Monitor },
-  { tier: 'avanzado' as const, icon: Building },
-  { tier: 'premium' as const, icon: Building2 },
+  {
+    tier: 'basico' as const,
+    planId: 'mantenimiento-basico',
+    icon: Monitor,
+    cyberIcon: CyberPlanBasic,
+  },
+  {
+    tier: 'avanzado' as const,
+    planId: 'mantenimiento-avanzado',
+    icon: Building,
+    cyberIcon: CyberPlanAdvanced,
+  },
+  {
+    tier: 'premium' as const,
+    planId: 'mantenimiento-premium',
+    icon: Building2,
+    cyberIcon: CyberPlanPremium,
+  },
 ]
 
 type DashboardFreeProps = {
@@ -45,6 +70,10 @@ type DashboardFreeProps = {
   onRefresh?: () => void
   refreshing?: boolean
   onLogout: () => void
+  onNavigate?: ((tab: DashboardView) => void) | undefined
+  onOpenEcosystemSubTab?: ((subTab: EcosystemSubTab) => void) | undefined
+  onOpenTicketModal?: ((draft?: TicketDraft) => void) | undefined
+  onSelectCheckoutPlan?: ((plan: PlanData) => void) | undefined
 }
 
 function formatDate(d?: string | null, locale = 'es-AR') {
@@ -60,16 +89,19 @@ export default function DashboardFree({
   pagos = [],
   onRefresh,
   refreshing: _refreshing,
-  onLogout,
+  onLogout: _onLogout,
+  onNavigate,
+  onOpenEcosystemSubTab,
+  onOpenTicketModal,
+  onSelectCheckoutPlan,
 }: Readonly<DashboardFreeProps>) {
   const { t, i18n } = useTranslation()
-  const router = useRouter()
-  const navigate = (path: string) => router.push(path)
   const nombre = cliente?.full_name?.split(' ')[0] ?? 'Cliente'
   const theme = PLAN_THEMES.basico
-  const [ticketPanelOpen, setTicketPanelOpen] = useState(false)
+  const [localTicketOpen, setLocalTicketOpen] = useState(false)
   const [comprobanteModalOpen, setComprobanteModalOpen] = useState(false)
   const pendingPago = pagos.find((p) => p.estado === 'pendiente')
+
   const {
     tickets,
     notifications,
@@ -84,13 +116,51 @@ export default function DashboardFree({
 
   const totalPaid = useMemo(() => pagos.reduce((sum, p) => sum + Number(p.monto || 0), 0), [pagos])
 
+  const triggerOpenTicket = (draft?: TicketDraft) => {
+    if (onOpenTicketModal) {
+      onOpenTicketModal(draft)
+      return
+    }
+    setLocalTicketOpen(true)
+  }
+
+  const handleDirectPlanActivate = (tierKey: 'basico' | 'avanzado' | 'premium', planId: string) => {
+    const entry = PLAN_CATALOG.find((c) => c.id === planId)
+    const planTheme = PLAN_THEMES[tierKey]
+    const rawARS = entry?.precio ?? 32000
+    const rawUSD = entry?.precioUSD ?? 28
+    const matchIcon = PREVIEW_TIERS.find((p) => p.tier === tierKey)?.cyberIcon ?? CyberPlanBasic
+
+    if (onSelectCheckoutPlan) {
+      onSelectCheckoutPlan({
+        id: planId,
+        title: entry?.nombre ?? planTheme.badge,
+        description: planTheme.subtitle,
+        icon: matchIcon,
+        color: 'from-cyan-400 to-purple-500',
+        shadow: 'shadow-cyan-500/20',
+        border: 'border-cyan-500/30',
+        features: planTheme.perks,
+        popular: tierKey === 'avanzado',
+        rawPriceARS: rawARS,
+        rawPriceUSD: rawUSD,
+        price: '$' + rawARS.toLocaleString('es-AR'),
+        priceUSD: '$' + rawUSD,
+        period: '/mes',
+      })
+      return
+    }
+
+    onOpenEcosystemSubTab?.('store')
+  }
+
   const handleRefresh = () => {
     onRefresh?.()
     refreshTickets()
   }
 
   return (
-    <div className="relative space-y-8 font-sans">
+    <div className="relative space-y-7 font-sans">
       {/* Banner de transferencia registrada / pendiente */}
       {pendingPago && (
         <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -120,65 +190,47 @@ export default function DashboardFree({
         </div>
       )}
 
-      {/* 1. Header Hero Card */}
+      {/* 1. Header Hero Card (Acciones Directas sin Salir del Panel) */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-3xl border border-border bg-card p-6 sm:p-8 shadow-sm"
+        className="rounded-3xl border border-slate-300/90 dark:border-border bg-card p-6 sm:p-8 shadow-xs"
       >
-        <div className="flex flex-col md:flex-row items-start justify-between gap-6">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-muted/40 border border-border flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-muted/50 border border-border flex items-center justify-center shrink-0">
               <Sparkles className="w-6 h-6 text-[#38BDF8]" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <p className="text-xs uppercase tracking-wider text-[#38BDF8] font-bold">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="text-xs uppercase tracking-wider text-[#4361EE] dark:text-[#38BDF8] font-bold">
                   {suscripciones.length > 0
                     ? t('dash.suscripcion_en_revision', 'Cuenta Registrada')
-                    : t('dash.sin_suscripcion', 'Sin Suscripción Activa')}
+                    : t('dash.sin_suscripcion', 'Panel Unificado de Cliente')}
                 </p>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                   <CheckCircle2 className="w-3 h-3" />
                   {t('dash.cuenta_activa', 'Sesión Activa')}
                 </span>
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground mt-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground mt-1 tracking-tight">
                 {t('dashboard.hola', 'Hola')}, {nombre}
               </h1>
 
-              <p className="mt-2 text-sm text-muted-foreground max-w-xl font-medium leading-relaxed">
-                {suscripciones.length > 0
-                  ? t(
-                      'dash.panel_cliente_desc',
-                      'Tu cuenta está conectada. Podés gestionar tus tickets, revisar comprobantes de pago o activar más servicios.'
-                    )
-                  : t(
-                      'dash.activar_suscripcion_desc',
-                      'Explorá los servicios de desarrollo web, sistemas de turnos y abonos mensuales para tu negocio.'
-                    )}
+              <p className="mt-1.5 text-sm text-muted-foreground max-w-xl font-medium leading-relaxed">
+                Desde este mismo panel podés activar tu abono en 1 clic, simular el ahorro de tu
+                flota con Linux POS, cotizar módulos de turnos/tienda o hablar directo con
+                ingeniería.
               </p>
-
-              <div className="mt-4 flex items-center gap-4 text-xs font-semibold text-muted-foreground">
-                <span>Email: {cliente?.email ?? '—'}</span>
-                <span>•</span>
-                <button
-                  type="button"
-                  onClick={onLogout}
-                  className="hover:text-destructive transition-colors cursor-pointer"
-                >
-                  {t('dashboard.salir', 'Cerrar Sesión')}
-                </button>
-              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto flex-wrap">
+          <div className="flex items-center gap-2.5 w-full lg:w-auto flex-wrap">
             <button
               type="button"
-              onClick={() => setTicketPanelOpen(true)}
-              className="flex-1 md:flex-initial px-4 py-3 rounded-xl bg-muted/40 hover:bg-muted text-foreground border border-border font-semibold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              onClick={() => triggerOpenTicket({ categoria: 'consulta' })}
+              className="flex-1 lg:flex-initial px-4 py-2.5 rounded-xl bg-muted/50 hover:bg-muted text-foreground border border-slate-300/80 dark:border-border font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plus size={16} />
               <span>{t('dashboard.abrir_ticket', 'Abrir Ticket')}</span>
@@ -186,51 +238,85 @@ export default function DashboardFree({
 
             <button
               type="button"
-              onClick={() => navigate('/tienda')}
-              className="flex-1 md:flex-initial px-6 py-3 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white font-semibold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+              onClick={() => onOpenEcosystemSubTab?.('quoter')}
+              className="flex-1 lg:flex-initial px-4 py-2.5 rounded-xl bg-muted/50 hover:bg-muted text-foreground border border-slate-300/80 dark:border-border font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>{t('dash.subir_plan', 'Mejorar Plan')}</span>
+              <Calculator size={16} className="text-cyan-500" />
+              <span>Cotizador</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onOpenEcosystemSubTab?.('linux')}
+              className="flex-1 lg:flex-initial px-4 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Terminal size={16} />
+              <span>Linux POS</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleDirectPlanActivate('avanzado', 'mantenimiento-avanzado')}
+              className="flex-1 lg:flex-initial px-5 py-2.5 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white font-semibold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+            >
+              <span>{t('dash.subir_plan', 'Activar Abono')}</span>
               <ArrowRight size={16} />
             </button>
           </div>
         </div>
       </motion.div>
 
-      {/* 2. Key Metric Cards */}
+      {/* 2. Key Metric Cards (Clickable Shortcuts) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <button
+          type="button"
+          onClick={() => onOpenEcosystemSubTab?.('store')}
+          className="text-left rounded-2xl border border-slate-300/85 dark:border-border bg-card p-5 shadow-xs hover:border-primary/50 transition-all cursor-pointer"
+        >
           <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             Plan Actual
           </p>
           <p className="text-lg font-bold text-foreground mt-1 truncate">
-            {suscripciones[0]?.plan?.nombre ?? 'Plan Básico (Web)'}
+            {suscripciones[0]?.plan?.nombre ?? 'Cuenta Base (Web)'}
           </p>
-          <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium mt-1 inline-block">
-            ● Cuenta verificada
+          <span className="text-xs text-[#4361EE] dark:text-[#38BDF8] font-semibold mt-1 inline-block">
+            Elegir plan en 1 clic →
           </span>
-        </div>
+        </button>
 
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <button
+          type="button"
+          onClick={() => onOpenEcosystemSubTab?.('linux')}
+          className="text-left rounded-2xl border border-slate-300/85 dark:border-border bg-card p-5 shadow-xs hover:border-emerald-500/50 transition-all cursor-pointer"
+        >
           <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
-            Disponibilidad
+            Infraestructura &amp; POS
           </p>
           <p className="text-lg font-bold text-foreground mt-1 font-mono">99.99%</p>
-          <span className="text-xs text-[#38BDF8] font-medium mt-1 inline-block">
-            Edge CDN Online
+          <span className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold mt-1 inline-block">
+            Edge Cloud + Linux LAN →
           </span>
-        </div>
+        </button>
 
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <button
+          type="button"
+          onClick={() => triggerOpenTicket({ categoria: 'consulta' })}
+          className="text-left rounded-2xl border border-slate-300/85 dark:border-border bg-card p-5 shadow-xs hover:border-primary/50 transition-all cursor-pointer"
+        >
           <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             Tickets Soporte
           </p>
           <p className="text-lg font-bold text-foreground mt-1 font-mono">{openCount}</p>
           <span className="text-xs text-muted-foreground font-medium mt-1 inline-block">
-            {openCount === 0 ? 'Sin pendientes' : `${openCount} en gestión`}
+            {openCount === 0 ? 'Abrir consulta →' : `${openCount} en gestión →`}
           </span>
-        </div>
+        </button>
 
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <button
+          type="button"
+          onClick={() => onNavigate?.('invoices')}
+          className="text-left rounded-2xl border border-slate-300/85 dark:border-border bg-card p-5 shadow-xs hover:border-primary/50 transition-all cursor-pointer"
+        >
           <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
             Comprobantes
           </p>
@@ -238,14 +324,14 @@ export default function DashboardFree({
           <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium mt-1 inline-block">
             {pagos.length > 0
               ? `$${totalPaid.toLocaleString(i18n.language || 'es-AR')} registrado`
-              : 'Al día'}
+              : 'Ver facturación →'}
           </span>
-        </div>
+        </button>
       </div>
 
-      {/* 3. Pagos Registrados (si existen) */}
+      {/* 3. Pagos Registrados */}
       {pagos.length > 0 && (
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-2xl border border-slate-300/85 dark:border-border bg-card p-6 shadow-xs">
           <div className="flex items-center justify-between gap-4 mb-4">
             <div className="flex items-center gap-2.5">
               <Receipt className="w-5 h-5 text-[#38BDF8]" />
@@ -295,38 +381,49 @@ export default function DashboardFree({
       )}
 
       {/* 4. Live Pulse Hub */}
-      <div>
-        <ServicePulseHub
-          theme={theme}
-          tier="none"
-          openTickets={openCount}
-          unreadNotifications={unreadCount}
-          notifications={notifications}
-          onOpenTickets={() => setTicketPanelOpen(true)}
-          onMarkRead={markRead}
-        />
-      </div>
+      <ServicePulseHub
+        theme={theme}
+        tier="none"
+        openTickets={openCount}
+        unreadNotifications={unreadCount}
+        notifications={notifications}
+        onOpenTickets={() => triggerOpenTicket({ categoria: 'consulta' })}
+        onMarkRead={markRead}
+      />
 
-      {/* 5. Vista Previa de Planes Disponibles */}
-      <div className="pt-2">
+      {/* 5. Activación Directa de Planes (Checkout en Modal sin Salir del Dashboard) */}
+      <div className="pt-1">
         <p className="mb-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-          {t('dashboard.vista_previa_planes', 'Soluciones y Planes Disponibles')}
+          {t('dashboard.vista_previa_planes', 'Activación Directa en 1 Clic (Sin Salir del Panel)')}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {PREVIEW_TIERS.map(({ tier, icon: Icon }, i) => {
+          {PREVIEW_TIERS.map(({ tier, planId, icon: Icon }, i) => {
             const planTheme = PLAN_THEMES[tier]
+            const catalogEntry = PLAN_CATALOG.find((c) => c.id === planId)
             return (
               <motion.div
                 key={tier}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
-                className="rounded-2xl border border-border bg-card p-6 shadow-sm flex flex-col justify-between"
+                transition={{ delay: i * 0.06 }}
+                className={`rounded-2xl border p-6 bg-card shadow-xs flex flex-col justify-between transition-all ${
+                  tier === 'avanzado'
+                    ? 'border-2 border-violet-500/50'
+                    : 'border-slate-300/85 dark:border-border'
+                }`}
               >
                 <div>
-                  <div className="w-10 h-10 rounded-xl border border-border bg-muted/40 flex items-center justify-center mb-3.5">
-                    <Icon className={`w-5 h-5 ${planTheme.accent}`} />
+                  <div className="flex items-center justify-between gap-2 mb-3.5">
+                    <div className="w-10 h-10 rounded-xl border border-border bg-muted/40 flex items-center justify-center">
+                      <Icon className={`w-5 h-5 ${planTheme.accent}`} />
+                    </div>
+                    {catalogEntry && (
+                      <span className="font-mono text-sm font-extrabold text-foreground">
+                        ${catalogEntry.precio.toLocaleString('es-AR')}
+                        <span className="text-[11px] font-normal text-muted-foreground">/mes</span>
+                      </span>
+                    )}
                   </div>
                   <h3 className="text-lg font-bold text-foreground">{planTheme.badge}</h3>
                   <p className="mt-1 text-xs text-muted-foreground font-medium">
@@ -347,14 +444,14 @@ export default function DashboardFree({
 
                 <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
                   <span className="text-[10px] font-mono text-muted-foreground">
-                    dashboard.{tier}.exe
+                    Pago directo CBU / PayPal
                   </span>
                   <button
                     type="button"
-                    onClick={() => navigate('/tienda')}
-                    className="text-xs font-bold text-[#38BDF8] hover:text-[#7DD3FC] flex items-center gap-1 cursor-pointer transition-colors"
+                    onClick={() => handleDirectPlanActivate(tier, planId)}
+                    className="text-xs font-bold text-[#4361EE] dark:text-[#38BDF8] hover:underline flex items-center gap-1 cursor-pointer transition-colors"
                   >
-                    <span>Ver detalle</span>
+                    <span>Activar ahora</span>
                     <ArrowRight size={12} />
                   </button>
                 </div>
@@ -364,22 +461,22 @@ export default function DashboardFree({
         </div>
       </div>
 
-      {/* 6. Support Ticket Panel Modal */}
-      <SupportTicketPanel
-        open={ticketPanelOpen}
-        onClose={() => setTicketPanelOpen(false)}
-        theme={theme}
-        tier="none"
-        tickets={tickets}
-        openCount={openCount}
-        submitting={submitting}
-        error={ticketError}
-        onSubmit={async (a, m, c) => {
-          await createTicket(a, m, c)
-        }}
-      />
+      {!onOpenTicketModal && (
+        <SupportTicketPanel
+          open={localTicketOpen}
+          onClose={() => setLocalTicketOpen(false)}
+          theme={theme}
+          tier="none"
+          tickets={tickets}
+          openCount={openCount}
+          submitting={submitting}
+          error={ticketError}
+          onSubmit={async (a, m, c) => {
+            await createTicket(a, m, c)
+          }}
+        />
+      )}
 
-      {/* Modal para adjuntar comprobante */}
       <AdjuntarComprobanteModal
         open={comprobanteModalOpen}
         onClose={() => setComprobanteModalOpen(false)}

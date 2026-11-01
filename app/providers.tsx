@@ -5,7 +5,7 @@
  */
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
@@ -14,7 +14,7 @@ import { ThemeProvider } from '@/core/theme/ThemeContext'
 import { PostHogProvider } from '@/lib/posthog/PostHogProvider'
 import dynamic from 'next/dynamic'
 import ThemedToaster from '@/components/shared/ThemedToaster'
-import '@/core/i18n/config'
+import i18n, { syncHtmlLangAttributes } from '@/core/i18n/config'
 
 const PremiumBackground = dynamic(() => import('@/components/Effects/PremiumBackground'), {
   ssr: false,
@@ -59,6 +59,19 @@ export default function Providers({ children }: { readonly children: React.React
   const enableVercelAnalytics =
     process.env.NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS !== 'false' &&
     (process.env.NODE_ENV === 'production' || enableVercelTelemetry)
+
+  useEffect(() => {
+    try {
+      const savedLang = localStorage.getItem('lang')
+      if (savedLang && savedLang !== i18n.language) {
+        void i18n.changeLanguage(savedLang)
+      } else {
+        syncHtmlLangAttributes(i18n.language)
+      }
+    } catch {
+      // safe fallback
+    }
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient}>

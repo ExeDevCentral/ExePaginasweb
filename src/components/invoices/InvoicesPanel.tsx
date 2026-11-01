@@ -240,7 +240,7 @@ export default function InvoicesPanel({
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-2xl border border-slate-300/85 dark:border-border bg-card p-6 shadow-sm">
           <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
             {t('invoices.total_pagado', 'Total Abonado')}
           </p>
@@ -254,7 +254,7 @@ export default function InvoicesPanel({
             Cuenta al día · Sin deudas
           </p>
         </div>
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-2xl border border-slate-300/85 dark:border-border bg-card p-6 shadow-sm">
           <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
             {t('invoices.pendientes', 'Facturas Pendientes')}
           </p>
@@ -269,7 +269,7 @@ export default function InvoicesPanel({
 
       {/* Invoice Table or Informative Empty State */}
       {invoices.length > 0 ? (
-        <div className="rounded-2xl border border-border bg-card p-4 overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-slate-300/85 dark:border-border bg-card p-4 overflow-hidden shadow-sm">
           <DataTable
             columns={columns}
             data={invoices}
@@ -285,8 +285,8 @@ export default function InvoicesPanel({
           />
         </div>
       ) : (
-        <div className="text-center py-14 border border-dashed border-border bg-card rounded-2xl p-8 shadow-sm space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-muted/40 border border-border flex items-center justify-center mx-auto text-[#38BDF8]">
+        <div className="text-center py-14 border border-dashed border-slate-300/90 dark:border-border bg-card rounded-2xl p-8 shadow-sm space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-muted/40 border border-slate-300/80 dark:border-border flex items-center justify-center mx-auto text-[#38BDF8]">
             <FileText className="w-7 h-7" />
           </div>
           <div>
@@ -307,7 +307,7 @@ export default function InvoicesPanel({
 
       {/* Historial de Pagos si existen registros en la base de datos */}
       {pagos.length > 0 && (
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4">
+        <div className="rounded-2xl border border-slate-300/85 dark:border-border bg-card p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2.5 pb-2 border-b border-border">
             <CreditCard className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <h3 className="text-sm font-bold text-foreground">Comprobantes y Pagos Registrados</h3>

@@ -1,15 +1,8 @@
 /**
  * © 2026 Exequiel Echevarria — ExePaginasWeb
- * Componente: InteractiveFeatureShowcase (Super Card 4 Pasos + Ventana Animada)
- *
- * Estructura solicitada:
- * - Columna Izquierda: 4 PASOS principales con selector de alta gama y docking pointer.
- * - Columna Derecha (Ventana ImagineArt):
- *   - Dock de píldoras frosted glass estilo ImagineArt ([ 01 ] [ 02 ] ...).
- *   - Barra láser animada sincronizada y delimitada al 100%.
- *   - Layout Split cinemático inspirado en ImagineArt:
- *     - Columna Visual (Mockup interactivo / Métrica / Telemetría real).
- *     - Columna de Contenido (Badge de categoría, título de gran impacto, explicación técnica de alta seriedad y garantías).
+ * Componente: InteractiveFeatureShowcase
+ * Diseño: Dashboard minimalista de alta precisión con telemetría visual SVG,
+ * avance automático continuo entre etapas y pasos, y soporte nativo Claro/Oscuro.
  */
 'use client'
 
@@ -18,21 +11,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Logo } from '@/components/layout/Logo'
 import {
-  Sparkles,
   Zap,
-  Calendar,
-  CreditCard,
   ShieldCheck,
-  ChevronRight,
   Play,
   Pause,
   Layers,
-  Search,
-  ExternalLink,
-  CheckCircle2,
   Lock,
   Check,
-  Clock,
   TrendingUp,
   ArrowRight,
   PhoneCall,
@@ -41,273 +26,363 @@ import {
   FileCode,
   Target,
   BarChart3,
-  Shield,
   Database,
-  Server,
   Cpu,
-  Activity,
   Globe,
   ArrowUpRight,
 } from 'lucide-react'
 import { trackEvent } from '@/core/analytics/trackEvent'
+
+interface SubStage {
+  id: string
+  label: string
+  icon: React.ElementType
+  eyebrow: string
+  title: string
+  description: string
+  tags: string[]
+  visual: {
+    type: 'ring' | 'chart' | 'code'
+    primaryMetric: string
+    primaryLabel: string
+    ringPercent?: number
+    secondaryMetrics: { label: string; value: string; accent?: boolean }[]
+    chartPoints?: string
+    codeSnippet?: { line: string; highlight?: boolean }[]
+  }
+}
 
 interface MainStep {
   id: string
   number: string
   title: string
   subtitle: string
-  badge: string
-  accentColor: string
+  accent: string
+  stages: SubStage[]
 }
 
-const MAIN_STEPS: MainStep[] = [
+const STEPS: MainStep[] = [
   {
-    id: 'cliente-nosotros',
+    id: 'trato-directo',
     number: '01',
-    title: 'El Cliente y Nosotros',
-    subtitle: 'Quiénes somos, metodología y tiempos',
-    badge: 'ATENCIÓN DIRECTA',
-    accentColor: '#06b6d4',
+    title: 'Trato Directo',
+    subtitle: 'Sin intermediarios ni agencias',
+    accent: '#06b6d4',
+    stages: [
+      {
+        id: 'diagnostico',
+        label: 'Diagnóstico',
+        icon: PhoneCall,
+        eyebrow: 'CONTACTO DIRECTO',
+        title: 'Hablás directo con quien construye tu sistema',
+        description:
+          'En 15 minutos definimos la arquitectura exacta para digitalizar tus ventas y reservas, sin vendedores ni pasamanos.',
+        tags: ['Atención de Fundador', 'Diagnóstico en 15m', 'Cero Burocracia'],
+        visual: {
+          type: 'ring',
+          primaryMetric: '100%',
+          primaryLabel: 'Trato con Ingeniería',
+          ringPercent: 100,
+          secondaryMetrics: [
+            { label: 'Tiempo de relevamiento', value: '15 min', accent: true },
+            { label: 'Intermediarios', value: '0 agencias' },
+            { label: 'Arquitecto a cargo', value: 'Exequiel E.' },
+          ],
+        },
+      },
+      {
+        id: 'presupuesto',
+        label: 'Propuesta Fija',
+        icon: Award,
+        eyebrow: 'TRANSPARENCIA TOTAL',
+        title: 'Presupuesto cerrado y plazos por contrato',
+        description:
+          'Recibís un desglose técnico claro con precio fijo en pesos o dólares. Sin costos ocultos ni adicionales sorpresivos.',
+        tags: ['Precio Fijo', 'Plazos Garantizados', '50% Anticipo'],
+        visual: {
+          type: 'chart',
+          primaryMetric: '$0',
+          primaryLabel: 'Costos Ocultos',
+          chartPoints: 'M 0 70 Q 45 65, 80 45 T 160 28 T 240 12',
+          secondaryMetrics: [
+            { label: 'Entrega promedio', value: '7 a 14 días', accent: true },
+            { label: 'Alquiler mensual', value: 'Ninguno' },
+          ],
+        },
+      },
+      {
+        id: 'entrega',
+        label: 'Llave en Mano',
+        icon: Rocket,
+        eyebrow: 'PROPIEDAD ABSOLUTA',
+        title: 'Código, dominio y cuentas 100% a tu nombre',
+        description:
+          'Al finalizar, transferimos el repositorio y las credenciales a tu titularidad. Nunca quedás cautivo de un proveedor.',
+        tags: ['Repositorio Propio', 'Dominio Tuyo', 'Soporte Directo'],
+        visual: {
+          type: 'ring',
+          primaryMetric: '100%',
+          primaryLabel: 'Titularidad del Cliente',
+          ringPercent: 100,
+          secondaryMetrics: [
+            { label: 'Repositorio GitHub', value: 'Transferido', accent: true },
+            { label: 'Comisión por ventas', value: '0%' },
+            { label: 'Dependencia mensual', value: 'Nula' },
+          ],
+        },
+      },
+    ],
   },
   {
-    id: 'produccion-ejecucion',
+    id: 'arquitectura-viva',
     number: '02',
-    title: 'Producción y Ejecución',
-    subtitle: 'Arquitectura en vivo, pagos y código puro',
-    badge: 'SISTEMAS REALES',
-    accentColor: '#10b981',
+    title: 'Ingeniería & Pagos',
+    subtitle: 'Stack moderno y cobros directos',
+    accent: '#10b981',
+    stages: [
+      {
+        id: 'nextjs',
+        label: 'Next.js 16 SSR',
+        icon: Cpu,
+        eyebrow: 'CÓDIGO PURO',
+        title: 'Ingeniería empresarial sin plantillas lentas',
+        description:
+          'Desarrollado en React 19 y Next.js 16. Tu plataforma compila en el servidor para cargar al instante en cualquier móvil.',
+        tags: ['Server-Side Rendering', '0 Plugins Basura', 'TypeScript Estricto'],
+        visual: {
+          type: 'code',
+          primaryMetric: '48 KB',
+          primaryLabel: 'Bundle Inicial Ultra-Liviano',
+          codeSnippet: [
+            { line: 'export async function CheckoutFlow() {' },
+            { line: '  const session = await edgeAuth.verify()', highlight: true },
+            { line: '  return <InstantPaymentGateway />' },
+            { line: '}' },
+          ],
+          secondaryMetrics: [
+            { label: 'Motor de render', value: 'Next.js 16 Edge', accent: true },
+            { label: 'Plantillas WordPress', value: '0%' },
+          ],
+        },
+      },
+      {
+        id: 'cobros',
+        label: 'Cobros Directos',
+        icon: Layers,
+        eyebrow: 'FINANZAS SIN INTERMEDIARIOS',
+        title: 'El dinero entra directo a tu CBU o Mercado Pago',
+        description:
+          'Integramos pasarelas oficiales con acreditación inmediata. No retenemos porcentajes ni tocamos tu recaudación.',
+        tags: ['Mercado Pago API', 'Transferencia CBU', '0% Comisión Nuestra'],
+        visual: {
+          type: 'chart',
+          primaryMetric: '0%',
+          primaryLabel: 'Comisión por Transacción',
+          chartPoints: 'M 0 75 Q 50 60, 95 40 T 175 20 T 240 8',
+          secondaryMetrics: [
+            { label: 'Liquidación', value: 'Directa a tu cuenta', accent: true },
+            { label: 'Conciliación', value: 'Automática 24/7' },
+          ],
+        },
+      },
+      {
+        id: 'cloud',
+        label: 'Base de Datos',
+        icon: Database,
+        eyebrow: 'SEGURIDAD BANCARIA',
+        title: 'PostgreSQL dedicado con respaldos diarios',
+        description:
+          'Tus clientes, turnos y ventas se almacenan con aislamiento criptográfico y copias de seguridad automáticas.',
+        tags: ['PostgreSQL Cloud', 'SSL / TLS 1.3', 'Backups Diarios'],
+        visual: {
+          type: 'ring',
+          primaryMetric: '99.9%',
+          primaryLabel: 'Uptime Global Edge',
+          ringPercent: 99,
+          secondaryMetrics: [
+            { label: 'Encriptación', value: 'AES-256 + SSL', accent: true },
+            { label: 'Nodos CDN', value: 'Multi-Región' },
+            { label: 'Respaldo', value: 'Automático' },
+          ],
+        },
+      },
+    ],
   },
   {
-    id: 'rendimiento-garantia',
+    id: 'rendimiento',
     number: '03',
-    title: 'Rendimiento & Garantía',
-    subtitle: '0.38s en Google y 100% propiedad tuya',
-    badge: 'CERO ALQUILERES',
-    accentColor: '#f59e0b',
+    title: 'Velocidad 0.38s',
+    subtitle: 'Auditoría Google 100/100 real',
+    accent: '#06b6d4',
+    stages: [
+      {
+        id: 'lighthouse',
+        label: 'Google 100/100',
+        icon: Zap,
+        eyebrow: 'VELOCIDAD EXTREMA',
+        title: 'Carga en 0.38 segundos comprobable en vivo',
+        description:
+          'Superamos el puntaje máximo en Google PageSpeed Insights. Una web instantánea retiene al doble de visitantes.',
+        tags: ['0.38s Carga Real', 'Core Web Vitals OK', 'Mobile First'],
+        visual: {
+          type: 'ring',
+          primaryMetric: '100',
+          primaryLabel: 'Google Lighthouse Score',
+          ringPercent: 100,
+          secondaryMetrics: [
+            { label: 'First Paint (FCP)', value: '0.38 seg', accent: true },
+            { label: 'Accesibilidad & SEO', value: '100 / 100' },
+            { label: 'Rebote por lentitud', value: 'Eliminado' },
+          ],
+        },
+      },
+      {
+        id: 'seo',
+        label: 'SEO Técnico',
+        icon: Globe,
+        eyebrow: 'POSICIONAMIENTO ORGÁNICO',
+        title: 'Indexación prioritaria en buscadores',
+        description:
+          'Incluimos metadatos dinámicos y marcado Schema.org para que tu negocio destaque en Google desde el primer día.',
+        tags: ['Schema.org JSON-LD', 'Sitemap Dinámico', 'OpenGraph Pro'],
+        visual: {
+          type: 'chart',
+          primaryMetric: '#1',
+          primaryLabel: 'Arquitectura SEO Semántica',
+          chartPoints: 'M 0 80 Q 60 70, 100 45 T 180 22 T 240 6',
+          secondaryMetrics: [
+            { label: 'Indexación Google', value: 'Instantánea', accent: true },
+            { label: 'Estructura HTML', value: '100% Semántica' },
+          ],
+        },
+      },
+      {
+        id: 'blindaje',
+        label: 'Blindaje Cloud',
+        icon: Lock,
+        eyebrow: 'CERO CAÍDAS',
+        title: 'Inmune a picos de tráfico y ataques',
+        description:
+          'Despliegue sobre red distribuida con mitigación DDoS automática. Tu sistema responde igual con 10 o 10.000 usuarios.',
+        tags: ['Firewall WAF Activo', 'Auto-Escalado', ' Monitoreo 24/7'],
+        visual: {
+          type: 'code',
+          primaryMetric: '24/7',
+          primaryLabel: 'Protección Edge Activa',
+          codeSnippet: [
+            { line: '[WAF] Edge Firewall: ACTIVE' },
+            { line: '[TLS] Strict-Transport-Security: max-age=63072000', highlight: true },
+            { line: '[CDN] Cache-Control: public, s-maxage=31536000' },
+            { line: '[STATUS] 200 OK · Latency: 14ms' },
+          ],
+          secondaryMetrics: [
+            { label: 'Latencia promedio', value: '14 ms', accent: true },
+            { label: 'Certificado SSL', value: 'Renovación Auto' },
+          ],
+        },
+      },
+    ],
   },
   {
-    id: 'publicidad-crecimiento',
+    id: 'conversion-escala',
     number: '04',
-    title: 'Publicidad & Crecimiento',
-    subtitle: 'Campañas que convierten el doble',
-    badge: 'MÁQUINAS DE VENTAS',
-    accentColor: '#a855f7',
+    title: 'Conversión & Escala',
+    subtitle: 'Diseñado para facturar más',
+    accent: '#8b5cf6',
+    stages: [
+      {
+        id: 'embudo',
+        label: 'Embudo Directo',
+        icon: Target,
+        eyebrow: 'ARQUITECTURA DE VENTAS',
+        title: 'De visitante a cliente en 3 clics',
+        description:
+          'Interfaces limpias y libres de distracciones que guían al usuario directo a reservar o comprar en segundos.',
+        tags: ['UX de Alta Conversión', 'Checkout en 3 Clics', 'Sin Fricción'],
+        visual: {
+          type: 'chart',
+          primaryMetric: '+210%',
+          primaryLabel: 'Incremento en Conversión',
+          chartPoints: 'M 0 78 Q 55 68, 105 38 T 185 18 T 240 5',
+          secondaryMetrics: [
+            { label: 'Pasos al pago', value: 'Solo 3 clics', accent: true },
+            { label: 'Abandono de carrito', value: '-65%' },
+          ],
+        },
+      },
+      {
+        id: 'metricas',
+        label: 'Pixel & Analytics',
+        icon: BarChart3,
+        eyebrow: 'MEDICIÓN EXACTA',
+        title: 'Rastreo quirúrgico para tus campañas',
+        description:
+          'Dejamos configurados los eventos de conversión para Meta Ads y Google Ads para optimizar cada peso invertido.',
+        tags: ['Meta Pixel API', 'Google Analytics 4', 'Eventos Medidos'],
+        visual: {
+          type: 'ring',
+          primaryMetric: '3.4x',
+          primaryLabel: 'Retorno Publicitario (ROAS)',
+          ringPercent: 88,
+          secondaryMetrics: [
+            { label: 'Tracking de eventos', value: '100% Medido', accent: true },
+            { label: 'Costo por Lead', value: '-48% promedio' },
+            { label: 'Atribución', value: 'Tiempo Real' },
+          ],
+        },
+      },
+      {
+        id: 'autonomia',
+        label: 'Panel Autónomo',
+        icon: FileCode,
+        eyebrow: 'CONTROL TOTAL',
+        title: 'Administrá precios, stock y clientes desde el celular',
+        description:
+          'Panel de control intuitivo para gestionar tu operación en segundos sin depender de programadores.',
+        tags: ['Panel Autogestionable', '100% Mobile', 'Reportes Claros'],
+        visual: {
+          type: 'code',
+          primaryMetric: '2 seg',
+          primaryLabel: 'Actualización en Tiempo Real',
+          codeSnippet: [
+            { line: '✓ Catálogo sincronizado en vivo' },
+            { line: '✓ Reserva #1042 confirmada y cobrada', highlight: true },
+            { line: '✓ Notificación enviada al cliente' },
+            { line: '✓ Balance diario actualizado' },
+          ],
+          secondaryMetrics: [
+            { label: 'Curva de aprendizaje', value: 'Inmediata', accent: true },
+            { label: 'Soporte técnico', value: 'Incluido' },
+          ],
+        },
+      },
+    ],
   },
 ]
-
-interface SubStage {
-  id: string
-  number: string
-  label: string
-  tag: string
-  accentColor: string
-  icon: React.ElementType
-}
-
-const STEP_SUBSTAGES: Record<number, SubStage[]> = {
-  // 0: El Cliente y Nosotros
-  0: [
-    {
-      id: 'c1',
-      number: '01',
-      label: 'Relevamiento',
-      tag: 'MANO A MANO',
-      accentColor: '#06b6d4',
-      icon: PhoneCall,
-    },
-    {
-      id: 'c2',
-      number: '02',
-      label: 'Presupuesto',
-      tag: '1 SOLO PAGO',
-      accentColor: '#10b981',
-      icon: Award,
-    },
-    {
-      id: 'c3',
-      number: '03',
-      label: '7-15 Días',
-      tag: 'TIEMPO RÉCORD',
-      accentColor: '#f59e0b',
-      icon: Clock,
-    },
-    {
-      id: 'c4',
-      number: '04',
-      label: 'Pruebas',
-      tag: 'LINK PRIVADO',
-      accentColor: '#22c55e',
-      icon: FileCode,
-    },
-    {
-      id: 'c5',
-      number: '05',
-      label: 'Lanzamiento',
-      tag: '100% TUYO',
-      accentColor: '#a855f7',
-      icon: Rocket,
-    },
-  ],
-  // 1: Producción y Ejecución (Seriedad Técnica y Pasos Reales)
-  1: [
-    {
-      id: 'p1',
-      number: '01',
-      label: 'Next.js 16',
-      tag: 'CÓDIGO PURO',
-      accentColor: '#10b981',
-      icon: FileCode,
-    },
-    {
-      id: 'p2',
-      number: '02',
-      label: 'PostgreSQL',
-      tag: 'SEGURIDAD RLS',
-      accentColor: '#06b6d4',
-      icon: Database,
-    },
-    {
-      id: 'p3',
-      number: '03',
-      label: 'Cobros CBU',
-      tag: '0% COMISIÓN',
-      accentColor: '#f59e0b',
-      icon: CreditCard,
-    },
-    {
-      id: 'p4',
-      number: '04',
-      label: 'Despacho Cloud',
-      tag: 'TIEMPO REAL',
-      accentColor: '#22c55e',
-      icon: Activity,
-    },
-    {
-      id: 'p5',
-      number: '05',
-      label: 'Edge CDN',
-      tag: 'CDN BUENOS AIRES',
-      accentColor: '#a855f7',
-      icon: Server,
-    },
-  ],
-  // 2: Rendimiento & Garantía Total
-  2: [
-    {
-      id: 'r1',
-      number: '01',
-      label: 'Google 100',
-      tag: '100/100 VITALS',
-      accentColor: '#f59e0b',
-      icon: Search,
-    },
-    {
-      id: 'r2',
-      number: '02',
-      label: '0.38s Carga',
-      tag: 'INSTANTÁNEO',
-      accentColor: '#06b6d4',
-      icon: Zap,
-    },
-    {
-      id: 'r3',
-      number: '03',
-      label: 'SSL 256',
-      tag: 'CIFRADO TOTAL',
-      accentColor: '#10b981',
-      icon: Lock,
-    },
-    {
-      id: 'r4',
-      number: '04',
-      label: 'Código Propio',
-      tag: 'SIN ATADURAS',
-      accentColor: '#a855f7',
-      icon: ShieldCheck,
-    },
-    {
-      id: 'r5',
-      number: '05',
-      label: 'Soporte 24/7',
-      tag: 'SOPORTE 24/7',
-      accentColor: '#22c55e',
-      icon: Award,
-    },
-  ],
-  // 3: Publicidad & Crecimiento
-  3: [
-    {
-      id: 'm1',
-      number: '01',
-      label: 'Píxel Meta',
-      tag: 'TRACKING 100%',
-      accentColor: '#a855f7',
-      icon: Target,
-    },
-    {
-      id: 'm2',
-      number: '02',
-      label: '0% Rebote',
-      tag: '0% REBOTE',
-      accentColor: '#06b6d4',
-      icon: Zap,
-    },
-    {
-      id: 'm3',
-      number: '03',
-      label: 'Embudo 1 Clic',
-      tag: 'ALTA CONVERSIÓN',
-      accentColor: '#10b981',
-      icon: TrendingUp,
-    },
-    {
-      id: 'm4',
-      number: '04',
-      label: 'Retargeting CRM',
-      tag: 'AUTOMATIZADO',
-      accentColor: '#22c55e',
-      icon: Target,
-    },
-    {
-      id: 'm5',
-      number: '05',
-      label: 'ROAS 2X',
-      tag: 'MÁQUINA DE VENTAS',
-      accentColor: '#f59e0b',
-      icon: BarChart3,
-    },
-  ],
-}
 
 export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
   className = '',
 }) => {
-  // Paso principal seleccionado en la columna izquierda (1 de 4)
-  const [activeMainStep, setActiveMainStep] = useState(0)
-
-  // Sub-etapa del circuito láser actual (1 de 5)
-  const [laserIdx, setLaserIdx] = useState(0)
-  const [isLaserPaused, setIsLaserPaused] = useState(false)
+  const [activeStepIdx, setActiveStepIdx] = useState(0)
+  const [subStageIdx, setSubStageIdx] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
   const [elapsed, setElapsed] = useState(0)
 
-  const STEP_DURATION = 4200 // 4.2 segundos por sub-etapa
+  const STAGE_DURATION = 4500 // 4.5s por sub-etapa
 
-  // Timer fluido continuo que avanza por las 5 sub-etapas y al terminar la 5ta salta automáticamente al siguiente paso principal
   useEffect(() => {
-    if (isLaserPaused) return
+    if (isPaused) return
 
     const startTime = Date.now()
-
     const timer = setInterval(() => {
       const diff = Date.now() - startTime
-      if (diff >= STEP_DURATION) {
+      if (diff >= STAGE_DURATION) {
         setElapsed(0)
-        const total = STEP_SUBSTAGES[activeMainStep]?.length ?? 5
-        setLaserIdx((prev) => {
-          if (prev + 1 >= total) {
-            // Completó todas las subetapas del paso principal actual -> avanza automáticamente al siguiente paso principal
-            const nextStep = (activeMainStep + 1) % MAIN_STEPS.length
-            setActiveMainStep(nextStep)
+        const currentStagesCount = STEPS[activeStepIdx]?.stages.length ?? 3
+        setSubStageIdx((prev) => {
+          if (prev + 1 >= currentStagesCount) {
+            const nextMain = (activeStepIdx + 1) % STEPS.length
+            setActiveStepIdx(nextMain)
             return 0
           }
           return prev + 1
@@ -318,1550 +393,389 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
     }, 40)
 
     return () => clearInterval(timer)
-  }, [activeMainStep, isLaserPaused, laserIdx])
+  }, [activeStepIdx, subStageIdx, isPaused])
 
-  const currentMain = MAIN_STEPS[activeMainStep] ?? MAIN_STEPS[0]!
-  const currentSubStages = STEP_SUBSTAGES[activeMainStep] ?? STEP_SUBSTAGES[0]!
-  const totalStages = currentSubStages.length
-  // Progreso continuo acumulado a lo largo de todo el circuito (0% a 100%)
-  const continuousProgress = ((laserIdx + Math.min(elapsed / STEP_DURATION, 1)) / totalStages) * 100
+  const currentStep = STEPS[activeStepIdx] ?? STEPS[0]!
+  const currentStage = currentStep.stages[subStageIdx] ?? currentStep.stages[0]!
+  const totalStages = currentStep.stages.length
+  const stepProgress = ((subStageIdx + Math.min(1, elapsed / STAGE_DURATION)) / totalStages) * 100
 
   return (
     <section
-      id="super-card-showcase"
-      aria-label="Super Card de ExePaginasWeb"
-      className={`relative w-full max-w-7xl mx-auto py-12 sm:py-16 px-4 sm:px-6 lg:px-8 select-none ${className}`}
+      id="arquitectura-en-vivo"
+      aria-label="Recorrido interactivo de arquitectura y metodología"
+      className={`relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 ${className}`}
     >
-      {/* CABECERA EXPLICATIVA */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-950/40 text-cyan-300 font-mono text-xs uppercase tracking-wider mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            Metodología & Plataformas en Vivo
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
-            Así transformamos tu negocio en{' '}
-            <span className="text-cyan-600 dark:text-cyan-400">ExePaginasWeb.com</span>
-          </h2>
+      {/* CABECERA MINIMALISTA */}
+      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] text-slate-700 dark:text-cyan-400 font-mono text-[11px] uppercase tracking-widest mb-3 shadow-2xs">
+          <ShieldCheck className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+          <span>Ingeniería Transparente</span>
         </div>
 
-        <span className="hidden sm:inline-block font-mono text-xs text-neutral-400">
-          Elegí un paso a la izquierda para ver su simulación interactiva
-        </span>
+        <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+          Cómo construimos y escalamos tu{' '}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-emerald-600 dark:from-cyan-400 dark:to-emerald-400">
+            activo digital
+          </span>
+        </h2>
       </div>
 
       {/* ==============================================================
-          ESTRUCTURA PRINCIPAL: 4 PASOS (IZQUIERDA) + VENTANA IMAGINEART (DERECHA)
+          SUPER CARD MINIMALISTA ESTILO DASHBOARD (CLARO / OSCURO)
          ============================================================== */}
-      <div className="relative rounded-3xl border border-slate-200 dark:border-neutral-800 bg-[#FAF7F2] dark:bg-[#070a13] shadow-[0_20px_50px_rgba(0,0,0,0.08)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col lg:flex-row min-h-[720px] lg:h-[750px]">
+      <div className="relative rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-white/[0.08] bg-white dark:bg-[#070b14] shadow-[0_20px_60px_-15px_rgba(15,23,42,0.07)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85)] overflow-hidden flex flex-col lg:flex-row min-h-[520px]">
         {/* ==============================================================
-            COLUMNA IZQUIERDA (36%): LOS 4 PASOS CON DISEÑO DE ALTA GAMA (MODO CLARO Y OSCURO)
+            SIDEBAR IZQUIERDO MINIMALISTA (29%)
            ============================================================== */}
-        <div className="relative w-full lg:flex-[0_0_36%] p-6 sm:p-7 lg:p-8 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-neutral-800/80 flex flex-col justify-between bg-[#F2ECE1] dark:bg-[#080d1a]/95 z-20">
-          <div className="space-y-3.5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-neutral-800/80">
+        <div className="w-full lg:w-[29%] p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-slate-200/80 dark:border-white/[0.07] bg-slate-50/70 dark:bg-[#050811] flex flex-col justify-between">
+          <div>
+            {/* Brand Header */}
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200/70 dark:border-white/[0.06]">
               <div className="flex items-center gap-2.5">
-                <Logo size={26} />
-                <div>
-                  <span className="font-mono font-bold text-xs text-slate-900 dark:text-white block tracking-wide">
-                    ExePaginasWeb
-                  </span>
-                  <span className="font-mono text-[10px] text-slate-500 dark:text-neutral-400 block">
-                    // 4 PASOS PRINCIPALES
-                  </span>
-                </div>
+                <Logo size={22} />
+                <span className="font-mono font-bold text-xs text-slate-900 dark:text-white tracking-wide">
+                  ExePaginasWeb
+                </span>
               </div>
-              <span className="text-cyan-600 dark:text-cyan-400 font-bold font-mono text-xs">
-                {activeMainStep + 1} DE 4 ACTIVO
+              <span className="font-mono text-[11px] text-slate-400 dark:text-neutral-500">
+                0{activeStepIdx + 1} / 04
               </span>
             </div>
 
-            {MAIN_STEPS.map((step, idx) => {
-              const isActive = idx === activeMainStep
+            {/* Lista de 4 Pasos Limpia */}
+            <div className="space-y-2">
+              {STEPS.map((step, idx) => {
+                const isActive = idx === activeStepIdx
 
-              return (
-                <div
-                  key={step.id}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => {
-                    setActiveMainStep(idx)
-                    setLaserIdx(0)
-                    setElapsed(0)
-                    trackEvent('main_step_selected', { step: step.id })
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      setActiveMainStep(idx)
-                      setLaserIdx(0)
+                return (
+                  <button
+                    key={step.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveStepIdx(idx)
+                      setSubStageIdx(0)
                       setElapsed(0)
-                    }
-                  }}
-                  className={`relative flex items-center justify-between p-4 sm:p-4.5 rounded-2xl transition-all duration-300 cursor-pointer text-left overflow-hidden ${
-                    isActive
-                      ? 'bg-cyan-50/90 dark:bg-[#0c2438] dark:bg-gradient-to-r dark:from-[#0c2438] dark:via-[#0c1e30] dark:to-[#08121f] border-2 border-cyan-600 dark:border-cyan-400/90 shadow-md shadow-cyan-600/10 dark:shadow-[0_0_30px_rgba(6,182,212,0.25)] ring-1 ring-cyan-600/20 dark:ring-cyan-400/20 scale-[1.01]'
-                      : 'bg-white dark:bg-[#091122]/70 hover:bg-[#FAF7F2] dark:hover:bg-[#0d1830] border border-slate-200 dark:border-neutral-800/80 hover:border-slate-300 dark:hover:border-neutral-700 text-slate-700 dark:text-neutral-300 hover:scale-[1.005] group'
-                  }`}
-                >
-                  {/* BARRITA DE LUZ NEÓN LATERAL CUANDO ESTÁ ACTIVO */}
-                  {isActive && (
-                    <div className="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full bg-cyan-500 dark:bg-cyan-400 shadow-[0_0_14px_#22d3ee]" />
-                  )}
+                      trackEvent('main_step_selected', { step: step.id })
+                    }}
+                    className={`relative w-full text-left p-3.5 rounded-xl transition-colors duration-200 cursor-pointer overflow-hidden group ${
+                      isActive
+                        ? 'bg-white dark:bg-[#0c1424] border border-cyan-500/50 dark:border-cyan-400/40 shadow-sm dark:shadow-[0_0_25px_-5px_rgba(6,182,212,0.2)]'
+                        : 'bg-transparent hover:bg-slate-200/50 dark:hover:bg-white/[0.03] border border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-colors ${
+                          isActive
+                            ? 'bg-cyan-600 text-white dark:bg-cyan-500/20 dark:text-cyan-300 dark:border dark:border-cyan-400/40'
+                            : 'bg-slate-200/70 text-slate-600 dark:bg-white/[0.04] dark:text-neutral-500 group-hover:text-slate-900 dark:group-hover:text-neutral-300'
+                        }`}
+                      >
+                        {step.number}
+                      </span>
 
-                  <div className="flex items-center gap-4 min-w-0">
-                    <span
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center font-mono font-bold text-base shrink-0 transition-all ${
-                        isActive
-                          ? 'bg-cyan-600 text-white dark:bg-cyan-500/20 dark:text-cyan-300 border border-cyan-600 dark:border-cyan-400/60 shadow-xs'
-                          : 'bg-slate-200/90 text-slate-800 dark:bg-neutral-900 dark:text-neutral-400 border border-slate-300 dark:border-neutral-800 group-hover:text-slate-900 dark:group-hover:text-neutral-200 group-hover:border-slate-400 dark:group-hover:border-neutral-700'
-                      }`}
-                    >
-                      {step.number}
-                    </span>
-
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4
-                          className={`text-base sm:text-lg font-bold tracking-tight truncate transition-colors ${
+                      <div className="min-w-0 flex-1">
+                        <h3
+                          className={`text-sm font-bold truncate transition-colors ${
                             isActive
                               ? 'text-slate-900 dark:text-white'
-                              : 'text-slate-800 dark:text-neutral-200 group-hover:text-slate-950 dark:group-hover:text-white'
+                              : 'text-slate-600 dark:text-neutral-400 group-hover:text-slate-900 dark:group-hover:text-neutral-200'
                           }`}
                         >
                           {step.title}
-                        </h4>
-                        {isActive ? (
-                          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-100 text-cyan-900 border border-cyan-300 dark:bg-cyan-500/20 dark:text-cyan-300 dark:border-cyan-400/40">
-                            ETAPA {laserIdx + 1}/5
-                          </span>
-                        ) : idx < activeMainStep ? (
-                          <span className="hidden sm:inline-flex items-center gap-0.5 text-[10px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
-                            <Check className="w-3 h-3" /> LISTO
-                          </span>
-                        ) : idx === (activeMainStep + 1) % MAIN_STEPS.length ? (
-                          <span className="hidden sm:inline-block text-[10px] font-mono text-slate-500 dark:text-neutral-500 font-semibold">
-                            SIGUIENTE
-                          </span>
-                        ) : null}
+                        </h3>
+                        <p
+                          className={`text-xs truncate mt-0.5 transition-colors ${
+                            isActive
+                              ? 'text-slate-500 dark:text-slate-400'
+                              : 'text-slate-400 dark:text-neutral-600'
+                          }`}
+                        >
+                          {step.subtitle}
+                        </p>
                       </div>
-                      <p
-                        className={`text-xs sm:text-sm truncate mt-0.5 transition-colors ${
-                          isActive
-                            ? 'text-cyan-950 dark:text-cyan-100/90 font-medium'
-                            : 'text-slate-600 dark:text-neutral-400 group-hover:text-slate-800 dark:group-hover:text-neutral-300'
-                        }`}
-                      >
-                        {step.subtitle}
-                      </p>
                     </div>
-                  </div>
 
-                  {/* FLECHA INDICADORA TRIANGULAR APUNTANDO A LA VENTANA DERECHA */}
-                  {isActive ? (
-                    <motion.div
-                      layoutId="mainActivePointerArrow"
-                      className="hidden lg:block absolute -right-3.5 top-1/2 -translate-y-1/2 w-0 h-0 border-y-[11px] border-y-transparent border-l-[14px] border-l-cyan-500 dark:border-l-cyan-400 z-30 filter drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]"
-                      transition={{ type: 'spring', stiffness: 500, damping: 32 }}
-                    />
-                  ) : (
-                    <ChevronRight className="w-4 h-4 text-slate-400 dark:text-neutral-600 group-hover:text-slate-700 dark:group-hover:text-neutral-400 group-hover:translate-x-0.5 transition-all shrink-0" />
-                  )}
-                </div>
-              )
-            })}
+                    {/* Barra de progreso sutil integrada solo en el paso activo */}
+                    {isActive && (
+                      <div className="absolute left-0 right-0 bottom-0 h-[2px] bg-slate-100 dark:bg-white/[0.05]">
+                        <div
+                          className="h-full bg-cyan-500 dark:bg-cyan-400"
+                          style={{
+                            width: `${Math.max(4, stepProgress)}%`,
+                            transition: isPaused ? 'none' : 'width 50ms linear',
+                          }}
+                        />
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-200 dark:border-neutral-800/80 flex items-center justify-between font-mono text-xs sm:text-sm text-slate-500 dark:text-neutral-400">
-            <span>Hacé clic en cualquier paso</span>
-            <span className="text-cyan-600 dark:text-cyan-400 font-bold">{currentMain.badge}</span>
+          {/* Nota discreta al pie del sidebar */}
+          <div className="hidden lg:flex items-center justify-between pt-4 mt-4 border-t border-slate-200/70 dark:border-white/[0.06] text-[11px] font-mono text-slate-400 dark:text-neutral-500">
+            <span>Secuencia automática</span>
+            <span className="text-cyan-600 dark:text-cyan-400 font-semibold">Activa</span>
           </div>
         </div>
 
         {/* ==============================================================
-            COLUMNA DERECHA (64%): LA VENTANA IMAGINEART SPLIT SHOWCASE (MODO CLARO Y OSCURO)
+            CANVAS PRINCIPAL DERECHO (71%): VISUAL & DESPEJADO
            ============================================================== */}
         <div
-          onMouseEnter={() => setIsLaserPaused(true)}
-          onMouseLeave={() => setIsLaserPaused(false)}
-          className="relative w-full lg:flex-[1_1_64%] p-6 sm:p-8 lg:p-9 flex flex-col justify-between overflow-hidden bg-[#FAF7F2] dark:bg-[#070c18] bg-gradient-to-b from-[#FAF7F2] via-white to-[#F2ECE1] dark:from-[#0a0f20] dark:via-[#070c18] dark:to-[#04060c]"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          className="relative w-full lg:w-[71%] p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white dark:bg-[#070b14]"
         >
-          {/* LUZ AMBIENTAL AMBILIGHT VIBRANTE */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-10 rounded-full blur-[140px] opacity-25 dark:opacity-30 transition-all duration-700 pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at 60% 40%, ${currentMain.accentColor}40, transparent 70%)`,
-            }}
-          />
-
-          {/* ==============================================================
-              CABECERA MINIMALISTA Y SEGMENTED CONTROL EJECUTIVO
-             ============================================================== */}
-          <div className="space-y-3 pb-3 border-b border-slate-200 dark:border-neutral-800/80">
-            <div className="flex items-center justify-between font-mono text-xs sm:text-sm">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <span
-                  className="w-2 h-2 rounded-full inline-block shrink-0"
-                  style={{ backgroundColor: currentMain.accentColor }}
-                />
-                <span className="text-slate-900 dark:text-white font-bold truncate">
-                  {currentMain.number} // {currentMain.title}
-                </span>
-                <span className="text-slate-500 dark:text-neutral-400 hidden md:inline truncate">
-                  — {currentMain.subtitle}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2.5 shrink-0">
-                <span className="text-[11px] font-mono text-slate-500 dark:text-neutral-400 hidden sm:inline">
-                  Paso {activeMainStep + 1} de 4
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setIsLaserPaused(!isLaserPaused)}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300 cursor-pointer transition-colors font-sans text-xs"
-                >
-                  {isLaserPaused ? (
-                    <Play className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                  ) : (
-                    <Pause className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
-                  )}
-                  <span>{isLaserPaused ? 'Reanudar' : 'Pausa'}</span>
-                </button>
-              </div>
+          {/* BARRA SUPERIOR: SUB-TABS MINIMALISTAS + PAUSA */}
+          <div className="flex items-center justify-between gap-3 pb-5 border-b border-slate-100 dark:border-white/[0.06]">
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-[#0c1220] border border-slate-200/60 dark:border-white/[0.06]">
+              {currentStep.stages.map((stg, i) => {
+                const isCurrent = i === subStageIdx
+                const Icon = stg.icon
+                return (
+                  <button
+                    key={stg.id}
+                    type="button"
+                    onClick={() => {
+                      setSubStageIdx(i)
+                      setElapsed(0)
+                    }}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-mono text-xs transition-colors duration-150 cursor-pointer ${
+                      isCurrent
+                        ? 'bg-white text-slate-900 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border dark:border-cyan-400/30 font-bold shadow-2xs'
+                        : 'text-slate-500 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white font-medium'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5 shrink-0" />
+                    <span>{stg.label}</span>
+                  </button>
+                )
+              })}
             </div>
 
-            {/* SEGMENTED CONTROL DE ETAPAS CON PROGRESO INTEGRADO */}
-            <div className="space-y-1.5">
-              <div className="grid grid-cols-5 gap-1 p-1 rounded-xl bg-slate-200/60 dark:bg-neutral-900/80 border border-slate-200/80 dark:border-neutral-800">
-                {currentSubStages.map((stg, i) => {
-                  const isCurrent = i === laserIdx
-                  const StgIcon = stg.icon
-
-                  return (
-                    <button
-                      key={stg.id}
-                      type="button"
-                      onClick={() => {
-                        setLaserIdx(i)
-                        setElapsed(0)
-                      }}
-                      className={`relative flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg font-mono text-[11px] sm:text-xs transition-colors duration-150 cursor-pointer min-w-0 ${
-                        isCurrent
-                          ? 'bg-white text-slate-900 dark:bg-cyan-500 dark:text-slate-950 font-bold shadow-xs'
-                          : 'text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200 font-medium'
-                      }`}
-                    >
-                      <StgIcon className="w-3.5 h-3.5 shrink-0" />
-                      <span className="truncate">{stg.label}</span>
-                    </button>
-                  )
-                })}
-              </div>
-
-              {/* LÍNEA DE PROGRESO DISCRETA Y ELEGANTE */}
-              <div className="w-full h-0.5 bg-slate-200 dark:bg-neutral-800/80 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-cyan-500 rounded-full transition-all duration-75"
-                  style={{
-                    width: `${Math.max(2, continuousProgress)}%`,
-                    transition: isLaserPaused ? 'none' : 'width 50ms linear',
-                  }}
-                />
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => setIsPaused(!isPaused)}
+              aria-label={isPaused ? 'Reanudar rotación' : 'Pausar rotación'}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:text-neutral-500 dark:hover:text-neutral-300 hover:bg-slate-100 dark:hover:bg-white/[0.04] transition-colors cursor-pointer font-mono text-xs"
+            >
+              {isPaused ? (
+                <Play className="w-3.5 h-3.5 text-emerald-500" />
+              ) : (
+                <Pause className="w-3.5 h-3.5 text-cyan-500" />
+              )}
+              <span className="hidden sm:inline">{isPaused ? 'Reanudar' : 'Pausa'}</span>
+            </button>
           </div>
 
-          {/* ==============================================================
-              SPLIT SHOWCASE CARD CINEMÁTICO ESTILO IMAGINEART
-             ============================================================== */}
-          <div className="my-auto py-2">
+          {/* ESCENARIO CENTRAL: WIDGET TELEMÉTRICO + COPY CONCISO */}
+          <div className="my-auto py-6">
             <AnimatePresence mode="wait">
-              {/* ==========================================================
-                  PASO 01: EL CLIENTE Y NOSOTROS (5 SUB-ETAPAS)
-                 ========================================================== */}
-              {activeMainStep === 0 && (
-                <motion.div
-                  key={`p0-${laserIdx}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="rounded-2xl border border-slate-200 dark:border-cyan-500/30 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
-                >
-                  {laserIdx === 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      {/* Lado Izquierdo: Mockup Visual ImagineArt */}
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-cyan-500/30 bg-[#FAF7F2] dark:bg-[#09182d] dark:bg-gradient-to-br dark:from-[#09182d] dark:to-[#040d1a] p-4.5 space-y-3 shadow-inner">
-                        <div className="flex items-center justify-between text-xs font-mono pb-2 border-b border-cyan-500/20">
-                          <span className="text-cyan-400 font-bold flex items-center gap-1.5">
-                            <PhoneCall className="w-3.5 h-3.5" />
-                            Llamada Directa
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            EN VIVO
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3.5">
-                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-neutral-900 via-neutral-950 to-[#071322] border border-cyan-500/40 flex items-center justify-center shadow-lg shadow-cyan-500/20 shrink-0 p-1.5 relative group">
-                            <Logo size={36} variant="dark" />
-                            <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-400 border-2 border-neutral-950 shadow-[0_0_8px_#34d399]" />
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-1.5">
-                              <h4 className="text-slate-900 dark:text-white font-bold text-sm sm:text-base">
-                                Exequiel Echevarria
-                              </h4>
-                              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
-                            </div>
-                            <p className="text-[11px] text-neutral-400 font-mono">
-                              Fundador & Arquitecto de Software · ExePaginasWeb
-                            </p>
-                          </div>
-                        </div>
-                        <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/80 border border-slate-200 dark:border-neutral-800 text-xs font-mono space-y-1">
-                          <div className="flex justify-between text-neutral-400 text-[11px]">
-                            <span>Tiempo de diagnóstico:</span>
-                            <span className="text-cyan-400 font-bold">15 minutos</span>
-                          </div>
-                          <div className="flex justify-between text-neutral-400 text-[11px]">
-                            <span>Canal:</span>
-                            <span className="text-emerald-400 font-bold">WhatsApp / Meet</span>
-                          </div>
-                        </div>
+              <motion.div
+                key={`${currentStep.id}-${currentStage.id}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.16 }}
+                className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-center"
+              >
+                {/* COLUMNA VISUAL (5 COLS): TARJETA DASHBOARD CON GRÁFICOS SVG */}
+                <div className="md:col-span-5 rounded-2xl p-5 bg-slate-50/90 dark:bg-[#0b111e] border border-slate-200/80 dark:border-cyan-500/25 shadow-sm dark:shadow-[0_0_35px_-12px_rgba(6,182,212,0.2)] space-y-4">
+                  {/* Visual Tipo 1: Anillo de Progreso (Estilo Video 83% / 100%) */}
+                  {currentStage.visual.type === 'ring' && (
+                    <div className="flex items-center gap-4 pb-3 border-b border-slate-200/70 dark:border-white/[0.06]">
+                      <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
+                        <svg className="w-full h-full -rotate-90" viewBox="0 0 64 64">
+                          <circle
+                            cx="32"
+                            cy="32"
+                            r="26"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="5"
+                            className="text-slate-200 dark:text-white/[0.07]"
+                          />
+                          <circle
+                            cx="32"
+                            cy="32"
+                            r="26"
+                            fill="none"
+                            stroke={currentStep.accent}
+                            strokeWidth="5"
+                            strokeLinecap="round"
+                            strokeDasharray={163.36}
+                            strokeDashoffset={
+                              163.36 - (163.36 * (currentStage.visual.ringPercent ?? 100)) / 100
+                            }
+                          />
+                        </svg>
+                        <span className="absolute font-mono font-extrabold text-sm text-slate-900 dark:text-white">
+                          {currentStage.visual.primaryMetric}
+                        </span>
                       </div>
-
-                      {/* Lado Derecho: Contenido Editorial y Propuesta */}
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 font-mono text-xs font-bold border border-cyan-500/30 dark:border-cyan-400/30">
-                          <Sparkles className="w-3.5 h-3.5" />
-                          RELEVAMIENTO EXPRESS · SIN INTERMEDIARIOS
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Hablás mano a mano con quien escribe tu código
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Sin ejecutivos de ventas ni pasamanos de agencias. En 15 minutos
-                          identificamos exactamente qué necesita tu negocio para vender más por
-                          internet y automatizar sus reservas.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ 0 Pasamanos
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Diagnóstico Claro
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-cyan-50 dark:bg-neutral-900 border border-cyan-200 dark:border-neutral-800 text-cyan-800 dark:text-cyan-300">
-                            ✓ Sin Tecnicismos
-                          </span>
-                        </div>
+                      <div>
+                        <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-700 dark:text-cyan-400 font-bold block">
+                          Métrica Verificada
+                        </span>
+                        <span className="text-sm font-bold text-slate-900 dark:text-white">
+                          {currentStage.visual.primaryLabel}
+                        </span>
                       </div>
                     </div>
                   )}
 
-                  {laserIdx === 1 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
-                          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-                            <Award className="w-3.5 h-3.5" />
-                            Contrato Digital Fijo
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            CERRADO
-                          </span>
-                        </div>
-                        <div className="space-y-2 text-xs">
-                          <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[11px] text-neutral-400 block">
-                              DESARROLLO COMPLETO
-                            </span>
-                            <span className="text-lg font-bold text-white block mt-0.5">
-                              1 Solo Pago Final
-                            </span>
-                            <span className="text-emerald-400 text-[11px] block mt-1">
-                              Cero costos sorpresa
-                            </span>
-                          </div>
-                          <div className="flex justify-between p-2 rounded-lg bg-white dark:bg-neutral-900/50 border border-slate-200 dark:border-neutral-800 text-[11px]">
-                            <span className="text-neutral-400">Mensualidad por uso:</span>
-                            <span className="text-emerald-400 font-bold">$0,00 ARS</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
-                          <Award className="w-3.5 h-3.5" />
-                          TRANSPARENCIA TOTAL · SIN LETRA CHICA
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Presupuesto exacto antes de empezar la obra
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Te cotizamos un valor cerrado por la solución llave en mano. Sabés
-                          exactamente cuánto invertís y qué vas a recibir, sin aumentos imprevistos
-                          ni comisiones ocultas por venta.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ 1 Solo Pago
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ 0% Comisiones
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-emerald-50 dark:bg-neutral-900 border border-emerald-200 dark:border-neutral-800 text-emerald-800 dark:text-emerald-300">
-                            ✓ Factura Oficial
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 2 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-amber-500/30 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
-                          <span className="text-amber-400 font-bold flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5" />
-                            Velocidad de Despliegue
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-amber-500/15 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 text-[10px] font-bold">
-                            7 A 15 DÍAS
-                          </span>
-                        </div>
-                        <div className="space-y-3 text-xs">
-                          <div>
-                            <div className="flex justify-between text-neutral-400 text-[11px] mb-1">
-                              <span>Agencias tradicionales</span>
-                              <span className="text-red-400 font-bold">60 a 90 días</span>
-                            </div>
-                            <div className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden">
-                              <div className="h-full bg-red-500/70 rounded-full w-[85%]" />
-                            </div>
-                          </div>
-                          <div>
-                            <div className="flex justify-between text-emerald-300 text-[11px] mb-1">
-                              <span className="font-bold">ExePaginasWeb</span>
-                              <span className="text-emerald-400 font-bold">7 a 15 días</span>
-                            </div>
-                            <div className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden">
-                              <div className="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full w-[25%] shadow-[0_0_10px_#10b981]" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-mono text-xs font-bold border border-amber-500/30 dark:border-amber-400/30">
-                          <Clock className="w-3.5 h-3.5" />
-                          CRONOGRAMA RÉCORD · SIN DEMORAS
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Tu web funcionando en 7 a 15 días garantizados
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          No te hacemos perder meses en reuniones interminables. Usamos una
-                          arquitectura de código moderna que nos permite entregar tu sistema
-                          funcionando en tiempo récord.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Entregas Rápidas
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Sin Demoras
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-amber-50 dark:bg-neutral-900 border border-amber-200 dark:border-neutral-800 text-amber-800 dark:text-amber-300">
-                            ✓ Puntualidad Total
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 3 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-emerald-500/40 bg-gradient-to-br from-[#071c14] to-[#040e0a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
-                          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-                            <FileCode className="w-3.5 h-3.5" />
-                            Entorno Staging Privado
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            PRIVADO
-                          </span>
-                        </div>
-                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-2 text-xs">
-                          <div className="flex items-center gap-1.5 text-neutral-400 text-[11px]">
-                            <Globe className="w-3.5 h-3.5 text-cyan-400" />
-                            <span className="truncate">demo-privada.exepaginasweb.com</span>
-                          </div>
-                          <div className="flex items-center justify-between pt-1 border-t border-neutral-800 text-[11px]">
-                            <span className="text-neutral-400">Pruebas en vivo:</span>
-                            <span className="text-emerald-400 font-bold">100% Calibrado</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
-                          <FileCode className="w-3.5 h-3.5" />
-                          TESTING EN VIVO · ANTES DEL LANZAMIENTO
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Probás todo en tu celular antes de que salga al público
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Te enviamos un enlace privado para que toques cada botón, hagas reservas
-                          de prueba y veas cómo llega el WhatsApp. No se publica hasta que estés
-                          100% conforme.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Link Privado
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Pruebas Reales
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-emerald-50 dark:bg-neutral-900 border border-emerald-200 dark:border-neutral-800 text-emerald-800 dark:text-emerald-300">
-                            ✓ 100% a Gusto
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 4 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-purple-500/30 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
-                          <span className="text-purple-400 font-bold flex items-center gap-1.5">
-                            <Rocket className="w-3.5 h-3.5" />
-                            Lanzamiento Oficial
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-[10px] font-bold">
-                            ACTIVO
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[10px] text-purple-300 block">DOMINIO</span>
-                            <span className="text-white font-bold block truncate mt-0.5">
-                              tunegocio.com
-                            </span>
-                            <span className="text-[10px] text-emerald-400 block mt-1">
-                              SSL 256 Activo
-                            </span>
-                          </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[10px] text-purple-300 block">COBROS</span>
-                            <span className="text-emerald-400 font-bold block truncate mt-0.5">
-                              Directo CBU
-                            </span>
-                            <span className="text-[10px] text-neutral-400 block mt-1">
-                              0% comisión
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 font-mono text-xs font-bold border border-purple-500/30 dark:border-purple-400/30">
-                          <Rocket className="w-3.5 h-3.5" />
-                          LLAVE EN MANO · FACTURANDO DESDE EL PRIMER DÍA
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Te entregamos la plataforma lista para recibir clientes
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Con el dominio configurado, el panel en tu celular y los cobros
-                          acreditándose directamente en tu banco. El código fuente es 100% de tu
-                          propiedad para siempre.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Código Propio
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Sin Alquileres
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-purple-50 dark:bg-neutral-900 border border-purple-200 dark:border-neutral-800 text-purple-800 dark:text-purple-300">
-                            ✓ Listo para Usar
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-
-              {/* ==========================================================
-                  PASO 02: PRODUCCIÓN Y EJECUCIÓN (SERIEDAD Y PASOS REALES)
-                 ========================================================== */}
-              {activeMainStep === 1 && (
-                <motion.div
-                  key={`p1-${laserIdx}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="rounded-2xl border border-slate-200 dark:border-emerald-500/30 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
-                >
-                  {laserIdx === 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
-                          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-                            <Cpu className="w-3.5 h-3.5" />
-                            Next.js 16 Edge SSR
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            48 KB BUNDLE
-                          </span>
-                        </div>
-                        <div className="space-y-2 text-xs">
-                          <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[11px] text-neutral-400 block">COMPILACIÓN</span>
-                            <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
-                              SSR Instantáneo (Edge)
-                            </span>
-                            <span className="text-emerald-400 text-[11px] block mt-1">
-                              60 FPS garantizados
-                            </span>
-                          </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/50 border border-slate-200 dark:border-neutral-800 text-[11px] flex justify-between">
-                            <span className="text-neutral-400">Código basura:</span>
-                            <span className="text-emerald-400 font-bold">0% WordPress</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
-                          <FileCode className="w-3.5 h-3.5" />
-                          ARQUITECTURA SERVER-SIDE · NEXT.JS 16
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Código puro de nivel empresarial sin plantillas basura
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Desarrollado en React 19 y Next.js 16. Tu web se compila en el servidor
-                          para volar en cualquier dispositivo móvil sin demoras, eliminando plugins
-                          pesados y vulnerabilidades.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Server-Side Rendering
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ 0 Plugins Basura
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-emerald-50 dark:bg-neutral-900 border border-emerald-200 dark:border-neutral-800 text-emerald-800 dark:text-emerald-300">
-                            ✓ Máxima Velocidad
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 1 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-cyan-500/40 bg-gradient-to-br from-[#08182b] to-[#040e1a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-cyan-500/20">
-                          <span className="text-cyan-400 font-bold flex items-center gap-1.5">
-                            <Database className="w-3.5 h-3.5" />
-                            PostgreSQL Supabase
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 text-[10px] font-bold">
-                            12ms PING
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[10px] text-cyan-300 block">SEGURIDAD</span>
-                            <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
-                              RLS Activo
-                            </span>
-                            <span className="text-[10px] text-cyan-400 block mt-1">AES-256</span>
-                          </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[10px] text-cyan-300 block">RESPALDO</span>
-                            <span className="text-emerald-400 font-bold block mt-0.5">
-                              Backups 24h
-                            </span>
-                            <span className="text-[10px] text-neutral-400 block mt-1">
-                              Automático
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 font-mono text-xs font-bold border border-cyan-500/30 dark:border-cyan-400/30">
-                          <Shield className="w-3.5 h-3.5" />
-                          BASE DE DATOS RELACIONAL · ALTA SEGURIDAD
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Tus clientes y reservas blindados en PostgreSQL
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Aislamiento de datos con Row Level Security y copias de seguridad
-                          automáticas diarias. Nadie accede a tu información y el sistema soporta
-                          alta concurrencia sin caídas.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Row Level Security
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Backups Diarios
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-cyan-50 dark:bg-neutral-900 border border-cyan-200 dark:border-neutral-800 text-cyan-800 dark:text-cyan-300">
-                            ✓ Cifrado AES-256
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 2 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-amber-500/30 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
-                          <span className="text-amber-400 font-bold flex items-center gap-1.5">
-                            <CreditCard className="w-3.5 h-3.5" />
-                            Acreditación Inmediata
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            0% COMISIÓN
-                          </span>
-                        </div>
-                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-1 text-xs">
-                          <span className="text-[11px] text-neutral-400 block">SEÑA RECIBIDA</span>
-                          <span className="text-2xl font-black text-slate-900 dark:text-white block">
-                            + $ 10.000,00{' '}
-                            <span className="text-xs font-normal text-emerald-400">ARS</span>
-                          </span>
-                          <div className="flex justify-between pt-1 border-t border-neutral-800 text-[11px]">
-                            <span className="text-neutral-400">Destino:</span>
-                            <span className="text-emerald-400 font-bold">Tu CBU o Alias</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-mono text-xs font-bold border border-amber-500/30 dark:border-amber-400/30">
-                          <CreditCard className="w-3.5 h-3.5" />
-                          INTEGRACIÓN BANCARIA · COBROS DIRECTOS
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Cobros y señas acreditados directo en tu cuenta bancaria
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Validación automática de transferencias y pagos con QR. El dinero va 100%
-                          a tu cuenta bancaria sin retenciones de plataformas intermediarias,
-                          confirmando el turno al instante.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Directo a tu CBU
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ 0% Comisiones
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-amber-50 dark:bg-neutral-900 border border-amber-200 dark:border-neutral-800 text-amber-800 dark:text-amber-300">
-                            ✓ Bloqueo en 0.2s
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 3 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
-                          <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
-                            <Activity className="w-3.5 h-3.5" />
-                            Webhook Event Dispatcher
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            EN 2s
-                          </span>
-                        </div>
-                        <div className="p-3 rounded-xl bg-[#0b2619] border border-emerald-500/30 text-neutral-100 space-y-1 font-sans text-xs">
-                          <span className="font-mono text-[10px] text-emerald-300 font-bold block">
-                            Notificación Automática ✓✓
-                          </span>
-                          <p className="leading-relaxed">
-                            «¡Hola Juan! 👋 Tu turno está <strong>CONFIRMADO</strong>. Seña
-                            acreditada con éxito. Te esperamos.»
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
-                          <Activity className="w-3.5 h-3.5" />
-                          EVENT-DRIVEN · CONFIRMACIÓN EN 2 SEGUNDOS
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Notificación instantánea y confirmación automática
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Conectado con la API oficial de WhatsApp. Tu cliente recibe el comprobante
-                          y la ubicación en su chat en 2 segundos, reduciendo ausencias a
-                          prácticamente cero.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Envío en 2s
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ WhatsApp Cloud API
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-emerald-50 dark:bg-neutral-900 border border-emerald-200 dark:border-neutral-800 text-emerald-800 dark:text-emerald-300">
-                            ✓ Cero Ausencias
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 4 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-purple-500/30 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
-                          <span className="text-purple-400 font-bold flex items-center gap-1.5">
-                            <Server className="w-3.5 h-3.5" />
-                            Servidores Edge Globales
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-[10px] font-bold">
-                            99.99% UPTIME
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[10px] text-purple-300 block">UBICACIÓN</span>
-                            <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
-                              Buenos Aires CDN
-                            </span>
-                            <span className="text-[10px] text-emerald-400 block mt-1">
-                              &lt; 15ms Latencia
-                            </span>
-                          </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[10px] text-purple-300 block">
-                              DISPONIBILIDAD
-                            </span>
-                            <span className="text-emerald-400 font-bold block mt-0.5">
-                              24/7 En Línea
-                            </span>
-                            <span className="text-[10px] text-neutral-400 block mt-1">
-                              Cero caídas
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 font-mono text-xs font-bold border border-purple-500/30 dark:border-purple-400/30">
-                          <Server className="w-3.5 h-3.5" />
-                          DESPLIEGUE CLOUD · ALTA DISPONIBILIDAD
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Infraestructura en la nube que soporta miles de visitas
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Alojado en redes perimetrales (Edge CDN) con nodos en Buenos Aires. Tu web
-                          no se cae en fechas de alta demanda publicitaria y responde en
-                          milisegundos.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ 99.99% Uptime
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Red Perimetral
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-purple-50 dark:bg-neutral-900 border border-purple-200 dark:border-neutral-800 text-purple-800 dark:text-purple-300">
-                            ✓ Resistencia al Tráfico
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-
-              {/* ==========================================================
-                  PASO 03: RENDIMIENTO & GARANTÍA TOTAL (5 SUB-ETAPAS)
-                 ========================================================== */}
-              {activeMainStep === 2 && (
-                <motion.div
-                  key={`p2-${laserIdx}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="rounded-2xl border border-slate-200 dark:border-amber-500/30 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
-                >
-                  {laserIdx === 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-amber-500/30 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
-                          <span className="text-amber-400 font-bold flex items-center gap-1.5">
-                            <Search className="w-3.5 h-3.5" />
-                            Google Lighthouse
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            100/100
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                          {[
-                            { label: 'Rendimiento', val: '100/100' },
-                            { label: 'Accesibilidad', val: '100/100' },
-                            { label: 'Prácticas', val: '100/100' },
-                            { label: 'SEO Google', val: '100/100' },
-                          ].map((m) => (
-                            <div
-                              key={m.label}
-                              className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex items-center justify-between px-2.5"
-                            >
-                              <span className="text-[11px] text-neutral-300 truncate">
-                                {m.label}
-                              </span>
-                              <span className="text-emerald-400 font-bold text-[11px]">
-                                {m.val}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-mono text-xs font-bold border border-amber-500/30 dark:border-amber-400/30">
-                          <Award className="w-3.5 h-3.5" />
-                          AUDITORÍA OFICIAL · 100/100 EN GOOGLE
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Puntaje perfecto en Google Core Web Vitals
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Auditado bajo los estándares oficiales de Google. Al no tener código
-                          basura ni plantillas lentas, Google premia tu web ubicándola por encima de
-                          tus competidores locales.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ 100 Rendimiento
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ 100 SEO Local
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-amber-50 dark:bg-neutral-900 border border-amber-200 dark:border-neutral-800 text-amber-800 dark:text-amber-300">
-                            ✓ Auditoría Pública
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 1 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-cyan-500/40 bg-gradient-to-br from-[#08182b] to-[#040e1a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-cyan-500/20">
-                          <span className="text-cyan-400 font-bold flex items-center gap-1.5">
-                            <Zap className="w-3.5 h-3.5" />
-                            Velocidad de Carga
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 text-[10px] font-bold">
-                            0.38 SEGUNDOS
-                          </span>
-                        </div>
-                        <div className="space-y-2 text-xs">
-                          <div>
-                            <div className="flex justify-between text-neutral-400 text-[11px] mb-1">
-                              <span>Web tradicional (WordPress)</span>
-                              <span className="text-red-400 font-bold">4.8s (53% abandona)</span>
-                            </div>
-                            <div className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden">
-                              <div className="h-full bg-red-500/70 rounded-full w-[90%]" />
-                            </div>
-                          </div>
-                          <div>
-                            <div className="flex justify-between text-emerald-300 text-[11px] mb-1">
-                              <span className="font-bold">ExePaginasWeb (Next.js)</span>
-                              <span className="text-emerald-400 font-bold">
-                                0.38s (Instantáneo)
-                              </span>
-                            </div>
-                            <div className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden">
-                              <div className="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-full w-[12%] shadow-[0_0_10px_#10b981]" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 font-mono text-xs font-bold border border-cyan-500/30 dark:border-cyan-400/30">
-                          <Zap className="w-3.5 h-3.5" />
-                          VELOCIDAD EXTREMA · APERTURA EN 0.38S
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Carga al instante en cualquier teléfono móvil
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          El usuario no experimenta pantallas en blanco ni esperas. Toca tu enlace o
-                          anuncio y el catálogo o turnero ya está completamente desplegado para
-                          comprar.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Carga Instantánea
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Cero Esperas
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-cyan-50 dark:bg-neutral-900 border border-cyan-200 dark:border-neutral-800 text-cyan-800 dark:text-cyan-300">
-                            ✓ Retención del 99%
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 2 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
-                          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-                            <Lock className="w-3.5 h-3.5" />
-                            Certificado de Blindaje
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            SSL 256-BIT
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[10px] text-neutral-400 block">ENCRIPTACIÓN</span>
-                            <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
-                              HTTPS Bancario
-                            </span>
-                            <span className="text-[10px] text-emerald-400 block mt-1">
-                              Candado Activo
-                            </span>
-                          </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[10px] text-neutral-400 block">FIREWALL</span>
-                            <span className="text-emerald-400 font-bold block mt-0.5">
-                              Anti-DDoS
-                            </span>
-                            <span className="text-[10px] text-neutral-400 block mt-1">
-                              Cero brechas
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
-                          <Lock className="w-3.5 h-3.5" />
-                          SEGURIDAD SSL & BLINDAJE CONTRA ATAQUES
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Cifrado de grado bancario para tus transacciones
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Tus clientes pagan y reservan con la tranquilidad de estar bajo los
-                          protocolos de cifrado más exigentes del mercado. Cero filtraciones y
-                          reputación intachable.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Certificado SSL
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Firewall WAF
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-emerald-50 dark:bg-neutral-900 border border-emerald-200 dark:border-neutral-800 text-emerald-800 dark:text-emerald-300">
-                            ✓ Datos Blindados
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 3 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-purple-500/30 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
-                          <span className="text-purple-400 font-bold flex items-center gap-1.5">
-                            <ShieldCheck className="w-3.5 h-3.5" />
-                            Propiedad vs Alquiler
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-[10px] font-bold">
-                            100% TUYO
-                          </span>
-                        </div>
-                        <div className="space-y-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-red-950/20 border border-red-500/30">
-                            <span className="text-[10px] text-red-400 font-bold block">
-                              PLATAFORMAS SAAS
-                            </span>
-                            <span className="text-neutral-300 block text-[11px] mt-0.5">
-                              Pagás de por vida. Si no pagás, apagan tu web.
-                            </span>
-                          </div>
-                          <div className="p-2.5 rounded-lg bg-emerald-950/30 border border-emerald-500/40">
-                            <div className="flex items-center gap-1.5 mb-0.5">
-                              <Logo size={14} variant="dark" />
-                              <span className="text-[10px] text-emerald-400 font-bold block">
-                                CON EXEPAGINASWEB
-                              </span>
-                            </div>
-                            <span className="text-emerald-200 block text-[11px]">
-                              1 solo pago. Código y clientes 100% tuyos siempre.
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 font-mono text-xs font-bold border border-purple-500/30 dark:border-purple-400/30">
-                          <ShieldCheck className="w-3.5 h-3.5" />
-                          CERO ALQUILERES · EL CÓDIGO ES TU ACTIVO
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          El software es un activo patrimonial de tu empresa
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          No alquilás una plantilla enlatada. Te entregamos el repositorio en GitHub
-                          con control de versiones y la base de datos de tu negocio para que nunca
-                          más dependas de mensualidades abusivas.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Repositorio GitHub
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Cero Mensualidades
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-purple-50 dark:bg-neutral-900 border border-purple-200 dark:border-neutral-800 text-purple-800 dark:text-purple-300">
-                            ✓ Libertad Total
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 4 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
-                          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-                            <Award className="w-3.5 h-3.5" />
-                            Garantía & Monitoreo
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            ACTIVO 24/7
-                          </span>
-                        </div>
-                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-2 text-xs">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                            <span className="text-white font-bold">
-                              WhatsApp Directo con Exequiel
-                            </span>
-                          </div>
-                          <p className="text-[11px] text-neutral-300 font-sans">
-                            Soporte técnico directo sin tickets ni robots para cualquier ampliación
-                            o consulta.
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
-                          <Award className="w-3.5 h-3.5" />
-                          ACOMPAÑAMIENTO REAL · TRATO DIRECTO
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Garantía de funcionamiento y soporte continuo
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Tu negocio no se queda solo después de la entrega. Tenés mi contacto
-                          directo para garantizar estabilidad técnica y resolver cualquier necesidad
-                          sobre la marcha.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Soporte Directo
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Monitoreo 24/7
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-emerald-50 dark:bg-neutral-900 border border-emerald-200 dark:border-neutral-800 text-emerald-800 dark:text-emerald-300">
-                            ✓ Respaldo Total
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-
-              {/* ==========================================================
-                  PASO 04: PUBLICIDAD & CRECIMIENTO (5 SUB-ETAPAS)
-                 ========================================================== */}
-              {activeMainStep === 3 && (
-                <motion.div
-                  key={`p3-${laserIdx}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="rounded-2xl border border-slate-200 dark:border-purple-500/30 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
-                >
-                  {laserIdx === 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-purple-500/30 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
-                          <span className="text-purple-400 font-bold flex items-center gap-1.5">
-                            <Target className="w-3.5 h-3.5" />
-                            Tracking Pixel Meta
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-[10px] font-bold">
-                            100% MEDIDO
-                          </span>
-                        </div>
-                        <div className="space-y-1.5 font-mono text-xs">
-                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex items-center justify-between">
-                            <span className="text-purple-300 font-bold flex items-center gap-1.5 text-[11px]">
-                              <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
-                              ViewContent
-                            </span>
-                            <span className="text-neutral-400 text-[10px]">Visitas</span>
-                          </div>
-                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex items-center justify-between">
-                            <span className="text-cyan-300 font-bold flex items-center gap-1.5 text-[11px]">
-                              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                              Checkout
-                            </span>
-                            <span className="text-neutral-400 text-[10px]">Turnos</span>
-                          </div>
-                          <div className="p-2 rounded-lg bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
-                            <span className="text-emerald-400 font-bold flex items-center gap-1.5 text-[11px]">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                              Purchase
-                            </span>
-                            <span className="text-emerald-300 text-[10px] font-bold">
-                              100% Señas
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 font-mono text-xs font-bold border border-purple-500/30 dark:border-purple-400/30">
-                          <Target className="w-3.5 h-3.5" />
-                          CONFIGURACIÓN DEL PÍXEL · META & GOOGLE
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Medición científica de cada peso invertido en anuncios
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Configuramos los eventos de conversión para que el algoritmo de Meta y
-                          Google aprenda quiénes son tus clientes más rentables y optimice tu costo
-                          de adquisición.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Píxel de Meta
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Google Tag Manager
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-purple-50 dark:bg-neutral-900 border border-purple-200 dark:border-neutral-800 text-purple-800 dark:text-purple-300">
-                            ✓ ROI Medido
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 1 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-cyan-500/40 bg-gradient-to-br from-[#08182b] to-[#040e1a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-cyan-500/20">
-                          <span className="text-cyan-400 font-bold flex items-center gap-1.5">
-                            <Zap className="w-3.5 h-3.5" />
-                            Retención en Publicidad
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            99.2% ACTIVA
-                          </span>
-                        </div>
-                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-1 text-xs">
-                          <span className="text-[11px] text-neutral-400 block">EN WEBS LENTAS</span>
-                          <span className="text-red-400 font-bold block">
-                            53% abandona antes de abrir
-                          </span>
-                          <span className="text-emerald-400 font-bold block text-[11px] pt-1 border-t border-neutral-800">
-                            En ExePaginasWeb: 0% Rebote
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 font-mono text-xs font-bold border border-cyan-500/30 dark:border-cyan-400/30">
-                          <Zap className="w-3.5 h-3.5" />
-                          ATERRIZAJE EN 0.38S · CERO DINERO PERDIDO
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Tu presupuesto publicitario rinde el doble sin rebotes
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          En plataformas lentas la mitad de la gente que toca tu anuncio se va antes
-                          de ver tu producto. Con nuestra apertura en 0.38s aprovechás el 100% de
-                          cada clic pagado.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ 0% Rebotes
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Presupuesto Eficiente
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-cyan-50 dark:bg-neutral-900 border border-cyan-200 dark:border-neutral-800 text-cyan-800 dark:text-cyan-300">
-                            ✓ Rinde el Doble
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 2 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
-                          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-                            <TrendingUp className="w-3.5 h-3.5" />
-                            Embudo Acelerado
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            &lt; 30s
-                          </span>
-                        </div>
-                        <div className="space-y-1.5 text-xs">
-                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex justify-between">
-                            <span>1. Ve tu oferta</span>
-                            <span className="text-cyan-400 font-bold">0.38s</span>
-                          </div>
-                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex justify-between">
-                            <span>2. Elige el turno</span>
-                            <span className="text-amber-400 font-bold">1 clic</span>
-                          </div>
-                          <div className="p-2 rounded-lg bg-emerald-950/40 border border-emerald-500/30 flex justify-between text-emerald-300 font-bold">
-                            <span>3. Paga la seña</span>
-                            <span>Directo</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
+                  {/* Visual Tipo 2: Curva SVG Luminosa (Estilo Video Spline Chart) */}
+                  {currentStage.visual.type === 'chart' && (
+                    <div className="space-y-2 pb-3 border-b border-slate-200/70 dark:border-white/[0.06]">
+                      <div className="flex items-baseline justify-between">
+                        <span className="text-2xl font-mono font-extrabold text-slate-900 dark:text-white">
+                          {currentStage.visual.primaryMetric}
+                        </span>
+                        <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
                           <TrendingUp className="w-3.5 h-3.5" />
-                          EMBUDO EN 1 CLIC · ALTA CONVERSIÓN
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Eliminamos la fricción para que compren en el acto
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Sin registros largos ni formularios engorrosos. El usuario pasa del
-                          anuncio a la confirmación de su seña en menos de 30 segundos directamente
-                          en su smartphone.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ 1 Solo Clic
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Sin Fricción
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-emerald-50 dark:bg-neutral-900 border border-emerald-200 dark:border-neutral-800 text-emerald-800 dark:text-emerald-300">
-                            ✓ Máxima Venta
-                          </span>
-                        </div>
+                          {currentStage.visual.primaryLabel}
+                        </span>
+                      </div>
+                      <div className="h-16 w-full pt-1">
+                        <svg
+                          viewBox="0 0 240 85"
+                          className="w-full h-full overflow-visible"
+                          preserveAspectRatio="none"
+                        >
+                          <defs>
+                            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor={currentStep.accent} stopOpacity="0.35" />
+                              <stop
+                                offset="100%"
+                                stopColor={currentStep.accent}
+                                stopOpacity="0.0"
+                              />
+                            </linearGradient>
+                          </defs>
+                          <path
+                            d={`${currentStage.visual.chartPoints} L 240 85 L 0 85 Z`}
+                            fill="url(#chartGrad)"
+                          />
+                          <path
+                            d={currentStage.visual.chartPoints}
+                            fill="none"
+                            stroke={currentStep.accent}
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                          />
+                        </svg>
                       </div>
                     </div>
                   )}
 
-                  {laserIdx === 3 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
-                          <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
-                            <Target className="w-3.5 h-3.5" />
-                            Recuperación Automática
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                            +35% CIERRES
-                          </span>
-                        </div>
-                        <div className="p-3 rounded-xl bg-[#0b2619] border border-emerald-500/30 text-neutral-100 space-y-1 font-sans text-xs">
-                          <span className="font-mono text-[10px] text-emerald-300 font-bold block">
-                            Mensaje Inteligente de Rescate
-                          </span>
-                          <p className="leading-relaxed">
-                            «¡Hola Juan! Vimos que estabas reservando para el Viernes. ¿Tuviste
-                            alguna duda con el pago? Avisame y te lo guardo.»
-                          </p>
-                        </div>
+                  {/* Visual Tipo 3: Bloque de Código / Telemetría Limpio */}
+                  {currentStage.visual.type === 'code' && (
+                    <div className="space-y-2.5 pb-3 border-b border-slate-200/70 dark:border-white/[0.06]">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono font-bold text-slate-900 dark:text-white">
+                          {currentStage.visual.primaryLabel}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 font-mono text-[11px] font-bold">
+                          {currentStage.visual.primaryMetric}
+                        </span>
                       </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
-                          <Target className="w-3.5 h-3.5" />
-                          AUTOMATIZACIÓN CRM · RECUPERACIÓN DE CLIENTES
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Recuperamos los carritos y turnos indecisos
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Si un cliente se distrae antes de transferir la seña, el sistema envía un
-                          recordatorio automático cordial por WhatsApp, recuperando hasta el 35% de
-                          ventas perdidas.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Rescate Automático
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Trato Cordial
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-emerald-50 dark:bg-neutral-900 border border-emerald-200 dark:border-neutral-800 text-emerald-800 dark:text-emerald-300">
-                            ✓ +35% Ventas
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {laserIdx === 4 && (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-purple-500/30 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
-                          <span className="text-purple-400 font-bold flex items-center gap-1.5">
-                            <BarChart3 className="w-3.5 h-3.5" />
-                            Retorno Publicitario
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-[10px] font-bold">
-                            ROAS 2.4X
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[10px] text-neutral-400 block">INVERSIÓN</span>
-                            <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
-                              $ 100.000
-                            </span>
-                            <span className="text-[10px] text-purple-300 block mt-1">
-                              En Anuncios
-                            </span>
+                      <div className="p-3 rounded-xl bg-slate-900 dark:bg-[#050811] border border-slate-800 dark:border-white/[0.06] font-mono text-[11px] space-y-1">
+                        {currentStage.visual.codeSnippet?.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className={`truncate ${
+                              item.highlight ? 'text-cyan-400 font-semibold' : 'text-slate-400'
+                            }`}
+                          >
+                            {item.line}
                           </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
-                            <span className="text-[10px] text-emerald-400 block">FACTURADO</span>
-                            <span className="text-emerald-400 font-bold block mt-0.5">
-                              $ 240.000
-                            </span>
-                            <span className="text-[10px] text-emerald-300 block mt-1">
-                              Multiplicador 2.4x
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 font-mono text-xs font-bold border border-purple-500/30 dark:border-purple-400/30">
-                          <BarChart3 className="w-3.5 h-3.5" />
-                          MÁQUINA DE VENTAS · RETORNO PREDECIBLE
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          Transformamos tu sitio en un motor predecible de ingresos
-                        </h3>
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed font-sans">
-                          Una web que carga en 0.38s, cobra directo al banco y recupera carritos por
-                          WhatsApp convierte a cada visitante en cliente, amortizando la inversión
-                          en pocas semanas.
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ ROAS 2X a 3X
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300">
-                            ✓ Ingresos Predecibles
-                          </span>
-                          <span className="px-3 py-1 rounded-lg bg-purple-50 dark:bg-neutral-900 border border-purple-200 dark:border-neutral-800 text-purple-800 dark:text-purple-300">
-                            ✓ Escala Continua
-                          </span>
-                        </div>
+                        ))}
                       </div>
                     </div>
                   )}
-                </motion.div>
-              )}
+
+                  {/* KPIs Secundarios Limpios */}
+                  <div className="space-y-2 font-mono text-xs">
+                    {currentStage.visual.secondaryMetrics.map((m, i) => (
+                      <div key={i} className="flex items-center justify-between">
+                        <span className="text-slate-500 dark:text-neutral-400">{m.label}</span>
+                        <span
+                          className={`font-bold ${
+                            m.accent
+                              ? 'text-cyan-700 dark:text-cyan-400'
+                              : 'text-slate-800 dark:text-neutral-200'
+                          }`}
+                        >
+                          {m.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* COLUMNA EDITORIAL (7 COLS): LIMPIA, DIRECTA Y ESCANEABLE */}
+                <div className="md:col-span-7 space-y-4">
+                  <span className="inline-block font-mono text-[11px] font-bold uppercase tracking-widest text-cyan-700 dark:text-cyan-400">
+                    {currentStage.eyebrow}
+                  </span>
+
+                  <h3 className="text-xl sm:text-2xl lg:text-[26px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
+                    {currentStage.title}
+                  </h3>
+
+                  <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed">
+                    {currentStage.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {currentStage.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.07] font-mono text-xs text-slate-700 dark:text-neutral-300"
+                      >
+                        <Check className="w-3 h-3 text-cyan-600 dark:text-cyan-400 shrink-0" />
+                        <span>{tag}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             </AnimatePresence>
           </div>
 
-          {/* ==============================================================
-              PIE INFERIOR DE LA VENTANA DERECHA
-             ============================================================== */}
-          <div className="pt-3 border-t border-slate-200 dark:border-neutral-800/80 flex items-center justify-between font-mono text-xs text-slate-500 dark:text-neutral-400 pr-24 sm:pr-28">
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 inline-block" />
-              <span>
-                Etapa {laserIdx + 1} de {currentSubStages.length} ·{' '}
-                {currentSubStages[laserIdx]?.tag}
-              </span>
-            </span>
+          {/* FOOTER INTERNO DISCRETO CON ACCIÓN RÁPIDA */}
+          <div className="pt-4 border-t border-slate-100 dark:border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 font-mono text-xs text-slate-400 dark:text-neutral-500">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>Sistemas en producción verificables</span>
+            </div>
 
-            <span className="text-slate-500 dark:text-neutral-400 hidden sm:inline">
-              {isLaserPaused ? 'Pausado' : 'Rotación continua'}
-            </span>
+            <div className="flex items-center gap-4">
+              <Link
+                href="/soluciones"
+                className="font-mono text-xs text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white flex items-center gap-1 transition-colors"
+              >
+                <span>Ver arquitectura</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <a
+                href="https://wa.me/5493412799385?text=Hola%20Exequiel!%20Vi%20tu%20plataforma%20en%20ExePaginasWeb%20y%20quiero%20consultar%20por%20un%20proyecto."
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  trackEvent('hero_cta_contact_clicked', { source: 'super_card_footer' })
+                }
+                className="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-950 font-mono text-xs font-bold flex items-center gap-1.5 transition-colors"
+              >
+                <span>Diagnosticar Proyecto</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
-        </div>
-      </div>
-
-      {/* FOOTER CALL-OUT DE CONVERSIÓN & SOPORTE (MODO CLARO Y OSCURO) */}
-      <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4.5 rounded-2xl bg-white dark:bg-neutral-900/60 border border-slate-200 dark:border-neutral-800/90 font-mono text-xs text-slate-700 dark:text-neutral-300 shadow-md dark:shadow-xl">
-        <div className="flex items-center gap-2.5">
-          <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-          <span>¿Querés un diagnóstico inmediato de arquitectura para tu negocio?</span>
-        </div>
-        <div className="flex items-center gap-3 w-full sm:w-auto justify-end flex-wrap">
-          <Link
-            href="/soluciones"
-            className="text-slate-600 hover:text-slate-950 dark:text-neutral-400 dark:hover:text-white font-medium flex items-center gap-1 transition-colors hover:underline text-xs"
-          >
-            <span>Ver Soluciones</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-          <a
-            href="https://wa.me/5493412799385?text=Hola%20Exequiel!%20Estuve%20viendo%20la%20Super%20Card%20interactiva%20en%20ExePaginasWeb%20y%20quiero%20cotizar%20mi%20proyecto."
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackEvent('hero_cta_contact_clicked', { source: 'super_card_footer' })}
-            className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold flex items-center gap-1.5 transition-all shadow-md shadow-cyan-600/20 hover:scale-105 active:scale-95"
-          >
-            <span>Solicitar Diagnóstico Técnico</span>
-            <ArrowUpRight className="w-4 h-4 text-white" />
-          </a>
         </div>
       </div>
     </section>

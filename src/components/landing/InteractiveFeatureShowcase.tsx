@@ -289,7 +289,6 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
   const [laserIdx, setLaserIdx] = useState(0)
   const [isLaserPaused, setIsLaserPaused] = useState(false)
   const [elapsed, setElapsed] = useState(0)
-  const [transitionBanner, setTransitionBanner] = useState<string | null>(null)
 
   const STEP_DURATION = 4200 // 4.2 segundos por sub-etapa
 
@@ -309,11 +308,6 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
             // Completó todas las subetapas del paso principal actual -> avanza automáticamente al siguiente paso principal
             const nextStep = (activeMainStep + 1) % MAIN_STEPS.length
             setActiveMainStep(nextStep)
-            const completedStep = MAIN_STEPS[activeMainStep]
-            const upcomingStep = MAIN_STEPS[nextStep]
-            setTransitionBanner(
-              `⚡ ${completedStep?.number} ${completedStep?.title} completado ➔ Iniciando ${upcomingStep?.number}: ${upcomingStep?.title}`
-            )
             return 0
           }
           return prev + 1
@@ -325,15 +319,6 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
     return () => clearInterval(timer)
   }, [activeMainStep, isLaserPaused, laserIdx])
-
-  // Limpiar el banner de aviso de transición después de 3.2 segundos
-  useEffect(() => {
-    if (!transitionBanner) return
-    const bannerTimer = setTimeout(() => {
-      setTransitionBanner(null)
-    }, 3200)
-    return () => clearTimeout(bannerTimer)
-  }, [transitionBanner])
 
   const currentMain = MAIN_STEPS[activeMainStep] ?? MAIN_STEPS[0]!
   const currentSubStages = STEP_SUBSTAGES[activeMainStep] ?? STEP_SUBSTAGES[0]!
@@ -368,25 +353,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
       {/* ==============================================================
           ESTRUCTURA PRINCIPAL: 4 PASOS (IZQUIERDA) + VENTANA IMAGINEART (DERECHA)
          ============================================================== */}
-      <div className="relative rounded-3xl border border-2 border-slate-300 dark:border-neutral-800 bg-[#FAF7F2] dark:bg-[#070a13] shadow-[0_20px_50px_rgba(0,0,0,0.08)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col lg:flex-row min-h-[720px] lg:h-[750px]">
-        {/* Esquinas blueprint (+) */}
-        <span className="absolute top-4 left-4 font-mono text-slate-300 dark:text-neutral-600 text-sm pointer-events-none z-10">
-          +
-        </span>
-        <span className="absolute top-4 right-4 font-mono text-slate-300 dark:text-neutral-600 text-sm pointer-events-none z-10">
-          +
-        </span>
-        <span className="absolute bottom-4 left-4 font-mono text-slate-300 dark:text-neutral-600 text-sm pointer-events-none z-10">
-          +
-        </span>
-        <span className="absolute bottom-4 right-4 font-mono text-slate-300 dark:text-neutral-600 text-sm pointer-events-none z-10">
-          +
-        </span>
-
+      <div className="relative rounded-3xl border border-slate-200 dark:border-neutral-800 bg-[#FAF7F2] dark:bg-[#070a13] shadow-[0_20px_50px_rgba(0,0,0,0.08)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col lg:flex-row min-h-[720px] lg:h-[750px]">
         {/* ==============================================================
             COLUMNA IZQUIERDA (36%): LOS 4 PASOS CON DISEÑO DE ALTA GAMA (MODO CLARO Y OSCURO)
            ============================================================== */}
-        <div className="relative w-full lg:flex-[0_0_36%] p-6 sm:p-7 lg:p-8 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-neutral-800/80 flex flex-col justify-between bg-[#F2ECE1] dark:bg-[#080d1a]/95 border-r-2 border-slate-300 dark:border-neutral-800/80 z-20">
+        <div className="relative w-full lg:flex-[0_0_36%] p-6 sm:p-7 lg:p-8 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-neutral-800/80 flex flex-col justify-between bg-[#F2ECE1] dark:bg-[#080d1a]/95 z-20">
           <div className="space-y-3.5">
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-neutral-800/80">
               <div className="flex items-center gap-2.5">
@@ -430,25 +401,12 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   className={`relative flex items-center justify-between p-4 sm:p-4.5 rounded-2xl transition-all duration-300 cursor-pointer text-left overflow-hidden ${
                     isActive
                       ? 'bg-cyan-50/90 dark:bg-[#0c2438] dark:bg-gradient-to-r dark:from-[#0c2438] dark:via-[#0c1e30] dark:to-[#08121f] border-2 border-cyan-600 dark:border-cyan-400/90 shadow-md shadow-cyan-600/10 dark:shadow-[0_0_30px_rgba(6,182,212,0.25)] ring-1 ring-cyan-600/20 dark:ring-cyan-400/20 scale-[1.01]'
-                      : 'bg-white dark:bg-[#091122]/70 hover:bg-[#FAF7F2] dark:hover:bg-[#0d1830] border-2 border-slate-300 dark:border-neutral-800/80 hover:border-slate-400 dark:hover:border-neutral-700/90 text-slate-700 dark:text-neutral-300 hover:scale-[1.005] group'
+                      : 'bg-white dark:bg-[#091122]/70 hover:bg-[#FAF7F2] dark:hover:bg-[#0d1830] border border-slate-200 dark:border-neutral-800/80 hover:border-slate-300 dark:hover:border-neutral-700 text-slate-700 dark:text-neutral-300 hover:scale-[1.005] group'
                   }`}
                 >
                   {/* BARRITA DE LUZ NEÓN LATERAL CUANDO ESTÁ ACTIVO */}
                   {isActive && (
                     <div className="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full bg-cyan-500 dark:bg-cyan-400 shadow-[0_0_14px_#22d3ee]" />
-                  )}
-
-                  {/* BARRITA DE PROGRESO INFERIOR EN EL PASO ACTIVO */}
-                  {isActive && (
-                    <div className="absolute left-0 right-0 bottom-0 h-1 bg-slate-200 dark:bg-neutral-800">
-                      <div
-                        className="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 shadow-[0_0_8px_#06b6d4]"
-                        style={{
-                          width: `${Math.max(3, continuousProgress)}%`,
-                          transition: isLaserPaused ? 'none' : 'width 50ms linear',
-                        }}
-                      />
-                    </div>
                   )}
 
                   <div className="flex items-center gap-4 min-w-0">
@@ -537,142 +495,80 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
             }}
           />
 
-          {/* BANNER TRANSICIONAL INFORMATIVO: VISUALIZA CUÁNDO SALTA AUTOMÁTICAMENTE DE PASO */}
-          <AnimatePresence>
-            {transitionBanner && (
-              <motion.div
-                initial={{ opacity: 0, y: -10, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.98 }}
-                className="mb-3 p-2.5 rounded-xl bg-gradient-to-r from-cyan-100/95 via-emerald-100/90 to-white dark:from-cyan-950/90 dark:via-emerald-950/90 dark:to-neutral-900 border border-cyan-400/50 shadow-md shadow-cyan-500/10 dark:shadow-cyan-500/20 text-xs font-mono text-cyan-900 dark:text-cyan-200 flex items-center justify-between"
-              >
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 animate-spin" />
-                  <span className="font-bold">{transitionBanner}</span>
-                </div>
-                <span className="text-[10px] text-slate-500 dark:text-neutral-400 uppercase tracking-widest hidden sm:inline">
-                  Avance automático
-                </span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           {/* ==============================================================
-              CABECERA CON IDENTIFICADOR Y CONTROL DE PAUSA
+              CABECERA MINIMALISTA Y SEGMENTED CONTROL EJECUTIVO
              ============================================================== */}
-          <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-neutral-800/80 font-mono text-xs sm:text-sm">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <span
-                className="w-2.5 h-2.5 rounded-full inline-block animate-ping shrink-0"
-                style={{ backgroundColor: currentMain.accentColor }}
-              />
-              <span className="text-slate-900 dark:text-white font-bold truncate">
-                {currentMain.number} // {currentMain.title}
-              </span>
-              <span className="text-slate-500 dark:text-neutral-400 hidden md:inline truncate">
-                · {currentMain.subtitle}
-              </span>
+          <div className="space-y-3 pb-3 border-b border-slate-200 dark:border-neutral-800/80">
+            <div className="flex items-center justify-between font-mono text-xs sm:text-sm">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span
+                  className="w-2 h-2 rounded-full inline-block shrink-0"
+                  style={{ backgroundColor: currentMain.accentColor }}
+                />
+                <span className="text-slate-900 dark:text-white font-bold truncate">
+                  {currentMain.number} // {currentMain.title}
+                </span>
+                <span className="text-slate-500 dark:text-neutral-400 hidden md:inline truncate">
+                  — {currentMain.subtitle}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2.5 shrink-0">
+                <span className="text-[11px] font-mono text-slate-500 dark:text-neutral-400 hidden sm:inline">
+                  Paso {activeMainStep + 1} de 4
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsLaserPaused(!isLaserPaused)}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300 cursor-pointer transition-colors font-sans text-xs"
+                >
+                  {isLaserPaused ? (
+                    <Play className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  ) : (
+                    <Pause className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
+                  )}
+                  <span>{isLaserPaused ? 'Reanudar' : 'Pausa'}</span>
+                </button>
+              </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setIsLaserPaused(!isLaserPaused)}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 text-slate-700 dark:text-neutral-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors shrink-0 font-sans text-xs shadow-xs"
-            >
-              {isLaserPaused ? (
-                <Play className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              ) : (
-                <Pause className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-              )}
-              <span>{isLaserPaused ? 'Reanudar' : 'Pausar'}</span>
-            </button>
-          </div>
+            {/* SEGMENTED CONTROL DE ETAPAS CON PROGRESO INTEGRADO */}
+            <div className="space-y-1.5">
+              <div className="grid grid-cols-5 gap-1 p-1 rounded-xl bg-slate-200/60 dark:bg-neutral-900/80 border border-slate-200/80 dark:border-neutral-800">
+                {currentSubStages.map((stg, i) => {
+                  const isCurrent = i === laserIdx
+                  const StgIcon = stg.icon
 
-          {/* BARRA GUÍA TRANSITORIA: LOS 4 PASOS EN SERIE (HACE EL RECORRIDO 100% INTUITIVO) */}
-          <div className="flex items-center justify-between gap-1.5 py-1 px-2.5 my-2 rounded-xl bg-[#E2D9C8] dark:bg-neutral-950/80 border-2 border-slate-300 dark:border-neutral-800/80 font-mono text-[11px]">
-            <div className="flex items-center gap-2">
-              <span className="text-slate-500 dark:text-neutral-400 font-bold hidden sm:inline">
-                CIRCUITO:
-              </span>
-              <div className="flex items-center gap-1">
-                {MAIN_STEPS.map((st, i) => {
-                  const isCur = i === activeMainStep
-                  const isDone = i < activeMainStep
                   return (
                     <button
-                      key={`pipeline-btn-${st.id}`}
+                      key={stg.id}
                       type="button"
                       onClick={() => {
-                        setActiveMainStep(i)
-                        setLaserIdx(0)
+                        setLaserIdx(i)
                         setElapsed(0)
                       }}
-                      className={`px-2 py-0.5 rounded-md transition-all flex items-center gap-1 cursor-pointer ${
-                        isCur
-                          ? 'bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border border-cyan-500/40 dark:border-cyan-400/50 font-bold shadow-xs'
-                          : isDone
-                            ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400/90 border border-emerald-500/30'
-                            : 'text-slate-500 dark:text-neutral-500 hover:text-slate-800 dark:hover:text-neutral-300'
+                      className={`relative flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg font-mono text-[11px] sm:text-xs transition-colors duration-150 cursor-pointer min-w-0 ${
+                        isCurrent
+                          ? 'bg-white text-slate-900 dark:bg-cyan-500 dark:text-slate-950 font-bold shadow-xs'
+                          : 'text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200 font-medium'
                       }`}
                     >
-                      <span>{st.number}</span>
-                      <span className="hidden md:inline">{st.title.split(' ')[0]}</span>
-                      {isDone && (
-                        <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                      )}
+                      <StgIcon className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">{stg.label}</span>
                     </button>
                   )
                 })}
               </div>
-            </div>
-            <span className="text-cyan-700 dark:text-cyan-400 font-bold text-[10px] sm:text-[11px]">
-              PASO {activeMainStep + 1} DE 4 // AUTO-AVANCE
-            </span>
-          </div>
 
-          {/* ==============================================================
-              DOCK DE PÍLDORAS ESTILO IMAGINEART (SELECTOR COMPACTO SIN SCROLLBAR)
-             ============================================================== */}
-          <div className="relative w-full py-1.5">
-            <div className="grid grid-cols-5 gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-[#E2D9C8] dark:bg-neutral-900/90 border-2 border-slate-300 dark:border-white/10 backdrop-blur-xl shadow-inner">
-              {currentSubStages.map((stg, i) => {
-                const isCurrent = i === laserIdx
-                const StgIcon = stg.icon
-
-                return (
-                  <button
-                    key={stg.id}
-                    type="button"
-                    onClick={() => {
-                      setLaserIdx(i)
-                      setElapsed(0)
-                    }}
-                    className={`relative flex items-center justify-center gap-1 sm:gap-1.5 px-2 py-1.5 sm:py-2 rounded-full font-mono text-[11px] sm:text-xs transition-all duration-300 cursor-pointer min-w-0 ${
-                      isCurrent
-                        ? 'bg-slate-900 text-white dark:bg-cyan-500 dark:text-slate-950 font-black shadow-md shadow-slate-900/20 dark:shadow-[0_0_16px_rgba(6,182,212,0.5)] scale-[1.02]'
-                        : 'text-slate-800 hover:text-slate-950 hover:bg-slate-300/80 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-white/5 font-medium'
-                    }`}
-                  >
-                    <StgIcon className="w-3.5 h-3.5 shrink-0" />
-                    <span className="truncate">{stg.label}</span>
-                  </button>
-                )
-              })}
-            </div>
-
-            {/* TIMER EN FORMA DE LÍNEA ESTILO LÁSER EN MOVIMIENTO CONTINUO */}
-            <div className="relative w-full h-1.5 bg-slate-200 dark:bg-neutral-800/80 rounded-full mt-2.5 overflow-hidden">
-              <div
-                className="h-full rounded-full relative"
-                style={{
-                  width: `${Math.max(2, continuousProgress)}%`,
-                  background: 'linear-gradient(90deg, #06b6d4, #10b981, #f59e0b, #22c55e, #a855f7)',
-                  boxShadow: '0 0 14px rgba(56, 189, 248, 0.8)',
-                  transition: isLaserPaused ? 'none' : 'width 50ms linear',
-                }}
-              >
-                {/* Cabeza láser brillante siempre en movimiento continuo */}
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_#ffffff,0_0_16px_#38bdf8]" />
+              {/* LÍNEA DE PROGRESO DISCRETA Y ELEGANTE */}
+              <div className="w-full h-0.5 bg-slate-200 dark:bg-neutral-800/80 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-cyan-500 rounded-full transition-all duration-75"
+                  style={{
+                    width: `${Math.max(2, continuousProgress)}%`,
+                    transition: isLaserPaused ? 'none' : 'width 50ms linear',
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -692,12 +588,12 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
-                  className="rounded-2xl border-2 border-slate-300 dark:border-cyan-500/30 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
+                  className="rounded-2xl border border-slate-200 dark:border-cyan-500/30 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
                       {/* Lado Izquierdo: Mockup Visual ImagineArt */}
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-cyan-500/40 bg-[#FAF7F2] dark:bg-[#09182d] dark:bg-gradient-to-br dark:from-[#09182d] dark:to-[#040d1a] p-4.5 space-y-3 shadow-inner">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-cyan-500/30 bg-[#FAF7F2] dark:bg-[#09182d] dark:bg-gradient-to-br dark:from-[#09182d] dark:to-[#040d1a] p-4.5 space-y-3 shadow-inner">
                         <div className="flex items-center justify-between text-xs font-mono pb-2 border-b border-cyan-500/20">
                           <span className="text-cyan-400 font-bold flex items-center gap-1.5">
                             <PhoneCall className="w-3.5 h-3.5" />
@@ -724,7 +620,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             </p>
                           </div>
                         </div>
-                        <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/80 border-2 border-slate-300/80 dark:border-neutral-800 text-xs font-mono space-y-1">
+                        <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/80 border border-slate-200 dark:border-neutral-800 text-xs font-mono space-y-1">
                           <div className="flex justify-between text-neutral-400 text-[11px]">
                             <span>Tiempo de diagnóstico:</span>
                             <span className="text-cyan-400 font-bold">15 minutos</span>
@@ -767,7 +663,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 1 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Award className="w-3.5 h-3.5" />
@@ -778,7 +674,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="space-y-2 text-xs">
-                          <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[11px] text-neutral-400 block">
                               DESARROLLO COMPLETO
                             </span>
@@ -789,7 +685,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               Cero costos sorpresa
                             </span>
                           </div>
-                          <div className="flex justify-between p-2 rounded-lg bg-white dark:bg-neutral-900/50 border-2 border-slate-300/80 dark:border-neutral-800 text-[11px]">
+                          <div className="flex justify-between p-2 rounded-lg bg-white dark:bg-neutral-900/50 border border-slate-200 dark:border-neutral-800 text-[11px]">
                             <span className="text-neutral-400">Mensualidad por uso:</span>
                             <span className="text-emerald-400 font-bold">$0,00 ARS</span>
                           </div>
@@ -826,7 +722,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-amber-500/30 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
                           <span className="text-amber-400 font-bold flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5" />
@@ -898,7 +794,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             PRIVADO
                           </span>
                         </div>
-                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 space-y-2 text-xs">
+                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-2 text-xs">
                           <div className="flex items-center gap-1.5 text-neutral-400 text-[11px]">
                             <Globe className="w-3.5 h-3.5 text-cyan-400" />
                             <span className="truncate">demo-privada.exepaginasweb.com</span>
@@ -940,7 +836,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-purple-500/30 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <Rocket className="w-3.5 h-3.5" />
@@ -951,7 +847,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[10px] text-purple-300 block">DOMINIO</span>
                             <span className="text-white font-bold block truncate mt-0.5">
                               tunegocio.com
@@ -960,7 +856,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               SSL 256 Activo
                             </span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[10px] text-purple-300 block">COBROS</span>
                             <span className="text-emerald-400 font-bold block truncate mt-0.5">
                               Directo CBU
@@ -1012,11 +908,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
-                  className="rounded-2xl border-2 border-slate-300 dark:border-emerald-500/40 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
+                  className="rounded-2xl border border-slate-200 dark:border-emerald-500/30 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Cpu className="w-3.5 h-3.5" />
@@ -1027,7 +923,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="space-y-2 text-xs">
-                          <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[11px] text-neutral-400 block">COMPILACIÓN</span>
                             <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
                               SSR Instantáneo (Edge)
@@ -1036,7 +932,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               60 FPS garantizados
                             </span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/50 border-2 border-slate-300/80 dark:border-neutral-800 text-[11px] flex justify-between">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/50 border border-slate-200 dark:border-neutral-800 text-[11px] flex justify-between">
                             <span className="text-neutral-400">Código basura:</span>
                             <span className="text-emerald-400 font-bold">0% WordPress</span>
                           </div>
@@ -1084,14 +980,14 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[10px] text-cyan-300 block">SEGURIDAD</span>
                             <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
                               RLS Activo
                             </span>
                             <span className="text-[10px] text-cyan-400 block mt-1">AES-256</span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[10px] text-cyan-300 block">RESPALDO</span>
                             <span className="text-emerald-400 font-bold block mt-0.5">
                               Backups 24h
@@ -1133,7 +1029,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-amber-500/30 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
                           <span className="text-amber-400 font-bold flex items-center gap-1.5">
                             <CreditCard className="w-3.5 h-3.5" />
@@ -1143,7 +1039,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             0% COMISIÓN
                           </span>
                         </div>
-                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 space-y-1 text-xs">
+                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-1 text-xs">
                           <span className="text-[11px] text-neutral-400 block">SEÑA RECIBIDA</span>
                           <span className="text-2xl font-black text-slate-900 dark:text-white block">
                             + $ 10.000,00{' '}
@@ -1186,7 +1082,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 3 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
                             <Activity className="w-3.5 h-3.5" />
@@ -1237,7 +1133,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-purple-500/30 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <Server className="w-3.5 h-3.5" />
@@ -1248,7 +1144,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[10px] text-purple-300 block">UBICACIÓN</span>
                             <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
                               Buenos Aires CDN
@@ -1257,7 +1153,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               &lt; 15ms Latencia
                             </span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[10px] text-purple-300 block">
                               DISPONIBILIDAD
                             </span>
@@ -1311,11 +1207,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
-                  className="rounded-2xl border-2 border-slate-300 dark:border-amber-500/40 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
+                  className="rounded-2xl border border-slate-200 dark:border-amber-500/30 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-amber-500/30 bg-[#FAF7F2] dark:bg-[#241707] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
                           <span className="text-amber-400 font-bold flex items-center gap-1.5">
                             <Search className="w-3.5 h-3.5" />
@@ -1334,7 +1230,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           ].map((m) => (
                             <div
                               key={m.label}
-                              className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 flex items-center justify-between px-2.5"
+                              className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex items-center justify-between px-2.5"
                             >
                               <span className="text-[11px] text-neutral-300 truncate">
                                 {m.label}
@@ -1441,7 +1337,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Lock className="w-3.5 h-3.5" />
@@ -1452,7 +1348,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[10px] text-neutral-400 block">ENCRIPTACIÓN</span>
                             <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
                               HTTPS Bancario
@@ -1461,7 +1357,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               Candado Activo
                             </span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[10px] text-neutral-400 block">FIREWALL</span>
                             <span className="text-emerald-400 font-bold block mt-0.5">
                               Anti-DDoS
@@ -1503,7 +1399,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 3 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-purple-500/30 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <ShieldCheck className="w-3.5 h-3.5" />
@@ -1566,7 +1462,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Award className="w-3.5 h-3.5" />
@@ -1576,7 +1472,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             ACTIVO 24/7
                           </span>
                         </div>
-                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 space-y-2 text-xs">
+                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-2 text-xs">
                           <div className="flex items-center gap-2">
                             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                             <span className="text-white font-bold">
@@ -1630,11 +1526,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
-                  className="rounded-2xl border-2 border-slate-300 dark:border-purple-500/40 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
+                  className="rounded-2xl border border-slate-200 dark:border-purple-500/30 bg-white dark:bg-[#080d1a] p-5 sm:p-6 shadow-md dark:shadow-2xl"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-purple-500/30 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <Target className="w-3.5 h-3.5" />
@@ -1645,14 +1541,14 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="space-y-1.5 font-mono text-xs">
-                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 flex items-center justify-between">
+                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex items-center justify-between">
                             <span className="text-purple-300 font-bold flex items-center gap-1.5 text-[11px]">
                               <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
                               ViewContent
                             </span>
                             <span className="text-neutral-400 text-[10px]">Visitas</span>
                           </div>
-                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 flex items-center justify-between">
+                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex items-center justify-between">
                             <span className="text-cyan-300 font-bold flex items-center gap-1.5 text-[11px]">
                               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                               Checkout
@@ -1711,7 +1607,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             99.2% ACTIVA
                           </span>
                         </div>
-                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 space-y-1 text-xs">
+                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-1 text-xs">
                           <span className="text-[11px] text-neutral-400 block">EN WEBS LENTAS</span>
                           <span className="text-red-400 font-bold block">
                             53% abandona antes de abrir
@@ -1752,7 +1648,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <TrendingUp className="w-3.5 h-3.5" />
@@ -1763,11 +1659,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="space-y-1.5 text-xs">
-                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 flex justify-between">
+                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex justify-between">
                             <span>1. Ve tu oferta</span>
                             <span className="text-cyan-400 font-bold">0.38s</span>
                           </div>
-                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 flex justify-between">
+                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex justify-between">
                             <span>2. Elige el turno</span>
                             <span className="text-amber-400 font-bold">1 clic</span>
                           </div>
@@ -1808,7 +1704,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 3 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-emerald-500/30 bg-[#FAF7F2] dark:bg-[#061e16] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
                             <Target className="w-3.5 h-3.5" />
@@ -1859,7 +1755,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border border-slate-200 dark:border-purple-500/30 bg-[#FAF7F2] dark:bg-[#1b0d2a] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <BarChart3 className="w-3.5 h-3.5" />
@@ -1870,7 +1766,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[10px] text-neutral-400 block">INVERSIÓN</span>
                             <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
                               $ 100.000
@@ -1879,7 +1775,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               En Anuncios
                             </span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
                             <span className="text-[10px] text-emerald-400 block">FACTURADO</span>
                             <span className="text-emerald-400 font-bold block mt-0.5">
                               $ 240.000
@@ -1924,23 +1820,19 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
           </div>
 
           {/* ==============================================================
-              PIE INFERIOR DE LA VENTANA DERECHA CON CLEARANCE PARA EL CHAT WIDGET
+              PIE INFERIOR DE LA VENTANA DERECHA
              ============================================================== */}
-          <div className="pt-3 border-t border-slate-200 dark:border-neutral-800/80 flex items-center justify-between font-mono text-xs sm:text-sm text-slate-600 dark:text-neutral-400 pr-24 sm:pr-28">
+          <div className="pt-3 border-t border-slate-200 dark:border-neutral-800/80 flex items-center justify-between font-mono text-xs text-slate-500 dark:text-neutral-400 pr-24 sm:pr-28">
             <span className="flex items-center gap-2">
-              <Logo size={16} />
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 inline-block" />
               <span>
-                Etapa {laserIdx + 1} de {currentSubStages.length} //{' '}
+                Etapa {laserIdx + 1} de {currentSubStages.length} ·{' '}
                 {currentSubStages[laserIdx]?.tag}
               </span>
             </span>
 
-            <span className="text-cyan-700 dark:text-cyan-400 font-mono text-xs hidden sm:inline">
-              {isLaserPaused
-                ? '⏸️ Timer pausado'
-                : laserIdx === totalStages - 1
-                  ? `🚀 Avanzando a Paso ${((activeMainStep + 1) % MAIN_STEPS.length) + 1} en ${((STEP_DURATION - elapsed) / 1000).toFixed(1)}s`
-                  : `⏱️ Siguiente etapa en ${((STEP_DURATION - elapsed) / 1000).toFixed(1)}s`}
+            <span className="text-slate-500 dark:text-neutral-400 hidden sm:inline">
+              {isLaserPaused ? 'Pausado' : 'Rotación continua'}
             </span>
           </div>
         </div>

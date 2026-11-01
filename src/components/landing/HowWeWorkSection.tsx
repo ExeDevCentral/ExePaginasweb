@@ -166,8 +166,12 @@ export default function HowWeWorkSection() {
   return (
     <section
       id="proceso"
-      className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-24 border-t border-slate-200/80 dark:border-white/10"
+      className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-24"
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 inset-x-0 h-px max-w-xl mx-auto bg-gradient-to-r from-transparent via-slate-300/70 dark:via-white/10 to-transparent"
+      />
       {/* Encabezado Editorial / Plano */}
       <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-brand/10 border border-brand/25 text-brand dark:text-emerald-400 font-mono text-[11px] uppercase tracking-widest font-semibold mb-4">

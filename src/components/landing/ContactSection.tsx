@@ -162,10 +162,11 @@ const ContactSection = () => {
   }
 
   return (
-    <section
-      id="contact"
-      className="relative px-4 py-20 sm:px-6 lg:px-8 overflow-hidden z-10 border-t border-slate-200/80 dark:border-white/10"
-    >
+    <section id="contact" className="relative px-4 py-20 sm:px-6 lg:px-8 overflow-hidden z-10">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 inset-x-0 h-px max-w-xl mx-auto bg-gradient-to-r from-transparent via-slate-300/70 dark:via-white/10 to-transparent"
+      />
       <span id="contacto" className="absolute top-0" />
 
       <div className="relative mx-auto max-w-6xl">

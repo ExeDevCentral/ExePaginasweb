@@ -195,7 +195,7 @@ export const OptimusScaleHero: React.FC = () => {
   }
 
   return (
-    <div className="relative w-full bg-transparent text-foreground text-foreground transition-colors duration-300">
+    <div className="relative z-10 w-full bg-transparent text-foreground transition-colors duration-300">
       {/* ========================================================
           1. HERO PRINCIPAL (ESTRUCTURA ALINEADA CON EL NAVBAR)
          ======================================================== */}
@@ -206,12 +206,14 @@ export const OptimusScaleHero: React.FC = () => {
         onMouseMove={handleHeroMouseMove}
         className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between pt-24 sm:pt-28 pb-4 overflow-hidden"
       >
-        {/* Aura radial interactiva suave con decaimiento lumínico en scroll */}
+        {/* Aura radial interactiva suave con decaimiento lumínico en scroll y máscara vertical sin cortes */}
         <motion.div
           className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300"
           style={{
             opacity: auraIntensity,
             background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(6, 182, 212, 0.05), transparent 70%)`,
+            maskImage: 'linear-gradient(to bottom, black 0%, black 75%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 75%, transparent 100%)',
           }}
         />
 
@@ -345,7 +347,15 @@ export const OptimusScaleHero: React.FC = () => {
         </div>
 
         {/* TICKER / MARQUEE DE MÉTRICAS */}
-        <div className="relative z-10 w-full mt-8 sm:mt-10 py-4.5 border-t border-slate-200/80 dark:border-white/10 overflow-hidden bg-slate-100/60 dark:bg-black/40 backdrop-blur-xs select-none">
+        <div
+          className="relative z-10 w-full mt-8 sm:mt-10 py-4.5 border-y border-slate-200/60 dark:border-white/[0.06] overflow-hidden bg-slate-100/40 dark:bg-white/[0.015] backdrop-blur-xs select-none"
+          style={{
+            maskImage:
+              'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
+            WebkitMaskImage:
+              'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
+          }}
+        >
           <div className="flex w-max animate-marquee gap-10 sm:gap-14 items-center">
             {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
               <div
@@ -371,7 +381,7 @@ export const OptimusScaleHero: React.FC = () => {
       {/* ========================================================
           3. SUPER CARD INTERACTIVA UNIFICADA (PASO A PASO Y SISTEMAS EN VIVO)
          ======================================================== */}
-      <InteractiveFeatureShowcase className="border-t border-slate-200/80 dark:border-white/10" />
+      <InteractiveFeatureShowcase />
 
       {/* ESTILOS CSS PARA EL MARQUEE TICKER INFINITO */}
       <style jsx>{`

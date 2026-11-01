@@ -186,8 +186,12 @@ export default function LinuxBusinessSection() {
     <section
       id="sistemas-linux"
       data-linux-business="true"
-      className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20 sm:py-24 border-t border-slate-200/80 dark:border-white/10"
+      className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20 sm:py-24"
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 inset-x-0 h-px max-w-xl mx-auto bg-gradient-to-r from-transparent via-slate-300/70 dark:via-white/10 to-transparent"
+      />
       {/* Cabecera Editorial Sobria y Técnica */}
       <div className="max-w-3xl mx-auto text-center mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 font-mono text-[11px] uppercase tracking-widest font-bold mb-4">

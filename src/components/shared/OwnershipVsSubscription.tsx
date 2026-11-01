@@ -510,7 +510,15 @@ export const OwnershipVsSubscription: React.FC = () => {
 
   return (
     <section id="comparativa" className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_20%_10%,color-mix(in_oklab,var(--own-500)_6%,transparent),transparent_60%),radial-gradient(60%_50%_at_80%_20%,color-mix(in_oklab,var(--rent-500)_6%,transparent),transparent_60%)]" />
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_45%_at_25%_50%,color-mix(in_oklab,var(--own-500)_4.5%,transparent),transparent_70%),radial-gradient(55%_45%_at_75%_50%,color-mix(in_oklab,var(--rent-500)_4.5%,transparent),transparent_70%)]"
+        style={{
+          maskImage:
+            'linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)',
+          WebkitMaskImage:
+            'linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)',
+        }}
+      />
 
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Header con Honestidad Brutal */}

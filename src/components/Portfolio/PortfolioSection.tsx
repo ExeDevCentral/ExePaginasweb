@@ -61,8 +61,18 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
 
   return (
     <section id="portafolio" className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
-      {/* Glows de fondo */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-150 h-87.5 bg-linear-to-r from-accent-cyan/10 to-accent-magenta/10 rounded-full blur-[130px] pointer-events-none" />
+      {/* Glows de fondo con transición difuminada vertical para evitar cortes entre secciones */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          maskImage:
+            'linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)',
+          WebkitMaskImage:
+            'linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)',
+        }}
+      >
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-87.5 bg-linear-to-r from-accent-cyan/8 to-accent-magenta/8 rounded-full blur-[130px]" />
+      </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Encabezado Editorial Técnico */}

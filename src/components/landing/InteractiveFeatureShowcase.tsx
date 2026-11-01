@@ -429,7 +429,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   }}
                   className={`relative flex items-center justify-between p-4 sm:p-4.5 rounded-2xl transition-all duration-300 cursor-pointer text-left overflow-hidden ${
                     isActive
-                      ? 'bg-white dark:from-[#0c2438] dark:via-[#0c1e30] dark:to-[#08121f] border-2 border-cyan-600 dark:border-cyan-400/90 shadow-md shadow-cyan-500/15 dark:shadow-[0_0_30px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500/20 dark:ring-cyan-400/20 scale-[1.01]'
+                      ? 'bg-cyan-50/90 dark:bg-gradient-to-r dark:from-[#0c2438] dark:via-[#0c1e30] dark:to-[#08121f] border-2 border-cyan-600 dark:border-cyan-400/90 shadow-md shadow-cyan-600/10 dark:shadow-[0_0_30px_rgba(6,182,212,0.25)] ring-1 ring-cyan-600/20 dark:ring-cyan-400/20 scale-[1.01]'
                       : 'bg-white dark:bg-[#091122]/70 hover:bg-[#FAF7F2] dark:hover:bg-[#0d1830] border-2 border-slate-300 dark:border-neutral-800/80 hover:border-slate-400 dark:hover:border-neutral-700/90 text-slate-700 dark:text-neutral-300 hover:scale-[1.005] group'
                   }`}
                 >
@@ -455,8 +455,8 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                     <span
                       className={`w-12 h-12 rounded-xl flex items-center justify-center font-mono font-bold text-base shrink-0 transition-all ${
                         isActive
-                          ? 'bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 border border-cyan-400/60 shadow-inner'
-                          : 'bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 text-slate-500 dark:text-neutral-400 group-hover:text-slate-900 dark:group-hover:text-neutral-200 group-hover:border-slate-300 dark:group-hover:border-neutral-700'
+                          ? 'bg-cyan-600 text-white dark:bg-cyan-500/20 dark:text-cyan-300 border border-cyan-600 dark:border-cyan-400/60 shadow-xs'
+                          : 'bg-slate-200/90 text-slate-800 dark:bg-neutral-900 dark:text-neutral-400 border border-slate-300 dark:border-neutral-800 group-hover:text-slate-900 dark:group-hover:text-neutral-200 group-hover:border-slate-400 dark:group-hover:border-neutral-700'
                       }`}
                     >
                       {step.number}
@@ -474,15 +474,15 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           {step.title}
                         </h4>
                         {isActive ? (
-                          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 border border-cyan-400/40">
+                          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-100 text-cyan-900 border border-cyan-300 dark:bg-cyan-500/20 dark:text-cyan-300 dark:border-cyan-400/40">
                             ETAPA {laserIdx + 1}/5
                           </span>
                         ) : idx < activeMainStep ? (
-                          <span className="hidden sm:inline-flex items-center gap-0.5 text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                          <span className="hidden sm:inline-flex items-center gap-0.5 text-[10px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
                             <Check className="w-3 h-3" /> LISTO
                           </span>
                         ) : idx === (activeMainStep + 1) % MAIN_STEPS.length ? (
-                          <span className="hidden sm:inline-block text-[10px] font-mono text-slate-400 dark:text-neutral-500">
+                          <span className="hidden sm:inline-block text-[10px] font-mono text-slate-500 dark:text-neutral-500 font-semibold">
                             SIGUIENTE
                           </span>
                         ) : null}
@@ -490,8 +490,8 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       <p
                         className={`text-xs sm:text-sm truncate mt-0.5 transition-colors ${
                           isActive
-                            ? 'text-cyan-900 dark:text-cyan-100/90 font-medium'
-                            : 'text-slate-500 dark:text-neutral-400 group-hover:text-slate-700 dark:group-hover:text-neutral-300'
+                            ? 'text-cyan-950 dark:text-cyan-100/90 font-medium'
+                            : 'text-slate-600 dark:text-neutral-400 group-hover:text-slate-800 dark:group-hover:text-neutral-300'
                         }`}
                       >
                         {step.subtitle}
@@ -703,7 +703,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <PhoneCall className="w-3.5 h-3.5" />
                             Llamada Directa
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             EN VIVO
                           </span>
                         </div>
@@ -714,7 +714,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </div>
                           <div>
                             <div className="flex items-center gap-1.5">
-                              <h4 className="text-slate-900 dark:text-slate-900 dark:text-white font-bold text-sm sm:text-base">
+                              <h4 className="text-slate-900 dark:text-white font-bold text-sm sm:text-base">
                                 Exequiel Echevarria
                               </h4>
                               <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
@@ -738,7 +738,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                       {/* Lado Derecho: Contenido Editorial y Propuesta */}
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-mono text-xs font-bold border border-cyan-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 font-mono text-xs font-bold border border-cyan-500/30 dark:border-cyan-400/30">
                           <Sparkles className="w-3.5 h-3.5" />
                           RELEVAMIENTO EXPRESS · SIN INTERMEDIARIOS
                         </div>
@@ -773,7 +773,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Award className="w-3.5 h-3.5" />
                             Contrato Digital Fijo
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             CERRADO
                           </span>
                         </div>
@@ -797,7 +797,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
                           <Award className="w-3.5 h-3.5" />
                           TRANSPARENCIA TOTAL · SIN LETRA CHICA
                         </div>
@@ -832,7 +832,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Clock className="w-3.5 h-3.5" />
                             Velocidad de Despliegue
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-amber-500/15 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 text-[10px] font-bold">
                             7 A 15 DÍAS
                           </span>
                         </div>
@@ -859,7 +859,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-mono text-xs font-bold border border-amber-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-mono text-xs font-bold border border-amber-500/30 dark:border-amber-400/30">
                           <Clock className="w-3.5 h-3.5" />
                           CRONOGRAMA RÉCORD · SIN DEMORAS
                         </div>
@@ -894,7 +894,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <FileCode className="w-3.5 h-3.5" />
                             Entorno Staging Privado
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             PRIVADO
                           </span>
                         </div>
@@ -911,7 +911,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
                           <FileCode className="w-3.5 h-3.5" />
                           TESTING EN VIVO · ANTES DEL LANZAMIENTO
                         </div>
@@ -946,7 +946,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Rocket className="w-3.5 h-3.5" />
                             Lanzamiento Oficial
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-[10px] font-bold">
                             ACTIVO
                           </span>
                         </div>
@@ -973,7 +973,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-mono text-xs font-bold border border-purple-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 font-mono text-xs font-bold border border-purple-500/30 dark:border-purple-400/30">
                           <Rocket className="w-3.5 h-3.5" />
                           LLAVE EN MANO · FACTURANDO DESDE EL PRIMER DÍA
                         </div>
@@ -1022,7 +1022,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Cpu className="w-3.5 h-3.5" />
                             Next.js 16 Edge SSR
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             48 KB BUNDLE
                           </span>
                         </div>
@@ -1044,7 +1044,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
                           <FileCode className="w-3.5 h-3.5" />
                           ARQUITECTURA SERVER-SIDE · NEXT.JS 16
                         </div>
@@ -1079,7 +1079,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Database className="w-3.5 h-3.5" />
                             PostgreSQL Supabase
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 text-[10px] font-bold">
                             12ms PING
                           </span>
                         </div>
@@ -1104,7 +1104,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-mono text-xs font-bold border border-cyan-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 font-mono text-xs font-bold border border-cyan-500/30 dark:border-cyan-400/30">
                           <Shield className="w-3.5 h-3.5" />
                           BASE DE DATOS RELACIONAL · ALTA SEGURIDAD
                         </div>
@@ -1139,7 +1139,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <CreditCard className="w-3.5 h-3.5" />
                             Acreditación Inmediata
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             0% COMISIÓN
                           </span>
                         </div>
@@ -1157,7 +1157,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-mono text-xs font-bold border border-amber-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-mono text-xs font-bold border border-amber-500/30 dark:border-amber-400/30">
                           <CreditCard className="w-3.5 h-3.5" />
                           INTEGRACIÓN BANCARIA · COBROS DIRECTOS
                         </div>
@@ -1192,7 +1192,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Activity className="w-3.5 h-3.5" />
                             Webhook Event Dispatcher
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             EN 2s
                           </span>
                         </div>
@@ -1243,7 +1243,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Server className="w-3.5 h-3.5" />
                             Servidores Edge Globales
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-[10px] font-bold">
                             99.99% UPTIME
                           </span>
                         </div>
@@ -1272,7 +1272,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-mono text-xs font-bold border border-purple-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 font-mono text-xs font-bold border border-purple-500/30 dark:border-purple-400/30">
                           <Server className="w-3.5 h-3.5" />
                           DESPLIEGUE CLOUD · ALTA DISPONIBILIDAD
                         </div>
@@ -1321,7 +1321,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Search className="w-3.5 h-3.5" />
                             Google Lighthouse
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             100/100
                           </span>
                         </div>
@@ -1348,7 +1348,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-mono text-xs font-bold border border-amber-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-mono text-xs font-bold border border-amber-500/30 dark:border-amber-400/30">
                           <Award className="w-3.5 h-3.5" />
                           AUDITORÍA OFICIAL · 100/100 EN GOOGLE
                         </div>
@@ -1383,7 +1383,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Zap className="w-3.5 h-3.5" />
                             Velocidad de Carga
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 text-[10px] font-bold">
                             0.38 SEGUNDOS
                           </span>
                         </div>
@@ -1412,7 +1412,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-mono text-xs font-bold border border-cyan-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 font-mono text-xs font-bold border border-cyan-500/30 dark:border-cyan-400/30">
                           <Zap className="w-3.5 h-3.5" />
                           VELOCIDAD EXTREMA · APERTURA EN 0.38S
                         </div>
@@ -1447,7 +1447,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Lock className="w-3.5 h-3.5" />
                             Certificado de Blindaje
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             SSL 256-BIT
                           </span>
                         </div>
@@ -1474,7 +1474,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
                           <Lock className="w-3.5 h-3.5" />
                           SEGURIDAD SSL & BLINDAJE CONTRA ATAQUES
                         </div>
@@ -1509,7 +1509,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <ShieldCheck className="w-3.5 h-3.5" />
                             Propiedad vs Alquiler
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-[10px] font-bold">
                             100% TUYO
                           </span>
                         </div>
@@ -1537,7 +1537,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-mono text-xs font-bold border border-purple-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 font-mono text-xs font-bold border border-purple-500/30 dark:border-purple-400/30">
                           <ShieldCheck className="w-3.5 h-3.5" />
                           CERO ALQUILERES · EL CÓDIGO ES TU ACTIVO
                         </div>
@@ -1572,7 +1572,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Award className="w-3.5 h-3.5" />
                             Garantía & Monitoreo
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             ACTIVO 24/7
                           </span>
                         </div>
@@ -1591,7 +1591,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
                           <Award className="w-3.5 h-3.5" />
                           ACOMPAÑAMIENTO REAL · TRATO DIRECTO
                         </div>
@@ -1640,7 +1640,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Target className="w-3.5 h-3.5" />
                             Tracking Pixel Meta
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-[10px] font-bold">
                             100% MEDIDO
                           </span>
                         </div>
@@ -1672,7 +1672,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-mono text-xs font-bold border border-purple-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 font-mono text-xs font-bold border border-purple-500/30 dark:border-purple-400/30">
                           <Target className="w-3.5 h-3.5" />
                           CONFIGURACIÓN DEL PÍXEL · META & GOOGLE
                         </div>
@@ -1707,7 +1707,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Zap className="w-3.5 h-3.5" />
                             Retención en Publicidad
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             99.2% ACTIVA
                           </span>
                         </div>
@@ -1723,7 +1723,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-mono text-xs font-bold border border-cyan-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 font-mono text-xs font-bold border border-cyan-500/30 dark:border-cyan-400/30">
                           <Zap className="w-3.5 h-3.5" />
                           ATERRIZAJE EN 0.38S · CERO DINERO PERDIDO
                         </div>
@@ -1758,7 +1758,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <TrendingUp className="w-3.5 h-3.5" />
                             Embudo Acelerado
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             &lt; 30s
                           </span>
                         </div>
@@ -1779,7 +1779,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 dark:border-emerald-400/30">
                           <TrendingUp className="w-3.5 h-3.5" />
                           EMBUDO EN 1 CLIC · ALTA CONVERSIÓN
                         </div>
@@ -1814,7 +1814,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <Target className="w-3.5 h-3.5" />
                             Recuperación Automática
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
                             +35% CIERRES
                           </span>
                         </div>
@@ -1865,7 +1865,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             <BarChart3 className="w-3.5 h-3.5" />
                             Retorno Publicitario
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-[10px] font-bold">
                             ROAS 2.4X
                           </span>
                         </div>
@@ -1892,7 +1892,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-mono text-xs font-bold border border-purple-400/30">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 font-mono text-xs font-bold border border-purple-500/30 dark:border-purple-400/30">
                           <BarChart3 className="w-3.5 h-3.5" />
                           MÁQUINA DE VENTAS · RETORNO PREDECIBLE
                         </div>

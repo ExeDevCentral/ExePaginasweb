@@ -9,6 +9,24 @@
 
 Llevar la navegación de "funciona" a "se siente terminada": que no se corte nada, que nada se superponga, que los espaciados sean consistentes y que el panel se comporte bien en mobile, tablet y desktop. El foco son los **detalles**: bordes, alineaciones, tamaños de icono, estados de foco, truncados y comportamiento del panel.
 
+## Estado de implementación
+
+Actualizado el 2026-11-01.
+
+| Tarea | Estado | Detalle |
+|-------|--------|---------|
+| 1. MegaPanel: altura y scroll | Hecho | `max-h` con `100dvh`, `min-h-0`, `overscroll-contain`, z-index por encima del chat flotante |
+| 2. Índice vs. tags | Hecho | Se eliminó el índice absoluto `ESTIMATE // 06` / `PLANS // 07` (redundante con el `kbd`) |
+| 3. Navbar mobile | Hecho | Logo sin márgenes negativos, CTA con 12 px de aire, burger 40×40, ES 40 px |
+| 4. Footer del MegaPanel | Hecho | `flex-wrap` en autor y badge, botones `whitespace-nowrap` + `truncate`, atajos ocultos en mobile |
+| 5. Aire interno y alineación | Parcial | Badge reducido y CTA alineado a 17 px en desktop; faltan iconos de utilidades |
+| 6. Estado activo y scroll-spy | Parcial | Contacto con `IntersectionObserver` y `aria-current="location"`; falta `/portafolio/[slug]` |
+| 7. Jerarquía de la barra | Hecho | Badge a `text-[9px]` y menor contraste |
+| 8. Búsqueda y teclado | Ya existía | Esc, ↑↓, ↵, 1–7, click fuera y ⌘K global |
+| 9. Accesibilidad | Parcial | Focus trap, retorno de foco y `aria-modal`; falta revisar reduced-motion del clip-path |
+| 10. Micro-consistencia | Parcial | Truncados y hover/focus revisados; radios y sombras sin auditar |
+
+
 ## Evidencia relevada
 
 Capturas a 390, 768, 1024 y 1440 con el panel abierto:

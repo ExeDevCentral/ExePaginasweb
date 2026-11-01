@@ -270,14 +270,24 @@ export default function MegaPanel({
 
   // Reset del foco e índice al abrir (solo auto-enfoca en desktop para no tapar la pantalla con el teclado virtual móvil)
   useEffect(() => {
-    if (isOpen) {
-      setSearchQuery('')
-      setSelectedIndex(0)
-      if (typeof window !== 'undefined' && window.innerWidth >= 768) {
-        const timer = setTimeout(() => {
-          inputRef.current?.focus()
-        }, 50)
-        return () => clearTimeout(timer)
+    if (!isOpen) return
+
+    const previouslyFocused = document.activeElement as HTMLElement | null
+    setSearchQuery('')
+    setSelectedIndex(0)
+
+    let timer: ReturnType<typeof setTimeout> | undefined
+    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+      timer = setTimeout(() => {
+        inputRef.current?.focus()
+      }, 50)
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer)
+      // Devuelve el foco al trigger que abrió el panel
+      if (previouslyFocused && document.contains(previouslyFocused)) {
+        previouslyFocused.focus()
       }
     }
   }, [isOpen])
@@ -294,6 +304,24 @@ export default function MegaPanel({
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         onClose()
+        return
+      }
+
+      // Focus trap: mantiene el foco dentro del diálogo
+      if (event.key === 'Tab') {
+        const focusables = panelRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+        if (!focusables || focusables.length === 0) return
+        const first = focusables[0]
+        const last = focusables[focusables.length - 1]
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault()
+          last?.focus()
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault()
+          first?.focus()
+        }
         return
       }
 
@@ -411,10 +439,10 @@ export default function MegaPanel({
             transition={{ duration: 0.15 }}
             onClick={onClose}
             aria-hidden="true"
-            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-45"
+            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-[55]"
           />
 
-          <div className="fixed inset-x-0 top-16 z-50 flex justify-center px-4 pointer-events-auto select-none sm:top-20">
+          <div className="fixed inset-x-0 top-16 z-[60] flex justify-center px-3 pt-2 pointer-events-auto select-none sm:top-20 sm:px-4">
             <motion.div
               ref={panelRef}
               id="mega-panel-palette"
@@ -432,7 +460,7 @@ export default function MegaPanel({
                 boxShadow:
                   '0 24px 60px -12px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.06)',
               }}
-              className="relative w-full max-w-3xl max-h-[85vh] overflow-hidden rounded-2xl border border-black/8 dark:border-white/8 bg-[#FFFDF9] dark:bg-[#0B0F14] flex flex-col"
+              className="relative w-full max-w-3xl max-h-[calc(100dvh-88px)] sm:max-h-[min(85vh,calc(100dvh-104px))] overflow-hidden rounded-2xl border border-black/8 dark:border-white/8 bg-[#FFFDF9] dark:bg-[#0B0F14] flex flex-col"
             >
               {/* Recurso visual sutil: Grilla de puntos con máscara radial (3-4% opacidad) */}
               <div
@@ -497,7 +525,7 @@ export default function MegaPanel({
               </div>
 
               {/* Contenedor escrolleable de tarjetas */}
-              <div className="overflow-y-auto p-3.5 sm:p-4 flex-1 space-y-3">
+              <div className="overflow-y-auto overscroll-contain p-3.5 sm:p-4 flex-1 min-h-0 space-y-3">
                 {/* Categoría: Rubros */}
                 {rubroItems.length > 0 && (
                   <div>
@@ -635,12 +663,6 @@ export default function MegaPanel({
                               } to-transparent`}
                               aria-hidden="true"
                             />
-                            <div
-                              className="absolute right-3 bottom-3 font-mono text-[8px] tracking-[0.2em] text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/60 transition-colors"
-                              aria-hidden="true"
-                            >
-                              {item.id === 'tienda' ? 'PLANS // 07' : 'ESTIMATE // 06'}
-                            </div>
                             <div>
                               <div className="flex items-center justify-between gap-2 mb-2">
                                 <div className="flex items-center gap-2.5">
@@ -766,12 +788,12 @@ export default function MegaPanel({
                   <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-white/8 text-[11px] font-mono font-bold text-slate-800 dark:text-[#E6EAF0] flex items-center justify-center shrink-0">
                     EXE
                   </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-xs text-slate-900 dark:text-[#E6EAF0]">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <span className="font-semibold text-xs text-slate-900 dark:text-[#E6EAF0] truncate">
                         Exequiel Echevarría
                       </span>
-                      <span className="font-mono text-[10px] text-slate-500 dark:text-[#CBD5E1] border border-black/10 dark:border-white/8 px-1.5 py-0.2 rounded bg-black/2 dark:bg-white/4">
+                      <span className="font-mono text-[10px] text-slate-500 dark:text-[#CBD5E1] border border-black/10 dark:border-white/8 px-1.5 py-0.2 rounded bg-black/2 dark:bg-white/4 whitespace-nowrap">
                         Full-Stack · React / TypeScript
                       </span>
                     </div>
@@ -795,18 +817,20 @@ export default function MegaPanel({
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                   <Link
                     href="/dashboard"
                     onClick={onClose}
-                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-white/15 bg-white/80 dark:bg-white/6 hover:bg-slate-100 dark:hover:bg-white/12 text-slate-900 dark:text-[#E6EAF0] font-semibold text-xs transition-colors shrink-0 shadow-xs active:scale-[0.98]"
+                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-300 dark:border-white/15 bg-white/80 dark:bg-white/6 hover:bg-slate-100 dark:hover:bg-white/12 text-slate-900 dark:text-[#E6EAF0] font-semibold text-[11px] sm:text-xs whitespace-nowrap transition-colors shrink-0 shadow-xs active:scale-[0.98]"
                   >
                     <LayoutDashboard
                       size={14}
                       strokeWidth={2}
-                      className="text-cyan-600 dark:text-cyan-400"
+                      className="text-cyan-600 dark:text-cyan-400 shrink-0"
                     />
-                    <span>{t('megapanel.dashboard_cta', 'Panel Clientes')}</span>
+                    <span className="truncate">
+                      {t('megapanel.dashboard_cta', 'Panel Clientes')}
+                    </span>
                   </Link>
                   <a
                     href={getWhatsAppUrl(
@@ -818,17 +842,19 @@ export default function MegaPanel({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={onClose}
-                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs transition-colors shrink-0 shadow-xs active:scale-[0.98]"
+                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-[11px] sm:text-xs whitespace-nowrap transition-colors shrink-0 shadow-xs active:scale-[0.98]"
                   >
-                    <MessageCircle size={15} strokeWidth={2} />
-                    <span>{t('megapanel.whatsapp_cta', 'Hablar por WhatsApp')}</span>
-                    <span className="font-mono text-[10px]">↗</span>
+                    <MessageCircle size={15} strokeWidth={2} className="shrink-0" />
+                    <span className="truncate">
+                      {t('megapanel.whatsapp_cta', 'Hablar por WhatsApp')}
+                    </span>
+                    <span className="font-mono text-[10px] shrink-0">↗</span>
                   </a>
                 </div>
               </div>
 
               {/* Barra de atajos de pie de consola (Keyboard hints puros) */}
-              <div className="px-3 sm:px-4 py-2 bg-black/3 dark:bg-black/40 border-t border-black/4 dark:border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-[#CBD5E1]">
+              <div className="hidden sm:flex px-3 sm:px-4 py-2 bg-black/3 dark:bg-black/40 border-t border-black/4 dark:border-white/5 items-center justify-between text-[11px] font-mono text-slate-500 dark:text-[#CBD5E1]">
                 <div className="flex items-center gap-2.5">
                   <span className="flex items-center gap-1">
                     <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">

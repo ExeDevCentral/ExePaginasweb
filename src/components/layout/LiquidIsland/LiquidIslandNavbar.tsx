@@ -6,7 +6,7 @@
  */
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
@@ -45,6 +45,26 @@ export default function LiquidIslandNavbar({
   // Estados interactivos
   const [megaPanelOpen, setMegaPanelOpen] = useState(false)
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
+  const [contactInView, setContactInView] = useState(false)
+
+  // Scroll-spy de la sección de contacto (solo en la home)
+  useEffect(() => {
+    if (pathname !== '/') {
+      setContactInView(false)
+      return
+    }
+
+    const target = resolveAnchorElement('contact')
+    if (!target) return
+
+    const observer = new IntersectionObserver(
+      (entries) => setContactInView(Boolean(entries[0]?.isIntersecting)),
+      { rootMargin: '-96px 0px -45% 0px', threshold: 0 }
+    )
+
+    observer.observe(target)
+    return () => observer.disconnect()
+  }, [pathname])
 
   // Referencias para accesibilidad y spotlight
   const navRef = useRef<HTMLElement>(null)
@@ -124,7 +144,7 @@ export default function LiquidIslandNavbar({
                 }
               }}
               aria-label={getNavLabel('nav.inicio', 'Inicio')}
-              className="outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-full min-w-11 min-h-11 flex items-center justify-center p-1 -m-1 active:scale-95 transition-transform"
+              className="outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-full min-w-11 min-h-11 flex items-center justify-center active:scale-95 transition-transform"
             >
               <NavLogo scrollY={scrollY} isCompact={false} reduceMotion={reduceMotion} />
             </Link>
@@ -206,7 +226,8 @@ export default function LiquidIslandNavbar({
               <NavLink
                 href="/#contact"
                 label={getNavLabel('nav.contacto', 'Contacto')}
-                isActive={false}
+                isActive={contactInView}
+                ariaCurrent="location"
                 isHovered={hoveredLink === 'contacto'}
                 onHover={() => setHoveredLink('contacto')}
                 onLeave={() => setHoveredLink(null)}
@@ -225,9 +246,11 @@ export default function LiquidIslandNavbar({
           {/* DERECHA: Badge de Disponibilidad + Idioma + Tema + Menú + CTA Dominante */}
           <motion.div layout="position" className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             {/* Disponibilidad en tiempo real */}
-            <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 dark:border-cyan-400/30 text-[10px] font-mono font-bold tracking-wider text-cyan-800 dark:text-cyan-300 select-none shrink-0">
-              <CyberRadarBeacon size={9} />
-              <span>{getNavLabel('nav.disponible_badge', 'DISPONIBLE // 2026')}</span>
+            <div className="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/8 border border-cyan-500/25 dark:border-cyan-400/25 text-[9px] font-mono font-semibold tracking-wider text-cyan-800/90 dark:text-cyan-300/80 select-none shrink-0">
+              <CyberRadarBeacon size={8} />
+              <span className="whitespace-nowrap">
+                {getNavLabel('nav.disponible_badge', 'DISPONIBLE // 2026')}
+              </span>
             </div>
 
             {/* Selector de idioma */}
@@ -253,7 +276,7 @@ export default function LiquidIslandNavbar({
                   ? getNavLabel('nav.aria_close_menu', 'Cerrar menú')
                   : getNavLabel('nav.aria_open_menu', 'Abrir menú de navegación')
               }
-              className="p-2 rounded-full border border-cyan-500/30 dark:border-cyan-400/35 bg-cyan-500/5 hover:bg-cyan-500/15 hover:border-cyan-400/60 transition-colors cursor-pointer flex lg:hidden"
+              className="w-10 h-10 sm:w-9 sm:h-9 flex items-center justify-center rounded-full border border-cyan-500/30 dark:border-cyan-400/35 bg-cyan-500/5 hover:bg-cyan-500/15 hover:border-cyan-400/60 transition-colors cursor-pointer flex lg:hidden"
             >
               <CyberBurgerIcon isOpen={megaPanelOpen} size={17} />
             </motion.button>

@@ -21,6 +21,8 @@ export interface NavLinkProps {
   className?: string
   ariaExpanded?: boolean
   ariaControls?: string
+  /** Tipo de `aria-current` cuando el link está activo. */
+  ariaCurrent?: 'page' | 'location'
 }
 
 export default function NavLink({
@@ -35,6 +37,7 @@ export default function NavLink({
   className = '',
   ariaExpanded,
   ariaControls,
+  ariaCurrent = 'page',
 }: Readonly<NavLinkProps>) {
   const reduceMotion = Boolean(useReducedMotion())
   const showBlob = isHovered || isActive
@@ -47,6 +50,7 @@ export default function NavLink({
       {...(onLeave ? { onMouseLeave: onLeave, onBlur: onLeave } : {})}
       {...(typeof ariaExpanded === 'boolean' ? { 'aria-expanded': ariaExpanded } : {})}
       {...(ariaControls ? { 'aria-controls': ariaControls } : {})}
+      {...(isActive ? { 'aria-current': ariaCurrent } : {})}
       className={`relative inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full select-none transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 ${
         showBlob
           ? 'text-cyan-600 dark:text-cyan-300 font-bold'

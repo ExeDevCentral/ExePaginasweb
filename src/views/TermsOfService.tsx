@@ -108,7 +108,7 @@ const TermsOfService: React.FC = () => {
               <FileText className="w-7 h-7 text-accent-magenta" />
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-accent-magenta/10 border border-accent-magenta/30 text-accent-magenta mb-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-accent-magenta/10 border border-accent-magenta/30 text-fuchsia-800 dark:text-fuchsia-300 mb-2">
                 <Sparkles className="w-3.5 h-3.5" />
                 {t('termsofservice.badge_legal') ||
                   'Marco Legal Internacional & Soberanía de Código'}
@@ -206,7 +206,7 @@ const TermsOfService: React.FC = () => {
                     <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                     {t(`termsofservice.pais_${selectedCountry}_titulo`)}
                   </h4>
-                  <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-medium bg-accent-magenta/10 border border-accent-magenta/20 text-accent-magenta">
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-medium bg-accent-magenta/10 border border-accent-magenta/20 text-fuchsia-800 dark:text-fuchsia-300">
                     {t(`termsofservice.pais_${selectedCountry}_badge`)}
                   </span>
                 </div>

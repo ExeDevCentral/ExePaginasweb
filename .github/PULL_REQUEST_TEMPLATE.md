@@ -10,18 +10,19 @@
 
 Closes #
 
-## Checklist
+## Verificación
 
 - [ ] `npm run typecheck` pasa
-- [ ] `npm run lint` pasa (0 warnings)
+- [ ] `npm run lint` pasa y no agrega warnings
 - [ ] `npm test` pasa
-- [ ] `npm run build` pasa
-- [ ] Commit messages siguen Conventional Commits
+- [ ] Revisé el workflow **Verify Build** completo: build, Playwright y CLI
+- [ ] Los commits siguen Conventional Commits
+- [ ] Actualicé documentación o tests cuando corresponde
 
 ## Screenshots / evidencias
 
 <!-- Si es UI, adjuntá screenshot o test visual. -->
 
-## Notas
+## Riesgos y notas
 
-<!-- Comportamiento fuera de alcance, deuda conocida, follow-ups. -->
+<!-- Riesgos, migraciones, configuración requerida o follow-ups conocidos. -->

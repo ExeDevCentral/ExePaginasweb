@@ -57,16 +57,18 @@ export default function NavLogo({
         }}
         className="overflow-hidden whitespace-nowrap hidden sm:flex items-center"
       >
-        <MatrixWordmark
-          parts={[
-            { text: 'EXE', color: light ? '#0f172a' : '#ffffff' },
-            { text: '//', color: light ? '#b45309' : '#facc15' },
-            { text: 'PAGINASWEB', color: light ? '#0f172a' : '#ffffff' },
-            { text: '.', color: light ? '#0e7490' : '#22d3ee' },
-            { text: 'COM', color: light ? '#0e7490' : '#22d3ee' },
-          ]}
-          className="text-xs font-black tracking-tight"
-        />
+        <span aria-hidden="true">
+          <MatrixWordmark
+            parts={[
+              { text: 'EXE', color: light ? '#0f172a' : '#ffffff' },
+              { text: '//', color: light ? '#b45309' : '#facc15' },
+              { text: 'PAGINASWEB', color: light ? '#0f172a' : '#ffffff' },
+              { text: '.', color: light ? '#0e7490' : '#22d3ee' },
+              { text: 'COM', color: light ? '#0e7490' : '#22d3ee' },
+            ]}
+            className="text-xs font-black tracking-tight"
+          />
+        </span>
       </motion.div>
     </div>
   )

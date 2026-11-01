@@ -228,11 +228,19 @@ export const OptimusScaleHero: React.FC = () => {
               <h1 className="mt-2 text-3xl sm:text-5xl xl:text-6xl font-display font-medium tracking-tight leading-[1.1] sm:leading-[1.05] text-foreground text-foreground">
                 <span className="sr-only">Exe Páginas Web - </span>
                 <span className="block font-semibold">
-                  {t('hero.titulo_prefijo') || 'Páginas web y sistemas a medida'}
+                  {t('hero.titulo_prefijo') !== 'hero.titulo_prefijo'
+                    ? t('hero.titulo_prefijo')
+                    : 'Páginas web y sistemas a medida'}
                 </span>
 
                 <span className="inline-flex items-center gap-2 sm:gap-4 flex-wrap mt-1">
-                  <span>{t('hero.titulo_sufijo') || 'para'}</span>
+                  <span>
+                    {t('hero.titulo_sufijo') !== 'hero.titulo_sufijo'
+                      ? t('hero.titulo_sufijo')
+                      : t('hero.titulo_conector') !== 'hero.titulo_conector'
+                        ? t('hero.titulo_conector')
+                        : 'para'}
+                  </span>
                   <span className="relative inline-block overflow-hidden py-1">
                     <AnimatePresence mode="wait">
                       <motion.span

@@ -96,7 +96,9 @@
     "card_4_badge": "Stabil 24/7",
     "card_4_tech_1": "4 Sek. Bootzeit",
     "card_4_tech_2": "Rettet langsame PCs",
-    "card_4_tech_3": "0 € Lizenzen & Viren"
+    "card_4_tech_3": "0 € Lizenzen & Viren",
+    "titulo_sufijo": "zum",
+    "titulo_conector": "zum"
   },
   "features": {
     "seccion_titulo": "Warum ExeSistemasWEB?",

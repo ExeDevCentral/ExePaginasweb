@@ -22,7 +22,6 @@ import {
   Zap,
   Calendar,
   CreditCard,
-  MessageSquare,
   ShieldCheck,
   ChevronRight,
   Play,
@@ -45,7 +44,6 @@ import {
   Shield,
   Database,
   Server,
-  MessageCircle,
   Cpu,
   Activity,
   Globe,
@@ -179,10 +177,10 @@ const STEP_SUBSTAGES: Record<number, SubStage[]> = {
     {
       id: 'p4',
       number: '04',
-      label: 'WhatsApp',
-      tag: 'RESPUESTA 2S',
+      label: 'Despacho Cloud',
+      tag: 'TIEMPO REAL',
       accentColor: '#22c55e',
-      icon: MessageSquare,
+      icon: Activity,
     },
     {
       id: 'p5',
@@ -265,10 +263,10 @@ const STEP_SUBSTAGES: Record<number, SubStage[]> = {
     {
       id: 'm4',
       number: '04',
-      label: 'WhatsApp Bot',
-      tag: 'AUTOMÁTICO',
+      label: 'Retargeting CRM',
+      tag: 'AUTOMATIZADO',
       accentColor: '#22c55e',
-      icon: MessageCircle,
+      icon: Target,
     },
     {
       id: 'm5',
@@ -370,7 +368,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
       {/* ==============================================================
           ESTRUCTURA PRINCIPAL: 4 PASOS (IZQUIERDA) + VENTANA IMAGINEART (DERECHA)
          ============================================================== */}
-      <div className="relative rounded-3xl border border-slate-200 dark:border-neutral-800 bg-white dark:bg-[#070a13] shadow-[0_20px_50px_rgba(0,0,0,0.06)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col lg:flex-row min-h-[720px] lg:h-[750px]">
+      <div className="relative rounded-3xl border border-2 border-slate-300 dark:border-neutral-800 bg-[#FAF7F2] dark:bg-[#070a13] shadow-[0_20px_50px_rgba(0,0,0,0.08)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col lg:flex-row min-h-[720px] lg:h-[750px]">
         {/* Esquinas blueprint (+) */}
         <span className="absolute top-4 left-4 font-mono text-slate-300 dark:text-neutral-600 text-sm pointer-events-none z-10">
           +
@@ -388,7 +386,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
         {/* ==============================================================
             COLUMNA IZQUIERDA (36%): LOS 4 PASOS CON DISEÑO DE ALTA GAMA (MODO CLARO Y OSCURO)
            ============================================================== */}
-        <div className="relative w-full lg:flex-[0_0_36%] p-6 sm:p-7 lg:p-8 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-neutral-800/80 flex flex-col justify-between bg-slate-50/95 dark:bg-[#080d1a]/95 z-20">
+        <div className="relative w-full lg:flex-[0_0_36%] p-6 sm:p-7 lg:p-8 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-neutral-800/80 flex flex-col justify-between bg-[#F2ECE1] dark:bg-[#080d1a]/95 border-r-2 border-slate-300 dark:border-neutral-800/80 z-20">
           <div className="space-y-3.5">
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-neutral-800/80">
               <div className="flex items-center gap-2.5">
@@ -431,8 +429,8 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   }}
                   className={`relative flex items-center justify-between p-4 sm:p-4.5 rounded-2xl transition-all duration-300 cursor-pointer text-left overflow-hidden ${
                     isActive
-                      ? 'bg-gradient-to-r from-cyan-50 via-cyan-50/60 to-white dark:from-[#0c2438] dark:via-[#0c1e30] dark:to-[#08121f] border-2 border-cyan-500 dark:border-cyan-400/90 shadow-md shadow-cyan-500/15 dark:shadow-[0_0_30px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500/20 dark:ring-cyan-400/20 scale-[1.01]'
-                      : 'bg-white/80 dark:bg-[#091122]/70 hover:bg-slate-100/90 dark:hover:bg-[#0d1830] border border-slate-200 dark:border-neutral-800/80 hover:border-slate-300 dark:hover:border-neutral-700/90 text-slate-700 dark:text-neutral-300 hover:scale-[1.005] group'
+                      ? 'bg-white dark:from-[#0c2438] dark:via-[#0c1e30] dark:to-[#08121f] border-2 border-cyan-600 dark:border-cyan-400/90 shadow-md shadow-cyan-500/15 dark:shadow-[0_0_30px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500/20 dark:ring-cyan-400/20 scale-[1.01]'
+                      : 'bg-white dark:bg-[#091122]/70 hover:bg-[#FAF7F2] dark:hover:bg-[#0d1830] border-2 border-slate-300 dark:border-neutral-800/80 hover:border-slate-400 dark:hover:border-neutral-700/90 text-slate-700 dark:text-neutral-300 hover:scale-[1.005] group'
                   }`}
                 >
                   {/* BARRITA DE LUZ NEÓN LATERAL CUANDO ESTÁ ACTIVO */}
@@ -528,7 +526,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
         <div
           onMouseEnter={() => setIsLaserPaused(true)}
           onMouseLeave={() => setIsLaserPaused(false)}
-          className="relative w-full lg:flex-[1_1_64%] p-6 sm:p-8 lg:p-9 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-100/90 dark:from-[#0a0f20] dark:via-[#070c18] dark:to-[#04060c]"
+          className="relative w-full lg:flex-[1_1_64%] p-6 sm:p-8 lg:p-9 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#FAF7F2] via-white to-[#F2ECE1] dark:from-[#0a0f20] dark:via-[#070c18] dark:to-[#04060c]"
         >
           {/* LUZ AMBIENTAL AMBILIGHT VIBRANTE */}
           <div
@@ -591,7 +589,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
           </div>
 
           {/* BARRA GUÍA TRANSITORIA: LOS 4 PASOS EN SERIE (HACE EL RECORRIDO 100% INTUITIVO) */}
-          <div className="flex items-center justify-between gap-1.5 py-1 px-2.5 my-2 rounded-xl bg-slate-200/70 dark:bg-neutral-950/80 border border-slate-300/80 dark:border-neutral-800/80 font-mono text-[11px]">
+          <div className="flex items-center justify-between gap-1.5 py-1 px-2.5 my-2 rounded-xl bg-[#E2D9C8] dark:bg-neutral-950/80 border-2 border-slate-300 dark:border-neutral-800/80 font-mono text-[11px]">
             <div className="flex items-center gap-2">
               <span className="text-slate-500 dark:text-neutral-400 font-bold hidden sm:inline">
                 CIRCUITO:
@@ -636,7 +634,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               DOCK DE PÍLDORAS ESTILO IMAGINEART (SELECTOR COMPACTO SIN SCROLLBAR)
              ============================================================== */}
           <div className="relative w-full py-1.5">
-            <div className="grid grid-cols-5 gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-slate-200/80 dark:bg-neutral-900/90 border border-slate-300/80 dark:border-white/10 backdrop-blur-xl shadow-inner">
+            <div className="grid grid-cols-5 gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-[#E2D9C8] dark:bg-neutral-900/90 border-2 border-slate-300 dark:border-white/10 backdrop-blur-xl shadow-inner">
               {currentSubStages.map((stg, i) => {
                 const isCurrent = i === laserIdx
                 const StgIcon = stg.icon
@@ -652,7 +650,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                     className={`relative flex items-center justify-center gap-1 sm:gap-1.5 px-2 py-1.5 sm:py-2 rounded-full font-mono text-[11px] sm:text-xs transition-all duration-300 cursor-pointer min-w-0 ${
                       isCurrent
                         ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-black shadow-md shadow-slate-900/20 dark:shadow-white/20 scale-[1.02]'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-300/50 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-white/5 font-medium'
+                        : 'text-slate-800 hover:text-slate-950 hover:bg-slate-300/80 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-white/5 font-medium'
                     }`}
                   >
                     <StgIcon className="w-3.5 h-3.5 shrink-0" />
@@ -694,12 +692,12 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.3 }}
-                  className="rounded-2xl border border-cyan-500/30 bg-white/95 dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-lg dark:shadow-2xl border-slate-200/80"
+                  className="rounded-2xl border border-cyan-500/30 bg-white dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-md dark:shadow-2xl border-2 border-slate-300 dark:border-cyan-500/30"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
                       {/* Lado Izquierdo: Mockup Visual ImagineArt */}
-                      <div className="md:col-span-5 rounded-xl border border-cyan-500/40 bg-gradient-to-br from-cyan-950/10 via-slate-100 to-slate-50 dark:from-[#09182d] dark:to-[#040d1a] p-4.5 space-y-3 shadow-inner">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-cyan-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#09182d] dark:to-[#040d1a] p-4.5 space-y-3 shadow-inner">
                         <div className="flex items-center justify-between text-xs font-mono pb-2 border-b border-cyan-500/20">
                           <span className="text-cyan-400 font-bold flex items-center gap-1.5">
                             <PhoneCall className="w-3.5 h-3.5" />
@@ -726,7 +724,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             </p>
                           </div>
                         </div>
-                        <div className="p-2.5 rounded-lg bg-slate-100/80 dark:bg-neutral-900/80 border border-slate-200 dark:border-neutral-800 text-xs font-mono space-y-1">
+                        <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/80 border-2 border-slate-300/80 dark:border-neutral-800 text-xs font-mono space-y-1">
                           <div className="flex justify-between text-neutral-400 text-[11px]">
                             <span>Tiempo de diagnóstico:</span>
                             <span className="text-cyan-400 font-bold">15 minutos</span>
@@ -769,7 +767,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 1 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-emerald-500/40 bg-gradient-to-br from-emerald-950/10 via-slate-100 to-slate-50 dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Award className="w-3.5 h-3.5" />
@@ -780,7 +778,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="space-y-2 text-xs">
-                          <div className="p-3 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[11px] text-neutral-400 block">
                               DESARROLLO COMPLETO
                             </span>
@@ -791,7 +789,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               Cero costos sorpresa
                             </span>
                           </div>
-                          <div className="flex justify-between p-2 rounded-lg bg-slate-100/60 dark:bg-neutral-900/50 border border-slate-200 dark:border-neutral-800 text-[11px]">
+                          <div className="flex justify-between p-2 rounded-lg bg-white dark:bg-neutral-900/50 border-2 border-slate-300/80 dark:border-neutral-800 text-[11px]">
                             <span className="text-neutral-400">Mensualidad por uso:</span>
                             <span className="text-emerald-400 font-bold">$0,00 ARS</span>
                           </div>
@@ -828,7 +826,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-amber-500/40 bg-gradient-to-br from-amber-950/10 via-slate-100 to-slate-50 dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
                           <span className="text-amber-400 font-bold flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5" />
@@ -900,7 +898,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             PRIVADO
                           </span>
                         </div>
-                        <div className="p-3 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-2 text-xs">
+                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 space-y-2 text-xs">
                           <div className="flex items-center gap-1.5 text-neutral-400 text-[11px]">
                             <Globe className="w-3.5 h-3.5 text-cyan-400" />
                             <span className="truncate">demo-privada.exepaginasweb.com</span>
@@ -942,7 +940,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-purple-500/40 bg-gradient-to-br from-purple-950/10 via-slate-100 to-slate-50 dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <Rocket className="w-3.5 h-3.5" />
@@ -953,7 +951,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[10px] text-purple-300 block">DOMINIO</span>
                             <span className="text-white font-bold block truncate mt-0.5">
                               tunegocio.com
@@ -962,7 +960,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               SSL 256 Activo
                             </span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[10px] text-purple-300 block">COBROS</span>
                             <span className="text-emerald-400 font-bold block truncate mt-0.5">
                               Directo CBU
@@ -1014,11 +1012,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.3 }}
-                  className="rounded-2xl border border-emerald-500/30 bg-white/95 dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-lg dark:shadow-2xl border-slate-200/80"
+                  className="rounded-2xl border border-emerald-500/30 bg-white dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-md dark:shadow-2xl border-2 border-slate-300 dark:border-cyan-500/30"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-emerald-500/40 bg-gradient-to-br from-emerald-950/10 via-slate-100 to-slate-50 dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Cpu className="w-3.5 h-3.5" />
@@ -1029,7 +1027,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="space-y-2 text-xs">
-                          <div className="p-3 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[11px] text-neutral-400 block">COMPILACIÓN</span>
                             <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
                               SSR Instantáneo (Edge)
@@ -1038,7 +1036,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               60 FPS garantizados
                             </span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-slate-100/60 dark:bg-neutral-900/50 border border-slate-200 dark:border-neutral-800 text-[11px] flex justify-between">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/50 border-2 border-slate-300/80 dark:border-neutral-800 text-[11px] flex justify-between">
                             <span className="text-neutral-400">Código basura:</span>
                             <span className="text-emerald-400 font-bold">0% WordPress</span>
                           </div>
@@ -1086,14 +1084,14 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[10px] text-cyan-300 block">SEGURIDAD</span>
                             <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
                               RLS Activo
                             </span>
                             <span className="text-[10px] text-cyan-400 block mt-1">AES-256</span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[10px] text-cyan-300 block">RESPALDO</span>
                             <span className="text-emerald-400 font-bold block mt-0.5">
                               Backups 24h
@@ -1135,7 +1133,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-amber-500/40 bg-gradient-to-br from-amber-950/10 via-slate-100 to-slate-50 dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
                           <span className="text-amber-400 font-bold flex items-center gap-1.5">
                             <CreditCard className="w-3.5 h-3.5" />
@@ -1145,7 +1143,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             0% COMISIÓN
                           </span>
                         </div>
-                        <div className="p-3 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-1 text-xs">
+                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 space-y-1 text-xs">
                           <span className="text-[11px] text-neutral-400 block">SEÑA RECIBIDA</span>
                           <span className="text-2xl font-black text-slate-900 dark:text-white block">
                             + $ 10.000,00{' '}
@@ -1188,11 +1186,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 3 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-emerald-500/40 bg-gradient-to-br from-emerald-950/10 via-slate-100 to-slate-50 dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
-                          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-                            <MessageSquare className="w-3.5 h-3.5" />
-                            Meta Cloud WhatsApp API
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
+                            <Activity className="w-3.5 h-3.5" />
+                            Webhook Event Dispatcher
                           </span>
                           <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
                             EN 2s
@@ -1210,9 +1208,9 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
-                          <MessageSquare className="w-3.5 h-3.5" />
-                          WHATSAPP OFICIAL · RESPUESTA EN 2 SEGUNDOS
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
+                          <Activity className="w-3.5 h-3.5" />
+                          EVENT-DRIVEN · CONFIRMACIÓN EN 2 SEGUNDOS
                         </div>
                         <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
                           Notificación instantánea y confirmación automática
@@ -1239,7 +1237,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-purple-500/40 bg-gradient-to-br from-purple-950/10 via-slate-100 to-slate-50 dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <Server className="w-3.5 h-3.5" />
@@ -1250,7 +1248,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[10px] text-purple-300 block">UBICACIÓN</span>
                             <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
                               Buenos Aires CDN
@@ -1259,7 +1257,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               &lt; 15ms Latencia
                             </span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[10px] text-purple-300 block">
                               DISPONIBILIDAD
                             </span>
@@ -1313,11 +1311,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.3 }}
-                  className="rounded-2xl border border-amber-500/30 bg-white/95 dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-lg dark:shadow-2xl border-slate-200/80"
+                  className="rounded-2xl border border-amber-500/30 bg-white dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-md dark:shadow-2xl border-2 border-slate-300 dark:border-cyan-500/30"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-amber-500/40 bg-gradient-to-br from-amber-950/10 via-slate-100 to-slate-50 dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-amber-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#241707] dark:to-[#100a03] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-amber-500/20">
                           <span className="text-amber-400 font-bold flex items-center gap-1.5">
                             <Search className="w-3.5 h-3.5" />
@@ -1336,7 +1334,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           ].map((m) => (
                             <div
                               key={m.label}
-                              className="p-2 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex items-center justify-between px-2.5"
+                              className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 flex items-center justify-between px-2.5"
                             >
                               <span className="text-[11px] text-neutral-300 truncate">
                                 {m.label}
@@ -1443,7 +1441,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-emerald-500/40 bg-gradient-to-br from-emerald-950/10 via-slate-100 to-slate-50 dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Lock className="w-3.5 h-3.5" />
@@ -1454,7 +1452,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[10px] text-neutral-400 block">ENCRIPTACIÓN</span>
                             <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
                               HTTPS Bancario
@@ -1463,7 +1461,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               Candado Activo
                             </span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[10px] text-neutral-400 block">FIREWALL</span>
                             <span className="text-emerald-400 font-bold block mt-0.5">
                               Anti-DDoS
@@ -1505,7 +1503,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 3 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-purple-500/40 bg-gradient-to-br from-purple-950/10 via-slate-100 to-slate-50 dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <ShieldCheck className="w-3.5 h-3.5" />
@@ -1568,7 +1566,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-emerald-500/40 bg-gradient-to-br from-emerald-950/10 via-slate-100 to-slate-50 dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <Award className="w-3.5 h-3.5" />
@@ -1578,7 +1576,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             ACTIVO 24/7
                           </span>
                         </div>
-                        <div className="p-3 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-2 text-xs">
+                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 space-y-2 text-xs">
                           <div className="flex items-center gap-2">
                             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                             <span className="text-white font-bold">
@@ -1632,11 +1630,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.3 }}
-                  className="rounded-2xl border border-purple-500/30 bg-white/95 dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-lg dark:shadow-2xl border-slate-200/80"
+                  className="rounded-2xl border border-purple-500/30 bg-white dark:bg-neutral-950/70 backdrop-blur-xl p-5 sm:p-6 shadow-md dark:shadow-2xl border-2 border-slate-300 dark:border-cyan-500/30"
                 >
                   {laserIdx === 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-purple-500/40 bg-gradient-to-br from-purple-950/10 via-slate-100 to-slate-50 dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <Target className="w-3.5 h-3.5" />
@@ -1647,14 +1645,14 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="space-y-1.5 font-mono text-xs">
-                          <div className="p-2 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex items-center justify-between">
+                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 flex items-center justify-between">
                             <span className="text-purple-300 font-bold flex items-center gap-1.5 text-[11px]">
                               <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
                               ViewContent
                             </span>
                             <span className="text-neutral-400 text-[10px]">Visitas</span>
                           </div>
-                          <div className="p-2 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex items-center justify-between">
+                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 flex items-center justify-between">
                             <span className="text-cyan-300 font-bold flex items-center gap-1.5 text-[11px]">
                               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                               Checkout
@@ -1713,7 +1711,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             99.2% ACTIVA
                           </span>
                         </div>
-                        <div className="p-3 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 space-y-1 text-xs">
+                        <div className="p-3 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 space-y-1 text-xs">
                           <span className="text-[11px] text-neutral-400 block">EN WEBS LENTAS</span>
                           <span className="text-red-400 font-bold block">
                             53% abandona antes de abrir
@@ -1754,7 +1752,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 2 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-emerald-500/40 bg-gradient-to-br from-emerald-950/10 via-slate-100 to-slate-50 dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
                           <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                             <TrendingUp className="w-3.5 h-3.5" />
@@ -1765,11 +1763,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="space-y-1.5 text-xs">
-                          <div className="p-2 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex justify-between">
+                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 flex justify-between">
                             <span>1. Ve tu oferta</span>
                             <span className="text-cyan-400 font-bold">0.38s</span>
                           </div>
-                          <div className="p-2 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 flex justify-between">
+                          <div className="p-2 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800 flex justify-between">
                             <span>2. Elige el turno</span>
                             <span className="text-amber-400 font-bold">1 clic</span>
                           </div>
@@ -1810,10 +1808,10 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 3 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-emerald-500/40 bg-gradient-to-br from-emerald-950/10 via-slate-100 to-slate-50 dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-emerald-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#061e16] dark:to-[#030d0a] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-emerald-500/20">
-                          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-                            <MessageCircle className="w-3.5 h-3.5" />
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
+                            <Target className="w-3.5 h-3.5" />
                             Recuperación Automática
                           </span>
                           <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
@@ -1832,9 +1830,9 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
 
                       <div className="md:col-span-7 space-y-3">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
-                          <MessageCircle className="w-3.5 h-3.5" />
-                          WHATSAPP AUTOMÁTICO · RECUPERACIÓN DE CLIENTES
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-400/30">
+                          <Target className="w-3.5 h-3.5" />
+                          AUTOMATIZACIÓN CRM · RECUPERACIÓN DE CLIENTES
                         </div>
                         <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
                           Recuperamos los carritos y turnos indecisos
@@ -1861,7 +1859,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {laserIdx === 4 && (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                      <div className="md:col-span-5 rounded-xl border border-purple-500/40 bg-gradient-to-br from-purple-950/10 via-slate-100 to-slate-50 dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
+                      <div className="md:col-span-5 rounded-xl border-2 border-slate-300 dark:border-purple-500/40 bg-[#FAF7F2] dark:bg-gradient-to-br dark:from-[#1b0d2a] dark:to-[#0c0614] p-4.5 space-y-3 shadow-inner font-mono">
                         <div className="flex items-center justify-between text-xs pb-2 border-b border-purple-500/20">
                           <span className="text-purple-400 font-bold flex items-center gap-1.5">
                             <BarChart3 className="w-3.5 h-3.5" />
@@ -1872,7 +1870,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[10px] text-neutral-400 block">INVERSIÓN</span>
                             <span className="text-slate-900 dark:text-white font-bold block mt-0.5">
                               $ 100.000
@@ -1881,7 +1879,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               En Anuncios
                             </span>
                           </div>
-                          <div className="p-2.5 rounded-lg bg-slate-100/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800">
+                          <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-900/90 border-2 border-slate-300/80 dark:border-neutral-800">
                             <span className="text-[10px] text-emerald-400 block">FACTURADO</span>
                             <span className="text-emerald-400 font-bold block mt-0.5">
                               $ 240.000
@@ -1967,10 +1965,10 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackEvent('hero_cta_contact_clicked', { source: 'super_card_footer' })}
-            className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center gap-1.5 transition-all shadow-md shadow-cyan-500/20 hover:scale-105 active:scale-95"
+            className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold flex items-center gap-1.5 transition-all shadow-md shadow-cyan-600/20 hover:scale-105 active:scale-95"
           >
-            <MessageCircle className="w-3.5 h-3.5" />
-            <span>Hablar con Exequiel</span>
+            <span>Solicitar Diagnóstico Técnico</span>
+            <ArrowUpRight className="w-4 h-4 text-white" />
           </a>
         </div>
       </div>

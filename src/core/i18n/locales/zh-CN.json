@@ -96,7 +96,9 @@
     "card_4_badge": "零卡顿死机",
     "card_4_tech_1": "4 秒极速冷启动",
     "card_4_tech_2": "老旧 PC 性能焕新",
-    "card_4_tech_3": "$0 授权费与免疫病毒"
+    "card_4_tech_3": "$0 授权费与免疫病毒",
+    "titulo_sufijo": "实现",
+    "titulo_conector": "实现"
   },
   "features": {
     "seccion_titulo": "为什么选择 ExeSistemasWEB？",

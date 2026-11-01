@@ -96,7 +96,9 @@
     "card_4_badge": "Zero Travamentos",
     "card_4_tech_1": "Boot em 4 Seg",
     "card_4_tech_2": "Revive PCs Lentos",
-    "card_4_tech_3": "$0 Licenças & Vírus"
+    "card_4_tech_3": "$0 Licenças & Vírus",
+    "titulo_sufijo": "para",
+    "titulo_conector": "para"
   },
   "features": {
     "seccion_titulo": "Por que ExeSistemasWEB?",

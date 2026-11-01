@@ -96,7 +96,9 @@
     "card_4_badge": "Zero Freezes",
     "card_4_tech_1": "4-Sec Boot Time",
     "card_4_tech_2": "Revives Slow PCs",
-    "card_4_tech_3": "$0 Licenses & Viruses"
+    "card_4_tech_3": "$0 Licenses & Viruses",
+    "titulo_sufijo": "لـ",
+    "titulo_conector": "لـ"
   },
   "features": {
     "seccion_titulo": "لماذا ExeSistemasWEB؟",

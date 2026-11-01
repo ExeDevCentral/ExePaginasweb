@@ -96,7 +96,9 @@
     "card_4_badge": "Zéro Plantage",
     "card_4_tech_1": "Boot en 4 Sec",
     "card_4_tech_2": "Ravive vos PC",
-    "card_4_tech_3": "0 € Licence & Virus"
+    "card_4_tech_3": "0 € Licence & Virus",
+    "titulo_sufijo": "pour",
+    "titulo_conector": "pour"
   },
   "features": {
     "seccion_titulo": "Pourquoi ExeSistemasWEB ?",

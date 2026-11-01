@@ -49,15 +49,19 @@ async function collectContrastFailures(page: import('@playwright/test').Page) {
     }
 
     const effectiveBackground = (el: HTMLElement): number[] | null => {
-      // Fondos con gradientes/imágenes no se pueden resolver como color plano:
-      // usar el contenedor de atrás daría un contraste FALSO. Si cualquier
-      // ancestro en la cadena define una imagen de fondo, no auditor este nodo.
+      // Fondos con gradientes/imágenes o colores modernos no se pueden resolver
+      // como color plano. No sustituirlos por el fondo de un ancestro: daría un
+      // contraste falso al comparar colores que no están uno sobre el otro.
       let node: HTMLElement | null = el
       while (node) {
         const nodeStyle = getComputedStyle(node)
         if (nodeStyle.backgroundImage !== 'none') return null
-        const parsed = parseRgb(nodeStyle.backgroundColor)
+        const backgroundColor = nodeStyle.backgroundColor
+        const parsed = parseRgb(backgroundColor)
         if (parsed) return parsed
+        if (backgroundColor !== 'transparent' && backgroundColor !== 'rgba(0, 0, 0, 0)') {
+          return null
+        }
         node = node.parentElement
       }
       return null

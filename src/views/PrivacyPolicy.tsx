@@ -107,7 +107,7 @@ const PrivacyPolicy: React.FC = () => {
               <Shield className="w-7 h-7 text-accent-cyan" />
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan mb-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-accent-cyan/10 border border-accent-cyan/30 text-cyan-800 dark:text-cyan-300 mb-2">
                 <Sparkles className="w-3.5 h-3.5" />
                 {t('privacypolicy.badge_legal') || 'Protección de Datos & Privacidad Global'}
               </div>
@@ -204,7 +204,7 @@ const PrivacyPolicy: React.FC = () => {
                     <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                     {t(`privacypolicy.pais_${selectedCountry}_titulo`)}
                   </h4>
-                  <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-medium bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan">
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-medium bg-accent-cyan/10 border border-accent-cyan/20 text-cyan-800 dark:text-cyan-300">
                     {t(`privacypolicy.pais_${selectedCountry}_badge`)}
                   </span>
                 </div>

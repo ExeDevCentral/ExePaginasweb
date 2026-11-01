@@ -140,17 +140,20 @@ const Footer = () => {
               <div>
                 <Link
                   href="/"
+                  aria-label="ExePaginasWeb, inicio"
                   className="inline-flex items-center gap-2.5 mb-3 group focus:outline-none"
                 >
                   <Logo size={34} className="h-8 w-auto shrink-0" />
-                  <MatrixWordmark
-                    parts={[
-                      { text: 'ExePaginas', color: isLight ? '#0f172a' : '#ffffff' },
-                      { text: 'WEB', color: isLight ? '#ca8a04' : '#facc15' },
-                      { text: '.com', color: isLight ? '#0284c7' : '#22d3ee' },
-                    ]}
-                    className="font-montserrat font-black text-xl tracking-tight"
-                  />
+                  <span aria-hidden="true">
+                    <MatrixWordmark
+                      parts={[
+                        { text: 'ExePaginas', color: isLight ? '#0f172a' : '#ffffff' },
+                        { text: 'WEB', color: isLight ? '#ca8a04' : '#facc15' },
+                        { text: '.com', color: isLight ? '#0284c7' : '#22d3ee' },
+                      ]}
+                      className="font-montserrat font-black text-xl tracking-tight"
+                    />
+                  </span>
                 </Link>
 
                 <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed mb-4 max-w-xs">
@@ -427,6 +430,7 @@ const Footer = () => {
                   href="https://exepaginasweb.com"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="ExePaginasWeb, sitio oficial"
                   title="Diseño & Desarrollo por Exepaginasweb.com"
                   className="group relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-accent-cyan/30 dark:border-accent-cyan/20 bg-accent-cyan/6 dark:bg-white/3 hover:border-accent-cyan/60 dark:hover:border-accent-cyan/50 hover:bg-accent-cyan/10 dark:hover:bg-accent-cyan/7 transition-all duration-300 shadow-xs whitespace-nowrap"
                 >
@@ -437,11 +441,13 @@ const Footer = () => {
                     <span className="sm:hidden">Crafted by </span>
                   </span>
                   <span className="text-[10px] uppercase tracking-[0.16em] whitespace-nowrap">
-                    <MatrixScramble
-                      text="Exepaginasweb.com"
-                      palette="matrix"
-                      letterClassName="font-black text-foreground"
-                    />
+                    <span aria-hidden="true">
+                      <MatrixScramble
+                        text="Exepaginasweb.com"
+                        palette="matrix"
+                        letterClassName="font-black text-foreground"
+                      />
+                    </span>
                   </span>
                   <span className="inline-block w-1 h-2.5 bg-accent-cyan animate-pulse rounded-[1px]" />
                 </a>

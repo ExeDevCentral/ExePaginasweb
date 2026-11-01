@@ -1,8 +1,8 @@
 /**
  * © 2026 Exequiel Echevarria — ExePaginasWeb
  * Componente: InteractiveFeatureShowcase
- * Diseño: Dashboard minimalista de alta precisión con telemetría visual SVG,
- * avance automático continuo entre etapas y pasos, y soporte nativo Claro/Oscuro.
+ * Diseño: Dashboard minimalista de alta precisión con sistema cromático adaptativo
+ * de 4 tonos (Cyan, Emerald, Amber, Violet) para Tema Claro y Tema Oscuro.
  */
 'use client'
 
@@ -33,6 +33,26 @@ import {
 } from 'lucide-react'
 import { trackEvent } from '@/core/analytics/trackEvent'
 
+interface StepTheme {
+  hex: string
+  // Sidebar item activo
+  sidebarActiveCard: string
+  sidebarActiveBadge: string
+  progressBar: string
+  // Sub-tab activo
+  subTabActive: string
+  // Widget telemétrico
+  widgetCard: string
+  codeHighlight: string
+  pillBadge: string
+  // Textos y acentos
+  accentText: string
+  checkIcon: string
+  dotBg: string
+  // CTA Botón
+  ctaBtn: string
+}
+
 interface SubStage {
   id: string
   label: string
@@ -57,7 +77,7 @@ interface MainStep {
   number: string
   title: string
   subtitle: string
-  accent: string
+  theme: StepTheme
   stages: SubStage[]
 }
 
@@ -67,13 +87,32 @@ const STEPS: MainStep[] = [
     number: '01',
     title: 'Trato Directo',
     subtitle: 'Sin intermediarios ni agencias',
-    accent: '#06b6d4',
+    theme: {
+      hex: '#06b6d4',
+      sidebarActiveCard:
+        'bg-cyan-50/80 dark:bg-[#091826] border-cyan-500/50 dark:border-cyan-400/40 shadow-sm dark:shadow-[0_0_25px_-5px_rgba(6,182,212,0.22)]',
+      sidebarActiveBadge:
+        'bg-cyan-600 text-white dark:bg-cyan-500/20 dark:text-cyan-300 dark:border dark:border-cyan-400/40',
+      progressBar: 'bg-cyan-600 dark:bg-cyan-400',
+      subTabActive:
+        'bg-white text-cyan-900 border border-cyan-300/80 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border-cyan-400/30 font-bold shadow-2xs',
+      widgetCard:
+        'bg-cyan-50/40 dark:bg-[#091322] border-cyan-200/90 dark:border-cyan-500/30 shadow-sm dark:shadow-[0_0_35px_-12px_rgba(6,182,212,0.22)]',
+      codeHighlight: 'text-cyan-400 font-semibold',
+      pillBadge:
+        'bg-cyan-500/10 text-cyan-800 dark:text-cyan-300 border border-cyan-500/20 dark:border-cyan-400/20',
+      accentText: 'text-cyan-700 dark:text-cyan-400',
+      checkIcon: 'text-cyan-600 dark:text-cyan-400',
+      dotBg: 'bg-cyan-500',
+      ctaBtn:
+        'bg-cyan-600 hover:bg-cyan-500 text-white dark:bg-cyan-500 dark:hover:bg-cyan-400 dark:text-slate-950 shadow-sm shadow-cyan-500/20',
+    },
     stages: [
       {
         id: 'diagnostico',
         label: 'Diagnóstico',
         icon: PhoneCall,
-        eyebrow: 'CONTACTO DIRECTO',
+        eyebrow: 'PASO 01 · CONTACTO DIRECTO',
         title: 'Hablás directo con quien construye tu sistema',
         description:
           'En 15 minutos definimos la arquitectura exacta para digitalizar tus ventas y reservas, sin vendedores ni pasamanos.',
@@ -94,7 +133,7 @@ const STEPS: MainStep[] = [
         id: 'presupuesto',
         label: 'Propuesta Fija',
         icon: Award,
-        eyebrow: 'TRANSPARENCIA TOTAL',
+        eyebrow: 'PASO 01 · TRANSPARENCIA TOTAL',
         title: 'Presupuesto cerrado y plazos por contrato',
         description:
           'Recibís un desglose técnico claro con precio fijo en pesos o dólares. Sin costos ocultos ni adicionales sorpresivos.',
@@ -114,7 +153,7 @@ const STEPS: MainStep[] = [
         id: 'entrega',
         label: 'Llave en Mano',
         icon: Rocket,
-        eyebrow: 'PROPIEDAD ABSOLUTA',
+        eyebrow: 'PASO 01 · PROPIEDAD ABSOLUTA',
         title: 'Código, dominio y cuentas 100% a tu nombre',
         description:
           'Al finalizar, transferimos el repositorio y las credenciales a tu titularidad. Nunca quedás cautivo de un proveedor.',
@@ -138,13 +177,32 @@ const STEPS: MainStep[] = [
     number: '02',
     title: 'Ingeniería & Pagos',
     subtitle: 'Stack moderno y cobros directos',
-    accent: '#10b981',
+    theme: {
+      hex: '#10b981',
+      sidebarActiveCard:
+        'bg-emerald-50/80 dark:bg-[#071915] border-emerald-500/50 dark:border-emerald-400/40 shadow-sm dark:shadow-[0_0_25px_-5px_rgba(16,185,129,0.22)]',
+      sidebarActiveBadge:
+        'bg-emerald-600 text-white dark:bg-emerald-500/20 dark:text-emerald-300 dark:border dark:border-emerald-400/40',
+      progressBar: 'bg-emerald-600 dark:bg-emerald-400',
+      subTabActive:
+        'bg-white text-emerald-900 border border-emerald-300/80 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-400/30 font-bold shadow-2xs',
+      widgetCard:
+        'bg-emerald-50/40 dark:bg-[#071512] border-emerald-200/90 dark:border-emerald-500/30 shadow-sm dark:shadow-[0_0_35px_-12px_rgba(16,185,129,0.22)]',
+      codeHighlight: 'text-emerald-400 font-semibold',
+      pillBadge:
+        'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/20 dark:border-emerald-400/20',
+      accentText: 'text-emerald-700 dark:text-emerald-400',
+      checkIcon: 'text-emerald-600 dark:text-emerald-400',
+      dotBg: 'bg-emerald-500',
+      ctaBtn:
+        'bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-slate-950 shadow-sm shadow-emerald-500/20',
+    },
     stages: [
       {
         id: 'nextjs',
         label: 'Next.js 16 SSR',
         icon: Cpu,
-        eyebrow: 'CÓDIGO PURO',
+        eyebrow: 'PASO 02 · CÓDIGO PURO',
         title: 'Ingeniería empresarial sin plantillas lentas',
         description:
           'Desarrollado en React 19 y Next.js 16. Tu plataforma compila en el servidor para cargar al instante en cualquier móvil.',
@@ -169,7 +227,7 @@ const STEPS: MainStep[] = [
         id: 'cobros',
         label: 'Cobros Directos',
         icon: Layers,
-        eyebrow: 'FINANZAS SIN INTERMEDIARIOS',
+        eyebrow: 'PASO 02 · FINANZAS DIRECTAS',
         title: 'El dinero entra directo a tu CBU o Mercado Pago',
         description:
           'Integramos pasarelas oficiales con acreditación inmediata. No retenemos porcentajes ni tocamos tu recaudación.',
@@ -189,7 +247,7 @@ const STEPS: MainStep[] = [
         id: 'cloud',
         label: 'Base de Datos',
         icon: Database,
-        eyebrow: 'SEGURIDAD BANCARIA',
+        eyebrow: 'PASO 02 · SEGURIDAD BANCARIA',
         title: 'PostgreSQL dedicado con respaldos diarios',
         description:
           'Tus clientes, turnos y ventas se almacenan con aislamiento criptográfico y copias de seguridad automáticas.',
@@ -213,13 +271,32 @@ const STEPS: MainStep[] = [
     number: '03',
     title: 'Velocidad 0.38s',
     subtitle: 'Auditoría Google 100/100 real',
-    accent: '#06b6d4',
+    theme: {
+      hex: '#f59e0b',
+      sidebarActiveCard:
+        'bg-amber-50/80 dark:bg-[#1c1306] border-amber-500/50 dark:border-amber-400/40 shadow-sm dark:shadow-[0_0_25px_-5px_rgba(245,158,11,0.22)]',
+      sidebarActiveBadge:
+        'bg-amber-600 text-white dark:bg-amber-500/20 dark:text-amber-300 dark:border dark:border-amber-400/40',
+      progressBar: 'bg-amber-600 dark:bg-amber-400',
+      subTabActive:
+        'bg-white text-amber-900 border border-amber-300/80 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-400/30 font-bold shadow-2xs',
+      widgetCard:
+        'bg-amber-50/40 dark:bg-[#171005] border-amber-200/90 dark:border-amber-500/30 shadow-sm dark:shadow-[0_0_35px_-12px_rgba(245,158,11,0.22)]',
+      codeHighlight: 'text-amber-400 font-semibold',
+      pillBadge:
+        'bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20 dark:border-amber-400/20',
+      accentText: 'text-amber-700 dark:text-amber-400',
+      checkIcon: 'text-amber-600 dark:text-amber-400',
+      dotBg: 'bg-amber-500',
+      ctaBtn:
+        'bg-amber-600 hover:bg-amber-500 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 shadow-sm shadow-amber-500/20',
+    },
     stages: [
       {
         id: 'lighthouse',
         label: 'Google 100/100',
         icon: Zap,
-        eyebrow: 'VELOCIDAD EXTREMA',
+        eyebrow: 'PASO 03 · VELOCIDAD EXTREMA',
         title: 'Carga en 0.38 segundos comprobable en vivo',
         description:
           'Superamos el puntaje máximo en Google PageSpeed Insights. Una web instantánea retiene al doble de visitantes.',
@@ -240,7 +317,7 @@ const STEPS: MainStep[] = [
         id: 'seo',
         label: 'SEO Técnico',
         icon: Globe,
-        eyebrow: 'POSICIONAMIENTO ORGÁNICO',
+        eyebrow: 'PASO 03 · POSICIONAMIENTO ORGÁNICO',
         title: 'Indexación prioritaria en buscadores',
         description:
           'Incluimos metadatos dinámicos y marcado Schema.org para que tu negocio destaque en Google desde el primer día.',
@@ -260,11 +337,11 @@ const STEPS: MainStep[] = [
         id: 'blindaje',
         label: 'Blindaje Cloud',
         icon: Lock,
-        eyebrow: 'CERO CAÍDAS',
+        eyebrow: 'PASO 03 · CERO CAÍDAS',
         title: 'Inmune a picos de tráfico y ataques',
         description:
           'Despliegue sobre red distribuida con mitigación DDoS automática. Tu sistema responde igual con 10 o 10.000 usuarios.',
-        tags: ['Firewall WAF Activo', 'Auto-Escalado', ' Monitoreo 24/7'],
+        tags: ['Firewall WAF Activo', 'Auto-Escalado', 'Monitoreo 24/7'],
         visual: {
           type: 'code',
           primaryMetric: '24/7',
@@ -288,13 +365,32 @@ const STEPS: MainStep[] = [
     number: '04',
     title: 'Conversión & Escala',
     subtitle: 'Diseñado para facturar más',
-    accent: '#8b5cf6',
+    theme: {
+      hex: '#8b5cf6',
+      sidebarActiveCard:
+        'bg-violet-50/80 dark:bg-[#150e28] border-violet-500/50 dark:border-violet-400/40 shadow-sm dark:shadow-[0_0_25px_-5px_rgba(139,92,246,0.25)]',
+      sidebarActiveBadge:
+        'bg-violet-600 text-white dark:bg-violet-500/20 dark:text-violet-300 dark:border dark:border-violet-400/40',
+      progressBar: 'bg-violet-600 dark:bg-violet-400',
+      subTabActive:
+        'bg-white text-violet-900 border border-violet-300/80 dark:bg-violet-500/15 dark:text-violet-300 dark:border-violet-400/30 font-bold shadow-2xs',
+      widgetCard:
+        'bg-violet-50/40 dark:bg-[#120b22] border-violet-200/90 dark:border-violet-500/30 shadow-sm dark:shadow-[0_0_35px_-12px_rgba(139,92,246,0.25)]',
+      codeHighlight: 'text-violet-400 font-semibold',
+      pillBadge:
+        'bg-violet-500/10 text-violet-800 dark:text-violet-300 border border-violet-500/20 dark:border-violet-400/20',
+      accentText: 'text-violet-700 dark:text-violet-400',
+      checkIcon: 'text-violet-600 dark:text-violet-400',
+      dotBg: 'bg-violet-500',
+      ctaBtn:
+        'bg-violet-600 hover:bg-violet-500 text-white dark:bg-violet-500 dark:hover:bg-violet-400 dark:text-white shadow-sm shadow-violet-500/20',
+    },
     stages: [
       {
         id: 'embudo',
         label: 'Embudo Directo',
         icon: Target,
-        eyebrow: 'ARQUITECTURA DE VENTAS',
+        eyebrow: 'PASO 04 · ARQUITECTURA DE VENTAS',
         title: 'De visitante a cliente en 3 clics',
         description:
           'Interfaces limpias y libres de distracciones que guían al usuario directo a reservar o comprar en segundos.',
@@ -314,7 +410,7 @@ const STEPS: MainStep[] = [
         id: 'metricas',
         label: 'Pixel & Analytics',
         icon: BarChart3,
-        eyebrow: 'MEDICIÓN EXACTA',
+        eyebrow: 'PASO 04 · MEDICIÓN EXACTA',
         title: 'Rastreo quirúrgico para tus campañas',
         description:
           'Dejamos configurados los eventos de conversión para Meta Ads y Google Ads para optimizar cada peso invertido.',
@@ -335,7 +431,7 @@ const STEPS: MainStep[] = [
         id: 'autonomia',
         label: 'Panel Autónomo',
         icon: FileCode,
-        eyebrow: 'CONTROL TOTAL',
+        eyebrow: 'PASO 04 · CONTROL TOTAL',
         title: 'Administrá precios, stock y clientes desde el celular',
         description:
           'Panel de control intuitivo para gestionar tu operación en segundos sin depender de programadores.',
@@ -397,6 +493,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
   const currentStep = STEPS[activeStepIdx] ?? STEPS[0]!
   const currentStage = currentStep.stages[subStageIdx] ?? currentStep.stages[0]!
+  const theme = currentStep.theme
   const totalStages = currentStep.stages.length
   const stepProgress = ((subStageIdx + Math.min(1, elapsed / STAGE_DURATION)) / totalStages) * 100
 
@@ -408,23 +505,25 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
     >
       {/* CABECERA MINIMALISTA */}
       <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] text-slate-700 dark:text-cyan-400 font-mono text-[11px] uppercase tracking-widest mb-3 shadow-2xs">
-          <ShieldCheck className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-          <span>Ingeniería Transparente</span>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] font-mono text-[11px] uppercase tracking-widest mb-3 shadow-2xs transition-colors duration-300">
+          <ShieldCheck
+            className={`w-3.5 h-3.5 transition-colors duration-300 ${theme.checkIcon}`}
+          />
+          <span className="text-slate-700 dark:text-neutral-300">Ingeniería Transparente</span>
         </div>
 
         <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
           Cómo construimos y escalamos tu{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-emerald-600 dark:from-cyan-400 dark:to-emerald-400">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-emerald-600 to-violet-600 dark:from-cyan-400 dark:via-emerald-400 dark:to-violet-400">
             activo digital
           </span>
         </h2>
       </div>
 
       {/* ==============================================================
-          SUPER CARD MINIMALISTA ESTILO DASHBOARD (CLARO / OSCURO)
+          SUPER CARD MINIMALISTA CON TONO ADAPTATIVO POR PASO (CLARO / OSCURO)
          ============================================================== */}
-      <div className="relative rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-white/[0.08] bg-white dark:bg-[#070b14] shadow-[0_20px_60px_-15px_rgba(15,23,42,0.07)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85)] overflow-hidden flex flex-col lg:flex-row min-h-[520px]">
+      <div className="relative rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-white/[0.08] bg-white dark:bg-[#070b14] shadow-[0_20px_60px_-15px_rgba(15,23,42,0.07)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85)] overflow-hidden flex flex-col lg:flex-row min-h-[510px] transition-colors duration-500">
         {/* ==============================================================
             SIDEBAR IZQUIERDO MINIMALISTA (29%)
            ============================================================== */}
@@ -438,12 +537,21 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   ExePaginasWeb
                 </span>
               </div>
-              <span className="font-mono text-[11px] text-slate-400 dark:text-neutral-500">
-                0{activeStepIdx + 1} / 04
-              </span>
+              <div className="flex items-center gap-1.5">
+                {STEPS.map((s, idx) => (
+                  <span
+                    key={s.id}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      idx === activeStepIdx
+                        ? `w-4 ${s.theme.dotBg}`
+                        : 'w-1.5 bg-slate-300 dark:bg-white/15'
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
 
-            {/* Lista de 4 Pasos Limpia */}
+            {/* Lista de 4 Pasos con su propio tono cromático */}
             <div className="space-y-2">
               {STEPS.map((step, idx) => {
                 const isActive = idx === activeStepIdx
@@ -458,17 +566,17 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       setElapsed(0)
                       trackEvent('main_step_selected', { step: step.id })
                     }}
-                    className={`relative w-full text-left p-3.5 rounded-xl transition-colors duration-200 cursor-pointer overflow-hidden group ${
+                    className={`relative w-full text-left p-3.5 rounded-xl border transition-all duration-200 cursor-pointer overflow-hidden group ${
                       isActive
-                        ? 'bg-white dark:bg-[#0c1424] border border-cyan-500/50 dark:border-cyan-400/40 shadow-sm dark:shadow-[0_0_25px_-5px_rgba(6,182,212,0.2)]'
-                        : 'bg-transparent hover:bg-slate-200/50 dark:hover:bg-white/[0.03] border border-transparent'
+                        ? step.theme.sidebarActiveCard
+                        : 'bg-transparent hover:bg-slate-200/50 dark:hover:bg-white/[0.03] border-transparent'
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <span
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-colors ${
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-colors duration-200 ${
                           isActive
-                            ? 'bg-cyan-600 text-white dark:bg-cyan-500/20 dark:text-cyan-300 dark:border dark:border-cyan-400/40'
+                            ? step.theme.sidebarActiveBadge
                             : 'bg-slate-200/70 text-slate-600 dark:bg-white/[0.04] dark:text-neutral-500 group-hover:text-slate-900 dark:group-hover:text-neutral-300'
                         }`}
                       >
@@ -488,7 +596,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                         <p
                           className={`text-xs truncate mt-0.5 transition-colors ${
                             isActive
-                              ? 'text-slate-500 dark:text-slate-400'
+                              ? 'text-slate-600 dark:text-slate-300'
                               : 'text-slate-400 dark:text-neutral-600'
                           }`}
                         >
@@ -497,11 +605,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
                     </div>
 
-                    {/* Barra de progreso sutil integrada solo en el paso activo */}
+                    {/* Barra de progreso del color propio del paso */}
                     {isActive && (
-                      <div className="absolute left-0 right-0 bottom-0 h-[2px] bg-slate-100 dark:bg-white/[0.05]">
+                      <div className="absolute left-0 right-0 bottom-0 h-[2.5px] bg-slate-200/60 dark:bg-white/[0.05]">
                         <div
-                          className="h-full bg-cyan-500 dark:bg-cyan-400"
+                          className={`h-full ${step.theme.progressBar}`}
                           style={{
                             width: `${Math.max(4, stepProgress)}%`,
                             transition: isPaused ? 'none' : 'width 50ms linear',
@@ -518,21 +626,30 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
           {/* Nota discreta al pie del sidebar */}
           <div className="hidden lg:flex items-center justify-between pt-4 mt-4 border-t border-slate-200/70 dark:border-white/[0.06] text-[11px] font-mono text-slate-400 dark:text-neutral-500">
             <span>Secuencia automática</span>
-            <span className="text-cyan-600 dark:text-cyan-400 font-semibold">Activa</span>
+            <span className={`font-semibold transition-colors duration-300 ${theme.accentText}`}>
+              Paso 0{activeStepIdx + 1} / 04
+            </span>
           </div>
         </div>
 
         {/* ==============================================================
-            CANVAS PRINCIPAL DERECHO (71%): VISUAL & DESPEJADO
+            CANVAS PRINCIPAL DERECHO (71%): VISUAL & AMBIENTADO POR PASO
            ============================================================== */}
         <div
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          className="relative w-full lg:w-[71%] p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white dark:bg-[#070b14]"
+          className="relative w-full lg:w-[71%] p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white dark:bg-[#070b14] overflow-hidden"
         >
+          {/* Resplandor ambiental sutil que cambia de tono en cada paso */}
+          <div
+            aria-hidden="true"
+            className="absolute -top-24 -right-24 w-96 h-96 rounded-full blur-[110px] opacity-15 dark:opacity-20 pointer-events-none transition-all duration-700"
+            style={{ backgroundColor: theme.hex }}
+          />
+
           {/* BARRA SUPERIOR: SUB-TABS MINIMALISTAS + PAUSA */}
-          <div className="flex items-center justify-between gap-3 pb-5 border-b border-slate-100 dark:border-white/[0.06]">
-            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-[#0c1220] border border-slate-200/60 dark:border-white/[0.06]">
+          <div className="relative z-10 flex items-center justify-between gap-3 pb-5 border-b border-slate-100 dark:border-white/[0.06]">
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100/90 dark:bg-[#0c1220] border border-slate-200/60 dark:border-white/[0.06]">
               {currentStep.stages.map((stg, i) => {
                 const isCurrent = i === subStageIdx
                 const Icon = stg.icon
@@ -544,10 +661,10 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       setSubStageIdx(i)
                       setElapsed(0)
                     }}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-mono text-xs transition-colors duration-150 cursor-pointer ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-mono text-xs transition-all duration-150 cursor-pointer ${
                       isCurrent
-                        ? 'bg-white text-slate-900 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border dark:border-cyan-400/30 font-bold shadow-2xs'
-                        : 'text-slate-500 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white font-medium'
+                        ? theme.subTabActive
+                        : 'text-slate-500 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white font-medium border border-transparent'
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -566,14 +683,16 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               {isPaused ? (
                 <Play className="w-3.5 h-3.5 text-emerald-500" />
               ) : (
-                <Pause className="w-3.5 h-3.5 text-cyan-500" />
+                <Pause
+                  className={`w-3.5 h-3.5 transition-colors duration-300 ${theme.checkIcon}`}
+                />
               )}
               <span className="hidden sm:inline">{isPaused ? 'Reanudar' : 'Pausa'}</span>
             </button>
           </div>
 
           {/* ESCENARIO CENTRAL: WIDGET TELEMÉTRICO + COPY CONCISO */}
-          <div className="my-auto py-6">
+          <div className="relative z-10 my-auto py-6">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${currentStep.id}-${currentStage.id}`}
@@ -583,9 +702,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                 transition={{ duration: 0.16 }}
                 className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-center"
               >
-                {/* COLUMNA VISUAL (5 COLS): TARJETA DASHBOARD CON GRÁFICOS SVG */}
-                <div className="md:col-span-5 rounded-2xl p-5 bg-slate-50/90 dark:bg-[#0b111e] border border-slate-200/80 dark:border-cyan-500/25 shadow-sm dark:shadow-[0_0_35px_-12px_rgba(6,182,212,0.2)] space-y-4">
-                  {/* Visual Tipo 1: Anillo de Progreso (Estilo Video 83% / 100%) */}
+                {/* COLUMNA VISUAL (5 COLS): TARJETA DASHBOARD CON COLOR DEL PASO */}
+                <div
+                  className={`md:col-span-5 rounded-2xl p-5 border space-y-4 transition-colors duration-300 ${theme.widgetCard}`}
+                >
+                  {/* Visual Tipo 1: Anillo de Progreso */}
                   {currentStage.visual.type === 'ring' && (
                     <div className="flex items-center gap-4 pb-3 border-b border-slate-200/70 dark:border-white/[0.06]">
                       <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
@@ -597,14 +718,14 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="5"
-                            className="text-slate-200 dark:text-white/[0.07]"
+                            className="text-slate-200/80 dark:text-white/[0.07]"
                           />
                           <circle
                             cx="32"
                             cy="32"
                             r="26"
                             fill="none"
-                            stroke={currentStep.accent}
+                            stroke={theme.hex}
                             strokeWidth="5"
                             strokeLinecap="round"
                             strokeDasharray={163.36}
@@ -618,7 +739,9 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                         </span>
                       </div>
                       <div>
-                        <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-700 dark:text-cyan-400 font-bold block">
+                        <span
+                          className={`text-[11px] font-mono uppercase tracking-wider font-bold block ${theme.accentText}`}
+                        >
                           Métrica Verificada
                         </span>
                         <span className="text-sm font-bold text-slate-900 dark:text-white">
@@ -628,14 +751,16 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                     </div>
                   )}
 
-                  {/* Visual Tipo 2: Curva SVG Luminosa (Estilo Video Spline Chart) */}
+                  {/* Visual Tipo 2: Curva SVG Luminosa */}
                   {currentStage.visual.type === 'chart' && (
                     <div className="space-y-2 pb-3 border-b border-slate-200/70 dark:border-white/[0.06]">
                       <div className="flex items-baseline justify-between">
                         <span className="text-2xl font-mono font-extrabold text-slate-900 dark:text-white">
                           {currentStage.visual.primaryMetric}
                         </span>
-                        <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                        <span
+                          className={`text-xs font-mono font-semibold flex items-center gap-1 ${theme.accentText}`}
+                        >
                           <TrendingUp className="w-3.5 h-3.5" />
                           {currentStage.visual.primaryLabel}
                         </span>
@@ -647,23 +772,25 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           preserveAspectRatio="none"
                         >
                           <defs>
-                            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="0%" stopColor={currentStep.accent} stopOpacity="0.35" />
-                              <stop
-                                offset="100%"
-                                stopColor={currentStep.accent}
-                                stopOpacity="0.0"
-                              />
+                            <linearGradient
+                              id={`chartGrad-${currentStep.id}`}
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1"
+                            >
+                              <stop offset="0%" stopColor={theme.hex} stopOpacity="0.35" />
+                              <stop offset="100%" stopColor={theme.hex} stopOpacity="0.0" />
                             </linearGradient>
                           </defs>
                           <path
                             d={`${currentStage.visual.chartPoints} L 240 85 L 0 85 Z`}
-                            fill="url(#chartGrad)"
+                            fill={`url(#chartGrad-${currentStep.id})`}
                           />
                           <path
                             d={currentStage.visual.chartPoints}
                             fill="none"
-                            stroke={currentStep.accent}
+                            stroke={theme.hex}
                             strokeWidth="2.5"
                             strokeLinecap="round"
                           />
@@ -672,14 +799,16 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                     </div>
                   )}
 
-                  {/* Visual Tipo 3: Bloque de Código / Telemetría Limpio */}
+                  {/* Visual Tipo 3: Bloque de Código / Telemetría */}
                   {currentStage.visual.type === 'code' && (
                     <div className="space-y-2.5 pb-3 border-b border-slate-200/70 dark:border-white/[0.06]">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-mono font-bold text-slate-900 dark:text-white">
                           {currentStage.visual.primaryLabel}
                         </span>
-                        <span className="px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 font-mono text-[11px] font-bold">
+                        <span
+                          className={`px-2 py-0.5 rounded-md font-mono text-[11px] font-bold ${theme.pillBadge}`}
+                        >
                           {currentStage.visual.primaryMetric}
                         </span>
                       </div>
@@ -688,7 +817,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                           <div
                             key={idx}
                             className={`truncate ${
-                              item.highlight ? 'text-cyan-400 font-semibold' : 'text-slate-400'
+                              item.highlight ? theme.codeHighlight : 'text-slate-400'
                             }`}
                           >
                             {item.line}
@@ -698,16 +827,14 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                     </div>
                   )}
 
-                  {/* KPIs Secundarios Limpios */}
+                  {/* KPIs Secundarios */}
                   <div className="space-y-2 font-mono text-xs">
                     {currentStage.visual.secondaryMetrics.map((m, i) => (
                       <div key={i} className="flex items-center justify-between">
                         <span className="text-slate-500 dark:text-neutral-400">{m.label}</span>
                         <span
                           className={`font-bold ${
-                            m.accent
-                              ? 'text-cyan-700 dark:text-cyan-400'
-                              : 'text-slate-800 dark:text-neutral-200'
+                            m.accent ? theme.accentText : 'text-slate-800 dark:text-neutral-200'
                           }`}
                         >
                           {m.value}
@@ -719,7 +846,9 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                 {/* COLUMNA EDITORIAL (7 COLS): LIMPIA, DIRECTA Y ESCANEABLE */}
                 <div className="md:col-span-7 space-y-4">
-                  <span className="inline-block font-mono text-[11px] font-bold uppercase tracking-widest text-cyan-700 dark:text-cyan-400">
+                  <span
+                    className={`inline-block font-mono text-[11px] font-bold uppercase tracking-widest ${theme.accentText}`}
+                  >
                     {currentStage.eyebrow}
                   </span>
 
@@ -737,7 +866,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                         key={tag}
                         className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.07] font-mono text-xs text-slate-700 dark:text-neutral-300"
                       >
-                        <Check className="w-3 h-3 text-cyan-600 dark:text-cyan-400 shrink-0" />
+                        <Check className={`w-3.5 h-3.5 shrink-0 ${theme.checkIcon}`} />
                         <span>{tag}</span>
                       </span>
                     ))}
@@ -747,10 +876,12 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
             </AnimatePresence>
           </div>
 
-          {/* FOOTER INTERNO DISCRETO CON ACCIÓN RÁPIDA */}
-          <div className="pt-4 border-t border-slate-100 dark:border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          {/* FOOTER INTERNO DISCRETO CON ACCIÓN RÁPIDA SINCRONIZADA AL COLOR */}
+          <div className="relative z-10 pt-4 border-t border-slate-100 dark:border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2 font-mono text-xs text-slate-400 dark:text-neutral-500">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span
+                className={`w-2 h-2 rounded-full transition-colors duration-300 ${theme.dotBg}`}
+              />
               <span>Sistemas en producción verificables</span>
             </div>
 
@@ -769,7 +900,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                 onClick={() =>
                   trackEvent('hero_cta_contact_clicked', { source: 'super_card_footer' })
                 }
-                className="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-950 font-mono text-xs font-bold flex items-center gap-1.5 transition-colors"
+                className={`px-3.5 py-1.5 rounded-lg font-mono text-xs font-bold flex items-center gap-1.5 transition-all duration-300 ${theme.ctaBtn}`}
               >
                 <span>Diagnosticar Proyecto</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />

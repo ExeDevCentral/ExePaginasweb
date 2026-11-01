@@ -61,8 +61,13 @@ automáticamente.
 
 Usá el [template de PR](.github/PULL_REQUEST_TEMPLATE.md), apuntá a `main`,
 vinculá el issue relacionado y adjuntá capturas cuando el cambio sea visual.
-El workflow **Verify Build** comprueba lint, tipos, tests, auditoría, build,
-Playwright y el CLI. No fusiones mientras algún check esté fallando.
+El título del PR también debe seguir **Conventional Commits**, porque GitHub lo
+usa como base del commit creado por squash; verificá el título final antes de
+fusionar.
+El workflow **Verify Build** ejecuta `npm audit --audit-level=high`, además de
+lint, tipos, tests, build, Playwright y el CLI. El umbral bloquea vulnerabilidades
+altas y críticas; revisá también los advisories moderados y registrá los que
+queden pendientes. No fusiones mientras algún check requerido esté fallando.
 
 Integrá el PR con **squash merge** y eliminá la rama después de fusionar. Así
 `main` conserva un commit claro por cambio. No reescribas ni fuerces el historial

@@ -156,10 +156,10 @@ export function smoothScrollTo(targetSelectorOrY: string | number, offset = -88)
   const el = resolveAnchorElement(cleanId)
 
   if (el) {
+    const top = el.getBoundingClientRect().top + (window.scrollY || 0) + offset
     if (globalLenis) {
-      globalLenis.scrollTo(el, { offset, duration: 0.85 })
+      globalLenis.scrollTo(Math.max(0, top), { duration: 0.85 })
     } else {
-      const top = el.getBoundingClientRect().top + (window.scrollY || 0) + offset
       window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
     }
   } else {

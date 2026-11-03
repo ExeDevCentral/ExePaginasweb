@@ -11,14 +11,17 @@ describe('smoothScrollTo navigation utility', () => {
     setGlobalLenis(null)
   })
 
-  it('debe delegar a lenis.scrollTo con offset -88 y duration 0.85 cuando Lenis esta disponible', () => {
+  it('debe delegar a Lenis la posicion absoluta calculada cuando esta disponible', () => {
     const mockScrollTo = vi.fn()
     setGlobalLenis({ scrollTo: mockScrollTo } as unknown as Lenis)
 
-    const fakeEl = { id: 'contact' } as unknown as HTMLElement
+    const fakeEl = {
+      id: 'contact',
+      getBoundingClientRect: () => ({ top: 500, bottom: 600, height: 100 }),
+    } as unknown as HTMLElement
     globalThis.window = {
       location: { href: '' },
-      scrollY: 0,
+      scrollY: 100,
       scrollTo: vi.fn(),
     } as unknown as Window & typeof globalThis
     globalThis.document = {
@@ -27,8 +30,7 @@ describe('smoothScrollTo navigation utility', () => {
 
     smoothScrollTo('#contact', -88)
 
-    expect(mockScrollTo).toHaveBeenCalledWith(fakeEl, {
-      offset: -88,
+    expect(mockScrollTo).toHaveBeenCalledWith(512, {
       duration: 0.85,
     })
 

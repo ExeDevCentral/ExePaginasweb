@@ -16,14 +16,22 @@ import {
 } from './scrollUtils'
 
 const NAVBAR_SCROLL_OFFSET = -92
+const HASH_SCROLL_DURATION = 0.75
+let activeHashScrollCleanup: (() => void) | null = null
 
-function scrollElementIntoClearView(el: HTMLElement) {
+function scrollElementIntoClearView(el: HTMLElement, onComplete?: () => void) {
+  const top = el.getBoundingClientRect().top + (window.scrollY || 0) + NAVBAR_SCROLL_OFFSET
   const lenis = getGlobalLenis()
   if (lenis) {
-    lenis.scrollTo(el, { offset: NAVBAR_SCROLL_OFFSET, duration: 0.75 })
+    lenis.scrollTo(Math.max(0, top), {
+      duration: HASH_SCROLL_DURATION,
+      ...(onComplete ? { onComplete } : {}),
+    })
   } else {
-    const top = el.getBoundingClientRect().top + (window.scrollY || 0) + NAVBAR_SCROLL_OFFSET
     window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+    if (onComplete) {
+      setTimeout(onComplete, (HASH_SCROLL_DURATION + 0.15) * 1000)
+    }
   }
 }
 
@@ -31,11 +39,25 @@ function scheduleHashScrollWithRetry(rawHash: string): () => void {
   const cleanId = decodeURIComponent(rawHash.replace(/^#/, '')).trim()
   if (!cleanId || typeof document === 'undefined') return () => {}
 
+  activeHashScrollCleanup?.()
+
   let cancelled = false
   let attempts = 0
   let timerId: ReturnType<typeof setTimeout> | null = null
   let settleTimerId: ReturnType<typeof setTimeout> | null = null
   let rafId: number | null = null
+
+  const cleanup = () => {
+    cancelled = true
+    if (timerId !== null) clearTimeout(timerId)
+    if (settleTimerId !== null) clearTimeout(settleTimerId)
+    if (rafId !== null) cancelAnimationFrame(rafId)
+    if (activeHashScrollCleanup === cleanup) {
+      activeHashScrollCleanup = null
+    }
+  }
+
+  activeHashScrollCleanup = cleanup
 
   const tryScroll = () => {
     if (cancelled) return
@@ -43,20 +65,21 @@ function scheduleHashScrollWithRetry(rawHash: string): () => void {
     if (target && target.getBoundingClientRect().height > 0) {
       rafId = requestAnimationFrame(() => {
         if (cancelled) return
-        scrollElementIntoClearView(target)
-        // Re-estabilización suave si animaciones de entrada o chunks dinámicos desplazan el layout
-        settleTimerId = setTimeout(() => {
+        scrollElementIntoClearView(target, () => {
           if (cancelled) return
-          const settled = resolveAnchorElement(cleanId)
-          if (settled && settled.getBoundingClientRect().height > 0) {
-            const deltaFromDesired = Math.abs(
-              settled.getBoundingClientRect().top + NAVBAR_SCROLL_OFFSET
-            )
-            if (deltaFromDesired > 28) {
-              scrollElementIntoClearView(settled)
+          settleTimerId = setTimeout(() => {
+            if (cancelled) return
+            const settled = resolveAnchorElement(cleanId)
+            if (settled && settled.getBoundingClientRect().height > 0) {
+              const deltaFromDesired = Math.abs(
+                settled.getBoundingClientRect().top + NAVBAR_SCROLL_OFFSET
+              )
+              if (deltaFromDesired > 28) {
+                scrollElementIntoClearView(settled)
+              }
             }
-          }
-        }, 380)
+          }, 50)
+        })
       })
       return
     }
@@ -70,12 +93,7 @@ function scheduleHashScrollWithRetry(rawHash: string): () => void {
   // Primer intento tras el pintado inicial de la ruta
   timerId = setTimeout(tryScroll, 30)
 
-  return () => {
-    cancelled = true
-    if (timerId !== null) clearTimeout(timerId)
-    if (settleTimerId !== null) clearTimeout(settleTimerId)
-    if (rafId !== null) cancelAnimationFrame(rafId)
-  }
+  return cleanup
 }
 
 export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -163,6 +181,7 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const anchor = targetNode?.closest?.('a[href]') as HTMLAnchorElement | null
       if (!anchor) return
       if (
+        e.defaultPrevented ||
         anchor.target === '_blank' ||
         anchor.hasAttribute('download') ||
         anchor.dataset.customScroll === 'true'

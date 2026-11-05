@@ -8,6 +8,7 @@
 
 DROP POLICY IF EXISTS "Clientes ven sus tickets" ON public.tickets;
 DROP POLICY IF EXISTS "Admins leen todos los tickets" ON public.tickets;
+DROP POLICY IF EXISTS "tickets_select" ON public.tickets;
 
 CREATE POLICY "tickets_select"
   ON public.tickets FOR SELECT

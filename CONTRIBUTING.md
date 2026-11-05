@@ -36,6 +36,9 @@ nombre corto en kebab-case, por ejemplo `fix/mobile-nav-focus`.
 
 ### 3. Escribí código con los estándares del repo
 
+- Seguí las [convenciones de nombres](docs/engineering/naming-conventions.md)
+  para TypeScript, JavaScript y SQL; respetá el glosario y no renombres schema
+  publicado sin un plan de compatibilidad.
 - **TypeScript estricto** — `npm run typecheck` debe pasar.
 - **Lint** — `npm run lint`; no agregues warnings nuevos.
 - **Tests** — `npm test`; los módulos de lógica llevan unit tests (Vitest).

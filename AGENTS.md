@@ -2,6 +2,12 @@
 
 ## Agent skills
 
+### Naming conventions
+
+Follow [`docs/engineering/naming-conventions.md`](docs/engineering/naming-conventions.md)
+for JavaScript/TypeScript and PostgreSQL identifiers. Preserve persisted schema
+names unless the change includes a compatibility migration.
+
 ### Issue tracker
 
 Issues tracked on GitHub (`ExeDevCentral/ExePaginasweb`). See `docs/agents/issue-tracker.md`.

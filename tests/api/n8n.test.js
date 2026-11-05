@@ -206,4 +206,53 @@ describe('POST /api/automation/n8n route handler', () => {
     expect(json.ticketId).toMatch(/^EXE-N8N-[A-Z0-9]+$/)
     expect(json.dispatchedToN8n).toBe(true)
   })
+
+  it('procesa correctamente la solicitud con teléfono/WhatsApp aunque no tenga email', async () => {
+    process.env.N8N_WEBHOOK_URL = 'https://n8n.example.com/webhook/lead'
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      new Response(JSON.stringify({ ok: true }), { status: 200 })
+    )
+
+    const { POST } = await import('../../app/api/automation/n8n/route')
+    const { NextRequest } = await import('next/server')
+
+    const req = new NextRequest('http://localhost:3000/api/automation/n8n', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'Martín Gomez',
+        phone: '+54 9 11 1234-5678',
+        automationType: 'cotizacion_express',
+        details: 'Presupuesto sistema de reservas',
+      }),
+      headers: { 'content-type': 'application/json' },
+    })
+
+    const res = await POST(req)
+    expect(res.status).toBe(200)
+    const json = await res.json()
+    expect(json.ok).toBe(true)
+    expect(json.clientName).toBe('Martín Gomez')
+    expect(json.clientPhone).toBe('+54 9 11 1234-5678')
+    expect(json.clientEmail).toBeNull()
+    expect(json.dispatchedToN8n).toBe(true)
+  })
+
+  it('rechaza solicitudes que no incluyan ni email ni teléfono', async () => {
+    const { POST } = await import('../../app/api/automation/n8n/route')
+    const { NextRequest } = await import('next/server')
+
+    const req = new NextRequest('http://localhost:3000/api/automation/n8n', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'Anónimo',
+        automationType: 'demo_sistema',
+      }),
+      headers: { 'content-type': 'application/json' },
+    })
+
+    const res = await POST(req)
+    expect(res.status).toBe(400)
+    const json = await res.json()
+    expect(json.error).toBe('Datos inválidos')
+  })
 })

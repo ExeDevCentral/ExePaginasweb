@@ -51,6 +51,7 @@ const ContactSection = () => {
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [feedback, setFeedback] = useState('')
@@ -114,7 +115,13 @@ const ContactSection = () => {
       const res = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message, lang: i18n.language }),
+        body: JSON.stringify({
+          name,
+          email,
+          phone: phone.trim() || undefined,
+          message,
+          lang: i18n.language,
+        }),
       })
 
       const data = (await res.json()) as { ticketId?: string; message?: string; error?: string }
@@ -126,7 +133,8 @@ const ContactSection = () => {
             email,
             lead_type: 'contact',
             name,
-            message,
+            message: `[Ticket: ${data.ticketId || 'CNT'}] WhatsApp/Tel: ${phone || 'N/A'}. ${message}`,
+            metadata: { phone },
           })
           .then(() => {})
 
@@ -144,11 +152,12 @@ const ContactSection = () => {
         setFeedback(successMsg)
         toast.success(t('contact.success_titulo'), {
           description: data.ticketId
-            ? `Ticket generado: ${data.ticketId}. Revisa tu casilla de correo.`
+            ? `Ticket generado: ${data.ticketId}. Revisa tu casilla o te contactaremos por WhatsApp.`
             : successMsg,
         })
         setName('')
         setEmail('')
+        setPhone('')
         setMessage('')
       } else {
         throw new Error(data.error || 'Error al enviar el mensaje')
@@ -301,7 +310,7 @@ const ContactSection = () => {
                   {t('contact.form_desc')}
                 </p>
 
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-3">
                   <div className="group relative">
                     <input
                       id="contact-name"
@@ -317,6 +326,23 @@ const ContactSection = () => {
                       className="absolute left-4 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-white/50 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-cyan-600 dark:peer-focus:text-emerald-400"
                     >
                       {t('contact.form_nombre')}
+                    </label>
+                  </div>
+
+                  <div className="group relative">
+                    <input
+                      id="contact-phone"
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder=" "
+                      className="peer w-full rounded-xl border border-emerald-500/30 dark:border-emerald-500/30 bg-slate-50/80 dark:bg-white/5 px-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white outline-none transition-all placeholder:text-muted-foreground focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:bg-white dark:focus:bg-white/10 shadow-2xs"
+                    />
+                    <label
+                      htmlFor="contact-phone"
+                      className="absolute left-4 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400/80 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-emerald-600 dark:peer-focus:text-emerald-400"
+                    >
+                      {t('contact.form_telefono', 'WhatsApp / Teléfono')}
                     </label>
                   </div>
 

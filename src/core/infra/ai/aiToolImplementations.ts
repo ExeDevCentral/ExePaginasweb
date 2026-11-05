@@ -183,14 +183,25 @@ export async function getClientOrders(userContext: AiUserContext, limit: number)
 
 export async function createTicketRecord(input: {
   contactEmail?: string | null
+  contactPhone?: string | null
   projectType?: string | null
 }) {
   const ticketId = `EXE-CHT-${Math.random().toString(36).substring(2, 7).toUpperCase()}`
 
   const { error } = await supabaseAdmin.from('leads').insert({
-    email: input.contactEmail ?? null,
+    email:
+      input.contactEmail ??
+      (input.contactPhone
+        ? `${input.contactPhone.replace(/\D/g, '')}@lead.exepaginasweb.com`
+        : null),
     lead_type: 'chat',
-    message: `[${ticketId}] ${input.projectType ?? 'solicitud sin tipo'} — registrado vía asistente IA`,
+    message: `[${ticketId}] [${input.projectType ?? 'solicitud sin tipo'}] Tel: ${input.contactPhone ?? 'N/A'} — registrado vía asistente IA`,
+    metadata: {
+      ticketId,
+      phone: input.contactPhone ?? null,
+      email: input.contactEmail ?? null,
+      projectType: input.projectType ?? null,
+    },
   })
 
   if (error) {
@@ -201,6 +212,7 @@ export async function createTicketRecord(input: {
   return {
     ticketId,
     contactEmail: input.contactEmail ?? null,
+    contactPhone: input.contactPhone ?? null,
     projectType: input.projectType ?? null,
     ok: true,
   }

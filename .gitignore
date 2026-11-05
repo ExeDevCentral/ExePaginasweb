@@ -1,5 +1,6 @@
-# Logs
-logs
+# Subprojects & standalone repos
+reproductor-android/
+
 *.log
 npm-debug.log*
 yarn-debug.log*

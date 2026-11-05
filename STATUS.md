@@ -41,3 +41,4 @@
 - [x] Support full bilingual internationalization (ES / EN).
 - [ ] Add real-time dashboard analytics visualization.
 - [ ] Implement self-service tenant API keys.
+

@@ -3,7 +3,7 @@
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
-import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase/client'
 
 export interface SubscriptionUpdateParams {
   clienteId: string

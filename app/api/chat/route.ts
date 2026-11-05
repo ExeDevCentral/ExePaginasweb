@@ -440,6 +440,29 @@ export async function POST(req: NextRequest) {
     tools: tools as unknown as ToolSet,
   }
 
+  const finalizeRun = (opts: {
+    model: string
+    provider: string
+    status?: 'completed' | 'failed' | 'cancelled'
+    inputTokens?: number | null | undefined
+    outputTokens?: number | null | undefined
+    error?: string | null
+  }) => {
+    const latencyMs = Math.round(performance.now() - startedAt)
+    aiService
+      .completeRun(activeRunId, {
+        status: opts.status ?? 'completed',
+        latencyMs,
+        inputTokens: opts.inputTokens ?? 0,
+        outputTokens: opts.outputTokens ?? 0,
+        model: opts.model,
+        error: opts.error ?? null,
+      })
+      .catch((recordError) => {
+        console.warn('[chat] No se pudo registrar el run de IA:', recordError)
+      })
+  }
+
   // Cadena de proveedores en orden de prioridad. `streamText` no lanza al
   // construir la respuesta: la petición real ocurre al consumir el stream.
   // Por eso seleccionamos el proveedor leyendo el PRIMER chunk del stream
@@ -456,7 +479,18 @@ export async function POST(req: NextRequest) {
           baseURL: 'https://ai-gateway.vercel.sh/v1',
           apiKey: aiGatewayKey,
         })
-        return streamText({ ...commonSettings, model: gateway('openai/gpt-4o-mini') })
+        return streamText({
+          ...commonSettings,
+          model: gateway('openai/gpt-4o-mini'),
+          onFinish: (event) => {
+            finalizeRun({
+              model: 'openai/gpt-4o-mini',
+              provider: 'vercel-ai-gateway',
+              inputTokens: event.usage?.inputTokens,
+              outputTokens: event.usage?.outputTokens,
+            })
+          },
+        })
       },
     })
   }
@@ -465,7 +499,18 @@ export async function POST(req: NextRequest) {
       name: 'gemini',
       make: () => {
         const google = createGoogleGenerativeAI({ apiKey: geminiKey })
-        return streamText({ ...commonSettings, model: google('gemini-2.5-flash') })
+        return streamText({
+          ...commonSettings,
+          model: google('gemini-2.5-flash'),
+          onFinish: (event) => {
+            finalizeRun({
+              model: 'gemini-2.5-flash',
+              provider: 'gemini',
+              inputTokens: event.usage?.inputTokens,
+              outputTokens: event.usage?.outputTokens,
+            })
+          },
+        })
       },
     })
   }
@@ -474,32 +519,20 @@ export async function POST(req: NextRequest) {
       name: 'groq',
       make: () => {
         const groq = createGroq({ apiKey: groqKey })
-        return streamText({ ...commonSettings, model: groq('llama-3.3-70b-versatile') })
+        return streamText({
+          ...commonSettings,
+          model: groq('llama-3.3-70b-versatile'),
+          onFinish: (event) => {
+            finalizeRun({
+              model: 'llama-3.3-70b-versatile',
+              provider: 'groq',
+              inputTokens: event.usage?.inputTokens,
+              outputTokens: event.usage?.outputTokens,
+            })
+          },
+        })
       },
     })
-  }
-
-  const finalizeRun = (opts: {
-    model: string
-    provider: string
-    status?: 'completed' | 'failed' | 'cancelled'
-    inputTokens?: number
-    outputTokens?: number
-    error?: string | null
-  }) => {
-    const latencyMs = Math.round(performance.now() - startedAt)
-    aiService
-      .completeRun(activeRunId, {
-        status: opts.status ?? 'completed',
-        latencyMs,
-        inputTokens: opts.inputTokens ?? 0,
-        outputTokens: opts.outputTokens ?? 0,
-        model: opts.model,
-        error: opts.error ?? null,
-      })
-      .catch((recordError) => {
-        console.warn('[chat] No se pudo registrar el run de IA:', recordError)
-      })
   }
 
   if (aiProviderChain.length > 0) {

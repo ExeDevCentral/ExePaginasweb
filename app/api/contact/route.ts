@@ -9,6 +9,7 @@ import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send'
 import { dispatchN8nEvent } from '@/lib/server/n8n'
 import { contactNotification, contactAutoReply, aiDiagnosticAutoReply } from '@/lib/email/templates'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
+import { isSupabaseAdminConfigured, supabaseAdmin } from '@/lib/supabase/admin'
 import {
   validateContentLength,
   validateFetchMetadata,
@@ -83,6 +84,32 @@ export async function POST(req: NextRequest) {
   console.log(
     `[contact] [${ticketId}] [Lang: ${detectedLang}] [Diag: ${isAiDiag}] Mensaje de ${name} <${maskEmail(email)}> (${message.length} chars)`
   )
+
+  // Persistir lead de manera atómica en Supabase para evitar pérdidas por fallos en email
+  if (isSupabaseAdminConfigured()) {
+    try {
+      const { error: dbError } = await supabaseAdmin.from('leads').insert({
+        email,
+        name: name || undefined,
+        lead_type: isAiDiag ? 'diagnostic' : 'contact',
+        message: `[${ticketId}] Tel: ${phone || 'N/A'}. ${message}`,
+        metadata: {
+          ticketId,
+          phone: phone || null,
+          projectType: projectType || null,
+          total: total ?? null,
+          isDiagnostic: Boolean(isAiDiag),
+          lang: detectedLang,
+          source: 'contact_form',
+        },
+      })
+      if (dbError) {
+        console.error(`[contact] [${ticketId}] Error guardando lead en Supabase:`, dbError)
+      }
+    } catch (dbErr) {
+      console.error(`[contact] [${ticketId}] Excepción guardando lead en Supabase:`, dbErr)
+    }
+  }
 
   try {
     if (process.env.RESEND_API_KEY) {

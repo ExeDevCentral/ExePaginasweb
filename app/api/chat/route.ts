@@ -286,73 +286,94 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: msg }, { status: 429 })
   }
 
-  // Capturar email si el usuario lo escribió en el chat (lógica determinística, antes del streaming)
+  // Capturar email o teléfono si el usuario lo escribió en el chat (lógica determinística, antes del streaming)
   const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/
   const emailMatch = userMessage.match(emailRegex)
-  if (emailMatch && emailMatch[0]) {
-    const capturedEmail = emailMatch[0]
+  const capturedEmail = emailMatch ? emailMatch[0] : null
+
+  const phoneRegex = /(?:(?:\+|00)?\d{1,3}[-.\s]?)?(?:\(?\d{2,5}\)?[-.\s]?)?\d{3,4}[-.\s]?\d{3,4}/
+  const phoneMatch = userMessage.match(phoneRegex)
+  const rawPhone = phoneMatch ? phoneMatch[0].trim() : null
+  const cleanPhoneDigits = rawPhone ? rawPhone.replace(/\D/g, '') : ''
+  const capturedPhone = cleanPhoneDigits.length >= 7 ? rawPhone : null
+
+  if (capturedEmail || capturedPhone) {
     const detectedLang = detectLanguage(userMessage, '')
     const ticketId = `EXE-CHT-${Date.now().toString(36).toUpperCase().slice(-5)}`
-    console.log(`[chat] Email capturado en chat (Ticket: ${ticketId}, Lang: ${detectedLang})`)
+    console.log(
+      `[chat] Contacto capturado en chat (Ticket: ${ticketId}, Email: ${capturedEmail || 'N/A'}, Tel: ${capturedPhone || 'N/A'}, Lang: ${detectedLang})`
+    )
 
     if (process.env.RESEND_API_KEY) {
-      // Sincronizar lead capturado desde el chat con la audiencia de Resend
-      void syncContactToAudience({
-        email: capturedEmail,
-        firstName: capturedEmail.split('@')[0],
-      }).catch((err) => {
-        console.warn('[chat] No se pudo sincronizar lead con Resend Audience:', err)
-      })
+      if (capturedEmail) {
+        // Sincronizar lead capturado desde el chat con la audiencia de Resend
+        void syncContactToAudience({
+          email: capturedEmail,
+          firstName: visitorName || capturedEmail.split('@')[0],
+        }).catch((err) => {
+          console.warn('[chat] No se pudo sincronizar lead con Resend Audience:', err)
+        })
+      }
 
       // Despachar evento a n8n en segundo plano si N8N_WEBHOOK_URL está configurado
       void dispatchN8nEvent({
         event: 'lead.chat',
         ticketId,
-        name: visitorName || capturedEmail.split('@')[0],
-        email: capturedEmail,
+        name: visitorName || (capturedEmail ? capturedEmail.split('@')[0] : 'Visitante Chat'),
+        email: capturedEmail || undefined,
+        phone: capturedPhone || undefined,
         message: userMessage,
         lang: detectedLang,
         metadata: {
           conversationId,
           visitorName,
+          phone: capturedPhone || undefined,
         },
       })
 
-      const emailResults = await Promise.allSettled([
+      const emailTasks: Promise<unknown>[] = [
         sendEmail({
           to: [ADMIN_EMAIL],
-          subject: `[${ticketId}] Consulta desde Chat WEB (${capturedEmail})`,
+          subject: `[${ticketId}] 🚨 Lead Chat WEB (${capturedPhone ? `Tel: ${capturedPhone}` : capturedEmail})`,
           html: contactNotification({
             name: visitorName || 'Visitante Chat',
-            email: capturedEmail,
+            email: capturedEmail || 'No especificado',
+            phone: capturedPhone || undefined,
             message: userMessage,
             ticketId,
           }),
-          replyTo: capturedEmail,
+          replyTo: capturedEmail || undefined,
           tags: [
             { name: 'category', value: 'chat_lead_admin' },
             { name: 'ticket_id', value: ticketId },
           ],
         }),
-        sendEmail({
-          to: [capturedEmail],
-          subject:
-            detectedLang === 'en'
-              ? `✨ We received your inquiry [Ticket: ${ticketId}] - ExeSistemasWEB`
-              : `✨ Recibimos tu consulta del Chat [Ticket: ${ticketId}] - ExeSistemasWEB`,
-          html: contactAutoReply({
-            name: visitorName || capturedEmail.split('@')[0],
-            message: userMessage,
-            ticketId,
-            lang: detectedLang,
-          }),
-          tags: [
-            { name: 'category', value: 'chat_lead_client' },
-            { name: 'ticket_id', value: ticketId },
-            { name: 'lang', value: detectedLang },
-          ],
-        }),
-      ])
+      ]
+
+      if (capturedEmail) {
+        emailTasks.push(
+          sendEmail({
+            to: [capturedEmail],
+            subject:
+              detectedLang === 'en'
+                ? `✨ We received your inquiry [Ticket: ${ticketId}] - ExeSistemasWEB`
+                : `✨ Recibimos tu consulta del Chat [Ticket: ${ticketId}] - ExeSistemasWEB`,
+            html: contactAutoReply({
+              name: visitorName || capturedEmail.split('@')[0],
+              message: userMessage,
+              ticketId,
+              lang: detectedLang,
+            }),
+            tags: [
+              { name: 'category', value: 'chat_lead_client' },
+              { name: 'ticket_id', value: ticketId },
+              { name: 'lang', value: detectedLang },
+            ],
+          })
+        )
+      }
+
+      const emailResults = await Promise.allSettled(emailTasks)
       if (emailResults.some((result) => result.status === 'rejected')) {
         console.error('[chat] Error enviando emails desde chat:', emailResults)
       }
@@ -360,10 +381,16 @@ export async function POST(req: NextRequest) {
 
     if (isSupabaseAdminConfigured()) {
       const { error: leadError } = await supabase.from('leads').insert({
-        email: capturedEmail,
+        email: capturedEmail || `${cleanPhoneDigits || 'anon'}@lead.exepaginasweb.com`,
         lead_type: 'chat',
-        message: userMessage,
+        message: `[${ticketId}] WhatsApp/Tel: ${capturedPhone || 'N/A'}. ${userMessage}`,
         name: visitorName || undefined,
+        metadata: {
+          ticketId,
+          phone: capturedPhone,
+          email: capturedEmail,
+          source: 'chat_conversation',
+        },
       })
       if (leadError) console.error('[chat] Error guardando lead:', leadError)
     } else {

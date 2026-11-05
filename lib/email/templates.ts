@@ -27,6 +27,7 @@ type ContactInput = {
   email: TemplateValue
   message: TemplateValue
   ticketId?: TemplateValue
+  phone?: TemplateValue
 }
 type AutoReplyInput = {
   name?: TemplateValue
@@ -373,10 +374,20 @@ export function paymentNotification({
   return baseLayout(body, 'Nueva venta recibida')
 }
 
-export function contactNotification({ name, email, message, ticketId }: ContactInput): string {
+export function contactNotification({
+  name,
+  email,
+  message,
+  ticketId,
+  phone,
+}: ContactInput): string {
   const safeTicket = escapeHtml(ticketId || 'EXE-CNT-DIRECT')
   const safeName = escapeHtml(name)
-  const safeEmail = escapeHtml(email)
+  const safeEmail = escapeHtml(email || 'No especificado')
+  const rawPhone = phone ? String(phone).trim() : ''
+  const cleanPhoneDigits = rawPhone ? rawPhone.replace(/[^0-9]/g, '') : ''
+  const safePhone = rawPhone ? escapeHtml(rawPhone) : ''
+
   const body = `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
       <tr>
@@ -392,13 +403,25 @@ export function contactNotification({ name, email, message, ticketId }: ContactI
     <div class="hud-box" style="border-color:rgba(0,212,255,0.35);">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <td width="50%" valign="top">
+          <td width="33%" valign="top">
             <div class="label">Remitente</div>
             <div class="value">${safeName}</div>
           </td>
-          <td width="50%" valign="top">
+          <td width="33%" valign="top">
+            <div class="label">WhatsApp / Teléfono</div>
+            <div class="value">${
+              cleanPhoneDigits
+                ? `<a href="https://wa.me/${cleanPhoneDigits}" style="color:#10b981;font-weight:bold;text-decoration:none;">📱 ${safePhone}</a>`
+                : '<span style="color:#64748b;">No especificado</span>'
+            }</div>
+          </td>
+          <td width="34%" valign="top">
             <div class="label">Correo Electrónico</div>
-            <div class="value"><a href="mailto:${safeEmail}" style="color:#00d4ff;text-decoration:none">${safeEmail}</a></div>
+            <div class="value">${
+              email
+                ? `<a href="mailto:${safeEmail}" style="color:#00d4ff;text-decoration:none">${safeEmail}</a>`
+                : '<span style="color:#64748b;">No especificado</span>'
+            }</div>
           </td>
         </tr>
       </table>
@@ -410,9 +433,16 @@ export function contactNotification({ name, email, message, ticketId }: ContactI
     </div>
 
     <div style="text-align:center;margin-top:24px;">
-      <a href="mailto:${safeEmail}?subject=Re:%20[${safeTicket}]%20Tu%20consulta%20en%20ExeSistemasWEB" class="btn">Responder por Email</a>
-      <br>
-      <a href="https://wa.me/${BRAND.whatsapp}?text=Hola%20${encodeURIComponent(String(name ?? ''))},%20recibimos%20tu%20consulta%20[${safeTicket}]%20en%20ExePaginasWeb" class="btn-secondary">Abrir WhatsApp</a>
+      ${
+        cleanPhoneDigits
+          ? `<a href="https://wa.me/${cleanPhoneDigits}?text=Hola%20${encodeURIComponent(String(name ?? ''))},%20recibimos%20tu%20consulta%20[${safeTicket}]%20en%20ExePaginasWeb" class="btn" style="background:#10b981;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:bold;display:inline-block;margin:6px;">📱 Chatear por WhatsApp con ${safeName}</a><br>`
+          : ''
+      }
+      ${
+        email
+          ? `<a href="mailto:${safeEmail}?subject=Re:%20[${safeTicket}]%20Tu%20consulta%20en%20ExeSistemasWEB" class="btn-secondary" style="display:inline-block;margin:6px;">Responder por Email</a>`
+          : ''
+      }
     </div>
   `
   return baseLayout(body, `[${safeTicket}] Nuevo contacto de ${safeName}`)

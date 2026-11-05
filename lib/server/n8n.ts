@@ -17,6 +17,7 @@ export interface N8nEventPayload {
   ticketId?: string | undefined
   name?: string | undefined
   email?: string | undefined
+  phone?: string | undefined
   message?: string | undefined
   lang?: string | undefined
   metadata?: Record<string, unknown> | undefined
@@ -95,6 +96,7 @@ export async function executeServerlessAutomationFallback(
     const ticketId =
       payload.ticketId || `EXE-N8N-${Date.now().toString(36).toUpperCase().slice(-5)}`
     const clientEmail = payload.email?.trim()
+    const clientPhone = payload.phone?.trim()
     const clientName = payload.name?.trim() || 'Cliente'
     const automationType = String(payload.metadata?.automationType || 'cotizacion_express')
     const details = payload.message || ''
@@ -102,19 +104,38 @@ export async function executeServerlessAutomationFallback(
 
     const emailTasks: Promise<unknown>[] = []
 
+    const cleanPhoneDigits = clientPhone ? clientPhone.replace(/[^0-9]/g, '') : null
+
     // 1. Notificación instantánea al administrador
     emailTasks.push(
       sendEmail({
         to: ADMIN_EMAIL,
         subject: `[${ticketId}] ⚡ Automatización en Vivo: ${automationType} (${clientName})`,
         html: `
-          <div style="font-family:sans-serif;padding:20px;background:#090d18;color:#fff;border-radius:12px;">
+          <div style="font-family:sans-serif;padding:24px;background:#090d18;color:#fff;border-radius:12px;max-width:600px;">
             <h2 style="color:#00d4ff;margin-top:0;">⚡ Solicitud de Automatización (Motor Serverless)</h2>
-            <p><strong>Ticket:</strong> ${ticketId}</p>
-            <p><strong>Cliente:</strong> ${clientName} &lt;${clientEmail || 'Sin email registrado'}&gt;</p>
+            <p><strong>Ticket:</strong> <span style="font-family:monospace;color:#10b981;font-weight:bold;">${ticketId}</span></p>
+            <p><strong>Cliente:</strong> ${clientName}</p>
+            <p><strong>WhatsApp / Teléfono:</strong> ${
+              clientPhone
+                ? `<a href="https://wa.me/${cleanPhoneDigits}" style="color:#10b981;font-weight:bold;font-size:16px;">📱 ${clientPhone} (Abrir WhatsApp)</a>`
+                : '<span style="color:#94a3b8;">No especificado</span>'
+            }</p>
+            <p><strong>Email:</strong> ${
+              clientEmail
+                ? `<a href="mailto:${clientEmail}" style="color:#38bdf8;">${clientEmail}</a>`
+                : '<span style="color:#94a3b8;">Sin email registrado</span>'
+            }</p>
             <p><strong>Tipo:</strong> ${automationType}</p>
             <p><strong>Detalles:</strong> ${details}</p>
-            <p style="color:#10b981;">✓ Registrado y procesado en modo gratis resiliente.</p>
+            ${
+              cleanPhoneDigits
+                ? `<div style="margin-top:20px;">
+                    <a href="https://wa.me/${cleanPhoneDigits}?text=Hola%20${encodeURIComponent(clientName)},%20te%20contacto%20de%20ExePaginasWeb%20por%20tu%20solicitud%20[${ticketId}]" style="display:inline-block;padding:12px 24px;background:#10b981;color:#fff;text-decoration:none;font-weight:bold;border-radius:8px;">📱 Chatear por WhatsApp con el Cliente</a>
+                  </div>`
+                : ''
+            }
+            <p style="color:#10b981;margin-top:20px;">✓ Registrado y procesado en modo gratis resiliente.</p>
           </div>
         `,
       }).catch((e) => {

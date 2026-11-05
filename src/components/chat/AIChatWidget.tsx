@@ -31,6 +31,7 @@ import {
   Sparkles,
   Mail,
   Loader2,
+  Phone,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
@@ -338,29 +339,42 @@ export const AIChatWidget: React.FC = () => {
   const [selectedAutoType, setSelectedAutoType] = useState<
     'cotizacion_express' | 'auditoria_gratis' | 'demo_sistema' | 'notificacion_directa'
   >('cotizacion_express')
+  const [autoPhone, setAutoPhone] = useState('')
   const [autoEmail, setAutoEmail] = useState('')
   const [isAutomating, setIsAutomating] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const handleTriggerLiveAutomation = async (typeOverride?: typeof selectedAutoType) => {
     const targetType = typeOverride || selectedAutoType
-    setIsAutomating(true)
     const effectiveName = visitorName.trim() || 'Visitante Web'
+    const phoneTrimmed = autoPhone.trim()
+    const emailTrimmed = autoEmail.trim()
+
+    if (!phoneTrimmed && !emailTrimmed) {
+      toast.error('Medio de contacto requerido', {
+        description:
+          'Por favor, ingresá al menos tu WhatsApp o tu Email para que podamos comunicarnos y enviarte la propuesta.',
+      })
+      return
+    }
+
+    setIsAutomating(true)
     try {
       const res = await fetch('/api/automation/n8n', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: effectiveName,
-          email: autoEmail.trim() || undefined,
+          phone: phoneTrimmed || undefined,
+          email: emailTrimmed || undefined,
           automationType: targetType,
-          details: `Disparado desde el centro de soporte unificado (${targetType})`,
+          details: `Disparado desde el botón de chat (${targetType})`,
         }),
       })
-      const data = (await res.json()) as { ticketId?: string; message?: string }
+      const data = (await res.json()) as { ticketId?: string; message?: string; error?: string }
       if (res.ok && data.ticketId) {
-        toast.success('¡Automatización ejecutada!', {
-          description: `Ticket generado: ${data.ticketId}. Revisa tu casilla o continuá por WhatsApp.`,
+        toast.success('¡Solicitud y Automatización Enviadas!', {
+          description: `Ticket: ${data.ticketId}. Nos comunicaremos por ${phoneTrimmed ? 'WhatsApp' : 'Email'} a la brevedad.`,
         })
         const typeLabels: Record<string, string> = {
           cotizacion_express: 'Cotización Express',
@@ -373,13 +387,15 @@ export const AIChatWidget: React.FC = () => {
           ...prev,
           makeMessage(
             'assistant',
-            `⚡ ¡Automatización n8n ejecutada con éxito para ${effectiveName}!\n\nTicket: [${data.ticketId}].\nFlujo: ${label}.${autoEmail ? `\nEnviamos la confirmación a ${autoEmail}.` : ''}\n\n¿Querés que configuremos este sistema en tu negocio?`
+            `⚡ ¡Solicitud registrada con éxito para ${effectiveName}!\n\nTicket: [${data.ticketId}].\nFlujo: ${label}.${phoneTrimmed ? `\nTel/WhatsApp: ${phoneTrimmed}` : ''}${emailTrimmed ? `\nConfirmación enviada a: ${emailTrimmed}` : ''}\n\nExequiel y el equipo ya recibieron tu requerimiento y te contactarán de inmediato.`
           ),
         ])
         setHubView('chat')
         setCurrentTicket(data.ticketId)
       } else {
-        toast.error('Error al ejecutar automatización')
+        toast.error('Error al enviar la solicitud', {
+          description: data.error || 'Por favor verifica los datos ingresados.',
+        })
       }
     } catch (err) {
       console.error('[AIChatWidget] Error disparando automatización:', err)
@@ -769,15 +785,27 @@ export const AIChatWidget: React.FC = () => {
                       ))}
                     </div>
 
-                    {/* Email opcional */}
+                    {/* WhatsApp / Teléfono (Prioritario para contacto directo) */}
+                    <div className="relative mb-2">
+                      <Phone className="w-3.5 h-3.5 text-emerald-400 absolute left-3 top-3" />
+                      <input
+                        type="tel"
+                        value={autoPhone}
+                        onChange={(e) => setAutoPhone(e.target.value)}
+                        placeholder="Tu WhatsApp / Teléfono (ej: +54 9 11 ...)"
+                        className="w-full pl-8 pr-3 py-2 rounded-xl bg-black/60 border border-emerald-500/30 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-emerald-400 font-sans"
+                      />
+                    </div>
+
+                    {/* Email */}
                     <div className="relative mb-3">
-                      <Mail className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-3" />
+                      <Mail className="w-3.5 h-3.5 text-cyan-400 absolute left-3 top-3" />
                       <input
                         type="email"
                         value={autoEmail}
                         onChange={(e) => setAutoEmail(e.target.value)}
-                        placeholder="Tu email (opcional para recibir la plantilla)"
-                        className="w-full pl-8 pr-3 py-2 rounded-xl bg-black/60 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 font-sans"
+                        placeholder="Tu correo electrónico (para recibir propuesta)"
+                        className="w-full pl-8 pr-3 py-2 rounded-xl bg-black/60 border border-white/10 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400 font-sans"
                       />
                     </div>
 
@@ -795,7 +823,7 @@ export const AIChatWidget: React.FC = () => {
                       ) : (
                         <>
                           <Zap className="w-3.5 h-3.5" />
-                          <span>Disparar Flujo en Vivo (Gratis)</span>
+                          <span>Enviar Solicitud &amp; Disparar Flujo</span>
                         </>
                       )}
                     </button>

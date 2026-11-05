@@ -15,6 +15,8 @@ import {
 } from '@/lib/server/paypal'
 import { requireAuthUser } from '@/lib/server/apiAuth'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
+import { readJsonBody } from '@/lib/server/requestSecurity'
+import { catalogEntryById } from '@/core/domain/planCatalog'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,14 +38,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
-  let body: unknown = null
-  try {
-    body = await req.json()
-  } catch {
-    return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
-  }
+  const bodyResult = await readJsonBody(req, 4 * 1024)
+  if (bodyResult.errorResponse) return bodyResult.errorResponse
 
-  const parseResult = CaptureOrderSchema.safeParse(body)
+  const parseResult = CaptureOrderSchema.safeParse(bodyResult.body)
   if (!parseResult.success) {
     return NextResponse.json(
       { error: 'Falta el ID de la orden de PayPal.', details: parseResult.error.flatten() },
@@ -61,9 +59,37 @@ export async function POST(req: NextRequest) {
   }
 
   const { orderId } = parseResult.data
+  if (!/^[A-Za-z0-9_-]+$/.test(orderId)) {
+    return NextResponse.json({ error: 'ID de orden inválido.' }, { status: 400 })
+  }
+
   const token = await getPayPalAccessToken()
   if (!token) {
     return NextResponse.json({ error: 'PayPal credentials are not configured' }, { status: 502 })
+  }
+
+  const orderBeforeCapture = await fetchPayPalOrder(orderId, token)
+  const orderUnit = orderBeforeCapture?.purchase_units?.[0]
+  const [planSlug, orderEmail] = (orderUnit?.custom_id || '').split('|')
+  const orderPlan = catalogEntryById(planSlug)
+  if (
+    orderBeforeCapture?.id !== orderId ||
+    !orderEmail ||
+    orderEmail.toLowerCase() !== user.email.toLowerCase()
+  ) {
+    return NextResponse.json(
+      { error: 'La orden no pertenece a la cuenta autenticada.' },
+      { status: 403 }
+    )
+  }
+  if (
+    !orderPlan ||
+    !orderUnit?.amount?.value ||
+    !Number.isFinite(Number(orderUnit.amount.value)) ||
+    orderUnit.amount.currency_code !== 'USD' ||
+    Math.round(Number(orderUnit.amount.value) * 100) !== Math.round(orderPlan.precioUSD * 100)
+  ) {
+    return NextResponse.json({ error: 'Importe o plan de orden inválido.' }, { status: 400 })
   }
 
   const captureResult = await capturePayPalOrder(orderId, token)
@@ -79,8 +105,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No se pudo confirmar el pago.' }, { status: 502 })
   }
 
-  if (captured?.status !== 'COMPLETED') {
-    console.error('[paypal/capture] order not completed:', orderId)
+  if (captured?.id !== orderId || captured.status !== 'COMPLETED') {
+    console.error('[paypal/capture] order id/status mismatch:', orderId)
     return NextResponse.json({ error: 'La orden no fue completada.' }, { status: 400 })
   }
 

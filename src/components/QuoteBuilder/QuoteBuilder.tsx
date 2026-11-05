@@ -619,6 +619,7 @@ export default function QuoteBuilder() {
   const [designTier, setDesignTier] = useState<string>('template')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [company, setCompany] = useState('')
   const [sending, setSending] = useState(false)
   const [confettiTrigger, setConfettiTrigger] = useState(0)
@@ -689,6 +690,7 @@ export default function QuoteBuilder() {
     if (featureNames.length) msg += `*Funcionalidades:* ${featureNames.join(', ')}%0A`
     msg += `*Presupuesto estimado:* ${formatPrice(total)}%0A`
     if (name) msg += `%0A*Nombre:* ${name}%0A`
+    if (phone) msg += `*Teléfono/WhatsApp:* ${phone}%0A`
     if (email) msg += `*Email:* ${email}%0A`
     if (company) msg += `*Empresa:* ${company}%0A`
     msg += `%0A_(Presupuesto base orientativo sujeto a diagnóstico técnico previo)_`
@@ -709,6 +711,7 @@ export default function QuoteBuilder() {
         body: JSON.stringify({
           name: name || 'Sin nombre',
           email: email || 'Sin email',
+          phone: phone.trim() || undefined,
           isDiagnostic: true,
           projectType: typeName,
           total: formatPrice(total),
@@ -1263,6 +1266,18 @@ export default function QuoteBuilder() {
                               onChange={(e) => setName(e.target.value)}
                               placeholder={t('cotizador.placeholder_nombre')}
                               className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
+                            />
+                          </div>
+                          <div>
+                            <input
+                              type="tel"
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
+                              placeholder={t(
+                                'cotizador.placeholder_telefono',
+                                'WhatsApp / Teléfono (ej: +54 9 11 ...)'
+                              )}
+                              className="w-full rounded-xl border border-emerald-500/30 bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-emerald-500"
                             />
                           </div>
                           <div>

@@ -101,7 +101,7 @@ function mockPayPalFetch(orderResponses) {
         json: async () => ({ verification_status: 'SUCCESS' }),
       })
     }
-    if (url.includes('/capture')) {
+    if (/\/v2\/checkout\/orders\/[^/]+\/capture$/.test(url)) {
       if (orderResponses.alreadyCaptured) {
         return Promise.resolve({
           ok: false,
@@ -120,8 +120,12 @@ function mockPayPalFetch(orderResponses) {
         json: async () => ({ id: orderResponses.createId || 'PAYPAL_ORDER_NEW_1' }),
       })
     }
-    if (orderResponses.orderDetails) {
-      return Promise.resolve({ ok: true, json: async () => orderResponses.orderDetails })
+    if (/\/v2\/checkout\/orders\/[^/]+$/.test(url) && init?.method !== 'POST') {
+      return Promise.resolve({
+        ok: true,
+        json: async () =>
+          orderResponses.orderDetails || orderResponses.captured || defaultCapturedOrder(),
+      })
     }
     return Promise.resolve({ ok: true, json: async () => ({}) })
   })
@@ -238,6 +242,64 @@ describe('💳 PayPal Orders v2: creación y captura server-side', () => {
       expect(insertCalls).toBeTruthy()
       expect(mockSupabaseInstance.from).toHaveBeenCalledWith('suscripciones')
       expect(mockSupabaseInstance.from).toHaveBeenCalledWith('tenants')
+    })
+
+    it('rechaza una orden cuya identidad del comprador no coincide antes de capturarla', async () => {
+      mockPayPalFetch({
+        orderDetails: {
+          ...defaultCapturedOrder(),
+          purchase_units: [
+            {
+              ...defaultCapturedOrder().purchase_units[0],
+              custom_id: 'mantenimiento-avanzado|otra-persona@example.com|ecommerce',
+            },
+          ],
+        },
+      })
+
+      const { POST } = await import('../../app/api/paypal/capture/route')
+      const { status } = await callRoute(
+        POST,
+        { orderId: 'PAYPAL_ORDER_NEW_1' },
+        { Authorization: 'Bearer tok_123' }
+      )
+
+      expect(status).toBe(403)
+      expect(global.fetch.mock.calls.some(([url]) => url.includes('/capture'))).toBe(false)
+    })
+
+    it('rechaza un importe alterado respecto al catálogo antes de capturar', async () => {
+      const order = defaultCapturedOrder()
+      order.purchase_units[0].amount.value = '1.00'
+      mockPayPalFetch({ orderDetails: order })
+
+      const { POST } = await import('../../app/api/paypal/capture/route')
+      const { status } = await callRoute(
+        POST,
+        { orderId: 'PAYPAL_ORDER_NEW_1' },
+        { Authorization: 'Bearer tok_123' }
+      )
+
+      expect(status).toBe(400)
+      expect(global.fetch.mock.calls.some(([url]) => url.includes('/capture'))).toBe(false)
+    })
+
+    it('rechaza una orden donde el payer de PayPal no corresponde al correo del checkout', async () => {
+      mockPayPalFetch({
+        captured: {
+          ...defaultCapturedOrder(),
+          payer: { email_address: 'otro@example.com', name: { given_name: 'Otro' } },
+        },
+      })
+
+      const { POST } = await import('../../app/api/paypal/capture/route')
+      const { status } = await callRoute(
+        POST,
+        { orderId: 'PAYPAL_ORDER_NEW_1' },
+        { Authorization: 'Bearer tok_123' }
+      )
+
+      expect(status).toBe(502)
     })
 
     it('debe recuperar orden ya capturada (hosted button) y procesarla', async () => {

@@ -69,20 +69,35 @@ function addressText(value: ResendAddress | null | undefined, fallback: string):
  * Permite verificar el estado del webhook y reactivar automáticamente
  * cualquier webhook deshabilitado en el panel de Resend vía API.
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
   const secret =
     process.env.RESEND_WEBHOOK_SIGNING_SECRET ||
     process.env.RESEND_WEBHOOK_SECRET ||
     process.env.SVIX_SECRET
 
-  const autoHealReport = await ensureResendWebhooksActive()
+  const authHeader = req.headers.get('authorization')
+  const bearer = authHeader?.match(/^Bearer\s+(.+)$/i)?.[1]?.trim()
+  const internalKey = req.headers.get('x-internal-key')?.trim()
+
+  const isAuthorized = Boolean(
+    (bearer &&
+      (bearer === secret || (process.env.CRON_SECRET && bearer === process.env.CRON_SECRET))) ||
+    (internalKey &&
+      (internalKey === secret ||
+        (process.env.CRON_SECRET && internalKey === process.env.CRON_SECRET)))
+  )
+
+  let autoHealReport = null
+  if (isAuthorized) {
+    autoHealReport = await ensureResendWebhooksActive()
+  }
 
   return NextResponse.json({
     status: 'ok',
     endpoint: '/api/webhooks/resend',
     secretConfigured: Boolean(secret),
     provider: 'resend_svix',
-    autoHeal: autoHealReport,
+    ...(isAuthorized ? { autoHeal: autoHealReport } : {}),
     timestamp: new Date().toISOString(),
   })
 }

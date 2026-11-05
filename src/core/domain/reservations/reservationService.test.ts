@@ -17,7 +17,7 @@ describe('ReservationService - Concurrencia', () => {
     service = new ReservationService(repo)
   })
 
-  it('ALERTA: Dos peticiones simultáneas pueden crear reservas duplicadas (Condición de Carrera)', async () => {
+  it('rechaza una de dos reservas simultáneas que se solapan', async () => {
     const request1: BookingRequest = {
       employeeId: 'emp-1',
       startTime: new Date('2026-06-01T10:00:00Z'),
@@ -38,12 +38,23 @@ describe('ReservationService - Concurrencia', () => {
 
     const fulfilled = results.filter((r) => r.status === 'fulfilled')
 
-    // Aquí está el problema de concurrencia:
-    // Ambos métodos leyeron la base de datos vacía antes de que el otro guardara.
-    // Por lo tanto, ¡ambos se guardaron con éxito!
-    console.log(`Reservas creadas exitosamente en paralelo: ${fulfilled.length}`)
+    expect(fulfilled).toHaveLength(1)
+    expect(results.filter((result) => result.status === 'rejected')).toHaveLength(1)
+  })
 
-    // Este test pasa SI DEMUESTRA que fallamos en proteger la concurrencia (por ahora).
-    expect(fulfilled.length).toBe(2)
+  it('permite reservas contiguas sin solapamiento', async () => {
+    const first = await service.createReservation({
+      employeeId: 'emp-1',
+      startTime: new Date('2026-06-01T10:00:00Z'),
+      endTime: new Date('2026-06-01T11:00:00Z'),
+    })
+    const next = await service.createReservation({
+      employeeId: 'emp-1',
+      startTime: new Date('2026-06-01T11:00:00Z'),
+      endTime: new Date('2026-06-01T12:00:00Z'),
+    })
+
+    expect(first.id).not.toBe(next.id)
+    expect(next.startTime.toISOString()).toBe('2026-06-01T11:00:00.000Z')
   })
 })

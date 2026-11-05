@@ -70,9 +70,11 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
           break
         case 'createTicket': {
           const contactEmail = input['contactEmail'] as string | null | undefined
+          const contactPhone = input['contactPhone'] as string | null | undefined
           const projectType = input['projectType'] as string | null | undefined
           output = await createTicketRecord({
             contactEmail: contactEmail ?? null,
+            contactPhone: contactPhone ?? null,
             projectType: projectType ?? null,
           })
           break
@@ -86,6 +88,8 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
             typeof input['clientName'] === 'string' ? input['clientName'] : 'Cliente'
           const clientEmail =
             typeof input['clientEmail'] === 'string' ? input['clientEmail'] : undefined
+          const clientPhone =
+            typeof input['clientPhone'] === 'string' ? input['clientPhone'] : undefined
           const details = typeof input['details'] === 'string' ? input['details'] : ''
           const ticketId = `EXE-N8N-${Date.now().toString(36).toUpperCase().slice(-5)}`
 
@@ -94,9 +98,11 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
             ticketId,
             name: clientName,
             email: clientEmail,
+            phone: clientPhone,
             message: `[${automationType}] ${details}`,
             metadata: {
               automationType,
+              phone: clientPhone,
               source: 'ai_assistant_tool',
               conversationId: runtime.conversationId,
             },

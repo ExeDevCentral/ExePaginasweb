@@ -19,19 +19,62 @@ export function validateContentLength(
   maxBytes: number = 50 * 1024
 ): SecurityCheckResult {
   const header = req.headers.get('content-length')
-  if (header) {
-    const length = Number.parseInt(header, 10)
-    if (!Number.isNaN(length) && length > maxBytes) {
-      return {
-        allowed: false,
-        errorResponse: NextResponse.json(
-          { error: 'El tamaño de la solicitud excede el límite permitido.' },
-          { status: 413 }
-        ),
-      }
+  if (header !== null && (!/^\d+$/.test(header) || Number(header) > maxBytes)) {
+    return {
+      allowed: false,
+      errorResponse: NextResponse.json(
+        { error: 'El tamaño de la solicitud excede el límite permitido.' },
+        { status: 413 }
+      ),
     }
   }
   return { allowed: true }
+}
+
+export async function readJsonBody(
+  req: Request,
+  maxBytes: number = 50 * 1024
+): Promise<{ body?: unknown; errorResponse?: NextResponse }> {
+  const contentLength = validateContentLength(req, maxBytes)
+  if (!contentLength.allowed && contentLength.errorResponse) {
+    return { errorResponse: contentLength.errorResponse }
+  }
+  if (!req.body) {
+    return { errorResponse: NextResponse.json({ error: 'JSON inválido' }, { status: 400 }) }
+  }
+
+  const reader = req.body.getReader()
+  const chunks: Uint8Array[] = []
+  let bytesRead = 0
+  try {
+    while (true) {
+      const { value, done } = await reader.read()
+      if (done) break
+      bytesRead += value.byteLength
+      if (bytesRead > maxBytes) {
+        await reader.cancel()
+        return {
+          errorResponse: NextResponse.json(
+            { error: 'El tamaño de la solicitud excede el límite permitido.' },
+            { status: 413 }
+          ),
+        }
+      }
+      chunks.push(value)
+    }
+
+    const payload = new Uint8Array(bytesRead)
+    let offset = 0
+    for (const chunk of chunks) {
+      payload.set(chunk, offset)
+      offset += chunk.byteLength
+    }
+    return { body: JSON.parse(new TextDecoder().decode(payload)) as unknown }
+  } catch {
+    return { errorResponse: NextResponse.json({ error: 'JSON inválido' }, { status: 400 }) }
+  } finally {
+    reader.releaseLock()
+  }
 }
 
 /**

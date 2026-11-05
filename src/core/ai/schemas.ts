@@ -113,6 +113,7 @@ export const AiToolInputSchemas = {
 
   createTicket: z.object({
     contactEmail: z.string().email().max(255).nullish(),
+    contactPhone: z.string().max(50).nullish(),
     projectType: z.string().max(200).nullish(),
   }),
 
@@ -132,6 +133,11 @@ export const AiToolInputSchemas = {
       .describe('Tipo de automatización n8n a ejecutar'),
     clientName: z.string().min(1).max(100).describe('Nombre de la persona que solicita'),
     clientEmail: z.string().email().max(255).nullish().describe('Correo del cliente (opcional)'),
+    clientPhone: z
+      .string()
+      .max(50)
+      .nullish()
+      .describe('Teléfono o WhatsApp del cliente para contacto directo'),
     details: z.string().max(500).describe('Detalles breves de la solicitud'),
   }),
 } as const

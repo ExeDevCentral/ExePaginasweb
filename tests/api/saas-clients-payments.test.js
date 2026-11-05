@@ -161,9 +161,10 @@ describe('🛡️ SUITE DE PRUEBAS RIGUROSA: Clientes, Tokens, Lista de Pagos, M
               payer: { email_address: 'nuevo.cliente@empresa.com', name: { given_name: 'Carlos' } },
               purchase_units: [
                 {
-                  custom_id: 'mantenimiento-pro|nuevo.cliente@empresa.com|saas',
-                  amount: { value: '99.00', currency_code: 'USD' },
+                  custom_id: 'mantenimiento-avanzado|nuevo.cliente@empresa.com|saas',
+                  amount: { value: '55.00', currency_code: 'USD' },
                   description: 'Plan Mantenimiento Pro',
+                  payments: { captures: [{ id: 'CAPTURE_999', status: 'COMPLETED' }] },
                 },
               ],
             }),

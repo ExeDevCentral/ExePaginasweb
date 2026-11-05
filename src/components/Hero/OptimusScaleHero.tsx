@@ -19,15 +19,9 @@ import {
   CyberMetricLightning,
   CyberMetricShield,
   CyberMetricProcessor,
-  CyberSpeedGauge,
-  CyberCatalogIcon,
-  CyberPitchRadarIcon,
-  CyberShopBagIcon,
-  RestoiaEngineIcon,
 } from '@/components/ui/MagnificentIcons'
 
 import HeroProductShowcase from './HeroProductShowcase'
-import CyberTerminalCard from '../shared/CyberTerminalCard'
 import InteractiveFeatureShowcase from '@/components/landing/InteractiveFeatureShowcase'
 import ConvergentTypewriterSubtitle from './ConvergentTypewriterSubtitle'
 import { trackEvent } from '@/core/analytics/trackEvent'
@@ -43,110 +37,10 @@ const TICKER_ITEMS = [
   { value: '7 a 15', label: 'días puesta en marcha', tag: 'ENTREGA LLAVE EN MANO' },
 ]
 
-const CAPABILITIES = [
-  {
-    id: '01',
-    code: '01 // PÁDEL & TURNOS',
-    titleKey: 'hero.card_1_titulo',
-    defaultTitle: 'Pádel SaaS & Reservas 24/7',
-    descKey: 'hero.card_1_desc',
-    defaultDesc:
-      'Carga en 0.38s, reservas automáticas de canchas con seña a tu banco y calendario multi-espacio en tiempo real sin comisiones.',
-    cta: 'Lanzar SportManager en vivo',
-    href: 'https://sportmanager-playhub.vercel.app',
-    liveLauncher: {
-      label: 'PROBAR SPORTMANAGER (PÁDEL)',
-      sublabel: 'RESERVAS Y CANCHAS REALES',
-      href: 'https://sportmanager-playhub.vercel.app',
-      icon: <CyberPitchRadarIcon size={18} />,
-      color: 'cyan' as const,
-    },
-    ariaLabel: 'Probar SportManager Pádel en vivo sin filtros',
-    color: 'cyan' as const,
-    delay: '0s',
-    icon: CyberSpeedGauge,
-    badge: 'Canchas & Pádel',
-    tech: ['Pádel & Canchas 24/7', 'Señas a tu Banco', 'Cero Comisiones'],
-  },
-  {
-    id: '02',
-    code: '02 // E-COMMERCE 3D',
-    titleKey: 'hero.card_2_titulo',
-    defaultTitle: 'Tienda CelStore con Visor 3D',
-    descKey: 'hero.card_2_desc',
-    defaultDesc:
-      'Catálogo interactivo con renderizado 3D en GPU, checkout directo con Mercado Pago y stock atómico sin cuotas cautivas.',
-    cta: 'Lanzar CelStore 3D en vivo',
-    href: 'https://multi-tiendas-celphone.vercel.app',
-    liveLauncher: {
-      label: 'PROBAR TIENDA CELSTORE 3D',
-      sublabel: 'CATÁLOGO 3D & CHECKOUT',
-      href: 'https://multi-tiendas-celphone.vercel.app',
-      icon: <CyberShopBagIcon size={18} />,
-      color: 'fuchsia' as const,
-    },
-    ariaLabel: 'Probar CelStore E-Commerce en vivo sin filtros',
-    color: 'fuchsia' as const,
-    delay: '-2.75s',
-    icon: CyberCatalogIcon,
-    badge: 'Visor 3D GPU',
-    tech: ['Visor 3D Three.js', 'Cobro Mercado Pago', '0% Comisiones'],
-  },
-  {
-    id: '03',
-    code: '03 // GASTRONOMÍA & POS',
-    titleKey: 'hero.card_3_titulo',
-    defaultTitle: 'Suite RESTOia & Comandas',
-    descKey: 'hero.card_3_desc',
-    defaultDesc:
-      'Mapa interactivo de mesas, comandas de cocina 100% offline ante microcortes, arqueo blindado y cobros sin intermediarios.',
-    cta: 'Lanzar RESTOia en vivo',
-    href: 'https://kobe-sand.vercel.app/',
-    liveLauncher: {
-      label: 'PROBAR RESTOIA EN VIVO',
-      sublabel: 'KOBE ENGINE · 100% OFFLINE',
-      href: 'https://kobe-sand.vercel.app/',
-      icon: <RestoiaEngineIcon size={18} />,
-      color: 'amber' as const,
-    },
-    ariaLabel: 'Probar RESTOia gastronómico en vivo sin filtros',
-    color: 'amber' as const,
-    delay: '-5.5s',
-    icon: CyberMetricLightning,
-    badge: '100% Offline',
-    tech: ['Comandas 100% Offline', 'KDS Cocina en Vivo', 'Arqueo Ciego Z'],
-  },
-  {
-    id: '04',
-    code: '04 // LINUX POS & TERMINALES',
-    titleKey: 'hero.card_4_titulo',
-    defaultTitle: 'Estaciones Linux POS para Negocios',
-    descKey: 'hero.card_4_desc',
-    defaultDesc:
-      'Transformamos las PCs actuales de tu mostrador o caja en terminales Linux dedicadas: arranque en 4s, cero virus, modo quiosco blindado y $0 en licencias.',
-    cta: 'Ver Terminales Linux para Comercios',
-    href: '/linux',
-    liveLauncher: {
-      label: 'VER TERMINALES LINUX POS',
-      sublabel: '0% LICENCIAS · ANTI-CUELGUES',
-      href: '/linux',
-      icon: <CyberMetricProcessor size={18} />,
-      color: 'emerald' as const,
-    },
-    ariaLabel: 'Ver terminales Linux POS para negocios y comercios',
-    color: 'emerald' as const,
-    delay: '-8.25s',
-    icon: CyberMetricProcessor,
-    badge: 'Cero Cuelgues',
-    tech: ['Arranque en 4 Seg', 'Revive PCs Lentas', '$0 Licencias & Virus'],
-  },
-]
-
 export const OptimusScaleHero: React.FC = () => {
   const { t } = useTranslation()
   const [wordIndex, setWordIndex] = useState(0)
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 })
-  const [showcaseV2, setShowcaseV2] = useState(false)
 
   const safeT = (key: string, fallback: string): string => {
     const res = t(key, fallback)
@@ -161,16 +55,6 @@ export const OptimusScaleHero: React.FC = () => {
     target: heroRef,
     offset: ['start start', 'end start'],
   })
-
-  // Permite activar la Master Card V2 pasando ?showcase=v2 en la URL mientras se termina
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search)
-      if (params.get('showcase') === 'v2') {
-        setShowcaseV2(true)
-      }
-    }
-  }, [])
 
   // Aura interactiva de fondo
   const auraIntensity = useTransform(scrollYProgress, [0, 0.5], [0.6, 0.15])

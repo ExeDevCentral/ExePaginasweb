@@ -9,6 +9,7 @@ import { sendEmail, syncContactToAudience, ADMIN_EMAIL } from '@/lib/email/send'
 import { dispatchN8nEvent } from '@/lib/server/n8n'
 import { contactNotification, contactAutoReply, aiDiagnosticAutoReply } from '@/lib/email/templates'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
+import { isSupabaseAdminConfigured, supabaseAdmin } from '@/lib/supabase/admin'
 import {
   validateContentLength,
   validateFetchMetadata,
@@ -20,6 +21,7 @@ import { detectLanguage } from '@/lib/server/language'
 const ContactSchema = z.object({
   name: z.string().trim().min(1, 'El nombre es requerido').max(100, 'Nombre demasiado largo'),
   email: z.string().trim().email('Email inválido').max(255),
+  phone: z.string().trim().max(50, 'Teléfono demasiado largo').nullish(),
   message: z.string().trim().min(1, 'El mensaje es requerido').max(5000, 'Mensaje demasiado largo'),
   lang: z.string().max(10).nullish(),
   locale: z.string().max(10).nullish(),
@@ -67,7 +69,8 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { name, email, message, lang, locale, isDiagnostic, projectType, total } = parseResult.data
+  const { name, email, phone, message, lang, locale, isDiagnostic, projectType, total } =
+    parseResult.data
 
   const clientLang = lang || locale || req.headers.get('accept-language')
   const detectedLang = detectLanguage(message, clientLang)
@@ -81,6 +84,32 @@ export async function POST(req: NextRequest) {
   console.log(
     `[contact] [${ticketId}] [Lang: ${detectedLang}] [Diag: ${isAiDiag}] Mensaje de ${name} <${maskEmail(email)}> (${message.length} chars)`
   )
+
+  // Persistir lead de manera atómica en Supabase para evitar pérdidas por fallos en email
+  if (isSupabaseAdminConfigured()) {
+    try {
+      const { error: dbError } = await supabaseAdmin.from('leads').insert({
+        email,
+        name: name || undefined,
+        lead_type: isAiDiag ? 'diagnostic' : 'contact',
+        message: `[${ticketId}] Tel: ${phone || 'N/A'}. ${message}`,
+        metadata: {
+          ticketId,
+          phone: phone || null,
+          projectType: projectType || null,
+          total: total ?? null,
+          isDiagnostic: Boolean(isAiDiag),
+          lang: detectedLang,
+          source: 'contact_form',
+        },
+      })
+      if (dbError) {
+        console.error(`[contact] [${ticketId}] Error guardando lead en Supabase:`, dbError)
+      }
+    } catch (dbErr) {
+      console.error(`[contact] [${ticketId}] Excepción guardando lead en Supabase:`, dbErr)
+    }
+  }
 
   try {
     if (process.env.RESEND_API_KEY) {
@@ -107,7 +136,7 @@ export async function POST(req: NextRequest) {
         sendEmail({
           to: [ADMIN_EMAIL],
           subject: `[${ticketId}] ${isAiDiag ? '🤖 Nuevo Diagnóstico IA' : 'Nuevo contacto'} de ${name} <${email}>`,
-          html: contactNotification({ name, email, message, ticketId }),
+          html: contactNotification({ name, email, phone: phone || undefined, message, ticketId }),
           replyTo: email,
           tags: [
             { name: 'category', value: isAiDiag ? 'ai_diagnostic_admin' : 'contact_admin' },
@@ -140,9 +169,11 @@ export async function POST(req: NextRequest) {
         ticketId,
         name,
         email,
+        phone: phone || undefined,
         message,
         lang: detectedLang,
         metadata: {
+          phone: phone || undefined,
           projectType: parseResult.data.projectType,
           total: parseResult.data.total,
           isDiagnostic: Boolean(parseResult.data.isDiagnostic),

@@ -677,6 +677,15 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
         <div
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
+          onFocus={() => setIsPaused(true)}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+              setIsPaused(false)
+            }
+          }}
+          role="region"
+          aria-label="Detalle de las capacidades destacadas"
+          tabIndex={0}
           className="relative w-full lg:w-[71%] p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white dark:bg-[#070b14] overflow-hidden"
         >
           {/* Resplandor ambiental sutil controlado en tema claro para no lavar los bordes */}

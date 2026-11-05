@@ -5,8 +5,7 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "exepaginasweb-leads",
-        "responseMode": "onReceived",
-        "responseData": "allEntries",
+        "responseMode": "responseNode",
         "options": {}
       },
       "id": "e8179248-2fa4-469b-980b-1175653b4991",
@@ -60,12 +59,36 @@
         "values": {
           "string": [
             {
+              "name": "canal",
+              "value": "Formulario de Contacto Web"
+            },
+            {
               "name": "titulo",
               "value": "=🚨 NUEVO LEAD DE CONTACTO ({{ $json.body ? $json.body.ticketId : 'EXE-CNT' }})"
             },
             {
+              "name": "cliente_nombre",
+              "value": "={{ ($json.body && $json.body.name) || 'Visitante' }}"
+            },
+            {
+              "name": "cliente_telefono",
+              "value": "={{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) || 'No especificado' }}"
+            },
+            {
+              "name": "cliente_email",
+              "value": "={{ ($json.body && $json.body.email) || 'No especificado' }}"
+            },
+            {
+              "name": "ticketId",
+              "value": "={{ ($json.body && $json.body.ticketId) || 'EXE-CNT' }}"
+            },
+            {
+              "name": "whatsapp_direct_link",
+              "value": "={{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) ? 'https://wa.me/' + String($json.body.phone || $json.body.metadata.phone).replace(/[^0-9]/g, '') : '' }}"
+            },
+            {
               "name": "mensaje_formateado",
-              "value": "=Nombre: {{ $json.body ? $json.body.name : 'N/A' }}\nEmail: {{ $json.body ? $json.body.email : 'N/A' }}\nIdioma: {{ $json.body ? $json.body.lang : 'es' }}\nTicket: {{ $json.body ? $json.body.ticketId : '' }}\nMensaje: {{ $json.body ? $json.body.message : '' }}\nFecha: {{ $json.body ? $json.body.timestamp : '' }}"
+              "value": "=Nombre: {{ ($json.body && $json.body.name) || 'N/A' }}\nTeléfono / WhatsApp: {{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) || 'No especificado' }}\nEmail: {{ ($json.body && $json.body.email) || 'N/A' }}\nTicket: {{ ($json.body && $json.body.ticketId) || '' }}\nMensaje: {{ ($json.body && $json.body.message) || '' }}\nChat WhatsApp: {{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) ? 'https://wa.me/' + String($json.body.phone || $json.body.metadata.phone).replace(/[^0-9]/g, '') : 'Sin número' }}\nFecha: {{ ($json.body && $json.body.timestamp) || '' }}"
             }
           ]
         },
@@ -75,19 +98,43 @@
       "name": "Formatear Contacto",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.2,
-      "position": [760, 160]
+      "position": [760, 140]
     },
     {
       "parameters": {
         "values": {
           "string": [
             {
+              "name": "canal",
+              "value": "Chatbot ExeBot IA"
+            },
+            {
               "name": "titulo",
-              "value": "=💬 EMAIL CAPTURADO EN CHATBOT ({{ $json.body ? $json.body.ticketId : 'EXE-CHT' }})"
+              "value": "=💬 DATO CAPTURADO EN CHATBOT ({{ $json.body ? $json.body.ticketId : 'EXE-CHT' }})"
+            },
+            {
+              "name": "cliente_nombre",
+              "value": "={{ ($json.body && $json.body.name) || 'Visitante Chat' }}"
+            },
+            {
+              "name": "cliente_telefono",
+              "value": "={{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) || 'No especificado' }}"
+            },
+            {
+              "name": "cliente_email",
+              "value": "={{ ($json.body && $json.body.email) || 'No especificado' }}"
+            },
+            {
+              "name": "ticketId",
+              "value": "={{ ($json.body && $json.body.ticketId) || 'EXE-CHT' }}"
+            },
+            {
+              "name": "whatsapp_direct_link",
+              "value": "={{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) ? 'https://wa.me/' + String($json.body.phone || $json.body.metadata.phone).replace(/[^0-9]/g, '') : '' }}"
             },
             {
               "name": "mensaje_formateado",
-              "value": "=Nombre: {{ ($json.body && $json.body.name) || 'Visitante' }}\nEmail: {{ $json.body ? $json.body.email : 'N/A' }}\nTicket: {{ $json.body ? $json.body.ticketId : '' }}\nIdioma: {{ $json.body ? $json.body.lang : 'es' }}\nFecha: {{ $json.body ? $json.body.timestamp : '' }}"
+              "value": "=Nombre: {{ ($json.body && $json.body.name) || 'Visitante Chat' }}\nTeléfono / WhatsApp: {{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) || 'No especificado' }}\nEmail: {{ ($json.body && $json.body.email) || 'N/A' }}\nTicket: {{ ($json.body && $json.body.ticketId) || '' }}\nMensaje: {{ ($json.body && $json.body.message) || '' }}\nChat WhatsApp: {{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) ? 'https://wa.me/' + String($json.body.phone || $json.body.metadata.phone).replace(/[^0-9]/g, '') : 'Sin número' }}\nFecha: {{ ($json.body && $json.body.timestamp) || '' }}"
             }
           ]
         },
@@ -97,19 +144,43 @@
       "name": "Formatear Chat",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.2,
-      "position": [760, 300]
+      "position": [760, 280]
     },
     {
       "parameters": {
         "values": {
           "string": [
             {
+              "name": "canal",
+              "value": "Pago o Transferencia"
+            },
+            {
               "name": "titulo",
               "value": "=💰 PAGO O RESERVA CAPTURADA ({{ $json.body ? $json.body.ticketId : 'EXE-PAY' }})"
             },
             {
+              "name": "cliente_nombre",
+              "value": "={{ ($json.body && $json.body.name) || 'Cliente Comprador' }}"
+            },
+            {
+              "name": "cliente_telefono",
+              "value": "={{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) || 'No especificado' }}"
+            },
+            {
+              "name": "cliente_email",
+              "value": "={{ ($json.body && $json.body.email) || 'No especificado' }}"
+            },
+            {
+              "name": "ticketId",
+              "value": "={{ ($json.body && $json.body.ticketId) || 'EXE-PAY' }}"
+            },
+            {
+              "name": "whatsapp_direct_link",
+              "value": "={{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) ? 'https://wa.me/' + String($json.body.phone || $json.body.metadata.phone).replace(/[^0-9]/g, '') : '' }}"
+            },
+            {
               "name": "mensaje_formateado",
-              "value": "=Tipo: {{ $json.body ? $json.body.event : 'pago' }}\nTicket: {{ $json.body ? $json.body.ticketId : '' }}\nCliente: {{ $json.body ? $json.body.email : 'N/A' }}\nFecha: {{ $json.body ? $json.body.timestamp : '' }}"
+              "value": "=Tipo: {{ ($json.body && $json.body.event) || 'pago' }}\nTicket: {{ ($json.body && $json.body.ticketId) || '' }}\nCliente: {{ ($json.body && $json.body.email) || 'N/A' }}\nTeléfono / WhatsApp: {{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) || 'No especificado' }}\nFecha: {{ ($json.body && $json.body.timestamp) || '' }}"
             }
           ]
         },
@@ -119,19 +190,43 @@
       "name": "Formatear Pago/Transferencia",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.2,
-      "position": [760, 460]
+      "position": [760, 420]
     },
     {
       "parameters": {
         "values": {
           "string": [
             {
+              "name": "canal",
+              "value": "Botón de Chat (Automatización en Vivo)"
+            },
+            {
               "name": "titulo",
-              "value": "=⚡ AUTOMATIZACIÓN n8n EN VIVO ({{ $json.body ? $json.body.ticketId : 'EXE-N8N' }})"
+              "value": "=⚡ SOLICITUD DESDE BOTÓN DE CHAT ({{ $json.body ? $json.body.ticketId : 'EXE-N8N' }})"
+            },
+            {
+              "name": "cliente_nombre",
+              "value": "={{ ($json.body && $json.body.name) || 'Cliente' }}"
+            },
+            {
+              "name": "cliente_telefono",
+              "value": "={{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) || 'No especificado' }}"
+            },
+            {
+              "name": "cliente_email",
+              "value": "={{ ($json.body && $json.body.email) || 'No especificado' }}"
+            },
+            {
+              "name": "ticketId",
+              "value": "={{ ($json.body && $json.body.ticketId) || 'EXE-N8N' }}"
+            },
+            {
+              "name": "whatsapp_direct_link",
+              "value": "={{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) ? 'https://wa.me/' + String($json.body.phone || $json.body.metadata.phone).replace(/[^0-9]/g, '') : '' }}"
             },
             {
               "name": "mensaje_formateado",
-              "value": "=Solicitante: {{ $json.body ? $json.body.name : 'Cliente' }}\nAcción: {{ ($json.body && $json.body.metadata && $json.body.metadata.automationType) || 'cotizacion_express' }}\nEmail: {{ ($json.body && $json.body.email) || 'N/A' }}\nTicket: {{ $json.body ? $json.body.ticketId : '' }}\nDetalles: {{ $json.body ? $json.body.message : '' }}\nFecha: {{ $json.body ? $json.body.timestamp : '' }}"
+              "value": "=Solicitante: {{ ($json.body && $json.body.name) || 'Cliente' }}\nTeléfono / WhatsApp: {{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) || 'No especificado' }}\nEmail: {{ ($json.body && $json.body.email) || 'No especificado' }}\nFlujo Solicitado: {{ ($json.body && $json.body.metadata && $json.body.metadata.automationType) || 'cotizacion_express' }}\nTicket: {{ ($json.body && $json.body.ticketId) || '' }}\nDetalles: {{ ($json.body && $json.body.message) || '' }}\nChat WhatsApp: {{ ($json.body && ($json.body.phone || ($json.body.metadata && $json.body.metadata.phone))) ? 'https://wa.me/' + String($json.body.phone || $json.body.metadata.phone).replace(/[^0-9]/g, '') : 'Sin número' }}\nFecha: {{ ($json.body && $json.body.timestamp) || '' }}"
             }
           ]
         },
@@ -141,7 +236,7 @@
       "name": "Formatear Automatizacion n8n",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.2,
-      "position": [760, 600]
+      "position": [760, 560]
     },
     {
       "parameters": {
@@ -163,7 +258,57 @@
       "name": "Keep-Alive Ping Handler",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.2,
-      "position": [760, 740]
+      "position": [760, 700]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "destinatario_admin",
+              "value": "Exemetal@hotmail.com"
+            },
+            {
+              "name": "asunto",
+              "value": "=[{{ $json.ticketId }}] 🚨 NUEVA SOLICITUD DE CLIENTE: {{ $json.cliente_nombre }} ({{ $json.canal }})"
+            },
+            {
+              "name": "cuerpo_alerta",
+              "value": "=🚨 NUEVA SOLICITUD RECIBIDA EN EXEPAGINASWEB\n\nTicket: {{ $json.ticketId }}\nCanal: {{ $json.canal }}\nNombre: {{ $json.cliente_nombre }}\nWhatsApp / Teléfono: {{ $json.cliente_telefono }}\nEmail: {{ $json.cliente_email }}\n\nEnlace directo a WhatsApp:\n{{ $json.whatsapp_direct_link ? $json.whatsapp_direct_link : 'No proporcionó WhatsApp' }}\n\nDetalles del Mensaje:\n{{ $json.mensaje_formateado }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c3d4e5f6-7890-4abc-def1-234567890abc",
+      "name": "Preparar Alerta de Contacto",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [1040, 360]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"ok\": true,\n  \"ticketId\": \"{{ $json.ticketId }}\",\n  \"status\": \"lead_received_and_notified\",\n  \"client\": {\n    \"name\": \"{{ $json.cliente_nombre }}\",\n    \"phone\": \"{{ $json.cliente_telefono }}\",\n    \"email\": \"{{ $json.cliente_email }}\",\n    \"whatsapp_link\": \"{{ $json.whatsapp_direct_link }}\"\n  },\n  \"processedAt\": \"{{ new Date().toISOString() }}\"\n}",
+        "options": {}
+      },
+      "id": "d4e5f6a1-8901-4bcd-ef12-345678901bcd",
+      "name": "Responder Webhook OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1300, 360]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"keepalive_ok\",\n  \"timestamp\": \"{{ $json.timestamp }}\"\n}",
+        "options": {}
+      },
+      "id": "e5f6a1b2-9012-4cde-f123-456789012cde",
+      "name": "Responder Keep-Alive",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1040, 700]
     }
   ],
   "connections": {
@@ -218,6 +363,72 @@
         [
           {
             "node": "Keep-Alive Ping Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Contacto": {
+      "main": [
+        [
+          {
+            "node": "Preparar Alerta de Contacto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Chat": {
+      "main": [
+        [
+          {
+            "node": "Preparar Alerta de Contacto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Pago/Transferencia": {
+      "main": [
+        [
+          {
+            "node": "Preparar Alerta de Contacto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Automatizacion n8n": {
+      "main": [
+        [
+          {
+            "node": "Preparar Alerta de Contacto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Alerta de Contacto": {
+      "main": [
+        [
+          {
+            "node": "Responder Webhook OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep-Alive Ping Handler": {
+      "main": [
+        [
+          {
+            "node": "Responder Keep-Alive",
             "type": "main",
             "index": 0
           }

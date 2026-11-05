@@ -11,23 +11,20 @@ export class ReservationService {
   constructor(private reservationRepository: IReservationRepository) {}
 
   async createReservation(request: BookingRequest): Promise<ExistingReservation> {
-    // 1. Obtener reservas existentes para ese día y empleado
+    // Pre-check rápido para dar un error de dominio antes de intentar la operación atómica.
     const existingReservations = await this.reservationRepository.findByEmployeeAndDate(
       request.employeeId,
       request.startTime
     )
 
-    // 2. Validar conflictos usando nuestro Core Engine
-    const conflict = hasConflict(request, existingReservations)
-
-    if (conflict) {
-      throw new Error('CONFLIT_DETECTED: El horario ya está ocupado.')
+    if (hasConflict(request, existingReservations)) {
+      throw new Error('CONFLICT_DETECTED: El horario ya está ocupado.')
     }
 
-    // 3. Guardar si todo está en orden
-    return await this.reservationRepository.save({
+    // El repositorio vuelve a comprobar y guarda atómicamente para cerrar la ventana de carrera.
+    return this.reservationRepository.createIfAvailable({
       ...request,
-      status: 'confirmed', // Por simplicidad arranca confirmada
+      status: 'confirmed',
     })
   }
 }

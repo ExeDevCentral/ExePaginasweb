@@ -275,7 +275,7 @@ export async function processPayPalCapture(
   const [customPlanSlug, customEmail] = customId.split('|')
   const customTipo = customId.split('|')[2] || 'mantenimiento'
 
-  const email = captured.payer?.email_address || customEmail || ''
+  const email = customEmail || captured.payer?.email_address || ''
   const amount = purchaseUnit?.amount?.value
   const currency = purchaseUnit?.amount?.currency_code
 
@@ -289,22 +289,37 @@ export async function processPayPalCapture(
     return { ok: false, error: 'PayPal payload is missing payment data' }
   }
 
+  if (!captured.id || !purchaseUnit?.custom_id) {
+    return { ok: false, error: 'PayPal order identifier or checkout metadata is missing' }
+  }
+
   const clienteId = await getOrCreateCliente(email, captured.payer?.name?.given_name)
   if (!clienteId) return { ok: false, error: 'Customer could not be resolved' }
 
-  const plan = (await getPlanBySlug(customPlanSlug || '')) || (await getPlanByAmountUSD(amount))
-  if (!plan) return { ok: false, error: 'Unknown PayPal plan' }
-
+  const plan = await getPlanBySlug(customPlanSlug || '')
+  const catalogPlan = catalogEntryById(customPlanSlug)
+  if (!plan || !catalogPlan) return { ok: false, error: 'Unknown PayPal plan' }
+  if (Math.round(Number(amount) * 100) !== Math.round(catalogPlan.precioUSD * 100)) {
+    return { ok: false, error: 'PayPal amount does not match the selected plan' }
+  }
+  if (
+    captured.payer?.email_address &&
+    customEmail &&
+    captured.payer.email_address.toLowerCase() !== customEmail.toLowerCase()
+  ) {
+    return { ok: false, error: 'PayPal payer does not match the checkout owner' }
+  }
   const orderId = captured.id
-  const captureId = purchaseUnit?.payments?.captures?.[0]?.id
+  const captureId = purchaseUnit.payments?.captures?.[0]?.id
   const now = new Date().toISOString()
 
   if (orderId) {
-    const { data: existing } = await db
+    const { data: existing, error: existingError } = await db
       .from('pagos')
       .select('id')
       .eq('paypal_order_id', orderId)
       .limit(1)
+    if (existingError) return { ok: false, error: 'Unable to verify payment idempotency' }
     if (existing?.[0]?.id) {
       return {
         ok: true,

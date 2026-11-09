@@ -411,6 +411,7 @@ export async function processPayPalCapture(
 
       await sendEmail({
         to: [email],
+        replyTo: ADMIN_EMAIL,
         subject: `Pago aprobado - ${plan.nombre}`,
         html: paymentConfirmation({
           name: payerName,
@@ -429,6 +430,7 @@ export async function processPayPalCapture(
 
       await sendEmail({
         to: [ADMIN_EMAIL],
+        replyTo: email,
         subject: `Nueva venta! ${payerName || 'Un cliente'} compro ${plan.nombre}`,
         html: paymentNotification({
           name: payerName,

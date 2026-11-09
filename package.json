@@ -69,9 +69,10 @@
     "react-dom": "^19.3.0",
     "react-i18next": "^17.0.13",
     "sonner": "^2.0.8",
+    "svix": "^1.99.1",
     "tailwind-merge": "^3.7.0",
     "three": "^0.185.1",
-    "zod": "^4.5.4",
+    "zod": "^4.6.7",
     "zustand": "^5.0.16"
   },
   "devDependencies": {
@@ -100,7 +101,6 @@
     "postcss": "^8.5.28",
     "prettier": "^3.9.6",
     "puppeteer-core": "^25.10.0",
-    "svix": "^1.99.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.69.0",
@@ -119,7 +119,10 @@
   "overrides": {
     "glob": "^13.0.0",
     "fflate": "^0.8.3",
-    "zod": "$zod"
+    "zod": "$zod",
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.5"
+    }
   },
   "browserslist": [
     "> 0.5%",

@@ -127,14 +127,15 @@ if (!resendKey) {
   })
 } else {
   try {
-    const { Resend } = await import('resend')
-    const resend = new Resend(resendKey)
-    const domainRes = await resend.domains.list()
-    if (domainRes.error) {
+    const domainRes = await fetch('https://api.resend.com/domains', {
+      headers: { Authorization: `Bearer ${resendKey}` },
+      signal: AbortSignal.timeout(5000),
+    })
+    if (!domainRes.ok) {
       results.push({
         service: 'Resend Emailing',
-        status: '❌ ERROR API',
-        detail: domainRes.error.message,
+        status: `❌ ERROR API (${domainRes.status})`,
+        detail: 'Verificar permisos de RESEND_API_KEY',
       })
     } else {
       results.push({

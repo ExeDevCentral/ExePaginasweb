@@ -26,7 +26,7 @@ import { dispatchN8nEvent } from '@/lib/server/n8n'
 import { contactNotification, contactAutoReply } from '@/lib/email/templates'
 import { detectLanguage } from '@/lib/server/language'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
-import { validateContentLength, validateFetchMetadata } from '@/lib/server/requestSecurity'
+import { readJsonBody, validateFetchMetadata } from '@/lib/server/requestSecurity'
 import { AiService } from '@/core/ai/aiService'
 import { SupabaseAiAuditRepository } from '@/core/infra/ai/SupabaseAiAuditRepository'
 import { SupabaseAiContextProvider } from '@/core/infra/ai/SupabaseAiContextProvider'
@@ -233,11 +233,6 @@ export async function POST(req: NextRequest) {
     return fetchMeta.errorResponse
   }
 
-  const lengthCheck = validateContentLength(req, 100 * 1024)
-  if (!lengthCheck.allowed && lengthCheck.errorResponse) {
-    return lengthCheck.errorResponse
-  }
-
   const startedAt = performance.now()
 
   try {
@@ -253,12 +248,9 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
-  let body: unknown = null
-  try {
-    body = await req.json()
-  } catch {
-    return Response.json({ error: 'JSON inválido' }, { status: 400 })
-  }
+  const bodyResult = await readJsonBody(req, 100 * 1024)
+  if (bodyResult.errorResponse) return bodyResult.errorResponse
+  const body = bodyResult.body
 
   const validation = ChatRequestBodySchema.safeParse(body)
   if (!validation.success) {
@@ -354,10 +346,11 @@ export async function POST(req: NextRequest) {
         emailTasks.push(
           sendEmail({
             to: [capturedEmail],
+            replyTo: ADMIN_EMAIL,
             subject:
               detectedLang === 'en'
-                ? `✨ We received your inquiry [Ticket: ${ticketId}] - ExeSistemasWEB`
-                : `✨ Recibimos tu consulta del Chat [Ticket: ${ticketId}] - ExeSistemasWEB`,
+                ? `✨ We received your inquiry [Ticket: ${ticketId}] - ExePaginasWeb`
+                : `✨ Recibimos tu consulta del Chat [Ticket: ${ticketId}] - ExePaginasWeb`,
             html: contactAutoReply({
               name: visitorName || capturedEmail.split('@')[0],
               message: userMessage,

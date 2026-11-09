@@ -15,11 +15,27 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
   const code = searchParams.get('code')
-  const errorParam = searchParams.get('error_description') || searchParams.get('error')
+  const rawErrorParam = searchParams.get('error_description') || searchParams.get('error')
+  const errorParam = rawErrorParam
+    ? rawErrorParam
+        .replace(/[\r\n\0]+/g, ' ')
+        .trim()
+        .slice(0, 200)
+    : null
   const next = sanitizeInternalPath(searchParams.get('next'))
 
   const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL
-  const origin = configuredOrigin ? new URL(configuredOrigin).origin : request.nextUrl.origin
+  const origin = (() => {
+    if (!configuredOrigin) return request.nextUrl.origin
+    try {
+      const normalized = configuredOrigin.startsWith('http')
+        ? configuredOrigin
+        : `https://${configuredOrigin}`
+      return new URL(normalized).origin
+    } catch {
+      return request.nextUrl.origin
+    }
+  })()
 
   const isRecovery = type === 'recovery'
   const targetUrl = isRecovery ? `${origin}/login?mode=update-password` : `${origin}${next}`

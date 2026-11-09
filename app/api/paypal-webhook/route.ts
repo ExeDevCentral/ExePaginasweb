@@ -18,6 +18,7 @@ import {
   markWebhookFailed,
   markWebhookProcessed,
 } from '@/lib/server/webhookEvents'
+import { validateContentLength } from '@/lib/server/requestSecurity'
 
 type PayPalCaptureEventResource = {
   id?: string
@@ -49,6 +50,29 @@ async function verifyWebhookSignature(req: NextRequest, rawBody: string): Promis
     return false
   }
 
+  const authAlgo = req.headers.get('paypal-auth-algo')
+  const certUrl = req.headers.get('paypal-cert-url')
+  const transmissionId = req.headers.get('paypal-transmission-id')
+  const transmissionSig = req.headers.get('paypal-transmission-sig')
+  const transmissionTime = req.headers.get('paypal-transmission-time')
+
+  if (!authAlgo || !certUrl || !transmissionId || !transmissionSig || !transmissionTime) {
+    return false
+  }
+
+  try {
+    const parsedCert = new URL(certUrl)
+    if (
+      parsedCert.protocol !== 'https:' ||
+      (!parsedCert.hostname.endsWith('.paypal.com') && parsedCert.hostname !== 'paypal.com')
+    ) {
+      console.error('[paypal-webhook] Untrusted paypal-cert-url host:', parsedCert.hostname)
+      return false
+    }
+  } catch {
+    return false
+  }
+
   try {
     const token = await getPayPalAccessToken()
     if (!token) return false
@@ -60,11 +84,11 @@ async function verifyWebhookSignature(req: NextRequest, rawBody: string): Promis
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        auth_algo: req.headers.get('paypal-auth-algo'),
-        cert_url: req.headers.get('paypal-cert-url'),
-        transmission_id: req.headers.get('paypal-transmission-id'),
-        transmission_sig: req.headers.get('paypal-transmission-sig'),
-        transmission_time: req.headers.get('paypal-transmission-time'),
+        auth_algo: authAlgo,
+        cert_url: certUrl,
+        transmission_id: transmissionId,
+        transmission_sig: transmissionSig,
+        transmission_time: transmissionTime,
         webhook_id: webhookId,
         webhook_event: JSON.parse(rawBody),
       }),
@@ -117,6 +141,11 @@ async function cancelSuscripcionActiva(clienteId?: string | null, planSlug?: str
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
+  const lengthCheck = validateContentLength(req, 256 * 1024)
+  if (!lengthCheck.allowed && lengthCheck.errorResponse) {
+    return lengthCheck.errorResponse
+  }
+
   if (!process.env.PAYPAL_WEBHOOK_ID) {
     console.error('[paypal-webhook] PAYPAL_WEBHOOK_ID not configured')
     return NextResponse.json(
@@ -136,6 +165,9 @@ export async function POST(req: NextRequest) {
   let rawBody = ''
   try {
     rawBody = await req.text()
+    if (rawBody.length > 256 * 1024) {
+      return NextResponse.json({ error: 'Payload too large' }, { status: 413 })
+    }
   } catch {
     return NextResponse.json({ error: 'Body could not be read' }, { status: 400 })
   }

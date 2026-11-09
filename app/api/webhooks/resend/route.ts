@@ -4,11 +4,18 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import { NextRequest, NextResponse } from 'next/server'
+import { timingSafeEqual } from 'node:crypto'
 import { Webhook } from 'svix'
 import { z } from 'zod'
 import { sendEmail, ensureResendWebhooksActive } from '@/lib/email/send'
-import { inboundEmailNotification, contactAutoReply } from '@/lib/email/templates'
+import {
+  inboundEmailNotification,
+  contactAutoReply,
+  extractCleanEmail,
+  extractDisplayName,
+} from '@/lib/email/templates'
 import { detectLanguage } from '@/lib/server/language'
+import { validateContentLength } from '@/lib/server/requestSecurity'
 import {
   claimWebhookEvent,
   markWebhookFailed,
@@ -64,6 +71,16 @@ function addressText(value: ResendAddress | null | undefined, fallback: string):
   return value.email || fallback
 }
 
+function safeSecretEquals(
+  provided: string | null | undefined,
+  expected: string | null | undefined
+): boolean {
+  if (!provided || !expected) return false
+  const a = Buffer.from(provided)
+  const b = Buffer.from(expected)
+  return a.length === b.length && timingSafeEqual(a, b)
+}
+
 /**
  * Health-Check & Auto-Healer Endpoint (GET):
  * Permite verificar el estado del webhook y reactivar automáticamente
@@ -79,30 +96,45 @@ export async function GET(req: NextRequest) {
   const bearer = authHeader?.match(/^Bearer\s+(.+)$/i)?.[1]?.trim()
   const internalKey = req.headers.get('x-internal-key')?.trim()
 
-  const isAuthorized = Boolean(
-    (bearer &&
-      (bearer === secret || (process.env.CRON_SECRET && bearer === process.env.CRON_SECRET))) ||
-    (internalKey &&
-      (internalKey === secret ||
-        (process.env.CRON_SECRET && internalKey === process.env.CRON_SECRET)))
-  )
+  const isAuthorized =
+    safeSecretEquals(bearer, secret) ||
+    safeSecretEquals(bearer, process.env.CRON_SECRET) ||
+    safeSecretEquals(internalKey, secret) ||
+    safeSecretEquals(internalKey, process.env.CRON_SECRET)
 
-  let autoHealReport = null
-  if (isAuthorized) {
-    autoHealReport = await ensureResendWebhooksActive()
+  if (!isAuthorized) {
+    return NextResponse.json(
+      {
+        status: 'ok',
+        endpoint: '/api/webhooks/resend',
+        provider: 'resend_svix',
+        timestamp: new Date().toISOString(),
+      },
+      { headers: { 'Cache-Control': 'no-store' } }
+    )
   }
 
-  return NextResponse.json({
-    status: 'ok',
-    endpoint: '/api/webhooks/resend',
-    secretConfigured: Boolean(secret),
-    provider: 'resend_svix',
-    ...(isAuthorized ? { autoHeal: autoHealReport } : {}),
-    timestamp: new Date().toISOString(),
-  })
+  const autoHealReport = await ensureResendWebhooksActive()
+
+  return NextResponse.json(
+    {
+      status: 'ok',
+      endpoint: '/api/webhooks/resend',
+      secretConfigured: Boolean(secret),
+      provider: 'resend_svix',
+      autoHeal: autoHealReport,
+      timestamp: new Date().toISOString(),
+    },
+    { headers: { 'Cache-Control': 'no-store' } }
+  )
 }
 
 export async function POST(req: NextRequest) {
+  const lengthCheck = validateContentLength(req, 256 * 1024)
+  if (!lengthCheck.allowed && lengthCheck.errorResponse) {
+    return lengthCheck.errorResponse
+  }
+
   const secret =
     process.env.RESEND_WEBHOOK_SIGNING_SECRET ||
     process.env.RESEND_WEBHOOK_SECRET ||
@@ -130,6 +162,9 @@ export async function POST(req: NextRequest) {
   let payloadString = ''
   try {
     payloadString = await req.text()
+    if (payloadString.length > 256 * 1024) {
+      return NextResponse.json({ error: 'Payload too large' }, { status: 413 })
+    }
   } catch (err: unknown) {
     console.error('[resend-webhook] Error reading request raw body:', err)
     return NextResponse.json({ error: 'Error reading request body' }, { status: 400 })
@@ -223,9 +258,11 @@ export async function POST(req: NextRequest) {
 
     case 'email.received':
       try {
-        const fromEmail = addressText(eventData.from, 'remitente_desconocido')
+        const rawFrom = addressText(eventData.from, 'remitente_desconocido')
+        const cleanFromEmail = extractCleanEmail(rawFrom)
+        const senderDisplayName = extractDisplayName(rawFrom, 'Estimado/a')
         const toEmail = addressText(eventData.to, 'Contacto@exepaginasweb.com')
-        const subject = eventData.subject || 'Nuevo correo recibido en ExeSistemasWEB'
+        const subject = eventData.subject || 'Nuevo correo recibido en ExePaginasWeb'
         const bodyContent = eventData.text || eventData.html || ''
         const adminDestination = process.env.ADMIN_EMAIL || 'Exemetal@hotmail.com'
         const detectedLang = detectLanguage(bodyContent + ' ' + subject, '')
@@ -240,20 +277,26 @@ export async function POST(req: NextRequest) {
           throw new Error('RESEND_API_KEY is not configured')
         }
 
+        const lowerFrom = cleanFromEmail.toLowerCase()
         const isSystemSender =
-          fromEmail === adminDestination ||
-          fromEmail.includes('noreply') ||
-          fromEmail.includes('no-reply') ||
-          fromEmail.includes('mailer-daemon')
+          !lowerFrom.includes('@') ||
+          lowerFrom === adminDestination.toLowerCase() ||
+          lowerFrom.endsWith('@exepaginasweb.com') ||
+          lowerFrom.includes('noreply') ||
+          lowerFrom.includes('no-reply') ||
+          lowerFrom.includes('mailer-daemon') ||
+          lowerFrom.includes('postmaster') ||
+          lowerFrom.includes('bounce') ||
+          lowerFrom.includes('autoresponder')
 
         const inboundTasks = [
           // 1. Reenvío obligatorio al Administrador (Exemetal@hotmail.com)
           sendEmail({
             to: adminDestination,
             subject: `[${ticketId}] [${isSales ? 'Ventas' : 'Contacto'}] ${subject}`,
-            replyTo: fromEmail,
+            replyTo: cleanFromEmail || rawFrom,
             html: inboundEmailNotification({
-              fromEmail,
+              fromEmail: rawFrom,
               toEmail,
               subject,
               html: eventData.html ?? undefined,
@@ -264,13 +307,14 @@ export async function POST(req: NextRequest) {
           // 2. Auto-respuesta instantánea al remitente si es un usuario humano real
           !isSystemSender
             ? sendEmail({
-                to: fromEmail,
+                to: cleanFromEmail,
+                replyTo: adminDestination,
                 subject:
                   detectedLang === 'en'
-                    ? `✨ We received your email [Ticket: ${ticketId}] - ExeSistemasWEB`
-                    : `✨ Recibimos tu correo [Ticket: ${ticketId}] - ExeSistemasWEB`,
+                    ? `✨ We received your email [Ticket: ${ticketId}] - ExePaginasWeb`
+                    : `✨ Recibimos tu correo [Ticket: ${ticketId}] - ExePaginasWeb`,
                 html: contactAutoReply({
-                  name: fromEmail.split('@')[0],
+                  name: senderDisplayName,
                   message: subject + '\n' + (eventData.text || ''),
                   ticketId,
                   lang: detectedLang,

@@ -8,8 +8,8 @@ import { z } from 'zod'
 import { dispatchN8nEvent } from '@/lib/server/n8n'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send'
-import { n8nAutomationReceipt } from '@/lib/email/templates'
-import { readJsonBody } from '@/lib/server/requestSecurity'
+import { n8nAutomationReceipt, n8nAdminNotification } from '@/lib/email/templates'
+import { readJsonBody, validateFetchMetadata } from '@/lib/server/requestSecurity'
 import { isSupabaseAdminConfigured, supabaseAdmin } from '@/lib/supabase/admin'
 
 const AutomationRequestSchema = z
@@ -43,6 +43,11 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const fetchMeta = validateFetchMetadata(req)
+  if (!fetchMeta.allowed && fetchMeta.errorResponse) {
+    return fetchMeta.errorResponse
+  }
+
   const ip = clientIp(req)
   try {
     const rl = await checkRateLimit(`n8n-automation:${ip}`, 60, 20)
@@ -111,38 +116,25 @@ export async function POST(req: NextRequest) {
     },
   })
 
-  // 3. Notificación instantánea al Administrador por email con botón de WhatsApp directo al cliente
+  // 3. Notificación instantánea al Administrador por email con plantilla escapada
   if (process.env.RESEND_API_KEY) {
     void sendEmail({
       to: ADMIN_EMAIL,
+      replyTo: cleanEmail || ADMIN_EMAIL,
       subject: `[${ticketId}] 🚨 Nueva solicitud desde Botón de Chat: ${name}`,
-      html: `
-        <div style="font-family:sans-serif;padding:24px;background:#090d18;color:#fff;border-radius:12px;max-width:600px;">
-          <h2 style="color:#00d4ff;margin-top:0;">🚨 Nueva Solicitud en Botón de Chat (n8n)</h2>
-          <p><strong>Ticket:</strong> <span style="font-family:monospace;color:#10b981;font-weight:bold;font-size:15px;">${ticketId}</span></p>
-          <p><strong>Cliente:</strong> ${name}</p>
-          <p><strong>WhatsApp / Teléfono:</strong> ${
-            cleanPhone
-              ? `<a href="https://wa.me/${cleanPhoneDigits}" style="color:#10b981;font-weight:bold;font-size:16px;">📱 ${cleanPhone} (Abrir WhatsApp)</a>`
-              : '<span style="color:#94a3b8;">No especificado</span>'
-          }</p>
-          <p><strong>Email:</strong> ${
-            cleanEmail
-              ? `<a href="mailto:${cleanEmail}" style="color:#38bdf8;">${cleanEmail}</a>`
-              : '<span style="color:#94a3b8;">No especificado</span>'
-          }</p>
-          <p><strong>Flujo Solicitado:</strong> ${automationType}</p>
-          <p><strong>Detalles:</strong> ${details || 'Sin detalles adicionales'}</p>
-          ${
-            cleanPhoneDigits
-              ? `<div style="margin-top:20px;">
-                  <a href="https://wa.me/${cleanPhoneDigits}?text=Hola%20${encodeURIComponent(name)},%20te%20contacto%20de%20ExePaginasWeb%20por%20tu%20solicitud%20[${ticketId}]" style="display:inline-block;padding:12px 24px;background:#10b981;color:#fff;text-decoration:none;font-weight:bold;border-radius:8px;">📱 Chatear por WhatsApp con el Cliente</a>
-                </div>`
-              : ''
-          }
-          <p style="color:#64748b;font-size:11px;margin-top:24px;">Despachado a n8n Cloud: ${dispatchResult.sent ? '✓ Sí' : '✗ Fallback Serverless'}</p>
-        </div>
-      `,
+      html: n8nAdminNotification({
+        name,
+        email: cleanEmail,
+        phone: cleanPhone,
+        automationType,
+        details: details || undefined,
+        ticketId,
+        dispatchedToN8n: dispatchResult.sent,
+      }),
+      tags: [
+        { name: 'category', value: 'n8n_automation_admin' },
+        { name: 'ticket_id', value: ticketId },
+      ],
     }).catch((emailErr) => {
       console.warn('[automation/n8n] Error notificando al admin:', emailErr)
     })
@@ -154,7 +146,8 @@ export async function POST(req: NextRequest) {
     try {
       await sendEmail({
         to: cleanEmail,
-        subject: `⚡ Tu automatización [${ticketId}] fue ejecutada — ExeSistemasWEB`,
+        replyTo: ADMIN_EMAIL,
+        subject: `⚡ Tu automatización [${ticketId}] fue ejecutada — ExePaginasWeb`,
         html: n8nAutomationReceipt({
           name,
           email: cleanEmail,
@@ -164,6 +157,10 @@ export async function POST(req: NextRequest) {
           engineMode: dispatchResult.sent ? 'n8n_cloud' : 'serverless_free',
           lang: 'es',
         }),
+        tags: [
+          { name: 'category', value: 'n8n_automation_client' },
+          { name: 'ticket_id', value: ticketId },
+        ],
       })
       emailSent = true
     } catch (emailErr) {

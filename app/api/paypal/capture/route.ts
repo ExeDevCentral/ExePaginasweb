@@ -15,7 +15,7 @@ import {
 } from '@/lib/server/paypal'
 import { requireAuthUser } from '@/lib/server/apiAuth'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
-import { readJsonBody } from '@/lib/server/requestSecurity'
+import { readJsonBody, validateFetchMetadata } from '@/lib/server/requestSecurity'
 import { catalogEntryById } from '@/core/domain/planCatalog'
 
 export const dynamic = 'force-dynamic'
@@ -25,6 +25,11 @@ const CaptureOrderSchema = z.object({
 })
 
 export async function POST(req: NextRequest) {
+  const fetchMeta = validateFetchMetadata(req)
+  if (!fetchMeta.allowed && fetchMeta.errorResponse) {
+    return fetchMeta.errorResponse
+  }
+
   try {
     const limit = await checkRateLimit(`paypal-capture:${clientIp(req)}`, 3_600, 30)
     if (!limit.allowed) {

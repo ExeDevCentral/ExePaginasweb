@@ -9,7 +9,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
 import { isSupabaseAdminConfigured, supabaseAdmin } from '@/lib/supabase/admin'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
-import { readJsonBody } from '@/lib/server/requestSecurity'
+import { readJsonBody, validateFetchMetadata } from '@/lib/server/requestSecurity'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,6 +25,11 @@ const EventPayloadSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    const fetchMeta = validateFetchMetadata(req)
+    if (!fetchMeta.allowed && fetchMeta.errorResponse) {
+      return fetchMeta.errorResponse
+    }
+
     try {
       const limit = await checkRateLimit(`analytics:${clientIp(req)}`, 60, 60)
       if (!limit.allowed) {

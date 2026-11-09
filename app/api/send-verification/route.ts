@@ -9,6 +9,7 @@ import { z } from 'zod'
 import { sendEmail } from '@/lib/email/send'
 import { emailVerification } from '@/lib/email/templates'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
+import { readJsonBody } from '@/lib/server/requestSecurity'
 
 const SendVerificationSchema = z.object({
   email: z.string().trim().email().max(255),
@@ -83,12 +84,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
-  let body: unknown = null
-  try {
-    body = await req.json()
-  } catch {
-    return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
-  }
+  const bodyResult = await readJsonBody(req, 8 * 1024)
+  if (bodyResult.errorResponse) return bodyResult.errorResponse
+  const body = bodyResult.body
 
   const parseResult = SendVerificationSchema.safeParse(body)
   if (!parseResult.success) {

@@ -9,6 +9,7 @@ import { isSupabaseAdminConfigured } from '@/lib/supabase/admin'
 import { createPayPalOrder } from '@/lib/server/paypal'
 import { requireAuthUser } from '@/lib/server/apiAuth'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
+import { readJsonBody, validateFetchMetadata } from '@/lib/server/requestSecurity'
 import { STORE_PLAN_IDS } from '@/core/domain/planCatalog'
 
 export const dynamic = 'force-dynamic'
@@ -19,6 +20,11 @@ const CreateOrderSchema = z.object({
 })
 
 export async function POST(req: NextRequest) {
+  const fetchMeta = validateFetchMetadata(req)
+  if (!fetchMeta.allowed && fetchMeta.errorResponse) {
+    return fetchMeta.errorResponse
+  }
+
   try {
     const limit = await checkRateLimit(`paypal-order:${clientIp(req)}`, 3_600, 20)
     if (!limit.allowed) {
@@ -32,12 +38,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
-  let body: unknown = null
-  try {
-    body = await req.json()
-  } catch {
-    return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
-  }
+  const bodyResult = await readJsonBody(req, 4 * 1024)
+  if (bodyResult.errorResponse) return bodyResult.errorResponse
+  const body = bodyResult.body
 
   const parseResult = CreateOrderSchema.safeParse(body)
   if (!parseResult.success) {

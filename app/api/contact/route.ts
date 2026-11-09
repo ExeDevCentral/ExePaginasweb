@@ -10,11 +10,7 @@ import { dispatchN8nEvent } from '@/lib/server/n8n'
 import { contactNotification, contactAutoReply, aiDiagnosticAutoReply } from '@/lib/email/templates'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 import { isSupabaseAdminConfigured, supabaseAdmin } from '@/lib/supabase/admin'
-import {
-  validateContentLength,
-  validateFetchMetadata,
-  maskEmail,
-} from '@/lib/server/requestSecurity'
+import { readJsonBody, validateFetchMetadata, maskEmail } from '@/lib/server/requestSecurity'
 
 import { detectLanguage } from '@/lib/server/language'
 
@@ -36,11 +32,6 @@ export async function POST(req: NextRequest) {
     return fetchMeta.errorResponse
   }
 
-  const lengthCheck = validateContentLength(req, 50 * 1024)
-  if (!lengthCheck.allowed && lengthCheck.errorResponse) {
-    return lengthCheck.errorResponse
-  }
-
   try {
     const limit = await checkRateLimit(`contact:${clientIp(req)}`, 3_600, 5)
     if (!limit.allowed) {
@@ -54,12 +45,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Servicio temporalmente no disponible.' }, { status: 503 })
   }
 
-  let body: unknown = null
-  try {
-    body = await req.json()
-  } catch {
-    return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
-  }
+  const bodyResult = await readJsonBody(req, 50 * 1024)
+  if (bodyResult.errorResponse) return bodyResult.errorResponse
+  const body = bodyResult.body
 
   const parseResult = ContactSchema.safeParse(body)
   if (!parseResult.success) {
@@ -126,11 +114,11 @@ export async function POST(req: NextRequest) {
 
       const autoReplySubject = isAiDiag
         ? detectedLang === 'en'
-          ? `🤖 AI Diagnostic Completed [Ticket: ${ticketId}] - ExeSistemasWEB`
-          : `🤖 Tu Diagnóstico IA está listo [Ticket: ${ticketId}] - ExeSistemasWEB`
+          ? `🤖 AI Diagnostic Completed [Ticket: ${ticketId}] - ExePaginasWeb`
+          : `🤖 Tu Diagnóstico IA está listo [Ticket: ${ticketId}] - ExePaginasWeb`
         : detectedLang === 'en'
-          ? `✨ We received your message [Ticket: ${ticketId}] - ExeSistemasWEB`
-          : `✨ Recibimos tu mensaje [Ticket: ${ticketId}] - ExeSistemasWEB`
+          ? `✨ We received your message [Ticket: ${ticketId}] - ExePaginasWeb`
+          : `✨ Recibimos tu mensaje [Ticket: ${ticketId}] - ExePaginasWeb`
 
       const emailTasks = [
         sendEmail({
@@ -147,6 +135,7 @@ export async function POST(req: NextRequest) {
           to: [email],
           subject: autoReplySubject,
           html: clientHtmlTemplate,
+          replyTo: ADMIN_EMAIL,
           tags: [
             { name: 'category', value: isAiDiag ? 'ai_diagnostic_client' : 'contact_client' },
             { name: 'ticket_id', value: ticketId },

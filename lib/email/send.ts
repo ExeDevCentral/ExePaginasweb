@@ -1,14 +1,17 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
+import { randomUUID } from 'node:crypto'
+
 const RESEND_API = 'https://api.resend.com/emails'
 const RESEND_WEBHOOKS_API = 'https://api.resend.com/webhooks'
 
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'Exemetal@hotmail.com'
 export const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'Contacto@exepaginasweb.com'
 export const SALES_EMAIL = process.env.SALES_EMAIL || 'Ventas@exepaginasweb.com'
+export const REPLY_TO_EMAIL = process.env.RESEND_REPLY_TO || CONTACT_EMAIL
 
 export interface EmailTag {
   name: string
@@ -19,7 +22,8 @@ export interface SendEmailOptions {
   to: string | string[]
   subject: string
   html?: string | undefined
-  replyTo?: string | undefined
+  text?: string | undefined
+  replyTo?: string | string[] | undefined
   tags?: EmailTag[] | undefined
   headers?: Record<string, string> | undefined
   template?:
@@ -46,6 +50,62 @@ export interface WebhookStatusReport {
   errors?: string[] | undefined
 }
 
+/**
+ * Elimina saltos de línea CR/LF y caracteres de control para prevenir CRLF Header Injection.
+ */
+export function sanitizeHeaderValue(value: string): string {
+  if (!value || typeof value !== 'string') return ''
+  return value
+    .replace(/[\r\n\0]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/**
+ * Formatea el remitente con nombre de autoría directa si solo se especificó la casilla de correo.
+ */
+export function formatSenderAddress(rawFrom?: string): string {
+  const clean = sanitizeHeaderValue(rawFrom || CONTACT_EMAIL) || CONTACT_EMAIL
+  if (clean.includes('<') && clean.includes('>')) {
+    return clean
+  }
+  return `Exequiel Echevarría · ExePaginasWeb <${clean}>`
+}
+
+/**
+ * Genera una versión de texto plano limpia a partir de HTML para multipart/alternative en Resend,
+ * mejorando la entregabilidad en Gmail, Outlook y Hotmail.
+ */
+export function htmlToPlainText(html?: string): string {
+  if (!html || typeof html !== 'string') return ''
+  return html
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<head[\s\S]*?<\/head>/gi, '')
+    .replace(/<div[^>]*max-height:\s*0[^>]*>[\s\S]*?<\/div>/gi, '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|tr|li|h[1-6]|table)>/gi, '\n')
+    .replace(/<\/?(strong|em|b|i|u|code|span|a)\b[^>]*>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&#847;/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#x27;/gi, "'")
+    .split('\n')
+    .map((line) =>
+      line
+        .replace(/\s+/g, ' ')
+        .replace(/\s+([,.;:!?])/g, '$1')
+        .trim()
+    )
+    .filter((line, idx, arr) => line.length > 0 || (idx > 0 && arr[idx - 1] !== ''))
+    .join('\n')
+    .trim()
+}
+
 function getConfig() {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
@@ -53,7 +113,7 @@ function getConfig() {
   }
   return {
     apiKey,
-    from: process.env.RESEND_FROM_EMAIL || 'Contacto@exepaginasweb.com',
+    from: formatSenderAddress(process.env.RESEND_FROM_EMAIL || CONTACT_EMAIL),
   }
 }
 
@@ -62,10 +122,38 @@ function getConfig() {
  */
 const waitMs = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
+let lastResendDispatchAt = 0
+let resendQueue: Promise<void> = Promise.resolve()
+
+/**
+ * Espaciador de solicitudes en memoria para evitar colisiones 429 cuando se envían
+ * correos al administrador y auto-respuesta al cliente en paralelo.
+ */
+async function paceResendCall(): Promise<void> {
+  if (process.env.NODE_ENV === 'test') return
+  const minIntervalMs = 520
+  const prev = resendQueue
+  let release!: () => void
+  resendQueue = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  await prev
+  try {
+    const elapsed = Date.now() - lastResendDispatchAt
+    if (elapsed < minIntervalMs) {
+      await waitMs(minIntervalMs - elapsed)
+    }
+    lastResendDispatchAt = Date.now()
+  } finally {
+    release()
+  }
+}
+
 export async function sendEmail({
   to,
   subject,
   html,
+  text,
   replyTo,
   tags,
   headers,
@@ -73,24 +161,56 @@ export async function sendEmail({
 }: SendEmailOptions): Promise<Record<string, unknown>> {
   const { apiKey, from } = getConfig()
 
+  const recipients = (Array.isArray(to) ? to : [to])
+    .map((addr) => sanitizeHeaderValue(addr))
+    .filter(Boolean)
+
+  const cleanSubject = sanitizeHeaderValue(subject) || 'Notificación — ExePaginasWeb'
+
+  const effectiveReplyTo = replyTo ?? REPLY_TO_EMAIL
+  const cleanReplyTo = Array.isArray(effectiveReplyTo)
+    ? effectiveReplyTo.map((item) => sanitizeHeaderValue(item)).filter(Boolean)
+    : sanitizeHeaderValue(effectiveReplyTo)
+
   const payload: Record<string, unknown> = {
     from,
-    to: Array.isArray(to) ? to : [to],
-    subject,
+    to: recipients,
+    subject: cleanSubject,
   }
 
-  if (html) payload.html = html
-  if (replyTo) {
-    payload.reply_to = replyTo
-    payload.replyTo = replyTo
+  if (html) {
+    payload.html = html
+    const generatedText = text ? text.trim() : htmlToPlainText(html)
+    if (generatedText) {
+      payload.text = generatedText
+    }
+  } else if (text) {
+    payload.text = text.trim()
   }
-  if (tags && tags.length > 0) payload.tags = tags
-  if (headers && Object.keys(headers).length > 0) payload.headers = headers
+
+  if (cleanReplyTo && (typeof cleanReplyTo === 'string' || cleanReplyTo.length > 0)) {
+    payload.reply_to = cleanReplyTo
+    payload.replyTo = cleanReplyTo
+  }
+
+  if (tags && tags.length > 0) {
+    payload.tags = tags.map((tag) => ({
+      name: sanitizeHeaderValue(tag.name).replace(/[^a-zA-Z0-9_-]/g, '_'),
+      value: sanitizeHeaderValue(tag.value).replace(/[^a-zA-Z0-9_-]/g, '_'),
+    }))
+  }
+
+  payload.headers = {
+    'X-Entity-Ref-ID': randomUUID(),
+    ...(headers || {}),
+  }
+
   if (template) payload.template = template
 
-  const maxAttempts = 2
+  const maxAttempts = 3
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
+      await paceResendCall()
       const res = await fetch(RESEND_API, {
         method: 'POST',
         headers: {
@@ -103,16 +223,21 @@ export async function sendEmail({
 
       if (res.ok) {
         const json = (await res.json()) as Record<string, unknown>
-        console.log('[email] Enviado correctamente a', to)
+        console.log('[email] Enviado correctamente a', recipients.join(', '))
         return json
       }
 
       // Si el plan gratis llega al límite de ráfaga (429 Rate Limit) o error temporal 5xx
       if ((res.status === 429 || res.status >= 500) && attempt < maxAttempts) {
+        const retryAfterHeader = Number(res.headers.get('retry-after'))
+        const backoffMs =
+          Number.isFinite(retryAfterHeader) && retryAfterHeader > 0
+            ? Math.min(retryAfterHeader * 1000, 3000)
+            : 650 * attempt
         console.warn(
-          `[email] Resend respondió ${res.status}. Reintentando con retroceso en modo gratis...`
+          `[email] Resend respondió ${res.status}. Reintentando en ${backoffMs}ms (intento ${attempt}/${maxAttempts})...`
         )
-        await waitMs(650)
+        await waitMs(backoffMs)
         continue
       }
 
@@ -121,7 +246,7 @@ export async function sendEmail({
       throw new Error(`Resend error: ${res.status}`)
     } catch (err) {
       if (attempt < maxAttempts && err instanceof Error && err.name === 'TimeoutError') {
-        await waitMs(500)
+        await waitMs(500 * attempt)
         continue
       }
       throw err
@@ -146,20 +271,21 @@ export async function syncContactToAudience({
 
   const targetAudience = audienceId || process.env.RESEND_AUDIENCE_ID
   const url = targetAudience
-    ? `https://api.resend.com/audiences/${targetAudience}/contacts`
+    ? `https://api.resend.com/audiences/${encodeURIComponent(targetAudience)}/contacts`
     : 'https://api.resend.com/contacts'
 
   try {
     const payload: Record<string, unknown> = {
-      email: email.trim().toLowerCase(),
+      email: sanitizeHeaderValue(email).toLowerCase(),
       unsubscribed,
     }
-    if (firstName) payload.first_name = firstName.trim()
-    if (lastName) payload.last_name = lastName.trim()
+    if (firstName) payload.first_name = sanitizeHeaderValue(firstName)
+    if (lastName) payload.last_name = sanitizeHeaderValue(lastName)
     if (!targetAudience && process.env.RESEND_AUDIENCE_ID) {
       payload.audience_id = process.env.RESEND_AUDIENCE_ID
     }
 
+    await paceResendCall()
     const res = await fetch(url, {
       method: 'POST',
       headers: {
@@ -172,7 +298,6 @@ export async function syncContactToAudience({
 
     if (!res.ok) {
       const errText = await res.text()
-      // Si el contacto ya existe, no es un error
       if (res.status === 409 || errText.includes('already_exists')) {
         console.log(`[resend-audience] Contacto ${email} ya registrado en audiencia.`)
         return { status: 'exists' }
@@ -242,9 +367,8 @@ export async function ensureResendWebhooksActive(): Promise<WebhookStatusReport>
       if (status === 'active' || status === 'enabled') {
         enabledCount++
       } else if (wh.id) {
-        // Intentar reactivar vía PATCH
         try {
-          const patchRes = await fetch(`${RESEND_WEBHOOKS_API}/${wh.id}`, {
+          const patchRes = await fetch(`${RESEND_WEBHOOKS_API}/${encodeURIComponent(wh.id)}`, {
             method: 'PATCH',
             headers: {
               Authorization: `Bearer ${apiKey}`,

@@ -14,6 +14,7 @@ import {
   paymentConfirmation,
   emailVerification,
   n8nAutomationReceipt,
+  n8nAdminNotification,
 } from '../lib/email/templates.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -81,14 +82,26 @@ const n8nReceiptHtml = n8nAutomationReceipt({
 })
 fs.writeFileSync(path.join(outDir, '06-n8n-automation-live.html'), n8nReceiptHtml, 'utf8')
 
+// 7. n8n Admin Notification (Administrador)
+const n8nAdminHtml = n8nAdminNotification({
+  name: '{{{name}}}',
+  email: '{{{email}}}',
+  phone: '{{{phone}}}',
+  automationType: '{{{automationType}}}',
+  details: '{{{details}}}',
+  ticketId: '{{{ticketId}}}',
+  dispatchedToN8n: true,
+})
+fs.writeFileSync(path.join(outDir, '07-n8n-admin-notification.html'), n8nAdminHtml, 'utf8')
+
 // Generar README instructivo para el usuario
-const readmeContent = `# Plantillas Oficiales para Resend Templates
+const readmeContent = `# Plantillas Oficiales para Resend Templates (ExePaginasWeb)
 
 Estas plantillas están listas para ser cargadas en tu panel de Resend (https://resend.com/emails/templates):
 
 ### 1. \`01-contact-auto-reply.html\`
 - **Name:** \`contact-auto-reply\`
-- **Subject:** \`✨ Recibimos tu consulta [Ticket: {{{ticketId}}}] - ExeSistemasWEB\`
+- **Subject:** \`✨ Recibimos tu mensaje [Ticket: {{{ticketId}}}] - ExePaginasWeb\`
 - **Variables:** \`name\`, \`ticketId\`, \`message\`
 
 ### 2. \`02-contact-admin-notification.html\`
@@ -98,7 +111,7 @@ Estas plantillas están listas para ser cargadas en tu panel de Resend (https://
 
 ### 3. \`03-ai-diagnostic.html\`
 - **Name:** \`ai-diagnostic\`
-- **Subject:** \`🤖 Tu Diagnóstico IA está listo [Ticket: {{{ticketId}}}] - ExeSistemasWEB\`
+- **Subject:** \`🤖 Tu Diagnóstico IA está listo [Ticket: {{{ticketId}}}] - ExePaginasWeb\`
 - **Variables:** \`name\`, \`ticketId\`, \`message\`
 
 ### 4. \`04-payment-confirmation.html\`
@@ -108,13 +121,18 @@ Estas plantillas están listas para ser cargadas en tu panel de Resend (https://
 
 ### 5. \`05-email-verification.html\`
 - **Name:** \`email-verification\`
-- **Subject:** \`🔒 Confirma tu cuenta de correo electrónico — ExeSistemasWEB\`
+- **Subject:** \`🔒 Confirma tu cuenta de correo electrónico — ExePaginasWeb\`
 - **Variables:** \`name\`, \`verificationUrl\`
 
 ### 6. \`06-n8n-automation-live.html\`
 - **Name:** \`n8n-automation-live\`
-- **Subject:** \`⚡ Automatización Ejecutada [Ticket: {{{ticketId}}}] - ExeSistemasWEB\`
+- **Subject:** \`⚡ Automatización Ejecutada [Ticket: {{{ticketId}}}] - ExePaginasWeb\`
 - **Variables:** \`name\`, \`email\`, \`automationType\`, \`details\`, \`ticketId\`
+
+### 7. \`07-n8n-admin-notification.html\`
+- **Name:** \`n8n-admin-notification\`
+- **Subject:** \`[{{{ticketId}}}] 🚨 Nueva solicitud de automatización: {{{name}}}\`
+- **Variables:** \`name\`, \`email\`, \`phone\`, \`automationType\`, \`details\`, \`ticketId\`
 `
 fs.writeFileSync(path.join(outDir, 'README.md'), readmeContent, 'utf8')
 

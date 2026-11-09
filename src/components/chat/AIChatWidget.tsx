@@ -1,10 +1,10 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * UnifiedSupportHub (AIChatWidget unificado):
  * - Un solo botón flotante expandible en esquina inferior derecha (estilo SaaS "Ciudad de Servidores")
  * - Al hacer clic despliega dos canales limpios:
  *   1. Hablar con Exequiel por WhatsApp (Humano · Respuesta en < 5 min)
- *   2. Preguntarle al Asistente IA (Técnico · 24/7 autónomo)
+ *   2. Preguntarle al Asistente IA (Técnico · 24/7 autónomo con Escudo Zero-Trust)
  * - Paleta cian, ámbar, esmeralda y obsidiana con tipografía JetBrains Mono / Space Grotesk
  */
 'use client'
@@ -35,6 +35,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { getWhatsAppUrl, DISPLAY_WHATSAPP_NUMBER } from '../../core/utils/whatsappUtils'
+import { inspectUserMessage, sanitizeVisitorName } from '@/core/ai/securityGuard'
 import { trackEvent } from '@/core/analytics/trackEvent'
 import Logo from '../layout/Logo'
 import HudButton from '../HudButton'
@@ -294,8 +295,14 @@ const VisitorIdentityBar: React.FC<{
 }
 
 function buildClientFallback(text: string, visitorName?: string): string {
+  const verdict = inspectUserMessage(text)
+  if (!verdict.allowed && verdict.safeResponse) {
+    return verdict.safeResponse
+  }
+
   const lowerText = text.toLowerCase()
-  const namePrefix = visitorName ? `¡Hola ${visitorName}! ` : ''
+  const safeName = sanitizeVisitorName(visitorName)
+  const namePrefix = safeName ? `¡Hola ${safeName}! ` : ''
   const isN8n = lowerText.includes('n8n') || lowerText.includes('automatiz')
 
   if (isN8n) {
@@ -311,7 +318,7 @@ function buildClientFallback(text: string, visitorName?: string): string {
     lowerText.includes('cotiz') ||
     lowerText.includes('costo')
   ) {
-    return `${namePrefix}Nuestros valores base de referencia 2026 son:\n\n• Landing Page de Alta Conversión: desde $450.000 ARS\n• Tienda Online E-Commerce: desde $750.000 ARS\n• Sistemas y Paneles SaaS a medida: presupuesto personalizado.\n\nTodo con 100% código propio y automatizaciones n8n disponibles. ¿Querés que te preparemos una propuesta formal? Tu ticket asignado es [${ticket}].`
+    return `${namePrefix}Nuestros valores base de referencia son:\n\n• Landing Page de Alta Conversión: desde $450.000 ARS\n• Tienda Online E-Commerce: desde $750.000 ARS\n• Sistemas y Paneles SaaS a medida: presupuesto personalizado.\n\nTodo con 100% código propio y automatizaciones n8n disponibles. ¿Querés que te preparemos una propuesta formal? Tu ticket asignado es [${ticket}].`
   }
 
   if (
@@ -408,9 +415,12 @@ export const AIChatWidget: React.FC = () => {
   useEffect(() => {
     try {
       const stored = localStorage.getItem('exe_visitor_name')
-      if (stored) {
-        setVisitorName(stored)
-        setNameInput(stored)
+      const safeStored = sanitizeVisitorName(stored)
+      if (safeStored) {
+        setVisitorName(safeStored)
+        setNameInput(safeStored)
+      } else if (stored) {
+        localStorage.removeItem('exe_visitor_name')
       }
     } catch {
       // Ignorar errores de localStorage en navegación privada
@@ -418,12 +428,19 @@ export const AIChatWidget: React.FC = () => {
   }, [])
 
   const handleSaveName = (newName: string) => {
-    const trimmed = newName.trim()
-    setVisitorName(trimmed)
+    const safeTrimmed = sanitizeVisitorName(newName) ?? ''
+    if (newName.trim() && !safeTrimmed) {
+      toast.error('Nombre no válido', {
+        description: 'Por favor ingresá únicamente tu nombre real sin comandos ni símbolos.',
+      })
+      return
+    }
+    setVisitorName(safeTrimmed)
+    setNameInput(safeTrimmed)
     setIsEditingName(false)
     try {
-      if (trimmed) {
-        localStorage.setItem('exe_visitor_name', trimmed)
+      if (safeTrimmed) {
+        localStorage.setItem('exe_visitor_name', safeTrimmed)
       } else {
         localStorage.removeItem('exe_visitor_name')
       }
@@ -431,12 +448,12 @@ export const AIChatWidget: React.FC = () => {
       // Ignorar errores de localStorage
     }
 
-    if (trimmed) {
+    if (safeTrimmed) {
       setMessages((prev) => [
         ...prev,
         makeMessage(
           'assistant',
-          `¡Excelente, ${trimmed}! He registrado tu nombre. Nuestro motor de automatizaciones n8n Cloud y desarrollo web a medida están listos. ¿Qué proyecto o flujo querés cotizar hoy?`
+          `¡Excelente, ${safeTrimmed}! He registrado tu nombre. Nuestro motor de automatizaciones n8n Cloud y desarrollo web a medida están listos. ¿Qué proyecto o flujo querés cotizar hoy?`
         ),
       ])
     }
@@ -876,7 +893,7 @@ export const AIChatWidget: React.FC = () => {
                 <div className="px-5 py-2.5 bg-black/40 border-t border-white/5 text-[10px] font-mono text-slate-400 flex items-center justify-center gap-2">
                   <Logo size={15} variant="dark" />
                   <span>
-                    ExePaginasWeb · Arquitectura Cloud &amp; Sistemas a Escala Global · 2026 ·{' '}
+                    ExePaginasWeb · Arquitectura Cloud &amp; Sistemas a Escala Global · 2025 ·{' '}
                     {DISPLAY_WHATSAPP_NUMBER}
                   </span>
                 </div>
@@ -905,9 +922,18 @@ export const AIChatWidget: React.FC = () => {
                         <Logo size={20} variant="dark" />
                       </div>
                       <div>
-                        <h4 className="text-xs font-bold text-white tracking-tight">ExeBot IA</h4>
-                        <span className="text-[10px] text-cyan-400 font-mono block leading-none">
-                          ExePaginasWeb · 24/7 En línea
+                        <div className="flex items-center gap-1.5">
+                          <h4 className="text-xs font-bold text-white tracking-tight">ExeBot IA</h4>
+                          <span
+                            title="Escudo Zero-Trust Anti-Inyección Activo"
+                            className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded-full bg-emerald-500/15 border border-emerald-400/40 text-[9px] font-mono text-emerald-300 font-bold"
+                          >
+                            <ShieldCheck className="w-2.5 h-2.5 text-emerald-400" />
+                            <span>ZERO-TRUST</span>
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-cyan-400 font-mono block leading-none mt-0.5">
+                          ExePaginasWeb · 24/7 Protegido
                         </span>
                       </div>
                     </div>

@@ -1,10 +1,11 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Endpoint para disparar y diagnosticar automatizaciones en vivo con n8n Cloud y Resend.
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { inspectUserMessage, sanitizeVisitorName } from '@/core/ai/securityGuard'
 import { dispatchN8nEvent } from '@/lib/server/n8n'
 import { checkRateLimit, clientIp } from '@/lib/server/rateLimit'
 import { sendEmail, ADMIN_EMAIL } from '@/lib/email/send'
@@ -74,7 +75,17 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { name, email, phone, automationType, details } = parsed.data
+  const { name: rawName, email, phone, automationType, details } = parsed.data
+  const nameVerdict = inspectUserMessage(rawName)
+  const detailsVerdict = inspectUserMessage(details || '')
+  if (!nameVerdict.allowed || !detailsVerdict.allowed) {
+    return NextResponse.json(
+      { error: 'Datos rechazados por el escudo de seguridad Zero-Trust.' },
+      { status: 400 }
+    )
+  }
+
+  const name = sanitizeVisitorName(rawName) ?? 'Visitante Web'
   const cleanEmail = email?.trim() || undefined
   const cleanPhone = phone?.trim() || undefined
   const cleanPhoneDigits = cleanPhone ? cleanPhone.replace(/[^0-9]/g, '') : null

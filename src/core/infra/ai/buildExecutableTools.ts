@@ -1,12 +1,14 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import { zodSchema } from 'ai'
 import { AiUserContext } from '@/core/ai/types'
 import { IAiAuditRepository, safeToolError } from '@/core/ai/audit'
+import { canRoleUseTool, toolAuthorizationError } from '@/core/ai/permissions'
 import { AiToolInputSchemas } from '@/core/ai/schemas'
+import { inspectUserMessage, sanitizeVisitorName } from '@/core/ai/securityGuard'
 import { getToolDefinition, toolRequiresConfirmation } from '@/core/ai/toolRegistry'
 import {
   getActiveServices,
@@ -36,13 +38,38 @@ export type ExecutableToolMap = Record<
 >
 
 export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
+  const executedWriteTools = new Set<string>()
+  const isAuthenticated = Boolean(runtime.userContext.userId)
+
   const executeWithAudit = async (toolName: string, input: Record<string, unknown>) => {
     const def = getToolDefinition(toolName)
     const started = performance.now()
     try {
       if (!def) throw new Error(`Herramienta desconocida: ${toolName}`)
+
+      // 1. Verificación estricta RBAC + Autenticación Zero-Trust
+      if (!canRoleUseTool(def, runtime.userContext.role, isAuthenticated)) {
+        throw new Error(toolAuthorizationError(def))
+      }
+
+      // 2. Verificación de aislamiento Multi-Tenant
+      if (def.tenantScoped && !runtime.userContext.tenantId) {
+        throw new Error('Operación requiere un tenant activo autenticado.')
+      }
+
+      // 3. Bloqueo de operaciones de alto riesgo / confirmación manual
       if (toolRequiresConfirmation(def)) {
         throw new Error('Esta operación requiere confirmación del usuario antes de ejecutarse.')
+      }
+
+      // 4. Límite anti-abuso: máximo 1 ejecución por herramienta de escritura en cada turno
+      if (def.level === 'write') {
+        if (executedWriteTools.has(toolName)) {
+          throw new Error(
+            `Límite de seguridad alcanzado: la herramienta "${toolName}" ya fue ejecutada en este turno.`
+          )
+        }
+        executedWriteTools.add(toolName)
       }
 
       let output: unknown
@@ -57,10 +84,16 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
           output = await getClientStatus(runtime.userContext)
           break
         case 'getInvoices':
-          output = await getClientInvoices(runtime.userContext, Number(input['limit'] ?? 10))
+          output = await getClientInvoices(
+            runtime.userContext,
+            Math.min(Math.max(Number(input['limit'] ?? 10), 1), 25)
+          )
           break
         case 'getOrders':
-          output = await getClientOrders(runtime.userContext, Number(input['limit'] ?? 10))
+          output = await getClientOrders(
+            runtime.userContext,
+            Math.min(Math.max(Number(input['limit'] ?? 10), 1), 25)
+          )
           break
         case 'getAvailability':
           output = { ok: true, message: 'Disponibilidad a consultar por negocio.', params: input }
@@ -69,13 +102,24 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
           output = { ok: true, message: 'Reserva pendiente de confirmación.', params: input }
           break
         case 'createTicket': {
-          const contactEmail = input['contactEmail'] as string | null | undefined
-          const contactPhone = input['contactPhone'] as string | null | undefined
-          const projectType = input['projectType'] as string | null | undefined
+          const contactEmail =
+            typeof input['contactEmail'] === 'string' ? input['contactEmail'].trim() : null
+          const contactPhone =
+            typeof input['contactPhone'] === 'string' ? input['contactPhone'].trim() : null
+          const rawProjectType =
+            typeof input['projectType'] === 'string' ? input['projectType'].trim() : null
+
+          if (rawProjectType) {
+            const check = inspectUserMessage(rawProjectType)
+            if (!check.allowed) {
+              throw new Error('Solicitud rechazada por el filtro de seguridad Zero-Trust.')
+            }
+          }
+
           output = await createTicketRecord({
             contactEmail: contactEmail ?? null,
             contactPhone: contactPhone ?? null,
-            projectType: projectType ?? null,
+            projectType: rawProjectType ? rawProjectType.slice(0, 120) : null,
           })
           break
         }
@@ -84,13 +128,20 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
             typeof input['automationType'] === 'string'
               ? input['automationType']
               : 'cotizacion_express'
-          const clientName =
+          const rawClientName =
             typeof input['clientName'] === 'string' ? input['clientName'] : 'Cliente'
+          const clientName = sanitizeVisitorName(rawClientName) ?? 'Cliente'
           const clientEmail =
-            typeof input['clientEmail'] === 'string' ? input['clientEmail'] : undefined
+            typeof input['clientEmail'] === 'string' ? input['clientEmail'].trim() : undefined
           const clientPhone =
-            typeof input['clientPhone'] === 'string' ? input['clientPhone'] : undefined
-          const details = typeof input['details'] === 'string' ? input['details'] : ''
+            typeof input['clientPhone'] === 'string' ? input['clientPhone'].trim() : undefined
+          const rawDetails = typeof input['details'] === 'string' ? input['details'] : ''
+
+          const detailsCheck = inspectUserMessage(rawDetails)
+          if (!detailsCheck.allowed) {
+            throw new Error('Automatización bloqueada por detección de payload no seguro.')
+          }
+          const details = detailsCheck.sanitizedText.slice(0, 300)
           const ticketId = `EXE-N8N-${Date.now().toString(36).toUpperCase().slice(-5)}`
 
           const dispatchResult = await dispatchN8nEvent({
@@ -125,22 +176,20 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
       }
 
       const latencyMs = Math.round(performance.now() - started)
-      if (def) {
-        await runtime.audit.recordToolCall({
-          runId: runtime.runId,
-          toolName,
-          input,
-          output:
-            typeof output === 'object' && output !== null
-              ? (output as Record<string, unknown>)
-              : { value: output },
-          status: 'executed',
-          latencyMs,
-          error: null,
-          userId: runtime.userContext.userId,
-          tenantId: runtime.userContext.tenantId,
-        })
-      }
+      await runtime.audit.recordToolCall({
+        runId: runtime.runId,
+        toolName,
+        input,
+        output:
+          typeof output === 'object' && output !== null
+            ? (output as Record<string, unknown>)
+            : { value: output },
+        status: 'executed',
+        latencyMs,
+        error: null,
+        userId: runtime.userContext.userId,
+        tenantId: runtime.userContext.tenantId,
+      })
       runtime.onExecute?.({ toolName, latencyMs, ok: true })
       return output
     } catch (err: unknown) {
@@ -161,7 +210,7 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
     }
   }
 
-  return {
+  const allCandidates: ExecutableToolMap = {
     createTicket: {
       description:
         'Registra una solicitud de cotización/contacto y devuelve un identificador EXE-CHT-XXXXX.',
@@ -220,4 +269,17 @@ export function buildExecutableTools(runtime: ToolRuntime): ExecutableToolMap {
         executeWithAudit('triggerN8nAutomation', input as unknown as Record<string, unknown>),
     },
   }
+
+  // Filtrado de mínimo privilegio (Least Privilege):
+  // Solo se exponen al modelo las herramientas autorizadas para el rol y estado de sesión actual.
+  const authorizedTools: ExecutableToolMap = {}
+  for (const [toolName, toolEntry] of Object.entries(allCandidates)) {
+    const def = getToolDefinition(toolName)
+    if (!def) continue
+    if (!canRoleUseTool(def, runtime.userContext.role, isAuthenticated)) continue
+    if (def.tenantScoped && !runtime.userContext.tenantId) continue
+    authorizedTools[toolName] = toolEntry
+  }
+
+  return authorizedTools
 }

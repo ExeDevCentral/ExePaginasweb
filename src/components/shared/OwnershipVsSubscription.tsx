@@ -1,568 +1,557 @@
 /**
- * © 2025 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarría — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
+ *
+ * OwnershipVsSubscription:
+ * Estudio de Mini-Auditoría IA Interactiva con Gráfico SVG de Curvas en Tiempo Real (36 meses),
+ * Deslizador Continuo de Ventas (BigInt), Simulador Visual de Apagón y Diagnóstico Humano Simple.
  */
 'use client'
 
 import React from 'react'
-import { motion, useInView, useReducedMotion } from 'framer-motion'
-import { useTranslation } from 'react-i18next'
 import {
-  CyberRealPropertyShield,
-  CyberCheckMark,
-  CyberCrossMark,
-  CyberInsignia,
-  CyberRefreshIcon,
-  CyberTechCode,
-  CyberPowerSwitch,
-  CyberWarningHazard,
-} from '@/components/ui/MagnificentIcons'
+  Sparkles,
+  ShoppingBag,
+  CalendarCheck,
+  Lightbulb,
+  ShieldCheck,
+  AlertTriangle,
+  Lock,
+  Unlock,
+  TrendingUp,
+  Zap,
+  Terminal,
+  ArrowRight,
+  CheckCircle2,
+  XCircle,
+} from 'lucide-react'
+import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
+import { trackEvent } from '@/core/analytics/trackEvent'
+import { CyberInsignia } from '@/components/ui/MagnificentIcons'
 
-/* ============================================================
-   Terminal de liberación del código
-   ============================================================ */
 const AUDIT_TITLE =
   'Software Diseñado Alrededor de Tu Negocio: ¿Cuándo Conviene Alquilar y Cuándo Ser Dueño?'
 
-type TermMode = 'tuyo' | 'suspendido'
+type DecisionPhase = 'experimental' | 'escala'
+type BusinessScenarioId = 'experimental' | 'ecommerce' | 'servicios'
+type AxisId = 'codigo' | 'datos' | 'comisiones' | 'continuidad'
 
-type TermPart = { text: string; strike?: boolean }
-type TermLine = {
-  kind: 'cmd' | 'ok' | 'err' | 'warn' | 'html'
-  parts: TermPart[]
-  glitch?: boolean
+interface BusinessScenario {
+  id: BusinessScenarioId
+  phase: DecisionPhase
+  badge: string
+  shortLabel: string
+  title: string
+  subtitle: string
+  defaultMonthlyArs: number
+  defaultFeePct: bigint
+  aiVerdictTag: string
+  aiHeadline: string
+  aiExplanation: string
+  aiRecommendation: string
 }
 
-function textOfLine(line: TermLine): string {
-  return line.parts.map((p) => p.text).join('')
+const SCENARIOS: readonly [BusinessScenario, ...BusinessScenario[]] = [
+  {
+    id: 'experimental',
+    phase: 'experimental',
+    badge: 'FASE EXPERIMENTAL',
+    shortLabel: 'Recién Empiezo',
+    title: 'Estoy probando una idea desde cero',
+    subtitle: 'Todavía no tengo ventas fijas',
+    defaultMonthlyArs: 1_000_000,
+    defaultFeePct: 3n,
+    aiVerdictTag: 'HONESTIDAD BRUTAL · RECOMENDACIÓN IA',
+    aiHeadline: 'Todavía NO inviertas en un sistema a medida: alquilá algo básico para probar',
+    aiExplanation:
+      'Si estás experimentando y aún no validaste que tu producto se vende todos los meses, usar una plantilla económica por 3 a 6 meses es la decisión financiera correcta.',
+    aiRecommendation:
+      'Validá tus primeras 30 ventas con gasto mínimo. Cuando la comisión empiece a doler, pasate a código propio.',
+  },
+  {
+    id: 'ecommerce',
+    phase: 'escala',
+    badge: 'FASE ESCALA · VENTAS ACTIVAS',
+    shortLabel: 'Vendo Productos',
+    title: 'Ya tengo tienda o catálogo con ventas',
+    subtitle: 'Me descuentan comisión por cada venta',
+    defaultMonthlyArs: 5_000_000,
+    defaultFeePct: 5n,
+    aiVerdictTag: 'ALERTA IA · FUGA DE GANANCIA DETECTADA',
+    aiHeadline: 'Pagar alquiler + porcentaje por cada venta te está comiendo un sueldo al año',
+    aiExplanation:
+      'Cuando tu negocio ya vende, el alquiler con comisión funciona como un socio silencioso que se lleva entre el 3% y el 10% de tu esfuerzo para siempre. Con un sistema propio pagás una sola vez y el 100% de cada venta va a tu cuenta.',
+    aiRecommendation:
+      'Pasar a tienda propia elimina el 100% de comisiones por venta desde el primer día.',
+  },
+  {
+    id: 'servicios',
+    phase: 'escala',
+    badge: 'FASE ESCALA · SERVICIOS & B2B',
+    shortLabel: 'Servicios / Turnos / Empresa',
+    title: 'Vendo servicios, turnos o atención profesional',
+    subtitle: 'Quiero velocidad, prestigio y cero cuotas',
+    defaultMonthlyArs: 8_000_000,
+    defaultFeePct: 5n,
+    aiVerdictTag: 'DIAGNÓSTICO IA · ACTIVO DIGITAL PROPIO',
+    aiHeadline: 'Tu marca necesita un activo propio que nadie te pueda suspender ni limitar',
+    aiExplanation:
+      'Las plataformas alquiladas te encasillan en plantillas lentas e iguales a las de tu competencia, y retienen tu base de clientes. Con arquitectura propia tu web vuela en celulares y es 100% tuya de por vida.',
+    aiRecommendation:
+      'Construí un sistema propio con base de datos y código a tu nombre, sin alquileres eternos.',
+  },
+] as const
+
+interface QuestionPillar {
+  id: AxisId
+  number: string
+  question: string
+  axisTitle: string
+  rentPain: string
+  ownGain: string
+  rentControlPct: number
+  terminalCmd: string
+  terminalRentOut: string
+  terminalOwnOut: string
 }
 
-function lineKindClass(kind: TermLine['kind']): string {
-  switch (kind) {
-    case 'cmd':
-      return 'text-text-mid'
-    case 'ok':
-      return 'text-emerald-400'
-    case 'err':
-      return 'text-rose-400'
-    case 'warn':
-      return 'text-amber-300/90'
-    case 'html':
-      return 'text-rose-300/90'
+const QUESTION_PILLARS: readonly [QuestionPillar, ...QuestionPillar[]] = [
+  {
+    id: 'codigo',
+    number: '01',
+    question: '¿De quién es la web cuando terminás de pagarla?',
+    axisTitle: 'Propiedad del Código Fuente',
+    rentPain:
+      'En plataformas de alquiler nunca sos dueño de nada. Aunque pagues durante 5 años, el día que dejás de pagar te quedás con las manos vacías.',
+    ownGain:
+      'Con ExePaginasWeb recibís la escritura digital completa (Repositorio GitHub a tu nombre). Lo pagás una vez y es propiedad de tu negocio para siempre.',
+    rentControlPct: 0,
+    terminalCmd: '$ git clone https://github.com/tu-empresa/sistema-web.git',
+    terminalRentOut: '✗ 402 Payment Required · Código cerrado cautivo en servidor ajeno',
+    terminalOwnOut: '✓ Repositorio transferido a tu nombre — 100% propiedad legal y técnica',
+  },
+  {
+    id: 'comisiones',
+    number: '02',
+    question: '¿Cuánto me descuentan cada vez que vendo algo?',
+    axisTitle: 'Comisiones de Venta y Pasarelas',
+    rentPain:
+      'Te cobran dos veces: la cuota mensual fija más un peaje del 3% al 10% sobre cada venta que hacés. Cuanto mejor te va, más plata te sacan.',
+    ownGain:
+      '0% de comisiones por venta para siempre. Tus cobros de MercadoPago, transferencia o tarjeta entran limpios y directo a tu banco.',
+    rentControlPct: 10,
+    terminalCmd: '$ audit-checkout --commission-fee',
+    terminalRentOut: '✗ Descuento automático del 3% al 10% sobre cada ticket de venta',
+    terminalOwnOut: '✓ 0.0% comisión ExePaginasWeb · 100% del dinero directo a tu cuenta',
+  },
+  {
+    id: 'datos',
+    number: '03',
+    question: '¿Mis clientes e historial quedan en mis manos?',
+    axisTitle: 'Base de Datos y Tus Clientes',
+    rentPain:
+      'Tus clientes, pedidos y métricas están encerrados en el sistema de ellos. Si querés mudarte, bloquean o recortan la exportación.',
+    ownGain:
+      'Base de datos PostgreSQL propia y dedicada. Todos tus clientes, teléfonos, ventas y estadísticas están bajo tu llave exclusiva.',
+    rentControlPct: 15,
+    terminalCmd: '$ pg_dump --schema=public -- verify-ownership',
+    terminalRentOut: '✗ Acceso denegado: Base de datos compartida bajo llave del proveedor',
+    terminalOwnOut: '✓ PostgreSQL dedicada (Supabase) con acceso total y backups tuyos',
+  },
+  {
+    id: 'continuidad',
+    number: '04',
+    question: '¿Me pueden apagar la página de un día para el otro?',
+    axisTitle: 'Continuidad Operativa',
+    rentPain:
+      'Si vence una tarjeta o aumentan la cuota en dólares y no pagás, un robot suspende tu tienda en 24 horas y perdés todas las ventas.',
+    ownGain:
+      'Nadie tiene un botón para apagarte el negocio. Tu web sigue online 24/7 sin cuotas extorsivas ni aumentos sorpresa.',
+    rentControlPct: 20,
+    terminalCmd: '$ curl -I https://tu-negocio.com/status',
+    terminalRentOut: '✗ HTTP 402 Payment Required — Tienda suspendida automáticamente',
+    terminalOwnOut: '✓ HTTP 200 OK — Sistema 100% activo sin vencimientos ni bloqueos',
+  },
+] as const
+
+const QUICK_REVENUE_STOPS = [
+  { label: '$1M / mes', value: 1_000_000 },
+  { label: '$5M / mes', value: 5_000_000 },
+  { label: '$15M / mes', value: 15_000_000 },
+  { label: '$30M / mes', value: 30_000_000 },
+] as const
+
+const FEE_OPTIONS: readonly { label: string; pct: bigint }[] = [
+  { label: '3% comisión', pct: 3n },
+  { label: '5% comisión', pct: 5n },
+  { label: '10% comisión', pct: 10n },
+] as const
+
+/**
+ * Cálculo financiero exacto con BigInt (Principio 3 de Ingeniería Real).
+ */
+function calculateAuditNumbers(monthlySalesArs: number, feePct: bigint) {
+  const monthlySales = BigInt(Math.round(monthlySalesArs))
+  const fixedMonthlyRent = 60_000n // Canon base promedio SaaS + apps obligatorias
+  const monthlyCommission = (monthlySales * feePct) / 100n
+  const monthlyDrain = monthlyCommission + fixedMonthlyRent
+  const drainYear1 = monthlyDrain * 12n
+  const drainYear2 = monthlyDrain * 24n
+  const drainYear3 = monthlyDrain * 36n
+
+  const fmt = new Intl.NumberFormat('es-AR')
+  return {
+    monthlyDrainNum: Number(monthlyDrain),
+    drainYear1Num: Number(drainYear1),
+    drainYear2Num: Number(drainYear2),
+    drainYear3Num: Number(drainYear3),
+    monthlyDrainFormatted: `$${fmt.format(monthlyDrain)}`,
+    drainYear1Formatted: `$${fmt.format(drainYear1)}`,
+    drainYear2Formatted: `$${fmt.format(drainYear2)}`,
+    drainYear3Formatted: `$${fmt.format(drainYear3)}`,
+    monthlySalesFormatted: `$${fmt.format(monthlySales)}`,
   }
 }
 
-function buildLines(t: (k: string, f: string) => string, mode: TermMode): TermLine[] {
-  if (mode === 'suspendido') {
-    return [
-      { kind: 'cmd', parts: [{ text: '$ curl https://plataforma-alquiler.com/tu-sitio' }] },
-      {
-        kind: 'err',
-        parts: [
-          { text: t('versus.extra_terminal_b_curl', '✗ 402 Payment Required · Plan cancelado') },
-        ],
-      },
-      { kind: 'cmd', parts: [{ text: '$ ls /codigo-fuente' }] },
-      {
-        kind: 'err',
-        parts: [
-          { text: t('versus.extra_terminal_b_ls', 'ls: permission denied (código cautivo)') },
-        ],
-      },
-      { kind: 'cmd', parts: [{ text: '$ exportar-clientes-db' }] },
-      {
-        kind: 'err',
-        parts: [
-          {
-            text: t(
-              'versus.extra_terminal_b_typeerror',
-              '✗ Error: Exportación bloqueada · Acceso suspendido'
-            ),
-          },
-        ],
-        glitch: true,
-      },
-      { kind: 'cmd', parts: [{ text: '$ systemctl status tienda' }] },
-      {
-        kind: 'warn',
-        parts: [
-          {
-            text: t('versus.extra_terminal_b_status', '● inactivo (dead) — 0 ventas posibles'),
-          },
-        ],
-      },
-    ]
-  }
-
-  return [
-    { kind: 'cmd', parts: [{ text: '$ git clone https://github.com/tu-empresa/sistema-web.git' }] },
-    {
-      kind: 'ok',
-      parts: [
-        {
-          text: t(
-            'versus.extra_terminal_out_clone',
-            '✓ Repositorio propio transferido — 100% en tu control'
-          ),
-        },
-      ],
-    },
-    { kind: 'cmd', parts: [{ text: '$ npm run lint && npm test' }] },
-    {
-      kind: 'ok',
-      parts: [
-        {
-          text: t('versus.extra_terminal_out_lint', '✓ 0 errores · Tests de arquitectura pasando'),
-        },
-      ],
-    },
-    { kind: 'cmd', parts: [{ text: '$ npm run deploy' }] },
-    {
-      kind: 'ok',
-      parts: [
-        {
-          text: t(
-            'versus.extra_terminal_out_build',
-            '✓ Despliegue en producción OK · 0 comisiones a terceros'
-          ),
-        },
-      ],
-    },
-    { kind: 'cmd', parts: [{ text: '$ cat TITULARIDAD_2025.txt' }] },
-    {
-      kind: 'ok',
-      parts: [
-        {
-          text: t(
-            'versus.extra_terminal_out_cat',
-            '→ Código TypeScript + Base PostgreSQL dedicada. 100% TUYO.'
-          ),
-        },
-      ],
-    },
-    { kind: 'cmd', parts: [{ text: '$ systemctl status soberania' }] },
-    {
-      kind: 'ok',
-      parts: [
-        {
-          text: t(
-            'versus.extra_terminal_out_status',
-            '● activo (running) — Tu negocio online sin alquileres de por vida'
-          ),
-        },
-      ],
-    },
-  ]
-}
-
-const AXIS_CLI_PROBES: Record<number, { cmd: string; tuyoOut: string; suspendidoOut: string }> = {
-  0: {
-    cmd: '$ git remote -v && stat LICENSE_OWNER',
-    tuyoOut: '✓ origin github.com/tu-empresa/core (Propiedad 100% transferida)',
-    suspendidoOut: '✗ fatal: repository locked by SaaS vendor (Código cautivo)',
-  },
-  1: {
-    cmd: '$ pg_dump --schema-only postgresql://tu-db-dedicada',
-    tuyoOut: '✓ PostgreSQL Dedicado · Acceso root y backups diarios en tu poder',
-    suspendidoOut: '✗ ERROR 403: Base de datos compartida bloqueada para exportación',
-  },
-  2: {
-    cmd: '$ audit-fees --gateway=direct-bank --sales=100%',
-    tuyoOut: '✓ Retención por venta: 0.00% · Liquidación directa a tu CBU/Cuenta',
-    suspendidoOut: '✗ Descuento automático: -5% a -12% por cada venta + canon mensual',
-  },
-  3: {
-    cmd: '$ uptime --sla-check &&healthcheck --autonomous',
-    tuyoOut: '✓ Sistema 100% online y perpetuo · Sin vencimientos ni cortes',
-    suspendidoOut: '✗ HTTP 402 Payment Required · Tienda apagada por falta de canon',
-  },
-}
-
-function CodeLiberationTerminal({
-  mode,
-  onToggleMode,
-  selectedAxis,
+/* ============================================================
+   Gráfico Central Impactante: Curvas Comparativas 36 Meses +
+   Simulador Visual de "Apagón por Falta de Pago"
+   ============================================================ */
+function WealthGapVisualChart({
+  monthlySalesArs,
+  feePct,
+  stressCutActive,
+  onToggleStressCut,
+  isExperimental,
 }: {
-  mode: TermMode
-  onToggleMode: (m: TermMode) => void
-  selectedAxis: number
+  monthlySalesArs: number
+  feePct: bigint
+  stressCutActive: boolean
+  onToggleStressCut: () => void
+  isExperimental: boolean
 }) {
-  const { t } = useTranslation()
-  const ref = React.useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, amount: 0.25 })
-  const reduceMotion = useReducedMotion()
+  const stats = calculateAuditNumbers(monthlySalesArs, feePct)
 
-  const [phase, setPhase] = React.useState<'typing' | 'done'>('typing')
-  const [chars, setChars] = React.useState(0)
-  const [replayKey, setReplayKey] = React.useState(0)
-  const intervalRef = React.useRef<number | null>(null)
+  // Escala visual en banda dedicada superior (Y entre 34 y 114) para que NUNCA toque la línea verde (Y=136)
+  const maxVisualDrain = 38_000_000
+  const rawRatio = Math.min(1, Math.max(0.08, stats.drainYear3Num / maxVisualDrain))
+  const ratio = Math.min(0.96, Math.max(0.52, Math.pow(rawRatio, 0.38)))
 
-  const lines = React.useMemo(() => buildLines(t, mode), [t, mode])
-  const full = React.useMemo(() => lines.map((l) => textOfLine(l)).join('\n'), [lines])
+  // Bandas horizontales compactas y separadas matemáticamente (ViewBox 640 x 182):
+  // - Banda Curva Roja (Fuga Alquiler): Y = 34 a 114
+  // - Banda Línea Verde (ExePaginasWeb): Y = 136
+  // - Banda Eje Temporal (HOY..AÑO 3): Y = 170
+  const baseY = 136
+  const startRedY = 114
+  const endRedY = Math.round(112 - ratio * 76) // Entre 36 y 72
+  const mid12Y = Math.round(startRedY - (startRedY - endRedY) * 0.36)
+  const mid24Y = Math.round(startRedY - (startRedY - endRedY) * 0.7)
 
-  React.useEffect(() => {
-    if (!inView) return
-    setChars(0)
-    setPhase('typing')
+  const redCurvePath = stressCutActive
+    ? `M 60 ${startRedY} Q 150 ${(startRedY + mid12Y) / 2}, 235 ${mid12Y} T 410 ${mid24Y} L 428 ${baseY} L 580 ${baseY}`
+    : `M 60 ${startRedY} C 175 ${mid12Y + 6}, 340 ${mid24Y}, 580 ${endRedY}`
 
-    if (reduceMotion === true) {
-      setChars(full.length)
-      setPhase('done')
-      return
-    }
-
-    const total = full.length
-    if (total === 0) {
-      setPhase('done')
-      return
-    }
-
-    const tickMs = 25
-    const totalTicks = Math.max(1, Math.round(1200 / tickMs))
-    const step = Math.max(1, Math.ceil(total / totalTicks))
-    let remaining = total
-
-    intervalRef.current = window.setInterval(() => {
-      remaining = Math.max(0, remaining - step)
-      setChars(total - remaining)
-      if (remaining <= 0) {
-        if (intervalRef.current) window.clearInterval(intervalRef.current)
-        intervalRef.current = null
-        setPhase('done')
-      }
-    }, tickMs)
-
-    return () => {
-      if (intervalRef.current) {
-        window.clearInterval(intervalRef.current)
-        intervalRef.current = null
-      }
-    }
-  }, [inView, full, replayKey, reduceMotion])
-
-  const completeNow = React.useCallback(() => {
-    if (intervalRef.current) {
-      window.clearInterval(intervalRef.current)
-      intervalRef.current = null
-    }
-    setChars(full.length)
-    setPhase('done')
-  }, [full.length])
-
-  const handleConsoleClick = () => {
-    if (reduceMotion === true) return
-    if (phase === 'typing') {
-      completeNow()
-    } else {
-      setReplayKey((k) => k + 1)
-    }
-  }
-
-  let remaining = chars
-  const rows = lines.map((line) => {
-    const text = textOfLine(line)
-    const take = Math.max(0, Math.min(remaining, text.length))
-    remaining -= take
-    return { line, take }
-  })
-
-  const isSuspendido = mode === 'suspendido'
-  const cursorClass = isSuspendido ? 'bg-rose-400' : 'bg-emerald-400'
-  const activeProbe = AXIS_CLI_PROBES[selectedAxis] ?? AXIS_CLI_PROBES[0]!
+  const areaFillPath = stressCutActive
+    ? `M 60 ${baseY} L 60 ${startRedY} Q 150 ${(startRedY + mid12Y) / 2}, 235 ${mid12Y} T 410 ${mid24Y} L 428 ${baseY} Z`
+    : `M 60 ${baseY} L 60 ${startRedY} C 175 ${mid12Y + 6}, 340 ${mid24Y}, 580 ${endRedY} L 580 ${baseY} Z`
 
   return (
-    <div
-      ref={ref}
-      className="relative h-full flex flex-col justify-between rounded-2xl bg-[#03060f] border border-white/10 shadow-2xl overflow-hidden"
-    >
-      {/* Barra superior de la consola */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-[#070b16] border-b border-white/10 font-mono text-xs">
-        <div className="flex items-center gap-2">
-          <span className="flex gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
-          </span>
-          <span className="text-slate-400 text-[11px] ml-2">bash — terminal@exepaginasweb:~</span>
-        </div>
-
-        {/* Selector de modo integrado en la barra */}
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => onToggleMode('tuyo')}
-            className={`px-2.5 py-1 rounded text-[11px] font-bold font-mono transition-all cursor-pointer ${
-              !isSuspendido
-                ? 'bg-emerald-500 text-slate-950 font-extrabold shadow-sm shadow-emerald-500/30'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            [100% TUYO]
-          </button>
-          <button
-            type="button"
-            onClick={() => onToggleMode('suspendido')}
-            className={`px-2.5 py-1 rounded text-[11px] font-bold font-mono transition-all cursor-pointer ${
-              isSuspendido
-                ? 'bg-rose-600 text-white font-extrabold shadow-sm shadow-rose-600/30'
-                : 'text-slate-400 hover:text-rose-400'
-            }`}
-          >
-            [SUSPENDIDO]
-          </button>
-        </div>
-      </div>
-
-      {/* Salida del terminal */}
-      <div
-        role="button"
-        tabIndex={0}
-        aria-label="Ejecutar comparativa entre propiedad y suscripción en terminal interactivo"
-        onClick={handleConsoleClick}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            handleConsoleClick()
-          }
-        }}
-        className="flex-1 p-4 sm:p-5 font-mono text-xs sm:text-[13px] leading-relaxed select-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500/40 flex flex-col justify-between"
-      >
+    <div className="relative rounded-3xl bg-white dark:bg-[#070d1b] border border-slate-200/90 dark:border-white/10 shadow-xl overflow-hidden p-5 sm:p-7">
+      {/* Cabecera del Gráfico con Indicadores Grandes y Dóciles */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-slate-200/80 dark:border-white/10">
         <div>
-          {rows.map(({ line, take }, i) => {
-            const isLast = i === rows.length - 1
-            const segments: React.ReactNode[] = []
-            let budget = take
-            line.parts.forEach((part, pi) => {
-              if (budget <= 0) return
-              const shown = part.text.slice(0, budget)
-              budget -= shown.length
-              if (!shown) return
-              segments.push(
-                <span
-                  key={`${pi}-${shown.length}`}
-                  className={part.strike ? 'line-through decoration-rose-400/70' : undefined}
-                >
-                  {shown}
-                </span>
-              )
-            })
-            return (
-              <div key={i} className={line.glitch ? 'animate-pulse' : undefined}>
-                <span className={lineKindClass(line.kind)}>
-                  {segments}
-                  {isLast ? (
-                    <span
-                      className={`inline-block w-2 h-3.5 align-middle ml-1 ${cursorClass} ${
-                        reduceMotion === true ? '' : 'animate-pulse'
-                      }`}
-                    />
-                  ) : null}
-                </span>
-              </div>
-            )
-          })}
-
-          {/* Sonda interactiva sincronizada con el Eje seleccionado en la Matriz */}
-          <div className="mt-3 pt-2.5 border-t border-white/10 text-[11px] space-y-1">
-            <div className="text-cyan-400 font-bold">
-              [EJE 0{selectedAxis + 1} ACTIVO] {activeProbe.cmd}
-            </div>
-            <div
-              className={
-                isSuspendido ? 'text-rose-400 font-semibold' : 'text-emerald-400 font-semibold'
-              }
-            >
-              {isSuspendido ? activeProbe.suspendidoOut : activeProbe.tuyoOut}
-            </div>
+          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">
+            <TrendingUp className="w-4 h-4" />
+            <span>Proyección Visual en Tiempo Real (Próximos 3 Años)</span>
           </div>
+          <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            {stressCutActive
+              ? '⚠️ Simulación Activa: Qué pasa si un mes dejás de pagar la cuota'
+              : '¿Adónde va el dinero de tus ventas mes a mes?'}
+          </h3>
         </div>
 
-        {phase === 'done' && (
-          <div className="flex items-center justify-between gap-3 mt-3 pt-2.5 border-t border-white/5 text-[11px] text-slate-500">
-            <span>
-              {isSuspendido
-                ? '✗ Simulación de alquiler sin pago — click para reintentar'
-                : '✓ Simulación de activo propio — click para reiniciar'}
+        {/* Botón Interactivo de Prueba de Estrés */}
+        <button
+          type="button"
+          onClick={onToggleStressCut}
+          className={`inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer shrink-0 border ${
+            stressCutActive
+              ? 'bg-rose-600 text-white border-rose-500 shadow-lg shadow-rose-600/25'
+              : 'bg-rose-50 dark:bg-rose-950/35 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-500/40 hover:bg-rose-100 dark:hover:bg-rose-950/60'
+          }`}
+        >
+          {stressCutActive ? (
+            <>
+              <Unlock className="w-4 h-4" />
+              <span>Volver a proyección normal</span>
+            </>
+          ) : (
+            <>
+              <Lock className="w-4 h-4 text-rose-500" />
+              <span>Simular: ¿Y si dejo de pagar 1 mes?</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* 2 Contadores Gigantes Cara a Cara */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-5">
+        <div className="relative rounded-2xl p-4 sm:p-5 bg-rose-50/80 dark:bg-rose-950/25 border border-rose-200 dark:border-rose-500/30">
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <span className="text-xs font-bold uppercase tracking-wide text-rose-700 dark:text-rose-300 flex items-center gap-1.5">
+              <XCircle className="w-4 h-4 text-rose-500 shrink-0" />
+              <span>Si Alquilás (Shopify / Tiendanube)</span>
             </span>
-            <CyberRefreshIcon size={13} className="text-slate-400 animate-spin" />
+            <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-700 dark:text-rose-300">
+              Peaje Eterno
+            </span>
           </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-/* ============================================================
-   Matriz Táctica de Ingeniería Real (4 Ejes Interactivos)
-   ============================================================ */
-function TacticalEngineeringMatrix({
-  selectedAxis,
-  onSelectAxis,
-}: {
-  selectedAxis: number
-  onSelectAxis: (idx: number) => void
-}) {
-  const rows = [
-    {
-      axis: 'Propiedad del Código Fuente',
-      rental:
-        'Código cerrado en servidores ajenos. Si dejás de pagar, tu inversión se pierde al 100%.',
-      exepaginas:
-        'Repositorio en GitHub con control de versiones. Código TypeScript/Next.js 100% de tu propiedad.',
-    },
-    {
-      axis: 'Base de Datos y Tus Clientes',
-      rental: 'Base de datos compartida y cautiva bajo APIs propietarias con límites estrictos.',
-      exepaginas:
-        'PostgreSQL dedicada (Supabase). Tenés acceso root, backups automáticos y control total.',
-    },
-    {
-      axis: 'Comisiones de Venta y Pasarelas',
-      rental:
-        'Impuesto adicional del 2% al 15% sobre tus ventas brutas además de la pasarela de pago.',
-      exepaginas:
-        '0% de comisiones extras para siempre. Tus cobros van directo desde la pasarela a tu banco.',
-    },
-    {
-      axis: 'Continuidad Operativa',
-      rental:
-        'Si no pagás la cuota mensual, tu tienda se suspende en 24 horas y tus clientes no compran.',
-      exepaginas:
-        'Tu sistema sigue 100% online en tu infraestructura, sin cuotas extorsivas de alquiler.',
-    },
-  ]
-
-  return (
-    <div
-      data-tactical-matrix="true"
-      className="h-full rounded-2xl bg-white/95 dark:bg-[#060b14]/90 border border-slate-200/90 dark:border-cyan-500/30 p-4 sm:p-6 shadow-[0_14px_36px_-10px_rgba(6,182,212,0.12),0_4px_16px_rgba(0,0,0,0.02)] backdrop-blur-xl relative overflow-hidden flex flex-col justify-between"
-    >
-      {/* Haz láser holográfico superior de 1px */}
-      <div className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-cyan-500/75 to-transparent" />
-
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-slate-200/80 dark:border-white/10 font-mono text-[11px]">
-        <div className="flex items-center gap-2 text-cyan-700 dark:text-cyan-400 font-bold uppercase tracking-wider">
-          <CyberTechCode size={14} className="text-cyan-600 dark:text-cyan-400" />
-          <span>[MATRIZ TÁCTICA // 4 EJES DE INGENIERÍA]</span>
-        </div>
-        <span className="text-cyan-700 dark:text-cyan-300 text-[10px]">
-          ⚡ TOCÁ UN EJE PARA AUDITAR EN TERMINAL
-        </span>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-slate-200/80 dark:border-white/10 font-mono text-[11px] uppercase tracking-wider">
-              <th className="py-2.5 px-2.5 text-slate-600 dark:text-slate-400 w-[26%]">
-                Eje Técnico
-              </th>
-              <th className="py-2.5 px-2.5 text-rose-700 dark:text-rose-400 w-[37%] font-bold">
-                Plataforma Alquilada (SaaS)
-              </th>
-              <th className="py-2.5 px-2.5 text-emerald-700 dark:text-emerald-400 w-[37%] font-bold">
-                ExePaginasWeb (Propiedad Real)
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-200/80 dark:divide-white/5 text-xs">
-            {rows.map((row, idx) => {
-              const isSelected = selectedAxis === idx
-              return (
-                <tr
-                  key={idx}
-                  onClick={() => onSelectAxis(idx)}
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      onSelectAxis(idx)
-                    }
-                  }}
-                  className={`cursor-pointer transition-colors ${
-                    isSelected
-                      ? 'bg-cyan-50/90 dark:bg-cyan-500/10 ring-1 ring-inset ring-cyan-500/30'
-                      : 'hover:bg-slate-50/80 dark:hover:bg-white/5'
-                  }`}
-                >
-                  <td className="py-3 px-2.5 font-mono font-bold text-slate-900 dark:text-white align-top">
-                    <span className="text-cyan-700 dark:text-cyan-400 mr-1.5 text-[10px]">
-                      [0{idx + 1}]
-                    </span>
-                    {row.axis}
-                  </td>
-                  <td className="py-3 px-2.5 text-rose-900 dark:text-rose-200/80 align-top leading-relaxed">
-                    <div className="flex items-start gap-1.5">
-                      <CyberCrossMark
-                        size={13}
-                        className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5"
-                      />
-                      <span>{row.rental}</span>
-                    </div>
-                  </td>
-                  <td className="py-3 px-2.5 text-emerald-950 dark:text-emerald-200/90 align-top leading-relaxed font-medium">
-                    <div className="flex items-start gap-1.5">
-                      <CyberCheckMark
-                        size={13}
-                        className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5"
-                      />
-                      <span>{row.exepaginas}</span>
-                    </div>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
-}
-
-/* ============================================================
-   Sello Notarial Criptográfico de Autoría Directa (Exequiel Echevarria 2025)
-   ============================================================ */
-function NotarialAuthorshipSeal() {
-  return (
-    <div
-      data-notarial-seal="true"
-      className="p-5 sm:p-6 rounded-2xl bg-white/95 dark:bg-[#030712]/90 border border-emerald-500/40 backdrop-blur-xl relative overflow-hidden shadow-[0_14px_36px_-10px_rgba(16,185,129,0.18),0_4px_16px_rgba(0,0,0,0.02)]"
-    >
-      {/* Haz láser esmeralda superior de 1px */}
-      <div className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-emerald-500/75 to-transparent" />
-
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-4 border-b border-slate-200/80 dark:border-white/10 font-mono text-[11px]">
-        <div className="flex items-center gap-2">
-          <CyberRealPropertyShield size={15} className="text-emerald-600 dark:text-emerald-400" />
-          <span className="text-emerald-700 dark:text-emerald-400 font-bold uppercase tracking-wider">
-            CERTIFICADO DE AUTORÍA DIRECTA // CÓDIGO PROPIO
-          </span>
-        </div>
-        <span className="text-slate-500 dark:text-slate-400 text-[10px]">ORIGEN FORMAL: 2025</span>
-      </div>
-
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="space-y-1.5 max-w-xl">
-          <h4 className="text-base sm:text-lg font-bold font-montserrat text-slate-950 dark:text-white tracking-tight">
-            Autoría Directa de Exequiel Echevarría — Sin Intermediarios
-          </h4>
-          <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
-            ExePaginasWeb (Fundada en 2025): Transferencia de Repositorio GitHub a tu nombre, base
-            PostgreSQL dedicada en Supabase y 0% vendor lock-in.
+          <div className="text-2xl sm:text-3xl font-black font-mono text-rose-600 dark:text-rose-400 tracking-tight my-1">
+            -{stats.drainYear3Formatted}{' '}
+            <span className="text-xs font-bold uppercase">ARS en 3 años</span>
+          </div>
+          <p className="text-xs text-slate-600 dark:text-slate-300">
+            Perdés <strong>{stats.monthlyDrainFormatted}/mes</strong> ({stats.drainYear1Formatted}{' '}
+            al año) en comisiones y cuotas sin ser dueño de nada.
           </p>
         </div>
 
-        <div className="font-mono text-left sm:text-right shrink-0">
-          <div className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
-            EXEQUIEL ECHEVARRÍA
+        <div className="relative rounded-2xl p-4 sm:p-5 bg-emerald-50/80 dark:bg-emerald-950/25 border border-emerald-300 dark:border-emerald-500/35">
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <span className="text-xs font-bold uppercase tracking-wide text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+              <span>Con ExePaginasWeb (1 Solo Pago)</span>
+            </span>
+            <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+              100% Tuyo
+            </span>
           </div>
-          <div className="text-[10px] text-slate-600 dark:text-slate-400">
-            Software & Web Architect
+          <div className="text-2xl sm:text-3xl font-black font-mono text-emerald-600 dark:text-emerald-400 tracking-tight my-1">
+            +{stats.drainYear3Formatted}{' '}
+            <span className="text-xs font-bold uppercase">ARS para vos</span>
           </div>
-          <div className="text-[9px] text-slate-500 mt-1 select-all font-mono">
-            SHA-256: 7e25...d2025
+          <p className="text-xs text-slate-600 dark:text-slate-300">
+            <strong>$0 de comisión por venta</strong> y <strong>$0 de alquiler mensual</strong>.
+            Toda esa ganancia se queda en tu negocio.
+          </p>
+        </div>
+      </div>
+
+      {/* LIENZO SVG PRINCIPAL: Cero Píldoras Superpuestas (Etiquetas HTML arriba + Bandas SVG limpias) */}
+      <div className="relative rounded-2xl bg-slate-950 border border-slate-800 p-4 sm:p-6 overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_75%_25%,rgba(16,185,129,0.12),transparent_60%)] pointer-events-none"
+        />
+
+        {/* Barra superior de estado en HTML Flexbox (Nunca se desborda ni pisa las líneas del gráfico) */}
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-4 mb-2 border-b border-white/10">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-bold">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>✓ ExePaginasWeb: $0 Comisiones · 100% Activo</span>
           </div>
+
+          {stressCutActive ? (
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-rose-600/95 border border-rose-400 text-white text-xs font-mono font-extrabold shadow-lg shadow-rose-600/30">
+              <span>✗ MES 24: DEJÁS DE PAGAR → TIENDA APAGADA (Ventas caen a $0)</span>
+            </div>
+          ) : (
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 text-xs font-mono font-bold">
+              <span className="w-2 h-2 rounded-full bg-rose-500" />
+              <span>Fuga acumulada en Alquiler (3 años): -{stats.drainYear3Formatted}</span>
+            </div>
+          )}
+        </div>
+
+        <svg
+          viewBox="0 0 640 182"
+          className="w-full h-auto overflow-visible select-none"
+          shapeRendering="geometricPrecision"
+          role="img"
+          aria-label="Gráfico comparativo de ahorro entre alquiler de plataforma y propiedad en ExePaginasWeb"
+        >
+          <defs>
+            <linearGradient id="wealthGapFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.36" />
+              <stop offset="100%" stopColor="#10b981" stopOpacity="0.06" />
+            </linearGradient>
+            <linearGradient id="ownLineGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#10b981" />
+            </linearGradient>
+          </defs>
+
+          {/* Líneas guía horizontales suaves */}
+          {[32, 66, 100, 136].map((yPos, idx) => (
+            <line
+              key={idx}
+              x1="60"
+              y1={yPos}
+              x2="580"
+              y2={yPos}
+              stroke="rgba(148,163,184,0.13)"
+              strokeDasharray={idx === 3 ? undefined : '4 4'}
+              strokeWidth="1"
+            />
+          ))}
+
+          {/* Área sombreada entre la curva roja y la base verde */}
+          <path d={areaFillPath} fill="url(#wealthGapFill)" />
+
+          {/* Curva Roja: Fuga acumulada en Alquiler SaaS (Siempre en banda Y = 42..142) */}
+          <path
+            d={redCurvePath}
+            fill="none"
+            stroke="#f43f5e"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
+
+          {/* Línea Verde/Cian: ExePaginasWeb ($0 comisiones) fija en banda Y = 164 */}
+          <line
+            x1="60"
+            y1={baseY}
+            x2="580"
+            y2={baseY}
+            stroke="url(#ownLineGrad)"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+
+          {/* Nodos y valores limpios sobre cada punto de la curva roja (siempre arriba del nodo: cy - 12) */}
+          <circle
+            cx="60"
+            cy={startRedY}
+            r="4.5"
+            className="fill-rose-500 stroke-slate-950"
+            strokeWidth="2"
+          />
+
+          <circle
+            cx="235"
+            cy={mid12Y}
+            r="5"
+            className="fill-rose-500 stroke-slate-950"
+            strokeWidth="2"
+          />
+          <text
+            x="235"
+            y={mid12Y - 12}
+            textAnchor="middle"
+            className="fill-rose-300 text-[11px] font-mono font-bold"
+          >
+            -{stats.drainYear1Formatted}
+          </text>
+
+          <circle
+            cx="410"
+            cy={mid24Y}
+            r="5.5"
+            className="fill-rose-500 stroke-slate-950"
+            strokeWidth="2"
+          />
+          <text
+            x="410"
+            y={mid24Y - 12}
+            textAnchor="middle"
+            className="fill-rose-300 text-[11px] font-mono font-bold"
+          >
+            {stressCutActive ? '✗ CORTE DE SITIO' : `-${stats.drainYear2Formatted}`}
+          </text>
+
+          {!stressCutActive ? (
+            <>
+              <circle
+                cx="580"
+                cy={endRedY}
+                r="7"
+                className="fill-rose-500 stroke-white"
+                strokeWidth="2"
+              />
+              <text
+                x="580"
+                y={endRedY - 14}
+                textAnchor="end"
+                className="fill-rose-400 text-xs font-mono font-extrabold"
+              >
+                -{stats.drainYear3Formatted}
+              </text>
+            </>
+          ) : (
+            <circle
+              cx="428"
+              cy={baseY}
+              r="6"
+              className="fill-rose-600 stroke-white"
+              strokeWidth="2"
+            />
+          )}
+
+          {/* Nodos Esmeralda sobre la base (Y = 164) */}
+          <circle
+            cx="60"
+            cy={baseY}
+            r="4.5"
+            className="fill-cyan-400 stroke-slate-950"
+            strokeWidth="2"
+          />
+          <circle
+            cx="580"
+            cy={baseY}
+            r="7"
+            className="fill-emerald-400 stroke-slate-950"
+            strokeWidth="2"
+          />
+
+          {/* Banda dedicada de Etiquetas de Tiempo (Y = 170, totalmente despejada) */}
+          <text x="60" y="170" className="fill-slate-400 text-[11px] font-mono font-semibold">
+            HOY
+          </text>
+          <text
+            x="235"
+            y="170"
+            textAnchor="middle"
+            className="fill-slate-400 text-[11px] font-mono font-semibold"
+          >
+            AÑO 1
+          </text>
+          <text
+            x="410"
+            y="170"
+            textAnchor="middle"
+            className="fill-slate-400 text-[11px] font-mono font-semibold"
+          >
+            AÑO 2
+          </text>
+          <text
+            x="580"
+            y="170"
+            textAnchor="end"
+            className="fill-emerald-300 text-[11px] font-mono font-bold"
+          >
+            AÑO 3 ($0 COMISIÓN)
+          </text>
+        </svg>
+
+        {/* Pie explicativo debajo del gráfico */}
+        <div className="mt-2 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
+          <div className="flex items-center gap-4">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-3 h-1.5 rounded-full bg-rose-500 inline-block" />
+              <span>Plata perdida en alquiler y comisiones</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-3 h-1.5 rounded-full bg-emerald-400 inline-block" />
+              <span>Propiedad ExePaginasWeb ($0 peaje mensual)</span>
+            </span>
+          </div>
+          {isExperimental && (
+            <span className="text-amber-300 font-medium">
+              💡 En etapa inicial, validá primero tus ventas antes de invertir.
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -570,278 +559,400 @@ function NotarialAuthorshipSeal() {
 }
 
 /* ============================================================
-   Sección Principal
+   Componente Principal: Mini-Auditoría IA Interactiva
+   (Limpia, Dócil de Comprender y Gráficamente Impactante)
    ============================================================ */
-type WorkstationViewMode = 'split' | 'matrix' | 'terminal'
-
-const REVENUE_TIERS = [
-  { id: '2m', label: '$2M ARS/mes', monthlyArs: 2_000_000 },
-  { id: '5m', label: '$5M ARS/mes', monthlyArs: 5_000_000 },
-  { id: '15m', label: '$15M ARS/mes', monthlyArs: 15_000_000 },
-] as const
-
 export const OwnershipVsSubscription: React.FC = () => {
-  const [terminalMode, setTerminalMode] = React.useState<TermMode>('tuyo')
-  const [decisionPhase, setDecisionPhase] = React.useState<'experimental' | 'escala'>('escala')
-  const [selectedAxis, setSelectedAxis] = React.useState<number>(0)
-  const [viewMode, setViewMode] = React.useState<WorkstationViewMode>('split')
-  const [revenueTierIdx, setRevenueTierIdx] = React.useState<number>(1)
+  const [scenarioId, setScenarioId] = React.useState<BusinessScenarioId>('ecommerce')
+  const [monthlySalesArs, setMonthlySalesArs] = React.useState<number>(5_000_000)
+  const [feePct, setFeePct] = React.useState<bigint>(5n)
+  const [stressCutActive, setStressCutActive] = React.useState<boolean>(false)
+  const [selectedAxis, setSelectedAxis] = React.useState<AxisId>('codigo')
+  const [showTechXray, setShowTechXray] = React.useState<boolean>(false)
 
-  const activeTier = REVENUE_TIERS[revenueTierIdx] ?? REVENUE_TIERS[1]!
-  // Cálculo financiero exacto en BigInt (5% comisión promedio SaaS * 12 meses)
-  const annualRetainedBigInt = (BigInt(activeTier.monthlyArs) * 5n * 12n) / 100n
-  const formattedAnnualRetained = Number(annualRetainedBigInt).toLocaleString('es-AR')
+  const currentScenario: BusinessScenario = React.useMemo(
+    () => SCENARIOS.find((s) => s.id === scenarioId) ?? SCENARIOS[0],
+    [scenarioId]
+  )
+
+  const activePillar: QuestionPillar = React.useMemo(
+    () => QUESTION_PILLARS.find((p) => p.id === selectedAxis) ?? QUESTION_PILLARS[0],
+    [selectedAxis]
+  )
+
+  const decisionPhase: DecisionPhase = currentScenario.phase
+  const isExperimental = decisionPhase === 'experimental'
+  const stats = calculateAuditNumbers(monthlySalesArs, feePct)
+
+  const handleSelectScenario = (preset: BusinessScenario) => {
+    setScenarioId(preset.id)
+    setMonthlySalesArs(preset.defaultMonthlyArs)
+    setFeePct(preset.defaultFeePct)
+    setStressCutActive(false)
+    trackEvent('hero_cta_demo_clicked', {
+      source: `ownership_ai_scenario_${preset.id}`,
+    })
+  }
+
+  const whatsappAuditUrl = getWhatsAppUrl(
+    `¡Hola Exequiel! Hice la Mini-Auditoría IA en tu web (${currentScenario.shortLabel}, ventas ~${stats.monthlySalesFormatted}/mes) y quiero cotizar mi propio sistema sin comisiones.`
+  )
 
   return (
     <section
-      id="comparativa"
-      className="scroll-mt-24 py-16 sm:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10"
+      id="arquitectura"
+      aria-labelledby="honest-audit-heading"
+      className="relative py-16 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden select-none"
     >
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_45%_at_25%_50%,color-mix(in_oklab,var(--own-500)_4.5%,transparent),transparent_70%),radial-gradient(55%_45%_at_75%_50%,color-mix(in_oklab,var(--rent-500)_4.5%,transparent),transparent_70%)]"
-        style={{
-          maskImage:
-            'linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)',
-          WebkitMaskImage:
-            'linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)',
-        }}
-      />
-
-      <div className="max-w-[1400px] mx-auto relative z-10">
-        {/* Header editorial asimétrico */}
-        <motion.div
-          className="mb-8 sm:mb-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-        >
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-sm border border-brand/25 bg-brand/10 backdrop-blur-md mb-3 font-mono">
-              <CyberInsignia size={14} className="text-brand dark:text-emerald-400" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand dark:text-emerald-400">
-                AUDITORÍA DE ARQUITECTURA // HONESTIDAD BRUTAL
-              </span>
-            </div>
-
-            <h2 className="text-2xl sm:text-4xl font-semibold font-montserrat tracking-[-0.028em] text-foreground">
-              {AUDIT_TITLE}
-            </h2>
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* ============================================================
+            CABECERA LIMPIA Y CENTRADA (Fácil de leer en 3 segundos)
+           ============================================================ */}
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 dark:bg-cyan-400/10 border border-cyan-500/30 dark:border-cyan-400/30 text-cyan-800 dark:text-cyan-300 text-xs font-bold tracking-wide mb-4">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-500" />
+            <span>MINI-AUDITORÍA HECHA CON IA · HONESTIDAD BRUTAL</span>
           </div>
 
-          <p className="max-w-md text-sm sm:text-base text-muted-foreground leading-relaxed lg:text-right lg:pb-1">
-            Si estás experimentando sin ventas validadas: alquilá Shopify o Wix. No gastes en
-            arquitectura a medida todavía. Pero si tu negocio ya factura y pagar comisiones
-            mensuales drena tu margen: el alquiler es un impuesto silencioso a tu propio
-            crecimiento.
+          <h2
+            id="honest-audit-heading"
+            className="text-2xl sm:text-4xl lg:text-[40px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]"
+          >
+            {AUDIT_TITLE}
+          </h2>
+
+          <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+            Si estás experimentando sin ventas validadas, te decimos la verdad: alquilá algo barato
+            para probar. Pero si tu negocio ya vende, mirá en el gráfico interactivo cuánta plata
+            regalás en alquileres y por qué te conviene ser dueño.
           </p>
-        </motion.div>
+        </div>
 
-        {/* EFECTO 1 & 2: Escáner Holográfico y Telemetría de Retención */}
-        <motion.div
-          data-hologram-scanner="true"
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-8"
-        >
-          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#060b14]/90 border border-slate-300 dark:border-cyan-500/30 shadow-[0_18px_45px_-12px_rgba(15,23,42,0.12)] dark:shadow-[0_0_25px_rgba(6,182,212,0.12)] backdrop-blur-xl relative overflow-hidden">
-            {/* Línea láser de barrido holográfico */}
-            <div className="pointer-events-none absolute inset-x-0 h-0.5 bg-linear-to-r from-transparent via-cyan-500 dark:via-cyan-400 to-transparent animate-pulse opacity-70" />
-
-            <div className="flex items-center justify-between gap-2 mb-3 pb-2.5 border-b border-slate-200 dark:border-white/10 font-mono text-[11px]">
-              <span className="text-cyan-700 dark:text-cyan-400 font-bold tracking-widest uppercase flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-ping inline-block" />
-                [DIAGNÓSTICO // ESCÁNER HOLOGRÁFICO]
-              </span>
-              <span className="text-slate-500 dark:text-slate-400 text-[10px]">
-                VERSIÓN 2026.04
-              </span>
-            </div>
-
-            {/* Selector de fase */}
-            <div className="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-black/60 p-1.5 rounded-xl border border-slate-200 dark:border-white/10 mb-4">
-              <button
-                type="button"
-                onClick={() => setDecisionPhase('experimental')}
-                className={`py-2 px-3 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                  decisionPhase === 'experimental'
-                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 font-extrabold'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
-                }`}
-              >
-                <span>[01 // FASE EXPERIMENTAL]</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setDecisionPhase('escala')}
-                className={`py-2 px-3 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                  decisionPhase === 'escala'
-                    ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/30 font-extrabold'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
-                }`}
-              >
-                <span>[02 // FASE ESCALA]</span>
-              </button>
-            </div>
-
-            {/* Diagnóstico condicional */}
-            {decisionPhase === 'experimental' ? (
-              <div className="text-left p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-500/40 text-amber-950 dark:text-amber-200 text-xs sm:text-sm leading-relaxed mb-4">
-                <div className="font-mono font-bold text-amber-800 dark:text-amber-400 mb-1 flex items-center gap-2">
-                  <CyberWarningHazard size={14} className="text-amber-700 dark:text-amber-400" />
-                  <span>RECOMENDACIÓN HONESTA: ALQUILÁ UNA PLANTILLA</span>
-                </div>
-                <p>
-                  Si todavía no probaste el producto o no sabés si hay demanda real,{' '}
-                  <strong>no inviertas en desarrollo a medida todavía</strong>. Una plantilla de $25
-                  USD/mes en Shopify o Tiendanube es perfecta para validar tus primeras ventas sin
-                  comprometer capital.
-                </p>
-              </div>
-            ) : (
-              <div className="text-left p-4 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-300 dark:border-cyan-500/40 text-slate-800 dark:text-cyan-200 text-xs sm:text-sm leading-relaxed mb-4">
-                <div className="font-mono font-bold text-cyan-800 dark:text-cyan-400 mb-1 flex items-center gap-2">
-                  <CyberPowerSwitch size={14} className="text-cyan-700 dark:text-cyan-400" />
-                  <span>RECOMENDACIÓN ESTRATÉGICA: CONSTRUÍ TU ACTIVO PROPIO</span>
-                </div>
-                <p>
-                  Si ya tenés clientes o facturás mes a mes, pagar comisiones del 2% al 15% más
-                  cuotas obligatorias es un impuesto permanente.{' '}
-                  <strong>ExePaginasWeb te construye un activo 100% tuyo con 0% comisiones</strong>,
-                  base de datos propia y retorno directo a tu bolsillo.
-                </p>
-              </div>
-            )}
-
-            {/* EFECTO 2: Reactor de Telemetría + Simulador BigInt de Retención de Capital */}
-            <div
-              data-energy-reactor="true"
-              data-capital-simulator="true"
-              className="p-3.5 rounded-xl bg-slate-100 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-left space-y-2.5"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono">
-                <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
-                  <span>MONITOR DE RETENCIÓN DE CAPITAL</span>
-                </span>
-                <span className="font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
-                  CAPITAL PROTEGIDO // 0% FUGAS
-                </span>
-              </div>
-
-              <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300/60 dark:border-white/5">
-                <div className="h-full w-full bg-linear-to-r from-emerald-500 via-cyan-400 to-emerald-400 shadow-[0_0_10px_#10b981]" />
-              </div>
-
-              {/* Selector interactivo de volumen de ventas mensual (BigInt) */}
-              <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="text-[11px] text-slate-600 dark:text-slate-400 mr-1">
-                    Simulá tus ventas:
+        {/* ============================================================
+            ESTACIÓN DE AUDITORÍA IA (Diseño Luminoso, Gráfico y Dócil)
+           ============================================================ */}
+        <div data-audit-workstation="true" data-hologram-scanner="true" className="space-y-6">
+          {/* PASO 1 + PASO 2: Controles Humanos Simples (3 Botones Grandes + Slider Suave) */}
+          <div className="rounded-3xl bg-white/90 dark:bg-[#081022]/90 backdrop-blur-xl border border-slate-200/90 dark:border-cyan-500/25 shadow-xl p-5 sm:p-7">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              {/* Selector de Situación actual (3 tarjetas visuales amigables) */}
+              <div className="lg:col-span-7">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 font-black inline-flex items-center justify-center text-[11px]">
+                    1
                   </span>
-                  {REVENUE_TIERS.map((tier, idx) => (
-                    <button
-                      key={tier.id}
-                      type="button"
-                      onClick={() => setRevenueTierIdx(idx)}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer border ${
-                        revenueTierIdx === idx
-                          ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-xs'
-                          : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-white/10 hover:border-emerald-400/50'
-                      }`}
-                    >
-                      {tier.label}
-                    </button>
-                  ))}
+                  <span>Elegí la etapa hoy de tu negocio:</span>
                 </div>
-                <div className="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold">
-                  Ahorrás +${formattedAnnualRetained} ARS/año en comisiones (100% tuyo)
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {SCENARIOS.map((item) => {
+                    const active = item.id === scenarioId
+                    const Icon =
+                      item.id === 'experimental'
+                        ? Lightbulb
+                        : item.id === 'ecommerce'
+                          ? ShoppingBag
+                          : CalendarCheck
+
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => handleSelectScenario(item)}
+                        className={`text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                          active
+                            ? item.phase === 'experimental'
+                              ? 'bg-amber-500/15 border-amber-500 text-slate-900 dark:text-white shadow-md shadow-amber-500/10'
+                              : 'bg-cyan-500/15 border-cyan-500 text-slate-900 dark:text-white shadow-md shadow-cyan-500/15'
+                            : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/25'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <div
+                            className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+                              active
+                                ? item.phase === 'experimental'
+                                  ? 'bg-amber-500 text-slate-950'
+                                  : 'bg-cyan-500 text-slate-950'
+                                : 'bg-slate-200/70 dark:bg-white/10 text-slate-600 dark:text-slate-300'
+                            }`}
+                          >
+                            <Icon className="w-5 h-5" />
+                          </div>
+                          <span className="text-[10px] font-mono font-bold opacity-75">
+                            {item.badge.split('·')[0]}
+                          </span>
+                        </div>
+                        <div>
+                          <div className="text-sm font-extrabold leading-tight">
+                            {item.shortLabel}
+                          </div>
+                          <div className="text-[11px] opacity-80 mt-0.5 leading-snug">
+                            {item.subtitle}
+                          </div>
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Deslizador Interactivo de Ventas Mensuales (BigInt) */}
+              <div
+                data-energy-reactor="true"
+                data-capital-simulator="true"
+                className="lg:col-span-5 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200/90 dark:border-white/10 p-4 sm:p-5"
+              >
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-black inline-flex items-center justify-center text-[11px]">
+                      2
+                    </span>
+                    <span>Tus ventas por mes:</span>
+                  </span>
+                  <span className="text-lg sm:text-xl font-black font-mono text-cyan-600 dark:text-cyan-400">
+                    {stats.monthlySalesFormatted}
+                  </span>
+                </div>
+
+                {/* Slider nativo estilizado para arrastrar suavemente */}
+                <input
+                  type="range"
+                  min={500_000}
+                  max={30_000_000}
+                  step={500_000}
+                  value={monthlySalesArs}
+                  aria-label="Simular facturación mensual en pesos argentinos"
+                  onChange={(e) => setMonthlySalesArs(Number(e.target.value))}
+                  className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500 my-2"
+                />
+
+                {/* Botones rápidos de monto + comisión */}
+                <div className="flex flex-wrap items-center justify-between gap-1.5 mt-2">
+                  <div className="flex flex-wrap gap-1">
+                    {QUICK_REVENUE_STOPS.map((stop) => (
+                      <button
+                        key={stop.value}
+                        type="button"
+                        onClick={() => setMonthlySalesArs(stop.value)}
+                        className={`px-2 py-1 rounded-lg text-[11px] font-mono font-bold transition-all cursor-pointer ${
+                          monthlySalesArs === stop.value
+                            ? 'bg-cyan-500 text-slate-950'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10'
+                        }`}
+                      >
+                        {stop.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    {FEE_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.label}
+                        type="button"
+                        onClick={() => setFeePct(opt.pct)}
+                        className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                          feePct === opt.pct
+                            ? 'bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/40'
+                            : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-3 pt-2.5 border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
+                  <span>CAPITAL PROTEGIDO // 0% FUGAS</span>
+                  <span>Ahorro anual: +{stats.drainYear1Formatted}</span>
                 </div>
               </div>
             </div>
-          </div>
-        </motion.div>
 
-        {/* ESTACIÓN INTERACTIVA UNIFICADA (LIBERA ALTURA VERTICAL EN ESCRITORIO) */}
-        <div data-audit-workstation="true" className="mb-8 space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
-            <span className="text-slate-600 dark:text-slate-400 text-[11px]">
-              Seleccioná cualquier eje técnico para ejecutar la auditoría en vivo:
-            </span>
-            <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-slate-200/80 dark:bg-[#060b14] border border-slate-300 dark:border-white/10">
-              {(
-                [
-                  { id: 'split', label: 'Vista Dividida' },
-                  { id: 'matrix', label: 'Solo Matriz' },
-                  { id: 'terminal', label: 'Solo Terminal' },
-                ] as const
-              ).map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setViewMode(tab.id)}
-                  className={`px-2.5 py-1 rounded text-[11px] font-bold transition-colors cursor-pointer ${
-                    viewMode === tab.id
-                      ? 'bg-cyan-500 text-slate-950'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
+            {/* Banner de Diagnóstico IA Humano (Claro, directo y sin jerga) */}
+            <div
+              className={`mt-5 rounded-2xl p-4 sm:p-5 border flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                isExperimental
+                  ? 'bg-amber-50/90 dark:bg-amber-950/25 border-amber-300 dark:border-amber-500/40'
+                  : 'bg-cyan-50/80 dark:bg-cyan-950/25 border-cyan-300 dark:border-cyan-500/35'
+              }`}
+            >
+              <div className="space-y-1">
+                <div
+                  className={`text-[11px] font-mono font-extrabold uppercase tracking-wider flex items-center gap-1.5 ${
+                    isExperimental
+                      ? 'text-amber-800 dark:text-amber-300'
+                      : 'text-cyan-800 dark:text-cyan-300'
                   }`}
                 >
-                  {tab.label}
-                </button>
-              ))}
+                  {isExperimental ? (
+                    <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
+                  ) : (
+                    <Zap className="w-4 h-4 text-cyan-500 shrink-0" />
+                  )}
+                  <span>{currentScenario.aiVerdictTag}</span>
+                </div>
+                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
+                  {currentScenario.aiHeadline}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {currentScenario.aiExplanation}
+                </p>
+              </div>
             </div>
           </div>
 
-          <div
-            className={
-              viewMode === 'split'
-                ? 'grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch'
-                : 'block'
-            }
-          >
-            {/* 1. Matriz Táctica de 4 Ejes Interactivos */}
-            {(viewMode === 'split' || viewMode === 'matrix') && (
-              <div className={viewMode === 'split' ? 'lg:col-span-7' : 'w-full'}>
-                <TacticalEngineeringMatrix
-                  selectedAxis={selectedAxis}
-                  onSelectAxis={(idx) => setSelectedAxis(idx)}
-                />
-              </div>
-            )}
+          {/* ============================================================
+              EL GRAN GRÁFICO VISUAL INTERACTIVO (Curva 36 Meses + Apagón)
+             ============================================================ */}
+          <WealthGapVisualChart
+            monthlySalesArs={monthlySalesArs}
+            feePct={feePct}
+            stressCutActive={stressCutActive}
+            onToggleStressCut={() => setStressCutActive((prev) => !prev)}
+            isExperimental={isExperimental}
+          />
 
-            {/* 2. Terminal CLI Interactiva de Liberación sincronizada */}
-            {(viewMode === 'split' || viewMode === 'terminal') && (
-              <div className={viewMode === 'split' ? 'lg:col-span-5' : 'w-full'}>
-                <CodeLiberationTerminal
-                  mode={terminalMode}
-                  onToggleMode={setTerminalMode}
-                  selectedAxis={selectedAxis}
-                />
+          {/* ============================================================
+              LAS 4 PREGUNTAS CLAVE EN LENGUAJE SIMPLE (Sin muros de texto)
+             ============================================================ */}
+          <div
+            data-tactical-matrix="true"
+            className="rounded-3xl bg-white/90 dark:bg-[#081022]/90 border border-slate-200/90 dark:border-white/10 shadow-xl p-5 sm:p-7"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
+                  3. Tocá cualquier pregunta para ver la diferencia real
+                </span>
+                <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">
+                  Lo que las plataformas de alquiler no te cuentan en la letra chica
+                </h3>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowTechXray((v) => !v)}
+                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer border self-start ${
+                  showTechXray
+                    ? 'bg-emerald-500 text-slate-950 border-emerald-400'
+                    : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-cyan-400/50'
+                }`}
+              >
+                <Terminal className="w-3.5 h-3.5" />
+                <span>
+                  {showTechXray ? 'Ocultar Rayos X Técnico' : 'Ver Rayos X Técnico (CLI)'}
+                </span>
+              </button>
+            </div>
+
+            {/* 4 Botones de Preguntas Simples */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+              {QUESTION_PILLARS.map((pillar) => {
+                const isSelected = pillar.id === selectedAxis
+                return (
+                  <button
+                    key={pillar.id}
+                    type="button"
+                    onClick={() => setSelectedAxis(pillar.id)}
+                    className={`text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? 'bg-cyan-500/15 border-cyan-500 text-slate-900 dark:text-white shadow-md shadow-cyan-500/10'
+                        : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/25'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-[11px] font-mono font-bold text-cyan-600 dark:text-cyan-400">
+                        PREGUNTA {pillar.number}
+                      </span>
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                        100% Tuyo
+                      </span>
+                    </div>
+                    <div className="text-sm font-extrabold leading-snug mb-1">
+                      {pillar.question}
+                    </div>
+                    <div className="text-[11px] font-mono opacity-70">{pillar.axisTitle}</div>
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Respuesta Visual Cara a Cara de la Pregunta Seleccionada */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="rounded-2xl p-5 bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-500/30">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase text-rose-700 dark:text-rose-300 mb-2">
+                  <XCircle className="w-4 h-4 text-rose-500 shrink-0" />
+                  <span>En Plataforma Alquilada (Tu control: {activePillar.rentControlPct}%)</span>
+                </div>
+                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                  {activePillar.rentPain}
+                </p>
+              </div>
+
+              <div className="rounded-2xl p-5 bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-300 dark:border-emerald-500/35">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase text-emerald-800 dark:text-emerald-300 mb-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <span>Con ExePaginasWeb (Tu control: 100%)</span>
+                </div>
+                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                  {activePillar.ownGain}
+                </p>
+              </div>
+            </div>
+
+            {/* Consola Rayos X Opcional (Solo se despliega si el usuario quiere ver la prueba técnica) */}
+            {showTechXray && (
+              <div className="mt-4 rounded-2xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs space-y-2">
+                <div className="text-slate-400">{activePillar.terminalCmd}</div>
+                <div className="text-rose-400">{activePillar.terminalRentOut}</div>
+                <div className="text-emerald-400 font-bold">{activePillar.terminalOwnOut}</div>
               </div>
             )}
           </div>
         </div>
 
-        {/* 3. Sello Notarial Criptográfico */}
-        <NotarialAuthorshipSeal />
+        {/* ============================================================
+            CIERRE DIRECTO CON SELLO DE AUTORÍA Y ACCIÓN A WHATSAPP
+           ============================================================ */}
+        <div
+          data-notarial-seal="true"
+          className="mt-6 rounded-3xl bg-white/90 dark:bg-[#081022]/90 border border-slate-200/90 dark:border-emerald-500/30 shadow-lg p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+        >
+          <div className="flex items-start gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-6 h-6 text-emerald-500" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400">
+                <span>GARANTÍA DE PROPIEDAD REAL · ORIGEN 2025</span>
+                <CyberInsignia size={13} className="text-cyan-500" />
+              </div>
+              <h3 className="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">
+                Trato directo con Exequiel Echevarría — Sin agencias ni alquileres ocultos
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                Transferencia de Repositorio GitHub a tu nombre, base de datos PostgreSQL dedicada y
+                0% comisiones por venta.
+              </p>
+            </div>
+          </div>
 
-        {/* Extensión natural hacia Propiedad en Hardware Físico (División Linux) */}
-        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3.5 rounded-xl border border-emerald-500/25 bg-emerald-500/[0.05] dark:bg-emerald-500/[0.06] font-mono text-xs">
-          <span className="text-slate-700 dark:text-slate-300 text-center sm:text-left">
-            <strong className="text-emerald-700 dark:text-emerald-400">
-              Soberanía en Hardware:
-            </strong>{' '}
-            También eliminamos licencias y lentitud en tus PCs de mostrador u oficina con Linux POS
-            dedicado.
-          </span>
           <a
-            href="/linux"
-            className="shrink-0 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-slate-950 font-bold transition-colors"
+            href={whatsappAuditUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              trackEvent('contact_whatsapp_clicked', {
+                source: 'ownership_notarial_seal_cta',
+              })
+            }
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-linear-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 text-slate-950 font-extrabold text-xs sm:text-sm tracking-wide transition-all shadow-md shadow-emerald-500/20 shrink-0"
           >
-            Explorar División /linux →
+            <span>Cotizar Mi Propio Sistema</span>
+            <ArrowRight className="w-4 h-4" />
           </a>
         </div>
       </div>

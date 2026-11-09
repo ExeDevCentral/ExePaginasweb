@@ -19,10 +19,16 @@ export default function DesktopLandingView() {
   return (
     <>
       <OptimusScaleHero />
-      <OwnershipVsSubscription />
-      <PortfolioSection featuredOnly />
-      <ContactSection />
-      <Footer />
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_950px]">
+        <OwnershipVsSubscription />
+      </div>
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_900px]">
+        <PortfolioSection featuredOnly />
+      </div>
+      <div className="[content-visibility:auto] [contain-intrinsic-size:1px_850px]">
+        <ContactSection />
+        <Footer />
+      </div>
     </>
   )
 }

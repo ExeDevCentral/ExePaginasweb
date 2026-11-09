@@ -6,8 +6,8 @@
  */
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { motion, AnimatePresence, useInView, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import { Logo } from '@/components/layout/Logo'
 import {
@@ -490,10 +490,37 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
   const [isPaused, setIsPaused] = useState(false)
   const [elapsed, setElapsed] = useState(0)
 
+  const sectionRef = useRef<HTMLElement>(null)
+  const isInView = useInView(sectionRef, { amount: 0.15 })
+  const reduceMotion = useReducedMotion()
+
   const STAGE_DURATION = 4500 // 4.5s por sub-etapa
 
+  const advanceStage = useCallback(
+    (direction: 1 | -1) => {
+      setElapsed(0)
+      const currentStagesCount = STEPS[activeStepIdx]?.stages.length ?? 3
+      if (direction === 1) {
+        if (subStageIdx + 1 >= currentStagesCount) {
+          setActiveStepIdx((activeStepIdx + 1) % STEPS.length)
+          setSubStageIdx(0)
+        } else {
+          setSubStageIdx(subStageIdx + 1)
+        }
+      } else if (subStageIdx - 1 < 0) {
+        const prevMain = (activeStepIdx - 1 + STEPS.length) % STEPS.length
+        const prevStagesCount = STEPS[prevMain]?.stages.length ?? 3
+        setActiveStepIdx(prevMain)
+        setSubStageIdx(prevStagesCount - 1)
+      } else {
+        setSubStageIdx(subStageIdx - 1)
+      }
+    },
+    [activeStepIdx, subStageIdx]
+  )
+
   useEffect(() => {
-    if (isPaused) return
+    if (isPaused || !isInView || reduceMotion) return
 
     const startTime = Date.now()
     const timer = setInterval(() => {
@@ -512,10 +539,27 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
       } else {
         setElapsed(diff)
       }
-    }, 40)
+    }, 80)
 
     return () => clearInterval(timer)
-  }, [activeStepIdx, subStageIdx, isPaused])
+  }, [activeStepIdx, subStageIdx, isPaused, isInView, reduceMotion])
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      advanceStage(1)
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      advanceStage(-1)
+    } else if (['1', '2', '3', '4'].includes(e.key)) {
+      const idx = Number(e.key) - 1
+      if (idx >= 0 && idx < STEPS.length) {
+        setActiveStepIdx(idx)
+        setSubStageIdx(0)
+        setElapsed(0)
+      }
+    }
+  }
 
   const currentStep = STEPS[activeStepIdx] ?? STEPS[0]!
   const currentStage = currentStep.stages[subStageIdx] ?? currentStep.stages[0]!
@@ -526,6 +570,8 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
   return (
     <section
       id="arquitectura-en-vivo"
+      ref={sectionRef}
+      onKeyDown={handleKeyDown}
       aria-label="Recorrido interactivo de arquitectura y metodología"
       className={`scroll-mt-24 relative w-full max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 py-20 sm:py-24 ${className}`}
     >
@@ -541,7 +587,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
             </span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+          <h2 className="text-2xl sm:text-4xl font-semibold tracking-[-0.028em] text-slate-900 dark:text-white leading-tight">
             Cómo construimos y escalamos tu{' '}
             <span className="text-cyan-600 dark:text-cyan-400">activo digital</span>
           </h2>
@@ -556,17 +602,17 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
       {/* ==============================================================
           SUPER CARD MINIMALISTA CON TONO ADAPTATIVO POR PASO (CLARO / OSCURO)
          ============================================================== */}
-      <div className="relative rounded-2xl sm:rounded-3xl border border-slate-300 dark:border-white/[0.08] ring-1 ring-slate-900/[0.04] dark:ring-0 bg-white dark:bg-[#070b14] shadow-[0_24px_60px_-12px_rgba(15,23,42,0.14),0_6px_20px_-4px_rgba(15,23,42,0.06)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85)] overflow-hidden flex flex-col lg:flex-row min-h-[510px] transition-colors duration-500">
-        {/* Línea superior de acento sincronizada al paso activo para delimitar el borde superior */}
+      <div className="relative rounded-2xl sm:rounded-3xl border border-slate-200/85 dark:border-white/[0.06] ring-1 ring-slate-900/[0.03] dark:ring-0 bg-white dark:bg-[#070b14] shadow-[0_24px_60px_-12px_rgba(15,23,42,0.12),0_6px_20px_-4px_rgba(15,23,42,0.04)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85)] overflow-hidden flex flex-col lg:flex-row min-h-[510px] transition-colors duration-500">
+        {/* Línea superior de acento de 1px sincronizada al paso activo */}
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute top-0 inset-x-0 h-[2px] z-20 transition-colors duration-300 opacity-85 dark:opacity-55 ${theme.progressBar}`}
+          className={`pointer-events-none absolute top-0 inset-x-0 h-px z-20 transition-colors duration-300 opacity-75 dark:opacity-50 ${theme.progressBar}`}
         />
 
         {/* ==============================================================
             SIDEBAR IZQUIERDO CON SUPERFICIE DIFERENCIADA (29%)
            ============================================================== */}
-        <div className="w-full lg:w-[29%] p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-slate-300/90 dark:border-white/[0.07] bg-slate-100/95 dark:bg-[#050811] flex flex-col justify-between">
+        <div className="w-full lg:w-[29%] p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-slate-200/80 dark:border-white/[0.06] bg-slate-100/85 dark:bg-[#050811] flex flex-col justify-between">
           <div>
             {/* Brand Header */}
             <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-300/80 dark:border-white/[0.06]">
@@ -644,9 +690,9 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                       </div>
                     </div>
 
-                    {/* Barra de progreso del color propio del paso */}
+                    {/* Barra de progreso fina de 1px del color propio del paso */}
                     {isActive && (
-                      <div className="absolute left-0 right-0 bottom-0 h-[2.5px] bg-slate-200 dark:bg-white/[0.05]">
+                      <div className="absolute left-0 right-0 bottom-0 h-px bg-slate-200/80 dark:bg-white/[0.04]">
                         <div
                           className={`h-full ${step.theme.progressBar}`}
                           style={{
@@ -756,7 +802,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                 >
                   {/* Visual Tipo 1: Anillo de Progreso */}
                   {currentStage.visual.type === 'ring' && (
-                    <div className="flex items-center gap-4 pb-3 border-b border-slate-200 dark:border-white/[0.06]">
+                    <div className="flex items-center gap-4 pb-3 border-b border-slate-200/80 dark:border-white/[0.05]">
                       <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
                         <svg className="w-full h-full -rotate-90" viewBox="0 0 64 64">
                           <circle
@@ -765,8 +811,8 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             r="26"
                             fill="none"
                             stroke="currentColor"
-                            strokeWidth="5"
-                            className="text-slate-200 dark:text-white/[0.07]"
+                            strokeWidth="2.5"
+                            className="text-slate-200/80 dark:text-white/[0.06]"
                           />
                           <circle
                             cx="32"
@@ -774,7 +820,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             r="26"
                             fill="none"
                             stroke={theme.hex}
-                            strokeWidth="5"
+                            strokeWidth="2.5"
                             strokeLinecap="round"
                             strokeDasharray={163.36}
                             strokeDashoffset={
@@ -782,17 +828,17 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             }
                           />
                         </svg>
-                        <span className="absolute font-mono font-extrabold text-sm text-slate-900 dark:text-white">
+                        <span className="absolute font-mono font-semibold text-sm text-slate-900 dark:text-white">
                           {currentStage.visual.primaryMetric}
                         </span>
                       </div>
                       <div>
                         <span
-                          className={`text-[11px] font-mono uppercase tracking-wider font-bold block ${theme.accentText}`}
+                          className={`text-[11px] font-mono uppercase tracking-wider font-semibold block ${theme.accentText}`}
                         >
                           Métrica Verificada
                         </span>
-                        <span className="text-sm font-bold text-slate-900 dark:text-white">
+                        <span className="text-sm font-semibold text-slate-900 dark:text-white">
                           {currentStage.visual.primaryLabel}
                         </span>
                       </div>
@@ -801,9 +847,9 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
                   {/* Visual Tipo 2: Curva SVG Luminosa */}
                   {currentStage.visual.type === 'chart' && (
-                    <div className="space-y-2 pb-3 border-b border-slate-200 dark:border-white/[0.06]">
+                    <div className="space-y-2 pb-3 border-b border-slate-200/80 dark:border-white/[0.05]">
                       <div className="flex items-baseline justify-between">
-                        <span className="text-2xl font-mono font-extrabold text-slate-900 dark:text-white">
+                        <span className="text-2xl font-mono font-semibold text-slate-900 dark:text-white">
                           {currentStage.visual.primaryMetric}
                         </span>
                         <span
@@ -827,7 +873,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               x2="0"
                               y2="1"
                             >
-                              <stop offset="0%" stopColor={theme.hex} stopOpacity="0.35" />
+                              <stop offset="0%" stopColor={theme.hex} stopOpacity="0.28" />
                               <stop offset="100%" stopColor={theme.hex} stopOpacity="0.0" />
                             </linearGradient>
                           </defs>
@@ -839,7 +885,8 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                             d={currentStage.visual.chartPoints}
                             fill="none"
                             stroke={theme.hex}
-                            strokeWidth="2.5"
+                            strokeWidth="1.5"
+                            vectorEffect="non-scaling-stroke"
                             strokeLinecap="round"
                           />
                         </svg>
@@ -900,7 +947,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                     {currentStage.eyebrow}
                   </span>
 
-                  <h3 className="text-xl sm:text-2xl lg:text-[26px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
+                  <h3 className="text-xl sm:text-2xl lg:text-[26px] font-semibold text-slate-900 dark:text-white tracking-[-0.025em] leading-snug">
                     {currentStage.title}
                   </h3>
 

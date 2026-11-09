@@ -5,6 +5,7 @@
  */
 'use client'
 
+import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import SiteHeader from '@/components/layout/SiteHeader'
@@ -17,7 +18,32 @@ const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatW
   ssr: false,
 })
 
+type ViewportMode = 'ssr' | 'mobile' | 'desktop'
+
 export default function HomePage() {
+  const [viewportMode, setViewportMode] = useState<ViewportMode>('ssr')
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return
+
+    const mql = window.matchMedia('(min-width: 768px)')
+    const syncViewport = (matches: boolean) => {
+      setViewportMode(matches ? 'desktop' : 'mobile')
+    }
+
+    syncViewport(mql.matches)
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      syncViewport(event.matches)
+    }
+
+    mql.addEventListener('change', handleChange)
+    return () => mql.removeEventListener('change', handleChange)
+  }, [])
+
+  const showMobile = viewportMode === 'ssr' || viewportMode === 'mobile'
+  const showDesktop = viewportMode === 'ssr' || viewportMode === 'desktop'
+
   return (
     <ErrorBoundary>
       <BrandIntroSplash />
@@ -27,18 +53,22 @@ export default function HomePage() {
         {/* Punto de referencia principal accesible (Landmark main) */}
         <main id="inicio">
           {/* ==============================================================
-              VERSIÓN MOBILE RESUMIDA (EXACTAMENTE 2 SECCIONES CON EL GLOBO 3D)
+              VERSIÓN MOBILE RESUMIDA (DESMONTA DESKTOP EN VIEWPORT MÓVIL)
              ============================================================== */}
-          <div className="block md:hidden">
-            <MobileLandingView />
-          </div>
+          {showMobile && (
+            <div className="block md:hidden">
+              <MobileLandingView />
+            </div>
+          )}
 
           {/* ==============================================================
-              VERSIÓN DESKTOP COMPLETA Y PROFUNDA (INMEDIATA EN PRIMER PINTADO)
+              VERSIÓN DESKTOP PROFUNDA (DESMONTA MOBILE EN VIEWPORT ESCRITORIO)
              ============================================================== */}
-          <div className="hidden md:block">
-            <DesktopLandingView />
-          </div>
+          {showDesktop && (
+            <div className="hidden md:block">
+              <DesktopLandingView />
+            </div>
+          )}
         </main>
 
         <BackToTopButton />

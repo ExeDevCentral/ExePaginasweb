@@ -192,9 +192,9 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                     <div
                       className={`relative h-full flex flex-col justify-between bg-white/95 dark:bg-[#0c1224]/90 backdrop-blur-xl border border-slate-200/90 dark:border-white/10 rounded-2xl shadow-[0_12px_32px_-10px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.02)] ${projectHoverShadow} hover:-translate-y-1.5 transition-all duration-300 overflow-hidden group`}
                     >
-                      {/* Haz láser perimetral superior (efecto holográfico continuo) */}
+                      {/* Haz láser perimetral superior de 1px (efecto holográfico continuo) */}
                       <div
-                        className={`pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent ${projectLaser} to-transparent group-hover:h-1 transition-all duration-300 z-30`}
+                        className={`pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent ${projectLaser} to-transparent transition-all duration-300 z-30`}
                       />
 
                       {/* Marcas de registro en esquinas */}

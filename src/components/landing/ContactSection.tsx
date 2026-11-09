@@ -194,7 +194,7 @@ const ContactSection = () => {
             <span className="w-1.5 h-1.5 rounded-full bg-brand dark:bg-emerald-400 animate-pulse" />
             <span>FIG. 03 — REGISTRO DE REQUERIMIENTOS // 2025</span>
           </div>
-          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-slate-950 dark:text-white">
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.08] tracking-[-0.028em] text-slate-950 dark:text-white">
             {t('contact.heading_1')}
             <br />
             <span className="font-serif italic font-normal text-brand dark:text-emerald-400">
@@ -208,13 +208,13 @@ const ContactSection = () => {
           {/* FORM — Lámina Principal */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-2 rounded-2xl border border-slate-300 dark:border-white/10 bg-white dark:bg-[#0c1224]/90 backdrop-blur-xl p-6 sm:p-8 shadow-[0_16px_40px_-10px_rgba(15,23,42,0.12),0_4px_16px_rgba(6,182,212,0.06)] hover:border-cyan-500/60 hover:shadow-[0_24px_50px_-12px_rgba(6,182,212,0.18)] transition-all duration-300 relative overflow-hidden"
+            className="lg:col-span-2 rounded-2xl border border-slate-200/85 dark:border-white/[0.07] bg-white dark:bg-[#0c1224]/90 backdrop-blur-xl p-6 sm:p-8 shadow-[0_16px_40px_-10px_rgba(15,23,42,0.10),0_4px_16px_rgba(6,182,212,0.05)] hover:border-cyan-500/50 hover:shadow-[0_24px_50px_-12px_rgba(6,182,212,0.16)] transition-all duration-300 relative overflow-hidden"
           >
-            {/* Haz láser perimetral superior */}
-            <div className="pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent via-cyan-500/80 to-transparent" />
+            {/* Haz láser perimetral superior de 1px */}
+            <div className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-cyan-500/75 to-transparent" />
 
             {/* Resplandor radial interno suave */}
             <div className="pointer-events-none absolute -inset-px rounded-2xl opacity-40 bg-[radial-gradient(400px_circle_at_50%_0%,rgba(6,182,212,0.08),transparent_70%)]" />

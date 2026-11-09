@@ -156,12 +156,37 @@ function buildLines(t: (k: string, f: string) => string, mode: TermMode): TermLi
   ]
 }
 
+const AXIS_CLI_PROBES: Record<number, { cmd: string; tuyoOut: string; suspendidoOut: string }> = {
+  0: {
+    cmd: '$ git remote -v && stat LICENSE_OWNER',
+    tuyoOut: '✓ origin github.com/tu-empresa/core (Propiedad 100% transferida)',
+    suspendidoOut: '✗ fatal: repository locked by SaaS vendor (Código cautivo)',
+  },
+  1: {
+    cmd: '$ pg_dump --schema-only postgresql://tu-db-dedicada',
+    tuyoOut: '✓ PostgreSQL Dedicado · Acceso root y backups diarios en tu poder',
+    suspendidoOut: '✗ ERROR 403: Base de datos compartida bloqueada para exportación',
+  },
+  2: {
+    cmd: '$ audit-fees --gateway=direct-bank --sales=100%',
+    tuyoOut: '✓ Retención por venta: 0.00% · Liquidación directa a tu CBU/Cuenta',
+    suspendidoOut: '✗ Descuento automático: -5% a -12% por cada venta + canon mensual',
+  },
+  3: {
+    cmd: '$ uptime --sla-check &&healthcheck --autonomous',
+    tuyoOut: '✓ Sistema 100% online y perpetuo · Sin vencimientos ni cortes',
+    suspendidoOut: '✗ HTTP 402 Payment Required · Tienda apagada por falta de canon',
+  },
+}
+
 function CodeLiberationTerminal({
   mode,
   onToggleMode,
+  selectedAxis,
 }: {
   mode: TermMode
   onToggleMode: (m: TermMode) => void
+  selectedAxis: number
 }) {
   const { t } = useTranslation()
   const ref = React.useRef<HTMLDivElement>(null)
@@ -244,11 +269,12 @@ function CodeLiberationTerminal({
 
   const isSuspendido = mode === 'suspendido'
   const cursorClass = isSuspendido ? 'bg-rose-400' : 'bg-emerald-400'
+  const activeProbe = AXIS_CLI_PROBES[selectedAxis] ?? AXIS_CLI_PROBES[0]!
 
   return (
     <div
       ref={ref}
-      className="relative rounded-2xl bg-[#03060f] border border-white/10 shadow-2xl overflow-hidden"
+      className="relative h-full flex flex-col justify-between rounded-2xl bg-[#03060f] border border-white/10 shadow-2xl overflow-hidden"
     >
       {/* Barra superior de la consola */}
       <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-[#070b16] border-b border-white/10 font-mono text-xs">
@@ -300,44 +326,60 @@ function CodeLiberationTerminal({
             handleConsoleClick()
           }
         }}
-        className="p-5 font-mono text-xs sm:text-[13px] leading-relaxed select-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
+        className="flex-1 p-4 sm:p-5 font-mono text-xs sm:text-[13px] leading-relaxed select-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500/40 flex flex-col justify-between"
       >
-        {rows.map(({ line, take }, i) => {
-          const isLast = i === rows.length - 1
-          const segments: React.ReactNode[] = []
-          let budget = take
-          line.parts.forEach((part, pi) => {
-            if (budget <= 0) return
-            const shown = part.text.slice(0, budget)
-            budget -= shown.length
-            if (!shown) return
-            segments.push(
-              <span
-                key={`${pi}-${shown.length}`}
-                className={part.strike ? 'line-through decoration-rose-400/70' : undefined}
-              >
-                {shown}
-              </span>
+        <div>
+          {rows.map(({ line, take }, i) => {
+            const isLast = i === rows.length - 1
+            const segments: React.ReactNode[] = []
+            let budget = take
+            line.parts.forEach((part, pi) => {
+              if (budget <= 0) return
+              const shown = part.text.slice(0, budget)
+              budget -= shown.length
+              if (!shown) return
+              segments.push(
+                <span
+                  key={`${pi}-${shown.length}`}
+                  className={part.strike ? 'line-through decoration-rose-400/70' : undefined}
+                >
+                  {shown}
+                </span>
+              )
+            })
+            return (
+              <div key={i} className={line.glitch ? 'animate-pulse' : undefined}>
+                <span className={lineKindClass(line.kind)}>
+                  {segments}
+                  {isLast ? (
+                    <span
+                      className={`inline-block w-2 h-3.5 align-middle ml-1 ${cursorClass} ${
+                        reduceMotion === true ? '' : 'animate-pulse'
+                      }`}
+                    />
+                  ) : null}
+                </span>
+              </div>
             )
-          })
-          return (
-            <div key={i} className={line.glitch ? 'animate-pulse' : undefined}>
-              <span className={lineKindClass(line.kind)}>
-                {segments}
-                {isLast ? (
-                  <span
-                    className={`inline-block w-2 h-3.5 align-middle ml-1 ${cursorClass} ${
-                      reduceMotion === true ? '' : 'animate-pulse'
-                    }`}
-                  />
-                ) : null}
-              </span>
+          })}
+
+          {/* Sonda interactiva sincronizada con el Eje seleccionado en la Matriz */}
+          <div className="mt-3 pt-2.5 border-t border-white/10 text-[11px] space-y-1">
+            <div className="text-cyan-400 font-bold">
+              [EJE 0{selectedAxis + 1} ACTIVO] {activeProbe.cmd}
             </div>
-          )
-        })}
+            <div
+              className={
+                isSuspendido ? 'text-rose-400 font-semibold' : 'text-emerald-400 font-semibold'
+              }
+            >
+              {isSuspendido ? activeProbe.suspendidoOut : activeProbe.tuyoOut}
+            </div>
+          </div>
+        </div>
 
         {phase === 'done' && (
-          <div className="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-white/5 text-[11px] text-slate-500">
+          <div className="flex items-center justify-between gap-3 mt-3 pt-2.5 border-t border-white/5 text-[11px] text-slate-500">
             <span>
               {isSuspendido
                 ? '✗ Simulación de alquiler sin pago — click para reintentar'
@@ -352,9 +394,15 @@ function CodeLiberationTerminal({
 }
 
 /* ============================================================
-   Matriz Táctica de Ingeniería Real (4 Ejes)
+   Matriz Táctica de Ingeniería Real (4 Ejes Interactivos)
    ============================================================ */
-function TacticalEngineeringMatrix() {
+function TacticalEngineeringMatrix({
+  selectedAxis,
+  onSelectAxis,
+}: {
+  selectedAxis: number
+  onSelectAxis: (idx: number) => void
+}) {
   const rows = [
     {
       axis: 'Propiedad del Código Fuente',
@@ -388,66 +436,83 @@ function TacticalEngineeringMatrix() {
   return (
     <div
       data-tactical-matrix="true"
-      className="mb-14 sm:mb-16 rounded-2xl bg-white/95 dark:bg-[#060b14]/90 border border-slate-200/90 dark:border-cyan-500/30 p-5 sm:p-7 shadow-[0_14px_36px_-10px_rgba(6,182,212,0.12),0_4px_16px_rgba(0,0,0,0.02)] backdrop-blur-xl relative overflow-hidden"
+      className="h-full rounded-2xl bg-white/95 dark:bg-[#060b14]/90 border border-slate-200/90 dark:border-cyan-500/30 p-4 sm:p-6 shadow-[0_14px_36px_-10px_rgba(6,182,212,0.12),0_4px_16px_rgba(0,0,0,0.02)] backdrop-blur-xl relative overflow-hidden flex flex-col justify-between"
     >
-      {/* Haz láser holográfico superior */}
-      <div className="pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent via-cyan-500/80 to-transparent" />
+      {/* Haz láser holográfico superior de 1px */}
+      <div className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-cyan-500/75 to-transparent" />
 
-      <div className="flex items-center justify-between gap-2 mb-4 pb-2 border-b border-slate-200/80 dark:border-white/10 font-mono text-[11px]">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-slate-200/80 dark:border-white/10 font-mono text-[11px]">
         <div className="flex items-center gap-2 text-cyan-700 dark:text-cyan-400 font-bold uppercase tracking-wider">
           <CyberTechCode size={14} className="text-cyan-600 dark:text-cyan-400" />
           <span>[MATRIZ TÁCTICA // 4 EJES DE INGENIERÍA]</span>
         </div>
-        <span className="text-slate-500 dark:text-slate-400 text-[10px]">
-          INGENIERÍA VS PLANTILLA
+        <span className="text-cyan-700 dark:text-cyan-300 text-[10px]">
+          ⚡ TOCÁ UN EJE PARA AUDITAR EN TERMINAL
         </span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-slate-200/80 dark:border-white/10 font-mono text-xs uppercase tracking-wider">
-              <th className="py-3 px-3 text-slate-600 dark:text-slate-400 w-1/4">Eje Técnico</th>
-              <th className="py-3 px-3 text-rose-700 dark:text-rose-400 w-[37.5%] font-bold">
+            <tr className="border-b border-slate-200/80 dark:border-white/10 font-mono text-[11px] uppercase tracking-wider">
+              <th className="py-2.5 px-2.5 text-slate-600 dark:text-slate-400 w-[26%]">
+                Eje Técnico
+              </th>
+              <th className="py-2.5 px-2.5 text-rose-700 dark:text-rose-400 w-[37%] font-bold">
                 Plataforma Alquilada (SaaS)
               </th>
-              <th className="py-3 px-3 text-emerald-700 dark:text-emerald-400 w-[37.5%] font-bold">
+              <th className="py-2.5 px-2.5 text-emerald-700 dark:text-emerald-400 w-[37%] font-bold">
                 ExePaginasWeb (Propiedad Real)
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200/80 dark:divide-white/5 text-xs sm:text-sm">
-            {rows.map((row, idx) => (
-              <tr
-                key={idx}
-                className="hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors"
-              >
-                <td className="py-3.5 px-3 font-mono font-bold text-slate-900 dark:text-white align-top">
-                  <span className="text-cyan-700 dark:text-cyan-400 mr-2 text-[10px]">
-                    [0{idx + 1}]
-                  </span>
-                  {row.axis}
-                </td>
-                <td className="py-3.5 px-3 text-rose-900 dark:text-rose-200/80 align-top leading-relaxed">
-                  <div className="flex items-start gap-2">
-                    <CyberCrossMark
-                      size={14}
-                      className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5"
-                    />
-                    <span>{row.rental}</span>
-                  </div>
-                </td>
-                <td className="py-3.5 px-3 text-emerald-950 dark:text-emerald-200/90 align-top leading-relaxed font-medium">
-                  <div className="flex items-start gap-2">
-                    <CyberCheckMark
-                      size={14}
-                      className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5"
-                    />
-                    <span>{row.exepaginas}</span>
-                  </div>
-                </td>
-              </tr>
-            ))}
+          <tbody className="divide-y divide-slate-200/80 dark:divide-white/5 text-xs">
+            {rows.map((row, idx) => {
+              const isSelected = selectedAxis === idx
+              return (
+                <tr
+                  key={idx}
+                  onClick={() => onSelectAxis(idx)}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      onSelectAxis(idx)
+                    }
+                  }}
+                  className={`cursor-pointer transition-colors ${
+                    isSelected
+                      ? 'bg-cyan-50/90 dark:bg-cyan-500/10 ring-1 ring-inset ring-cyan-500/30'
+                      : 'hover:bg-slate-50/80 dark:hover:bg-white/5'
+                  }`}
+                >
+                  <td className="py-3 px-2.5 font-mono font-bold text-slate-900 dark:text-white align-top">
+                    <span className="text-cyan-700 dark:text-cyan-400 mr-1.5 text-[10px]">
+                      [0{idx + 1}]
+                    </span>
+                    {row.axis}
+                  </td>
+                  <td className="py-3 px-2.5 text-rose-900 dark:text-rose-200/80 align-top leading-relaxed">
+                    <div className="flex items-start gap-1.5">
+                      <CyberCrossMark
+                        size={13}
+                        className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5"
+                      />
+                      <span>{row.rental}</span>
+                    </div>
+                  </td>
+                  <td className="py-3 px-2.5 text-emerald-950 dark:text-emerald-200/90 align-top leading-relaxed font-medium">
+                    <div className="flex items-start gap-1.5">
+                      <CyberCheckMark
+                        size={13}
+                        className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5"
+                      />
+                      <span>{row.exepaginas}</span>
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
@@ -464,8 +529,8 @@ function NotarialAuthorshipSeal() {
       data-notarial-seal="true"
       className="p-5 sm:p-6 rounded-2xl bg-white/95 dark:bg-[#030712]/90 border border-emerald-500/40 backdrop-blur-xl relative overflow-hidden shadow-[0_14px_36px_-10px_rgba(16,185,129,0.18),0_4px_16px_rgba(0,0,0,0.02)]"
     >
-      {/* Haz láser esmeralda superior */}
-      <div className="pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent via-emerald-500/80 to-transparent" />
+      {/* Haz láser esmeralda superior de 1px */}
+      <div className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-emerald-500/75 to-transparent" />
 
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-4 border-b border-slate-200/80 dark:border-white/10 font-mono text-[11px]">
         <div className="flex items-center gap-2">
@@ -507,14 +572,30 @@ function NotarialAuthorshipSeal() {
 /* ============================================================
    Sección Principal
    ============================================================ */
+type WorkstationViewMode = 'split' | 'matrix' | 'terminal'
+
+const REVENUE_TIERS = [
+  { id: '2m', label: '$2M ARS/mes', monthlyArs: 2_000_000 },
+  { id: '5m', label: '$5M ARS/mes', monthlyArs: 5_000_000 },
+  { id: '15m', label: '$15M ARS/mes', monthlyArs: 15_000_000 },
+] as const
+
 export const OwnershipVsSubscription: React.FC = () => {
   const [terminalMode, setTerminalMode] = React.useState<TermMode>('tuyo')
   const [decisionPhase, setDecisionPhase] = React.useState<'experimental' | 'escala'>('escala')
+  const [selectedAxis, setSelectedAxis] = React.useState<number>(0)
+  const [viewMode, setViewMode] = React.useState<WorkstationViewMode>('split')
+  const [revenueTierIdx, setRevenueTierIdx] = React.useState<number>(1)
+
+  const activeTier = REVENUE_TIERS[revenueTierIdx] ?? REVENUE_TIERS[1]!
+  // Cálculo financiero exacto en BigInt (5% comisión promedio SaaS * 12 meses)
+  const annualRetainedBigInt = (BigInt(activeTier.monthlyArs) * 5n * 12n) / 100n
+  const formattedAnnualRetained = Number(annualRetainedBigInt).toLocaleString('es-AR')
 
   return (
     <section
       id="comparativa"
-      className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10"
+      className="scroll-mt-24 py-16 sm:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10"
     >
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_45%_at_25%_50%,color-mix(in_oklab,var(--own-500)_4.5%,transparent),transparent_70%),radial-gradient(55%_45%_at_75%_50%,color-mix(in_oklab,var(--rent-500)_4.5%,transparent),transparent_70%)]"
@@ -529,7 +610,7 @@ export const OwnershipVsSubscription: React.FC = () => {
       <div className="max-w-[1400px] mx-auto relative z-10">
         {/* Header editorial asimétrico */}
         <motion.div
-          className="mb-12 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"
+          className="mb-8 sm:mb-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -543,7 +624,7 @@ export const OwnershipVsSubscription: React.FC = () => {
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-4xl font-black font-montserrat tracking-tight text-foreground">
+            <h2 className="text-2xl sm:text-4xl font-semibold font-montserrat tracking-[-0.028em] text-foreground">
               {AUDIT_TITLE}
             </h2>
           </div>
@@ -563,7 +644,7 @@ export const OwnershipVsSubscription: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-12"
+          className="mb-8"
         >
           <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#060b14]/90 border border-slate-300 dark:border-cyan-500/30 shadow-[0_18px_45px_-12px_rgba(15,23,42,0.12)] dark:shadow-[0_0_25px_rgba(6,182,212,0.12)] backdrop-blur-xl relative overflow-hidden">
             {/* Línea láser de barrido holográfico */}
@@ -635,12 +716,13 @@ export const OwnershipVsSubscription: React.FC = () => {
               </div>
             )}
 
-            {/* EFECTO 2: Reactor de Telemetría */}
+            {/* EFECTO 2: Reactor de Telemetría + Simulador BigInt de Retención de Capital */}
             <div
               data-energy-reactor="true"
-              className="p-3 rounded-xl bg-slate-100 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-left"
+              data-capital-simulator="true"
+              className="p-3.5 rounded-xl bg-slate-100 dark:bg-black/50 border border-slate-200 dark:border-white/10 text-left space-y-2.5"
             >
-              <div className="flex items-center justify-between text-[10px] font-mono mb-1.5">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono">
                 <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                   <span>MONITOR DE RETENCIÓN DE CAPITAL</span>
@@ -649,19 +731,98 @@ export const OwnershipVsSubscription: React.FC = () => {
                   CAPITAL PROTEGIDO // 0% FUGAS
                 </span>
               </div>
+
               <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300/60 dark:border-white/5">
                 <div className="h-full w-full bg-linear-to-r from-emerald-500 via-cyan-400 to-emerald-400 shadow-[0_0_10px_#10b981]" />
+              </div>
+
+              {/* Selector interactivo de volumen de ventas mensual (BigInt) */}
+              <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="text-[11px] text-slate-600 dark:text-slate-400 mr-1">
+                    Simulá tus ventas:
+                  </span>
+                  {REVENUE_TIERS.map((tier, idx) => (
+                    <button
+                      key={tier.id}
+                      type="button"
+                      onClick={() => setRevenueTierIdx(idx)}
+                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer border ${
+                        revenueTierIdx === idx
+                          ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-xs'
+                          : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-white/10 hover:border-emerald-400/50'
+                      }`}
+                    >
+                      {tier.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold">
+                  Ahorrás +${formattedAnnualRetained} ARS/año en comisiones (100% tuyo)
+                </div>
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* 1. Matriz Táctica de 4 Ejes (Especificación de Ingeniería, NO card) */}
-        <TacticalEngineeringMatrix />
+        {/* ESTACIÓN INTERACTIVA UNIFICADA (LIBERA ALTURA VERTICAL EN ESCRITORIO) */}
+        <div data-audit-workstation="true" className="mb-8 space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
+            <span className="text-slate-600 dark:text-slate-400 text-[11px]">
+              Seleccioná cualquier eje técnico para ejecutar la auditoría en vivo:
+            </span>
+            <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-slate-200/80 dark:bg-[#060b14] border border-slate-300 dark:border-white/10">
+              {(
+                [
+                  { id: 'split', label: 'Vista Dividida' },
+                  { id: 'matrix', label: 'Solo Matriz' },
+                  { id: 'terminal', label: 'Solo Terminal' },
+                ] as const
+              ).map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setViewMode(tab.id)}
+                  className={`px-2.5 py-1 rounded text-[11px] font-bold transition-colors cursor-pointer ${
+                    viewMode === tab.id
+                      ? 'bg-cyan-500 text-slate-950'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-        {/* 2. Terminal CLI Interactiva de Liberación */}
-        <div className="mb-12">
-          <CodeLiberationTerminal mode={terminalMode} onToggleMode={setTerminalMode} />
+          <div
+            className={
+              viewMode === 'split'
+                ? 'grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch'
+                : 'block'
+            }
+          >
+            {/* 1. Matriz Táctica de 4 Ejes Interactivos */}
+            {(viewMode === 'split' || viewMode === 'matrix') && (
+              <div className={viewMode === 'split' ? 'lg:col-span-7' : 'w-full'}>
+                <TacticalEngineeringMatrix
+                  selectedAxis={selectedAxis}
+                  onSelectAxis={(idx) => setSelectedAxis(idx)}
+                />
+              </div>
+            )}
+
+            {/* 2. Terminal CLI Interactiva de Liberación sincronizada */}
+            {(viewMode === 'split' || viewMode === 'terminal') && (
+              <div className={viewMode === 'split' ? 'lg:col-span-5' : 'w-full'}>
+                <CodeLiberationTerminal
+                  mode={terminalMode}
+                  onToggleMode={setTerminalMode}
+                  selectedAxis={selectedAxis}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 3. Sello Notarial Criptográfico */}

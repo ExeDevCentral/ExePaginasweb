@@ -129,11 +129,22 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
   const [currentTime, setCurrentTime] = useState('00:00')
   const [duration, setDuration] = useState('00:15')
   const [showControls, setShowControls] = useState(true)
+  const [simulatedEvent, setSimulatedEvent] = useState<string | null>(null)
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const controlsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const currentTab: TabConfig = TABS.find((t) => t.id === activeTab) ?? (TABS[0] as TabConfig)
+
+  const triggerSimulation = useCallback((tab: ShowcaseTab) => {
+    if (tab === 'turnos') {
+      setSimulatedEvent('✓ Turno #842 confirmado en 14ms · Seña acreditada directo a tu banco')
+    } else if (tab === 'ecommerce') {
+      setSimulatedEvent('✓ Orden #3910 aprobada · $0.00 comisión retenida (100% tuyo)')
+    } else if (tab === 'gestion') {
+      setSimulatedEvent('✓ Comanda #108 en KDS + Ticket Fiscal ARCA emitido en 11ms')
+    }
+  }, [])
 
   // Temporizador para auto-ocultar controles tras 4 segundos de inactividad
   const resetControlsTimer = useCallback(() => {
@@ -265,21 +276,21 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
           }}
         />
 
-        {/* EFECTO 2: BORDER BEAM (Haz de luz perimetral continuo en movimiento) */}
-        <div className="relative rounded-2xl p-[1.5px] overflow-hidden shadow-[0_25px_65px_rgba(0,0,0,0.85)]">
+        {/* EFECTO 2: BORDER BEAM (Haz de luz perimetral continuo de 1px ultra-fino) */}
+        <div className="relative rounded-2xl p-px overflow-hidden shadow-[0_25px_65px_rgba(0,0,0,0.85)]">
           {/* Haz láser girando por el perímetro */}
           <div
             className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] pointer-events-none"
             style={{
               background:
-                'conic-gradient(from 0deg, transparent 0 310deg, rgba(16,185,129,0.9) 340deg, rgba(6,182,212,1) 360deg)',
+                'conic-gradient(from 0deg, transparent 0 315deg, rgba(16,185,129,0.75) 342deg, rgba(6,182,212,0.9) 360deg)',
             }}
           />
 
           {/* Chasis Interior Fijo de Titanio / Cristal */}
-          <div className="relative rounded-[15px] bg-slate-100 dark:bg-[#060a14] border border-slate-300/80 dark:border-white/10 overflow-hidden shadow-2xl transition-colors">
+          <div className="relative rounded-[15px] bg-slate-100 dark:bg-[#060a14] border border-slate-200/75 dark:border-white/[0.07] overflow-hidden shadow-2xl transition-colors">
             {/* Barra superior de navegador estilo Chrome/Safari */}
-            <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-200/90 dark:bg-[#0a0f1d] border-b border-slate-300 dark:border-white/10 font-mono text-xs select-none transition-colors">
+            <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-200/80 dark:bg-[#0a0f1d] border-b border-slate-200/80 dark:border-white/[0.07] font-mono text-xs select-none transition-colors">
               {/* Botones de ventana */}
               <div className="flex items-center gap-2">
                 <span className="flex gap-1.5">
@@ -327,7 +338,10 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                     type="button"
                     role="tab"
                     aria-selected={isActive}
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => {
+                      setActiveTab(tab.id)
+                      setSimulatedEvent(null)
+                    }}
                     className={`group relative py-2 sm:py-2.5 px-1.5 sm:px-2 text-center transition-all duration-150 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 rounded-lg sm:rounded-xl border font-mono font-medium ${getTabButtonClasses(
                       tab,
                       isActive
@@ -632,6 +646,39 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              {/* Micro-Simulador Transaccional en Vivo (1-Clic In-Situ) */}
+              {activeTab !== 'video' && (
+                <div
+                  data-live-simulator="true"
+                  className="absolute top-3 left-3 right-3 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none"
+                >
+                  <button
+                    type="button"
+                    onClick={() => triggerSimulation(activeTab)}
+                    className="pointer-events-auto inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-950/85 hover:bg-slate-900 border border-cyan-400/40 text-cyan-300 font-mono text-[10px] font-bold shadow-lg backdrop-blur-md transition-all cursor-pointer"
+                  >
+                    <Zap className="w-3 h-3 text-cyan-400" />
+                    <span>
+                      {activeTab === 'turnos'
+                        ? 'SIMULAR TURNO EN VIVO'
+                        : activeTab === 'ecommerce'
+                          ? 'SIMULAR COBRO 0% COMISIÓN'
+                          : 'SIMULAR COMANDA KDS'}
+                    </span>
+                  </button>
+
+                  {simulatedEvent && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="pointer-events-auto px-2.5 py-1 rounded-lg bg-emerald-950/90 border border-emerald-400/50 text-emerald-200 font-mono text-[10px] font-semibold shadow-lg backdrop-blur-md"
+                    >
+                      {simulatedEvent}
+                    </motion.div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Pie de la pantalla con mensaje de confianza */}

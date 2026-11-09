@@ -170,7 +170,7 @@ export const OptimusScaleHero: React.FC = () => {
 
         {/* MÉTRICAS DE PIE DE HERO */}
         <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 sm:px-8 lg:px-12 mt-10 sm:mt-14">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0 border-t border-slate-200/80 dark:border-white/10 pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0 border-t border-slate-200/60 dark:border-white/[0.07] pt-6">
             <div className="flex items-center gap-3 md:px-8 first:md:pl-0">
               <CyberMetricLightning
                 size={17}
@@ -185,7 +185,7 @@ export const OptimusScaleHero: React.FC = () => {
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-3 md:px-8 md:border-l md:border-slate-200/80 dark:md:border-white/10">
+            <div className="flex items-center gap-3 md:px-8 md:border-l md:border-slate-200/60 dark:md:border-white/[0.07]">
               <CyberMetricShield size={17} className="text-cyan-600 dark:text-cyan-400 shrink-0" />
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-sm font-semibold text-foreground">
@@ -196,7 +196,7 @@ export const OptimusScaleHero: React.FC = () => {
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-3 md:px-8 md:border-l md:border-slate-200/80 dark:md:border-white/10">
+            <div className="flex items-center gap-3 md:px-8 md:border-l md:border-slate-200/60 dark:md:border-white/[0.07]">
               <CyberMetricProcessor
                 size={17}
                 className="text-cyan-600 dark:text-cyan-400 shrink-0"
@@ -215,7 +215,7 @@ export const OptimusScaleHero: React.FC = () => {
 
         {/* TICKER / MARQUEE DE MÉTRICAS */}
         <div
-          className="relative z-10 w-full mt-8 sm:mt-10 py-4.5 border-y border-slate-200/60 dark:border-white/[0.06] overflow-hidden bg-slate-100/40 dark:bg-white/[0.015] backdrop-blur-xs select-none"
+          className="relative z-10 w-full mt-8 sm:mt-10 py-4.5 border-y border-slate-200/50 dark:border-white/[0.05] overflow-hidden bg-slate-100/35 dark:bg-white/[0.01] backdrop-blur-xs select-none"
           style={{
             maskImage:
               'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
@@ -229,7 +229,7 @@ export const OptimusScaleHero: React.FC = () => {
                 key={'ticker-' + item.label + '-' + idx}
                 className="flex items-center gap-3 shrink-0"
               >
-                <span className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+                <span className="text-2xl sm:text-3xl font-semibold text-foreground tracking-[-0.03em] tabular-nums">
                   {item.value}
                 </span>
                 <span className="text-xs sm:text-[13px] font-mono uppercase tracking-wider text-muted-foreground">

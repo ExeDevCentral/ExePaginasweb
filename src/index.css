@@ -261,13 +261,13 @@
   --font-sans: var(--font-sans, 'Inter'), sans-serif;
   --font-display: var(--font-display, 'Space Grotesk'), sans-serif;
   --font-heading: var(--font-heading, 'Space Grotesk'), sans-serif;
-  --font-serif: var(--font-heading, 'Space Grotesk'), sans-serif;
+  --font-serif: var(--font-serif, 'Instrument Serif'), serif;
   --font-mono: var(--font-mono, 'JetBrains Mono'), monospace;
   --font-montserrat: 'Space Grotesk', sans-serif;
   --font-outfit: 'Space Grotesk', sans-serif;
   --font-inter: 'Inter', sans-serif;
 
-  --tracking-display: -0.03em;
+  --tracking-display: -0.028em;
 }
 
 :root {
@@ -289,8 +289,8 @@
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: rgba(4, 120, 87, 0.22);
-  --input: rgba(4, 120, 87, 0.22);
+  --border: rgba(15, 23, 42, 0.09);
+  --input: rgba(15, 23, 42, 0.11);
   --ring: #047857;
   --radius: 0.5rem; /* Radio coherente y sobrio (8px) */
   --font-sans: 'Inter', sans-serif;
@@ -305,9 +305,9 @@
   --signal-amber: #b45309; /* AA 4.6:1 sobre #FAF7F2 para texto */
   --signal-amber-bg: #d97706; /* Fondo de badges y botones */
   --state-rose: #be123c; /* AA 5.1:1 sobre crema */
-  --grid-line: rgba(4, 120, 87, 0.14); /* Retícula visible 14-16% */
-  --grid-line-bold: rgba(4, 120, 87, 0.26);
-  --border-tech: rgba(4, 120, 87, 0.28);
+  --grid-line: rgba(15, 23, 42, 0.055); /* Retícula fina de precisión */
+  --grid-line-bold: rgba(4, 120, 87, 0.14);
+  --border-tech: rgba(4, 120, 87, 0.18);
 
   /* Colores corporativos amables y compatibilidad */
   --accent-cyan: #0284c7;
@@ -397,8 +397,8 @@
   --destructive-foreground: #ffffff;
 
   /* Bordes Suaves, Finos y Elegantes (Bordes limpios sin saturación verde) */
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.065);
+  --input: rgba(255, 255, 255, 0.075);
   --ring: #38bdf8;
   --radius: 0.5rem;
 
@@ -409,10 +409,10 @@
   --signal-amber-bg: #f59e0b;
   --state-rose: #f43f5e;
 
-  /* Retícula Cósmica Sutil y Descansada (3% y 6% de opacidad) */
-  --grid-line: rgba(255, 255, 255, 0.03);
-  --grid-line-bold: rgba(56, 189, 248, 0.06);
-  --border-tech: rgba(56, 189, 248, 0.14);
+  /* Retícula Cósmica Sutil y Descansada (2.5% y 5% de opacidad) */
+  --grid-line: rgba(255, 255, 255, 0.025);
+  --grid-line-bold: rgba(56, 189, 248, 0.05);
+  --border-tech: rgba(56, 189, 248, 0.11);
 
   /* Acentos Cósmicos Suaves y Armónicos */
   --accent-cyan: #38bdf8;
@@ -495,6 +495,11 @@
     font-size: 1rem;
     line-height: 1.6;
     font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11', 'ss01';
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     overscroll-behavior-y: auto;
     -webkit-overflow-scrolling: touch;
     -webkit-tap-highlight-color: transparent;
@@ -505,7 +510,15 @@
   h3,
   h4 {
     font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-synthesis: none;
+    letter-spacing: -0.025em;
     text-wrap: balance;
+  }
+
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
   }
 
   p,
@@ -520,6 +533,10 @@
   canvas,
   svg {
     max-width: 100%;
+  }
+
+  svg {
+    shape-rendering: geometricPrecision;
   }
 
   button,

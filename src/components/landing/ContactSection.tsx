@@ -8,6 +8,7 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect, type SyntheticEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Badge } from '@astryxdesign/core'
 import { MessageCircle, ArrowRight, CheckCircle, Mail, Send } from 'lucide-react'
 import { supabase } from '../../core/infra/supabase/client'
 import { toast } from 'sonner'
@@ -190,9 +191,12 @@ const ContactSection = () => {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="mb-12"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-brand/10 border border-brand/25 text-brand dark:text-emerald-400 font-mono text-[11px] uppercase tracking-widest font-semibold mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand dark:bg-emerald-400 animate-pulse" />
-            <span>FIG. 03 — REGISTRO DE REQUERIMIENTOS // 2025</span>
+          <div className="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-white/75 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/10 backdrop-blur-md shadow-2xs mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-mono text-[11px] uppercase tracking-widest font-semibold text-slate-600 dark:text-slate-300">
+              FIG. 04 — REGISTRO DE REQUERIMIENTOS // 2025
+            </span>
+            <Badge label="< 2H" variant="success" />
           </div>
           <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.08] tracking-[-0.028em] text-slate-950 dark:text-white">
             {t('contact.heading_1')}
@@ -204,34 +208,20 @@ const ContactSection = () => {
         </motion.div>
 
         {/* Bento grid de especificación técnica */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* FORM — Lámina Principal */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-2 rounded-2xl border border-slate-200/85 dark:border-white/[0.07] bg-white dark:bg-[#0c1224]/90 backdrop-blur-xl p-6 sm:p-8 shadow-[0_16px_40px_-10px_rgba(15,23,42,0.10),0_4px_16px_rgba(6,182,212,0.05)] hover:border-cyan-500/50 hover:shadow-[0_24px_50px_-12px_rgba(6,182,212,0.16)] transition-all duration-300 relative overflow-hidden"
+            className="lg:col-span-2 rounded-2xl border border-slate-200/90 dark:border-white/[0.08] bg-white/95 dark:bg-[#090e1a]/95 backdrop-blur-xl p-6 sm:p-8 shadow-[0_12px_36px_-12px_rgba(15,23,42,0.08)] hover:border-cyan-500/40 transition-all duration-300 relative overflow-hidden"
           >
             {/* Haz láser perimetral superior de 1px */}
-            <div className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-cyan-500/75 to-transparent" />
+            <div className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-cyan-500/70 to-transparent" />
 
             {/* Resplandor radial interno suave */}
-            <div className="pointer-events-none absolute -inset-px rounded-2xl opacity-40 bg-[radial-gradient(400px_circle_at_50%_0%,rgba(6,182,212,0.08),transparent_70%)]" />
-
-            {/* Marcas de esquina técnicas (+) */}
-            <span className="absolute top-2 left-2 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none pointer-events-none">
-              +
-            </span>
-            <span className="absolute top-2 right-2 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none pointer-events-none">
-              +
-            </span>
-            <span className="absolute bottom-2 left-2 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none pointer-events-none">
-              +
-            </span>
-            <span className="absolute bottom-2 right-2 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none pointer-events-none">
-              +
-            </span>
+            <div className="pointer-events-none absolute -inset-px rounded-2xl opacity-35 bg-[radial-gradient(400px_circle_at_50%_0%,rgba(6,182,212,0.07),transparent_70%)]" />
 
             {status === 'success' ? (
               <div className="flex h-full flex-col items-center justify-center gap-5 py-8 text-center">
@@ -466,7 +456,7 @@ const ContactSection = () => {
                   href={ch.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`group relative flex flex-1 flex-col justify-between rounded-2xl border border-slate-300 dark:border-white/10 bg-white dark:bg-[#0c1224]/90 backdrop-blur-xl p-5.5 ${styles.hoverBorder} shadow-[0_12px_30px_-8px_rgba(15,23,42,0.1)] ${styles.hoverShadow} transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
+                  className={`group relative flex flex-1 flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-white/[0.08] bg-white/95 dark:bg-[#090e1a]/95 backdrop-blur-xl p-5.5 ${styles.hoverBorder} shadow-[0_10px_28px_-10px_rgba(15,23,42,0.07)] ${styles.hoverShadow} transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
                   initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -474,23 +464,11 @@ const ContactSection = () => {
                 >
                   {/* Haz láser de borde */}
                   <div
-                    className={`pointer-events-none absolute top-0 inset-x-0 h-0.75 bg-linear-to-r from-transparent ${styles.laser} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                    className={`pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent ${styles.laser} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
                   />
 
-                  {/* Marcas de cota técnica */}
-                  <span
-                    className={`absolute top-2 right-2.5 font-mono text-[9px] text-slate-300 dark:text-white/20 select-none ${styles.cornerHover} transition-colors`}
-                  >
-                    +
-                  </span>
-                  <span
-                    className={`absolute bottom-2 right-2.5 font-mono text-[9px] text-slate-300 dark:text-white/20 select-none ${styles.cornerHover} transition-colors`}
-                  >
-                    +
-                  </span>
-
                   <div
-                    className={`mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-300 group-hover:scale-110 shadow-inner ${styles.iconBox}`}
+                    className={`mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-300 group-hover:scale-105 ${styles.iconBox}`}
                   >
                     <Icon className="h-5 w-5" />
                   </div>

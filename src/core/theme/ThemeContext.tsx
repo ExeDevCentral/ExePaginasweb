@@ -40,15 +40,16 @@ export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
   useEffect(() => {
     try {
       const saved = localStorage.getItem('theme')
-      if (saved === 'light' || saved === 'dark') {
-        setTheme(saved)
-        document.documentElement.classList.toggle('dark', saved === 'dark')
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        const initial = prefersDark ? 'dark' : 'light'
-        setTheme(initial)
-        document.documentElement.classList.toggle('dark', prefersDark)
-      }
+      const resolved: Theme =
+        saved === 'light' || saved === 'dark'
+          ? saved
+          : window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light'
+      setTheme(resolved)
+      document.documentElement.classList.toggle('dark', resolved === 'dark')
+      document.documentElement.setAttribute('data-astryx-theme', 'neutral')
+      document.documentElement.setAttribute('data-astryx-media', resolved)
     } catch {
       // safe fallback
     }
@@ -58,6 +59,8 @@ export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
     setTheme(t)
     if (typeof document !== 'undefined') {
       document.documentElement.classList.toggle('dark', t === 'dark')
+      document.documentElement.setAttribute('data-astryx-theme', 'neutral')
+      document.documentElement.setAttribute('data-astryx-media', t)
       try {
         localStorage.setItem('theme', t)
       } catch {

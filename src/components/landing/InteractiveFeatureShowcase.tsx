@@ -9,6 +9,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence, useInView, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
+import { Badge } from '@astryxdesign/core'
 import { Logo } from '@/components/layout/Logo'
 import {
   Zap,
@@ -578,13 +579,14 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
       {/* CABECERA EDITORIAL ASIMÉTRICA */}
       <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-300/90 dark:border-white/10 bg-white dark:bg-white/[0.03] font-mono text-[11px] uppercase tracking-widest mb-3 shadow-xs transition-colors duration-300">
+          <div className="inline-flex items-center gap-2.5 px-3 py-1 rounded-full border border-slate-200/80 dark:border-white/10 bg-white/75 dark:bg-white/[0.03] backdrop-blur-md font-mono text-[11px] uppercase tracking-widest mb-3 shadow-2xs transition-colors duration-300">
             <ShieldCheck
               className={`w-3.5 h-3.5 transition-colors duration-300 ${theme.checkIcon}`}
             />
             <span className="text-slate-700 dark:text-neutral-300 font-semibold">
               Ingeniería Transparente
             </span>
+            <Badge label="4 ETAPAS" variant="cyan" />
           </div>
 
           <h2 className="text-2xl sm:text-4xl font-semibold tracking-[-0.028em] text-slate-900 dark:text-white leading-tight">

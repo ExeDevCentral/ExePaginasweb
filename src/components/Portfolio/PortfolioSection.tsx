@@ -8,6 +8,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { Badge } from '@astryxdesign/core'
 import {
   Calendar,
   ShoppingBag,
@@ -79,17 +80,18 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Encabezado Editorial Técnico */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-[2px] border border-brand/30 bg-brand/10 backdrop-blur-md mb-4 font-mono text-xs text-brand"
+            className="inline-flex items-center gap-2.5 px-3 py-1 rounded-full border border-slate-200/80 dark:border-white/10 bg-white/75 dark:bg-white/[0.03] backdrop-blur-md mb-4 shadow-2xs"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
-            <span className="font-bold uppercase tracking-wider">
-              FIG. 03 — LÁMINAS DE OBRA // CASOS DE ESTUDIO
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+              FIG. 03 — CASOS EN PRODUCCIÓN
             </span>
+            <Badge label="LIVE" variant="success" />
           </motion.div>
 
           <motion.h2
@@ -188,45 +190,17 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
 
                 return (
                   <div key={project.id} className="h-full flex flex-col">
-                    {/* Lámina Técnica con marcas de esquina */}
+                    {/* Tarjeta limpia estilo Astryx Editorial */}
                     <div
-                      className={`relative h-full flex flex-col justify-between bg-white/95 dark:bg-[#0c1224]/90 backdrop-blur-xl border border-slate-200/90 dark:border-white/10 rounded-2xl shadow-[0_12px_32px_-10px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.02)] ${projectHoverShadow} hover:-translate-y-1.5 transition-all duration-300 overflow-hidden group`}
+                      className={`relative h-full flex flex-col justify-between bg-white/95 dark:bg-[#090e1a]/95 backdrop-blur-xl border border-slate-200/90 dark:border-white/[0.08] rounded-2xl shadow-[0_10px_30px_-12px_rgba(15,23,42,0.08)] ${projectHoverShadow} hover:-translate-y-1 transition-all duration-300 overflow-hidden group`}
                     >
-                      {/* Haz láser perimetral superior de 1px (efecto holográfico continuo) */}
+                      {/* Haz láser perimetral superior de 1px */}
                       <div
-                        className={`pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent ${projectLaser} to-transparent transition-all duration-300 z-30`}
+                        className={`pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent ${projectLaser} to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-300 z-30`}
                       />
 
-                      {/* Marcas de registro en esquinas */}
-                      <span
-                        className="absolute top-2 left-2 z-20 text-[10px] font-mono text-slate-300 dark:text-white/20 select-none pointer-events-none group-hover:text-emerald-500 transition-colors"
-                        aria-hidden="true"
-                      >
-                        +
-                      </span>
-                      <span
-                        className="absolute bottom-2 left-2 z-20 text-[10px] font-mono text-slate-300 dark:text-white/20 select-none pointer-events-none group-hover:text-emerald-500 transition-colors"
-                        aria-hidden="true"
-                      >
-                        +
-                      </span>
-                      <span
-                        className="absolute bottom-2 right-2 z-20 text-[10px] font-mono text-slate-300 dark:text-white/20 select-none pointer-events-none group-hover:text-emerald-500 transition-colors"
-                        aria-hidden="true"
-                      >
-                        +
-                      </span>
-
-                      {/* Cota estática de lámina */}
-                      <span
-                        className="absolute top-3 right-3 z-20 font-mono text-[10px] tracking-wider px-2.5 py-0.5 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white font-bold shadow-xs"
-                        aria-hidden="true"
-                      >
-                        LÁMINA 0{idx + 1} // 2025
-                      </span>
-
-                      {/* Imagen del proyecto */}
-                      <div className="relative aspect-16/10 overflow-hidden bg-slate-900 border-b border-slate-200/80 dark:border-white/10">
+                      {/* Imagen del proyecto (sin sobrecarga de badges) */}
+                      <div className="relative aspect-16/10 overflow-hidden bg-slate-900 border-b border-slate-200/80 dark:border-white/[0.08]">
                         <img
                           src={project.image}
                           alt={project.title}
@@ -234,12 +208,12 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                           decoding="async"
                           className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 ease-out"
                         />
-                        <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent opacity-85 group-hover:opacity-70 transition-opacity" />
+                        <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/35 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
 
-                        {/* Estado / Badge de proyecto */}
-                        <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
-                          <span className="px-2.5 py-0.5 rounded-full bg-slate-950/90 border border-emerald-400/50 text-[10px] font-mono text-emerald-300 flex items-center gap-1.5 shadow-xs font-semibold">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        {/* Único badge de estado discreto */}
+                        <div className="absolute top-3.5 left-3.5">
+                          <span className="px-2.5 py-0.5 rounded-full bg-slate-950/75 backdrop-blur-md border border-emerald-400/35 text-[10px] font-mono text-emerald-300 flex items-center gap-1.5 font-medium">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                             {project.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')}
                           </span>
                         </div>
@@ -251,34 +225,36 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`Ver sitio web de ${project.title} en producción`}
-                            className="absolute bottom-3 right-3 p-1.5 rounded-lg bg-slate-950/90 border border-white/20 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-colors shadow-xs flex items-center justify-center cursor-pointer"
+                            className="absolute top-3.5 right-3.5 p-1.5 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/15 text-slate-200 hover:bg-emerald-500 hover:text-slate-950 hover:border-emerald-400 transition-colors flex items-center justify-center cursor-pointer"
                             title={`Ver sitio web de ${project.title} en producción`}
                           >
-                            <ArrowUpRight className="w-4 h-4" />
+                            <ArrowUpRight className="w-3.5 h-3.5" />
                           </a>
                         )}
 
                         {/* Título en tarjeta */}
-                        <div className="absolute bottom-2.5 left-3 right-12">
-                          <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider block mb-0.5 font-bold">
-                            {project.client}
-                          </span>
-                          <h3 className="text-base sm:text-lg font-bold text-white font-display leading-tight group-hover:text-emerald-300 transition-colors">
-                            {project.title}
-                          </h3>
+                        <div className="absolute bottom-3.5 left-4 right-4 flex items-end justify-between gap-2">
+                          <div>
+                            <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider block mb-0.5 font-semibold">
+                              0{idx + 1} · {project.client}
+                            </span>
+                            <h3 className="text-base sm:text-lg font-bold text-white font-display leading-tight group-hover:text-emerald-300 transition-colors">
+                              {project.title}
+                            </h3>
+                          </div>
                         </div>
                       </div>
 
                       {/* Contenido & Detalles */}
-                      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
-                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3 min-h-[3.2rem]">
+                      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3 min-h-[3.2rem]">
                           {project.description}
                         </p>
 
-                        {/* Métricas destacadas en estilo técnico */}
-                        <div className="grid grid-cols-2 gap-2 p-3 rounded-xl bg-slate-50/90 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-center shadow-inner">
+                        {/* Métricas destacadas limpias sin sombra pesada */}
+                        <div className="grid grid-cols-2 divide-x divide-slate-200/80 dark:divide-white/[0.08] py-2.5 px-3 rounded-xl bg-slate-50/80 dark:bg-white/[0.03] border border-slate-200/70 dark:border-white/[0.07] text-center">
                           {project.metrics.map((m) => (
-                            <div key={m.label}>
+                            <div key={m.label} className="px-2">
                               <div className="text-sm font-bold text-slate-950 dark:text-white font-mono">
                                 {m.value}
                               </div>
@@ -294,21 +270,21 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                           {project.tags.map((tTag) => (
                             <span
                               key={tTag}
-                              className="px-2 py-0.5 rounded-md bg-slate-100/90 dark:bg-white/5 border border-slate-200/90 dark:border-white/10 text-[10px] font-mono font-medium text-slate-700 dark:text-slate-300"
+                              className="px-2 py-0.5 rounded-md bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-[10px] font-mono font-medium text-slate-600 dark:text-slate-300"
                             >
                               {tTag}
                             </span>
                           ))}
                         </div>
 
-                        {/* Acciones principales con botón de lanzamiento directo */}
-                        <div className="pt-3 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center justify-between gap-2 mt-auto">
+                        {/* Acciones principales */}
+                        <div className="pt-3.5 border-t border-slate-200/70 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-2 mt-auto">
                           <button
                             type="button"
                             onClick={() => setSelectedProject(project)}
-                            className="text-xs font-mono text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1.5 transition-colors cursor-pointer py-1 font-bold"
+                            className="text-xs font-mono text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1.5 transition-colors cursor-pointer py-1 font-semibold"
                           >
-                            <Maximize2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                            <Maximize2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                             <span>{t('portfolio.detalles', 'FICHA TÉCNICA')}</span>
                           </button>
 
@@ -352,54 +328,6 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                               compact
                             />
                           )}
-                        </div>
-                      </div>
-
-                      {/* Cajetín Técnico de Obra (Title Block) */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-slate-200/80 dark:border-white/10 font-mono text-[11px] bg-slate-100/70 dark:bg-black/40 divide-x divide-slate-200/80 dark:divide-white/10">
-                        <div className="p-2 sm:p-2.5">
-                          <span
-                            className="text-[9px] uppercase text-slate-500 dark:text-slate-400 block"
-                            aria-hidden="true"
-                          >
-                            SISTEMA
-                          </span>
-                          <span className="font-semibold text-slate-900 dark:text-white truncate block">
-                            {project.client}
-                          </span>
-                        </div>
-                        <div className="p-2 sm:p-2.5">
-                          <span
-                            className="text-[9px] uppercase text-slate-500 dark:text-slate-400 block"
-                            aria-hidden="true"
-                          >
-                            STACK
-                          </span>
-                          <span className="text-slate-600 dark:text-slate-300 truncate block">
-                            {project.tags[0] || 'Next.js'}
-                          </span>
-                        </div>
-                        <div className="p-2 sm:p-2.5">
-                          <span
-                            className="text-[9px] uppercase text-slate-500 dark:text-slate-400 block"
-                            aria-hidden="true"
-                          >
-                            MÉTRICA
-                          </span>
-                          <span className="font-bold text-emerald-700 dark:text-emerald-400 truncate block">
-                            {project.metrics[0]?.value}
-                          </span>
-                        </div>
-                        <div className="p-2 sm:p-2.5">
-                          <span
-                            className="text-[9px] uppercase text-slate-500 dark:text-slate-400 block"
-                            aria-hidden="true"
-                          >
-                            AÑO // ESTADO
-                          </span>
-                          <span className="text-emerald-700 dark:text-emerald-400 font-medium truncate block">
-                            2025 // ACTIVO
-                          </span>
                         </div>
                       </div>
                     </div>

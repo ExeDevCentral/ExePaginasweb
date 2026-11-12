@@ -14,6 +14,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { Badge } from '@astryxdesign/core'
 import HudButton from '@/components/HudButton'
 import {
   CyberMetricLightning,
@@ -105,23 +106,24 @@ export const OptimusScaleHero: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center w-full my-auto">
             {/* COLUMNA IZQUIERDA: CONTENIDO EDITORIAL */}
             <div className="lg:col-span-6 min-w-0 flex flex-col items-start text-left z-20">
-              {/* Eyebrow */}
-              <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground dark:text-muted-foreground select-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span>
+              {/* Eyebrow editorial con Badge de Astryx */}
+              <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full border border-slate-200/80 dark:border-white/10 bg-white/75 dark:bg-white/[0.03] backdrop-blur-md shadow-2xs select-none">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.16em] text-slate-600 dark:text-slate-300 font-medium">
                   {t('hero.eyebrow_plataforma') ||
                     'ESTUDIO DE DESARROLLO WEB // ATENCIÓN DIRECTA CON EXEQUIEL'}
                 </span>
+                <Badge label="2025" variant="success" />
               </div>
 
               {/* Título H1 */}
-              <h1 className="mt-5 text-4xl sm:text-5xl xl:text-[3.5rem] font-display font-semibold tracking-[-0.02em] leading-[1.06] text-foreground">
+              <h1 className="mt-6 text-4xl sm:text-5xl xl:text-[3.55rem] font-display font-semibold tracking-[-0.025em] leading-[1.06] text-foreground">
                 <span className="sr-only">Exe Páginas Web - </span>
                 <span className="block">
                   {safeT('hero.titulo_prefijo', 'Páginas web y sistemas a medida')}
                 </span>
 
-                <span className="mt-1 inline-flex items-center gap-2 sm:gap-3 flex-wrap">
+                <span className="mt-1.5 inline-flex items-center gap-2 sm:gap-3 flex-wrap">
                   <span className="font-normal text-muted-foreground">
                     {safeT('hero.titulo_sufijo', 'para')}
                   </span>
@@ -133,7 +135,7 @@ export const OptimusScaleHero: React.FC = () => {
                         animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
                         exit={{ y: -22, opacity: 0, filter: 'blur(4px)' }}
                         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                        className="inline-block text-cyan-600 dark:text-cyan-400"
+                        className="inline-block bg-linear-to-r from-cyan-600 via-emerald-600 to-cyan-500 dark:from-cyan-400 dark:via-emerald-400 dark:to-cyan-300 bg-clip-text text-transparent font-semibold"
                       >
                         {rotatingWords[wordIndex]}
                       </motion.span>
@@ -168,14 +170,16 @@ export const OptimusScaleHero: React.FC = () => {
           </div>
         </div>
 
-        {/* MÉTRICAS DE PIE DE HERO */}
+        {/* MÉTRICAS DE PIE DE HERO (Banda de especificación limpia) */}
         <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 sm:px-8 lg:px-12 mt-10 sm:mt-14">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0 border-t border-slate-200/60 dark:border-white/[0.07] pt-6">
-            <div className="flex items-center gap-3 md:px-8 first:md:pl-0">
-              <CyberMetricLightning
-                size={17}
-                className="text-cyan-600 dark:text-cyan-400 shrink-0"
-              />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0 rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white/65 dark:bg-white/[0.02] backdrop-blur-md px-5 py-4 md:px-6 shadow-[0_8px_24px_-12px_rgba(15,23,42,0.06)]">
+            <div className="flex items-center gap-3 md:px-6 first:md:pl-0">
+              <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
+                <CyberMetricLightning
+                  size={16}
+                  className="text-cyan-600 dark:text-cyan-400 shrink-0"
+                />
+              </div>
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-sm font-semibold text-foreground">
                   {safeT('hero.metric_velocidad', '0.38s Carga')}
@@ -185,8 +189,13 @@ export const OptimusScaleHero: React.FC = () => {
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-3 md:px-8 md:border-l md:border-slate-200/60 dark:md:border-white/[0.07]">
-              <CyberMetricShield size={17} className="text-cyan-600 dark:text-cyan-400 shrink-0" />
+            <div className="flex items-center gap-3 md:px-6 md:border-l md:border-slate-200/70 dark:md:border-white/[0.07]">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                <CyberMetricShield
+                  size={16}
+                  className="text-emerald-600 dark:text-emerald-400 shrink-0"
+                />
+              </div>
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-sm font-semibold text-foreground">
                   {safeT('hero.metric_tuyo', '100% Tuyo')}
@@ -196,11 +205,13 @@ export const OptimusScaleHero: React.FC = () => {
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-3 md:px-8 md:border-l md:border-slate-200/60 dark:md:border-white/[0.07]">
-              <CyberMetricProcessor
-                size={17}
-                className="text-cyan-600 dark:text-cyan-400 shrink-0"
-              />
+            <div className="flex items-center gap-3 md:px-6 md:border-l md:border-slate-200/70 dark:md:border-white/[0.07]">
+              <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
+                <CyberMetricProcessor
+                  size={16}
+                  className="text-cyan-600 dark:text-cyan-400 shrink-0"
+                />
+              </div>
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-sm font-semibold text-foreground">
                   {safeT('hero.metric_autonomo', 'Autónomo 24/7')}
@@ -215,30 +226,30 @@ export const OptimusScaleHero: React.FC = () => {
 
         {/* TICKER / MARQUEE DE MÉTRICAS */}
         <div
-          className="relative z-10 w-full mt-8 sm:mt-10 py-4.5 border-y border-slate-200/50 dark:border-white/[0.05] overflow-hidden bg-slate-100/35 dark:bg-white/[0.01] backdrop-blur-xs select-none"
+          className="relative z-10 w-full mt-8 sm:mt-10 py-3.5 border-y border-slate-200/50 dark:border-white/[0.05] overflow-hidden bg-slate-100/25 dark:bg-white/[0.01] backdrop-blur-xs select-none"
           style={{
             maskImage:
-              'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
+              'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
             WebkitMaskImage:
-              'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
+              'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
           }}
         >
           <div className="flex w-max animate-marquee gap-10 sm:gap-14 items-center">
             {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
               <div
                 key={'ticker-' + item.label + '-' + idx}
-                className="flex items-center gap-3 shrink-0"
+                className="flex items-center gap-2.5 shrink-0"
               >
-                <span className="text-2xl sm:text-3xl font-semibold text-foreground tracking-[-0.03em] tabular-nums">
+                <span className="text-xl sm:text-2xl font-semibold text-foreground tracking-[-0.03em] tabular-nums">
                   {item.value}
                 </span>
-                <span className="text-xs sm:text-[13px] font-mono uppercase tracking-wider text-muted-foreground">
+                <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-muted-foreground">
                   {item.label}{' '}
-                  <strong className="text-foreground dark:text-[#f7f5ee] font-semibold">
+                  <strong className="text-emerald-700 dark:text-emerald-400 font-semibold">
                     {item.tag}
                   </strong>
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-white/20 ml-2 sm:ml-4" />
+                <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-white/20 ml-3 sm:ml-5" />
               </div>
             ))}
           </div>

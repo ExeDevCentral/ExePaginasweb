@@ -479,11 +479,11 @@ export const PremiumBackground: React.FC = () => {
           screenStars.push({ x: sx, y: sy, mag })
         }
 
-        // 2A. Dibujar las líneas astronómicas de la constelación
+        // 2A. Dibujar las líneas astronómicas de la constelación (sutil en reposo, nítido en hover)
         ctx.save()
         ctx.strokeStyle = baseColor
-        ctx.lineWidth = (dark ? 0.9 : 0.85) + hoverFactor * 0.75
-        ctx.globalAlpha = (dark ? 0.2 : 0.16) + hoverFactor * 0.42
+        ctx.lineWidth = (dark ? 0.75 : 0.7) + hoverFactor * 0.85
+        ctx.globalAlpha = (dark ? 0.11 : 0.08) + hoverFactor * 0.45
         ctx.beginPath()
         for (let eIdx = 0; eIdx < constellation.edges.length; eIdx++) {
           const [a, b] = constellation.edges[eIdx]!
@@ -517,7 +517,7 @@ export const PremiumBackground: React.FC = () => {
           // Núcleo de la estrella
           ctx.save()
           ctx.fillStyle = st.mag >= 0.92 && dark ? '#f8fafc' : baseColor
-          ctx.globalAlpha = ((dark ? 0.78 : 0.65) + hoverFactor * 0.22) * twinkle
+          ctx.globalAlpha = ((dark ? 0.48 : 0.38) + hoverFactor * 0.42) * twinkle
           ctx.beginPath()
           ctx.arc(st.x, st.y, radius, 0, Math.PI * 2)
           ctx.fill()
@@ -525,7 +525,7 @@ export const PremiumBackground: React.FC = () => {
         }
 
         // 2C. Etiqueta astronómica discreta (Glifo + Nombre de la Casa del Zodíaco)
-        const labelAlpha = (dark ? 0.18 : 0.2) + hoverFactor * 0.55
+        const labelAlpha = (dark ? 0.08 : 0.09) + hoverFactor * 0.55
         ctx.save()
         ctx.font = '600 9px "JetBrains Mono", monospace'
         ctx.fillStyle = dark ? '#cbd5e1' : '#475569'

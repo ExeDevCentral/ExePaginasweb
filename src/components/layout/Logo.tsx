@@ -31,15 +31,17 @@ export const Logo: React.FC<LogoProps> = ({
   const sizeStyle = { width: `${size}px`, height: `${size}px` }
 
   const renderLogoImage = () => {
-    const isSmall = size <= 64
-    const darkSrc = isSmall ? '/logo-dark-sm.webp' : '/logo-dark.webp'
-    const lightSrc = isSmall ? '/logo-light-sm.webp' : '/logo-light.webp'
+    // Usar siempre los assets de alta definición nativos (767x768) con image-rendering de precisión
+    // para evitar que se pixel o pierda nitidez en pantallas Retina / móviles de alta densidad
+    const darkSrc = '/logo-dark.webp'
+    const lightSrc = '/logo-light.webp'
 
     const commonImgStyle: React.CSSProperties = {
       maxWidth: size ? `${size}px` : '100%',
       maxHeight: size ? `${size}px` : '100%',
       width: size ? `${size}px` : 'auto',
       height: size ? `${size}px` : 'auto',
+      imageRendering: 'crisp-edges',
     }
 
     if (variant === 'dark') {
@@ -52,7 +54,7 @@ export const Logo: React.FC<LogoProps> = ({
           width={size}
           height={size}
           style={commonImgStyle}
-          className="object-contain filter drop-shadow-[0_0_15px_rgba(250,204,21,0.6)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
+          className="object-contain filter drop-shadow-[0_0_12px_rgba(250,204,21,0.5)] transition-transform duration-300 group-hover:scale-105 relative z-10 shrink-0 select-none"
         />
       )
     }
@@ -67,7 +69,7 @@ export const Logo: React.FC<LogoProps> = ({
           width={size}
           height={size}
           style={commonImgStyle}
-          className="object-contain filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.08)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
+          className="object-contain filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.12)] transition-transform duration-300 group-hover:scale-105 relative z-10 shrink-0 select-none"
         />
       )
     }
@@ -82,7 +84,7 @@ export const Logo: React.FC<LogoProps> = ({
           width={size}
           height={size}
           style={commonImgStyle}
-          className="object-contain dark:hidden filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.08)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
+          className="object-contain dark:hidden filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.12)] transition-transform duration-300 group-hover:scale-105 relative z-10 shrink-0 select-none"
         />
         <img
           src={darkSrc}
@@ -92,7 +94,7 @@ export const Logo: React.FC<LogoProps> = ({
           width={size}
           height={size}
           style={commonImgStyle}
-          className="object-contain hidden dark:block filter drop-shadow-[0_0_15px_rgba(250,204,21,0.6)] transition-transform duration-300 group-hover:scale-110 relative z-10 shrink-0"
+          className="object-contain hidden dark:block filter drop-shadow-[0_0_12px_rgba(250,204,21,0.5)] transition-transform duration-300 group-hover:scale-105 relative z-10 shrink-0 select-none"
         />
       </>
     )

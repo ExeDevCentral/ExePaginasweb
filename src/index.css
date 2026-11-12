@@ -1915,3 +1915,70 @@
   z-index: 20;
 }
 
+/* ==============================================================
+   ANIMACIÓN CYBER NEON PARA EL LOGO EXE (CICLO DE 6 SEGUNDOS)
+   ============================================================== */
+@keyframes laserSweep {
+  0%, 65% {
+    stroke-dashoffset: 600;
+    opacity: 0;
+  }
+  68% {
+    opacity: 1;
+  }
+  82% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  88% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: -600;
+    opacity: 0;
+  }
+}
+
+@keyframes laserSweepX {
+  0%, 68% {
+    stroke-dashoffset: 700;
+    opacity: 0;
+  }
+  71% {
+    opacity: 1;
+  }
+  85% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  90% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: -700;
+    opacity: 0;
+  }
+}
+
+@keyframes cyberRedPulse {
+  0%, 75% {
+    filter: drop-shadow(0 0 0px rgba(239, 68, 68, 0));
+    transform: scale(1);
+  }
+  84% {
+    filter: drop-shadow(0 0 12px rgba(239, 68, 68, 1)) drop-shadow(0 0 20px rgba(239, 68, 68, 0.8));
+    transform: scale(1.18);
+  }
+  92% {
+    filter: drop-shadow(0 0 0px rgba(239, 68, 68, 0));
+    transform: scale(1);
+  }
+  100% {
+    filter: drop-shadow(0 0 0px rgba(239, 68, 68, 0));
+    transform: scale(1);
+  }
+}
+
+

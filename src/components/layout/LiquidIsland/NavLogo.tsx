@@ -9,7 +9,7 @@ import React from 'react'
 import { motion, useTransform, type MotionValue } from 'framer-motion'
 import { useTheme } from '@/core/theme/ThemeContext'
 import { MatrixWordmark } from '@/components/Effects/MatrixText'
-import Logo from '../Logo'
+import CyberNeonLogo from '../CyberNeonLogo'
 
 export interface NavLogoProps {
   scrollY: MotionValue<number>
@@ -38,7 +38,7 @@ export default function NavLogo({
         }}
         layout="position"
       >
-        <Logo size={42} variant="auto" pulseCycle={!reduceMotion} />
+        <CyberNeonLogo size={28} />
       </motion.div>
 
       {/* Wordmark: colapsa suavemente con layout="position" en modo compact */}

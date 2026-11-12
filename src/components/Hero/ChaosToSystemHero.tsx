@@ -31,7 +31,6 @@ import {
   CheckCircle2,
   ChevronRight,
 } from 'lucide-react'
-import { ChromaticButton } from '@/components/ui/reactdrops/chromatic-button'
 
 type ActNumber = 1 | 2 | 3
 
@@ -369,19 +368,16 @@ export const ChaosToSystemHero: React.FC<ChaosToSystemHeroProps> = ({
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto mb-8">
-              <ChromaticButton
+              <button
                 type="button"
                 onClick={onPrimaryCtaClick}
-                colorMode="gradient-3"
-                color="#06b6d4"
-                color2="#10b981"
-                color3="#3b82f6"
-                className="group relative inline-flex items-center justify-center gap-2.5 px-7 py-3.5 font-mono text-sm font-bold text-white shadow-[0_0_30px_rgba(6,182,212,0.5)] hover:shadow-[0_0_45px_rgba(6,182,212,0.8)] cursor-pointer"
+                className="group relative inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-mono text-sm font-bold text-black bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-300 shadow-[0_0_25px_rgba(6,182,212,0.4)] hover:shadow-[0_0_40px_rgba(6,182,212,0.65)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer overflow-hidden"
               >
-                <Zap className="w-4 h-4 fill-white text-white drop-shadow" />
-                <span className="drop-shadow-sm">{primaryCtaText}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform drop-shadow" />
-              </ChromaticButton>
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full duration-1000 bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform" />
+                <Zap className="w-4 h-4 fill-black text-black" />
+                <span>{primaryCtaText}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
 
               <button
                 type="button"

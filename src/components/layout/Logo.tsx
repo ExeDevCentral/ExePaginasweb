@@ -14,6 +14,8 @@ interface LogoProps {
   showText?: boolean
   textClassName?: string
   animated?: boolean
+  /** Ciclo cinemático suave de 6s con destello holográfico y respiración de micro-escala */
+  pulseCycle?: boolean
 }
 
 export const Logo: React.FC<LogoProps> = ({
@@ -24,6 +26,7 @@ export const Logo: React.FC<LogoProps> = ({
   showText = false,
   textClassName = 'text-white text-base font-black tracking-widest uppercase font-mono',
   animated = false,
+  pulseCycle = false,
 }) => {
   const sizeStyle = { width: `${size}px`, height: `${size}px` }
 
@@ -99,14 +102,49 @@ export const Logo: React.FC<LogoProps> = ({
     <motion.div
       style={sizeStyle}
       className={`relative inline-flex items-center justify-center shrink-0 group ${className}`}
-      {...(animated
+      {...(pulseCycle
         ? {
-            animate: { y: [0, -3, 0] },
-            transition: { repeat: Infinity, duration: 3.5, ease: 'easeInOut' as const },
+            animate: {
+              scale: [1, 1, 1.08, 1.02, 1, 1],
+              filter: [
+                'drop-shadow(0 0 0px rgba(6,182,212,0))',
+                'drop-shadow(0 0 0px rgba(6,182,212,0))',
+                'drop-shadow(0 0 16px rgba(6,182,212,0.75))',
+                'drop-shadow(0 0 8px rgba(250,204,21,0.5))',
+                'drop-shadow(0 0 0px rgba(6,182,212,0))',
+                'drop-shadow(0 0 0px rgba(6,182,212,0))',
+              ],
+            },
+            transition: {
+              duration: 6,
+              repeat: Infinity,
+              ease: [0.22, 1, 0.36, 1],
+              times: [0, 0.3, 0.45, 0.58, 0.72, 1],
+            },
           }
-        : {})}
+        : animated
+          ? {
+              animate: { y: [0, -3, 0] },
+              transition: { repeat: Infinity, duration: 3.5, ease: 'easeInOut' as const },
+            }
+          : {})}
     >
-      {animated && (
+      {pulseCycle && (
+        <motion.div
+          animate={{
+            opacity: [0, 0, 0.8, 0.3, 0, 0],
+            scale: [0.8, 0.8, 1.35, 1.15, 0.9, 0.8],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            times: [0, 0.3, 0.45, 0.58, 0.72, 1],
+          }}
+          className="absolute inset-0 bg-radial from-cyan-400/40 via-amber-400/25 to-transparent blur-lg rounded-full pointer-events-none"
+        />
+      )}
+      {animated && !pulseCycle && (
         <div className="absolute inset-0 bg-yellow-400/20 blur-xl rounded-full animate-pulse pointer-events-none" />
       )}
       {renderLogoImage()}

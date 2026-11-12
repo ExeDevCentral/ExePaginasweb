@@ -38,7 +38,7 @@ export default function NavLogo({
         }}
         layout="position"
       >
-        <Logo size={34} variant="auto" />
+        <Logo size={34} variant="auto" pulseCycle={!reduceMotion} />
       </motion.div>
 
       {/* Wordmark: colapsa suavemente con layout="position" en modo compact */}

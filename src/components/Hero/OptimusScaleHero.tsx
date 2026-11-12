@@ -15,7 +15,6 @@ import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import HudButton from '@/components/HudButton'
-import { ChromaticButton } from '@/components/ui/reactdrops/chromatic-button'
 import {
   CyberMetricLightning,
   CyberMetricShield,
@@ -148,26 +147,17 @@ export const OptimusScaleHero: React.FC = () => {
 
               {/* CTA principal */}
               <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto max-w-full">
-                <a
+                <HudButton
+                  label={safeT('hero.cta_casos', 'Ver Portafolio en Vivo')}
                   href="/portafolio"
+                  variant="primary"
+                  size="lg"
                   onClick={() =>
                     trackEvent('hero_cta_portfolio_clicked', { source: 'optimus_hero' })
                   }
-                  className="w-full sm:w-auto inline-flex"
-                >
-                  <ChromaticButton
-                    colorMode="gradient-3"
-                    color="#06b6d4"
-                    color2="#10b981"
-                    color3="#3b82f6"
-                    className="w-full sm:w-auto px-7 py-3.5 font-mono text-sm font-bold text-white shadow-[0_0_30px_rgba(6,182,212,0.5)] hover:shadow-[0_0_45px_rgba(6,182,212,0.8)] cursor-pointer inline-flex items-center justify-center gap-2"
-                  >
-                    <span className="drop-shadow-sm">
-                      {safeT('hero.cta_casos', 'Ver Portafolio en Vivo')}
-                    </span>
-                    <span className="text-cyan-200">→</span>
-                  </ChromaticButton>
-                </a>
+                  ariaLabel="Explorar portafolio de sistemas en producción"
+                  className="w-full sm:w-auto max-w-full"
+                />
               </div>
             </div>
 

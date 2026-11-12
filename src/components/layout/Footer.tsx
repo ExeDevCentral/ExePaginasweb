@@ -146,7 +146,7 @@ const Footer = () => {
                   aria-label="ExePaginasWeb, inicio"
                   className="inline-flex items-center gap-2.5 mb-3 group focus:outline-none"
                 >
-                  <Logo size={34} className="h-8 w-auto shrink-0" />
+                  <Logo size={58} className="shrink-0" />
                   <span aria-hidden="true">
                     <MatrixWordmark
                       parts={[
@@ -412,7 +412,7 @@ const Footer = () => {
             <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 text-xs">
               {/* Izquierda: Copyright */}
               <div className="flex items-center justify-center lg:justify-start gap-2 text-slate-500 dark:text-slate-400 text-[11px] font-mono tracking-wide min-w-0">
-                <Logo size={18} variant="auto" />
+                <Logo size={36} variant="auto" />
                 <p className="select-none leading-snug">
                   © 2025{' '}
                   <span className="text-slate-900 dark:text-white font-semibold">

@@ -28,8 +28,9 @@ export const Logo: React.FC<LogoProps> = ({
   animated = false,
   pulseCycle = false,
 }) => {
-  const logoWidth = Math.round(size * (535 / 200))
-  const sizeStyle = { width: `${logoWidth}px`, height: `${size}px` }
+  const logoWidth = size
+  const logoHeight = Math.max(10, Math.round(size * (200 / 535)))
+  const sizeStyle = { width: `${logoWidth}px`, height: `${logoHeight}px` }
 
   const renderLogoImage = () => {
     // Isotipo vectorial unificado (mismos trazos exactos de public/logo.svg y CyberNeonLogo)
@@ -48,7 +49,7 @@ export const Logo: React.FC<LogoProps> = ({
         role="img"
         aria-label={alt}
         width={logoWidth}
-        height={size}
+        height={logoHeight}
         className={`w-full h-full transition-transform duration-300 group-hover:scale-105 relative z-10 shrink-0 select-none ${colorClass}`}
       >
         {/* Left E */}

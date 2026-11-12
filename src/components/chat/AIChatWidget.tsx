@@ -39,6 +39,7 @@ import { inspectUserMessage, sanitizeVisitorName } from '@/core/ai/securityGuard
 import { trackEvent } from '@/core/analytics/trackEvent'
 import Logo from '../layout/Logo'
 import HudButton from '../HudButton'
+import { LiquidGlassOrb } from '../ui/reactdrops/liquid-glass-orb'
 
 // Ícono SVG oficial de WhatsApp
 const WhatsAppIcon = ({ className = 'w-5 h-5' }: { className?: string }) => (
@@ -918,8 +919,14 @@ export const AIChatWidget: React.FC = () => {
                     </button>
 
                     <div className="flex items-center gap-2 ml-1">
-                      <div className="w-7 h-7 rounded-full bg-[#0c1322] border border-cyan-400/50 flex items-center justify-center shrink-0">
-                        <Logo size={20} variant="dark" />
+                      <div className="relative w-8 h-8 rounded-full flex items-center justify-center shrink-0 overflow-hidden border border-cyan-400/50 bg-[#0c1322]">
+                        <div className="absolute inset-0 flex items-center justify-center scale-75">
+                          <LiquidGlassOrb
+                            state={isLoading ? 'thinking' : 'speaking'}
+                            preset="azure"
+                            animateEntrance={false}
+                          />
+                        </div>
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5">

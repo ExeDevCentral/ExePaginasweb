@@ -566,13 +566,13 @@ export const AIChatWidget: React.FC = () => {
           {/* Aura perimetral cian */}
           <span className="absolute -inset-0.5 rounded-full bg-linear-to-r from-cyan-500 via-sky-400 to-emerald-400 opacity-20 group-hover:opacity-60 blur-xs transition-opacity duration-300" />
 
-          {/* Icono Dual / Logo Dinámico ExePaginasWeb */}
-          <div className="relative w-9 h-9 rounded-full bg-[#0a0f1d] border border-cyan-400/50 flex items-center justify-center shrink-0 shadow-inner">
+          {/* Icono Dual / Logo Dinámico ExePaginasWeb con Liquid Glass Orb */}
+          <div className="relative w-9 h-9 rounded-full bg-[#0a0f1d] border border-cyan-400/50 flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
             {isOpen ? (
-              <X className="w-4 h-4 text-white" />
+              <X className="w-4 h-4 text-white z-10" />
             ) : (
-              <div className="flex items-center justify-center">
-                <Logo size={26} variant="dark" />
+              <div className="absolute inset-0 flex items-center justify-center scale-90 pointer-events-none">
+                <LiquidGlassOrb state="idle" preset="azure" animateEntrance={false} />
               </div>
             )}
           </div>

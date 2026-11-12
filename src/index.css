@@ -1916,65 +1916,138 @@
 }
 
 /* ==============================================================
-   ANIMACIÓN CYBER NEON PARA EL LOGO EXE (CICLO DE 6 SEGUNDOS)
+   ANIMACIÓN CYBER NEON PARA EL LOGO EXE (LÁSER RECORRIENDO Y SALTANDO E -> X -> E -> .)
    ============================================================== */
-@keyframes laserSweep {
-  0%, 65% {
-    stroke-dashoffset: 600;
+@keyframes laserHopE1 {
+  0% {
+    stroke-dashoffset: 100;
     opacity: 0;
   }
-  68% {
+  3% {
     opacity: 1;
   }
-  82% {
+  26% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  88% {
-    stroke-dashoffset: 0;
-    opacity: 0;
-  }
+  31%,
   100% {
-    stroke-dashoffset: -600;
+    stroke-dashoffset: -28;
     opacity: 0;
   }
 }
 
-@keyframes laserSweepX {
-  0%, 68% {
-    stroke-dashoffset: 700;
+@keyframes laserJump1 {
+  0%,
+  22% {
+    stroke-dashoffset: 100;
     opacity: 0;
   }
-  71% {
+  25% {
     opacity: 1;
   }
-  85% {
+  33% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  90% {
-    stroke-dashoffset: 0;
-    opacity: 0;
-  }
+  37%,
   100% {
-    stroke-dashoffset: -700;
+    stroke-dashoffset: -35;
+    opacity: 0;
+  }
+}
+
+@keyframes laserHopX {
+  0%,
+  28% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  32% {
+    opacity: 1;
+  }
+  56% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  61%,
+  100% {
+    stroke-dashoffset: -28;
+    opacity: 0;
+  }
+}
+
+@keyframes laserJump2 {
+  0%,
+  52% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  63% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  67%,
+  100% {
+    stroke-dashoffset: -35;
+    opacity: 0;
+  }
+}
+
+@keyframes laserHopE2 {
+  0%,
+  58% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+  }
+  86% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  91%,
+  100% {
+    stroke-dashoffset: -28;
+    opacity: 0;
+  }
+}
+
+@keyframes laserJump3 {
+  0%,
+  80% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  83% {
+    opacity: 1;
+  }
+  91% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  95%,
+  100% {
+    stroke-dashoffset: -35;
     opacity: 0;
   }
 }
 
 @keyframes cyberRedPulse {
-  0%, 75% {
+  0%,
+  82% {
     filter: drop-shadow(0 0 0px rgba(239, 68, 68, 0));
     transform: scale(1);
   }
-  84% {
-    filter: drop-shadow(0 0 12px rgba(239, 68, 68, 1)) drop-shadow(0 0 20px rgba(239, 68, 68, 0.8));
+  90% {
+    filter: drop-shadow(0 0 12px rgba(239, 68, 68, 1)) drop-shadow(0 0 22px rgba(239, 68, 68, 0.85));
     transform: scale(1.18);
   }
-  92% {
-    filter: drop-shadow(0 0 0px rgba(239, 68, 68, 0));
-    transform: scale(1);
-  }
+  98%,
   100% {
     filter: drop-shadow(0 0 0px rgba(239, 68, 68, 0));
     transform: scale(1);

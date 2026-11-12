@@ -73,7 +73,7 @@ export default function MagneticCTA({
         size="sm"
         icon={<span className="text-xs font-semibold">→</span>}
         {...(onClick ? { onClick: (e) => onClick(e as React.MouseEvent<HTMLAnchorElement>) } : {})}
-        className={`!py-2 !px-4 !text-[11px] ${className}`}
+        className={`hud-pill !py-2 !px-4 !text-[11px] ${className}`}
       />
     </motion.div>
   )

@@ -158,6 +158,14 @@
   white-space: nowrap;
 }
 
+/* Variante Pill concéntrica para Dynamic Island Navbar */
+.hud.hud-pill,
+.hud.hud-pill::before,
+.hud.hud-pill::after {
+  clip-path: none;
+  border-radius: 9999px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hud::after, .hud__dot { animation: none; }
 }

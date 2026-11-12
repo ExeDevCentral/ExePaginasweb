@@ -15,6 +15,7 @@ import React, { useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
+import { Badge } from '@astryxdesign/core'
 import {
   ShieldCheck,
   CheckCircle2,
@@ -139,9 +140,10 @@ export default function MobileLandingView() {
 
         <div className="relative z-10 flex flex-col items-center text-center">
           {/* Eyebrow de Autoridad Directa */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-cyan/10 border border-accent-cyan/30 text-[11px] font-mono font-bold text-accent-cyan mb-3">
-            <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
-            <span>{t('mobile.eyebrow', 'EXEQUIEL ECHEVARRÍA · ARCHITECT · 2025')}</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 backdrop-blur-md text-[11px] font-mono font-semibold text-slate-700 dark:text-cyan-300 mb-3 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>{t('mobile.eyebrow', 'EXEQUIEL ECHEVARRÍA · ARCHITECT')}</span>
+            <Badge label="2025" variant="success" />
           </div>
 
           {/* Titular de Alto Impacto */}
@@ -250,7 +252,7 @@ export default function MobileLandingView() {
             return (
               <div
                 key={demo.id}
-                className="relative p-4 rounded-2xl bg-card border border-border dark:border-emerald-500/30 shadow-md overflow-hidden hover:border-accent-cyan/50 transition-all"
+                className="relative p-4 rounded-2xl bg-white/95 dark:bg-[#090e1a]/95 border border-slate-200/90 dark:border-white/[0.08] shadow-[0_8px_24px_-10px_rgba(15,23,42,0.08)] overflow-hidden hover:border-cyan-500/40 transition-all"
               >
                 {/* Micro indicador luminoso superior */}
                 <div

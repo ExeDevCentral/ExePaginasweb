@@ -6,6 +6,7 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
+import { Badge } from '@astryxdesign/core'
 import { Code2, Mail, Zap, Shield, Send, MessageSquare, MapPin } from 'lucide-react'
 import Link from 'next/link'
 
@@ -93,9 +94,9 @@ const Footer = () => {
       />
 
       {/* Contenedor Arquitectónico Compacto (max-w-5xl) */}
-      <div className="max-w-5xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-300 dark:border-white/[0.08] bg-white dark:bg-[#070b14]/90 backdrop-blur-xl shadow-[0_24px_60px_-15px_rgba(15,23,42,0.12)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.8)] overflow-hidden">
+      <div className="max-w-5xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-white/[0.08] bg-white/95 dark:bg-[#090e1a]/95 backdrop-blur-xl shadow-[0_18px_50px_-15px_rgba(15,23,42,0.08)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.8)] overflow-hidden">
         {/* 1. BARRA SUPERIOR COMPACTA DE TELEMETRÍA Y AUTORÍA (1 SOLA LÍNEA LIMPIA) */}
-        <div className="px-5 sm:px-7 py-3 bg-slate-100/95 dark:bg-[#050811]/90 border-b border-slate-300/85 dark:border-white/[0.06] flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-[11px] font-mono">
+        <div className="px-5 sm:px-7 py-3 bg-slate-50/90 dark:bg-[#050811]/90 border-b border-slate-200/80 dark:border-white/[0.06] flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-[11px] font-mono">
           {/* Estado Operativo */}
           <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200 font-semibold">
             <span className="relative flex h-2 w-2 shrink-0">
@@ -103,9 +104,7 @@ const Footer = () => {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
             <span>{t('footer.telemetry_sistemas') || 'Sistemas Operativos'}</span>
-            <span className="px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25 text-[10px] font-bold">
-              99.99%
-            </span>
+            <Badge label="99.99%" variant="success" />
           </div>
 
           {/* Indicadores técnicos condensados */}

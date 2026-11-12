@@ -10,6 +10,7 @@
 'use client'
 
 import React from 'react'
+import { Badge } from '@astryxdesign/core'
 import {
   Sparkles,
   ShoppingBag,
@@ -608,20 +609,21 @@ export const OwnershipVsSubscription: React.FC = () => {
         {/* ============================================================
             CABECERA LIMPIA Y CENTRADA (Fácil de leer en 3 segundos)
            ============================================================ */}
-        <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 dark:bg-cyan-400/10 border border-cyan-500/30 dark:border-cyan-400/30 text-cyan-800 dark:text-cyan-300 text-xs font-bold tracking-wide mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-500" />
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/75 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/10 backdrop-blur-md shadow-2xs text-slate-700 dark:text-slate-300 text-[11px] font-mono font-semibold tracking-wider mb-5">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
             <span>MINI-AUDITORÍA HECHA CON IA · HONESTIDAD BRUTAL</span>
+            <Badge label="36 MESES" variant="cyan" />
           </div>
 
           <h2
             id="honest-audit-heading"
-            className="text-2xl sm:text-4xl lg:text-[40px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]"
+            className="text-3xl sm:text-4xl lg:text-[42px] font-display font-semibold tracking-[-0.025em] text-slate-950 dark:text-white leading-[1.12]"
           >
             {AUDIT_TITLE}
           </h2>
 
-          <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="mt-4 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
             Si estás experimentando sin ventas validadas, te decimos la verdad: alquilá algo barato
             para probar. Pero si tu negocio ya vende, mirá en el gráfico interactivo cuánta plata
             regalás en alquileres y por qué te conviene ser dueño.
@@ -633,7 +635,8 @@ export const OwnershipVsSubscription: React.FC = () => {
            ============================================================ */}
         <div data-audit-workstation="true" data-hologram-scanner="true" className="space-y-6">
           {/* PASO 1 + PASO 2: Controles Humanos Simples (3 Botones Grandes + Slider Suave) */}
-          <div className="rounded-3xl bg-white/90 dark:bg-[#081022]/90 backdrop-blur-xl border border-slate-200/90 dark:border-cyan-500/25 shadow-xl p-5 sm:p-7">
+          <div className="relative rounded-2xl sm:rounded-3xl bg-white/95 dark:bg-[#090e1a]/95 backdrop-blur-xl border border-slate-200/90 dark:border-white/[0.08] shadow-[0_14px_40px_-14px_rgba(15,23,42,0.08)] p-5 sm:p-7 overflow-hidden">
+            <div className="pointer-events-none absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-cyan-500/60 to-transparent" />
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
               {/* Selector de Situación actual (3 tarjetas visuales amigables) */}
               <div className="lg:col-span-7">
@@ -773,13 +776,19 @@ export const OwnershipVsSubscription: React.FC = () => {
 
             {/* Banner de Diagnóstico IA Humano (Claro, directo y sin jerga) */}
             <div
-              className={`mt-5 rounded-2xl p-4 sm:p-5 border flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+              className={`mt-5 rounded-2xl p-4 sm:p-5 border flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden ${
                 isExperimental
-                  ? 'bg-amber-50/90 dark:bg-amber-950/25 border-amber-300 dark:border-amber-500/40'
-                  : 'bg-cyan-50/80 dark:bg-cyan-950/25 border-cyan-300 dark:border-cyan-500/35'
+                  ? 'bg-amber-50/75 dark:bg-amber-950/20 border-amber-200/90 dark:border-amber-500/30'
+                  : 'bg-cyan-50/60 dark:bg-cyan-950/20 border-cyan-200/90 dark:border-cyan-500/30'
               }`}
             >
-              <div className="space-y-1">
+              <div
+                aria-hidden="true"
+                className={`absolute left-0 inset-y-0 w-1 ${
+                  isExperimental ? 'bg-amber-500' : 'bg-cyan-500'
+                }`}
+              />
+              <div className="space-y-1 pl-2">
                 <div
                   className={`text-[11px] font-mono font-extrabold uppercase tracking-wider flex items-center gap-1.5 ${
                     isExperimental

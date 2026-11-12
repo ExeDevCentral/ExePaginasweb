@@ -84,6 +84,10 @@ const Footer = () => {
   const { t } = useTranslation()
   const { theme } = useTheme()
   const isLight = theme === 'light'
+  const safeT = (key: string, fallback: string) => {
+    const res = t(key, fallback)
+    return !res || res === key || res.startsWith('footer.') ? fallback : res
+  }
 
   return (
     <footer className="relative z-10 pt-8 pb-24 sm:pb-24 lg:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
@@ -93,8 +97,8 @@ const Footer = () => {
         className="pointer-events-none mx-auto mb-8 h-px max-w-xl bg-gradient-to-r from-transparent via-slate-300/70 dark:via-white/10 to-transparent"
       />
 
-      {/* Contenedor Arquitectónico Compacto (max-w-5xl) */}
-      <div className="max-w-5xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-white/[0.08] bg-white/95 dark:bg-[#090e1a]/95 backdrop-blur-xl shadow-[0_18px_50px_-15px_rgba(15,23,42,0.08)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.8)] overflow-hidden">
+      {/* Contenedor Arquitectónico Balanceado (max-w-6xl) */}
+      <div className="max-w-6xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-white/[0.08] bg-white/95 dark:bg-[#090e1a]/95 backdrop-blur-xl shadow-[0_18px_50px_-15px_rgba(15,23,42,0.08)] dark:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.8)] overflow-hidden">
         {/* 1. BARRA SUPERIOR COMPACTA DE TELEMETRÍA Y AUTORÍA (1 SOLA LÍNEA LIMPIA) */}
         <div className="px-5 sm:px-7 py-3 bg-slate-50/90 dark:bg-[#050811]/90 border-b border-slate-200/80 dark:border-white/[0.06] flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-[11px] font-mono">
           {/* Estado Operativo */}
@@ -161,11 +165,9 @@ const Footer = () => {
                 </p>
 
                 {/* Badge único de disponibilidad y alcance global */}
-                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-[11px] font-mono font-medium mb-5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>
-                    {t('footer.cupos_disponibles') || 'Disponibilidad activa · Escala Global'}
-                  </span>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-[11px] font-mono font-medium mb-5 whitespace-nowrap">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                  <span>Disponibilidad activa · Escala Global</span>
                 </div>
               </div>
 
@@ -285,7 +287,7 @@ const Footer = () => {
                     className="inline-flex items-center gap-1.5 font-semibold text-cyan-700 dark:text-cyan-400 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    {t('footer.nav_dashboard') || 'Panel de Clientes'}
+                    {safeT('footer.nav_dashboard', 'Panel de Clientes')}
                   </Link>
                 </li>
                 <li>
@@ -382,22 +384,22 @@ const Footer = () => {
                     <span className="font-medium">WhatsApp: {DISPLAY_WHATSAPP_NUMBER}</span>
                   </a>
                 </li>
-                <li className="pt-2.5 mt-2.5 flex items-center gap-3 border-t border-slate-200/80 dark:border-white/[0.06] text-[11px] font-mono">
+                <li className="pt-2.5 mt-2.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 border-t border-slate-200/80 dark:border-white/[0.06] text-[11px] font-mono">
                   <Link
                     href="/terminos"
-                    className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                    className="whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                   >
-                    {t('footer.terminos') || 'Términos'}
+                    {safeT('footer.terminos', 'Términos')}
                   </Link>
                   <span className="text-slate-300 dark:text-white/20">·</span>
                   <Link
                     href="/privacidad"
-                    className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                    className="whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                   >
-                    {t('footer.privacidad') || 'Privacidad'}
+                    {safeT('footer.privacidad', 'Privacidad')}
                   </Link>
                   <span className="text-slate-300 dark:text-white/20">·</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                  <span className="whitespace-nowrap text-emerald-600 dark:text-emerald-400 font-semibold">
                     WCAG AA
                   </span>
                 </li>

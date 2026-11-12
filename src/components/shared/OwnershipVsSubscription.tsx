@@ -665,8 +665,10 @@ export const OwnershipVsSubscription: React.FC = () => {
                         className={`text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
                           active
                             ? item.phase === 'experimental'
-                              ? 'bg-amber-500/15 border-amber-500 text-slate-900 dark:text-white shadow-md shadow-amber-500/10'
-                              : 'bg-cyan-500/15 border-cyan-500 text-slate-900 dark:text-white shadow-md shadow-cyan-500/15'
+                              ? 'bg-amber-500/12 border-amber-500/80 text-slate-900 dark:text-white shadow-md shadow-amber-500/10'
+                              : item.id === 'servicios'
+                                ? 'bg-emerald-500/12 border-emerald-500/80 text-slate-900 dark:text-white shadow-md shadow-emerald-500/10'
+                                : 'bg-cyan-500/12 border-cyan-500/80 text-slate-900 dark:text-white shadow-md shadow-cyan-500/10'
                             : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/25'
                         }`}
                       >
@@ -676,7 +678,9 @@ export const OwnershipVsSubscription: React.FC = () => {
                               active
                                 ? item.phase === 'experimental'
                                   ? 'bg-amber-500 text-slate-950'
-                                  : 'bg-cyan-500 text-slate-950'
+                                  : item.id === 'servicios'
+                                    ? 'bg-emerald-500 text-slate-950'
+                                    : 'bg-cyan-500 text-slate-950'
                                 : 'bg-slate-200/70 dark:bg-white/10 text-slate-600 dark:text-slate-300'
                             }`}
                           >
@@ -713,7 +717,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                     </span>
                     <span>Tus ventas por mes:</span>
                   </span>
-                  <span className="text-lg sm:text-xl font-black font-mono text-cyan-600 dark:text-cyan-400">
+                  <span className="text-lg sm:text-xl font-black font-mono text-emerald-600 dark:text-emerald-400">
                     {stats.monthlySalesFormatted}
                   </span>
                 </div>
@@ -727,7 +731,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                   value={monthlySalesArs}
                   aria-label="Simular facturación mensual en pesos argentinos"
                   onChange={(e) => setMonthlySalesArs(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500 my-2"
+                  className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500 my-2"
                 />
 
                 {/* Botones rápidos de monto + comisión */}
@@ -740,7 +744,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                         onClick={() => setMonthlySalesArs(stop.value)}
                         className={`px-2 py-1 rounded-lg text-[11px] font-mono font-bold transition-all cursor-pointer ${
                           monthlySalesArs === stop.value
-                            ? 'bg-cyan-500 text-slate-950'
+                            ? 'bg-emerald-500 text-slate-950'
                             : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10'
                         }`}
                       >
@@ -779,13 +783,13 @@ export const OwnershipVsSubscription: React.FC = () => {
               className={`mt-5 rounded-2xl p-4 sm:p-5 border flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden ${
                 isExperimental
                   ? 'bg-amber-50/75 dark:bg-amber-950/20 border-amber-200/90 dark:border-amber-500/30'
-                  : 'bg-cyan-50/60 dark:bg-cyan-950/20 border-cyan-200/90 dark:border-cyan-500/30'
+                  : 'bg-violet-50/70 dark:bg-violet-950/20 border-violet-200/90 dark:border-violet-500/30'
               }`}
             >
               <div
                 aria-hidden="true"
                 className={`absolute left-0 inset-y-0 w-1 ${
-                  isExperimental ? 'bg-amber-500' : 'bg-cyan-500'
+                  isExperimental ? 'bg-amber-500' : 'bg-violet-500'
                 }`}
               />
               <div className="space-y-1 pl-2">
@@ -793,13 +797,13 @@ export const OwnershipVsSubscription: React.FC = () => {
                   className={`text-[11px] font-mono font-extrabold uppercase tracking-wider flex items-center gap-1.5 ${
                     isExperimental
                       ? 'text-amber-800 dark:text-amber-300'
-                      : 'text-cyan-800 dark:text-cyan-300'
+                      : 'text-violet-800 dark:text-violet-300'
                   }`}
                 >
                   {isExperimental ? (
                     <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
                   ) : (
-                    <Zap className="w-4 h-4 text-cyan-500 shrink-0" />
+                    <Zap className="w-4 h-4 text-violet-500 dark:text-violet-400 shrink-0" />
                   )}
                   <span>{currentScenario.aiVerdictTag}</span>
                 </div>

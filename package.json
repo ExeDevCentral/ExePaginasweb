@@ -37,14 +37,18 @@
     "audit:keys": "node scripts/audit-apikeys.mjs",
     "webhooks:heal": "node scripts/heal-webhooks.mjs",
     "export:templates": "node scripts/export-resend-templates.mjs",
-    "check:deps": "npx npm-check-updates"
+    "check:deps": "npx npm-check-updates",
+    "postinstall": "node scripts/patch-astryx.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.67",
     "@ai-sdk/groq": "^4.0.40",
     "@ai-sdk/openai-compatible": "^3.0.47",
     "@ai-sdk/react": "^4.0.102",
+    "@astryxdesign/core": "^0.7.15",
+    "@astryxdesign/theme-neutral": "^0.7.15",
     "@sentry/react": "^10.73.0",
+    "@stylexjs/stylex": "^0.19.2",
     "@supabase/ssr": "^0.12.6",
     "@supabase/supabase-js": "^2.115.0",
     "@tanstack/react-query": "^5.102.8",

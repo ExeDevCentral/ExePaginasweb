@@ -6,6 +6,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, Space_Grotesk, JetBrains_Mono, Instrument_Serif } from 'next/font/google'
 import Providers from './providers'
+import '@astryxdesign/theme-neutral/theme.css'
+import '@astryxdesign/core/astryx.css'
 import './globals.css'
 
 const inter = Inter({

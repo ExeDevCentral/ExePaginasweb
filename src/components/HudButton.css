@@ -166,6 +166,10 @@
   border-radius: 9999px;
 }
 
+.hud.hud-pill {
+  overflow: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hud::after, .hud__dot { animation: none; }
 }

@@ -33,6 +33,8 @@ export interface HudButtonProps {
   onMouseLeave?: ((e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void) | undefined
   /** Deshabilitado */
   disabled?: boolean | undefined
+  /** Activa el efecto Matrix Scramble al hacer hover/focus (default: true) */
+  scramble?: boolean | undefined
   /** Clase CSS adicional */
   className?: string | undefined
   /** Target para links */
@@ -87,6 +89,7 @@ export default function HudButton({
   onMouseEnter: onMouseEnterProp,
   onMouseLeave: onMouseLeaveProp,
   disabled = false,
+  scramble = true,
   className = '',
   target,
   rel,
@@ -108,7 +111,7 @@ export default function HudButton({
   const shouldShowDot = showDot ?? variant === 'primary'
 
   const triggerScramble = useCallback(() => {
-    if (!effectiveLabel) return
+    if (!scramble || !effectiveLabel) return
     if (
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches

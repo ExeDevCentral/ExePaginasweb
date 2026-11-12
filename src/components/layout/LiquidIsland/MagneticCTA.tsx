@@ -39,12 +39,12 @@ export default function MagneticCTA({
     const centerX = rect.left + rect.width / 2
     const centerY = rect.top + rect.height / 2
 
-    // Desplazamiento máximo de 8px hacia el cursor
-    const distanceX = (e.clientX - centerX) * 0.28
-    const distanceY = (e.clientY - centerY) * 0.28
+    // Desplazamiento máximo de 4px hacia el cursor para no tocar el borde curvo de la cápsula
+    const distanceX = (e.clientX - centerX) * 0.22
+    const distanceY = (e.clientY - centerY) * 0.22
 
-    const clampedX = Math.max(-8, Math.min(8, distanceX))
-    const clampedY = Math.max(-8, Math.min(8, distanceY))
+    const clampedX = Math.max(-4, Math.min(4, distanceX))
+    const clampedY = Math.max(-3, Math.min(3, distanceY))
 
     x.set(clampedX)
     y.set(clampedY)
@@ -71,6 +71,7 @@ export default function MagneticCTA({
         href={href}
         variant="primary"
         size="sm"
+        scramble={false}
         icon={<span className="text-xs font-semibold">→</span>}
         {...(onClick ? { onClick: (e) => onClick(e as React.MouseEvent<HTMLAnchorElement>) } : {})}
         className={`hud-pill !py-2 !px-4 !text-[11px] ${className}`}

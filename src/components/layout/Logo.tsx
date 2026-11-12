@@ -28,75 +28,47 @@ export const Logo: React.FC<LogoProps> = ({
   animated = false,
   pulseCycle = false,
 }) => {
-  const sizeStyle = { width: `${size}px`, height: `${size}px` }
+  const logoWidth = Math.round(size * (535 / 200))
+  const sizeStyle = { width: `${logoWidth}px`, height: `${size}px` }
 
   const renderLogoImage = () => {
-    // Usar siempre los assets de alta definición nativos (767x768) con image-rendering de precisión
-    // para evitar que se pixel o pierda nitidez en pantallas Retina / móviles de alta densidad
-    const darkSrc = '/logo-dark.webp'
-    const lightSrc = '/logo-light.webp'
-
-    const commonImgStyle: React.CSSProperties = {
-      maxWidth: size ? `${size}px` : '100%',
-      maxHeight: size ? `${size}px` : '100%',
-      width: size ? `${size}px` : 'auto',
-      height: size ? `${size}px` : 'auto',
-      imageRendering: 'crisp-edges',
-    }
-
-    if (variant === 'dark') {
-      return (
-        <img
-          src={darkSrc}
-          alt={alt}
-          loading="eager"
-          fetchPriority="high"
-          width={size}
-          height={size}
-          style={commonImgStyle}
-          className="object-contain filter drop-shadow-[0_0_12px_rgba(250,204,21,0.5)] transition-transform duration-300 group-hover:scale-105 relative z-10 shrink-0 select-none"
-        />
-      )
-    }
-
-    if (variant === 'light') {
-      return (
-        <img
-          src={lightSrc}
-          alt={alt}
-          loading="eager"
-          fetchPriority="high"
-          width={size}
-          height={size}
-          style={commonImgStyle}
-          className="object-contain filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.12)] transition-transform duration-300 group-hover:scale-105 relative z-10 shrink-0 select-none"
-        />
-      )
-    }
+    // Isotipo vectorial unificado (mismos trazos exactos de public/logo.svg y CyberNeonLogo)
+    const colorClass =
+      variant === 'dark'
+        ? 'text-white drop-shadow-[0_0_10px_rgba(34,211,238,0.45)]'
+        : variant === 'light'
+          ? 'text-slate-900 drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]'
+          : 'text-slate-900 dark:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)] dark:drop-shadow-[0_0_10px_rgba(34,211,238,0.45)]'
 
     return (
-      <>
-        <img
-          src={lightSrc}
-          alt={alt}
-          loading="eager"
-          fetchPriority="high"
-          width={size}
-          height={size}
-          style={commonImgStyle}
-          className="object-contain dark:hidden filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.12)] transition-transform duration-300 group-hover:scale-105 relative z-10 shrink-0 select-none"
+      <svg
+        viewBox="0 0 535 200"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        role="img"
+        aria-label={alt}
+        width={logoWidth}
+        height={size}
+        className={`w-full h-full transition-transform duration-300 group-hover:scale-105 relative z-10 shrink-0 select-none ${colorClass}`}
+      >
+        {/* Left E */}
+        <path
+          d="M 20 0 L 157.5 0 L 126 42 L 62 42 L 62 79 L 115 79 L 115 121 L 62 121 L 62 158 L 126 158 L 157.5 200 L 20 200 Z"
+          fill="currentColor"
         />
-        <img
-          src={darkSrc}
-          alt={alt}
-          loading="eager"
-          fetchPriority="high"
-          width={size}
-          height={size}
-          style={commonImgStyle}
-          className="object-contain hidden dark:block filter drop-shadow-[0_0_12px_rgba(250,204,21,0.5)] transition-transform duration-300 group-hover:scale-105 relative z-10 shrink-0 select-none"
+        {/* Middle X */}
+        <path
+          d="M 170 0 L 212 0 L 250 64.4 L 288 0 L 330 0 L 271 100 L 330 200 L 288 200 L 250 135.6 L 212 200 L 170 200 L 229 100 Z"
+          fill="currentColor"
         />
-      </>
+        {/* Right E (Mirrored) */}
+        <path
+          d="M 480 0 L 342.5 0 L 374 42 L 438 42 L 438 79 L 385 79 L 385 121 L 438 121 L 438 158 L 374 158 L 342.5 200 L 480 200 Z"
+          fill="currentColor"
+        />
+        {/* Red Square Dot */}
+        <rect x="493" y="165" width="35" height="35" fill="#EF4444" rx="4" />
+      </svg>
     )
   }
 

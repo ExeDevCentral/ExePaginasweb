@@ -108,7 +108,7 @@ export default function LiquidIslandNavbar({
         <div
           className="pointer-events-none absolute -inset-1 rounded-full bg-cyan-500/10 blur-xl -z-20 opacity-40"
           style={{
-            maxWidth: 1100,
+            maxWidth: 1280,
             margin: '0 auto',
             left: 0,
             right: 0,
@@ -122,7 +122,7 @@ export default function LiquidIslandNavbar({
           aria-label={getNavLabel('nav.aria_main_nav', 'Navegación principal')}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative pointer-events-auto w-full max-w-275 mx-auto h-14 sm:h-14.5 rounded-full border border-slate-200/90 dark:border-cyan-400/30 bg-white/90 dark:bg-[#0c1224]/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 dark:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6),0_0_16px_rgba(6,182,212,0.1)] flex items-center justify-between px-3 sm:px-3.5 gap-2 overflow-hidden transition-colors duration-200 hover:border-slate-300 dark:hover:border-cyan-400/60"
+          className="relative pointer-events-auto w-full max-w-7xl mx-auto h-14 sm:h-14.5 rounded-full border border-slate-200/90 dark:border-cyan-400/30 bg-white/90 dark:bg-[#0c1224]/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 dark:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6),0_0_16px_rgba(6,182,212,0.1)] flex items-center justify-between px-4 sm:px-5 gap-2 overflow-hidden transition-colors duration-200 hover:border-slate-300 dark:hover:border-cyan-400/60"
         >
           {/* Spotlight dinámico sobre el cristal */}
           {!reduceMotion && <SpotlightGlass mouseX={mouseX} mouseY={mouseY} />}
@@ -151,8 +151,8 @@ export default function LiquidIslandNavbar({
           </motion.div>
 
           {/* CENTRO: Links de navegación (estables y continuos en desktop lg:flex) */}
-          <div className="hidden lg:flex items-center justify-center shrink-0">
-            <div className="flex items-center gap-1 sm:gap-1.5">
+          <div className="hidden lg:flex items-center justify-center min-w-0">
+            <div className="flex items-center gap-0.5 xl:gap-1.5">
               {/* Botón trigger del Mega Panel de Soluciones */}
               <div className="relative">
                 <button
@@ -244,9 +244,9 @@ export default function LiquidIslandNavbar({
           </div>
 
           {/* DERECHA: Badge de Disponibilidad + Idioma + Tema + Menú + CTA Dominante */}
-          <motion.div layout="position" className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-            {/* Disponibilidad en tiempo real */}
-            <div className="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/8 border border-cyan-500/25 dark:border-cyan-400/25 text-[9px] font-mono font-semibold tracking-wider text-cyan-800/90 dark:text-cyan-300/80 select-none shrink-0">
+          <motion.div layout="position" className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Disponibilidad en tiempo real (visible solo en 2xl para no comprimir la píldora) */}
+            <div className="hidden 2xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/8 border border-cyan-500/25 dark:border-cyan-400/25 text-[9px] font-mono font-semibold tracking-wider text-cyan-800/90 dark:text-cyan-300/80 select-none shrink-0">
               <CyberRadarBeacon size={8} />
               <span className="whitespace-nowrap">
                 {getNavLabel('nav.disponible_badge', 'DISPONIBLE // 2026')}

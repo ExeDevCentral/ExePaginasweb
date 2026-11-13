@@ -5,9 +5,10 @@
  */
 'use client'
 
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { PostHogProvider as PostHogProviderBase } from 'posthog-js/react'
+import { isTrackingDisabled } from '@/core/analytics/trackEvent'
 import { posthogClient, posthogEnabled } from './client'
 
 function PageViewTracker() {
@@ -15,22 +16,29 @@ function PageViewTracker() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    if (!posthogEnabled) return
+    if (!posthogEnabled || !pathname || isTrackingDisabled()) return
+
+    const search = searchParams.toString()
+    const url = search ? `${window.origin}${pathname}?${search}` : `${window.origin}${pathname}`
+
     posthogClient.capture('$pageview', {
+      $current_url: url,
       pathname,
-      search: searchParams.toString(),
+      search,
     })
   }, [pathname, searchParams])
 
   return null
 }
 
-export function PostHogProvider({ children }: { children: React.ReactNode }) {
+export function PostHogProvider({ children }: { readonly children: React.ReactNode }) {
   if (!posthogEnabled) return <>{children}</>
 
   return (
     <PostHogProviderBase client={posthogClient}>
-      <PageViewTracker />
+      <Suspense fallback={null}>
+        <PageViewTracker />
+      </Suspense>
       {children}
     </PostHogProviderBase>
   )

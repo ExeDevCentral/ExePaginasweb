@@ -1915,3 +1915,143 @@
   z-index: 20;
 }
 
+/* ==============================================================
+   ANIMACIÓN CYBER NEON PARA EL LOGO EXE (LÁSER RECORRIENDO Y SALTANDO E -> X -> E -> .)
+   ============================================================== */
+@keyframes laserHopE1 {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  26% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  31%,
+  100% {
+    stroke-dashoffset: -28;
+    opacity: 0;
+  }
+}
+
+@keyframes laserJump1 {
+  0%,
+  22% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  33% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  37%,
+  100% {
+    stroke-dashoffset: -35;
+    opacity: 0;
+  }
+}
+
+@keyframes laserHopX {
+  0%,
+  28% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  32% {
+    opacity: 1;
+  }
+  56% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  61%,
+  100% {
+    stroke-dashoffset: -28;
+    opacity: 0;
+  }
+}
+
+@keyframes laserJump2 {
+  0%,
+  52% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  63% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  67%,
+  100% {
+    stroke-dashoffset: -35;
+    opacity: 0;
+  }
+}
+
+@keyframes laserHopE2 {
+  0%,
+  58% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+  }
+  86% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  91%,
+  100% {
+    stroke-dashoffset: -28;
+    opacity: 0;
+  }
+}
+
+@keyframes laserJump3 {
+  0%,
+  80% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  83% {
+    opacity: 1;
+  }
+  91% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  95%,
+  100% {
+    stroke-dashoffset: -35;
+    opacity: 0;
+  }
+}
+
+@keyframes cyberRedPulse {
+  0%,
+  82% {
+    filter: drop-shadow(0 0 0px rgba(239, 68, 68, 0));
+    transform: scale(1);
+  }
+  90% {
+    filter: drop-shadow(0 0 12px rgba(239, 68, 68, 1)) drop-shadow(0 0 22px rgba(239, 68, 68, 0.85));
+    transform: scale(1.18);
+  }
+  98%,
+  100% {
+    filter: drop-shadow(0 0 0px rgba(239, 68, 68, 0));
+    transform: scale(1);
+  }
+}
+
+

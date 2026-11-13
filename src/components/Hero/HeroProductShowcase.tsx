@@ -11,6 +11,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -125,6 +126,11 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
   const [isPlaying, setIsPlaying] = useState(true)
   const [isMuted, setIsMuted] = useState(true)
   const [isCinemaMode, setIsCinemaMode] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
   const [progress, setProgress] = useState(0)
   const [currentTime, setCurrentTime] = useState('00:00')
   const [duration, setDuration] = useState('00:15')
@@ -222,15 +228,21 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
     }
   }
 
-  // Cerrar Modo Cine con tecla Escape
+  // Cerrar Modo Cine con tecla Escape y bloquear scroll del body
   useEffect(() => {
+    if (!isCinemaMode) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isCinemaMode) {
+      if (e.key === 'Escape') {
         setIsCinemaMode(false)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = prevOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
   }, [isCinemaMode])
 
   // Autoplay del video al montar o cambiar de pestaña
@@ -693,65 +705,73 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
         </div>
       </div>
 
-      {/* MODAL DE MODO CINE A PANTALLA COMPLETA */}
-      <AnimatePresence>
-        {isCinemaMode && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-black/90 backdrop-blur-2xl"
-          >
-            <div className="relative w-full max-w-5xl rounded-2xl bg-[#070b14] border border-white/20 shadow-2xl overflow-hidden">
-              <div className="flex items-center justify-between px-5 py-3 bg-[#0a0f1d] border-b border-white/10 font-mono text-xs">
-                <span className="text-white font-bold flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  MODO CINE // DEMOSTRACIÓN DE SOFTWARE
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setIsCinemaMode(false)}
-                  className="flex items-center gap-1.5 px-3 py-1 rounded bg-white/10 text-white hover:bg-white/20 font-mono text-xs cursor-pointer"
+      {/* MODAL DE MODO CINE A PANTALLA COMPLETA (Portal sobre document.body para evitar stacking contexts) */}
+      {isMounted &&
+        createPortal(
+          <AnimatePresence>
+            {isCinemaMode && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsCinemaMode(false)}
+                className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-8 bg-black/95 backdrop-blur-2xl"
+              >
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative w-full max-w-5xl rounded-2xl bg-[#070b14] border border-white/20 shadow-2xl overflow-hidden"
                 >
-                  <Minimize2 className="w-3.5 h-3.5" />
-                  <span>Salir (ESC)</span>
-                </button>
-              </div>
+                  <div className="flex items-center justify-between px-5 py-3 bg-[#0a0f1d] border-b border-white/10 font-mono text-xs">
+                    <span className="text-white font-bold flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      MODO CINE // DEMOSTRACIÓN DE SOFTWARE
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setIsCinemaMode(false)}
+                      className="flex items-center gap-1.5 px-3 py-1 rounded bg-white/10 text-white hover:bg-white/20 font-mono text-xs cursor-pointer"
+                    >
+                      <Minimize2 className="w-3.5 h-3.5" />
+                      <span>Salir (ESC)</span>
+                    </button>
+                  </div>
 
-              <div className="relative aspect-video bg-black">
-                {activeTab === 'video' ? (
-                  <video
-                    autoPlay
-                    loop
-                    controls
-                    muted={isMuted}
-                    playsInline
-                    preload="metadata"
-                    className="w-full h-full object-cover"
-                  >
-                    <source src="/assets/videos/hero-bg.mp4" type="video/mp4" />
-                  </video>
-                ) : (
-                  <Image
-                    src={
-                      activeTab === 'ecommerce'
-                        ? '/portfolio/celstore.webp'
-                        : activeTab === 'turnos'
-                          ? '/portfolio/sportmanager.webp'
-                          : activeTab === 'gestion'
-                            ? '/portfolio/restoai.webp'
-                            : '/assets/noema-consultora.webp'
-                    }
-                    alt="Demostración a pantalla completa"
-                    fill
-                    className="object-contain"
-                  />
-                )}
-              </div>
-            </div>
-          </motion.div>
+                  <div className="relative aspect-video bg-black">
+                    {activeTab === 'video' ? (
+                      <video
+                        autoPlay
+                        loop
+                        controls
+                        muted={isMuted}
+                        playsInline
+                        preload="metadata"
+                        className="w-full h-full object-cover"
+                      >
+                        <source src="/assets/videos/hero-bg.mp4" type="video/mp4" />
+                      </video>
+                    ) : (
+                      <Image
+                        src={
+                          activeTab === 'ecommerce'
+                            ? '/portfolio/celstore.webp'
+                            : activeTab === 'turnos'
+                              ? '/portfolio/sportmanager.webp'
+                              : activeTab === 'gestion'
+                                ? '/portfolio/restoai.webp'
+                                : '/assets/noema-consultora.webp'
+                        }
+                        alt="Demostración a pantalla completa"
+                        fill
+                        className="object-contain"
+                      />
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   )
 }

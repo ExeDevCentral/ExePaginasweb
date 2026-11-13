@@ -38,6 +38,9 @@ import { SupabaseAiAuditRepository } from '@/core/infra/ai/SupabaseAiAuditReposi
 import { SupabaseAiContextProvider } from '@/core/infra/ai/SupabaseAiContextProvider'
 import { buildExecutableTools } from '@/core/infra/ai/buildExecutableTools'
 import { resolveAiUserContext } from '@/core/infra/ai/resolveAiUserContext'
+import { runInBackground } from '@/lib/posthog/server'
+
+export const maxDuration = 60
 
 const ChatMessageSchema = z
   .object({
@@ -98,16 +101,18 @@ function getDevFallbackResponse(message: string, visitorName?: string | null): s
 
   if (lowerMsg.includes('n8n') || lowerMsg.includes('automatiz')) {
     const ticketId = `EXE-N8N-${Date.now().toString(36).toUpperCase().slice(-5)}`
-    void dispatchN8nEvent({
-      event: 'automation.trigger',
-      ticketId,
-      name: visitorName || 'Visitante Chat',
-      message: message.slice(0, 300),
-      metadata: {
-        source: 'chat_local_fallback',
-        automationType: 'cotizacion_express',
-      },
-    })
+    runInBackground(
+      dispatchN8nEvent({
+        event: 'automation.trigger',
+        ticketId,
+        name: visitorName || 'Visitante Chat',
+        message: message.slice(0, 300),
+        metadata: {
+          source: 'chat_local_fallback',
+          automationType: 'cotizacion_express',
+        },
+      })
+    )
     return `${greeting}¡Excelente! Tu automatización en vivo con n8n Cloud y Resend se ejecutó con éxito.\n\nTicket asignado: [${ticketId}].\n\n✓ Webhook despachado en tiempo real\n✓ Plantilla interactiva conectada\n✓ Modo 100% gratis activo sin límites forzosos\n\n¿Querés que apliquemos este flujo de ventas y correos a tu propio negocio?`
   }
 
@@ -357,29 +362,33 @@ export async function POST(req: NextRequest) {
     if (process.env.RESEND_API_KEY) {
       if (capturedEmail) {
         // Sincronizar lead capturado desde el chat con la audiencia de Resend
-        void syncContactToAudience({
-          email: capturedEmail,
-          firstName: visitorName || capturedEmail.split('@')[0],
-        }).catch((err) => {
-          console.warn('[chat] No se pudo sincronizar lead con Resend Audience:', err)
-        })
+        runInBackground(
+          syncContactToAudience({
+            email: capturedEmail,
+            firstName: visitorName || capturedEmail.split('@')[0],
+          }).catch((err) => {
+            console.warn('[chat] No se pudo sincronizar lead con Resend Audience:', err)
+          })
+        )
       }
 
       // Despachar evento a n8n en segundo plano si N8N_WEBHOOK_URL está configurado
-      void dispatchN8nEvent({
-        event: 'lead.chat',
-        ticketId,
-        name: visitorName || (capturedEmail ? capturedEmail.split('@')[0] : 'Visitante Chat'),
-        email: capturedEmail || undefined,
-        phone: capturedPhone || undefined,
-        message: securityVerdict.sanitizedText,
-        lang: detectedLang,
-        metadata: {
-          conversationId,
-          visitorName,
+      runInBackground(
+        dispatchN8nEvent({
+          event: 'lead.chat',
+          ticketId,
+          name: visitorName || (capturedEmail ? capturedEmail.split('@')[0] : 'Visitante Chat'),
+          email: capturedEmail || undefined,
           phone: capturedPhone || undefined,
-        },
-      })
+          message: securityVerdict.sanitizedText,
+          lang: detectedLang,
+          metadata: {
+            conversationId,
+            visitorName,
+            phone: capturedPhone || undefined,
+          },
+        })
+      )
 
       const emailTasks: Promise<unknown>[] = [
         sendEmail({

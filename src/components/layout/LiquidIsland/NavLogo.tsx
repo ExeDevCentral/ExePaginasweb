@@ -9,7 +9,7 @@ import React from 'react'
 import { motion, useTransform, type MotionValue } from 'framer-motion'
 import { useTheme } from '@/core/theme/ThemeContext'
 import { MatrixWordmark } from '@/components/Effects/MatrixText'
-import Logo from '../Logo'
+import CyberNeonLogo from '../CyberNeonLogo'
 
 export interface NavLogoProps {
   scrollY: MotionValue<number>
@@ -25,20 +25,20 @@ export default function NavLogo({
   const { theme } = useTheme()
   const light = theme === 'light'
 
-  // 1. Dolly-Out Phosphor Decay continuo de 0 a 300px
-  const logoScale = useTransform(scrollY, [0, 300], [1, 0.88], { clamp: true })
+  // Mantener escala nítida y visible (1 a 0.94x en scroll profundo)
+  const logoScale = useTransform(scrollY, [0, 300], [1, 0.94], { clamp: true })
 
   return (
-    <div className="flex items-center gap-2 shrink-0 select-none">
-      {/* Contenedor del logo oficial de la marca: nítido tanto en light como en dark */}
+    <div className="flex items-center gap-2.5 shrink-0 select-none">
+      {/* Contenedor del logo oficial: tamaño aumentado a 42px para máxima presencia y nitidez */}
       <motion.div
         className="relative flex items-center justify-center shrink-0 origin-left"
         style={{
-          scale: reduceMotion ? 0.9 : logoScale,
+          scale: reduceMotion ? 1 : logoScale,
         }}
         layout="position"
       >
-        <Logo size={34} variant="auto" />
+        <CyberNeonLogo size={32} />
       </motion.div>
 
       {/* Wordmark: colapsa suavemente con layout="position" en modo compact */}

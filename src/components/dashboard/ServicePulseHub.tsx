@@ -21,6 +21,8 @@ type ServicePulseHubProps = {
   openTickets: number
   unreadNotifications: number
   notifications: Notificacion[]
+  planLabel?: string
+  accountStatus?: string
   onOpenTickets: () => void
   onMarkRead: (id: string) => void
 }
@@ -31,6 +33,8 @@ export default function ServicePulseHub({
   openTickets,
   unreadNotifications,
   notifications,
+  planLabel,
+  accountStatus,
   onOpenTickets,
   onMarkRead,
 }: Readonly<ServicePulseHubProps>) {
@@ -99,14 +103,14 @@ export default function ServicePulseHub({
           </p>
         </div>
         <PulseStat
-          label={t('dashboard.infra', 'Infra')}
-          value="Vercel Edge"
+          label={t('dashboard.plan_actual', 'Plan')}
+          value={planLabel || (tier === 'none' ? 'Base' : tier.toUpperCase())}
           icon={Shield}
-          accent="text-emerald-600 dark:text-emerald-400"
+          accent="text-[#38BDF8]"
         />
         <PulseStat
           label={t('dashboard.estado', 'Estado')}
-          value="Online"
+          value={accountStatus || (tier === 'none' ? 'Registrada' : 'Activa')}
           icon={Zap}
           accent="text-emerald-600 dark:text-emerald-400"
         />

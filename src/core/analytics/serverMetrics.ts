@@ -33,4 +33,4 @@ export function trackServerMetric(
 }
 
 // Re-export directo de @vercel/functions para uso idiomático
-export { metric } from '@vercel/functions'
+export { metric, waitUntil } from '@vercel/functions'

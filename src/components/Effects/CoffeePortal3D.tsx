@@ -9,6 +9,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import * as THREE from 'three'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, ArrowRight, Coffee } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export const CoffeePortal3D = ({
   isVisible,
@@ -17,6 +18,7 @@ export const CoffeePortal3D = ({
   isVisible: boolean
   onDismiss?: () => void
 }) => {
+  const { t } = useTranslation()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [showSkip, setShowSkip] = useState(false)
   const [beanPhase, setBeanPhase] = useState<'orbit' | 'explode'>('orbit')
@@ -332,7 +334,10 @@ export const CoffeePortal3D = ({
             </h2>
 
             <p className="text-xs sm:text-sm font-mono text-amber-200/80 mt-1 font-semibold">
-              💥 Estallido 3D de granos y arquitectura de alta conversión
+              {t(
+                'demozone.coffee_portal_subtitle',
+                '💥 Estallido 3D de granos y arquitectura de alta conversión'
+              )}
             </p>
           </motion.div>
 
@@ -352,7 +357,7 @@ export const CoffeePortal3D = ({
                 }}
                 className="px-7 py-3.5 bg-linear-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-[0_0_35px_rgba(245,158,11,0.6)] flex items-center gap-2.5 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto"
               >
-                <span>Entrar a la tienda</span>
+                <span>{t('demozone.coffee_portal_enter', 'Entrar a la tienda')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </motion.div>

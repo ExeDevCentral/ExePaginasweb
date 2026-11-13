@@ -565,13 +565,13 @@ export const AIChatWidget: React.FC = () => {
           {/* Aura perimetral cian */}
           <span className="absolute -inset-0.5 rounded-full bg-linear-to-r from-cyan-500 via-sky-400 to-emerald-400 opacity-20 group-hover:opacity-60 blur-xs transition-opacity duration-300" />
 
-          {/* Icono Dual / Logo Dinámico ExePaginasWeb */}
-          <div className="relative w-9 h-9 rounded-full bg-[#0a0f1d] border border-cyan-400/50 flex items-center justify-center shrink-0 shadow-inner">
+          {/* Icono Dual / Logo Dinámico ExePaginasWeb con pulso cinemático de 6s */}
+          <div className="relative w-10 h-10 rounded-full bg-[#0a0f1d] border border-cyan-400/50 flex items-center justify-center shrink-0 shadow-inner">
             {isOpen ? (
-              <X className="w-4 h-4 text-white" />
+              <X className="w-5 h-5 text-white" />
             ) : (
               <div className="flex items-center justify-center">
-                <Logo size={26} variant="dark" />
+                <Logo size={32} variant="dark" pulseCycle={true} />
               </div>
             )}
           </div>
@@ -919,7 +919,7 @@ export const AIChatWidget: React.FC = () => {
 
                     <div className="flex items-center gap-2 ml-1">
                       <div className="w-7 h-7 rounded-full bg-[#0c1322] border border-cyan-400/50 flex items-center justify-center shrink-0">
-                        <Logo size={20} variant="dark" />
+                        <Logo size={20} variant="dark" pulseCycle={true} />
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5">

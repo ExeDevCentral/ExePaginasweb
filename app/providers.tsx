@@ -7,8 +7,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { SpeedInsights } from '@vercel/speed-insights/react'
-import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Analytics } from '@vercel/analytics/next'
 import { AuthSessionProvider } from '@/core/auth/AuthSessionProvider'
 import { ThemeProvider } from '@/core/theme/ThemeContext'
 import { PostHogProvider } from '@/lib/posthog/PostHogProvider'
@@ -55,10 +55,28 @@ export default function Providers({ children }: { readonly children: React.React
         },
       })
   )
-  const enableVercelTelemetry = process.env.NEXT_PUBLIC_ENABLE_VERCEL_TELEMETRY === 'true'
+  const isVercelDeployment = process.env.NEXT_PUBLIC_IS_VERCEL === '1'
+  const enableVercelTelemetry =
+    process.env.NEXT_PUBLIC_ENABLE_VERCEL_TELEMETRY !== 'false' &&
+    (process.env.NEXT_PUBLIC_ENABLE_VERCEL_TELEMETRY === 'true' || isVercelDeployment)
   const enableVercelAnalytics =
     process.env.NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS !== 'false' &&
     (process.env.NODE_ENV === 'production' || enableVercelTelemetry)
+
+  const shouldFilterVercelTelemetry = (): boolean => {
+    if (typeof window === 'undefined') return false
+    try {
+      const search = window.location.search
+      if (search.includes('admin=true') || search.includes('va-disable=1')) {
+        localStorage.setItem('va-disable', '1')
+        return true
+      }
+      const vaDisable = localStorage.getItem('va-disable')
+      return vaDisable === '1' || vaDisable === 'true'
+    } catch {
+      return false
+    }
+  }
 
   useEffect(() => {
     try {
@@ -90,28 +108,11 @@ export default function Providers({ children }: { readonly children: React.React
           </PostHogProvider>
         </ThemeProvider>
       </AuthSessionProvider>
-      {enableVercelTelemetry && <SpeedInsights />}
+      {enableVercelTelemetry && (
+        <SpeedInsights beforeSend={(event) => (shouldFilterVercelTelemetry() ? null : event)} />
+      )}
       {enableVercelAnalytics && (
-        <Analytics
-          beforeSend={(event) => {
-            if (typeof window !== 'undefined') {
-              try {
-                const search = window.location.search
-                if (search.includes('admin=true') || search.includes('va-disable=1')) {
-                  localStorage.setItem('va-disable', '1')
-                  return null
-                }
-                const vaDisable = localStorage.getItem('va-disable')
-                if (vaDisable === '1' || vaDisable === 'true') {
-                  return null
-                }
-              } catch {
-                // Silencioso ante restricciones de cookies/storage
-              }
-            }
-            return event
-          }}
-        />
+        <Analytics beforeSend={(event) => (shouldFilterVercelTelemetry() ? null : event)} />
       )}
     </QueryClientProvider>
   )

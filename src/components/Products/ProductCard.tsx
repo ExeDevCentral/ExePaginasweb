@@ -62,13 +62,12 @@ export default function ProductCard({
   const Icon = product.icon
 
   // Micro-Widget Local States
-  const [stylist, setStylist] = useState('Sofía (Estilista)')
-  const hairService = 'Corte & Peinado'
+  const [stylistIndex, setStylistIndex] = useState(0)
 
   const [bakeryItems, setBakeryItems] = useState(6)
 
   const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | 'XL'>('M')
-  const [selectedColor, setSelectedColor] = useState('Negro')
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0)
 
   const [selectedSlot, setSelectedSlot] = useState('19:00 Hs')
 
@@ -78,10 +77,20 @@ export default function ProductCard({
   const [includeWhatsAppBot, setIncludeWhatsAppBot] = useState(true)
 
   const roi = ROI_BADGES[product.tKey] || {
-    label: 'Máximo Rendimiento',
+    label: t('products.roi_default', 'Máximo Rendimiento'),
     color: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20',
     dotColor: 'bg-cyan-400',
   }
+
+  const stylists = [
+    t('products.widget_pelu_stylist_1', 'Sofía (Estilista)'),
+    t('products.widget_pelu_stylist_2', 'Lucas (Barbero)'),
+  ]
+  const hairService = t('products.widget_pelu_service_name', 'Corte & Peinado')
+  const garmentColors = [
+    t('products.widget_ropa_color_1', 'Negro'),
+    t('products.widget_ropa_color_2', 'Beige'),
+  ]
 
   const match = /(\d+)/.exec(product.price)
   const basePriceNum = match ? Number.parseInt(match[1]!, 10) : 300
@@ -165,20 +174,22 @@ export default function ProductCard({
               {product.tKey === 'peluqueria' && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-foreground font-medium">
-                    <span>Seleccionar Estilista:</span>
-                    <span className="text-pink-400 font-bold">✨ Disponible</span>
+                    <span>{t('products.widget_pelu_select', 'Seleccionar Estilista:')}</span>
+                    <span className="text-pink-400 font-bold">
+                      ✨ {t('products.widget_available', 'Disponible')}
+                    </span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    {['Sofía (Estilista)', 'Lucas (Barbero)'].map((s) => (
+                    {stylists.map((s, idx) => (
                       <button
                         key={s}
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation()
-                          setStylist(s)
+                          setStylistIndex(idx)
                         }}
                         className={`py-1.5 px-2 rounded-lg text-xs font-bold transition-all border ${
-                          stylist === s
+                          stylistIndex === idx
                             ? 'bg-pink-500/20 border-pink-500/50 text-pink-300'
                             : 'bg-muted/40 border-border text-muted-foreground'
                         }`}
@@ -189,7 +200,8 @@ export default function ProductCard({
                   </div>
                   <div className="flex justify-between items-center text-[11px] pt-1 text-muted-foreground">
                     <span>
-                      Servicio: <strong className="text-foreground">{hairService}</strong>
+                      {t('products.widget_pelu_service_label', 'Servicio:')}{' '}
+                      <strong className="text-foreground">{hairService}</strong>
                     </span>
                     <span className="text-pink-400 font-bold font-mono">$4.500 ARS</span>
                   </div>
@@ -200,13 +212,15 @@ export default function ProductCard({
               {product.tKey === 'panaderia' && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-foreground font-medium">
-                    <span>🥖 Tanda Recién Horneada:</span>
-                    <span className="text-amber-400 font-bold font-mono">17:30 Hs (Listo)</span>
+                    <span>🥖 {t('products.widget_pan_batch', 'Tanda Recién Horneada:')}</span>
+                    <span className="text-amber-400 font-bold font-mono">
+                      {t('products.widget_pan_ready', '17:30 Hs (Listo)')}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between gap-2 bg-muted/30 p-2 rounded-lg border border-border">
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
                       <Coffee className="w-3.5 h-3.5 text-amber-400" />
-                      {bakeryItems} Facturas / Medialunas
+                      {bakeryItems} {t('products.widget_pan_items', 'Facturas / Medialunas')}
                     </span>
                     <button
                       type="button"
@@ -216,7 +230,8 @@ export default function ProductCard({
                       }}
                       className="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-400 text-xs font-bold hover:bg-amber-500/30 transition-colors flex items-center gap-1"
                     >
-                      <CyberPlusIcon size={12} className="text-amber-400" /> Sumar Docena
+                      <CyberPlusIcon size={12} className="text-amber-400" />{' '}
+                      {t('products.widget_pan_add', 'Sumar Docena')}
                     </button>
                   </div>
                 </div>
@@ -226,8 +241,10 @@ export default function ProductCard({
               {product.tKey === 'ropa' && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-foreground font-medium">
-                    <span>Campera Eco-Cuero Urban:</span>
-                    <span className="text-emerald-400 font-bold font-mono">Stock: 14 un.</span>
+                    <span>{t('products.widget_ropa_item', 'Campera Eco-Cuero Urban:')}</span>
+                    <span className="text-emerald-400 font-bold font-mono">
+                      {t('products.widget_ropa_stock', 'Stock: 14 un.')}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex gap-1">
@@ -250,16 +267,16 @@ export default function ProductCard({
                       ))}
                     </div>
                     <div className="flex gap-1">
-                      {['Negro', 'Beige'].map((col) => (
+                      {garmentColors.map((col, idx) => (
                         <button
                           key={col}
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation()
-                            setSelectedColor(col)
+                            setSelectedColorIndex(idx)
                           }}
                           className={`px-2 py-1 rounded-md text-[10px] font-bold border transition-all ${
-                            selectedColor === col
+                            selectedColorIndex === idx
                               ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
                               : 'bg-muted/40 border-border text-muted-foreground'
                           }`}
@@ -276,8 +293,12 @@ export default function ProductCard({
               {product.tKey === 'padel' && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-foreground font-medium">
-                    <span>Turno Cancha 1 (Sintético Blindex):</span>
-                    <span className="text-cyan-400 font-bold">Disponible</span>
+                    <span>
+                      {t('products.widget_padel_court', 'Turno Cancha 1 (Sintético Blindex):')}
+                    </span>
+                    <span className="text-cyan-400 font-bold">
+                      {t('products.widget_available', 'Disponible')}
+                    </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {['17:30 Hs', '19:00 Hs', '20:30 Hs'].map((slot) => (
@@ -328,14 +349,17 @@ export default function ProductCard({
                 >
                   <div className="flex items-center justify-between text-xs font-bold text-accent-cyan">
                     <span className="flex items-center gap-1.5">
-                      <CyberCalculatorIcon size={16} className="text-accent-cyan" /> Cotizador para{' '}
+                      <CyberCalculatorIcon size={16} className="text-accent-cyan" />{' '}
+                      {t('products.calc_for', 'Cotizador para')}{' '}
                       {t(`products.${product.tKey}_titulo`)}
                     </span>
-                    <span>Estimado: ${estimatedTotal} USD</span>
+                    <span>
+                      {t('products.calc_estimated', 'Estimado')}: ${estimatedTotal} USD
+                    </span>
                   </div>
                   <div className="space-y-2 text-xs text-foreground">
                     <div className="flex items-center justify-between">
-                      <span>Sucursales o Puntos de Atencion:</span>
+                      <span>{t('products.calc_branches', 'Sucursales o Puntos de Atención:')}</span>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
@@ -361,25 +385,31 @@ export default function ProductCard({
                         onChange={(e) => setIncludeWhatsAppBot(e.target.checked)}
                         className="rounded border-border text-accent-cyan focus:ring-accent-cyan"
                       />
-                      <span>Incluir Notificaciones por WhatsApp automatizadas (+$80 USD)</span>
+                      <span>
+                        {t(
+                          'products.calc_whatsapp_bot',
+                          'Incluir Notificaciones por WhatsApp automatizadas (+$80 USD)'
+                        )}
+                      </span>
                     </label>
                   </div>
                   <a
                     href={`https://wa.me/5493416874786?text=${encodeURIComponent(
-                      'Hola ExePaginasWeb! Quiero consultar para mi rubro por ' +
-                        t(`products.${product.tKey}_titulo`) +
-                        ' para ' +
-                        sucursales +
-                        ' sucursal(es). Presupuesto estimado: $' +
-                        estimatedTotal +
-                        ' USD.'
+                      t('products.calc_wa_msg', {
+                        defaultValue:
+                          'Hola ExePaginasWeb! Quiero consultar para mi rubro por {{product}} para {{count}} sucursal(es). Presupuesto estimado: ${{total}} USD.',
+                        product: t(`products.${product.tKey}_titulo`),
+                        count: sucursales,
+                        total: estimatedTotal,
+                      })
                     )}`}
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-extrabold text-xs hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-500/20"
                   >
                     <WhatsAppLiveIcon size={16} />
-                    Enviar Consulta Directa por WhatsApp <CyberArrowRight size={14} />
+                    {t('products.calc_wa_cta', 'Enviar Consulta Directa por WhatsApp')}{' '}
+                    <CyberArrowRight size={14} />
                   </a>
                 </motion.div>
               )}
@@ -402,7 +432,7 @@ export default function ProductCard({
                     setShowCalculator((prev) => !prev)
                   }}
                   className="p-2.5 rounded-xl border border-border bg-card/60 hover:bg-accent-cyan/10 text-muted-foreground hover:text-accent-cyan transition-colors"
-                  title="Calcular presupuesto a medida"
+                  title={t('products.calc_btn_title', 'Calcular presupuesto a medida')}
                 >
                   <CyberCalculatorIcon size={16} />
                 </button>

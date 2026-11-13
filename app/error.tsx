@@ -7,6 +7,7 @@
 
 import { useEffect } from 'react'
 import * as Sentry from '@sentry/react'
+import { posthogClient, posthogEnabled } from '@/lib/posthog/client'
 
 export default function GlobalError({
   error,
@@ -18,6 +19,9 @@ export default function GlobalError({
   useEffect(() => {
     console.error('[GlobalError]', error)
     Sentry.captureException(error)
+    if (posthogEnabled) {
+      posthogClient.captureException(error)
+    }
   }, [error])
 
   return (

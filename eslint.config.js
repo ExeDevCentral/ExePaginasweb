@@ -16,6 +16,7 @@ export default [
       'messages-local.json',
       'docs/archive/**',
       'scripts/**',
+      'src/components/ui/reactdrops/**',
     ],
   },
   js.configs.recommended,

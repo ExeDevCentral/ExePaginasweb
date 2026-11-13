@@ -5,14 +5,25 @@ const productionCspDirectives = !isDevelopment ? '; upgrade-insecure-requests' :
 const developmentConnectSources = isDevelopment
   ? ' http://localhost:* ws://localhost:* ws://127.0.0.1:* http://127.0.0.1:*'
   : ''
+const posthogApiHost = (process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com').replace(
+  /\/+$/,
+  ''
+)
+const posthogAssetsHost = posthogApiHost.includes('eu.i.posthog.com')
+  ? 'https://eu-assets.i.posthog.com'
+  : 'https://us-assets.i.posthog.com'
 const posthogConnectSource = process.env.NEXT_PUBLIC_POSTHOG_HOST
-  ? ` ${process.env.NEXT_PUBLIC_POSTHOG_HOST}`
+  ? ` ${posthogApiHost}`
   : ''
 
 const nextConfig = {
   reactStrictMode: true,
   reactCompiler: true,
   poweredByHeader: false,
+  skipTrailingSlashRedirect: true,
+  env: {
+    NEXT_PUBLIC_IS_VERCEL: process.env.VERCEL || '',
+  },
   transpilePackages: ['three', '@tanstack/react-query'],
   experimental: {
     optimizePackageImports: [
@@ -22,6 +33,10 @@ const nextConfig = {
       'framer-motion',
       'lucide-react',
       'zod',
+      'posthog-js',
+      'sonner',
+      'cmdk',
+      '@supabase/supabase-js',
     ],
   },
   images: {
@@ -74,7 +89,7 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value:
-              `default-src 'self'; script-src 'self' 'unsafe-inline'${developmentScriptSources} https://www.paypal.com https://www.paypalobjects.com https://*.chatbase.co https://fonts.googleapis.com https://accounts.google.com https://va.vercel-scripts.com https://vercel.live https://*.vercel.live https://*.pusher.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live; img-src 'self' data: https: blob: https://vercel.live https://*.vercel.live; font-src 'self' https://fonts.gstatic.com data: https://vercel.live https://assets.vercel.com; connect-src 'self'${developmentConnectSources}${posthogConnectSource} https://bksonxnxshxinqffswqc.supabase.co https://api.resend.com https://api.groq.com https://generativelanguage.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com https://api.paypal.com https://api-m.paypal.com https://api-m.sandbox.paypal.com https://*.chatbase.co https://va.vercel-scripts.com https://raw.githack.com https://raw.githubusercontent.com https://vercel.live https://*.vercel.live https://*.pusher.com https://sockjs-mt1.pusher.com wss://*.pusher.com https://us.i.posthog.com https://eu.i.posthog.com https://*.posthog.com wss://*.posthog.com https://static.cloudflareinsights.com; frame-src 'self' https://www.paypal.com https://www.paypalobjects.com https://www.sandbox.paypal.com https://accounts.google.com https://*.chatbase.co https://vercel.live https://*.vercel.live; worker-src 'self' blob:; manifest-src 'self' https://vercel.com https://*.vercel.app; form-action 'self' https://www.paypal.com https://www.paypalobjects.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'${productionCspDirectives}`,
+              `default-src 'self'; script-src 'self' 'unsafe-inline'${developmentScriptSources} https://www.paypal.com https://www.paypalobjects.com https://*.chatbase.co https://fonts.googleapis.com https://accounts.google.com https://va.vercel-scripts.com https://vercel.live https://*.vercel.live https://*.pusher.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live; img-src 'self' data: https: blob: https://vercel.live https://*.vercel.live; font-src 'self' https://fonts.gstatic.com data: https://vercel.live https://assets.vercel.com; connect-src 'self'${developmentConnectSources}${posthogConnectSource} https://bksonxnxshxinqffswqc.supabase.co https://api.resend.com https://api.groq.com https://generativelanguage.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com https://api.paypal.com https://api-m.paypal.com https://api-m.sandbox.paypal.com https://*.chatbase.co https://va.vercel-scripts.com https://vitals.vercel-insights.com https://raw.githack.com https://raw.githubusercontent.com https://vercel.live https://*.vercel.live https://*.pusher.com https://sockjs-mt1.pusher.com wss://*.pusher.com https://us.i.posthog.com https://eu.i.posthog.com https://*.posthog.com wss://*.posthog.com https://static.cloudflareinsights.com; frame-src 'self' https://www.paypal.com https://www.paypalobjects.com https://www.sandbox.paypal.com https://accounts.google.com https://*.chatbase.co https://vercel.live https://*.vercel.live; worker-src 'self' blob:; manifest-src 'self' https://vercel.com https://*.vercel.app; form-action 'self' https://www.paypal.com https://www.paypalobjects.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'${productionCspDirectives}`,
           },
         ],
       },
@@ -123,6 +138,18 @@ const nextConfig = {
             value: 'no-store, no-cache, must-revalidate',
           },
         ],
+      },
+    ]
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/ingest/static/:path*',
+        destination: `${posthogAssetsHost}/static/:path*`,
+      },
+      {
+        source: '/ingest/:path*',
+        destination: `${posthogApiHost}/:path*`,
       },
     ]
   },

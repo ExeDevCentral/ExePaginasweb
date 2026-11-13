@@ -9,6 +9,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import type { Session } from '@supabase/supabase-js'
 import { supabase, isSupabaseConfigured } from '../infra/supabase/client'
 import { isLocalDashboardPreview } from './siteUrl'
+import { identifyPostHogUser, resetPostHogUser } from '@/lib/posthog/client'
 
 type AuthSessionContextValue = {
   ready: boolean
@@ -49,7 +50,16 @@ export function AuthSessionProvider({ children }: { readonly children: ReactNode
       }
     }
 
-    const syncSentryUser = (currentSession: Session | null) => {
+    const syncTelemetryUser = (currentSession: Session | null) => {
+      if (currentSession?.user) {
+        identifyPostHogUser({
+          id: currentSession.user.id,
+          ...(currentSession.user.email !== undefined ? { email: currentSession.user.email } : {}),
+        })
+      } else {
+        resetPostHogUser()
+      }
+
       if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
         import('@sentry/react')
           .then((Sentry) => {
@@ -71,7 +81,7 @@ export function AuthSessionProvider({ children }: { readonly children: ReactNode
     const { data: sub } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       if (!mounted) return
       setSession(nextSession)
-      syncSentryUser(nextSession)
+      syncTelemetryUser(nextSession)
       setReady(true)
     })
 
@@ -79,7 +89,7 @@ export function AuthSessionProvider({ children }: { readonly children: ReactNode
       const { data } = await supabase.auth.getSession()
       if (!mounted) return
       setSession(data.session)
-      syncSentryUser(data.session)
+      syncTelemetryUser(data.session)
       setReady(true)
     }
 

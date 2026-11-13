@@ -6,6 +6,7 @@
 'use client'
 
 import { track } from '@vercel/analytics'
+import { posthogClient, posthogEnabled } from '@/lib/posthog/client'
 
 export type AnalyticsEventName =
   | 'hero_cta_demo_clicked'
@@ -66,8 +67,10 @@ export function setTrackingDisabled(disabled: boolean): void {
     if (typeof window === 'undefined') return
     if (disabled) {
       window.localStorage.setItem('va-disable', '1')
+      if (posthogEnabled) posthogClient.opt_out_capturing()
     } else {
       window.localStorage.removeItem('va-disable')
+      if (posthogEnabled) posthogClient.opt_in_capturing()
     }
   } catch {
     // Silencioso ante restricciones de storage
@@ -97,7 +100,12 @@ export function trackEvent(
       options?.flags && options.flags.length > 0 ? { flags: options.flags } : undefined
     track(name, properties, trackOptions)
 
-    // 3. Supabase Analytics (Endpoint propio gratuito)
+    // 3. PostHog Product Analytics
+    if (posthogEnabled) {
+      posthogClient.capture(name, properties)
+    }
+
+    // 4. Supabase Analytics (Endpoint propio gratuito)
     const payload = JSON.stringify({
       event_name: name,
       properties: properties || {},

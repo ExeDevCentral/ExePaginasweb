@@ -13,6 +13,7 @@ import { isSupabaseAdminConfigured, supabaseAdmin } from '@/lib/supabase/admin'
 import { readJsonBody, validateFetchMetadata, maskEmail } from '@/lib/server/requestSecurity'
 
 import { detectLanguage } from '@/lib/server/language'
+import { captureServerEvent, runInBackground } from '@/lib/posthog/server'
 
 const ContactSchema = z.object({
   name: z.string().trim().min(1, 'El nombre es requerido').max(100, 'Nombre demasiado largo'),
@@ -144,30 +145,34 @@ export async function POST(req: NextRequest) {
         }),
       ]
 
-      // Sincronizar lead con audiencia de Resend en segundo plano
-      void syncContactToAudience({
-        email,
-        firstName: name,
-      }).catch((err) => {
-        console.warn(`[contact] No se pudo sincronizar con Resend Audience:`, err)
-      })
+      // Sincronizar lead con audiencia de Resend en segundo plano (protegido con waitUntil en Vercel)
+      runInBackground(
+        syncContactToAudience({
+          email,
+          firstName: name,
+        }).catch((err) => {
+          console.warn(`[contact] No se pudo sincronizar con Resend Audience:`, err)
+        })
+      )
 
       // Despachar evento a n8n en segundo plano si N8N_WEBHOOK_URL está configurado
-      void dispatchN8nEvent({
-        event: 'lead.contact',
-        ticketId,
-        name,
-        email,
-        phone: phone || undefined,
-        message,
-        lang: detectedLang,
-        metadata: {
+      runInBackground(
+        dispatchN8nEvent({
+          event: 'lead.contact',
+          ticketId,
+          name,
+          email,
           phone: phone || undefined,
-          projectType: parseResult.data.projectType,
-          total: parseResult.data.total,
-          isDiagnostic: Boolean(parseResult.data.isDiagnostic),
-        },
-      })
+          message,
+          lang: detectedLang,
+          metadata: {
+            phone: phone || undefined,
+            projectType: parseResult.data.projectType,
+            total: parseResult.data.total,
+            isDiagnostic: Boolean(parseResult.data.isDiagnostic),
+          },
+        })
+      )
 
       const results = await Promise.allSettled(emailTasks)
       results.forEach((res, index) => {
@@ -183,6 +188,17 @@ export async function POST(req: NextRequest) {
         }
       })
     }
+
+    captureServerEvent({
+      distinctId: email,
+      event: isAiDiag ? 'ai_diagnostic_submitted' : 'contact_lead_submitted',
+      properties: {
+        ticketId,
+        lang: detectedLang,
+        isDiagnostic: Boolean(isAiDiag),
+        projectType: projectType || null,
+      },
+    })
 
     const clientMsg =
       detectedLang === 'en'

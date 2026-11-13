@@ -701,22 +701,31 @@ export function ActivityTimeline({
         {t('dashboard.actividad_reciente', 'Actividad Reciente')}
       </p>
       <div className="space-y-2.5">
-        {items.map((item, i) => (
-          <div
-            key={`activity-${item.label}-${i}`}
-            className="flex items-center justify-between gap-3 rounded-xl bg-muted/40 border border-border px-4 py-3 hover:border-primary/40 transition-colors"
-          >
-            <div className="flex items-center gap-3 min-w-0">
-              <span className={`h-2 w-2 shrink-0 rounded-full ${dotColor[item.status]}`} />
-              <span className="text-xs sm:text-sm font-medium text-foreground truncate">
-                {item.label}
+        {items.length === 0 ? (
+          <div className="rounded-xl bg-muted/40 border border-dashed border-border px-4 py-6 text-center text-xs text-muted-foreground">
+            {t(
+              'dashboard.sin_actividad',
+              'Tu historial real aparecerá acá a medida que registres pagos, comprobantes o tickets.'
+            )}
+          </div>
+        ) : (
+          items.map((item, i) => (
+            <div
+              key={`activity-${item.label}-${i}`}
+              className="flex items-center justify-between gap-3 rounded-xl bg-muted/40 border border-border px-4 py-3 hover:border-primary/40 transition-colors"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <span className={`h-2 w-2 shrink-0 rounded-full ${dotColor[item.status]}`} />
+                <span className="text-xs sm:text-sm font-medium text-foreground truncate">
+                  {item.label}
+                </span>
+              </div>
+              <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
+                {item.time}
               </span>
             </div>
-            <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
-              {item.time}
-            </span>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </motion.div>
   )

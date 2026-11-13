@@ -219,9 +219,8 @@ export default function DashboardFree({
               </h1>
 
               <p className="mt-1.5 text-sm text-muted-foreground max-w-xl font-medium leading-relaxed">
-                Desde este mismo panel podés activar tu abono en 1 clic, simular el ahorro de tu
-                flota con Linux POS, cotizar módulos de turnos/tienda o hablar directo con
-                ingeniería.
+                Desde este mismo panel podés seguir tus tickets de soporte, adjuntar comprobantes de
+                transferencia, cotizar un proyecto o activar tu abono.
               </p>
             </div>
           </div>
@@ -286,15 +285,15 @@ export default function DashboardFree({
 
         <button
           type="button"
-          onClick={() => onOpenEcosystemSubTab?.('linux')}
+          onClick={() => onOpenEcosystemSubTab?.('quoter')}
           className="text-left rounded-2xl border border-slate-300/85 dark:border-border bg-card p-5 shadow-xs hover:border-emerald-500/50 transition-all cursor-pointer"
         >
           <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
-            Infraestructura &amp; POS
+            Cotizador &amp; Módulos
           </p>
-          <p className="text-lg font-bold text-foreground mt-1 font-mono">99.99%</p>
+          <p className="text-lg font-bold text-foreground mt-1">A medida</p>
           <span className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold mt-1 inline-block">
-            Edge Cloud + Linux LAN →
+            Calcular presupuesto →
           </span>
         </button>
 

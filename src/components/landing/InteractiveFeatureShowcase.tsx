@@ -7,6 +7,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence, useInView, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import { Badge } from '@astryxdesign/core'
@@ -486,6 +487,7 @@ const STEPS: MainStep[] = [
 export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
   className = '',
 }) => {
+  const { t } = useTranslation()
   const [activeStepIdx, setActiveStepIdx] = useState(0)
   const [subStageIdx, setSubStageIdx] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -584,20 +586,24 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               className={`w-3.5 h-3.5 transition-colors duration-300 ${theme.checkIcon}`}
             />
             <span className="text-slate-700 dark:text-neutral-300 font-semibold">
-              Ingeniería Transparente
+              {t('showcase.eyebrow', 'Ingeniería Transparente')}
             </span>
-            <Badge label="4 ETAPAS" variant="cyan" />
+            <Badge label={t('showcase.badge', '4 ETAPAS')} variant="cyan" />
           </div>
 
           <h2 className="text-2xl sm:text-4xl font-semibold tracking-[-0.028em] text-slate-900 dark:text-white leading-tight">
-            Cómo construimos y escalamos tu{' '}
-            <span className="text-cyan-600 dark:text-cyan-400">activo digital</span>
+            {t('showcase.heading_prefix', 'Cómo construimos y escalamos tu')}{' '}
+            <span className="text-cyan-600 dark:text-cyan-400">
+              {t('showcase.heading_accent', 'activo digital')}
+            </span>
           </h2>
         </div>
 
         <p className="max-w-sm text-sm text-muted-foreground leading-relaxed md:text-right">
-          Cuatro etapas, una sola persona responsable. Sin intermediarios ni capas que diluyan
-          decisiones.
+          {t(
+            'showcase.subtitle',
+            'Cuatro etapas, una sola persona responsable. Sin intermediarios ni capas que diluyan decisiones.'
+          )}
         </p>
       </div>
 
@@ -678,7 +684,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               : 'text-slate-700 dark:text-neutral-400 group-hover:text-slate-950 dark:group-hover:text-neutral-200'
                           }`}
                         >
-                          {step.title}
+                          {t(`showcase.steps.${step.id}.title`, step.title)}
                         </h3>
                         <p
                           className={`text-xs truncate mt-0.5 transition-colors ${
@@ -687,7 +693,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               : 'text-slate-500 dark:text-neutral-600'
                           }`}
                         >
-                          {step.subtitle}
+                          {t(`showcase.steps.${step.id}.subtitle`, step.subtitle)}
                         </p>
                       </div>
                     </div>
@@ -712,9 +718,9 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
           {/* Nota discreta al pie del sidebar */}
           <div className="hidden lg:flex items-center justify-between pt-4 mt-4 border-t border-slate-300/80 dark:border-white/[0.06] text-[11px] font-mono text-slate-600 dark:text-neutral-500">
-            <span>Secuencia automática</span>
+            <span>{t('showcase.auto_seq', 'Secuencia automática')}</span>
             <span className={`font-bold transition-colors duration-300 ${theme.accentText}`}>
-              Paso 0{activeStepIdx + 1} / 04
+              {t('showcase.step_counter', 'Paso')} 0{activeStepIdx + 1} / 04
             </span>
           </div>
         </div>
@@ -764,7 +770,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5 shrink-0" />
-                    <span>{stg.label}</span>
+                    <span>{t(`showcase.stages.${stg.id}.label`, stg.label)}</span>
                   </button>
                 )
               })}
@@ -773,7 +779,11 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
             <button
               type="button"
               onClick={() => setIsPaused(!isPaused)}
-              aria-label={isPaused ? 'Reanudar rotación' : 'Pausar rotación'}
+              aria-label={
+                isPaused
+                  ? t('showcase.resume_aria', 'Reanudar rotación')
+                  : t('showcase.pause_aria', 'Pausar rotación')
+              }
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300/80 dark:border-white/[0.07] bg-slate-50 hover:bg-slate-100 dark:bg-white/[0.02] dark:hover:bg-white/[0.06] text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors cursor-pointer font-mono text-xs"
             >
               {isPaused ? (
@@ -783,7 +793,9 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   className={`w-3.5 h-3.5 transition-colors duration-300 ${theme.checkIcon}`}
                 />
               )}
-              <span className="hidden sm:inline">{isPaused ? 'Reanudar' : 'Pausa'}</span>
+              <span className="hidden sm:inline">
+                {isPaused ? t('showcase.resume', 'Reanudar') : t('showcase.pause', 'Pausa')}
+              </span>
             </button>
           </div>
 
@@ -946,15 +958,15 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   <span
                     className={`inline-block font-mono text-[11px] font-bold uppercase tracking-widest ${theme.accentText}`}
                   >
-                    {currentStage.eyebrow}
+                    {t(`showcase.stages.${currentStage.id}.eyebrow`, currentStage.eyebrow)}
                   </span>
 
                   <h3 className="text-xl sm:text-2xl lg:text-[26px] font-semibold text-slate-900 dark:text-white tracking-[-0.025em] leading-snug">
-                    {currentStage.title}
+                    {t(`showcase.stages.${currentStage.id}.title`, currentStage.title)}
                   </h3>
 
                   <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed">
-                    {currentStage.description}
+                    {t(`showcase.stages.${currentStage.id}.description`, currentStage.description)}
                   </p>
 
                   <div className="flex flex-wrap gap-2 pt-1">
@@ -979,7 +991,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               <span
                 className={`w-2 h-2 rounded-full transition-colors duration-300 ${theme.dotBg}`}
               />
-              <span>Sistemas en producción verificables</span>
+              <span>{t('showcase.footer_badge', 'Sistemas en producción verificables')}</span>
             </div>
 
             <div className="flex items-center gap-2.5">
@@ -988,7 +1000,9 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                 className="px-3 py-1.5 rounded-lg border border-slate-300/85 dark:border-white/10 bg-slate-50 hover:bg-slate-100 dark:bg-white/[0.03] dark:hover:bg-white/[0.07] font-mono text-xs font-semibold text-slate-700 hover:text-slate-950 dark:text-neutral-300 dark:hover:text-white flex items-center gap-1.5 transition-colors"
               >
                 <span>
-                  {currentStage.id === 'linux-pos' ? 'Portal /linux' : 'Ver arquitectura'}
+                  {currentStage.id === 'linux-pos'
+                    ? t('showcase.portal_linux', 'Portal /linux')
+                    : t('showcase.view_arch', 'Ver arquitectura')}
                 </span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -1001,7 +1015,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                 }
                 className={`px-3.5 py-1.5 rounded-lg font-mono text-xs font-bold flex items-center gap-1.5 transition-all duration-300 ${theme.ctaBtn}`}
               >
-                <span>Diagnosticar Proyecto</span>
+                <span>{t('showcase.diagnose_cta', 'Diagnosticar Proyecto')}</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
             </div>

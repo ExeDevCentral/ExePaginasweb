@@ -42,7 +42,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
 
   const CATEGORIES = [
     { id: 'all', label: t('portfolio.cat_todos', 'Todos los Proyectos'), icon: Layers },
-    { id: 'saas', label: 'SaaS & Seguridad', icon: Zap },
+    { id: 'saas', label: t('portfolio.cat_saas', 'SaaS & Seguridad'), icon: Zap },
     { id: 'turnos', label: t('portfolio.cat_turnos', 'Turnos & Reservas'), icon: Calendar },
     { id: 'ecommerce', label: t('portfolio.cat_ecommerce', 'E-Commerce'), icon: ShoppingBag },
     { id: 'web', label: t('portfolio.cat_web', 'Landings & Web'), icon: Globe },
@@ -89,7 +89,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
           >
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-              FIG. 03 — CASOS EN PRODUCCIÓN
+              {t('portfolio.fig_badge', 'FIG. 03 — CASOS EN PRODUCCIÓN')}
             </span>
             <Badge label="LIVE" variant="success" />
           </motion.div>
@@ -214,7 +214,10 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                         <div className="absolute top-3.5 left-3.5">
                           <span className="px-2.5 py-0.5 rounded-full bg-slate-950/75 backdrop-blur-md border border-emerald-400/35 text-[10px] font-mono text-emerald-300 flex items-center gap-1.5 font-medium">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                            {project.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')}
+                            {t(
+                              `portfolio.items.${project.id}.statusLabel`,
+                              project.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')
+                            )}
                           </span>
                         </div>
 
@@ -224,9 +227,15 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label={`Ver sitio web de ${project.title} en producción`}
+                            aria-label={t('portfolio.view_live_aria', {
+                              defaultValue: 'Ver sitio web de {{title}} en producción',
+                              title: t(`portfolio.items.${project.id}.title`, project.title),
+                            })}
                             className="absolute top-3.5 right-3.5 p-1.5 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/15 text-slate-200 hover:bg-emerald-500 hover:text-slate-950 hover:border-emerald-400 transition-colors flex items-center justify-center cursor-pointer"
-                            title={`Ver sitio web de ${project.title} en producción`}
+                            title={t('portfolio.view_live_aria', {
+                              defaultValue: 'Ver sitio web de {{title}} en producción',
+                              title: t(`portfolio.items.${project.id}.title`, project.title),
+                            })}
                           >
                             <ArrowUpRight className="w-3.5 h-3.5" />
                           </a>
@@ -236,10 +245,11 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                         <div className="absolute bottom-3.5 left-4 right-4 flex items-end justify-between gap-2">
                           <div>
                             <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider block mb-0.5 font-semibold">
-                              0{idx + 1} · {project.client}
+                              0{idx + 1} ·{' '}
+                              {t(`portfolio.items.${project.id}.client`, project.client)}
                             </span>
                             <h3 className="text-base sm:text-lg font-bold text-white font-display leading-tight group-hover:text-emerald-300 transition-colors">
-                              {project.title}
+                              {t(`portfolio.items.${project.id}.title`, project.title)}
                             </h3>
                           </div>
                         </div>
@@ -248,18 +258,18 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                       {/* Contenido & Detalles */}
                       <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                         <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3 min-h-[3.2rem]">
-                          {project.description}
+                          {t(`portfolio.items.${project.id}.description`, project.description)}
                         </p>
 
                         {/* Métricas destacadas limpias sin sombra pesada */}
                         <div className="grid grid-cols-2 divide-x divide-slate-200/80 dark:divide-white/[0.08] py-2.5 px-3 rounded-xl bg-slate-50/80 dark:bg-white/[0.03] border border-slate-200/70 dark:border-white/[0.07] text-center">
-                          {project.metrics.map((m) => (
+                          {project.metrics.map((m, mIdx) => (
                             <div key={m.label} className="px-2">
                               <div className="text-sm font-bold text-slate-950 dark:text-white font-mono">
-                                {m.value}
+                                {t(`portfolio.items.${project.id}.metric_${mIdx}_value`, m.value)}
                               </div>
                               <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
-                                {m.label}
+                                {t(`portfolio.items.${project.id}.metric_${mIdx}_label`, m.label)}
                               </div>
                             </div>
                           ))}
@@ -529,49 +539,61 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                 <div className="flex items-center gap-2">
                   <span className="px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 font-black text-xs uppercase tracking-wider flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>EN PRODUCCIÓN</span>
+                    <span>
+                      {t(
+                        `portfolio.items.${selectedProject.id}.statusLabel`,
+                        selectedProject.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')
+                      )}
+                    </span>
                   </span>
                   <span className="px-3 py-1 rounded-full bg-accent-cyan/20 text-accent-cyan font-bold text-xs uppercase tracking-wider">
-                    {selectedProject.categoryLabel}
+                    {t(
+                      `portfolio.items.${selectedProject.id}.categoryLabel`,
+                      selectedProject.categoryLabel
+                    )}
                   </span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-black text-foreground font-montserrat">
-                  {selectedProject.title}
+                  {t(`portfolio.items.${selectedProject.id}.title`, selectedProject.title)}
                 </h3>
                 <p className="text-xs text-muted-foreground font-medium">
-                  Cliente / Dominio: {selectedProject.client}
+                  {t('portfolio.client_domain', 'Cliente / Dominio')}:{' '}
+                  {t(`portfolio.items.${selectedProject.id}.client`, selectedProject.client)}
                 </p>
               </div>
 
               <div className="rounded-2xl overflow-hidden border border-border h-60 sm:h-72 bg-muted">
                 <img
                   src={selectedProject.image}
-                  alt={selectedProject.title}
+                  alt={t(`portfolio.items.${selectedProject.id}.title`, selectedProject.title)}
                   className="w-full h-full object-cover"
                 />
               </div>
 
               <div className="space-y-4">
                 <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
-                  Resumen del Desarrollo
+                  {t('portfolio.dev_summary', 'Resumen del Desarrollo')}
                 </h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  {selectedProject.description}
+                  {t(
+                    `portfolio.items.${selectedProject.id}.description`,
+                    selectedProject.description
+                  )}
                 </p>
               </div>
 
               <div className="space-y-3">
                 <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
-                  Características Clave
+                  {t('portfolio.key_features', 'Características Clave')}
                 </h4>
                 <div className="space-y-2">
-                  {selectedProject.highlights.map((h) => (
+                  {selectedProject.highlights.map((h, hIdx) => (
                     <div
                       key={h}
                       className="flex items-start gap-2.5 text-xs sm:text-sm text-foreground/90"
                     >
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{h}</span>
+                      <span>{t(`portfolio.items.${selectedProject.id}.highlight_${hIdx}`, h)}</span>
                     </div>
                   ))}
                 </div>
@@ -583,7 +605,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                   onClick={() => setSelectedProject(null)}
                   className="px-5 py-2.5 rounded-xl border border-border text-xs font-bold text-foreground hover:bg-muted transition-colors"
                 >
-                  Cerrar
+                  {t('portfolio.close', 'Cerrar')}
                 </button>
 
                 {selectedProject.link && (

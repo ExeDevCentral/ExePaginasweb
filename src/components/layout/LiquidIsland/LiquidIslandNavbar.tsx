@@ -11,7 +11,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { motion, useMotionValue, useReducedMotion } from 'framer-motion'
-import { CyberChevron, CyberBurgerIcon, CyberRadarBeacon } from '@/components/ui/MagnificentIcons'
+import { CyberChevron, CyberBurgerIcon } from '@/components/ui/MagnificentIcons'
 
 import { useNavScroll } from './useNavScroll'
 import NavLogo from './NavLogo'
@@ -122,10 +122,14 @@ export default function LiquidIslandNavbar({
           aria-label={getNavLabel('nav.aria_main_nav', 'Navegación principal')}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative pointer-events-auto w-full max-w-7xl mx-auto h-14 sm:h-14.5 rounded-full border border-slate-200/90 dark:border-cyan-400/30 bg-white/90 dark:bg-[#0c1224]/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 dark:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6),0_0_16px_rgba(6,182,212,0.1)] flex items-center justify-between px-4 sm:px-5 gap-2 overflow-hidden transition-colors duration-200 hover:border-slate-300 dark:hover:border-cyan-400/60"
+          className="relative pointer-events-auto w-full max-w-7xl mx-auto h-14 sm:h-14.5 rounded-full border border-slate-200/90 dark:border-cyan-400/30 bg-white/90 dark:bg-[#0c1224]/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 dark:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6),0_0_16px_rgba(6,182,212,0.1)] flex items-center justify-between px-4 sm:px-5 gap-2 transition-colors duration-200 hover:border-slate-300 dark:hover:border-cyan-400/60"
         >
-          {/* Spotlight dinámico sobre el cristal */}
-          {!reduceMotion && <SpotlightGlass mouseX={mouseX} mouseY={mouseY} />}
+          {/* Spotlight dinámico sobre el cristal (contenido en su propio overflow-hidden) */}
+          {!reduceMotion && (
+            <div className="pointer-events-none absolute inset-0 rounded-full overflow-hidden z-0">
+              <SpotlightGlass mouseX={mouseX} mouseY={mouseY} />
+            </div>
+          )}
 
           {/* IZQUIERDA: Logo interactivo con Phosphor Decay */}
           <motion.div layout="position" className="flex items-center shrink-0">
@@ -246,10 +250,10 @@ export default function LiquidIslandNavbar({
           {/* DERECHA: Badge de Disponibilidad + Idioma + Tema + Menú + CTA Dominante */}
           <motion.div layout="position" className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Disponibilidad en tiempo real (visible solo en 2xl para no comprimir la píldora) */}
-            <div className="hidden 2xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/8 border border-cyan-500/25 dark:border-cyan-400/25 text-[9px] font-mono font-semibold tracking-wider text-cyan-800/90 dark:text-cyan-300/80 select-none shrink-0">
-              <CyberRadarBeacon size={8} />
+            <div className="hidden 2xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 dark:border-amber-400/30 text-[9px] font-mono font-semibold tracking-wider text-amber-800 dark:text-amber-300 select-none shrink-0">
+              <span className="w-2 h-2 rounded-full bg-amber-500 dark:bg-amber-400 animate-pulse shrink-0" />
               <span className="whitespace-nowrap">
-                {getNavLabel('nav.disponible_badge', 'DISPONIBLE // 2026')}
+                {getNavLabel('nav.disponible_badge', 'NO DISPONIBLE HASTA MARZO · Q1 2027')}
               </span>
             </div>
 

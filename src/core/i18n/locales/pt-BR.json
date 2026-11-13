@@ -15,7 +15,8 @@
     "area_cliente": "Área do Cliente",
     "sistemas_web_medida": "Sistemas Web Sob Medida",
     "tienda_online": "Loja Online",
-    "cotizador": "Cotador"
+    "cotizador": "Cotador",
+    "disponible_badge": "INDISPONÍVEL ATÉ MARÇO · Q1 2027"
   },
   "hero": {
     "badge": "Código próprio, não aluguel",
@@ -177,7 +178,7 @@
     "inversion": "Investimento",
     "ver_demo": "Ver Demo",
     "simulador_en_vivo": "Simulador ao Vivo do Setor",
-    "peluqueria_roi": "💇 Agenda Cheia 24/7",
+    "peluqueria_roi": "Agenda Cheia 24/7",
     "peluqueria_titulo": "Sistema para Salões & Barbearias",
     "peluqueria_desc": "Agenda inteligente de profissionais, agendamento online e catálogo de serviços com avisos pelo WhatsApp.",
     "peluqueria_feat_1": "Agendamento online por profissional e especialidade",
@@ -185,7 +186,7 @@
     "peluqueria_feat_3": "Ficha de clientes e histórico de procedimentos",
     "peluqueria_feat_4": "Controle financeiro, pagamentos e PIX",
     "peluqueria_feat_5": "Gestão de comissões para a equipe",
-    "panaderia_roi": "🥐 +40% Vendas no Balcão",
+    "panaderia_roi": "+40% Vendas no Balcão",
     "panaderia_titulo": "Sistema para Padarias & Cafeterias",
     "panaderia_desc": "Ponto de venda ultrarrápido, controle de fornadas e encomendas para eventos e buffet.",
     "panaderia_feat_1": "Ponto de venda (PDV) touch ultrarrápido",
@@ -193,7 +194,7 @@
     "panaderia_feat_3": "Gestão de encomendas e encomendas programadas",
     "panaderia_feat_4": "Fechamento de caixa diário e impressão de tickets",
     "panaderia_feat_5": "Tela para cozinha e setor de forno",
-    "ropa_roi": "👗 Controle de Tamanho e Estoque",
+    "ropa_roi": "Controle de Tamanhos e Estoque",
     "ropa_titulo": "Sistema para Lojas de Roupas & Moda",
     "ropa_desc": "Catálogo digital com grade de tamanhos e cores, controle de estoque físico e checkout instantâneo.",
     "ropa_feat_1": "Controle de estoque por Tamanho (P/M/G) e Cor",
@@ -201,7 +202,7 @@
     "ropa_feat_3": "Catálogo interativo de coleção",
     "ropa_feat_4": "Pagamentos com Cartão, PIX e Mercado Pago",
     "ropa_feat_5": "Histórico de compras por cliente",
-    "padel_roi": "⚡ +45% Ocupação de Quadras",
+    "padel_roi": "+45% Ocupação de Quadras",
     "padel_titulo": "Sistema para Quadras & Clubes Esportivos",
     "padel_desc": "Agendamento automatizado de horários, pagamento de sinal em tempo real e automação de iluminação para quadras.",
     "padel_feat_1": "Grade interativa de horários em tempo real",
@@ -210,7 +211,30 @@
     "padel_feat_4": "Aluguel de raquetes, bolas e lanchonete",
     "padel_feat_5": "Confirmação automática de agendamento via WhatsApp",
     "cta_personalizado": "Procura desenvolvimento para outro segmento? Criamos plataformas web totalmente personalizadas para os seus processos.",
-    "cta_boton": "Consultar sobre seu segmento"
+    "cta_boton": "Consultar sobre seu segmento",
+    "roi_default": "Desempenho Máximo",
+    "widget_pelu_select": "Selecionar Estilista:",
+    "widget_available": "Disponível",
+    "widget_pelu_stylist_1": "Sofia (Estilista)",
+    "widget_pelu_stylist_2": "Lucas (Barbeiro)",
+    "widget_pelu_service_label": "Serviço:",
+    "widget_pelu_service_name": "Corte & Escova",
+    "widget_pan_batch": "Fornada Recém-Assada:",
+    "widget_pan_ready": "17:30 (Pronto)",
+    "widget_pan_items": "Croissants / Doces",
+    "widget_pan_add": "Adicionar Dúzia",
+    "widget_ropa_item": "Jaqueta Eco-Couro Urban:",
+    "widget_ropa_stock": "Estoque: 14 un.",
+    "widget_ropa_color_1": "Preto",
+    "widget_ropa_color_2": "Bege",
+    "widget_padel_court": "Horário Quadra 1 (Blindex):",
+    "calc_for": "Orçamento para",
+    "calc_estimated": "Estimado",
+    "calc_branches": "Filiais ou Pontos de Atendimento:",
+    "calc_whatsapp_bot": "Incluir notificações automáticas por WhatsApp (+$80 USD)",
+    "calc_wa_msg": "Olá ExePaginasWeb! Gostaria de um orçamento para {{product}} para {{count}} filial(is). Orçamento estimado: ${{total}} USD.",
+    "calc_wa_cta": "Enviar Consulta Direta pelo WhatsApp",
+    "calc_btn_title": "Calcular orçamento sob medida"
   },
   "portfolio": {
     "titulo": "Portfólio Profissional",
@@ -236,7 +260,82 @@
     "cap_turnos_desc": "Agendamento em tempo real sem cadastro obrigatório ou atritos.",
     "cap_webs": "Websites & Landings",
     "cap_webs_desc": "Carregamento ultrarrápido, SEO técnico de excelência e design moderno.",
-    "cta_cotizar": "Orçar Meu Projeto Sob Medida"
+    "cta_cotizar": "Orçar Meu Projeto Sob Medida",
+    "cat_saas": "SaaS e Segurança",
+    "fig_badge": "FIG. 03 — CASOS EM PRODUÇÃO",
+    "view_live_aria": "Ver site de {{title}} em produção",
+    "client_domain": "Cliente / Domínio",
+    "dev_summary": "Resumo do Desenvolvimento",
+    "key_features": "Recursos Principais",
+    "close": "Fechar",
+    "items": {
+      "restoai": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "SaaS Gastronômico",
+        "title": "RESTOia — Suíte Gastronômica Inteligente & Motor KOBE",
+        "description": "Suíte de missão crítica para restaurantes: mapa de salão interativo (POS), KDS de cozinha ao vivo, comandas 100% offline com sincronização automática, fechamento de caixa por PIN, sommelier com IA e auditoria SHA-256."
+      },
+      "chispa32": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "Landing & Web",
+        "title": "Chispa32 — Oficina ESP32",
+        "description": "Landing de alta conversão para oficina especializada em reparo e gravação de placas ESP32. Design técnico premium com serviços e contato direto."
+      },
+      "gam": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "Landing & Web",
+        "title": "Oficina Artesanal GAM",
+        "description": "Site dedicado à restauração artesanal de máquinas de escrever com estética vintage-premium e contato direto."
+      },
+      "noema": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "Landing & Web",
+        "title": "Noema — Pesquisa de Mercado",
+        "description": "Site corporativo executivo para consultoria de pesquisa de mercado com calculadora metodológica e dashboard Chart.js."
+      },
+      "celstore": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "E-Commerce",
+        "title": "CelStore — Flagship Store de Smartphones e Hardware",
+        "description": "E-commerce de alto padrão para smartphones e hardware com visualizador 3D Three.js, configurador e estoque atômico no Supabase."
+      },
+      "coleccion-patrimonial": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "Landing & Web",
+        "title": "Coleção Patrimonial & Arquivo Histórico",
+        "description": "Museu digital de acervo histórico chileno com catálogo curatorial de livros antigos, cerâmica colonial e manuscritos."
+      },
+      "bilex": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "Ferramenta Web",
+        "title": "Bilex — Tradutor de PDFs e Imagens",
+        "description": "Aplicação web para traduzir PDFs e imagens com leitura bilíngue sincronizada, OCR Tesseract.js e múltiplos motores de IA."
+      },
+      "owleye": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "SaaS & Cloud",
+        "title": "OwlEyeEngine — Cibersegurança e Defesa Ativa",
+        "description": "Plataforma de cibersegurança em tempo real com pontuação heurística de ameaças, mitigação ativa e dashboard WebSocket."
+      },
+      "fixi": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "Marketplace",
+        "title": "FIXI — Marketplace de Serviços Locais",
+        "description": "Plataforma que conecta profissionais e clientes em tempo real com contato por WhatsApp, geolocalização e experiência 3D."
+      },
+      "sportmanager": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "Agendamento e Reservas",
+        "title": "SportManager / PlayHub — Gestão Esportiva SaaS",
+        "description": "Plataforma SaaS completa para complexos esportivos: reservas, pagamentos Mercado Pago, CRM, importação Excel e multi-tenant Supabase."
+      },
+      "pelu-rosario": {
+        "statusLabel": "EM PRODUÇÃO",
+        "categoryLabel": "Agendamento & E-Commerce",
+        "title": "Pelu Rosario — Barbearia Boutique & Visagismo IA",
+        "description": "Plataforma completa para barbearia boutique: agendamentos com WhatsApp, catálogo interativo, loja online e assistente de visagismo com IA."
+      }
+    }
   },
   "pricing": {
     "seccion_titulo": "Investimento Transparente",
@@ -731,7 +830,39 @@
     "bloom_testimonial_3": "O site me permitiu agendar num domingo à noite sem incomodar ninguém. Genial.",
     "bloom_role_frecuente": "Cliente Frequente",
     "bloom_role_premium": "Cliente Premium",
-    "bloom_role_nueva": "Nova Cliente"
+    "bloom_role_nueva": "Nova Cliente",
+    "badge_popular": "MAIS POPULAR",
+    "salon_stats": "⭐ 5.0 · Agendamento Online",
+    "neofit_stats": "⚡ Planos & Aulas Fit",
+    "aura_stats": "🏢 Imóveis & Leads",
+    "coffee_stats": "☕ Carrinho & Checkout",
+    "salon_feat_1": "Reserva em 3 cliques",
+    "salon_feat_2": "Depoimentos reais",
+    "salon_feat_3": "Catálogo de serviços",
+    "neofit_feat_1": "Planos com QR",
+    "neofit_feat_2": "Agenda semanal",
+    "neofit_feat_3": "Alta conversão",
+    "aura_feat_1": "Filtros ao vivo",
+    "aura_feat_2": "Lead no WhatsApp",
+    "aura_feat_3": "Galeria HD",
+    "coffee_feat_1": "Carrinho express",
+    "coffee_feat_2": "Sem comissões",
+    "coffee_feat_3": "Portal 3D interativo",
+    "coffee_prod_1_name": "Espresso Escuro",
+    "coffee_prod_2_name": "Cold Brew Clássico",
+    "coffee_prod_3_name": "Latte de Aveia",
+    "coffee_prod_4_name": "Blend Especial",
+    "coffee_prod_1_origin": "Etiópia",
+    "coffee_prod_2_origin": "Colômbia",
+    "coffee_prod_3_origin": "Brasil",
+    "coffee_prod_4_origin": "Peru",
+    "prop_1_tag": "Destaque",
+    "prop_2_tag": "Novo",
+    "prop_3_tag": "Premium",
+    "prop_4_tag": "Oportunidade",
+    "prop_5_tag": "Exclusiva",
+    "coffee_portal_subtitle": "💥 Explosão 3D de grãos e arquitetura de alta conversão",
+    "coffee_portal_enter": "Entrar na loja"
   },
   "privacypolicy": {
     "titulo_main": "Política de",
@@ -1425,5 +1556,150 @@
     "item_5_detail": "Calcule seu orçamento em 2 min com detalhamento transparente de arquitetura.",
     "item_6_label": "Loja Online & E-Commerce 3D",
     "item_6_detail": "Sua loja própria sem comissões por venda com recebimento direto."
+  },
+  "cmd": {
+    "aria_label": "Comandos e Navegação Rápida",
+    "placeholder": "Digite um comando ou busque uma seção... (ex. orçamento, loja, whatsapp)",
+    "close_aria": "Fechar paleta de comandos",
+    "empty": "Nenhum comando ou seção correspondente encontrado.",
+    "group_nav": "Navegação Rápida",
+    "nav_home": "Início",
+    "nav_store": "Loja de Planos e Manutenção",
+    "nav_quote": "Orçamentador Interativo Online (Web + Linux POS)",
+    "nav_linux": "Portal de Serviços Linux, POS e Nós Locais",
+    "nav_solutions": "Soluções de Software e Arquitetura",
+    "nav_portfolio": "Portfólio de Sistemas e Clientes",
+    "nav_dashboard": "Portal / Painel do Cliente",
+    "group_actions": "Ações Rápidas",
+    "wa_message": "Olá Exe! Entrando em contato pela paleta de comandos.",
+    "action_wa": "Conversar no WhatsApp Direto",
+    "online": "Online",
+    "action_theme": "Alternar Tema",
+    "light_mode": "Modo Claro",
+    "dark_mode": "Modo Escuro",
+    "action_lang": "Alterar Idioma",
+    "action_copy": "Copiar Link da ExePaginasWeb",
+    "action_top": "Voltar ao Topo",
+    "hint_nav": "Navegar",
+    "hint_select": "Selecionar",
+    "hint_close": "Fechar",
+    "toast_copied": "🔗 Link copiado para a área de transferência",
+    "toast_lang_en": "🌐 Idioma alterado para Inglês",
+    "toast_lang_es": "🌐 Idioma alterado para Espanhol",
+    "toast_dark": "🌙 Modo Escuro Ativado",
+    "toast_light": "☀️ Modo Claro Ativado"
+  },
+  "ownership": {
+    "badge": "MINI-AUDITORIA COM IA · HONESTIDADE BRUTAL",
+    "badge_months": "36 MESES",
+    "title": "Software Feito Sob Medida para Seu Negócio: Quando Alugar e Quando Ser Dono?",
+    "subtitle": "Se você está testando sem vendas validadas, dizemos a verdade: alugue algo barato para testar. Mas se seu negócio já vende, veja no gráfico interativo quanto dinheiro você perde em aluguéis e por que vale ser dono.",
+    "step1_label": "Escolha o estágio atual do seu negócio:",
+    "step2_label": "Suas vendas mensais:",
+    "capital_protected": "CAPITAL PROTEGIDO // 0% PERDAS",
+    "annual_savings": "Economia anual",
+    "step3_eyebrow": "3. Toque em qualquer pergunta para ver a diferença real",
+    "step3_title": "O que as plataformas de aluguel não contam nas letras miúdas",
+    "xray_show": "Ver Raio-X Técnico (CLI)",
+    "xray_hide": "Ocultar Raio-X Técnico",
+    "question_prefix": "PERGUNTA",
+    "yours_100": "100% Seu",
+    "rent_platform_label": "Em Plataforma Alugada",
+    "own_platform_label": "Com ExePaginasWeb",
+    "your_control": "Seu controle",
+    "seal_badge": "GARANTIA DE PROPRIEDADE REAL · ORIGEM 2025",
+    "seal_title": "Contato direto com Exequiel Echevarría — Sem agências ou aluguéis ocultos",
+    "seal_desc": "Transferência do repositório GitHub para seu nome, banco PostgreSQL dedicado e 0% de comissão por venda.",
+    "seal_cta": "Orçar Meu Próprio Sistema",
+    "scenarios": {
+      "experimental": {
+        "badge": "FASE EXPERIMENTAL",
+        "shortLabel": "Recém Começando",
+        "subtitle": "Ainda não tenho vendas fixas",
+        "aiVerdictTag": "HONESTIDADE BRUTAL · RECOMENDAÇÃO IA",
+        "aiHeadline": "Ainda NÃO invista em um sistema sob medida: alugue algo básico para testar",
+        "aiExplanation": "Se você está experimentando e ainda não validou vendas mensais, usar um modelo econômico por 3 a 6 meses é a decisão financeira certa."
+      },
+      "ecommerce": {
+        "badge": "FASE ESCALA · VENDAS ATIVAS",
+        "shortLabel": "Vendo Produtos",
+        "subtitle": "Descontam comissão em cada venda",
+        "aiVerdictTag": "ALERTA IA · VAZAMENTO DE LUCRO DETECTADO",
+        "aiHeadline": "Pagar aluguel + porcentagem por venda está consumindo um salário por ano",
+        "aiExplanation": "Quando seu negócio já vende, o aluguel com comissão age como um sócio silencioso que leva de 3% a 10% do seu esforço para sempre. Com sistema próprio você paga uma vez e 100% vai para sua conta."
+      },
+      "servicios": {
+        "badge": "FASE ESCALA · SERVIÇOS E B2B",
+        "shortLabel": "Serviços / Agendamento / B2B",
+        "subtitle": "Quero velocidade, prestígio e zero mensalidades",
+        "aiVerdictTag": "DIAGNÓSTICO IA · ATIVO DIGITAL PRÓPRIO",
+        "aiHeadline": "Sua marca precisa de um ativo próprio que ninguém possa suspender ou limitar",
+        "aiExplanation": "Plataformas alugadas prendem você em modelos lentos e iguais aos da concorrência, retendo seus clientes. Com arquitetura própria, seu site voa no celular e é 100% seu para sempre."
+      }
+    },
+    "pillars": {
+      "codigo": {
+        "question": "De quem é o site quando você termina de pagar?",
+        "axisTitle": "Propriedade do Código-Fonte"
+      },
+      "comisiones": {
+        "question": "Quanto descontam cada vez que vendo algo?",
+        "axisTitle": "Comissões de Venda e Gateways"
+      },
+      "datos": {
+        "question": "Meus clientes e histórico ficam em minhas mãos?",
+        "axisTitle": "Banco de Dados e Seus Clientes"
+      },
+      "continuidad": {
+        "question": "Podem desligar meu site de um dia para o outro?",
+        "axisTitle": "Continuidade Operacional"
+      }
+    },
+    "projection_eyebrow": "PROJEÇÃO DE 36 MESES",
+    "projection_title": "Aluguel vs. Ativo Próprio",
+    "sim_restore": "Restaurar",
+    "sim_cut": "Se parar de pagar?",
+    "year_1": "ANO 1",
+    "year_2": "ANO 2",
+    "year_3": "ANO 3",
+    "rent_offline": "HTTP 402 · FORA DO AR",
+    "rent_3y": "ALUGUEL (3 ANOS)",
+    "rent_suspended": "Loja suspensa",
+    "month_abbr": "mês",
+    "own_3y": "SISTEMA PRÓPRIO",
+    "own_zero_fee": "$0/mês · HTTP 200 OK"
+  },
+  "showcase": {
+    "eyebrow": "Engenharia Transparente",
+    "badge": "4 ETAPAS",
+    "heading_prefix": "Como construímos e escalamos seu",
+    "heading_accent": "ativo digital",
+    "subtitle": "Quatro etapas, uma única pessoa responsável. Sem intermediários nem camadas que diluam decisões.",
+    "auto_seq": "Sequência automática",
+    "step_counter": "Passo",
+    "pause": "Pausar",
+    "resume": "Retomar",
+    "footer_badge": "Sistemas em produção verificáveis",
+    "portal_linux": "Portal /linux",
+    "view_arch": "Ver arquitetura",
+    "diagnose_cta": "Diagnosticar Projeto",
+    "steps": {
+      "trato-directo": {
+        "title": "Contato Direto",
+        "subtitle": "Sem intermediários nem agências"
+      },
+      "arquitectura-viva": {
+        "title": "Arquitetura Viva",
+        "subtitle": "Stack moderna e escalável"
+      },
+      "rendimiento": {
+        "title": "Desempenho e Segurança",
+        "subtitle": "Velocidade e resiliência extrema"
+      },
+      "conversion-escala": {
+        "title": "Conversão e Escala",
+        "subtitle": "Propriedade total e resultados"
+      }
+    }
   }
 }

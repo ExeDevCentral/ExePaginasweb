@@ -352,7 +352,7 @@ const TiltCard = ({
           <div className="flex items-center gap-2">
             {project.badgeLabel && (
               <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-gradient-to-r from-accent-cyan to-accent-magenta text-slate-950 shadow-sm">
-                {project.badgeLabel}
+                {t('demozone.badge_popular', project.badgeLabel)}
               </span>
             )}
             <span className="text-xs font-mono font-bold text-muted-foreground/60">
@@ -368,7 +368,7 @@ const TiltCard = ({
           {/* Micro-badge flotante 3D */}
           <div className="absolute bottom-2.5 left-3 px-2.5 py-1 rounded-lg bg-background/85 backdrop-blur-md border border-border/70 text-[10px] font-bold text-foreground flex items-center gap-1.5 shadow-md">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>{project.statsBadge}</span>
+            <span>{t(`demozone.${project.id}_stats`, project.statsBadge)}</span>
           </div>
         </div>
 
@@ -382,13 +382,13 @@ const TiltCard = ({
 
         {/* Micro-Features Pills */}
         <div className="flex flex-wrap gap-1.5 pt-1">
-          {project.features.map((feat) => (
+          {project.features.map((feat, idx) => (
             <span
               key={feat}
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-muted/60 border border-border/60 text-[10px] font-semibold text-foreground/80 group-hover:border-accent-cyan/30 transition-colors"
             >
               <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
-              <span>{feat}</span>
+              <span>{t(`demozone.${project.id}_feat_${idx + 1}`, feat)}</span>
             </span>
           ))}
         </div>
@@ -472,13 +472,14 @@ const DemoZone = () => {
     setFlyingItem(product.id)
     setTimeout(() => {
       setFlyingItem(null)
+      const translatedName = t(`demozone.coffee_prod_${product.id}_name`, product.name)
       setCartItems((prev) => [
         ...prev,
-        { id: product.id, name: product.name, price: product.price },
+        { id: product.id, name: translatedName, price: product.price },
       ])
       setCartBounce(true)
       setTimeout(() => setCartBounce(false), 400)
-      setToast(`${product.emoji} "${product.name}" ${t('demozone.coffee_added')}`)
+      setToast(`${product.emoji} "${translatedName}" ${t('demozone.coffee_added')}`)
       setTimeout(() => setToast(null), 2000)
     }, 600)
   }
@@ -729,7 +730,7 @@ const DemoZone = () => {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                     >
-                      {auraFeatured.tag}
+                      {t(`demozone.prop_${auraFeatured.id}_tag`, auraFeatured.tag)}
                     </motion.span>
                     {/* Info panel bottom */}
                     <AnimatePresence mode="wait">
@@ -833,7 +834,7 @@ const DemoZone = () => {
                                 {prop.name}
                               </p>
                               <span className="text-muted-foreground text-[10px] shrink-0">
-                                {prop.tag}
+                                {t(`demozone.prop_${prop.id}_tag`, prop.tag)}
                               </span>
                             </div>
                             <p className="text-muted-foreground text-xs truncate mt-0.5">
@@ -993,9 +994,12 @@ const DemoZone = () => {
                         {/* Emoji big */}
                         <div className="text-5xl mb-1 text-center">{product.emoji}</div>
                         <div>
-                          <p className="font-bold text-foreground text-sm">{product.name}</p>
+                          <p className="font-bold text-foreground text-sm">
+                            {t(`demozone.coffee_prod_${product.id}_name`, product.name)}
+                          </p>
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            {t('demozone.coffee_origin')} {product.origin}
+                            {t('demozone.coffee_origin')}{' '}
+                            {t(`demozone.coffee_prod_${product.id}_origin`, product.origin)}
                           </p>
                         </div>
                         <p className="text-2xl font-black text-amber-400">

@@ -43,22 +43,24 @@ export const CyberNeonLogo: React.FC<CyberNeonLogoProps> = ({
         style={{ filter: 'drop-shadow(0 0 10px rgba(6,182,212,0.35))' }}
       >
         <defs>
-          {/* Gradiente electromagnético para el haz del láser */}
+          {/* Gradiente electromagnético de alto contraste para el haz del láser */}
           <linearGradient id={laserId} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.25" />
-            <stop offset="55%" stopColor="#22d3ee" stopOpacity="1" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="0%" stopColor="#0891b2" stopOpacity="0.45" />
+            <stop offset="45%" stopColor="#06b6d4" stopOpacity="1" />
+            <stop offset="85%" stopColor="#22d3ee" stopOpacity="1" />
+            <stop offset="100%" stopColor="#ec4899" stopOpacity="1" />
           </linearGradient>
           <linearGradient id={laserXId} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.4" />
-            <stop offset="55%" stopColor="#facc15" stopOpacity="1" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.6" />
+            <stop offset="50%" stopColor="#f43f5e" stopOpacity="1" />
+            <stop offset="100%" stopColor="#22d3ee" stopOpacity="1" />
           </linearGradient>
 
-          {/* Filtro de resplandor de neón */}
-          <filter id={glowId} x="-25%" y="-35%" width="150%" height="170%">
-            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+          {/* Filtro de resplandor de neón intenso */}
+          <filter id={glowId} x="-35%" y="-45%" width="170%" height="190%">
+            <feGaussianBlur stdDeviation="5" result="coloredBlur" />
             <feMerge>
+              <feMergeNode in="coloredBlur" />
               <feMergeNode in="coloredBlur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
@@ -105,11 +107,11 @@ export const CyberNeonLogo: React.FC<CyberNeonLogoProps> = ({
             d="M 20 0 L 157.5 0 L 126 42 L 62 42 L 62 79 L 115 79 L 115 121 L 62 121 L 62 158 L 126 158 L 157.5 200 L 20 200 Z"
             pathLength={100}
             stroke={`url(#${laserId})`}
-            strokeWidth="6"
+            strokeWidth="13"
             strokeLinecap="round"
             strokeLinejoin="round"
             className="animate-[laserHopE1_4.8s_linear_infinite]"
-            style={{ strokeDasharray: '26 74', strokeDashoffset: 100 }}
+            style={{ strokeDasharray: '28 72', strokeDashoffset: 100 }}
           />
 
           {/* Salto 1: Arco eléctrico de E -> X */}
@@ -117,10 +119,10 @@ export const CyberNeonLogo: React.FC<CyberNeonLogoProps> = ({
             d="M 148 4 Q 164 -28 178 4"
             pathLength={100}
             stroke="#22d3ee"
-            strokeWidth="5"
+            strokeWidth="10"
             strokeLinecap="round"
             className="animate-[laserJump1_4.8s_ease-out_infinite]"
-            style={{ strokeDasharray: '35 65', strokeDashoffset: 100 }}
+            style={{ strokeDasharray: '38 62', strokeDashoffset: 100 }}
           />
 
           {/* 2. X Central */}
@@ -128,11 +130,11 @@ export const CyberNeonLogo: React.FC<CyberNeonLogoProps> = ({
             d="M 170 0 L 212 0 L 250 64.4 L 288 0 L 330 0 L 271 100 L 330 200 L 288 200 L 250 135.6 L 212 200 L 170 200 L 229 100 Z"
             pathLength={100}
             stroke={`url(#${laserXId})`}
-            strokeWidth="6"
+            strokeWidth="13"
             strokeLinecap="round"
             strokeLinejoin="round"
             className="animate-[laserHopX_4.8s_linear_infinite]"
-            style={{ strokeDasharray: '26 74', strokeDashoffset: 100 }}
+            style={{ strokeDasharray: '28 72', strokeDashoffset: 100 }}
           />
 
           {/* Salto 2: Arco eléctrico de X -> E */}
@@ -140,10 +142,10 @@ export const CyberNeonLogo: React.FC<CyberNeonLogoProps> = ({
             d="M 322 4 Q 338 -28 352 4"
             pathLength={100}
             stroke="#facc15"
-            strokeWidth="5"
+            strokeWidth="10"
             strokeLinecap="round"
             className="animate-[laserJump2_4.8s_ease-out_infinite]"
-            style={{ strokeDasharray: '35 65', strokeDashoffset: 100 }}
+            style={{ strokeDasharray: '38 62', strokeDashoffset: 100 }}
           />
 
           {/* 3. E Derecha */}
@@ -151,11 +153,11 @@ export const CyberNeonLogo: React.FC<CyberNeonLogoProps> = ({
             d="M 480 0 L 342.5 0 L 374 42 L 438 42 L 438 79 L 385 79 L 385 121 L 438 121 L 438 158 L 374 158 L 342.5 200 L 480 200 Z"
             pathLength={100}
             stroke={`url(#${laserId})`}
-            strokeWidth="6"
+            strokeWidth="13"
             strokeLinecap="round"
             strokeLinejoin="round"
             className="animate-[laserHopE2_4.8s_linear_infinite]"
-            style={{ strokeDasharray: '26 74', strokeDashoffset: 100 }}
+            style={{ strokeDasharray: '28 72', strokeDashoffset: 100 }}
           />
 
           {/* Salto 3: Arco eléctrico de E -> Punto Rojo */}
@@ -163,10 +165,10 @@ export const CyberNeonLogo: React.FC<CyberNeonLogoProps> = ({
             d="M 476 188 Q 492 150 508 170"
             pathLength={100}
             stroke="#ef4444"
-            strokeWidth="5"
+            strokeWidth="10"
             strokeLinecap="round"
             className="animate-[laserJump3_4.8s_ease-out_infinite]"
-            style={{ strokeDasharray: '35 65', strokeDashoffset: 100 }}
+            style={{ strokeDasharray: '38 62', strokeDashoffset: 100 }}
           />
         </g>
       </svg>

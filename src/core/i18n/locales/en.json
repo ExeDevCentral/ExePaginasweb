@@ -16,7 +16,8 @@
     "sistemas_web_medida": "Custom Web Systems",
     "tienda_online": "Online Store",
     "cotizador": "Quote Calculator",
-    "cotiza_tu_web": "Quote Your Web"
+    "cotiza_tu_web": "Quote Your Web",
+    "disponible_badge": "UNAVAILABLE UNTIL MARCH · Q1 2027"
   },
   "hero": {
     "badge": "2026 — COMPETE FOR ATTENTION",
@@ -275,7 +276,7 @@
     "inversion": "Investment",
     "ver_demo": "View Demo",
     "simulador_en_vivo": "Live Industry Simulator",
-    "peluqueria_roi": "💇 24/7 Full Bookings",
+    "peluqueria_roi": "Full Schedule 24/7",
     "peluqueria_titulo": "Hair Salons & Barbershops System",
     "peluqueria_desc": "Smart stylist agenda, online appointment booking, and treatment catalog with automated WhatsApp alerts.",
     "peluqueria_feat_1": "Online booking by stylist and specialty",
@@ -283,7 +284,7 @@
     "peluqueria_feat_3": "Client files and treatment history",
     "peluqueria_feat_4": "Cash and electronic payment control",
     "peluqueria_feat_5": "Commission management for professionals",
-    "panaderia_roi": "🥐 +40% Counter Sales",
+    "panaderia_roi": "+40% Counter Sales",
     "panaderia_titulo": "Bakeries & Cafes System",
     "panaderia_desc": "Ultra-fast POS checkout, batch production tracking, and advance orders management for catering.",
     "panaderia_feat_1": "Ultra-fast touchscreen POS checkout",
@@ -291,7 +292,7 @@
     "panaderia_feat_3": "Pre-orders and catering management",
     "panaderia_feat_4": "Daily cash register balance and receipt printing",
     "panaderia_feat_5": "Kitchen and baking display screen",
-    "ropa_roi": "👗 Size & Stock Control",
+    "ropa_roi": "Size & Stock Control",
     "ropa_titulo": "Clothing Stores & Fashion System",
     "ropa_desc": "Digital catalog with size and color variants, physical stock sync, and instant checkout payment gateway.",
     "ropa_feat_1": "Stock management by Size (S/M/L) and Color",
@@ -299,7 +300,7 @@
     "ropa_feat_3": "Interactive seasonal lookbook catalog",
     "ropa_feat_4": "Card, QR, Stripe & MercadoPago payments",
     "ropa_feat_5": "Customer purchase history",
-    "padel_roi": "⚡ +45% Court Occupancy",
+    "padel_roi": "+45% Court Occupancy",
     "padel_titulo": "Sports Courts & Clubs System",
     "padel_desc": "Automated slot booking, real-time deposits, and automated lighting control for Padel and Soccer courts.",
     "padel_feat_1": "Real-time interactive booking grid",
@@ -308,7 +309,30 @@
     "padel_feat_4": "Paddle racket, ball, and bar rentals",
     "padel_feat_5": "Instant WhatsApp confirmation notifications",
     "cta_personalizado": "Looking for another industry? We create fully custom web platforms tailored to your specific workflows.",
-    "cta_boton": "Ask about your industry"
+    "cta_boton": "Ask about your industry",
+    "roi_default": "Peak Performance",
+    "widget_pelu_select": "Select Stylist:",
+    "widget_available": "Available",
+    "widget_pelu_stylist_1": "Sofia (Stylist)",
+    "widget_pelu_stylist_2": "Lucas (Barber)",
+    "widget_pelu_service_label": "Service:",
+    "widget_pelu_service_name": "Cut & Styling",
+    "widget_pan_batch": "Freshly Baked Batch:",
+    "widget_pan_ready": "17:30 (Ready)",
+    "widget_pan_items": "Croissants / Pastries",
+    "widget_pan_add": "Add Dozen",
+    "widget_ropa_item": "Urban Faux-Leather Jacket:",
+    "widget_ropa_stock": "Stock: 14 pcs",
+    "widget_ropa_color_1": "Black",
+    "widget_ropa_color_2": "Beige",
+    "widget_padel_court": "Court 1 Slot (Glass Turf):",
+    "calc_for": "Quote for",
+    "calc_estimated": "Estimated",
+    "calc_branches": "Branches or Service Points:",
+    "calc_whatsapp_bot": "Include automated WhatsApp notifications (+$80 USD)",
+    "calc_wa_msg": "Hi ExePaginasWeb! I would like a quote for {{product}} for {{count}} branch(es). Estimated budget: ${{total}} USD.",
+    "calc_wa_cta": "Send Direct WhatsApp Inquiry",
+    "calc_btn_title": "Calculate custom budget"
   },
   "portfolio": {
     "titulo": "Professional Portfolio",
@@ -334,7 +358,82 @@
     "cap_turnos_desc": "Real-time scheduling without mandatory registration or friction.",
     "cap_webs": "Webs & Landings",
     "cap_webs_desc": "Ultra-fast load speed, top-tier technical SEO, and modern UI design.",
-    "cta_cotizar": "Quote My Custom Project"
+    "cta_cotizar": "Quote My Custom Project",
+    "cat_saas": "SaaS & Security",
+    "fig_badge": "FIG. 03 — PRODUCTION CASES",
+    "view_live_aria": "View {{title}} live in production",
+    "client_domain": "Client / Domain",
+    "dev_summary": "Development Summary",
+    "key_features": "Key Features",
+    "close": "Close",
+    "items": {
+      "restoai": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "FoodTech SaaS",
+        "title": "RESTOia — Smart Restaurant Suite & KOBE Engine",
+        "description": "Mission-critical suite for restaurants and fine-dining bistros: interactive floor map (POS), live kitchen KDS with prep timers, 100% offline order sync, PIN-protected blind cash closing, AI sommelier, and immutable SHA-256 cryptographic audit."
+      },
+      "chispa32": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "Landing & Web",
+        "title": "Chispa32 — ESP32 Hardware Lab",
+        "description": "High-conversion landing page for an ESP32 board repair and reflashing lab. Technical premium design with clear value proposition, services, and direct contact."
+      },
+      "gam": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "Landing & Web",
+        "title": "GAM Artisan Workshop",
+        "description": "Website dedicated to artisan typewriter restoration. Vintage-premium aesthetic showcasing the craft, workshop, and direct restoration inquiries."
+      },
+      "noema": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "Landing & Web",
+        "title": "Noema — Market Research",
+        "description": "Executive corporate site for a qualitative and quantitative market research consultancy. Interactive methodological diagnostic calculator, Chart.js Data Insights dashboard, and glassmorphism design."
+      },
+      "celstore": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "E-Commerce",
+        "title": "CelStore — Smartphones & Hardware Flagship Store",
+        "description": "High-end e-commerce for smartphones and precision hardware. Features interactive Three.js 3D viewer, multi-boutique catalog, finish configurator, MercadoPago checkout, and atomic stock with Supabase."
+      },
+      "coleccion-patrimonial": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "Landing & Web",
+        "title": "Heritage Collection & Historical Archive",
+        "description": "Digital museum of a Chilean historical collection for museum donation: curatorial catalog of antique books, colonial ceramics, republican manuscripts, and vintage typewriters."
+      },
+      "bilex": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "Web Tool",
+        "title": "Bilex — PDF & Image Translator",
+        "description": "Web app to translate full documents (PDFs & images) with synchronized bilingual dual view, Tesseract.js OCR, multiple AI engines, and PDF/TXT/Markdown export."
+      },
+      "owleye": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "SaaS & Cloud",
+        "title": "OwlEyeEngine — Cybersecurity & Active Defense",
+        "description": "Real-time cybersecurity monitoring platform: low-level process & network inspection, heuristic threat scoring (0-100), active mitigation, and live WebSocket dashboard."
+      },
+      "fixi": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "Marketplace",
+        "title": "FIXI — Local Services Marketplace",
+        "description": "Smart platform connecting skilled tradespeople with clients in real time. Direct WhatsApp contact, geolocation alerts, rated profiles, and 3D experience."
+      },
+      "sportmanager": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "Booking & Scheduling",
+        "title": "SportManager / PlayHub — Sports Venue SaaS",
+        "description": "Complete SaaS platform for sports complexes: multi-court booking, MercadoPago webhook payments, CRM, Excel import, WhatsApp/email alerts, and multi-tenant Supabase architecture."
+      },
+      "pelu-rosario": {
+        "statusLabel": "IN PRODUCTION",
+        "categoryLabel": "Booking & E-Commerce",
+        "title": "Pelu Rosario — Boutique Barbershop & AI Visagism",
+        "description": "All-in-one platform for a classic barbershop & hair boutique: online booking with WhatsApp confirmation, interactive style catalog, boutique store, and AI biometric visagism assistant."
+      }
+    }
   },
   "pricing": {
     "seccion_titulo": "Transparent Investment",
@@ -907,7 +1006,39 @@
     "bloom_testimonial_3": "The website let me book on a Sunday night without bothering anyone. Great.",
     "bloom_role_frecuente": "Regular Client",
     "bloom_role_premium": "Premium Client",
-    "bloom_role_nueva": "New Client"
+    "bloom_role_nueva": "New Client",
+    "badge_popular": "MOST POPULAR",
+    "salon_stats": "⭐ 5.0 · Online Booking",
+    "neofit_stats": "⚡ Plans & Fit Classes",
+    "aura_stats": "🏢 Real Estate & Leads",
+    "coffee_stats": "☕ Cart & Checkout",
+    "salon_feat_1": "Book in 3 clicks",
+    "salon_feat_2": "Real testimonials",
+    "salon_feat_3": "Service catalog",
+    "neofit_feat_1": "QR Memberships",
+    "neofit_feat_2": "Weekly schedule",
+    "neofit_feat_3": "High conversion",
+    "aura_feat_1": "Live filters",
+    "aura_feat_2": "Lead to WhatsApp",
+    "aura_feat_3": "HD Gallery",
+    "coffee_feat_1": "Express cart",
+    "coffee_feat_2": "Zero commissions",
+    "coffee_feat_3": "Interactive 3D portal",
+    "coffee_prod_1_name": "Dark Espresso",
+    "coffee_prod_2_name": "Classic Cold Brew",
+    "coffee_prod_3_name": "Oat Latte",
+    "coffee_prod_4_name": "Special Blend",
+    "coffee_prod_1_origin": "Ethiopia",
+    "coffee_prod_2_origin": "Colombia",
+    "coffee_prod_3_origin": "Brazil",
+    "coffee_prod_4_origin": "Peru",
+    "prop_1_tag": "Featured",
+    "prop_2_tag": "New",
+    "prop_3_tag": "Premium",
+    "prop_4_tag": "Opportunity",
+    "prop_5_tag": "Exclusive",
+    "coffee_portal_subtitle": "💥 3D coffee bean burst & high-conversion architecture",
+    "coffee_portal_enter": "Enter the store"
   },
   "cotizador": {
     "title": "Interactive Quote Calculator",
@@ -1533,5 +1664,150 @@
     "item_5_detail": "Calculate your budget in 2 min with transparent architecture breakdown.",
     "item_6_label": "Online Store & 3D E-Commerce",
     "item_6_detail": "Your own store with 0% sales commission and direct bank payouts."
+  },
+  "cmd": {
+    "aria_label": "Commands & Quick Navigation",
+    "placeholder": "Type a command or search a section... (e.g. quote, store, whatsapp)",
+    "close_aria": "Close command palette",
+    "empty": "No matching commands or sections found.",
+    "group_nav": "Quick Navigation",
+    "nav_home": "Home",
+    "nav_store": "Plans & Maintenance Store",
+    "nav_quote": "Interactive Online Quote Builder (Web + Linux POS)",
+    "nav_linux": "Linux Services, POS & Local Nodes Portal",
+    "nav_solutions": "Software & Architecture Solutions",
+    "nav_portfolio": "Systems & Client Portfolio",
+    "nav_dashboard": "Client Portal / Dashboard",
+    "group_actions": "Quick Actions",
+    "wa_message": "Hi Exe! Reaching out from the command palette.",
+    "action_wa": "Chat Directly on WhatsApp",
+    "online": "Online",
+    "action_theme": "Toggle Theme",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode",
+    "action_lang": "Switch Language",
+    "action_copy": "Copy ExePaginasWeb Link",
+    "action_top": "Back to Top",
+    "hint_nav": "Navigate",
+    "hint_select": "Select",
+    "hint_close": "Close",
+    "toast_copied": "🔗 Link copied to clipboard",
+    "toast_lang_en": "🌐 Language switched to English",
+    "toast_lang_es": "🌐 Language switched to Spanish",
+    "toast_dark": "🌙 Dark Mode Enabled",
+    "toast_light": "☀️ Light Mode Enabled"
+  },
+  "ownership": {
+    "badge": "AI MINI-AUDIT · BRUTAL HONESTY",
+    "badge_months": "36 MONTHS",
+    "title": "Software Built Around Your Business: When Should You Rent vs. Own?",
+    "subtitle": "If you are still experimenting without validated sales, we tell you the truth: rent something cheap to test. But if your business already sells, check the interactive chart to see how much money you lose in rent and why owning pays off.",
+    "step1_label": "Choose your business stage today:",
+    "step2_label": "Your monthly sales:",
+    "capital_protected": "PROTECTED CAPITAL // 0% LEAKAGE",
+    "annual_savings": "Annual savings",
+    "step3_eyebrow": "3. Tap any question to see the real difference",
+    "step3_title": "What rental platforms hide in the fine print",
+    "xray_show": "Show Technical X-Ray (CLI)",
+    "xray_hide": "Hide Technical X-Ray",
+    "question_prefix": "QUESTION",
+    "yours_100": "100% Yours",
+    "rent_platform_label": "On Rented Platform",
+    "own_platform_label": "With ExePaginasWeb",
+    "your_control": "Your control",
+    "seal_badge": "REAL OWNERSHIP GUARANTEE · EST. 2025",
+    "seal_title": "Direct work with Exequiel Echevarría — No agencies or hidden rentals",
+    "seal_desc": "GitHub repository transferred to your name, dedicated PostgreSQL database, and 0% sales commission.",
+    "seal_cta": "Quote My Own System",
+    "scenarios": {
+      "experimental": {
+        "badge": "EXPERIMENTAL PHASE",
+        "shortLabel": "Just Starting",
+        "subtitle": "No steady sales yet",
+        "aiVerdictTag": "BRUTAL HONESTY · AI RECOMMENDATION",
+        "aiHeadline": "Do NOT invest in custom software yet: rent a basic tool to validate first",
+        "aiExplanation": "If you are experimenting and have not validated monthly sales yet, using an inexpensive template for 3 to 6 months is the smartest financial move."
+      },
+      "ecommerce": {
+        "badge": "SCALE PHASE · ACTIVE SALES",
+        "shortLabel": "Selling Products",
+        "subtitle": "They take a cut on every sale",
+        "aiVerdictTag": "AI ALERT · PROFIT LEAKAGE DETECTED",
+        "aiHeadline": "Paying rent + a percentage per sale is costing you a full salary every year",
+        "aiExplanation": "Once your store sells steadily, commission-based rent acts like a silent partner taking 3% to 10% of your revenue forever. With your own system, you pay once and keep 100% of every sale."
+      },
+      "servicios": {
+        "badge": "SCALE PHASE · SERVICES & B2B",
+        "shortLabel": "Services / Booking / B2B",
+        "subtitle": "I want speed, prestige, and zero fees",
+        "aiVerdictTag": "AI DIAGNOSIS · OWNED DIGITAL ASSET",
+        "aiHeadline": "Your brand needs an asset you own that nobody can suspend or throttle",
+        "aiExplanation": "Rented platforms trap you in slow, generic templates identical to your competitors and lock in your client list. With custom architecture, your site flies on mobile and belongs 100% to you for life."
+      }
+    },
+    "pillars": {
+      "codigo": {
+        "question": "Who owns the website once you finish paying?",
+        "axisTitle": "Source Code Ownership"
+      },
+      "comisiones": {
+        "question": "How much do they deduct every time I make a sale?",
+        "axisTitle": "Sales & Gateway Commissions"
+      },
+      "datos": {
+        "question": "Do my customers and history stay in my hands?",
+        "axisTitle": "Database & Your Clients"
+      },
+      "continuidad": {
+        "question": "Can they shut down my site overnight?",
+        "axisTitle": "Operational Continuity"
+      }
+    },
+    "projection_eyebrow": "36-MONTH PROJECTION",
+    "projection_title": "Rental vs. Owned Asset",
+    "sim_restore": "Restore",
+    "sim_cut": "If you miss a payment?",
+    "year_1": "YEAR 1",
+    "year_2": "YEAR 2",
+    "year_3": "YEAR 3",
+    "rent_offline": "HTTP 402 · OFFLINE",
+    "rent_3y": "RENTAL (3 YEARS)",
+    "rent_suspended": "Store suspended",
+    "month_abbr": "mo",
+    "own_3y": "OWNED SYSTEM",
+    "own_zero_fee": "$0/mo · HTTP 200 OK"
+  },
+  "showcase": {
+    "eyebrow": "Transparent Engineering",
+    "badge": "4 STAGES",
+    "heading_prefix": "How we build and scale your",
+    "heading_accent": "digital asset",
+    "subtitle": "Four stages, one accountable engineer. No middlemen or layers diluting decisions.",
+    "auto_seq": "Auto sequence",
+    "step_counter": "Step",
+    "pause": "Pause",
+    "resume": "Resume",
+    "footer_badge": "Verifiable production systems",
+    "portal_linux": "/linux Portal",
+    "view_arch": "View architecture",
+    "diagnose_cta": "Diagnose Project",
+    "steps": {
+      "trato-directo": {
+        "title": "Direct Work",
+        "subtitle": "No middlemen or agencies"
+      },
+      "arquitectura-viva": {
+        "title": "Living Architecture",
+        "subtitle": "Modern scalable stack"
+      },
+      "rendimiento": {
+        "title": "Performance & Security",
+        "subtitle": "Extreme speed and resilience"
+      },
+      "conversion-escala": {
+        "title": "Conversion & Scale",
+        "subtitle": "Full ownership and results"
+      }
+    }
   }
 }

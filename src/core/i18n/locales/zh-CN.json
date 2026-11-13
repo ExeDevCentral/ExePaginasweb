@@ -15,7 +15,8 @@
     "area_cliente": "客户专区",
     "sistemas_web_medida": "定制网页系统",
     "tienda_online": "在线商店",
-    "cotizador": "报价计算器"
+    "cotizador": "报价计算器",
+    "disponible_badge": "3月前暂不可用 · 2027年Q1"
   },
   "hero": {
     "badge": "你的代码，不是租赁",
@@ -173,7 +174,7 @@
     "inversion": "投资",
     "ver_demo": "查看演示",
     "simulador_en_vivo": "行业实时模拟器",
-    "peluqueria_roi": "💇 24/7 全天候满约",
+    "peluqueria_roi": "全天候满档预约",
     "peluqueria_titulo": "美发沙龙与理发店系统",
     "peluqueria_desc": "发型师智能排期、在线预约挂号、护理项目目录与 WhatsApp 自动提醒。",
     "peluqueria_feat_1": "按发型师与专业方向在线预约",
@@ -181,7 +182,7 @@
     "peluqueria_feat_3": "客户档案与历史护理记录",
     "peluqueria_feat_4": "现金与电子支付记账管理",
     "peluqueria_feat_5": "员工提成与佣金结算管理",
-    "panaderia_roi": "🥐 +40% 柜台销售额",
+    "panaderia_roi": "柜台销量 +40%",
     "panaderia_titulo": "烘焙面包房与咖啡馆系统",
     "panaderia_desc": "极速触控收银 POS、烘焙批次控制与宴会活动预订管理。",
     "panaderia_feat_1": "极速触控式收银 POS 界面",
@@ -189,7 +190,7 @@
     "panaderia_feat_3": "提前预订与餐饮外烩管理",
     "panaderia_feat_4": "每日现金对账与小票打印",
     "panaderia_feat_5": "后厨与烘焙区专属显示屏",
-    "ropa_roi": "👗 尺码与库存实时掌控",
+    "ropa_roi": "尺码与库存控制",
     "ropa_titulo": "服装精品店与时尚零售系统",
     "ropa_desc": "包含多尺码与颜色的数字图册、实体库存自动同步与即时结账网关。",
     "ropa_feat_1": "按尺码 (S/M/L) 和颜色精细化库存管理",
@@ -197,7 +198,7 @@
     "ropa_feat_3": "季节性互动 Lookbook 电子画册",
     "ropa_feat_4": "支持刷卡、扫码与主流安全支付网关",
     "ropa_feat_5": "每位客户的历史消费记录",
-    "padel_roi": "⚡ +45% 场地利用率",
+    "padel_roi": "球场预订率 +45%",
     "padel_titulo": "运动球馆与俱乐部管理系统",
     "padel_desc": "全自动时段预约、实时定金在线支付与板网球/足球球场智能灯控联动。",
     "padel_feat_1": "实时动态球场预约看板",
@@ -206,7 +207,30 @@
     "padel_feat_4": "球拍、球类租赁与吧台消费管理",
     "padel_feat_5": "WhatsApp 预约成功即时通知",
     "cta_personalizado": "需要其他行业的专属定制？我们为您的特定业务流程开发百分之百量身打造的平台。",
-    "cta_boton": "咨询您的行业定制方案"
+    "cta_boton": "咨询您的行业定制方案",
+    "roi_default": "极致性能",
+    "widget_pelu_select": "选择造型师：",
+    "widget_available": "可用",
+    "widget_pelu_stylist_1": "Sofia（造型师）",
+    "widget_pelu_stylist_2": "Lucas（理发师）",
+    "widget_pelu_service_label": "服务：",
+    "widget_pelu_service_name": "剪发与造型",
+    "widget_pan_batch": "新鲜出炉：",
+    "widget_pan_ready": "17:30（已备好）",
+    "widget_pan_items": "牛角包 / 糕点",
+    "widget_pan_add": "加一打",
+    "widget_ropa_item": "都市环保皮夹克：",
+    "widget_ropa_stock": "库存：14 件",
+    "widget_ropa_color_1": "黑色",
+    "widget_ropa_color_2": "米色",
+    "widget_padel_court": "1号场地时段（玻璃草皮）：",
+    "calc_for": "报价：",
+    "calc_estimated": "预估",
+    "calc_branches": "门店或服务网点数量：",
+    "calc_whatsapp_bot": "包含 WhatsApp 自动通知（+$80 USD）",
+    "calc_wa_msg": "你好 ExePaginasWeb！我想咨询 {{product}}（{{count}} 家门店）。预估预算：${{total}} USD。",
+    "calc_wa_cta": "通过 WhatsApp 直接咨询",
+    "calc_btn_title": "计算定制预算"
   },
   "portfolio": {
     "titulo": "专业作品集",
@@ -232,7 +256,82 @@
     "cap_turnos_desc": "免强制注册、极低阻力的实时排期系统。",
     "cap_webs": "官网与落地页",
     "cap_webs_desc": "毫秒级加载、一流的技术性 SEO 与现代化设计。",
-    "cta_cotizar": "评估我的专属定制项目"
+    "cta_cotizar": "评估我的专属定制项目",
+    "cat_saas": "SaaS 与安全",
+    "fig_badge": "FIG. 03 — 生产环境案例",
+    "view_live_aria": "查看 {{title}} 生产环境网站",
+    "client_domain": "客户 / 域名",
+    "dev_summary": "开发概览",
+    "key_features": "核心特性",
+    "close": "关闭",
+    "items": {
+      "restoai": {
+        "statusLabel": "已上线",
+        "categoryLabel": "餐饮 SaaS",
+        "title": "RESTOia — 智能餐饮套件与 KOBE 引擎",
+        "description": "面向高端餐厅的关键任务套件：交互式桌位图 (POS)、实时厨房 KDS、100% 离线点单自动同步、PIN 盲盘结账、AI 侍酒师与 SHA-256 不可篡改审计。"
+      },
+      "chispa32": {
+        "statusLabel": "已上线",
+        "categoryLabel": "着陆页与网站",
+        "title": "Chispa32 — ESP32 硬件实验室",
+        "description": "专注于 ESP32 主板维修与刷写的高转化技术着陆页，提供清晰的服务展示与直接联系入口。"
+      },
+      "gam": {
+        "statusLabel": "已上线",
+        "categoryLabel": "着陆页与网站",
+        "title": "GAM 手工打字机修复工坊",
+        "description": "专注于复古打字机手工修复的精品网站，以典雅复古美学展现匠心工艺与修复服务。"
+      },
+      "noema": {
+        "statusLabel": "已上线",
+        "categoryLabel": "着陆页与网站",
+        "title": "Noema — 市场研究咨询",
+        "description": "面向定性与定量市场研究咨询机构的企业官网，配备方法论诊断计算器与 Chart.js 数据洞察面板。"
+      },
+      "celstore": {
+        "statusLabel": "已上线",
+        "categoryLabel": "电子商务",
+        "title": "CelStore — 智能手机与硬件旗舰店",
+        "description": "高端智能手机与精密硬件电商平台，集成 Three.js 3D 交互展示、多精品店目录、外观配置器及 Supabase 原子库存控制。"
+      },
+      "coleccion-patrimonial": {
+        "statusLabel": "已上线",
+        "categoryLabel": "数字博物馆",
+        "title": "文化遗产典藏与历史档案馆",
+        "description": "智利历史典藏数字博物馆，呈现古籍、殖民时期陶瓷、手稿与古董打字机的策展目录及捐赠协议。"
+      },
+      "bilex": {
+        "statusLabel": "已上线",
+        "categoryLabel": "Web 工具",
+        "title": "Bilex — PDF 与图像双语翻译器",
+        "description": "支持整份 PDF 与图像文档翻译的 Web 应用，提供双语对照同步视图、Tesseract.js OCR 与多 AI 引擎支持。"
+      },
+      "owleye": {
+        "statusLabel": "已上线",
+        "categoryLabel": "SaaS 与云安全",
+        "title": "OwlEyeEngine — 网络安全与主动防御引擎",
+        "description": "实时网络安全监控平台：底层进程与网络检测、启发式威胁评分 (0-100)、主动防御与 WebSocket 实时面板。"
+      },
+      "fixi": {
+        "statusLabel": "已上线",
+        "categoryLabel": "服务交易平台",
+        "title": "FIXI — 本地生活服务交易平台",
+        "description": "实时连接本地技师与客户的智能服务平台，支持 WhatsApp 直连、地理定位提醒与 3D 交互体验。"
+      },
+      "sportmanager": {
+        "statusLabel": "已上线",
+        "categoryLabel": "预约与场馆管理",
+        "title": "SportManager / PlayHub — 体育场馆 SaaS 管理系统",
+        "description": "面向体育场馆的完整 SaaS 平台：多场地可视化预约、支付回调、CRM、Excel 批量导入及多租户架构。"
+      },
+      "pelu-rosario": {
+        "statusLabel": "已上线",
+        "categoryLabel": "预约与电商",
+        "title": "Pelu Rosario — 精品理发店与 AI 面部美学顾问",
+        "description": "精品理发店一体化平台：支持 WhatsApp 确认的在线预约、交互式发型目录、周边商城及 AI 面部美学分析助手。"
+      }
+    }
   },
   "pricing": {
     "seccion_titulo": "透明投资",
@@ -727,7 +826,39 @@
     "bloom_testimonial_3": "网站让我周日晚上也能预约，不用打扰任何人。太棒了。",
     "bloom_role_frecuente": "常客",
     "bloom_role_premium": "Premium 客户",
-    "bloom_role_nueva": "新客户"
+    "bloom_role_nueva": "新客户",
+    "badge_popular": "最受欢迎",
+    "salon_stats": "⭐ 5.0 · 在线预约",
+    "neofit_stats": "⚡ 会员方案与健身课程",
+    "aura_stats": "🏢 房产展示与获客",
+    "coffee_stats": "☕ 购物车与结账",
+    "salon_feat_1": "3步完成预约",
+    "salon_feat_2": "真实客户评价",
+    "salon_feat_3": "服务目录",
+    "neofit_feat_1": "二维码会员卡",
+    "neofit_feat_2": "每周课表",
+    "neofit_feat_3": "高转化率",
+    "aura_feat_1": "实时筛选",
+    "aura_feat_2": "直连 WhatsApp 获客",
+    "aura_feat_3": "高清画廊",
+    "coffee_feat_1": "极速购物车",
+    "coffee_feat_2": "零佣金",
+    "coffee_feat_3": "交互式 3D 入口",
+    "coffee_prod_1_name": "深烘浓缩咖啡",
+    "coffee_prod_2_name": "经典冷萃咖啡",
+    "coffee_prod_3_name": "燕麦拿铁",
+    "coffee_prod_4_name": "特调拼配",
+    "coffee_prod_1_origin": "埃塞俄比亚",
+    "coffee_prod_2_origin": "哥伦比亚",
+    "coffee_prod_3_origin": "巴西",
+    "coffee_prod_4_origin": "秘鲁",
+    "prop_1_tag": "精选",
+    "prop_2_tag": "新上架",
+    "prop_3_tag": "高端",
+    "prop_4_tag": "超值",
+    "prop_5_tag": "独家",
+    "coffee_portal_subtitle": "💥 3D 咖啡豆爆发与高转化电商架构",
+    "coffee_portal_enter": "进入商店"
   },
   "privacypolicy": {
     "titulo_main": "隐私",
@@ -1415,5 +1546,150 @@
     "item_5_detail": "2 分钟内生成透明的系统架构拆解与精准预算评估。",
     "item_6_label": "独立网店与 3D 电子商务",
     "item_6_detail": "0% 平台抽成、3D GPU 商品展示与资金直达您银行账户。"
+  },
+  "cmd": {
+    "aria_label": "命令与快速导航",
+    "placeholder": "输入命令或搜索板块...（如 quote, store, whatsapp）",
+    "close_aria": "关闭命令面板",
+    "empty": "未找到匹配的命令或板块。",
+    "group_nav": "快速导航",
+    "nav_home": "首页",
+    "nav_store": "套餐与维护商店",
+    "nav_quote": "在线互动报价器（Web + Linux POS）",
+    "nav_linux": "Linux 服务、POS 与本地节点门户",
+    "nav_solutions": "软件与架构解决方案",
+    "nav_portfolio": "系统与客户案例库",
+    "nav_dashboard": "客户门户 / 控制台",
+    "group_actions": "快捷操作",
+    "wa_message": "你好 Exe！我通过命令面板联系你。",
+    "action_wa": "直接通过 WhatsApp 对话",
+    "online": "在线",
+    "action_theme": "切换主题",
+    "light_mode": "浅色模式",
+    "dark_mode": "深色模式",
+    "action_lang": "切换语言",
+    "action_copy": "复制 ExePaginasWeb 链接",
+    "action_top": "回到顶部",
+    "hint_nav": "导航",
+    "hint_select": "选择",
+    "hint_close": "关闭",
+    "toast_copied": "🔗 链接已复制到剪贴板",
+    "toast_lang_en": "🌐 语言已切换为英语",
+    "toast_lang_es": "🌐 语言已切换为西班牙语",
+    "toast_dark": "🌙 深色模式已开启",
+    "toast_light": "☀️ 浅色模式已开启"
+  },
+  "ownership": {
+    "badge": "AI 迷你审计 · 坦诚评估",
+    "badge_months": "36 个月",
+    "title": "围绕您的业务定制软件：何时适合租用，何时应该拥有？",
+    "subtitle": "如果您还在测试阶段且尚未验证销量，我们实话实说：先租个便宜方案试水。但如果您的业务已有稳定成交，看看交互图表您就知道租金损耗有多大，为什么拥有系统更划算。",
+    "step1_label": "选择您当前的业务阶段：",
+    "step2_label": "您的月销售额：",
+    "capital_protected": "资产受保护 // 0% 利润流失",
+    "annual_savings": "年度节省",
+    "step3_eyebrow": "3. 点击任意问题查看真实差异",
+    "step3_title": "租用平台在细则里不会告诉你的事",
+    "xray_show": "查看技术透视 (CLI)",
+    "xray_hide": "隐藏技术透视",
+    "question_prefix": "问题",
+    "yours_100": "100% 归您所有",
+    "rent_platform_label": "租用平台",
+    "own_platform_label": "使用 ExePaginasWeb",
+    "your_control": "您的控制权",
+    "seal_badge": "真实所有权保障 · 创立于 2025",
+    "seal_title": "与 Exequiel Echevarría 直接合作 — 无中间商、无隐藏租金",
+    "seal_desc": "GitHub 仓库过户至您的名下、独立 PostgreSQL 数据库、0% 销售佣金。",
+    "seal_cta": "定制我的专属系统报价",
+    "scenarios": {
+      "experimental": {
+        "badge": "实验阶段",
+        "shortLabel": "刚刚起步",
+        "subtitle": "暂无稳定销量",
+        "aiVerdictTag": "坦诚建议 · AI 推荐",
+        "aiHeadline": "暂勿投资定制系统：先租用基础方案验证市场",
+        "aiExplanation": "如果您还在试水且尚未验证月度销量，先用 3 到 6 个月低成本模板是最明智的财务选择。"
+      },
+      "ecommerce": {
+        "badge": "扩张阶段 · 活跃销售",
+        "shortLabel": "销售商品",
+        "subtitle": "每笔订单都要被抽成",
+        "aiVerdictTag": "AI 警报 · 检测到利润流失",
+        "aiHeadline": "固定月租 + 每单抽成，每年都在吞噬您的净利润",
+        "aiExplanation": "当您的业务已稳定出单，抽成租用就像一个沉默的合伙人，永久抽走 3% 到 10% 的努力成果。拥有自有系统只需一次投入，100% 营收归您。"
+      },
+      "servicios": {
+        "badge": "扩张阶段 · 服务与 B2B",
+        "shortLabel": "服务 / 预约 / 企业",
+        "subtitle": "我需要极速体验、品牌质感与零月费",
+        "aiVerdictTag": "AI 诊断 · 自有数字资产",
+        "aiHeadline": "您的品牌需要一个无人能停用或限制的自有资产",
+        "aiExplanation": "租用平台会让您受困于千篇一律的慢速模板并锁定您的客户数据。采用自有架构，移动端飞快加载，系统终身 100% 归您。"
+      }
+    },
+    "pillars": {
+      "codigo": {
+        "question": "付完款后，网站归谁所有？",
+        "axisTitle": "源代码所有权"
+      },
+      "comisiones": {
+        "question": "每笔成交会被扣除多少费用？",
+        "axisTitle": "销售与支付网关佣金"
+      },
+      "datos": {
+        "question": "客户资料和历史数据是否掌握在自己手中？",
+        "axisTitle": "数据库与您的客户"
+      },
+      "continuidad": {
+        "question": "他们能一夜之间关停我的网站吗？",
+        "axisTitle": "业务连续性"
+      }
+    },
+    "projection_eyebrow": "36 个月成本预测",
+    "projection_title": "租用方案 vs 自有资产",
+    "sim_restore": "恢复",
+    "sim_cut": "如果停付月租？",
+    "year_1": "第 1 年",
+    "year_2": "第 2 年",
+    "year_3": "第 3 年",
+    "rent_offline": "HTTP 402 · 已停服",
+    "rent_3y": "租用成本（3 年）",
+    "rent_suspended": "商店已暂停",
+    "month_abbr": "月",
+    "own_3y": "自有系统",
+    "own_zero_fee": "$0/月 · HTTP 200 OK"
+  },
+  "showcase": {
+    "eyebrow": "透明化工程实践",
+    "badge": "4 个阶段",
+    "heading_prefix": "我们如何打造并扩展您的",
+    "heading_accent": "数字资产",
+    "subtitle": "四个阶段，一位核心工程师全程负责。没有中间商稀释决策。",
+    "auto_seq": "自动演示",
+    "step_counter": "步骤",
+    "pause": "暂停",
+    "resume": "继续",
+    "footer_badge": "可验证的生产级系统",
+    "portal_linux": "/linux 门户",
+    "view_arch": "查看架构",
+    "diagnose_cta": "诊断项目",
+    "steps": {
+      "trato-directo": {
+        "title": "直接合作",
+        "subtitle": "无中间商或外包代理"
+      },
+      "arquitectura-viva": {
+        "title": "现代高可用架构",
+        "subtitle": "现代化可扩展技术栈"
+      },
+      "rendimiento": {
+        "title": "极致性能与安全",
+        "subtitle": "极速响应与高韧性"
+      },
+      "conversion-escala": {
+        "title": "高转化与可扩展",
+        "subtitle": "完全所有权与真实增长"
+      }
+    }
   }
 }

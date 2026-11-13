@@ -38,7 +38,7 @@ export default function NavLogo({
         }}
         layout="position"
       >
-        <CyberNeonLogo size={28} />
+        <CyberNeonLogo size={32} />
       </motion.div>
 
       {/* Wordmark: colapsa suavemente con layout="position" en modo compact */}

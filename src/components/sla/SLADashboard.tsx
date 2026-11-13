@@ -85,24 +85,7 @@ export default function SLADashboard({
   const { data: dbSla, isLoading: slaLoading } = useActiveSLA(tenantId)
   const { data: breaches = [], isLoading: breachesLoading } = useSLABreaches(tenantId)
 
-  const defaultSla: SLAContract = {
-    id: 'sla-default',
-    tenant_id: tenantId,
-    nivel: 'avanzado',
-    nombre: 'Garantía Estándar SLA & Mantenimiento Web',
-    tiempo_respuesta_minutos: 120,
-    tiempo_resolucion_minutos: 480,
-    horas_por_mes: 5,
-    penalizacion_por_incumplimiento: 0,
-    activo: true,
-    fecha_inicio: new Date().toISOString(),
-    fecha_fin: null,
-    metadata: {},
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  }
-
-  const sla = dbSla ?? defaultSla
+  const sla = dbSla ?? null
 
   if (slaLoading || breachesLoading) {
     return (
@@ -134,7 +117,7 @@ export default function SLADashboard({
         <div className="flex items-center gap-2.5 flex-wrap">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
             <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
-            <span>SLA 99.9% Activo</span>
+            <span>{sla ? 'Contrato SLA Activo' : 'Mesa de Ayuda Activa'}</span>
           </div>
 
           {onOpenTicket && (
@@ -275,46 +258,57 @@ export default function SLADashboard({
       </div>
 
       {/* SLA Contract Card */}
-      {sla && <SLACard sla={sla} />}
+      {sla ? (
+        <>
+          <SLACard sla={sla} />
 
-      {/* Breach Summary Cards */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/5 p-5 text-center shadow-xs">
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/15 flex items-center justify-center mx-auto mb-2">
-            <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          {/* Breach Summary Cards (solo si hay contrato SLA real) */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/5 p-5 text-center shadow-xs">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/15 flex items-center justify-center mx-auto mb-2">
+                <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <p className="text-2xl sm:text-3xl font-bold font-mono text-foreground">
+                {breaches.filter((b: SLABreach) => b.estado_sla === 'ok').length}
+              </p>
+              <p className="text-xs font-semibold text-muted-foreground mt-1">
+                {t('sla.dentro_sla', 'Dentro del SLA')}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-amber-500/25 bg-amber-500/5 p-5 text-center shadow-xs">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center mx-auto mb-2">
+                <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              </div>
+              <p className="text-2xl sm:text-3xl font-bold font-mono text-amber-600 dark:text-amber-400">
+                {warningCount}
+              </p>
+              <p className="text-xs font-semibold text-muted-foreground mt-1">
+                {t('sla.por_vencer', 'Por vencer')}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-rose-500/25 bg-rose-500/5 p-5 text-center shadow-xs">
+              <div className="w-9 h-9 rounded-xl bg-rose-500/15 flex items-center justify-center mx-auto mb-2">
+                <XCircle className="w-5 h-5 text-rose-600 dark:text-rose-400" />
+              </div>
+              <p className="text-2xl sm:text-3xl font-bold font-mono text-rose-600 dark:text-rose-400">
+                {breachCount}
+              </p>
+              <p className="text-xs font-semibold text-muted-foreground mt-1">
+                {t('sla.incumplidos', 'Incumplidos')}
+              </p>
+            </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-bold font-mono text-foreground">
-            {breaches.filter((b: SLABreach) => b.estado_sla === 'ok').length || 1}
-          </p>
-          <p className="text-xs font-semibold text-muted-foreground mt-1">
-            {t('sla.dentro_sla', 'Dentro del SLA')}
+        </>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-6 text-center space-y-1.5">
+          <p className="text-sm font-bold text-foreground">Sin contrato SLA dedicado asignado</p>
+          <p className="text-xs text-muted-foreground">
+            Tus tickets y consultas se atienden por orden de llegada en la mesa de ayuda.
           </p>
         </div>
-
-        <div className="rounded-2xl border border-amber-500/25 bg-amber-500/5 p-5 text-center shadow-xs">
-          <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center mx-auto mb-2">
-            <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-          </div>
-          <p className="text-2xl sm:text-3xl font-bold font-mono text-amber-600 dark:text-amber-400">
-            {warningCount}
-          </p>
-          <p className="text-xs font-semibold text-muted-foreground mt-1">
-            {t('sla.por_vencer', 'Por vencer')}
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-rose-500/25 bg-rose-500/5 p-5 text-center shadow-xs">
-          <div className="w-9 h-9 rounded-xl bg-rose-500/15 flex items-center justify-center mx-auto mb-2">
-            <XCircle className="w-5 h-5 text-rose-600 dark:text-rose-400" />
-          </div>
-          <p className="text-2xl sm:text-3xl font-bold font-mono text-rose-600 dark:text-rose-400">
-            {breachCount}
-          </p>
-          <p className="text-xs font-semibold text-muted-foreground mt-1">
-            {t('sla.incumplidos', 'Incumplidos')}
-          </p>
-        </div>
-      </div>
+      )}
 
       {/* Breach Details */}
       {breaches.length > 0 && (

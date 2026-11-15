@@ -255,4 +255,36 @@ describe('POST /api/automation/n8n route handler', () => {
     const json = await res.json()
     expect(json.error).toBe('Datos inválidos')
   })
+
+  it('no duplica emails cuando n8n falla y se activa el fallback serverless', async () => {
+    process.env.N8N_WEBHOOK_URL = 'https://n8n.example.com/webhook/lead'
+    process.env.RESEND_API_KEY = 're_test_key'
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(new Response('Not Found', { status: 404 }))
+    const sendModule = await import('@/lib/email/send')
+    const sendSpy = vi.spyOn(sendModule, 'sendEmail').mockResolvedValue({ id: 'email_1' })
+
+    const { POST } = await import('../../app/api/automation/n8n/route')
+    const { NextRequest } = await import('next/server')
+
+    const req = new NextRequest('http://localhost:3000/api/automation/n8n', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'Lucía Fernández',
+        email: 'lucia@example.com',
+        automationType: 'cotizacion_express',
+      }),
+      headers: { 'content-type': 'application/json' },
+    })
+
+    const res = await POST(req)
+    expect(res.status).toBe(200)
+    const json = await res.json()
+    expect(json.ok).toBe(true)
+    expect(json.dispatchedToN8n).toBe(false)
+    expect(json.engine).toBe('serverless_free')
+    expect(json.emailConfirmationSent).toBe(true)
+    // Solo 2 envíos (1 admin + 1 cliente desde executeServerlessAutomationFallback), sin duplicados
+    expect(sendSpy).toHaveBeenCalledTimes(2)
+  })
 })

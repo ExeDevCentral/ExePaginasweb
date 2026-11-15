@@ -1,0 +1,15 @@
+# No necesarios en el build de producción en Vercel
+.agents/
+.vscode/
+.idea/
+.gemini/
+docs/
+tests/
+resend-templates/
+playwright-report/
+test-results/
+blob-report/
+coverage/
+reproductor-android/
+*.tsbuildinfo
+*.log

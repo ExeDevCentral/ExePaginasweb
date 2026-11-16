@@ -4,6 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 import { Inter, Space_Grotesk, JetBrains_Mono, Instrument_Serif } from 'next/font/google'
 import Providers from './providers'
 import '@astryxdesign/theme-neutral/theme.css'
@@ -96,6 +97,9 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   manifest: '/manifest.json',
+  verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION }
+    : undefined,
   openGraph: {
     type: 'website',
     locale: 'es_AR',
@@ -104,12 +108,21 @@ export const metadata: Metadata = {
     title: 'Exe Páginas Web | Desarrollo Web a Medida y Sistemas SaaS',
     description:
       'Exe Páginas Web — Construimos software a medida, plataformas cloud y sistemas web para empresas que no pueden permitirse fallar. Control total, cero dependencias.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Exe Páginas Web — Desarrollo Web a Medida y Sistemas SaaS',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Exe Páginas Web | Desarrollo Web a Medida',
     description:
       'Exe Páginas Web — Construimos software a medida, plataformas cloud y sistemas web para empresas que no pueden permitirse fallar. Control total, cero dependencias.',
+    images: ['/og-image.png'],
   },
 }
 
@@ -139,6 +152,11 @@ export default function RootLayout({
         publisher: {
           '@id': 'https://exepaginasweb.com/#organization',
         },
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://exepaginasweb.com/soluciones?q={search_term_string}',
+          'query-input': 'required name=search_term_string',
+        },
       },
       {
         '@type': ['ProfessionalService', 'Organization'],
@@ -146,9 +164,30 @@ export default function RootLayout({
         name: 'Exe Páginas Web',
         alternateName: ['ExePaginasWeb', 'ExeSistemasWEB', 'Exe Páginas Web'],
         url: 'https://exepaginasweb.com/',
-        logo: 'https://exepaginasweb.com/logo.png',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://exepaginasweb.com/logo.png',
+          width: 512,
+          height: 512,
+        },
         image: 'https://exepaginasweb.com/og-image.png',
         email: 'Contacto@exepaginasweb.com',
+        founder: {
+          '@type': 'Person',
+          name: 'Exequiel Echevarria',
+        },
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Rosario',
+          addressRegion: 'Santa Fe',
+          addressCountry: 'AR',
+        },
+        contactPoint: {
+          '@type': 'ContactPoint',
+          email: 'Contacto@exepaginasweb.com',
+          contactType: 'sales',
+          availableLanguage: ['Spanish', 'English', 'Portuguese'],
+        },
         description:
           'Exe Páginas Web ofrece arquitectura de software, plataformas cloud y aplicaciones a medida con 100% código propio para empresas y organizaciones a escala global.',
         serviceType: [
@@ -158,7 +197,46 @@ export default function RootLayout({
           'E-commerce y Plataformas Cloud',
           'Aplicaciones Web a Medida',
           'Sistemas SaaS',
+          'Terminales Linux POS',
         ],
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: 'Soluciones Web y Sistemas SaaS',
+          itemListElement: [
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: 'Sistema para Peluquerías & Barbershops',
+                url: 'https://exepaginasweb.com/soluciones#peluqueria',
+              },
+            },
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: 'Sistema para Panaderías & Cafeterías',
+                url: 'https://exepaginasweb.com/soluciones#panaderia',
+              },
+            },
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: 'Sistema para Locales de Ropa & Moda',
+                url: 'https://exepaginasweb.com/soluciones#indumentaria',
+              },
+            },
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: 'Sistema para Canchas & Clubes Deportivos',
+                url: 'https://exepaginasweb.com/soluciones#canchas',
+              },
+            },
+          ],
+        },
         areaServed: {
           '@type': 'AdministrativeArea',
           name: 'Global',
@@ -175,6 +253,10 @@ export default function RootLayout({
       },
     ],
   }
+
+  const gaId = process.env.NEXT_PUBLIC_GA_ID
+  const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
+  const primaryTagId = gaId || googleAdsId
 
   return (
     <html
@@ -194,6 +276,21 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased selection:bg-brand selection:text-white">
+        {primaryTagId && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${primaryTagId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-gtag-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+${gaId ? `gtag('config', '${gaId}');` : ''}
+${googleAdsId ? `gtag('config', '${googleAdsId}');` : ''}`}
+            </Script>
+          </>
+        )}
         <Providers>{children}</Providers>
       </body>
     </html>

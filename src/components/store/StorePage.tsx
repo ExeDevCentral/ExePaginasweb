@@ -212,16 +212,18 @@ export default function StorePage() {
               type="button"
               onClick={handleToggleSound}
               title={soundEnabled ? 'Silenciar sonidos' : 'Activar efectos de sonido'}
-              aria-label="Alternar sonido"
               className="p-2.5 rounded-2xl bg-card/80 backdrop-blur-xl border border-border text-foreground hover:border-accent-cyan transition-all shadow-md cursor-pointer flex items-center gap-2"
             >
               {soundEnabled ? (
-                <Volume2 className="w-4 h-4 text-accent-cyan" />
+                <Volume2 className="w-4 h-4 text-accent-cyan" aria-hidden="true" />
               ) : (
-                <VolumeX className="w-4 h-4 text-muted-foreground" />
+                <VolumeX className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
               )}
               <span className="text-xs font-mono hidden sm:inline">
                 {soundEnabled ? t('store.audio_on', 'Audio ON') : t('store.audio_mute', 'Mute')}
+              </span>
+              <span className="sr-only sm:hidden">
+                {soundEnabled ? 'Silenciar sonidos' : 'Activar efectos de sonido'}
               </span>
             </button>
 
@@ -230,13 +232,12 @@ export default function StorePage() {
               type="button"
               onClick={handleToggleTheme}
               title={isDark ? 'Cambiar a Tema Claro (Sol)' : 'Cambiar a Tema Oscuro (Luna)'}
-              aria-label="Cambiar tema de la aplicación"
               className="p-2.5 rounded-2xl bg-card/80 backdrop-blur-xl border border-border text-foreground hover:border-accent-cyan transition-all shadow-md cursor-pointer flex items-center gap-2"
             >
               {isDark ? (
-                <Sun className="w-4 h-4 text-amber-400" />
+                <Sun className="w-4 h-4 text-amber-400" aria-hidden="true" />
               ) : (
-                <Moon className="w-4 h-4 text-indigo-400" />
+                <Moon className="w-4 h-4 text-indigo-400" aria-hidden="true" />
               )}
               <span className="text-xs font-bold font-mono">
                 {isDark

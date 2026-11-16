@@ -559,9 +559,11 @@ export const AIChatWidget: React.FC = () => {
           }}
           whileHover={{ scale: 1.04, y: -2 }}
           whileTap={{ scale: 0.96 }}
-          aria-label={isOpen ? 'Cerrar canales de atención' : 'Abrir canales de atención'}
           className="group relative flex items-center gap-3 px-4 py-3 rounded-full bg-[#0a0d14]/95 text-white border-2 border-cyan-500/40 hover:border-cyan-400 shadow-2xl backdrop-blur-2xl transition-all duration-300 shadow-cyan-500/20 cursor-pointer"
         >
+          <span className="sr-only sm:hidden">
+            {isOpen ? 'Cerrar canales de atención' : 'Abrir canales de atención'}
+          </span>
           {/* Aura perimetral cian */}
           <span className="absolute -inset-0.5 rounded-full bg-linear-to-r from-cyan-500 via-sky-400 to-emerald-400 opacity-20 group-hover:opacity-60 blur-xs transition-opacity duration-300" />
 

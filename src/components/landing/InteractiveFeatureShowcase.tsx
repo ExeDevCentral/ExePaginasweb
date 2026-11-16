@@ -779,22 +779,23 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
             <button
               type="button"
               onClick={() => setIsPaused(!isPaused)}
-              aria-label={
-                isPaused
-                  ? t('showcase.resume_aria', 'Reanudar rotación')
-                  : t('showcase.pause_aria', 'Pausar rotación')
-              }
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300/80 dark:border-white/[0.07] bg-slate-50 hover:bg-slate-100 dark:bg-white/[0.02] dark:hover:bg-white/[0.06] text-slate-600 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors cursor-pointer font-mono text-xs"
             >
               {isPaused ? (
-                <Play className="w-3.5 h-3.5 text-emerald-500" />
+                <Play className="w-3.5 h-3.5 text-emerald-500" aria-hidden="true" />
               ) : (
                 <Pause
                   className={`w-3.5 h-3.5 transition-colors duration-300 ${theme.checkIcon}`}
+                  aria-hidden="true"
                 />
               )}
               <span className="hidden sm:inline">
                 {isPaused ? t('showcase.resume', 'Reanudar') : t('showcase.pause', 'Pausa')}
+              </span>
+              <span className="sr-only sm:hidden">
+                {isPaused
+                  ? t('showcase.resume_aria', 'Reanudar rotación')
+                  : t('showcase.pause_aria', 'Pausar rotación')}
               </span>
             </button>
           </div>

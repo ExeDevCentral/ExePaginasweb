@@ -147,10 +147,12 @@ export default function LiquidIslandNavbar({
                   }
                 }
               }}
-              aria-label={getNavLabel('nav.inicio', 'Inicio')}
               className="outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-full min-w-11 min-h-11 flex items-center justify-center active:scale-95 transition-transform"
             >
-              <NavLogo scrollY={scrollY} isCompact={false} reduceMotion={reduceMotion} />
+              <span className="sr-only">{getNavLabel('nav.inicio', 'Inicio')}</span>
+              <span aria-hidden="true">
+                <NavLogo scrollY={scrollY} isCompact={false} reduceMotion={reduceMotion} />
+              </span>
             </Link>
           </motion.div>
 

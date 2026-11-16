@@ -128,7 +128,8 @@ export async function POST(req: NextRequest) {
   })
 
   // 3. Notificación instantánea al Administrador por email con plantilla escapada
-  if (process.env.RESEND_API_KEY) {
+  // (Si el fallback serverless ya se ejecutó dentro de dispatchN8nEvent, evitamos duplicar el envío)
+  if (process.env.RESEND_API_KEY && !dispatchResult.fallbackExecuted) {
     void sendEmail({
       to: ADMIN_EMAIL,
       replyTo: cleanEmail || ADMIN_EMAIL,
@@ -152,8 +153,10 @@ export async function POST(req: NextRequest) {
   }
 
   // 4. Si el cliente ingresó email, enviar comprobante instantáneo vía Resend
-  let emailSent = false
-  if (cleanEmail && process.env.RESEND_API_KEY) {
+  let emailSent = Boolean(
+    dispatchResult.fallbackExecuted && cleanEmail && process.env.RESEND_API_KEY
+  )
+  if (cleanEmail && process.env.RESEND_API_KEY && !dispatchResult.fallbackExecuted) {
     try {
       await sendEmail({
         to: cleanEmail,

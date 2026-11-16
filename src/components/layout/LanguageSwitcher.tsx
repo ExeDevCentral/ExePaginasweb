@@ -71,7 +71,7 @@ export default function LanguageSwitcher({
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className="h-10 sm:h-8 px-2 flex items-center justify-center gap-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10 transition-all text-xs font-semibold cursor-pointer select-none border border-transparent hover:border-cyan-500/20"
-        aria-label="Switch language"
+        aria-label={`${currentLang.label} — Switch language`}
         aria-expanded={isOpen}
       >
         <CyberCountryFlag code={currentLang.code} size={18} />

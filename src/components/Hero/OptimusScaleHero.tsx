@@ -157,7 +157,6 @@ export const OptimusScaleHero: React.FC = () => {
                   onClick={() =>
                     trackEvent('hero_cta_portfolio_clicked', { source: 'optimus_hero' })
                   }
-                  ariaLabel="Explorar portafolio de sistemas en producción"
                   className="w-full sm:w-auto max-w-full"
                 />
               </div>

@@ -143,9 +143,9 @@ const Footer = () => {
               <div>
                 <Link
                   href="/"
-                  aria-label="ExePaginasWeb, inicio"
                   className="inline-flex items-center gap-2.5 mb-3 group focus:outline-none"
                 >
+                  <span className="sr-only">ExePaginasWeb, inicio</span>
                   <Logo size={58} className="shrink-0" />
                   <span aria-hidden="true">
                     <MatrixWordmark
@@ -431,10 +431,10 @@ const Footer = () => {
                   href="https://exepaginasweb.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="ExePaginasWeb, sitio oficial"
                   title="Diseño & Desarrollo por Exepaginasweb.com"
                   className="group relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-accent-cyan/30 dark:border-accent-cyan/20 bg-accent-cyan/6 dark:bg-white/3 hover:border-accent-cyan/60 dark:hover:border-accent-cyan/50 hover:bg-accent-cyan/10 dark:hover:bg-accent-cyan/7 transition-all duration-300 shadow-xs whitespace-nowrap"
                 >
+                  <span className="sr-only">ExePaginasWeb, sitio oficial</span>
                   <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground whitespace-nowrap">
                     <span className="hidden sm:inline">
                       {t('footer.crafted_by') || 'Crafted with precision by'}{' '}

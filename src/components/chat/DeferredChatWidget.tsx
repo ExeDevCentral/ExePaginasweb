@@ -41,9 +41,9 @@ export default function DeferredChatWidget() {
         onMouseEnter={() => setShouldLoad(true)}
         onTouchStart={() => setShouldLoad(true)}
         onClick={() => setShouldLoad(true)}
-        aria-label="Abrir canales de atención"
         className="group relative flex items-center gap-3 px-4 py-3 rounded-full bg-[#0a0d14]/95 text-white border-2 border-cyan-500/40 hover:border-cyan-400 shadow-2xl backdrop-blur-2xl transition-all duration-300 shadow-cyan-500/20 cursor-pointer active:scale-95"
       >
+        <span className="sr-only sm:hidden">Abrir canales de atención</span>
         <span className="absolute -inset-0.5 rounded-full bg-linear-to-r from-cyan-500 via-sky-400 to-emerald-400 opacity-20 group-hover:opacity-60 blur-xs transition-opacity duration-300" />
 
         <div className="relative w-9 h-9 rounded-full bg-[#0a0f1d] border border-cyan-400/50 flex items-center justify-center shrink-0 shadow-inner">

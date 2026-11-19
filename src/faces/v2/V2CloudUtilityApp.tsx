@@ -21,6 +21,7 @@ import {
   RefreshCw,
   ShieldCheck,
   Sparkles,
+  Terminal,
   Zap,
 } from 'lucide-react'
 import i18n, { syncHtmlLangAttributes } from '@/core/i18n/config'
@@ -39,6 +40,7 @@ interface ServicePlanBase {
   id: string
   code: string
   recommended: boolean
+  isLinuxSpecial?: boolean
   price: string
   whatsappText: string
   checks: {
@@ -118,19 +120,21 @@ const SERVICE_PLANS: readonly ServicePlanBase[] = [
     },
   },
   {
-    id: 'auditoria-velocidad',
-    code: 'audit-fix-core',
+    id: 'linux-pos',
+    code: 'linux-kiosk-pos',
     recommended: false,
-    price: 'USD 120',
-    whatsappText: 'Hola Exequiel, quiero una Auditoría & Fix para mi web actual.',
+    isLinuxSpecial: true,
+    price: 'USD 160',
+    whatsappText:
+      'Hola Exequiel, quiero probar/activar Terminales Linux POS (4.5s boot · $0 licencias).',
     checks: {
-      sslEdge: 'Fix Certificados',
-      seoSchema: 'Web Vitals 95+',
-      whatsappFunnel: 'Fix CTA',
-      payments: 'Fix Checkouts',
-      adminPanel: 'Reporte Técnico',
-      sourceCode: 'PR Limpio',
-      latency: '19 ms',
+      sslEdge: 'LAN + Offline-First',
+      seoSchema: 'Boot 4.5s · 480MB',
+      whatsappFunnel: 'Tickets ESC/POS',
+      payments: 'QR / Tarjetas / Efect.',
+      adminPanel: 'PostgreSQL Local',
+      sourceCode: '$0 Licencias OS',
+      latency: '0.4 ms (LAN)',
     },
   },
 ] as const
@@ -426,64 +430,116 @@ export default function V2CloudUtilityApp() {
             {SERVICE_PLANS.map((plan, index) => {
               const planCopy = copy.plans[plan.id] ?? copy.plans['tienda-turnos']!
               const isSelected = plan.id === selectedPlan.id
+              const isLinux = Boolean(plan.isLinuxSpecial)
+
               return (
                 <button
                   key={plan.id}
                   type="button"
                   onClick={() => setSelectedId(plan.id)}
                   style={{ animationDelay: `${index * 40}ms` }}
-                  className={`v2-enter group relative flex cursor-pointer flex-col justify-between rounded-lg border p-4 text-start transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#047857] ${
-                    isSelected
-                      ? '-translate-y-1 border-[#047857] bg-white shadow-[0_10px_25px_-10px_rgba(4,120,87,0.28)] ring-1 ring-[#047857]'
-                      : 'border-[#e2e8f0] bg-white hover:-translate-y-1 hover:border-[#94a3b8] hover:shadow-md'
+                  className={`v2-enter group relative flex cursor-pointer flex-col justify-between rounded-lg border p-4 text-start transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                    isLinux
+                      ? isSelected
+                        ? '-translate-y-1.5 border-[#f59e0b] bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1e1b4b] text-white shadow-[0_14px_30px_-8px_rgba(245,158,11,0.45)] ring-2 ring-[#f59e0b]'
+                        : 'border-[#f59e0b]/70 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1e1b4b] text-white shadow-md hover:-translate-y-1.5 hover:border-[#fbbf24] hover:shadow-[0_14px_28px_-8px_rgba(245,158,11,0.38)]'
+                      : isSelected
+                        ? '-translate-y-1 border-[#047857] bg-white shadow-[0_10px_25px_-10px_rgba(4,120,87,0.28)] ring-1 ring-[#047857]'
+                        : 'border-[#e2e8f0] bg-white hover:-translate-y-1 hover:border-[#94a3b8] hover:shadow-md'
                   }`}
                 >
-                  <div className="mb-3 flex items-center justify-between gap-2">
+                  <div className="mb-3 flex items-center justify-between gap-1.5">
                     <span
-                      className={`rounded px-1.5 py-0.5 font-mono text-[10.5px] font-semibold transition-colors ${
-                        isSelected
-                          ? 'bg-[#047857] text-white'
-                          : 'bg-[#f1f5f9] text-[#475569] group-hover:bg-[#e2e8f0]'
+                      className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[10.5px] font-semibold transition-colors ${
+                        isLinux
+                          ? 'bg-[#f59e0b] text-[#0f172a]'
+                          : isSelected
+                            ? 'bg-[#047857] text-white'
+                            : 'bg-[#f1f5f9] text-[#475569] group-hover:bg-[#e2e8f0]'
                       }`}
                     >
+                      {isLinux && <Terminal className="h-3 w-3" aria-hidden="true" />}
                       {plan.code}
                     </span>
-                    {plan.recommended && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#ecfdf5] px-2 py-0.5 text-[10px] font-bold text-[#047857]">
-                        <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
-                        Top
+
+                    {isLinux ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-[#f59e0b]/40 bg-[#f59e0b]/15 px-2 py-0.5 text-[10px] font-extrabold text-[#fbbf24]">
+                        <span className="h-1.5 w-1.5 animate-ping rounded-full bg-[#fbbf24]" />
+                        {copy.linuxBadge}
                       </span>
+                    ) : (
+                      plan.recommended && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#ecfdf5] px-2 py-0.5 text-[10px] font-bold text-[#047857]">
+                          <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
+                          Top
+                        </span>
+                      )
                     )}
                   </div>
 
                   <div>
-                    <h2 className="text-[15px] font-bold text-[#0f172a] transition-colors group-hover:text-[#047857]">
+                    <h2
+                      className={`text-[15px] font-bold transition-colors ${
+                        isLinux
+                          ? 'text-[#fbbf24] group-hover:text-white'
+                          : 'text-[#0f172a] group-hover:text-[#047857]'
+                      }`}
+                    >
                       {planCopy.name}
                     </h2>
-                    <p className="mt-1 text-[12px] leading-snug text-[#475569]">
+                    <p
+                      className={`mt-1 text-[12px] leading-snug ${
+                        isLinux ? 'text-slate-300' : 'text-[#475569]'
+                      }`}
+                    >
                       {planCopy.tagline}
                     </p>
                   </div>
 
-                  <div className="mt-4 border-t border-[#f1f5f9] pt-3">
+                  <div
+                    className={`mt-4 border-t pt-3 ${
+                      isLinux ? 'border-white/15' : 'border-[#f1f5f9]'
+                    }`}
+                  >
                     <div className="flex items-baseline justify-between">
-                      <span className="text-[15px] font-extrabold text-[#0f172a]">
+                      <span
+                        className={`text-[15px] font-extrabold ${
+                          isLinux ? 'text-white' : 'text-[#0f172a]'
+                        }`}
+                      >
                         {plan.price}
                       </span>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#475569]">
-                        <Clock className="h-3 w-3 text-[#047857]" aria-hidden="true" />
+                      <span
+                        className={`inline-flex items-center gap-1 text-[11px] font-medium ${
+                          isLinux ? 'text-amber-300' : 'text-[#475569]'
+                        }`}
+                      >
+                        <Clock
+                          className={`h-3 w-3 ${isLinux ? 'text-[#fbbf24]' : 'text-[#047857]'}`}
+                          aria-hidden="true"
+                        />
                         {planCopy.deliveryTime}
                       </span>
                     </div>
                     <div className="mt-2 flex items-center justify-between text-[11.5px] font-semibold">
-                      <span className={isSelected ? 'text-[#047857]' : 'text-[#64748b]'}>
+                      <span
+                        className={
+                          isLinux
+                            ? 'text-[#fbbf24]'
+                            : isSelected
+                              ? 'text-[#047857]'
+                              : 'text-[#64748b]'
+                        }
+                      >
                         {isSelected ? copy.colActiveLabel : copy.colCompareLabel}
                       </span>
                       <ArrowRight
                         className={`h-3.5 w-3.5 transition-transform duration-200 ${
-                          isSelected
-                            ? 'translate-x-0.5 text-[#047857]'
-                            : 'text-[#94a3b8] group-hover:translate-x-1 group-hover:text-[#047857]'
+                          isLinux
+                            ? 'text-[#fbbf24] group-hover:translate-x-1'
+                            : isSelected
+                              ? 'translate-x-0.5 text-[#047857]'
+                              : 'text-[#94a3b8] group-hover:translate-x-1 group-hover:text-[#047857]'
                         }`}
                         aria-hidden="true"
                       />
@@ -512,7 +568,18 @@ export default function V2CloudUtilityApp() {
               ))}
             </div>
 
-            <div className="flex shrink-0 items-center gap-2">
+            <div className="flex shrink-0 flex-wrap items-center gap-2">
+              {selectedPlan.isLinuxSpecial && (
+                <Link
+                  href="/linux"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-[#f59e0b] px-3 py-1.5 text-xs font-extrabold text-[#0f172a] shadow-xs transition-all hover:-translate-y-0.5 hover:bg-[#fbbf24]"
+                >
+                  <Terminal className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>{copy.linuxExploreBtn}</span>
+                  <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </Link>
+              )}
+
               <button
                 type="button"
                 onClick={() => void handleCopyBrief()}
@@ -546,17 +613,26 @@ export default function V2CloudUtilityApp() {
                   />
                   {SERVICE_PLANS.map((col) => {
                     const isActive = col.id === selectedPlan.id
+                    const isLinux = Boolean(col.isLinuxSpecial)
                     return (
                       <th
                         key={col.id}
                         className="w-[140px] min-w-[135px] bg-[#f8fafc] p-0 align-bottom"
                       >
                         <div
-                          className={`px-2 py-1.5 text-[11px] font-semibold tracking-wide text-white transition-all duration-200 ${
-                            isActive ? 'bg-[#047857] opacity-100' : 'bg-[#047857] opacity-0'
+                          className={`px-2 py-1.5 text-[11px] font-bold tracking-wide transition-all duration-200 ${
+                            isLinux
+                              ? 'bg-[#f59e0b] text-[#0f172a] opacity-100'
+                              : isActive
+                                ? 'bg-[#047857] text-white opacity-100'
+                                : 'bg-[#047857] text-white opacity-0'
                           }`}
                         >
-                          {col.recommended ? copy.colRecommended : copy.colSelected}
+                          {isLinux
+                            ? copy.linuxBadge
+                            : col.recommended
+                              ? copy.colRecommended
+                              : copy.colSelected}
                         </div>
                       </th>
                     )
@@ -570,14 +646,19 @@ export default function V2CloudUtilityApp() {
                   {SERVICE_PLANS.map((col) => {
                     const colCopy = copy.plans[col.id] ?? copy.plans['tienda-turnos']!
                     const isActive = col.id === selectedPlan.id
+                    const isLinux = Boolean(col.isLinuxSpecial)
                     return (
                       <th
                         key={col.id}
                         onClick={() => setSelectedId(col.id)}
-                        className={`cursor-pointer px-2 py-3 align-middle transition-colors hover:bg-[#f8fafc] ${
-                          isActive
-                            ? 'border-x-2 border-t-2 border-[#047857] bg-[#ecfdf5]/40'
-                            : 'border-b border-[#e2e8f0]'
+                        className={`cursor-pointer px-2 py-3 align-middle transition-colors ${
+                          isLinux
+                            ? isActive
+                              ? 'border-x-2 border-t-2 border-[#f59e0b] bg-[#fffbeb]'
+                              : 'border-b border-[#e2e8f0] bg-[#fffbeb]/60 hover:bg-[#fef3c7]/60'
+                            : isActive
+                              ? 'border-x-2 border-t-2 border-[#047857] bg-[#ecfdf5]/40'
+                              : 'border-b border-[#e2e8f0] hover:bg-[#f8fafc]'
                         }`}
                       >
                         <button
@@ -585,10 +666,18 @@ export default function V2CloudUtilityApp() {
                           onClick={() => setSelectedId(col.id)}
                           className="flex w-full flex-col items-center focus-visible:outline-2 focus-visible:outline-[#047857]"
                         >
-                          <span className="text-[13px] font-bold text-[#0f172a]">
+                          <span
+                            className={`text-[13px] font-bold ${
+                              isLinux ? 'text-[#b45309]' : 'text-[#0f172a]'
+                            }`}
+                          >
                             {colCopy.name}
                           </span>
-                          <span className="font-mono text-[10.5px] font-normal text-[#64748b]">
+                          <span
+                            className={`font-mono text-[10.5px] font-normal ${
+                              isLinux ? 'text-[#d97706]' : 'text-[#64748b]'
+                            }`}
+                          >
                             {col.code}
                           </span>
                         </button>
@@ -628,6 +717,7 @@ export default function V2CloudUtilityApp() {
 
                       {SERVICE_PLANS.map((col, colIdx) => {
                         const isActive = col.id === selectedPlan.id
+                        const isLinux = Boolean(col.isLinuxSpecial)
                         const val = col.checks[rowKey]
                         const isOptional = val === 'Opcional' || val.startsWith('N/A')
 
@@ -636,7 +726,13 @@ export default function V2CloudUtilityApp() {
                             key={`${col.id}-${checkRunId}`}
                             onClick={() => setSelectedId(col.id)}
                             className={`cursor-pointer px-2 py-2 align-middle transition-colors ${
-                              isActive ? 'border-x-2 border-[#047857] bg-[#ecfdf5]/30' : ''
+                              isLinux
+                                ? isActive
+                                  ? 'border-x-2 border-[#f59e0b] bg-[#fffbeb]/80'
+                                  : 'bg-[#fffbeb]/35'
+                                : isActive
+                                  ? 'border-x-2 border-[#047857] bg-[#ecfdf5]/30'
+                                  : ''
                             }`}
                           >
                             {cellState === 'checking' ? (
@@ -650,7 +746,7 @@ export default function V2CloudUtilityApp() {
                               <span
                                 style={{ animationDelay: `${(rowIndex + colIdx) * 18}ms` }}
                                 className={`v2-check-pop inline-flex items-center gap-1 font-semibold ${
-                                  isOptional ? 'text-[#b45309]' : 'text-[#047857]'
+                                  isLinux || isOptional ? 'text-[#b45309]' : 'text-[#047857]'
                                 }`}
                               >
                                 <Check className="h-3.5 w-3.5 stroke-[2.5]" aria-hidden="true" />
@@ -671,17 +767,26 @@ export default function V2CloudUtilityApp() {
                   {SERVICE_PLANS.map((col) => {
                     const colCopy = copy.plans[col.id] ?? copy.plans['tienda-turnos']!
                     const isActive = col.id === selectedPlan.id
+                    const isLinux = Boolean(col.isLinuxSpecial)
                     return (
                       <td
                         key={col.id}
                         onClick={() => setSelectedId(col.id)}
                         className={`cursor-pointer px-2 py-3 align-middle transition-colors ${
-                          isActive
-                            ? 'border-x-2 border-b-2 border-[#047857] bg-[#ecfdf5]/60'
-                            : 'border-t border-[#e2e8f0]'
+                          isLinux
+                            ? isActive
+                              ? 'border-x-2 border-b-2 border-[#f59e0b] bg-[#fef3c7]/80'
+                              : 'border-t border-[#e2e8f0] bg-[#fffbeb]/60'
+                            : isActive
+                              ? 'border-x-2 border-b-2 border-[#047857] bg-[#ecfdf5]/60'
+                              : 'border-t border-[#e2e8f0]'
                         }`}
                       >
-                        <div className="text-[13.5px] font-extrabold text-[#0f172a]">
+                        <div
+                          className={`text-[13.5px] font-extrabold ${
+                            isLinux ? 'text-[#92400e]' : 'text-[#0f172a]'
+                          }`}
+                        >
                           {col.price}
                         </div>
                         <div className="text-[11px] font-medium text-[#475569]">

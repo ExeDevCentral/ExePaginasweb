@@ -82,6 +82,8 @@ export interface V2Copy {
   switchVersion: string
   ctaActivate: string
   ctaShort: string
+  linuxBadge: string
+  linuxExploreBtn: string
   heroTitle: string
   heroSubtitle: string
   deskOpenBadge: string
@@ -134,6 +136,8 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     switchVersion: 'Cambiar versión',
     ctaActivate: 'Activar Servicio',
     ctaShort: 'Contactar',
+    linuxBadge: '¡PROBALO! · $0 Licencias',
+    linuxExploreBtn: 'Explorar Terminales Linux POS (/linux)',
     heroTitle: 'ExePaginasWeb — Servicios Directos & Matriz Técnica',
     heroSubtitle:
       'Seleccioná una tarjeta o columna para comparar alcances, tiempos de entrega y arquitectura real. Sin vueltas de agencia, 100% código propio.',
@@ -216,15 +220,16 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
           'Monitoreo con logs estructurados',
         ],
       },
-      'auditoria-velocidad': {
-        name: 'Auditoría & Fix',
-        tagline: 'Rescatamos y aceleramos webs lentas que hoy pierden clientes.',
+      'linux-pos': {
+        name: 'Linux POS & PCs',
+        tagline:
+          'Terminales de cobro blindadas (4.5s boot) y rescate de PCs lentas con $0 en licencias.',
         deliveryTime: '48 hs hábiles',
-        availability: 'Entrega express',
+        availability: 'Demo en vivo',
         highlights: [
-          'Optimización Core Web Vitals 95+ en celular',
-          'Corrección de errores de SSL, SEO y checkout',
-          'Entrega con reporte técnico verificable',
+          'Terminales POS modo quiosco (480 MB RAM · 4.5s arranque)',
+          'Rescate de flotas de PCs lentas con $0 en licencias',
+          'Servidor local PostgreSQL Offline-First (vende sin internet)',
         ],
       },
     },
@@ -234,6 +239,8 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     switchVersion: 'Switch version',
     ctaActivate: 'Activate Service',
     ctaShort: 'Contact',
+    linuxBadge: 'TRY IT! · $0 Licensing',
+    linuxExploreBtn: 'Explore Linux POS Terminals (/linux)',
     heroTitle: 'ExePaginasWeb — Direct Services & Technical Matrix',
     heroSubtitle:
       'Select any card or column to compare scope, delivery SLA, and live architecture. Zero agency fluff, 100% owned source code.',
@@ -316,15 +323,15 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
           'Structured telemetry and error boundaries',
         ],
       },
-      'auditoria-velocidad': {
-        name: 'Audit & Speed Fix',
-        tagline: 'Rescue and accelerate slow websites currently losing conversions.',
+      'linux-pos': {
+        name: 'Linux POS & Fleet',
+        tagline: 'Hardened kiosk POS terminals (4.5s boot) & PC fleet rescue with $0 license cost.',
         deliveryTime: '48 business hrs',
-        availability: 'Express delivery',
+        availability: 'Live demo ready',
         highlights: [
-          'Core Web Vitals 95+ optimization on mobile',
-          'SSL, technical SEO, and checkout bug fixes',
-          'Verifiable engineering audit report',
+          'Kiosk-mode POS terminals (480 MB RAM · 4.5s boot)',
+          'Revive slow PC fleets with $0 OS licensing fees',
+          'Local PostgreSQL Offline-First node (works without internet)',
         ],
       },
     },
@@ -334,6 +341,8 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     switchVersion: 'Trocar versão',
     ctaActivate: 'Ativar Serviço',
     ctaShort: 'Contato',
+    linuxBadge: 'TESTE AGORA · $0 Licenças',
+    linuxExploreBtn: 'Explorar Terminais Linux POS (/linux)',
     heroTitle: 'ExePaginasWeb — Serviços Diretos & Matriz Técnica',
     heroSubtitle:
       'Selecione um cartão ou coluna para comparar escopo, prazo de entrega e arquitetura real. Sem burocracia de agência, 100% código próprio.',
@@ -416,15 +425,16 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
           'Monitoramento com logs estruturados',
         ],
       },
-      'auditoria-velocidad': {
-        name: 'Auditoria & Fix',
-        tagline: 'Resgatamos e aceleramos sites lentos que perdem clientes.',
+      'linux-pos': {
+        name: 'Linux POS & PCs',
+        tagline:
+          'Terminais PDV blindados (boot em 4.5s) e resgate de PCs lentos com $0 em licenças.',
         deliveryTime: '48h úteis',
-        availability: 'Entrega expressa',
+        availability: 'Demo ao vivo',
         highlights: [
-          'Otimização Core Web Vitals 95+ no mobile',
-          'Correção de SSL, SEO técnico e checkout',
-          'Relatório técnico verificável',
+          'Terminais PDV modo quiosque (480 MB RAM · boot 4.5s)',
+          'Resgate de frotas de PCs lentos com $0 em licenças',
+          'Servidor local PostgreSQL Offline-First (opera sem internet)',
         ],
       },
     },
@@ -434,6 +444,8 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     switchVersion: 'Version wechseln',
     ctaActivate: 'Service aktivieren',
     ctaShort: 'Kontakt',
+    linuxBadge: 'JETZT TESTEN · 0 $ Lizenzen',
+    linuxExploreBtn: 'Linux POS-Terminals entdecken (/linux)',
     heroTitle: 'ExePaginasWeb — Direkte Services & Technische Matrix',
     heroSubtitle:
       'Wählen Sie eine Karte oder Spalte, um Umfang, Lieferzeit und Live-Architektur zu vergleichen. 100 % eigener Quellcode.',
@@ -511,15 +523,15 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
           'Strukturierte Logs',
         ],
       },
-      'auditoria-velocidad': {
-        name: 'Audit & Fix',
-        tagline: 'Beschleunigung und Fehlerbehebung bestehender Websites.',
+      'linux-pos': {
+        name: 'Linux POS & PCs',
+        tagline: 'Kiosk-POS-Terminals (4,5s Boot) & PC-Rettung mit 0 $ Lizenzkosten.',
         deliveryTime: '48 Werkstd.',
-        availability: 'Express',
+        availability: 'Live-Demo',
         highlights: [
-          'Core Web Vitals 95+',
-          'SSL-, SEO- & Checkout-Fixes',
-          'Technischer Prüfbericht',
+          'Kiosk-POS-Terminals (480 MB RAM · 4,5s Start)',
+          'PC-Flottenrettung ohne Lizenzgebühren',
+          'Lokaler PostgreSQL Offline-First-Server',
         ],
       },
     },
@@ -529,6 +541,8 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     switchVersion: 'Changer de version',
     ctaActivate: 'Activer le service',
     ctaShort: 'Contact',
+    linuxBadge: 'À ESSAYER · 0 $ Licence',
+    linuxExploreBtn: 'Explorer les terminaux Linux POS (/linux)',
     heroTitle: 'ExePaginasWeb — Services Directs & Matrice Technique',
     heroSubtitle:
       'Sélectionnez une carte ou une colonne pour comparer la portée, les délais et l’architecture en direct. 100 % code propriétaire.',
@@ -606,12 +620,16 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
         availability: 'Disponible',
         highlights: ['Assistant IA WhatsApp', 'Qualification auto des leads', 'Logs structurés'],
       },
-      'auditoria-velocidad': {
-        name: 'Audit & Fix',
-        tagline: 'Accélération et correction de sites existants.',
+      'linux-pos': {
+        name: 'Linux POS & PCs',
+        tagline: 'Terminaux de caisse kiosque (boot 4,5s) et sauvetage de PC avec 0 $ de licence.',
         deliveryTime: '48h ouvrées',
-        availability: 'Express',
-        highlights: ['Core Web Vitals 95+', 'Correctifs SSL, SEO & paiement', 'Rapport technique'],
+        availability: 'Démo en direct',
+        highlights: [
+          'Terminaux POS mode kiosque (480 Mo RAM · boot 4,5s)',
+          'Flotte PC accélérée avec 0 $ de licences',
+          'Serveur local PostgreSQL Offline-First',
+        ],
       },
     },
   },
@@ -620,6 +638,8 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     switchVersion: 'تغيير النسخة',
     ctaActivate: 'تفعيل الخدمة',
     ctaShort: 'تواصل',
+    linuxBadge: 'جرّبه الآن · 0$ تراخيص',
+    linuxExploreBtn: 'استكشاف أنظمة Linux POS (/linux)',
     heroTitle: 'ExePaginasWeb — خدمات مباشرة ومصفوفة تقنية',
     heroSubtitle:
       'اختر أي بطاقة أو عمود لمقارنة النطاق ووقت التسليم والبنية التقنية مباشرة. كود مملوك 100% بدون وسطاء.',
@@ -685,12 +705,16 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
         availability: 'متاح',
         highlights: ['بوت ذكي لواتساب', 'فرز تلقائي للعملاء', 'سجلات مراقبة'],
       },
-      'auditoria-velocidad': {
-        name: 'تدقيق وتسريع',
-        tagline: 'إصلاح وتسريع المواقع البطيئة.',
+      'linux-pos': {
+        name: 'أنظمة Linux POS',
+        tagline: 'نقاط بيع محصنة (إقلاع 4.5 ثانية) وإنقاذ أجهزة الكمبيوتر بتكلفة تراخيص 0$.',
         deliveryTime: '48 ساعة عمل',
-        availability: 'سريع',
-        highlights: ['Core Web Vitals 95+', 'إصلاح SSL و SEO', 'تقرير فني موثق'],
+        availability: 'عرض مباشر',
+        highlights: [
+          'نقاط بيع بوضع الكشك (480MB RAM · إقلاع 4.5 ثانية)',
+          'إحياء الأجهزة البطيئة بدون رسوم تراخيص',
+          'خادم محلي PostgreSQL يعمل بدون إنترنت',
+        ],
       },
     },
   },
@@ -699,6 +723,8 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     switchVersion: '切换版本',
     ctaActivate: '立即启动服务',
     ctaShort: '联系我们',
+    linuxBadge: '强烈推荐 · $0 授权费',
+    linuxExploreBtn: '探索 Linux POS 终端架构 (/linux)',
     heroTitle: 'ExePaginasWeb — 直达服务与技术矩阵',
     heroSubtitle: '点击任意卡片或列对比交付周期与真实架构。无外包套路，100% 自主源代码。',
     deskOpenBadge: '工程团队在线',
@@ -763,12 +789,16 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
         availability: '可接单',
         highlights: ['WhatsApp AI 助手', '自动线索分级与报表', '结构化日志监控'],
       },
-      'auditoria-velocidad': {
-        name: '性能审计与修复',
-        tagline: '挽救并加速加载缓慢的现有网站。',
+      'linux-pos': {
+        name: 'Linux POS 终端',
+        tagline: '4.5 秒极速启动收银终端与老旧电脑重生（$0 许可证费）。',
         deliveryTime: '48 工作小时',
-        availability: '加急交付',
-        highlights: ['移动端 Core Web Vitals 95+', '修复 SSL / SEO / 支付问题', '可验证技术报告'],
+        availability: '在线演示',
+        highlights: [
+          'Kiosk 锁定收银终端（480 MB 内存 · 4.5s 启动）',
+          '$0 系统授权费拯救卡顿电脑',
+          '本地 PostgreSQL 离线优先服务器（断网可收银）',
+        ],
       },
     },
   },

@@ -8,6 +8,7 @@ import type { Metadata } from 'next'
 import SiteHeader from '@/components/layout/SiteHeader'
 import Footer from '@/components/layout/Footer'
 import Products from '@/components/Products/Products'
+import MobileSolutionsView from '@/components/mobile/MobileSolutionsView'
 
 export const metadata: Metadata = {
   title: 'Soluciones Web para Negocios',
@@ -35,12 +36,17 @@ export default function SolucionesPage() {
   return (
     <>
       <SiteHeader />
-      <main className="pt-20">
-        <Products />
-        <DemoZone />
-        <ContactSection />
+      <main>
+        <div className="block md:hidden">
+          <MobileSolutionsView />
+        </div>
+        <div className="hidden md:block pt-20">
+          <Products />
+          <DemoZone />
+          <ContactSection />
+          <Footer />
+        </div>
       </main>
-      <Footer />
     </>
   )
 }

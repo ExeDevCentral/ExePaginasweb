@@ -31,7 +31,8 @@ import {
   Terminal,
   Server,
 } from 'lucide-react'
-import Header from '../layout/Header'
+import SiteHeader from '../layout/SiteHeader'
+import MobileQuoteView from '@/components/mobile/MobileQuoteView'
 import HudButton from '@/components/HudButton'
 import dynamic from 'next/dynamic'
 
@@ -778,575 +779,584 @@ export default function QuoteBuilder() {
 
   return (
     <div className="min-h-screen bg-transparent text-primary-text relative overflow-hidden">
-      <Quote3DCanvas />
-      <Header />
+      <SiteHeader />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 pt-36 pb-24">
-        {mode === 'plans' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="text-center mb-12">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-xs font-bold uppercase tracking-wider mb-6">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  {t('cotizador.planes_tag')}
-                </div>
-              </motion.div>
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-4xl md:text-6xl font-montserrat font-black text-foreground tracking-tight mb-6"
-              >
-                {t('cotizador.modelo_hibrido')}
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-muted-foreground max-w-2xl mx-auto text-lg"
-              >
-                {t('cotizador.modelo_hibrido_desc')}
-              </motion.p>
-            </div>
+      {/* Versión móvil pragmática (< 768px) */}
+      <div className="block md:hidden">
+        <MobileQuoteView />
+      </div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-              className="flex justify-center mb-10"
-            >
-              <div className="inline-flex items-center gap-2 bg-muted/80 border border-border rounded-2xl p-1.5">
-                <button
-                  onClick={() => setCurrency('ARS')}
-                  className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
-                    currency === 'ARS'
-                      ? 'bg-linear-to-r from-accent-cyan to-accent-cyan/80 text-black shadow-lg shadow-accent-cyan/25 bg-size-[200%_200%] animate-gradient-shift'
-                      : 'text-foreground/60 hover:text-foreground'
-                  }`}
+      {/* Versión escritorio completa (>= 768px) */}
+      <div className="hidden md:block">
+        <Quote3DCanvas />
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4 pt-36 pb-24">
+          {mode === 'plans' && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <div className="text-center mb-12">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-xs font-bold uppercase tracking-wider mb-6">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    {t('cotizador.planes_tag')}
+                  </div>
+                </motion.div>
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="text-4xl md:text-6xl font-montserrat font-black text-foreground tracking-tight mb-6"
                 >
-                  <Coins size={14} />
-                  ARS ($)
-                </button>
-                <button
-                  onClick={() => setCurrency('USD')}
-                  className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
-                    currency === 'USD'
-                      ? 'bg-linear-to-r from-accent-magenta to-accent-magenta/80 text-white shadow-lg shadow-accent-magenta/25 bg-size-[200%_200%] animate-gradient-shift'
-                      : 'text-foreground/60 hover:text-foreground'
-                  }`}
+                  {t('cotizador.modelo_hibrido')}
+                </motion.h1>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-muted-foreground max-w-2xl mx-auto text-lg"
                 >
-                  <Coins size={14} />
-                  USD (u$s)
-                </button>
+                  {t('cotizador.modelo_hibrido_desc')}
+                </motion.p>
               </div>
-            </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-10">
-              {plans.map((plan, i) => (
-                <PlanCard
-                  key={plan.id}
-                  plan={plan}
-                  currency={currency}
-                  index={i}
-                  onSelect={() => handlePlanSelect(plan.id)}
-                />
-              ))}
-            </div>
-
-            {/* Cartel Aclaratorio de Mantenimiento Opcional */}
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs md:text-sm font-semibold shadow-lg shadow-emerald-500/5">
-                <Check className="w-4 h-4 shrink-0 text-emerald-700 dark:text-emerald-400" />
-                <span>{t('cotizador.opcional_nota')}</span>
-              </div>
-            </div>
-
-            <ConfettiBurst trigger={planConfetti} intensity={20} />
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="text-center"
-            >
-              <div className="relative mb-8">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="px-4 bg-background text-muted-foreground text-sm">
-                    {t('cotizador.o')}
-                  </span>
-                </div>
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={goToCustom}
-                className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-linear-to-r from-accent-cyan/20 via-accent-cyan/15 to-accent-magenta/20 border border-accent-cyan/30 text-foreground font-bold transition-all bg-size-[200%_200%] animate-gradient-shift hover:from-accent-cyan/30 hover:to-accent-magenta/30 hover:shadow-lg hover:shadow-accent-cyan/10"
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 }}
+                className="flex justify-center mb-10"
               >
-                <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_4s_ease-in-out_infinite]" />
-                <Star className="w-5 h-5 text-accent-cyan relative z-10" />
-                <span className="relative z-10">{t('cotizador.arma_proyecto_medida')}</span>
-                <ArrowRight className="w-4 h-4 relative z-10" />
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        )}
-
-        {mode === 'custom' && (
-          <>
-            <div className="flex items-center gap-2 mb-12 justify-center">
-              {stepLabels.map((label, i) => (
-                <div key={label} className="flex items-center gap-2">
-                  <motion.div
-                    animate={
-                      i === step
-                        ? {
-                            scale: [1, 1.18, 1],
-                            boxShadow: [
-                              '0 0 20px rgba(34,211,238,0.3)',
-                              '0 0 40px rgba(236,72,153,0.4)',
-                              '0 0 20px rgba(34,211,238,0.3)',
-                            ],
-                            transition: { repeat: Infinity, duration: 2 },
-                          }
-                        : {}
-                    }
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                      i <= step
-                        ? 'btn-soft-violet text-accent-violet'
-                        : 'bg-muted text-muted-foreground'
+                <div className="inline-flex items-center gap-2 bg-muted/80 border border-border rounded-2xl p-1.5">
+                  <button
+                    onClick={() => setCurrency('ARS')}
+                    className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
+                      currency === 'ARS'
+                        ? 'bg-linear-to-r from-accent-cyan to-accent-cyan/80 text-black shadow-lg shadow-accent-cyan/25 bg-size-[200%_200%] animate-gradient-shift'
+                        : 'text-foreground/60 hover:text-foreground'
                     }`}
                   >
-                    {i + 1}
-                  </motion.div>
-                  <span
-                    className={`text-xs font-semibold hidden sm:block ${i <= step ? 'text-foreground' : 'text-muted-foreground'}`}
+                    <Coins size={14} />
+                    ARS ($)
+                  </button>
+                  <button
+                    onClick={() => setCurrency('USD')}
+                    className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 ${
+                      currency === 'USD'
+                        ? 'bg-linear-to-r from-accent-magenta to-accent-magenta/80 text-white shadow-lg shadow-accent-magenta/25 bg-size-[200%_200%] animate-gradient-shift'
+                        : 'text-foreground/60 hover:text-foreground'
+                    }`}
                   >
-                    {label}
-                  </span>
-                  {i < 3 && <ChevronRight className="w-4 h-4 text-muted-foreground/40" />}
+                    <Coins size={14} />
+                    USD (u$s)
+                  </button>
                 </div>
-              ))}
-            </div>
+              </motion.div>
 
-            <AnimatePresence mode="wait">
-              <ConfettiBurst key={`step-${step}`} trigger={confettiTrigger} intensity={16} />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-10">
+                {plans.map((plan, i) => (
+                  <PlanCard
+                    key={plan.id}
+                    plan={plan}
+                    currency={currency}
+                    index={i}
+                    onSelect={() => handlePlanSelect(plan.id)}
+                  />
+                ))}
+              </div>
 
-              {step === 0 && (
-                <motion.div
-                  key="step0"
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                >
-                  <div className="text-center mb-10">
-                    <Sparkles className="w-8 h-8 text-accent-cyan mx-auto mb-4" />
-                    <h1 className="text-4xl md:text-5xl font-display font-bold leading-tight text-foreground mb-3">
-                      {t('cotizador.que_necesitas')}
-                    </h1>
-                    <p className="text-muted-foreground">{t('cotizador.que_necesitas_desc')}</p>
+              {/* Cartel Aclaratorio de Mantenimiento Opcional */}
+              <div className="text-center max-w-2xl mx-auto mb-10">
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs md:text-sm font-semibold shadow-lg shadow-emerald-500/5">
+                  <Check className="w-4 h-4 shrink-0 text-emerald-700 dark:text-emerald-400" />
+                  <span>{t('cotizador.opcional_nota')}</span>
+                </div>
+              </div>
+
+              <ConfettiBurst trigger={planConfetti} intensity={20} />
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="text-center"
+              >
+                <div className="relative mb-8">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-border" />
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {PROJECT_TYPES.map((pt) => {
-                      const Icon = pt.icon
-                      const isSelected = selectedType === pt.id
-                      return (
-                        <GlowCard
-                          key={pt.id}
-                          onClick={() => setSelectedType(pt.id)}
-                          popular={isSelected}
-                        >
-                          <div className={`p-6 ${isSelected ? 'bg-accent-cyan/5' : ''}`}>
+                  <div className="relative flex justify-center">
+                    <span className="px-4 bg-background text-muted-foreground text-sm">
+                      {t('cotizador.o')}
+                    </span>
+                  </div>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={goToCustom}
+                  className="relative overflow-hidden inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-linear-to-r from-accent-cyan/20 via-accent-cyan/15 to-accent-magenta/20 border border-accent-cyan/30 text-foreground font-bold transition-all bg-size-[200%_200%] animate-gradient-shift hover:from-accent-cyan/30 hover:to-accent-magenta/30 hover:shadow-lg hover:shadow-accent-cyan/10"
+                >
+                  <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_4s_ease-in-out_infinite]" />
+                  <Star className="w-5 h-5 text-accent-cyan relative z-10" />
+                  <span className="relative z-10">{t('cotizador.arma_proyecto_medida')}</span>
+                  <ArrowRight className="w-4 h-4 relative z-10" />
+                </motion.button>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {mode === 'custom' && (
+            <>
+              <div className="flex items-center gap-2 mb-12 justify-center">
+                {stepLabels.map((label, i) => (
+                  <div key={label} className="flex items-center gap-2">
+                    <motion.div
+                      animate={
+                        i === step
+                          ? {
+                              scale: [1, 1.18, 1],
+                              boxShadow: [
+                                '0 0 20px rgba(34,211,238,0.3)',
+                                '0 0 40px rgba(236,72,153,0.4)',
+                                '0 0 20px rgba(34,211,238,0.3)',
+                              ],
+                              transition: { repeat: Infinity, duration: 2 },
+                            }
+                          : {}
+                      }
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                        i <= step
+                          ? 'btn-soft-violet text-accent-violet'
+                          : 'bg-muted text-muted-foreground'
+                      }`}
+                    >
+                      {i + 1}
+                    </motion.div>
+                    <span
+                      className={`text-xs font-semibold hidden sm:block ${i <= step ? 'text-foreground' : 'text-muted-foreground'}`}
+                    >
+                      {label}
+                    </span>
+                    {i < 3 && <ChevronRight className="w-4 h-4 text-muted-foreground/40" />}
+                  </div>
+                ))}
+              </div>
+
+              <AnimatePresence mode="wait">
+                <ConfettiBurst key={`step-${step}`} trigger={confettiTrigger} intensity={16} />
+
+                {step === 0 && (
+                  <motion.div
+                    key="step0"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                  >
+                    <div className="text-center mb-10">
+                      <Sparkles className="w-8 h-8 text-accent-cyan mx-auto mb-4" />
+                      <h1 className="text-4xl md:text-5xl font-display font-bold leading-tight text-foreground mb-3">
+                        {t('cotizador.que_necesitas')}
+                      </h1>
+                      <p className="text-muted-foreground">{t('cotizador.que_necesitas_desc')}</p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {PROJECT_TYPES.map((pt) => {
+                        const Icon = pt.icon
+                        const isSelected = selectedType === pt.id
+                        return (
+                          <GlowCard
+                            key={pt.id}
+                            onClick={() => setSelectedType(pt.id)}
+                            popular={isSelected}
+                          >
+                            <div className={`p-6 ${isSelected ? 'bg-accent-cyan/5' : ''}`}>
+                              <div
+                                className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all ${
+                                  isSelected
+                                    ? 'bg-accent-cyan/20 text-accent-cyan'
+                                    : 'bg-muted text-muted-foreground'
+                                }`}
+                              >
+                                <Icon className="w-6 h-6" />
+                              </div>
+                              <h3 className="text-lg font-bold text-foreground mb-1">
+                                {t('cotizador.tipo_' + pt.id, pt.label)}
+                              </h3>
+                              <p className="text-sm text-muted-foreground mb-3">
+                                {t('cotizador.tipo_' + pt.id + '_desc', pt.description)}
+                              </p>
+                              <p className="text-xl font-black font-montserrat text-accent-cyan">
+                                {formatPrice(pt.basePrice)}
+                              </p>
+                            </div>
+                          </GlowCard>
+                        )
+                      })}
+                    </div>
+                    <div className="flex justify-center mt-10">
+                      <HudButton
+                        disabled={!selectedType}
+                        onClick={() => changeStep(1)}
+                        label={t('cotizador.siguiente')}
+                        icon={<ArrowRight className="w-4 h-4" />}
+                        iconPosition="right"
+                        size="lg"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 1 && (
+                  <motion.div
+                    key="step1"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                  >
+                    <div className="text-center mb-10">
+                      <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight text-foreground mb-3">
+                        {t('cotizador.funcionalidades')}
+                      </h2>
+                      <p className="text-muted-foreground">{t('cotizador.funcionalidades_desc')}</p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-8">
+                      {FEATURES.map((feat) => {
+                        const isSelected = selectedFeatures.has(feat.id)
+                        return (
+                          <GlowCard
+                            key={feat.id}
+                            onClick={() => toggleFeature(feat.id)}
+                            popular={isSelected}
+                          >
                             <div
-                              className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all ${
-                                isSelected
-                                  ? 'bg-accent-cyan/20 text-accent-cyan'
-                                  : 'bg-muted text-muted-foreground'
+                              className={`flex flex-col justify-between p-4 h-full transition-colors ${
+                                isSelected ? 'bg-accent-cyan/5' : ''
                               }`}
                             >
-                              <Icon className="w-6 h-6" />
-                            </div>
-                            <h3 className="text-lg font-bold text-foreground mb-1">
-                              {t('cotizador.tipo_' + pt.id, pt.label)}
-                            </h3>
-                            <p className="text-sm text-muted-foreground mb-3">
-                              {t('cotizador.tipo_' + pt.id + '_desc', pt.description)}
-                            </p>
-                            <p className="text-xl font-black font-montserrat text-accent-cyan">
-                              {formatPrice(pt.basePrice)}
-                            </p>
-                          </div>
-                        </GlowCard>
-                      )
-                    })}
-                  </div>
-                  <div className="flex justify-center mt-10">
-                    <HudButton
-                      disabled={!selectedType}
-                      onClick={() => changeStep(1)}
-                      label={t('cotizador.siguiente')}
-                      icon={<ArrowRight className="w-4 h-4" />}
-                      iconPosition="right"
-                      size="lg"
-                    />
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 1 && (
-                <motion.div
-                  key="step1"
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                >
-                  <div className="text-center mb-10">
-                    <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight text-foreground mb-3">
-                      {t('cotizador.funcionalidades')}
-                    </h2>
-                    <p className="text-muted-foreground">{t('cotizador.funcionalidades_desc')}</p>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-8">
-                    {FEATURES.map((feat) => {
-                      const isSelected = selectedFeatures.has(feat.id)
-                      return (
-                        <GlowCard
-                          key={feat.id}
-                          onClick={() => toggleFeature(feat.id)}
-                          popular={isSelected}
-                        >
-                          <div
-                            className={`flex flex-col justify-between p-4 h-full transition-colors ${
-                              isSelected ? 'bg-accent-cyan/5' : ''
-                            }`}
-                          >
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="flex items-start gap-3 min-w-0">
-                                <div
-                                  className={`w-5 h-5 rounded-md border-2 shrink-0 mt-0.5 flex items-center justify-center transition-all ${
-                                    isSelected
-                                      ? 'border-accent-cyan bg-accent-cyan'
-                                      : 'border-border'
-                                  }`}
-                                >
-                                  {isSelected && <Check className="w-3.5 h-3.5 text-slate-900" />}
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-start gap-3 min-w-0">
+                                  <div
+                                    className={`w-5 h-5 rounded-md border-2 shrink-0 mt-0.5 flex items-center justify-center transition-all ${
+                                      isSelected
+                                        ? 'border-accent-cyan bg-accent-cyan'
+                                        : 'border-border'
+                                    }`}
+                                  >
+                                    {isSelected && <Check className="w-3.5 h-3.5 text-slate-900" />}
+                                  </div>
+                                  <div className="min-w-0">
+                                    <span className="text-sm font-semibold text-foreground flex items-center gap-1.5 flex-wrap">
+                                      {t('cotizador.feat_' + feat.id, feat.label)}
+                                      {feat.hasAsterisk && (
+                                        <span
+                                          className="text-accent-magenta font-bold text-sm leading-none"
+                                          title="Requiere evaluación o servicios de terceros"
+                                        >
+                                          *
+                                        </span>
+                                      )}
+                                    </span>
+                                    <p className="text-[11px] text-muted-foreground mt-1 leading-snug">
+                                      {t('cotizador.feat_' + feat.id + '_desc', feat.description)}
+                                    </p>
+                                  </div>
                                 </div>
-                                <div className="min-w-0">
-                                  <span className="text-sm font-semibold text-foreground flex items-center gap-1.5 flex-wrap">
-                                    {t('cotizador.feat_' + feat.id, feat.label)}
-                                    {feat.hasAsterisk && (
-                                      <span
-                                        className="text-accent-magenta font-bold text-sm leading-none"
-                                        title="Requiere evaluación o servicios de terceros"
-                                      >
-                                        *
-                                      </span>
-                                    )}
-                                  </span>
-                                  <p className="text-[11px] text-muted-foreground mt-1 leading-snug">
-                                    {t('cotizador.feat_' + feat.id + '_desc', feat.description)}
-                                  </p>
-                                </div>
+                                <span className="text-sm font-bold text-accent-cyan shrink-0 whitespace-nowrap ml-2">
+                                  + {formatPrice(feat.price)}
+                                </span>
                               </div>
-                              <span className="text-sm font-bold text-accent-cyan shrink-0 whitespace-nowrap ml-2">
-                                + {formatPrice(feat.price)}
-                              </span>
                             </div>
-                          </div>
-                        </GlowCard>
-                      )
-                    })}
-                  </div>
-
-                  {/* Banner de Transparencia y Respaldo Mutuo */}
-                  <div className="mb-10 p-4 rounded-2xl bg-muted/40 border border-border/80 flex items-start gap-3.5 shadow-sm">
-                    <div className="w-8 h-8 rounded-xl bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center shrink-0 mt-0.5">
-                      <ShieldCheck className="w-4 h-4 text-accent-cyan" />
+                          </GlowCard>
+                        )
+                      })}
                     </div>
-                    <div className="space-y-1">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-accent-cyan flex items-center gap-2">
-                        <span>
-                          {t('cotizador.clarificacion_titulo', 'Transparencia & Alcance Técnico')}
-                        </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan font-semibold lowercase">
-                          acuerdo previo
-                        </span>
-                      </h4>
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        {t(
-                          'cotizador.clarificacion_desc',
-                          'Los ítems marcados con asterisco (*) involucran plataformas o consumos de terceros (como API Keys de Inteligencia Artificial, licencias de correo corporativo, pasarelas de pago o registros de dominio). Nuestro valor cotizado cubre la arquitectura, diseño, desarrollo e integración completa. El alcance exacto y las cuentas de proveedores se validan en una breve reunión técnica inicial para total transparencia y seguridad de ambas partes.'
-                        )}
-                      </p>
-                    </div>
-                  </div>
 
-                  <div className="flex justify-between items-center">
-                    <HudButton
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => changeStep(0)}
-                      label={t('cotizador.atras')}
-                      icon={<ArrowLeft className="w-4 h-4" />}
-                      iconPosition="left"
-                    />
-                    <HudButton
-                      variant="primary"
-                      size="md"
-                      onClick={() => changeStep(2)}
-                      label={t('cotizador.siguiente')}
-                      icon={<ArrowRight className="w-4 h-4" />}
-                      iconPosition="right"
-                    />
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 2 && (
-                <motion.div
-                  key="step2"
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                >
-                  <div className="text-center mb-10">
-                    <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight text-foreground mb-3">
-                      {t('cotizador.diseno')}
-                    </h2>
-                    <p className="text-muted-foreground">{t('cotizador.diseno_desc')}</p>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-                    {DESIGN_TIERS.map((d) => {
-                      const isSelected = designTier === d.id
-                      return (
-                        <GlowCard
-                          key={d.id}
-                          onClick={() => setDesignTier(d.id)}
-                          popular={isSelected}
-                        >
-                          <div className={`p-6 ${isSelected ? 'bg-accent-cyan/5' : ''}`}>
-                            <h3 className="text-lg font-bold text-foreground mb-2">
-                              {t('cotizador.design_' + d.id, d.label)}
-                            </h3>
-                            <p className="text-sm text-muted-foreground mb-4">
-                              {t('cotizador.design_' + d.id + '_desc', d.description)}
-                            </p>
-                            <p className="text-xl font-black font-montserrat text-accent-cyan">
-                              {d.price === 0 ? t('cotizador.incluido') : formatPrice(d.price)}
-                            </p>
-                          </div>
-                        </GlowCard>
-                      )
-                    })}
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <HudButton
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => changeStep(1)}
-                      label={t('cotizador.atras')}
-                      icon={<ArrowLeft className="w-4 h-4" />}
-                      iconPosition="left"
-                    />
-                    <HudButton
-                      variant="primary"
-                      size="md"
-                      onClick={() => changeStep(3)}
-                      label={t('cotizador.ver_cotizacion')}
-                      icon={<ArrowRight className="w-4 h-4" />}
-                      iconPosition="right"
-                    />
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 3 && (
-                <motion.div
-                  key="step3"
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                >
-                  <div className="text-center mb-10">
-                    <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight text-foreground mb-3">
-                      {t('cotizador.tu_cotizacion')}
-                    </h2>
-                    <p className="text-muted-foreground">{t('cotizador.completa_datos')}</p>
-                  </div>
-
-                  {selectedPlan && (
-                    <div className="max-w-lg mx-auto mb-8 p-4 rounded-2xl bg-linear-to-r from-accent-cyan/10 to-accent-magenta/10 border border-accent-cyan/20 text-center">
-                      <p className="text-xs font-bold uppercase tracking-widest text-accent-cyan mb-1">
-                        {t('cotizador.plan_seleccionado')}
-                      </p>
-                      <p className="text-lg font-black text-foreground">
-                        {plans.find((p) => p.id === selectedPlan)?.name}
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                    <div className="lg:col-span-3 space-y-4">
-                      <div className="rounded-2xl border border-border bg-muted/50 p-6">
-                        <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
-                          {t('cotizador.resumen')}
-                        </h3>
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                              {t('cotizador.proyecto')}
-                            </span>
-                            <span className="text-sm font-bold text-foreground">
-                              {selectedTypeData ? t('cotizador.tipo_' + selectedTypeData.id) : ''}
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                              {t('cotizador.diseno_label')}
-                            </span>
-                            <span className="text-sm font-bold text-foreground">
-                              {t('cotizador.design_' + designTier)}
-                            </span>
-                          </div>
-                          {FEATURES.filter((f) => selectedFeatures.has(f.id)).map((f) => (
-                            <div key={f.id} className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground flex items-center gap-1">
-                                {t('cotizador.feat_' + f.id, f.label)}
-                                {f.hasAsterisk && (
-                                  <span className="text-accent-magenta font-bold text-xs">*</span>
-                                )}
-                              </span>
-                              <span className="text-sm font-bold text-accent-cyan">
-                                + {formatPrice(f.price)}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="mt-6 pt-4 border-t border-border flex justify-between items-center">
-                          <span className="text-lg font-black text-foreground">
-                            {t('cotizador.total_estimado')}
+                    {/* Banner de Transparencia y Respaldo Mutuo */}
+                    <div className="mb-10 p-4 rounded-2xl bg-muted/40 border border-border/80 flex items-start gap-3.5 shadow-sm">
+                      <div className="w-8 h-8 rounded-xl bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center shrink-0 mt-0.5">
+                        <ShieldCheck className="w-4 h-4 text-accent-cyan" />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-accent-cyan flex items-center gap-2">
+                          <span>
+                            {t('cotizador.clarificacion_titulo', 'Transparencia & Alcance Técnico')}
                           </span>
-                          <span className="text-3xl font-black font-montserrat text-foreground">
-                            {formatPrice(total)}
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan font-semibold lowercase">
+                            acuerdo previo
                           </span>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          {t('cotizador.nota_estimado')}
+                        </h4>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          {t(
+                            'cotizador.clarificacion_desc',
+                            'Los ítems marcados con asterisco (*) involucran plataformas o consumos de terceros (como API Keys de Inteligencia Artificial, licencias de correo corporativo, pasarelas de pago o registros de dominio). Nuestro valor cotizado cubre la arquitectura, diseño, desarrollo e integración completa. El alcance exacto y las cuentas de proveedores se validan en una breve reunión técnica inicial para total transparencia y seguridad de ambas partes.'
+                          )}
                         </p>
-
-                        <div className="mt-4 p-3.5 rounded-xl bg-accent-magenta/5 border border-accent-magenta/20 text-xs text-muted-foreground flex items-start gap-2.5">
-                          <Info className="w-4 h-4 shrink-0 text-accent-magenta mt-0.5" />
-                          <span className="leading-relaxed">
-                            {t(
-                              'cotizador.resumen_aviso_legal',
-                              '* Presupuesto base orientativo. Los ítems con (*) corresponden a desarrollos con integración a servicios externos (APIs, plataformas de cobro, casillas corporativas o dominios). El alcance técnico final y las credenciales se coordinan en una charla previa sin sorpresas.'
-                            )}
-                          </span>
-                        </div>
-
-                        <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs flex items-center gap-2">
-                          <Check className="w-3.5 h-3.5 shrink-0 text-emerald-700 dark:text-emerald-400" />
-                          <span>{t('cotizador.opcional_nota')}</span>
-                        </div>
                       </div>
                     </div>
 
-                    <div className="lg:col-span-2">
-                      <div className="rounded-2xl border border-border bg-muted/50 p-6">
-                        <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
-                          {t('cotizador.tus_datos')}
-                        </h3>
-                        <div className="space-y-4">
-                          <div>
-                            <input
-                              type="text"
-                              value={name}
-                              onChange={(e) => setName(e.target.value)}
-                              placeholder={t('cotizador.placeholder_nombre')}
-                              className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
-                            />
-                          </div>
-                          <div>
-                            <input
-                              type="tel"
-                              value={phone}
-                              onChange={(e) => setPhone(e.target.value)}
-                              placeholder={t(
-                                'cotizador.placeholder_telefono',
-                                'WhatsApp / Teléfono (ej: +54 9 11 ...)'
-                              )}
-                              className="w-full rounded-xl border border-emerald-500/30 bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-emerald-500"
-                            />
-                          </div>
-                          <div>
-                            <input
-                              type="email"
-                              value={email}
-                              onChange={(e) => setEmail(e.target.value)}
-                              placeholder={t('cotizador.placeholder_email')}
-                              className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
-                            />
-                          </div>
-                          <div>
-                            <input
-                              type="text"
-                              value={company}
-                              onChange={(e) => setCompany(e.target.value)}
-                              placeholder={t('cotizador.placeholder_empresa')}
-                              className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
-                            />
-                          </div>
+                    <div className="flex justify-between items-center">
+                      <HudButton
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => changeStep(0)}
+                        label={t('cotizador.atras')}
+                        icon={<ArrowLeft className="w-4 h-4" />}
+                        iconPosition="left"
+                      />
+                      <HudButton
+                        variant="primary"
+                        size="md"
+                        onClick={() => changeStep(2)}
+                        label={t('cotizador.siguiente')}
+                        icon={<ArrowRight className="w-4 h-4" />}
+                        iconPosition="right"
+                      />
+                    </div>
+                  </motion.div>
+                )}
 
-                          <HudButton
-                            onClick={handleSendQuote}
-                            disabled={sending || !name || !email}
-                            variant="primary"
-                            size="lg"
-                            className="w-full justify-center"
-                            label={
-                              sending ? t('cotizador.enviando') : t('cotizador.enviar_cotizacion')
-                            }
-                            icon={
-                              sending ? (
-                                <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                              ) : (
-                                <Send className="w-4 h-4" />
-                              )
-                            }
-                            iconPosition="right"
-                          />
-
-                          <a
-                            href={`https://wa.me/${WHAATSAPP_NUMBER}?text=${buildWhatsAppMessage()}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-3 w-full px-6 py-3.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold transition-all text-sm shadow-md"
+                {step === 2 && (
+                  <motion.div
+                    key="step2"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                  >
+                    <div className="text-center mb-10">
+                      <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight text-foreground mb-3">
+                        {t('cotizador.diseno')}
+                      </h2>
+                      <p className="text-muted-foreground">{t('cotizador.diseno_desc')}</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+                      {DESIGN_TIERS.map((d) => {
+                        const isSelected = designTier === d.id
+                        return (
+                          <GlowCard
+                            key={d.id}
+                            onClick={() => setDesignTier(d.id)}
+                            popular={isSelected}
                           >
-                            <MessageCircle className="w-4 h-4 fill-emerald-500/20 text-emerald-700 dark:text-emerald-400" />
-                            {t('cotizador.enviar_whatsapp')}
-                          </a>
+                            <div className={`p-6 ${isSelected ? 'bg-accent-cyan/5' : ''}`}>
+                              <h3 className="text-lg font-bold text-foreground mb-2">
+                                {t('cotizador.design_' + d.id, d.label)}
+                              </h3>
+                              <p className="text-sm text-muted-foreground mb-4">
+                                {t('cotizador.design_' + d.id + '_desc', d.description)}
+                              </p>
+                              <p className="text-xl font-black font-montserrat text-accent-cyan">
+                                {d.price === 0 ? t('cotizador.incluido') : formatPrice(d.price)}
+                              </p>
+                            </div>
+                          </GlowCard>
+                        )
+                      })}
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <HudButton
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => changeStep(1)}
+                        label={t('cotizador.atras')}
+                        icon={<ArrowLeft className="w-4 h-4" />}
+                        iconPosition="left"
+                      />
+                      <HudButton
+                        variant="primary"
+                        size="md"
+                        onClick={() => changeStep(3)}
+                        label={t('cotizador.ver_cotizacion')}
+                        icon={<ArrowRight className="w-4 h-4" />}
+                        iconPosition="right"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 3 && (
+                  <motion.div
+                    key="step3"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                  >
+                    <div className="text-center mb-10">
+                      <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight text-foreground mb-3">
+                        {t('cotizador.tu_cotizacion')}
+                      </h2>
+                      <p className="text-muted-foreground">{t('cotizador.completa_datos')}</p>
+                    </div>
+
+                    {selectedPlan && (
+                      <div className="max-w-lg mx-auto mb-8 p-4 rounded-2xl bg-linear-to-r from-accent-cyan/10 to-accent-magenta/10 border border-accent-cyan/20 text-center">
+                        <p className="text-xs font-bold uppercase tracking-widest text-accent-cyan mb-1">
+                          {t('cotizador.plan_seleccionado')}
+                        </p>
+                        <p className="text-lg font-black text-foreground">
+                          {plans.find((p) => p.id === selectedPlan)?.name}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                      <div className="lg:col-span-3 space-y-4">
+                        <div className="rounded-2xl border border-border bg-muted/50 p-6">
+                          <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
+                            {t('cotizador.resumen')}
+                          </h3>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-muted-foreground">
+                                {t('cotizador.proyecto')}
+                              </span>
+                              <span className="text-sm font-bold text-foreground">
+                                {selectedTypeData ? t('cotizador.tipo_' + selectedTypeData.id) : ''}
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-muted-foreground">
+                                {t('cotizador.diseno_label')}
+                              </span>
+                              <span className="text-sm font-bold text-foreground">
+                                {t('cotizador.design_' + designTier)}
+                              </span>
+                            </div>
+                            {FEATURES.filter((f) => selectedFeatures.has(f.id)).map((f) => (
+                              <div key={f.id} className="flex justify-between items-center">
+                                <span className="text-sm text-muted-foreground flex items-center gap-1">
+                                  {t('cotizador.feat_' + f.id, f.label)}
+                                  {f.hasAsterisk && (
+                                    <span className="text-accent-magenta font-bold text-xs">*</span>
+                                  )}
+                                </span>
+                                <span className="text-sm font-bold text-accent-cyan">
+                                  + {formatPrice(f.price)}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-6 pt-4 border-t border-border flex justify-between items-center">
+                            <span className="text-lg font-black text-foreground">
+                              {t('cotizador.total_estimado')}
+                            </span>
+                            <span className="text-3xl font-black font-montserrat text-foreground">
+                              {formatPrice(total)}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-2">
+                            {t('cotizador.nota_estimado')}
+                          </p>
+
+                          <div className="mt-4 p-3.5 rounded-xl bg-accent-magenta/5 border border-accent-magenta/20 text-xs text-muted-foreground flex items-start gap-2.5">
+                            <Info className="w-4 h-4 shrink-0 text-accent-magenta mt-0.5" />
+                            <span className="leading-relaxed">
+                              {t(
+                                'cotizador.resumen_aviso_legal',
+                                '* Presupuesto base orientativo. Los ítems con (*) corresponden a desarrollos con integración a servicios externos (APIs, plataformas de cobro, casillas corporativas o dominios). El alcance técnico final y las credenciales se coordinan en una charla previa sin sorpresas.'
+                              )}
+                            </span>
+                          </div>
+
+                          <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs flex items-center gap-2">
+                            <Check className="w-3.5 h-3.5 shrink-0 text-emerald-700 dark:text-emerald-400" />
+                            <span>{t('cotizador.opcional_nota')}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="lg:col-span-2">
+                        <div className="rounded-2xl border border-border bg-muted/50 p-6">
+                          <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
+                            {t('cotizador.tus_datos')}
+                          </h3>
+                          <div className="space-y-4">
+                            <div>
+                              <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder={t('cotizador.placeholder_nombre')}
+                                className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                type="tel"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                placeholder={t(
+                                  'cotizador.placeholder_telefono',
+                                  'WhatsApp / Teléfono (ej: +54 9 11 ...)'
+                                )}
+                                className="w-full rounded-xl border border-emerald-500/30 bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-emerald-500"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder={t('cotizador.placeholder_email')}
+                                className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                type="text"
+                                value={company}
+                                onChange={(e) => setCompany(e.target.value)}
+                                placeholder={t('cotizador.placeholder_empresa')}
+                                className="w-full rounded-xl border border-border bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-accent-cyan/60"
+                              />
+                            </div>
+
+                            <HudButton
+                              onClick={handleSendQuote}
+                              disabled={sending || !name || !email}
+                              variant="primary"
+                              size="lg"
+                              className="w-full justify-center"
+                              label={
+                                sending ? t('cotizador.enviando') : t('cotizador.enviar_cotizacion')
+                              }
+                              icon={
+                                sending ? (
+                                  <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                                ) : (
+                                  <Send className="w-4 h-4" />
+                                )
+                              }
+                              iconPosition="right"
+                            />
+
+                            <a
+                              href={`https://wa.me/${WHAATSAPP_NUMBER}?text=${buildWhatsAppMessage()}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-3 w-full px-6 py-3.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold transition-all text-sm shadow-md"
+                            >
+                              <MessageCircle className="w-4 h-4 fill-emerald-500/20 text-emerald-700 dark:text-emerald-400" />
+                              {t('cotizador.enviar_whatsapp')}
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex justify-start mt-8">
-                    <HudButton
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => changeStep(2)}
-                      label={t('cotizador.atras')}
-                      icon={<ArrowLeft className="w-4 h-4" />}
-                      iconPosition="left"
-                    />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </>
-        )}
+                    <div className="flex justify-start mt-8">
+                      <HudButton
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => changeStep(2)}
+                        label={t('cotizador.atras')}
+                        icon={<ArrowLeft className="w-4 h-4" />}
+                        iconPosition="left"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

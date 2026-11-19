@@ -175,7 +175,14 @@ npm run build
 
 ---
 
-## 7. Contact & Engineering Inquiries
+## 7. Mobile-First Ergonomic Architecture (`< 768px`)
+
+- **Native Bottom Navigation Dock (`MobileBottomNav`)**: Thumb-zone floating dock (`Inicio`, `Demos`, `Cotizar`, `Precios`, `Hablar`) with integrated conversion Action Sheet (direct WhatsApp + 24/7 AI Technical Assistant) and zero overlap over page CTAs.
+- **Dedicated Mobile Views (`< md`)**: Pragmatic, high-contrast views (`MobileLandingView` with interactive 3D planet `OptimusGlyphSphere`, `MobileQuoteView`, `MobilePricingView`, `MobilePortfolioView`, `MobileSolutionsView`, `MobileDemosView`) isolated from desktop (`>= md`) with strict `BigInt` monetary math and `overflow-x-clip`.
+
+---
+
+## 8. Contact & Engineering Inquiries
 
 **Exequiel Echevarría — Systems & Software Architect**  
 *ExeDevCentral · Digital Acceleration & Cloud Systems*
@@ -191,4 +198,4 @@ npm run build
   <sub>Engineered by <strong>Exequiel Echevarría</strong>. All rights reserved.</sub>
 </div>
 
-<!-- ExeDevCentral Audit & Quality Stamp: 2026-11-14 (Phase 10/10) -->
+<!-- ExeDevCentral Audit & Quality Stamp: 2026-11-19 (Mobile UX & Zero-Overlap Verification) -->

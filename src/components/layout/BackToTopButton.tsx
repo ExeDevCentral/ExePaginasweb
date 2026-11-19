@@ -49,7 +49,7 @@ export default function BackToTopButton() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 16 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
-          className="fixed bottom-22 right-4 sm:bottom-24 sm:right-6 z-40 select-none"
+          className="hidden md:block fixed bottom-22 right-4 sm:bottom-24 sm:right-6 z-40 select-none"
         >
           <button
             type="button"

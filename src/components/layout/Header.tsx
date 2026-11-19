@@ -110,23 +110,25 @@ const Header = () => {
           {/* Logo & Marca (Izquierda) */}
           <motion.a
             href="#home"
-            className="flex items-center gap-2.5 cursor-pointer select-none group shrink-0"
+            className="flex items-center gap-2 cursor-pointer select-none group min-w-0 shrink"
             whileTap={{ scale: 0.98 }}
             onClick={(e) => scrollToSection(e, 'home')}
           >
             <Logo
-              size={32}
-              className="h-8 w-auto shrink-0 transition-transform duration-300 group-hover:scale-105"
+              size={30}
+              className="h-7.5 w-auto shrink-0 transition-transform duration-300 group-hover:scale-105"
             />
-            <div className="flex items-baseline gap-1 select-none">
-              <span className="text-slate-900 dark:text-white text-[15px] font-black tracking-tight font-sans">
+            <div className="flex items-baseline gap-0.5 sm:gap-1 select-none truncate">
+              <span className="text-slate-900 dark:text-white text-xs sm:text-[15px] font-black tracking-tight font-sans">
                 EXE
               </span>
-              <span className="text-amber-600 dark:text-yellow-400 font-bold text-xs">{'//'}</span>
-              <span className="text-slate-900 dark:text-white text-[15px] font-extrabold tracking-tight font-sans">
+              <span className="text-amber-600 dark:text-yellow-400 font-bold text-[10px] sm:text-xs">
+                {'//'}
+              </span>
+              <span className="text-slate-900 dark:text-white text-xs sm:text-[15px] font-extrabold tracking-tight font-sans">
                 PAGINASWEB
               </span>
-              <span className="text-cyan-700 dark:text-cyan-400 font-bold text-[11px] tracking-normal">
+              <span className="hidden min-[400px]:inline text-cyan-700 dark:text-cyan-400 font-bold text-[10px] sm:text-[11px] tracking-normal">
                 .COM
               </span>
             </div>

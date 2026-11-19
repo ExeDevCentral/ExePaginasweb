@@ -6,6 +6,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
+import Link from 'next/link'
 import { useState, useMemo, useRef, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useTranslation } from 'react-i18next'
@@ -49,6 +50,7 @@ interface ProjectConfig {
   features: string[]
   statsBadge: string
   tagNumber: string
+  artwork: string
 }
 
 // --- CONSTANTES ESTÁTICAS (Optimizadas fuera del componente) ---
@@ -65,6 +67,7 @@ const PROJECTS: ProjectConfig[] = [
     badgeLabel: 'MÁS POPULAR',
     tagNumber: '01',
     statsBadge: '⭐ 5.0 · Turnos Online',
+    artwork: '/assets/demos/salon-bloom.jpg',
     features: ['Reserva en 3 clics', 'Testimonios reales', 'Catálogo de servicios'],
     accentColor: 'rgba(244, 63, 94, 0.35)',
     glowGradient: 'from-pink-500/20 via-rose-500/10 to-transparent',
@@ -87,6 +90,7 @@ const PROJECTS: ProjectConfig[] = [
     icon: Dumbbell,
     tagNumber: '02',
     statsBadge: '⚡ Planes & Clases Fit',
+    artwork: '/assets/demos/neofit-studio.jpg',
     features: ['Membresías QR', 'Agenda semanal', 'Alta conversión'],
     accentColor: 'rgba(16, 185, 129, 0.35)',
     glowGradient: 'from-emerald-500/20 via-teal-500/10 to-transparent',
@@ -109,6 +113,7 @@ const PROJECTS: ProjectConfig[] = [
     icon: Building2,
     tagNumber: '03',
     statsBadge: '🏢 Real Estate & Leads',
+    artwork: '/assets/demos/casa-aura.jpg',
     features: ['Filtros en vivo', 'Lead a WhatsApp', 'Galería HD'],
     accentColor: 'rgba(56, 189, 248, 0.35)',
     glowGradient: 'from-sky-500/20 via-blue-500/10 to-transparent',
@@ -131,6 +136,7 @@ const PROJECTS: ProjectConfig[] = [
     icon: Coffee,
     tagNumber: '04',
     statsBadge: '☕ Carrito & Checkout',
+    artwork: '/assets/demos/pixel-coffee.jpg',
     features: ['Carrito express', 'Sin comisiones', 'Portal 3D interactivo'],
     accentColor: 'rgba(245, 158, 11, 0.35)',
     glowGradient: 'from-amber-500/20 via-orange-500/10 to-transparent',
@@ -250,17 +256,21 @@ const TESTIMONIALS = [
   },
 ]
 
+type VisualStyleMode = 'neon' | 'wireframe' | 'noir'
+
 const TiltCard = ({
   project,
   category,
   title,
   summary,
+  visualMode,
   onOpen,
 }: {
   project: ProjectConfig
   category: string
   title: string
   summary: string
+  visualMode: VisualStyleMode
   onOpen: () => void
 }) => {
   const { t } = useTranslation()
@@ -300,8 +310,9 @@ const TiltCard = ({
 
   return (
     <motion.article
+      id={`demo-${project.id}`}
       ref={cardRef}
-      className={`group relative rounded-3xl border ${project.cardBorder} ${project.cardHoverBorder} bg-card/90 dark:bg-slate-900/80 p-6 sm:p-7 backdrop-blur-2xl overflow-hidden transition-all duration-500 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.5)] flex flex-col justify-between cursor-pointer`}
+      className={`scroll-mt-28 group relative rounded-3xl border ${project.cardBorder} ${project.cardHoverBorder} bg-card/90 dark:bg-slate-900/85 p-6 sm:p-7 backdrop-blur-2xl overflow-hidden transition-all duration-500 shadow-xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.5)] flex flex-col justify-between cursor-pointer`}
       style={{ perspective: 1000, transformStyle: 'preserve-3d' }}
       onPointerMove={handlePointerMove}
       onPointerEnter={handlePointerEnter}
@@ -361,9 +372,56 @@ const TiltCard = ({
           </div>
         </div>
 
-        {/* Dynamic 3D Three.js Canvas Viewport */}
-        <div className="relative my-2 rounded-2xl bg-gradient-to-b from-background/40 to-background/90 border border-border/60 overflow-hidden shadow-inner group-hover:border-accent-cyan/40 transition-colors duration-500">
-          <DemoCard3DScene type={project.id} isHovered={active} />
+        {/* Dynamic 3D Three.js Canvas Viewport + AI Artwork Backdrop */}
+        <div
+          className={`relative my-2 rounded-2xl bg-[#070913] border border-border/60 overflow-hidden shadow-inner group-hover:border-accent-cyan/50 transition-all duration-500 ${
+            visualMode === 'noir' ? 'grayscale contrast-125' : ''
+          }`}
+        >
+          <img
+            src={project.artwork}
+            alt={title}
+            loading="lazy"
+            className={`pointer-events-none absolute inset-0 w-full h-full object-cover transition-all duration-700 ${
+              visualMode === 'wireframe'
+                ? 'opacity-20 saturate-0 group-hover:opacity-35'
+                : 'opacity-55 group-hover:opacity-85 group-hover:scale-105'
+            }`}
+          />
+          {visualMode === 'wireframe' && (
+            <div
+              className="pointer-events-none absolute inset-0 opacity-35"
+              style={{
+                backgroundImage:
+                  'linear-gradient(to right, rgba(34,211,238,0.18) 1px, transparent 1px), linear-gradient(to bottom, rgba(34,211,238,0.18) 1px, transparent 1px)',
+                backgroundSize: '20px 20px',
+              }}
+            />
+          )}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#070913]/90 via-[#070913]/35 to-transparent" />
+          <div
+            className="pointer-events-none absolute inset-0 opacity-35 group-hover:opacity-70 transition-opacity duration-500"
+            style={{
+              background: `radial-gradient(240px circle at ${glowPos.x}% ${glowPos.y}%, ${project.accentColor}, transparent 75%)`,
+            }}
+          />
+          <div className="relative z-10">
+            <DemoCard3DScene
+              type={project.id}
+              isHovered={active}
+              wireframeMode={visualMode === 'wireframe'}
+              pointer={{ x: glowPos.x / 100, y: glowPos.y / 100 }}
+            />
+          </div>
+
+          {/* HUD Telemetry Corner */}
+          <div className="absolute top-2.5 right-3 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-mono uppercase tracking-widest text-cyan-300/90">
+            {visualMode === 'wireframe'
+              ? 'HOLO WIREFRAME'
+              : visualMode === 'noir'
+                ? 'NOIR 3D'
+                : 'WebGL 3D'}
+          </div>
 
           {/* Micro-badge flotante 3D */}
           <div className="absolute bottom-2.5 left-3 px-2.5 py-1 rounded-lg bg-background/85 backdrop-blur-md border border-border/70 text-[10px] font-bold text-foreground flex items-center gap-1.5 shadow-md">
@@ -394,13 +452,13 @@ const TiltCard = ({
         </div>
       </div>
 
-      {/* Action Button */}
-      <div className="pt-5 mt-4 border-t border-border/50 relative z-10">
+      {/* Action Button & Direct Quote Link */}
+      <div className="pt-5 mt-4 border-t border-border/50 relative z-10 flex items-center gap-2.5">
         <HudButton
           label={t('demozone.ver_subpagina')}
           variant="primary"
           size="md"
-          className="w-full justify-between"
+          className="flex-1 justify-between"
           onClick={(e) => {
             e.stopPropagation()
             onOpen()
@@ -408,6 +466,13 @@ const TiltCard = ({
           icon={<ArrowRight className="w-4 h-4" />}
           iconPosition="right"
         />
+        <Link
+          href={`/cotizador?demo=${project.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className="px-3.5 py-2.5 rounded-xl border border-white/15 bg-white/[0.04] hover:bg-white/10 text-xs font-semibold text-slate-200 hover:text-cyan-300 transition-colors shrink-0"
+        >
+          Cotizar
+        </Link>
       </div>
     </motion.article>
   )
@@ -421,6 +486,7 @@ const DemoZone = () => {
     category: string
     summary: string
   } | null>(null)
+  const [visualMode, setVisualMode] = useState<VisualStyleMode>('neon')
   const [showCoffeePortal, setShowCoffeePortal] = useState(false)
   const [glitchActive, setGlitchActive] = useState(false)
   const [cartItems, setCartItems] = useState<{ id: number; name: string; price: number }[]>([])
@@ -555,6 +621,30 @@ const DemoZone = () => {
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium">
             {t('demozone.section_desc')}
           </p>
+
+          {/* AI Creative Style Lab Switcher */}
+          <div className="mt-8 inline-flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-slate-900/80 border border-white/15 backdrop-blur-xl shadow-lg">
+            {(
+              [
+                { id: 'neon', label: 'Cyber Neon + IA' },
+                { id: 'wireframe', label: 'Holograma 3D' },
+                { id: 'noir', label: 'Editorial Noir' },
+              ] as const
+            ).map((mode) => (
+              <button
+                key={mode.id}
+                type="button"
+                onClick={() => setVisualMode(mode.id)}
+                className={`px-4 py-1.5 rounded-xl text-xs font-bold tracking-wide transition-all ${
+                  visualMode === mode.id
+                    ? 'bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-slate-950 shadow-md'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {mode.label}
+              </button>
+            ))}
+          </div>
         </motion.div>
 
         <motion.div
@@ -570,6 +660,7 @@ const DemoZone = () => {
               category={t(project.categoryKey)}
               title={project.title}
               summary={t(project.summaryKey)}
+              visualMode={visualMode}
               onOpen={() =>
                 openProject({
                   title: project.title,

@@ -332,11 +332,25 @@ function buildClientFallback(text: string, visitorName?: string): string {
   return `${namePrefix}Gracias por tu consulta. Diseñamos páginas web de alta conversión y sistemas cloud a medida con automatización de procesos n8n. Podés coordinar una llamada o chatear directo por WhatsApp con Exequiel. Tu ticket de seguimiento es [${ticket}].`
 }
 
-export const AIChatWidget: React.FC = () => {
+export interface AIChatWidgetProps {
+  initialOpenChat?: boolean
+}
+
+export const AIChatWidget: React.FC<AIChatWidgetProps> = ({ initialOpenChat = false }) => {
   const { i18n } = useTranslation()
-  const [isOpen, setIsOpen] = useState(false)
-  const [hubView, setHubView] = useState<'menu' | 'chat'>('menu')
-  const [hasUnread, setHasUnread] = useState(true)
+  const [isOpen, setIsOpen] = useState(initialOpenChat)
+  const [hubView, setHubView] = useState<'menu' | 'chat'>(initialOpenChat ? 'chat' : 'menu')
+  const [hasUnread, setHasUnread] = useState(!initialOpenChat)
+
+  useEffect(() => {
+    const handleExternalOpen = () => {
+      setIsOpen(true)
+      setHubView('chat')
+      setHasUnread(false)
+    }
+    window.addEventListener('exe:open-ai-chat', handleExternalOpen)
+    return () => window.removeEventListener('exe:open-ai-chat', handleExternalOpen)
+  }, [])
   const [soundEnabled, setSoundEnabled] = useState(true)
   const [input, setInput] = useState('')
   const [currentTicket, setCurrentTicket] = useState<string | null>(null)
@@ -542,9 +556,9 @@ export const AIChatWidget: React.FC = () => {
   return (
     <>
       {/* ========================================================
-          1. BOTÓN FLOTANTE UNIFICADO (DOCK EXPANDIBLE CIUDAD DE SERVIDORES)
+          1. BOTÓN FLOTANTE UNIFICADO (SOLO DESKTOP >= md; en móvil vive en MobileBottomNav)
          ======================================================== */}
-      <div className="fixed bottom-6 right-5 sm:bottom-7 sm:right-7 z-50 select-none">
+      <div className="hidden md:block fixed bottom-6 right-5 sm:bottom-7 sm:right-7 z-50 select-none">
         <motion.button
           type="button"
           onClick={() => {

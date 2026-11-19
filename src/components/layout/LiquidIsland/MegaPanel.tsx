@@ -78,6 +78,25 @@ export default function MegaPanel({
   const [shortcutKey, setShortcutKey] = useState('Ctrl K')
   const [isAvailableNow, setIsAvailableNow] = useState(true)
 
+  // Random micro-animations & cursor sparks per hovered card
+  type MicroSpark = {
+    id: number
+    cardId: string
+    x: number
+    y: number
+    dx: number
+    dy: number
+    size: number
+    kind: 'dot' | 'ring' | 'diamond' | 'cross'
+    color: string
+  }
+  const [activeFx, setActiveFx] = useState<{ cardId: string; mode: number; key: number } | null>(
+    null
+  )
+  const [sparks, setSparks] = useState<MicroSpark[]>([])
+  const sparkIdRef = useRef(0)
+  const lastSparkTimeRef = useRef(0)
+
   const localizedPaletteItems: PaletteItem[] = useMemo(
     () => [
       {
@@ -391,13 +410,140 @@ export default function MegaPanel({
     mobileAnchorRef,
   ])
 
-  // Mouse spotlight dinámico (estilo Linear / Vercel con variables --mx, --my)
-  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  // Mouse spotlight dinámico + micro-animaciones random donde posa el mouse
+  const spawnSparks = (cardId: string, x: number, y: number, count: number) => {
+    if (reduceMotion) return
+    const palette =
+      cardId === 'tienda'
+        ? ['#e879f9', '#38bdf8', '#f472b6', '#a78bfa']
+        : ['#34d399', '#22d3ee', '#10b981', '#a3e635']
+    const kinds: MicroSpark['kind'][] = ['dot', 'ring', 'diamond', 'cross']
+    const created: MicroSpark[] = []
+    for (let i = 0; i < count; i++) {
+      const id = ++sparkIdRef.current
+      const angle = Math.random() * Math.PI * 2
+      const dist = 14 + Math.random() * 26
+      created.push({
+        id,
+        cardId,
+        x,
+        y,
+        dx: Math.cos(angle) * dist,
+        dy: Math.sin(angle) * dist - 8,
+        size: 4 + Math.floor(Math.random() * 5),
+        kind: kinds[Math.floor(Math.random() * kinds.length)]!,
+        color: palette[Math.floor(Math.random() * palette.length)]!,
+      })
+    }
+    setSparks((prev) => [...prev.slice(-14), ...created])
+    window.setTimeout(() => {
+      const ids = new Set(created.map((c) => c.id))
+      setSparks((prev) => prev.filter((s) => !ids.has(s.id)))
+    }, 620)
+  }
+
+  const handleCardEnter = (
+    cardId: string,
+    globalIdx: number,
+    e: React.MouseEvent<HTMLAnchorElement>
+  ) => {
+    setSelectedIndex(globalIdx)
+    if (reduceMotion) return
     const rect = e.currentTarget.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
     e.currentTarget.style.setProperty('--mx', `${x}px`)
     e.currentTarget.style.setProperty('--my', `${y}px`)
+    const mode = Math.floor(Math.random() * 5)
+    setActiveFx({ cardId, mode, key: Date.now() })
+    spawnSparks(cardId, x, y, 4)
+  }
+
+  const handleMouseMove = (cardId: string, e: React.MouseEvent<HTMLAnchorElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    e.currentTarget.style.setProperty('--mx', `${x}px`)
+    e.currentTarget.style.setProperty('--my', `${y}px`)
+    const now = performance.now()
+    if (!reduceMotion && now - lastSparkTimeRef.current > 85) {
+      lastSparkTimeRef.current = now
+      spawnSparks(cardId, x, y, 1)
+    }
+  }
+
+  const renderCardMicroFx = (cardId: string, accent: 'emerald' | 'fuchsia') => {
+    const isCardActive = activeFx?.cardId === cardId
+    const cardSparks = sparks.filter((s) => s.cardId === cardId)
+    const glowColor =
+      accent === 'fuchsia' ? 'rgba(232, 121, 249, 0.16)' : 'rgba(16, 185, 129, 0.16)'
+
+    return (
+      <>
+        {/* Cursor-tracking radial spotlight */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          style={{
+            background: `radial-gradient(190px circle at var(--mx, 50%) var(--my, 50%), ${glowColor}, transparent 72%)`,
+          }}
+        />
+
+        {/* Random per-hover sweep / scanline effect */}
+        {!reduceMotion && isCardActive && activeFx.mode % 2 === 0 && (
+          <motion.div
+            key={`scan-${activeFx.key}`}
+            aria-hidden="true"
+            initial={{ top: '-10%', opacity: 0.7 }}
+            animate={{ top: '110%', opacity: 0 }}
+            transition={{ duration: 0.55, ease: 'easeOut' }}
+            className={`pointer-events-none absolute inset-x-2 h-px ${
+              accent === 'fuchsia'
+                ? 'bg-gradient-to-r from-transparent via-fuchsia-400/80 to-transparent'
+                : 'bg-gradient-to-r from-transparent via-emerald-400/80 to-transparent'
+            }`}
+          />
+        )}
+        {!reduceMotion && isCardActive && activeFx.mode % 2 === 1 && (
+          <motion.div
+            key={`sheen-${activeFx.key}`}
+            aria-hidden="true"
+            initial={{ x: '-120%', opacity: 0.5 }}
+            animate={{ x: '220%', opacity: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="pointer-events-none absolute inset-y-0 w-1/2 skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/12 to-transparent"
+          />
+        )}
+
+        {/* Random cursor sparks & ripples */}
+        {cardSparks.map((s) => (
+          <motion.span
+            key={s.id}
+            aria-hidden="true"
+            initial={{ x: s.x, y: s.y, scale: 0.5, opacity: 0.95 }}
+            animate={{
+              x: s.x + s.dx,
+              y: s.y + s.dy,
+              scale: s.kind === 'ring' ? 2.1 : 0.2,
+              opacity: 0,
+            }}
+            transition={{ duration: 0.55, ease: 'easeOut' }}
+            className="pointer-events-none absolute top-0 left-0 z-20"
+            style={{
+              width: s.size,
+              height: s.size,
+              marginLeft: -s.size / 2,
+              marginTop: -s.size / 2,
+              borderRadius: s.kind === 'dot' || s.kind === 'ring' ? '9999px' : '1px',
+              backgroundColor: s.kind === 'ring' ? 'transparent' : s.color,
+              border: s.kind === 'ring' ? `1.5px solid ${s.color}` : 'none',
+              transform: s.kind === 'diamond' ? 'rotate(45deg)' : undefined,
+              boxShadow: `0 0 8px ${s.color}`,
+            }}
+          />
+        ))}
+      </>
+    )
   }
 
   // Separación por categorías en vista normal
@@ -550,21 +696,36 @@ export default function MegaPanel({
                             href={item.href}
                             data-custom-scroll="true"
                             onClick={(e) => navigateToTarget(item.href, e)}
-                            onMouseEnter={() => setSelectedIndex(globalIdx)}
-                            onMouseMove={handleMouseMove}
+                            onMouseEnter={(e) => handleCardEnter(item.id, globalIdx, e)}
+                            onMouseMove={(e) => handleMouseMove(item.id, e)}
                             style={{
                               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
                             }}
-                            className={`group relative flex flex-col justify-between p-3 rounded-xl border transition-all duration-150 ${
+                            className={`group relative overflow-hidden flex flex-col justify-between p-3 rounded-xl border transition-all duration-150 ${
                               isSelected
                                 ? 'border-emerald-500/60 dark:border-emerald-500/60 bg-emerald-500/5 dark:bg-emerald-500/7 -translate-y-0.5'
                                 : 'border-black/7 dark:border-white/8 bg-black/2 dark:bg-[#11161D] hover:border-black/15 dark:hover:border-white/18 hover:-translate-y-0.5'
                             }`}
                           >
-                            <div>
+                            {renderCardMicroFx(item.id, 'emerald')}
+                            <div className="relative z-10">
                               <div className="flex items-center justify-between gap-2 mb-1.5">
                                 <div className="flex items-center gap-2">
-                                  <div
+                                  <motion.div
+                                    animate={
+                                      !reduceMotion && activeFx?.cardId === item.id
+                                        ? {
+                                            rotate:
+                                              activeFx.mode === 1
+                                                ? [0, -12, 10, 0]
+                                                : activeFx.mode === 3
+                                                  ? [0, 360]
+                                                  : [0, 6, -4, 0],
+                                            scale: [1, 1.18, 1],
+                                          }
+                                        : { rotate: 0, scale: 1 }
+                                    }
+                                    transition={{ duration: 0.42, ease: 'easeOut' }}
                                     className={`w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
                                       isSelected
                                         ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
@@ -572,7 +733,7 @@ export default function MegaPanel({
                                     }`}
                                   >
                                     <Icon size={15} strokeWidth={1.8} />
-                                  </div>
+                                  </motion.div>
                                   <h4 className="font-semibold text-xs sm:text-[13px] text-slate-900 dark:text-[#E6EAF0] tracking-[-0.01em] leading-tight">
                                     {item.label}
                                   </h4>
@@ -642,13 +803,17 @@ export default function MegaPanel({
                             href={item.href}
                             data-custom-scroll="true"
                             onClick={(e) => navigateToTarget(item.href, e)}
-                            onMouseEnter={() => setSelectedIndex(globalIdx)}
-                            onMouseMove={handleMouseMove}
+                            onMouseEnter={(e) => handleCardEnter(item.id, globalIdx, e)}
+                            onMouseMove={(e) => handleMouseMove(item.id, e)}
                             style={{
                               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
                             }}
                             className={`group relative flex flex-col justify-between p-3.5 rounded-xl border transition-all duration-200 overflow-hidden clip-path-[polygon(0_10px,10px_0,calc(100%_-_10px)_0,100%_10px,100%_calc(100%_-_10px),calc(100%_-_10px)_100%,10px_100%,0_calc(100%_-_10px))] ${borderAndBgClass}`}
                           >
+                            {renderCardMicroFx(
+                              item.id,
+                              item.id === 'tienda' ? 'fuchsia' : 'emerald'
+                            )}
                             <div
                               className={`absolute left-0 top-3 bottom-3 w-px transition-all duration-200 ${
                                 item.id === 'tienda'

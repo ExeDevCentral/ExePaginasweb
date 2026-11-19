@@ -16,6 +16,17 @@ const FullAIChatWidget = dynamic(() => import('./AIChatWidget'), {
 
 export default function DeferredChatWidget() {
   const [shouldLoad, setShouldLoad] = useState(false)
+  const [openOnLoad, setOpenOnLoad] = useState(false)
+
+  // Escucha solicitudes desde MobileBottomNav para abrir el chat IA sin mostrar FAB superpuesto en móvil
+  useEffect(() => {
+    const handleOpenRequest = () => {
+      setOpenOnLoad(true)
+      setShouldLoad(true)
+    }
+    window.addEventListener('exe:open-ai-chat', handleOpenRequest)
+    return () => window.removeEventListener('exe:open-ai-chat', handleOpenRequest)
+  }, [])
 
   // En celulares no forzamos la carga del motor de IA hasta que el usuario interactúe
   // Esto elimina 3 tareas largas de ~75ms y 150 KiB de descarga en redes móviles
@@ -31,11 +42,11 @@ export default function DeferredChatWidget() {
   }, [])
 
   if (shouldLoad) {
-    return <FullAIChatWidget />
+    return <FullAIChatWidget initialOpenChat={openOnLoad} />
   }
 
   return (
-    <div className="fixed bottom-6 right-5 sm:bottom-7 sm:right-7 z-50 select-none">
+    <div className="hidden md:block fixed bottom-6 right-5 sm:bottom-7 sm:right-7 z-50 select-none">
       <button
         type="button"
         onMouseEnter={() => setShouldLoad(true)}

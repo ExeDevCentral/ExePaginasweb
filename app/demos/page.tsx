@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import type { Metadata } from 'next'
 import SiteHeader from '@/components/layout/SiteHeader'
 import Footer from '@/components/layout/Footer'
+import MobileDemosView from '@/components/mobile/MobileDemosView'
 
 export const metadata: Metadata = {
   title: 'Demos Interactivas',
@@ -27,10 +28,15 @@ export default function DemosPage() {
   return (
     <>
       <SiteHeader />
-      <main className="pt-16">
-        <DemoZone />
+      <main>
+        <div className="block md:hidden">
+          <MobileDemosView />
+        </div>
+        <div className="hidden md:block pt-16">
+          <DemoZone />
+          <Footer />
+        </div>
       </main>
-      <Footer />
     </>
   )
 }

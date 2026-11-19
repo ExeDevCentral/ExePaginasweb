@@ -41,7 +41,8 @@ interface ServicePlanBase {
   code: string
   recommended: boolean
   isLinuxSpecial?: boolean
-  price: string
+  priceUSD: string
+  priceARS: string
   whatsappText: string
   checks: {
     sslEdge: string
@@ -59,8 +60,9 @@ const SERVICE_PLANS: readonly ServicePlanBase[] = [
     id: 'landing-express',
     code: 'web-express-72h',
     recommended: false,
-    price: 'USD 180',
-    whatsappText: 'Hola Exequiel, quiero activar Landing Express (72 hs · USD 180).',
+    priceUSD: 'u$s 380',
+    priceARS: '$450.000',
+    whatsappText: 'Hola Exequiel, quiero activar Landing Express (72 hs · u$s 380 / $450.000).',
     checks: {
       sslEdge: 'HTTPS TLS 1.3',
       seoSchema: 'Google Maps + Meta',
@@ -75,8 +77,10 @@ const SERVICE_PLANS: readonly ServicePlanBase[] = [
     id: 'tienda-turnos',
     code: 'biz-commerce-pro',
     recommended: true,
-    price: 'USD 420',
-    whatsappText: 'Hola Exequiel, quiero activar el plan recomendado Catálogo / Turnos (USD 420).',
+    priceUSD: 'u$s 850',
+    priceARS: '$750.000',
+    whatsappText:
+      'Hola Exequiel, quiero activar el plan recomendado Catálogo / Turnos (u$s 850 / $750.000).',
     checks: {
       sslEdge: 'HTTPS + Edge CDN',
       seoSchema: 'Schema.org JSON-LD',
@@ -91,7 +95,8 @@ const SERVICE_PLANS: readonly ServicePlanBase[] = [
     id: 'saas-medida',
     code: 'enterprise-saas',
     recommended: false,
-    price: 'A cotizar',
+    priceUSD: 'Desde u$s 1.600',
+    priceARS: 'Desde $1.800.000',
     whatsappText: 'Hola Exequiel, quiero cotizar un Sistema SaaS a medida.',
     checks: {
       sslEdge: 'Multi-Región + WAF',
@@ -107,8 +112,9 @@ const SERVICE_PLANS: readonly ServicePlanBase[] = [
     id: 'automatizacion-ia',
     code: 'ai-ops-engine',
     recommended: false,
-    price: 'USD 290',
-    whatsappText: 'Hola Exequiel, quiero activar Automatización IA / Bots para mi negocio.',
+    priceUSD: 'u$s 590',
+    priceARS: '$680.000',
+    whatsappText: 'Hola Exequiel, quiero activar Automatización IA / Bots (u$s 590 / $680.000).',
     checks: {
       sslEdge: 'API Privada',
       seoSchema: 'N/A (Backend)',
@@ -124,9 +130,10 @@ const SERVICE_PLANS: readonly ServicePlanBase[] = [
     code: 'linux-kiosk-pos',
     recommended: false,
     isLinuxSpecial: true,
-    price: 'USD 160',
+    priceUSD: 'u$s 450',
+    priceARS: '$520.000',
     whatsappText:
-      'Hola Exequiel, quiero probar/activar Terminales Linux POS (4.5s boot · $0 licencias).',
+      'Hola Exequiel, quiero probar/activar Terminales Linux POS (4.5s boot · u$s 450 / $520.000).',
     checks: {
       sslEdge: 'LAN + Offline-First',
       seoSchema: 'Boot 4.5s · 480MB',
@@ -187,6 +194,7 @@ function ExeBrandLogo({ className }: { className?: string }) {
 
 export default function V2CloudUtilityApp() {
   const [lang, setLang] = useState<V2Lang>('es')
+  const [currency, setCurrency] = useState<'USD' | 'ARS'>('USD')
   const [selectedId, setSelectedId] = useState<string>('tienda-turnos')
   const [cellState, setCellState] = useState<CellState>('checking')
   const [deskStatus, setDeskStatus] = useState<ArtDeskStatus>(() => getArgentinaDeskStatus())
@@ -242,6 +250,8 @@ export default function V2CloudUtilityApp() {
   const copy = V2_COPY[lang]
   const selectedPlan = SERVICE_PLANS.find((col) => col.id === selectedId) ?? SERVICE_PLANS[1]!
   const selectedPlanCopy = copy.plans[selectedPlan.id] ?? copy.plans['tienda-turnos']!
+  const formatPlanPrice = (plan: ServicePlanBase) =>
+    currency === 'ARS' ? plan.priceARS : plan.priceUSD
 
   const whatsappUrl = (text: string) =>
     `https://wa.me/5493416874786?text=${encodeURIComponent(text)}`
@@ -249,7 +259,7 @@ export default function V2CloudUtilityApp() {
   const handleCopyBrief = async () => {
     const summary = [
       `ExePaginasWeb — Technical Brief (${selectedPlan.code})`,
-      `Plan: ${selectedPlanCopy.name} | ${selectedPlan.price} | ${selectedPlanCopy.deliveryTime}`,
+      `Plan: ${selectedPlanCopy.name} | ${formatPlanPrice(selectedPlan)} | ${selectedPlanCopy.deliveryTime}`,
       `Included: ${selectedPlanCopy.highlights.join(' · ')}`,
       `Desk Status: ${deskStatus.isOpen ? 'OPEN' : 'BUSINESS DAYS ONLY (Mon-Fri 08:00-18:00 ART)'} (${deskStatus.artTimeFormatted})`,
       `Contact: https://exepaginasweb.com | exemetal@hotmail.com`,
@@ -304,8 +314,37 @@ export default function V2CloudUtilityApp() {
             </span>
           </div>
 
-          {/* Derecha: Selector de 7 Idiomas + Cambiar versión + CTA */}
+          {/* Derecha: Selector Moneda USD/ARS + Selector de 7 Idiomas + Cambiar versión + CTA */}
           <div className="flex items-center gap-2 sm:gap-2.5">
+            <div
+              role="group"
+              aria-label="Seleccionar moneda"
+              className="inline-flex h-8 items-center rounded-md border border-[#e2e8f0] bg-[#f8fafc] p-0.5 text-[11px] font-bold"
+            >
+              <button
+                type="button"
+                onClick={() => setCurrency('USD')}
+                className={`h-full cursor-pointer rounded px-2 transition-colors ${
+                  currency === 'USD'
+                    ? 'bg-[#0f172a] text-white'
+                    : 'text-[#64748b] hover:text-[#0f172a]'
+                }`}
+              >
+                USD
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrency('ARS')}
+                className={`h-full cursor-pointer rounded px-2 transition-colors ${
+                  currency === 'ARS'
+                    ? 'bg-[#047857] text-white'
+                    : 'text-[#64748b] hover:text-[#0f172a]'
+                }`}
+              >
+                ARS
+              </button>
+            </div>
+
             <label className="relative inline-flex items-center">
               <Globe
                 className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-[#047857]"
@@ -416,7 +455,7 @@ export default function V2CloudUtilityApp() {
             >
               <span>
                 {deskStatus.isOpen
-                  ? `${copy.btnRequestPrefix} ${selectedPlanCopy.name} (${selectedPlan.price})`
+                  ? `${copy.btnRequestPrefix} ${selectedPlanCopy.name} (${formatPlanPrice(selectedPlan)})`
                   : `${copy.btnReserveSlot} · ${selectedPlanCopy.name}`}
               </span>
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -507,7 +546,7 @@ export default function V2CloudUtilityApp() {
                           isLinux ? 'text-white' : 'text-[#0f172a]'
                         }`}
                       >
-                        {plan.price}
+                        {formatPlanPrice(plan)}
                       </span>
                       <span
                         className={`inline-flex items-center gap-1 text-[11px] font-medium ${
@@ -787,7 +826,7 @@ export default function V2CloudUtilityApp() {
                             isLinux ? 'text-[#92400e]' : 'text-[#0f172a]'
                           }`}
                         >
-                          {col.price}
+                          {formatPlanPrice(col)}
                         </div>
                         <div className="text-[11px] font-medium text-[#475569]">
                           {colCopy.deliveryTime}

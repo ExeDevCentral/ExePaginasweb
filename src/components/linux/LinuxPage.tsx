@@ -395,12 +395,12 @@ export default function LinuxPage() {
   }, [isDockVisible, jumpToStation])
 
   // Cálculo conservador y transparente de ahorro de CAPEX/OPEX frente a recambio de hardware + licencias
-  const newPcCostUSD = 620 // PC comercial nueva + licencia Pro + setup
-  const linuxMigrationUSD = pcCount === 1 ? 320 : 320 + (pcCount - 1) * 140
+  const newPcCostUSD = 850 // PC comercial nueva + licencia Pro + setup
+  const linuxMigrationUSD = pcCount === 1 ? 450 : 450 + (pcCount - 1) * 190
   const savedUSD = Math.max(0, pcCount * newPcCostUSD - linuxMigrationUSD)
 
-  const newPcCostARS = 720000
-  const linuxMigrationARS = pcCount === 1 ? 350000 : 350000 + (pcCount - 1) * 155000
+  const newPcCostARS = 950000
+  const linuxMigrationARS = pcCount === 1 ? 520000 : 520000 + (pcCount - 1) * 210000
   const savedARS = Math.max(0, pcCount * newPcCostARS - linuxMigrationARS)
 
   const formatARS = (val: number) => '$' + val.toLocaleString('es-AR')
@@ -981,7 +981,7 @@ export default function LinuxPage() {
                     transition={{ duration: 0.18 }}
                     className="text-2xl font-mono font-extrabold text-slate-900 dark:text-white my-3"
                   >
-                    {currency === 'ARS' ? '$350.000' : 'u$s 320'}
+                    {currency === 'ARS' ? '$520.000' : 'u$s 450'}
                   </motion.div>
                   <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 mb-6 font-mono">
                     <li className="flex items-center gap-2">
@@ -1032,7 +1032,7 @@ export default function LinuxPage() {
                     transition={{ duration: 0.18 }}
                     className="text-2xl font-mono font-extrabold text-emerald-600 dark:text-emerald-400 my-3"
                   >
-                    {currency === 'ARS' ? '$680.000' : 'u$s 620'}
+                    {currency === 'ARS' ? '$980.000' : 'u$s 890'}
                   </motion.div>
                   <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 mb-6 font-mono">
                     <li className="flex items-center gap-2">
@@ -1083,7 +1083,7 @@ export default function LinuxPage() {
                     transition={{ duration: 0.18 }}
                     className="text-2xl font-mono font-extrabold text-slate-900 dark:text-white my-3"
                   >
-                    {currency === 'ARS' ? '$32.000' : 'u$s 28'}
+                    {currency === 'ARS' ? '$55.000' : 'u$s 48'}
                     <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
                       {' '}
                       {t('linux_page.plan_3_period', '/mes')}

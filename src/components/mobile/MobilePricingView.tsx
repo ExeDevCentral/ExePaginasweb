@@ -62,10 +62,10 @@ const PLANS: readonly MobilePlan[] = [
   {
     id: 'linux',
     name: 'Terminal Linux POS',
-    setupARS: '$350.000',
-    setupUSD: 'u$s 320',
-    monthlyARS: '$18.000/mes',
-    monthlyUSD: 'u$s 30/mes',
+    setupARS: '$520.000',
+    setupUSD: 'u$s 450',
+    monthlyARS: '$55.000/mes',
+    monthlyUSD: 'u$s 48/mes',
     features: [
       'Recupera PCs de caja (arranque en 4.5s)',
       'Modo quiosco blindado · $0 en licencias',

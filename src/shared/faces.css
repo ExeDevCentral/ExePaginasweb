@@ -1,0 +1,123 @@
+/**
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
+ * Scoped CSS tokens isolating Classic vs V2 (AWS Utility) faces.
+ */
+
+[data-face='classic'] {
+  --face-bg: transparent;
+  --face-fg: #f8fafc;
+  --face-accent: #10b981;
+  --face-border: rgba(255, 255, 255, 0.12);
+}
+
+[data-face='v2'] {
+  position: relative;
+  z-index: 10;
+  --face-bg: #f6f7f9;
+  --face-surface: #ffffff;
+  --face-slate: #0f172a;
+  --face-slate-soft: #1e293b;
+  --face-fg: #0f172a;
+  --face-muted: #475569;
+  --face-border: #e2e8f0;
+  --face-brand: #047857;
+  --face-brand-hover: #065f46;
+  --face-brand-soft: #ecfdf5;
+  --face-brand-ring: rgba(4, 120, 87, 0.2);
+  --face-warn: #b45309;
+  background-color: var(--face-bg);
+  color: var(--face-fg);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
+
+@keyframes v2FadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes v2CheckPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+[data-face='v2'] .v2-enter {
+  animation: v2FadeSlideUp 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+[data-face='v2'] .v2-check-pop {
+  animation: v2CheckPop 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+[data-face='gateway'] {
+  position: relative;
+  z-index: 10;
+  background-color: #050811;
+  color: #f8fafc;
+}
+
+@keyframes gwAuroraDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.42;
+  }
+  50% {
+    transform: translate3d(24px, -18px, 0) scale(1.06);
+    opacity: 0.62;
+  }
+}
+
+@keyframes gwBorderSweep {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+[data-face='gateway'] .gw-aurora {
+  animation: gwAuroraDrift 9s ease-in-out infinite;
+}
+
+[data-face='gateway'] .gw-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 25%, #000 35%, transparent 100%);
+}
+
+[data-face='gateway'] .gw-shimmer-border {
+  background-size: 200% 200%;
+  animation: gwBorderSweep 6s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-face='gateway'] *,
+  [data-face='v2'] * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

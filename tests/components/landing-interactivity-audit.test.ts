@@ -10,8 +10,11 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 describe('Landing Page — Deep Modules, Viewport Seam & Interactivity Audit', () => {
-  it('app/page.tsx debe evitar montar simultáneamente MobileLandingView y DesktopLandingView tras hidratar el viewport', () => {
-    const pagePath = path.resolve(process.cwd(), 'app/page.tsx')
+  it('ClassicFaceView (o app/page.tsx) debe evitar montar simultáneamente MobileLandingView y DesktopLandingView tras hidratar el viewport', () => {
+    const classicPath = path.resolve(process.cwd(), 'src/faces/classic/ClassicFaceView.tsx')
+    const pagePath = fs.existsSync(classicPath)
+      ? classicPath
+      : path.resolve(process.cwd(), 'app/page.tsx')
     const content = fs.readFileSync(pagePath, 'utf-8')
 
     // Verifica que existe detección de viewport por matchMedia para desmontar el árbol inactivo

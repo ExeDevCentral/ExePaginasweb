@@ -218,7 +218,6 @@ export default function GatewayScreen() {
             onMouseEnter={() => handlePrefetch('classic')}
             onFocus={() => handlePrefetch('classic')}
             disabled={navigatingTo !== null}
-            aria-label="Entrar a la versión Classic: Estudio Web Interactivo completo"
             className="group relative flex min-h-[310px] cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-sky-400/20 bg-[#0b1120]/85 p-6 text-left backdrop-blur-md transition-[transform,opacity,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-sky-400/60 hover:shadow-[0_20px_50px_-15px_rgba(56,189,248,0.28)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 disabled:opacity-60 sm:p-8"
           >
             <div>
@@ -282,7 +281,6 @@ export default function GatewayScreen() {
             onMouseEnter={() => handlePrefetch('v2')}
             onFocus={() => handlePrefetch('v2')}
             disabled={navigatingTo !== null}
-            aria-label="Entrar a la versión V2: Cloud Utility Directo y Empresarial"
             className="group relative flex min-h-[310px] cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-[#ffffff] via-[#f8fafc] to-[#ecfdf5]/70 p-6 text-left text-[#0f172a] transition-[transform,opacity,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[#047857] hover:shadow-[0_20px_50px_-15px_rgba(16,185,129,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#047857] disabled:opacity-60 sm:p-8"
           >
             <div>

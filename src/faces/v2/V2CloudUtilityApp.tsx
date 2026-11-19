@@ -26,6 +26,12 @@ import {
 } from 'lucide-react'
 import i18n, { syncHtmlLangAttributes } from '@/core/i18n/config'
 import {
+  formatTierSetup,
+  type PricingTier,
+  type ServiceRateCard,
+  UNIFIED_PRICING,
+} from '@/shared/pricing-catalog'
+import {
   getArgentinaDeskStatus,
   normalizeV2Lang,
   V2_COPY,
@@ -37,12 +43,10 @@ import {
 type CellState = 'checking' | 'ok'
 
 interface ServicePlanBase {
-  id: string
+  id: Exclude<ServiceRateCard['id'], 'linux-lan-server'>
   code: string
   recommended: boolean
   isLinuxSpecial?: boolean
-  priceUSD: string
-  priceARS: string
   whatsappText: string
   checks: {
     sslEdge: string
@@ -58,11 +62,9 @@ interface ServicePlanBase {
 const SERVICE_PLANS: readonly ServicePlanBase[] = [
   {
     id: 'landing-express',
-    code: 'web-express-72h',
+    code: UNIFIED_PRICING['landing-express'].code,
     recommended: false,
-    priceUSD: 'u$s 380',
-    priceARS: '$450.000',
-    whatsappText: 'Hola Exequiel, quiero activar Landing Express (72 hs · u$s 380 / $450.000).',
+    whatsappText: 'Hola Exequiel, quiero activar Landing Express.',
     checks: {
       sslEdge: 'HTTPS TLS 1.3',
       seoSchema: 'Google Maps + Meta',
@@ -75,12 +77,9 @@ const SERVICE_PLANS: readonly ServicePlanBase[] = [
   },
   {
     id: 'tienda-turnos',
-    code: 'biz-commerce-pro',
+    code: UNIFIED_PRICING['tienda-turnos'].code,
     recommended: true,
-    priceUSD: 'u$s 850',
-    priceARS: '$750.000',
-    whatsappText:
-      'Hola Exequiel, quiero activar el plan recomendado Catálogo / Turnos (u$s 850 / $750.000).',
+    whatsappText: 'Hola Exequiel, quiero activar el plan recomendado Catálogo / Turnos.',
     checks: {
       sslEdge: 'HTTPS + Edge CDN',
       seoSchema: 'Schema.org JSON-LD',
@@ -93,10 +92,8 @@ const SERVICE_PLANS: readonly ServicePlanBase[] = [
   },
   {
     id: 'saas-medida',
-    code: 'enterprise-saas',
+    code: UNIFIED_PRICING['saas-medida'].code,
     recommended: false,
-    priceUSD: 'Desde u$s 1.600',
-    priceARS: 'Desde $1.800.000',
     whatsappText: 'Hola Exequiel, quiero cotizar un Sistema SaaS a medida.',
     checks: {
       sslEdge: 'Multi-Región + WAF',
@@ -110,11 +107,9 @@ const SERVICE_PLANS: readonly ServicePlanBase[] = [
   },
   {
     id: 'automatizacion-ia',
-    code: 'ai-ops-engine',
+    code: UNIFIED_PRICING['automatizacion-ia'].code,
     recommended: false,
-    priceUSD: 'u$s 590',
-    priceARS: '$680.000',
-    whatsappText: 'Hola Exequiel, quiero activar Automatización IA / Bots (u$s 590 / $680.000).',
+    whatsappText: 'Hola Exequiel, quiero activar Automatización IA / Bots.',
     checks: {
       sslEdge: 'API Privada',
       seoSchema: 'N/A (Backend)',
@@ -127,13 +122,10 @@ const SERVICE_PLANS: readonly ServicePlanBase[] = [
   },
   {
     id: 'linux-pos',
-    code: 'linux-kiosk-pos',
+    code: UNIFIED_PRICING['linux-pos'].code,
     recommended: false,
     isLinuxSpecial: true,
-    priceUSD: 'u$s 450',
-    priceARS: '$520.000',
-    whatsappText:
-      'Hola Exequiel, quiero probar/activar Terminales Linux POS (4.5s boot · u$s 450 / $520.000).',
+    whatsappText: 'Hola Exequiel, quiero probar/activar Terminales Linux POS (4.5s boot).',
     checks: {
       sslEdge: 'LAN + Offline-First',
       seoSchema: 'Boot 4.5s · 480MB',
@@ -194,7 +186,7 @@ function ExeBrandLogo({ className }: { className?: string }) {
 
 export default function V2CloudUtilityApp() {
   const [lang, setLang] = useState<V2Lang>('es')
-  const [currency, setCurrency] = useState<'USD' | 'ARS'>('USD')
+  const [tier, setTier] = useState<PricingTier>('ARS_PYME')
   const [selectedId, setSelectedId] = useState<string>('tienda-turnos')
   const [cellState, setCellState] = useState<CellState>('checking')
   const [deskStatus, setDeskStatus] = useState<ArtDeskStatus>(() => getArgentinaDeskStatus())
@@ -250,11 +242,18 @@ export default function V2CloudUtilityApp() {
   const copy = V2_COPY[lang]
   const selectedPlan = SERVICE_PLANS.find((col) => col.id === selectedId) ?? SERVICE_PLANS[1]!
   const selectedPlanCopy = copy.plans[selectedPlan.id] ?? copy.plans['tienda-turnos']!
-  const formatPlanPrice = (plan: ServicePlanBase) =>
-    currency === 'ARS' ? plan.priceARS : plan.priceUSD
+  const formatPlanPrice = (plan: ServicePlanBase) => formatTierSetup(plan.id, tier).primary
 
-  const whatsappUrl = (text: string) =>
-    `https://wa.me/5493416874786?text=${encodeURIComponent(text)}`
+  const whatsappUrl = (plan: ServicePlanBase) => {
+    const formatted = formatTierSetup(plan.id, tier)
+    const tierTag =
+      tier === 'ARS_PYME'
+        ? 'PyME Argentina ($ ARS)'
+        : tier === 'USD_AR'
+          ? 'Empresa Argentina (USD Bonificado)'
+          : 'Global / International (USD)'
+    return `https://wa.me/5493416874786?text=${encodeURIComponent(`${plan.whatsappText} [${tierTag}: ${formatted.primary}]`)}`
+  }
 
   const handleCopyBrief = async () => {
     const summary = [
@@ -314,34 +313,48 @@ export default function V2CloudUtilityApp() {
             </span>
           </div>
 
-          {/* Derecha: Selector Moneda USD/ARS + Selector de 7 Idiomas + Cambiar versión + CTA */}
+          {/* Derecha: Selector 3 Niveles (PyME AR $ | Empresa AR USD -31% | Global USD) + 7 Idiomas + Cambiar versión + CTA */}
           <div className="flex items-center gap-2 sm:gap-2.5">
             <div
               role="group"
-              aria-label="Seleccionar moneda"
-              className="inline-flex h-8 items-center rounded-md border border-[#e2e8f0] bg-[#f8fafc] p-0.5 text-[11px] font-bold"
+              aria-label="Seleccionar modalidad de precio"
+              className="inline-flex h-8 items-center rounded-md border border-[#e2e8f0] bg-[#f8fafc] p-0.5 text-[10.5px] font-bold"
             >
               <button
                 type="button"
-                onClick={() => setCurrency('USD')}
+                onClick={() => setTier('ARS_PYME')}
+                title="Precios en Pesos para PyMEs y Emprendedores de Argentina"
                 className={`h-full cursor-pointer rounded px-2 transition-colors ${
-                  currency === 'USD'
-                    ? 'bg-[#0f172a] text-white'
-                    : 'text-[#64748b] hover:text-[#0f172a]'
-                }`}
-              >
-                USD
-              </button>
-              <button
-                type="button"
-                onClick={() => setCurrency('ARS')}
-                className={`h-full cursor-pointer rounded px-2 transition-colors ${
-                  currency === 'ARS'
+                  tier === 'ARS_PYME'
                     ? 'bg-[#047857] text-white'
                     : 'text-[#64748b] hover:text-[#0f172a]'
                 }`}
               >
-                ARS
+                🇦🇷 PyME $
+              </button>
+              <button
+                type="button"
+                onClick={() => setTier('USD_AR')}
+                title="Precios en USD para Empresas de Argentina (~31% bonificación sobre tarifa internacional)"
+                className={`h-full cursor-pointer rounded px-2 transition-colors ${
+                  tier === 'USD_AR'
+                    ? 'bg-[#0f172a] text-white'
+                    : 'text-[#64748b] hover:text-[#0f172a]'
+                }`}
+              >
+                🇦🇷 USD -31%
+              </button>
+              <button
+                type="button"
+                onClick={() => setTier('USD_INTL')}
+                title="International / Global USD Rate"
+                className={`h-full cursor-pointer rounded px-2 transition-colors ${
+                  tier === 'USD_INTL'
+                    ? 'bg-[#2563eb] text-white'
+                    : 'text-[#64748b] hover:text-[#0f172a]'
+                }`}
+              >
+                🌎 Global
               </button>
             </div>
 
@@ -374,7 +387,7 @@ export default function V2CloudUtilityApp() {
             </Link>
 
             <a
-              href={whatsappUrl(selectedPlan.whatsappText)}
+              href={whatsappUrl(selectedPlan)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-8 items-center gap-1 rounded-md bg-[#047857] px-3 text-xs font-semibold text-white transition-all duration-150 hover:-translate-y-[1px] hover:bg-[#065f46]"
@@ -444,7 +457,7 @@ export default function V2CloudUtilityApp() {
             </button>
 
             <a
-              href={whatsappUrl(selectedPlan.whatsappText)}
+              href={whatsappUrl(selectedPlan)}
               target="_blank"
               rel="noopener noreferrer"
               className={`inline-flex min-h-[40px] items-center gap-2 rounded-md px-5 py-2 text-[13px] font-semibold text-white shadow-xs transition-all duration-150 hover:-translate-y-[1px] active:translate-y-0 ${
@@ -540,14 +553,25 @@ export default function V2CloudUtilityApp() {
                       isLinux ? 'border-white/15' : 'border-[#f1f5f9]'
                     }`}
                   >
-                    <div className="flex items-baseline justify-between">
-                      <span
-                        className={`text-[15px] font-extrabold ${
-                          isLinux ? 'text-white' : 'text-[#0f172a]'
-                        }`}
-                      >
-                        {formatPlanPrice(plan)}
-                      </span>
+                    <div className="flex items-baseline justify-between gap-1">
+                      <div className="flex items-baseline gap-1.5">
+                        <span
+                          className={`text-[15px] font-extrabold ${
+                            isLinux ? 'text-white' : 'text-[#0f172a]'
+                          }`}
+                        >
+                          {formatTierSetup(plan.id, tier).primary}
+                        </span>
+                        {formatTierSetup(plan.id, tier).strikeIntl && (
+                          <span
+                            className={`font-mono text-[10.5px] line-through ${
+                              isLinux ? 'text-slate-400' : 'text-[#94a3b8]'
+                            }`}
+                          >
+                            {formatTierSetup(plan.id, tier).strikeIntl}
+                          </span>
+                        )}
+                      </div>
                       <span
                         className={`inline-flex items-center gap-1 text-[11px] font-medium ${
                           isLinux ? 'text-amber-300' : 'text-[#475569]'
@@ -826,8 +850,13 @@ export default function V2CloudUtilityApp() {
                             isLinux ? 'text-[#92400e]' : 'text-[#0f172a]'
                           }`}
                         >
-                          {formatPlanPrice(col)}
+                          {formatTierSetup(col.id, tier).primary}
                         </div>
+                        {formatTierSetup(col.id, tier).strikeIntl && (
+                          <div className="font-mono text-[10px] text-[#94a3b8] line-through">
+                            {formatTierSetup(col.id, tier).strikeIntl}
+                          </div>
+                        )}
                         <div className="text-[11px] font-medium text-[#475569]">
                           {colCopy.deliveryTime}
                         </div>

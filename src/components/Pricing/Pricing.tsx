@@ -17,11 +17,12 @@ import {
 import ROICalculator from './ROICalculator'
 import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
 import HudButton from '@/components/HudButton'
+import { type PricingTier, UNIFIED_PRICING } from '@/shared/pricing-catalog'
 
 interface PlanData {
   tKey: 'landing' | 'ecommerce'
-  setupFee: { ARS: string; USD: string }
-  monthlyFee: { ARS: string; USD: string }
+  setupFee: { ARS: string; USD: string; USD_INTL: string; discountAr: number }
+  monthlyFee: { ARS: string; USD: string; USD_INTL: string }
   includedFeatures: boolean[]
   popular: boolean
 }
@@ -29,15 +30,33 @@ interface PlanData {
 const PRICING_PLANS: PlanData[] = [
   {
     tKey: 'landing',
-    setupFee: { ARS: '$450.000', USD: 'u$s 380' },
-    monthlyFee: { ARS: '$15.000', USD: 'u$s 25' },
+    setupFee: {
+      ARS: UNIFIED_PRICING['landing-express'].setup.ARS_PYME,
+      USD: UNIFIED_PRICING['landing-express'].setup.USD_AR,
+      USD_INTL: UNIFIED_PRICING['landing-express'].setup.USD_INTL,
+      discountAr: UNIFIED_PRICING['landing-express'].discountPercentAr,
+    },
+    monthlyFee: {
+      ARS: '$22.000',
+      USD: 'u$s 25',
+      USD_INTL: 'USD 40',
+    },
     includedFeatures: [true, true, true, true, false, false],
     popular: false,
   },
   {
     tKey: 'ecommerce',
-    setupFee: { ARS: '$750.000', USD: 'u$s 850' },
-    monthlyFee: { ARS: '$35.000', USD: 'u$s 60' },
+    setupFee: {
+      ARS: UNIFIED_PRICING['tienda-turnos'].setup.ARS_PYME,
+      USD: UNIFIED_PRICING['tienda-turnos'].setup.USD_AR,
+      USD_INTL: UNIFIED_PRICING['tienda-turnos'].setup.USD_INTL,
+      discountAr: UNIFIED_PRICING['tienda-turnos'].discountPercentAr,
+    },
+    monthlyFee: {
+      ARS: '$42.000',
+      USD: 'u$s 48',
+      USD_INTL: 'USD 75',
+    },
     includedFeatures: [true, true, true, true, true, true],
     popular: true,
   },
@@ -46,13 +65,14 @@ const PRICING_PLANS: PlanData[] = [
 const PricingCard = ({
   plan,
   index,
-  currency,
+  tier,
 }: {
   plan: PlanData
   index: number
-  currency: 'ARS' | 'USD'
+  tier: PricingTier
 }) => {
   const { t } = useTranslation()
+  const currency: 'ARS' | 'USD' = tier === 'ARS_PYME' ? 'ARS' : 'USD'
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   const rectRef = React.useRef<{ left: number; top: number } | null>(null)
@@ -142,12 +162,40 @@ const PricingCard = ({
 
         <div className="mb-6 sm:mb-8 p-4 sm:p-6 rounded-2xl bg-muted/60 dark:bg-emerald-950/20 border border-border dark:border-emerald-500/30">
           <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-border dark:border-emerald-500/20">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">
-              {t('pricing.setup_label')}
-            </p>
-            <p className="text-3xl sm:text-4xl font-outfit font-black text-foreground">
-              {plan.setupFee[currency]}
-            </p>
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+                {t('pricing.setup_label')}
+              </p>
+              {tier === 'USD_AR' && (
+                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                  -{plan.setupFee.discountAr}% Bonificación AR
+                </span>
+              )}
+              {tier === 'ARS_PYME' && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                  PyME &amp; Emprendedor AR
+                </span>
+              )}
+            </div>
+            <div className="flex items-baseline gap-2.5 flex-wrap">
+              <p className="text-3xl sm:text-4xl font-outfit font-black text-foreground">
+                {tier === 'ARS_PYME'
+                  ? plan.setupFee.ARS
+                  : tier === 'USD_AR'
+                    ? plan.setupFee.USD
+                    : plan.setupFee.USD_INTL}
+              </p>
+              {tier === 'USD_AR' && (
+                <span className="text-sm font-mono text-muted-foreground line-through">
+                  {plan.setupFee.USD_INTL} (Intl)
+                </span>
+              )}
+              {tier === 'ARS_PYME' && (
+                <span className="text-xs font-mono text-muted-foreground">
+                  (Eq. {plan.setupFee.USD})
+                </span>
+              )}
+            </div>
           </div>
           <div>
             <div className="flex items-center justify-between mb-1">
@@ -160,7 +208,11 @@ const PricingCard = ({
             </div>
             <div className="flex items-end gap-1">
               <p className="text-2xl font-outfit font-bold text-accent-cyan dark:text-emerald-400">
-                {plan.monthlyFee[currency]}
+                {tier === 'ARS_PYME'
+                  ? plan.monthlyFee.ARS
+                  : tier === 'USD_AR'
+                    ? plan.monthlyFee.USD
+                    : plan.monthlyFee.USD_INTL}
               </p>
               <span className="text-xs text-muted-foreground mb-1">{t('pricing.per_month')}</span>
             </div>
@@ -203,7 +255,8 @@ const PricingCard = ({
 
 const Pricing = () => {
   const { t } = useTranslation()
-  const [currency, setCurrency] = useState<'ARS' | 'USD'>('ARS')
+  const [tier, setTier] = useState<PricingTier>('ARS_PYME')
+  const currency: 'ARS' | 'USD' = tier === 'ARS_PYME' ? 'ARS' : 'USD'
 
   return (
     <section
@@ -240,34 +293,45 @@ const Pricing = () => {
             {t('pricing.descripcion')}
           </motion.p>
 
-          {/* Selector de Moneda Premium */}
+          {/* Selector de Moneda / Mercado en 3 Niveles (PyME AR Pesos | Empresa AR USD -30% | Global USD) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 bg-muted border border-border rounded-2xl p-1.5 self-center mb-8"
+            className="inline-flex flex-wrap items-center justify-center gap-2 bg-muted border border-border rounded-2xl p-1.5 self-center mb-8"
           >
             <button
-              onClick={() => setCurrency('ARS')}
-              className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
-                currency === 'ARS'
+              onClick={() => setTier('ARS_PYME')}
+              className={`px-4 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
+                tier === 'ARS_PYME'
                   ? 'bg-linear-to-r from-accent-cyan to-accent-cyan/80 text-black shadow-lg shadow-accent-cyan/25'
                   : 'text-foreground/60 hover:text-foreground'
               }`}
             >
               <CyberCoinCurrency size={18} />
-              ARS ($)
+              🇦🇷 PyME AR ($ ARS)
             </button>
             <button
-              onClick={() => setCurrency('USD')}
-              className={`px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
-                currency === 'USD'
+              onClick={() => setTier('USD_AR')}
+              className={`px-4 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
+                tier === 'USD_AR'
+                  ? 'bg-linear-to-r from-emerald-500 to-emerald-400 text-black shadow-lg shadow-emerald-500/25'
+                  : 'text-foreground/60 hover:text-foreground'
+              }`}
+            >
+              <CyberCoinCurrency size={18} />
+              🇦🇷 Empresa AR (u$s -31%)
+            </button>
+            <button
+              onClick={() => setTier('USD_INTL')}
+              className={`px-4 py-2.5 rounded-xl font-bold text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
+                tier === 'USD_INTL'
                   ? 'bg-linear-to-r from-accent-magenta to-accent-magenta/80 text-foreground shadow-lg shadow-accent-magenta/25'
                   : 'text-foreground/60 hover:text-foreground'
               }`}
             >
               <CyberCoinCurrency size={18} />
-              USD (u$s)
+              🌎 Global (USD)
             </button>
           </motion.div>
         </div>
@@ -275,7 +339,7 @@ const Pricing = () => {
         {/* Tarjetas de planes */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-10">
           {PRICING_PLANS.map((plan, index) => (
-            <PricingCard key={plan.tKey} plan={plan} index={index} currency={currency} />
+            <PricingCard key={plan.tKey} plan={plan} index={index} tier={tier} />
           ))}
         </div>
 
@@ -311,9 +375,20 @@ const Pricing = () => {
                 <span className="text-[10px] uppercase tracking-widest text-muted-foreground block">
                   {t('pricing.setup_label')}
                 </span>
-                <span className="text-2xl sm:text-3xl font-outfit font-black text-emerald-700 dark:text-emerald-400">
-                  {currency === 'ARS' ? '$350.000' : 'u$s 320'}
-                </span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl sm:text-3xl font-outfit font-black text-emerald-700 dark:text-emerald-400">
+                    {tier === 'ARS_PYME'
+                      ? UNIFIED_PRICING['linux-pos'].setup.ARS_PYME
+                      : tier === 'USD_AR'
+                        ? UNIFIED_PRICING['linux-pos'].setup.USD_AR
+                        : UNIFIED_PRICING['linux-pos'].setup.USD_INTL}
+                  </span>
+                  {tier === 'USD_AR' && (
+                    <span className="text-xs text-muted-foreground line-through">
+                      {UNIFIED_PRICING['linux-pos'].setup.USD_INTL}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="flex flex-wrap gap-2.5">
                 <HudButton

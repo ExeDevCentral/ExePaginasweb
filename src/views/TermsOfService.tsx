@@ -115,7 +115,9 @@ const TermsOfService: React.FC = () => {
               </div>
               <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
                 {t('termsofservice.titulo_main')}{' '}
-                <span className="text-gradient">{t('termsofservice.titulo_span')}</span>
+                <span className="bg-gradient-to-r from-sky-300 via-cyan-200 to-fuchsia-300 bg-clip-text text-transparent dark:from-sky-300 dark:via-cyan-200 dark:to-fuchsia-300">
+                  {t('termsofservice.titulo_span')}
+                </span>
               </h1>
             </div>
           </div>

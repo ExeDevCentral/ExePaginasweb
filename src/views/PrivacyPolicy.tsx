@@ -113,7 +113,9 @@ const PrivacyPolicy: React.FC = () => {
               </div>
               <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
                 {t('privacypolicy.titulo_main')}{' '}
-                <span className="text-gradient">{t('privacypolicy.titulo_span')}</span>
+                <span className="bg-gradient-to-r from-sky-300 via-cyan-200 to-emerald-300 bg-clip-text text-transparent dark:from-sky-300 dark:via-cyan-200 dark:to-emerald-300">
+                  {t('privacypolicy.titulo_span')}
+                </span>
               </h1>
             </div>
           </div>

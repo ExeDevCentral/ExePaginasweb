@@ -182,7 +182,7 @@ export default function StorePage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-background py-8 px-4 sm:px-6 lg:px-8 transition-colors duration-500">
+    <div className="min-h-screen relative overflow-x-clip bg-background pt-5 pb-28 sm:py-8 px-4 sm:px-6 lg:px-8 transition-colors duration-500">
       {/* Dynamic 3D Quantum Cyber Grid & Aurora Background */}
       <StoreNexusBackground />
 
@@ -239,7 +239,7 @@ export default function StorePage() {
               ) : (
                 <Moon className="w-4 h-4 text-indigo-400" aria-hidden="true" />
               )}
-              <span className="text-xs font-bold font-mono">
+              <span className="hidden sm:inline text-xs font-bold font-mono">
                 {isDark
                   ? `☀️ ${t('store.tema_claro', 'Claro')}`
                   : `🌙 ${t('store.tema_oscuro', 'Oscuro')}`}

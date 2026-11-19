@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import type { Metadata } from 'next'
 import SiteHeader from '@/components/layout/SiteHeader'
 import Footer from '@/components/layout/Footer'
+import MobilePricingView from '@/components/mobile/MobilePricingView'
 
 export const metadata: Metadata = {
   title: 'Precios y Planes de Desarrollo Web',
@@ -27,10 +28,15 @@ export default function PreciosPage() {
   return (
     <>
       <SiteHeader />
-      <main className="pt-16">
-        <Pricing />
+      <main>
+        <div className="block md:hidden">
+          <MobilePricingView />
+        </div>
+        <div className="hidden md:block pt-16">
+          <Pricing />
+          <Footer />
+        </div>
       </main>
-      <Footer />
     </>
   )
 }

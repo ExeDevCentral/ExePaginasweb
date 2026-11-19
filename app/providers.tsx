@@ -38,6 +38,10 @@ const CommandPalette = dynamic(() => import('@/components/layout/CommandPalette'
   ssr: false,
 })
 
+const MobileBottomNav = dynamic(() => import('@/components/mobile/MobileBottomNav'), {
+  ssr: false,
+})
+
 export default function Providers({ children }: { readonly children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
@@ -104,6 +108,7 @@ export default function Providers({ children }: { readonly children: React.React
               <ThemedToaster />
               <CommandPalette />
               {children}
+              <MobileBottomNav />
             </ScrollProvider>
           </PostHogProvider>
         </ThemeProvider>

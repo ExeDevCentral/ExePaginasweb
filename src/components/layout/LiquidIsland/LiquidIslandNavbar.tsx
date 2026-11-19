@@ -122,7 +122,7 @@ export default function LiquidIslandNavbar({
           aria-label={getNavLabel('nav.aria_main_nav', 'Navegación principal')}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative pointer-events-auto w-full max-w-7xl mx-auto h-14 sm:h-14.5 rounded-full border border-slate-200/90 dark:border-cyan-400/30 bg-white/90 dark:bg-[#0c1224]/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 dark:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6),0_0_16px_rgba(6,182,212,0.1)] flex items-center justify-between px-4 sm:px-5 gap-2 transition-colors duration-200 hover:border-slate-300 dark:hover:border-cyan-400/60"
+          className="relative pointer-events-auto w-full max-w-7xl mx-auto h-13 md:h-14.5 rounded-full border border-slate-200/90 dark:border-cyan-400/30 bg-white/90 dark:bg-[#0c1224]/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 dark:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.6),0_0_16px_rgba(6,182,212,0.1)] flex items-center justify-between px-3 sm:px-5 gap-1.5 sm:gap-2 transition-colors duration-200 hover:border-slate-300 dark:hover:border-cyan-400/60"
         >
           {/* Spotlight dinámico sobre el cristal (contenido en su propio overflow-hidden) */}
           {!reduceMotion && (
@@ -264,8 +264,8 @@ export default function LiquidIslandNavbar({
               <LanguageSwitcher />
             </motion.div>
 
-            {/* Selector de tema */}
-            <motion.div layout="position" className="hidden sm:flex items-center">
+            {/* Selector de tema (visible en móvil y desktop sin desbordar) */}
+            <motion.div layout="position" className="flex items-center">
               <ThemeToggle />
             </motion.div>
 
@@ -287,8 +287,8 @@ export default function LiquidIslandNavbar({
               <CyberBurgerIcon isOpen={megaPanelOpen} size={17} />
             </motion.button>
 
-            {/* CTA único dominante */}
-            <motion.div layout="position">
+            {/* CTA único dominante (en mobile vive en MobileBottomNav para evitar desborde horizontal) */}
+            <motion.div layout="position" className="hidden md:block">
               <MagneticCTA
                 label={getNavLabel('nav.cotiza_tu_web', 'Cotizá tu web')}
                 href="/cotizador"

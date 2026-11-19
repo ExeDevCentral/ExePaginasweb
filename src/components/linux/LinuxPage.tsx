@@ -415,7 +415,7 @@ export default function LinuxPage() {
     <div className="min-h-screen bg-transparent text-foreground relative">
       <SiteHeader />
 
-      <main id="linux" className="relative z-10 pt-28 sm:pt-32">
+      <main id="linux" className="relative z-10 pt-22 md:pt-32 pb-24 md:pb-0 overflow-x-clip">
         {/* ==============================================================
             1. HERO DEL PORTAL DE SERVICIOS LINUX (/linux)
            ============================================================== */}

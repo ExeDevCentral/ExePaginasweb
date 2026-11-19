@@ -41,6 +41,12 @@ export default function NavLogo({
         <CyberNeonLogo size={32} />
       </motion.div>
 
+      {/* Wordmark compacto en mobile (< sm) */}
+      <span className="flex sm:hidden items-baseline gap-0.5 text-[12px] font-bold tracking-tight text-slate-900 dark:text-white whitespace-nowrap">
+        <span>ExePaginas</span>
+        <span className="text-emerald-600 dark:text-cyan-400 font-black">Web</span>
+      </span>
+
       {/* Wordmark: colapsa suavemente con layout="position" en modo compact */}
       <motion.div
         layout="position"

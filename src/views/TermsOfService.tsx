@@ -93,14 +93,22 @@ const TermsOfService: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="max-w-4xl mx-auto"
         >
-          {/* Back button */}
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-accent-cyan transition-colors mb-8 group"
-          >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            {t('termsofservice.boton_volver') || '← Volver al inicio'}
-          </Link>
+          {/* Back button + Switch face */}
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-accent-cyan transition-colors group"
+            >
+              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+              {t('termsofservice.boton_volver') || '← Volver al inicio'}
+            </Link>
+            <Link
+              href="/?choose=1"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-sky-400/50 hover:text-white"
+            >
+              Cambiar versión (Classic / V2)
+            </Link>
+          </div>
 
           {/* Title Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
@@ -115,7 +123,9 @@ const TermsOfService: React.FC = () => {
               </div>
               <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
                 {t('termsofservice.titulo_main')}{' '}
-                <span className="text-gradient">{t('termsofservice.titulo_span')}</span>
+                <span className="bg-gradient-to-r from-sky-300 via-cyan-200 to-fuchsia-300 bg-clip-text text-transparent dark:from-sky-300 dark:via-cyan-200 dark:to-fuchsia-300">
+                  {t('termsofservice.titulo_span')}
+                </span>
               </h1>
             </div>
           </div>

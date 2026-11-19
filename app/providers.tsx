@@ -6,6 +6,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Analytics } from '@vercel/analytics/next'
@@ -43,6 +44,8 @@ const MobileBottomNav = dynamic(() => import('@/components/mobile/MobileBottomNa
 })
 
 export default function Providers({ children }: { readonly children: React.ReactNode }) {
+  const pathname = usePathname()
+  const isIsolatedFace = pathname === '/' || pathname?.startsWith('/v2')
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -100,16 +103,23 @@ export default function Providers({ children }: { readonly children: React.React
       <AuthSessionProvider>
         <ThemeProvider>
           <PostHogProvider>
-            <ScrollProvider>
-              <LaserScrollBeam />
-              <AnimatedFavicon />
-              <PremiumBackground />
-              <MouseSpotlight />
-              <ThemedToaster />
-              <CommandPalette />
-              {children}
-              <MobileBottomNav />
-            </ScrollProvider>
+            {isIsolatedFace ? (
+              <>
+                <ThemedToaster />
+                {children}
+              </>
+            ) : (
+              <ScrollProvider>
+                <LaserScrollBeam />
+                <AnimatedFavicon />
+                <PremiumBackground />
+                <MouseSpotlight />
+                <ThemedToaster />
+                <CommandPalette />
+                {children}
+                <MobileBottomNav />
+              </ScrollProvider>
+            )}
           </PostHogProvider>
         </ThemeProvider>
       </AuthSessionProvider>

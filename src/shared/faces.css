@@ -112,6 +112,35 @@
   animation: gwBorderSweep 6s ease infinite;
 }
 
+@keyframes gwBeamSlide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+@keyframes gwDotBreathe {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+[data-face='gateway'] .gw-header-beam {
+  animation: gwBeamSlide 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+[data-face='gateway'] .gw-dot-breathe {
+  animation: gwDotBreathe 2.8s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-face='gateway'] *,
   [data-face='v2'] * {

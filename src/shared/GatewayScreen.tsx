@@ -126,14 +126,34 @@ export default function GatewayScreen() {
         aria-hidden="true"
       />
 
-      {/* Top Executive Bar */}
-      <header className="relative z-10 border-b border-white/[0.08] bg-[#050811]/75 px-4 py-4 backdrop-blur-md sm:px-8">
+      {/* Top Executive Bar — Marca viva con identidad real EXE // PAGINASWEB.COM */}
+      <header className="relative z-10 overflow-hidden border-b border-white/[0.08] bg-[#050811]/80 px-4 py-3.5 backdrop-blur-md sm:px-8">
+        {/* Haz luminoso sutil recorriendo el borde inferior */}
+        <div
+          className="gw-header-beam pointer-events-none absolute bottom-0 left-0 h-[1.5px] w-1/3 bg-gradient-to-r from-transparent via-sky-400/80 to-transparent"
+          aria-hidden="true"
+        />
+
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <ExeLogo dotColor="#38bdf8" className="h-5 w-auto text-white" />
-            <span className="hidden border-l border-white/15 pl-3 font-mono text-xs font-medium tracking-wider text-slate-300 sm:inline">
-              EXE // PAGINASWEB · EST. 2025
-            </span>
+          <div className="group flex items-center gap-3.5">
+            <div className="relative flex items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1.5 shadow-[0_0_20px_-6px_rgba(56,189,248,0.45)] transition-all duration-200 group-hover:border-sky-400/40 group-hover:shadow-[0_0_24px_-4px_rgba(56,189,248,0.65)]">
+              <ExeLogo dotColor="#38bdf8" className="h-4 w-auto text-white" />
+            </div>
+
+            <div className="flex flex-col leading-none">
+              <div className="flex items-center gap-1 text-[13px] font-extrabold tracking-wide text-white sm:text-[14px]">
+                <span>EXE</span>
+                <span className="font-black text-amber-400">{'//'}</span>
+                <span>PAGINASWEB</span>
+                <span className="bg-gradient-to-r from-sky-400 to-cyan-300 bg-clip-text text-transparent">
+                  .COM
+                </span>
+              </div>
+              <div className="mt-1 hidden items-center gap-1.5 text-[10.5px] font-medium tracking-wide text-slate-400 sm:flex">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+                <span>Arquitectura Web Propia · Est. 2025</span>
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center gap-2.5">
@@ -231,6 +251,19 @@ export default function GatewayScreen() {
                   Cotizador, tienda online y panel de cliente
                 </li>
               </ul>
+
+              {/* Micro-Preview vivo: Ecosistema interactivo */}
+              <div
+                aria-hidden="true"
+                className="mt-5 flex items-center justify-between rounded-lg border border-sky-400/15 bg-[#050811]/80 px-3.5 py-2.5 font-mono text-[11px]"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="gw-dot-breathe h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_10px_#38bdf8]" />
+                  <span className="gw-dot-breathe h-1.5 w-1.5 rounded-full bg-fuchsia-400 [animation-delay:600ms]" />
+                  <span className="text-slate-300">interactive.studio</span>
+                </div>
+                <span className="text-[10px] text-sky-300/90">3D · Demos · AI Chat</span>
+              </div>
             </div>
 
             <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-sm font-semibold text-sky-300">
@@ -282,6 +315,20 @@ export default function GatewayScreen() {
                   horario ART en vivo y brief copiable
                 </li>
               </ul>
+
+              {/* Micro-Preview vivo: Matriz Cloud Utility */}
+              <div
+                aria-hidden="true"
+                className="mt-5 flex items-center justify-between rounded-lg border border-emerald-600/20 bg-white px-3.5 py-2.5 font-mono text-[11px] shadow-2xs"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="gw-dot-breathe h-2 w-2 rounded-full bg-[#047857]" />
+                  <span className="font-semibold text-[#0f172a]">edge-latam · 14ms</span>
+                </div>
+                <span className="rounded bg-[#ecfdf5] px-1.5 py-0.5 text-[10px] font-bold text-[#047857]">
+                  ✓ 99.9% SLA
+                </span>
+              </div>
             </div>
 
             <div className="mt-6 flex items-center justify-between border-t border-slate-200/90 pt-4 text-sm font-bold text-[#047857]">

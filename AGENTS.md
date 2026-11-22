@@ -27,6 +27,25 @@ Single-context repo (one `CONTEXT.md` + `GLOSSARY.md` + `docs/adr/` at the root)
 3. **Calidad & Robustez**: TDD, BigInt monetario, cero errores de tipo y tests pasando.
 4. **Módulos Profundos**: Interfaces compactas y simples hacia afuera con alta potencia interna (Deep Modules).
 
+### Arquitectura Dune & Flujo Multi-Agente Diario (Activación Automática)
+
+**Camino más corto = Camino correcto** (`TAREA -> REGLAS -> IMPORTS -> CHECK CI -> ACEPTAR / BLOQUEAR`):
+
+- **Auto-activación obligatoria según tipo de tarea** (leer la `SKILL.md` correspondiente en `.agents/skills/` automáticamente sin que el usuario lo pida):
+  - **UI / Estilos / Heroes / Navbars / Landing / Animaciones**: `frontend-design`, `ui-ux-pro-max`, `taste-design`, `better-layout`, `better-ui`, `shadcn-ui`, `vercel-react-best-practices`, `vercel-composition-patterns`, `vercel-react-view-transitions`, `web-design-guidelines`, `accessibility-engineering`.
+  - **Features complejas / Refactors / Auditorías multi-agente**: `autonomous-agent-loop`, `constraint-driven-development`, `codebase-design`, `domain-modeling`, `code-review-and-quality`.
+  - **Bugs / Errores / Regresiones**: `diagnose` / `systematic-debugging` + `tdd`.
+  - **Seguridad / APIs / Auth / Pagos**: `security-and-hardening` + `supabase-migration-checker` / `supabase-postgres-best-practices`.
+  - **Performance / Core Web Vitals**: `performance-optimization` + `vercel-react-best-practices`.
+  - **Evals & Mejora de Skills**: `promptfoo-evals`, `skill-creator`, `.agents/evals/lessons.md`.
+- **Feedback Loop obligatorio (económico y automático antes de cerrar cualquier tarea con código)**:
+  1. Elegir **Tier mínimo** (1 agente por defecto; máx. 2–3 workers en `/teamwork`) e iterar primero con tests puntuales y checks `--changed`.
+  2. Correr `npm run verify:loop` (`typecheck` + `eslint` + `audit:guardrails --changed` + `audit:imports --changed` + `vitest`) y auto-corregir en bucle hasta `PASS | Score: 100/100` (**Circuit Breaker**: máx. 3–5 reintentos; si el mismo error repite 3 veces, frenar y usar `diagnose`).
+  3. Si el cambio afecta UI/visual, verificar **una sola vez al final** con el subagente `browser` (modelo `flash`, 0 errores de consola + responsive).
+  4. Si es un cambio crítico o release, correr `npm run verify:full` y `npm run evals:agents` una sola vez al cierre.
+- **Fronteras de Imports (`audit:imports`)**: `src/core/domain/` es TypeScript puro (sin React, Next, Supabase ni `infra`); `src/components/` no importa repositorios DB ni `app/api/`; `src/shared/` es capa hoja.
+- **Agent Evals (`npm run evals:agents`)**: valida que las barreras físicas bloqueen regresiones. Toda falla recurrente se registra en `.agents/evals/lessons.md` y se promueve a regla física.
+
 <!-- markdownlint-disable MD025 -->
 <!-- BEGIN:nextjs-agent-rules -->
 

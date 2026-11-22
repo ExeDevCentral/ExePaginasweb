@@ -28,6 +28,14 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Physical Guardrails & Import Boundaries (Arquitectura Dune)
+        run: |
+          node scripts/audit-guardrails.mjs
+          node scripts/audit-imports.mjs --changed
+
+      - name: Agent Evals (Guardrails & Boundaries Self-Test)
+        run: npm run evals:agents
+
       - name: Type check
         run: npm run typecheck
 

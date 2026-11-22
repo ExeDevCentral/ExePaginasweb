@@ -84,6 +84,7 @@ export interface V2Copy {
   ctaShort: string
   linuxBadge: string
   linuxExploreBtn: string
+  architectBadge: string
   heroTitle: string
   heroSubtitle: string
   deskOpenBadge: string
@@ -118,6 +119,15 @@ export interface V2Copy {
     sourceCode: string
     latency: string
   }
+  rowTooltips: {
+    sslEdge: string
+    seoSchema: string
+    whatsappFunnel: string
+    payments: string
+    adminPanel: string
+    sourceCode: string
+    latency: string
+  }
   plans: Record<
     string,
     {
@@ -138,9 +148,11 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     ctaShort: 'Contactar',
     linuxBadge: '¡PROBALO! · $0 Licencias',
     linuxExploreBtn: 'Explorar Terminales Linux POS (/linux)',
-    heroTitle: 'ExePaginasWeb — Servicios Directos & Matriz Técnica',
+    architectBadge:
+      'Exequiel Echevarría · Software & Web Architect · 100% Código Propio · Est. 2025',
+    heroTitle: 'ExePaginasWeb — Arquitectura Web & Sistemas con 100% Código Propio',
     heroSubtitle:
-      'Seleccioná una tarjeta o columna para comparar alcances, tiempos de entrega y arquitectura real. Sin vueltas de agencia, 100% código propio.',
+      'Trato directo con el arquitecto, sin agencias ni plantillas alquiladas. Compará alcances, SLA real (48h a 7 días hábiles) y transferencia total de tu repositorio.',
     deskOpenBadge: 'Mesa de Ingeniería Activa',
     deskClosedBadge: 'Fuera de Horario · Solo Días Hábiles',
     deskHoursRule: 'Lun a Vie · 08:00 a 18:00 (Hora Argentina · UTC-3)',
@@ -174,6 +186,19 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
       adminPanel: 'Autogestión / Panel',
       sourceCode: 'Propiedad del Código',
       latency: 'Latencia Edge (AR/LATAM)',
+    },
+    rowTooltips: {
+      sslEdge: 'Despliegue Edge con certificados SSL TLS 1.3 automáticos y protección CDN.',
+      seoSchema:
+        'HTML semántico, metadatos OpenGraph, sitemap y datos estructurados Schema.org JSON-LD.',
+      whatsappFunnel:
+        'Embudo directo sin fricción pensado para cerrar ventas rápidas desde móviles.',
+      payments:
+        'Integración nativa con Mercado Pago, PayPal o Stripe vía webhooks (<1s) sin comisiones extra.',
+      adminPanel: 'Panel autogestionable sobre PostgreSQL real sin ataduras ni alquiler de CMS.',
+      sourceCode:
+        'Repositorio Git 100% a tu nombre (TypeScript / Next.js / React o Java Spring Boot).',
+      latency: 'Tiempo de respuesta (TTFB) promedio medido en nodos de Argentina y Sudamérica.',
     },
     plans: {
       'landing-express': {
@@ -241,9 +266,10 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     ctaShort: 'Contact',
     linuxBadge: 'TRY IT! · $0 Licensing',
     linuxExploreBtn: 'Explore Linux POS Terminals (/linux)',
-    heroTitle: 'ExePaginasWeb — Direct Services & Technical Matrix',
+    architectBadge: 'Exequiel Echevarría · Software & Web Architect · 100% Owned Code · Est. 2025',
+    heroTitle: 'ExePaginasWeb — Custom Web Architecture & 100% Owned Code',
     heroSubtitle:
-      'Select any card or column to compare scope, delivery SLA, and live architecture. Zero agency fluff, 100% owned source code.',
+      'Work directly with the software architect—zero agency middlemen or rented templates. Compare scope, real delivery SLAs (48h to 7 business days), and full Git ownership.',
     deskOpenBadge: 'Engineering Desk Online',
     deskClosedBadge: 'After Hours · Business Days Only',
     deskHoursRule: 'Mon–Fri · 08:00–18:00 (Argentina Time · UTC-3)',
@@ -277,6 +303,15 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
       adminPanel: 'Admin / Self-Service',
       sourceCode: 'Code Ownership',
       latency: 'Edge Latency (LATAM)',
+    },
+    rowTooltips: {
+      sslEdge: 'Edge deployment with automatic TLS 1.3 SSL certificates & CDN protection.',
+      seoSchema: 'Semantic HTML, OpenGraph metadata, sitemap, and Schema.org JSON-LD.',
+      whatsappFunnel: 'Zero-friction direct conversion flow engineered for mobile buyers.',
+      payments: 'Native Mercado Pago, PayPal, or Stripe integration via webhooks (<1s).',
+      adminPanel: 'Self-service dashboard backed by PostgreSQL with zero vendor lock-in.',
+      sourceCode: '100% owned repository (TypeScript / React / Next.js or Java Spring Boot).',
+      latency: 'Average Edge TTFB measured across South America / LATAM POPs.',
     },
     plans: {
       'landing-express': {
@@ -343,9 +378,11 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     ctaShort: 'Contato',
     linuxBadge: 'TESTE AGORA · $0 Licenças',
     linuxExploreBtn: 'Explorar Terminais Linux POS (/linux)',
-    heroTitle: 'ExePaginasWeb — Serviços Diretos & Matriz Técnica',
+    architectBadge:
+      'Exequiel Echevarría · Software & Web Architect · 100% Código Próprio · Est. 2025',
+    heroTitle: 'ExePaginasWeb — Arquitetura Web & Sistemas com 100% Código Próprio',
     heroSubtitle:
-      'Selecione um cartão ou coluna para comparar escopo, prazo de entrega e arquitetura real. Sem burocracia de agência, 100% código próprio.',
+      'Contato direto com o arquiteto, sem agências ou templates alugados. Compare escopo, prazo real (48h a 7 dias úteis) e propriedade total do repositório.',
     deskOpenBadge: 'Mesa de Engenharia Ativa',
     deskClosedBadge: 'Fora do Horário · Apenas Dias Úteis',
     deskHoursRule: 'Seg a Sex · 08:00 às 18:00 (Horário ART/BRT · UTC-3)',
@@ -379,6 +416,15 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
       adminPanel: 'Painel Administrativo',
       sourceCode: 'Propriedade do Código',
       latency: 'Latência Edge (LATAM)',
+    },
+    rowTooltips: {
+      sslEdge: 'Deploy Edge com certificados SSL TLS 1.3 automáticos e proteção CDN.',
+      seoSchema: 'HTML semântico, metadados OpenGraph, sitemap e Schema.org JSON-LD.',
+      whatsappFunnel: 'Fluxo direto sem atrito focado em conversão rápida no celular.',
+      payments: 'Integração nativa Mercado Pago, PayPal ou Stripe via webhooks (<1s).',
+      adminPanel: 'Painel próprio com banco PostgreSQL real e zero lock-in.',
+      sourceCode: 'Repositório Git 100% seu (TypeScript / React / Next.js ou Java Spring Boot).',
+      latency: 'Tempo médio de resposta (TTFB) medido na América do Sul / LATAM.',
     },
     plans: {
       'landing-express': {
@@ -446,9 +492,11 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     ctaShort: 'Kontakt',
     linuxBadge: 'JETZT TESTEN · 0 $ Lizenzen',
     linuxExploreBtn: 'Linux POS-Terminals entdecken (/linux)',
-    heroTitle: 'ExePaginasWeb — Direkte Services & Technische Matrix',
+    architectBadge:
+      'Exequiel Echevarría · Software & Web Architect · 100 % Eigener Code · Est. 2025',
+    heroTitle: 'ExePaginasWeb — Individuelle Web-Architektur & 100 % Eigener Code',
     heroSubtitle:
-      'Wählen Sie eine Karte oder Spalte, um Umfang, Lieferzeit und Live-Architektur zu vergleichen. 100 % eigener Quellcode.',
+      'Direkte Zusammenarbeit mit dem Software-Architekten ohne Agenturen oder gemietete Templates. Vergleichen Sie Umfang, echte Liefer-SLAs (48 Std. bis 7 Werktage) und volles Git-Eigentum.',
     deskOpenBadge: 'Engineering Desk Aktiv',
     deskClosedBadge: 'Außerhalb der Geschäftszeiten · Nur Werktags',
     deskHoursRule: 'Mo–Fr · 08:00–18:00 (Argentinien · UTC-3)',
@@ -481,6 +529,16 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
       adminPanel: 'Admin-Panel',
       sourceCode: 'Code-Eigentum',
       latency: 'Edge-Latenz',
+    },
+    rowTooltips: {
+      sslEdge: 'Edge-Deployment mit automatischen TLS 1.3 SSL-Zertifikaten und CDN-Schutz.',
+      seoSchema: 'Semantisches HTML, OpenGraph-Metadaten, Sitemap und Schema.org JSON-LD.',
+      whatsappFunnel: 'Direkter Konversionsfluss ohne Reibung für mobile Endgeräte.',
+      payments: 'Native Integration von Mercado Pago, PayPal oder Stripe per Webhook (<1s).',
+      adminPanel: 'Eigenständiges Dashboard mit PostgreSQL ohne Vendor-Lock-in.',
+      sourceCode:
+        '100 % eigenes Git-Repository (TypeScript / React / Next.js oder Java Spring Boot).',
+      latency: 'Durchschnittliche Edge-TTFB über Südamerika / LATAM-Knoten.',
     },
     plans: {
       'landing-express': {
@@ -543,9 +601,11 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     ctaShort: 'Contact',
     linuxBadge: 'À ESSAYER · 0 $ Licence',
     linuxExploreBtn: 'Explorer les terminaux Linux POS (/linux)',
-    heroTitle: 'ExePaginasWeb — Services Directs & Matrice Technique',
+    architectBadge:
+      'Exequiel Echevarría · Software & Web Architect · 100 % Code Propriétaire · Est. 2025',
+    heroTitle: 'ExePaginasWeb — Architecture Web Sur Mesure & 100 % Code Propriétaire',
     heroSubtitle:
-      'Sélectionnez une carte ou une colonne pour comparer la portée, les délais et l’architecture en direct. 100 % code propriétaire.',
+      'Échange direct avec l’architecte logiciel, sans agence intermédiaire ni modèles loués. Comparez la portée, les délais réels (48h à 7 jours ouvrés) et la propriété Git.',
     deskOpenBadge: 'Bureau d’Ingénierie Actif',
     deskClosedBadge: 'Hors Horaires · Jours Ouvrés Uniquement',
     deskHoursRule: 'Lun–Ven · 08:00–18:00 (Heure Argentine · UTC-3)',
@@ -578,6 +638,15 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
       adminPanel: 'Panneau Admin',
       sourceCode: 'Propriété du Code',
       latency: 'Latence Edge',
+    },
+    rowTooltips: {
+      sslEdge: 'Déploiement Edge avec certificats SSL TLS 1.3 automatiques et CDN.',
+      seoSchema: 'HTML sémantique, métadonnées OpenGraph, sitemap et Schema.org JSON-LD.',
+      whatsappFunnel: 'Flux de conversion direct sans friction pour les utilisateurs mobiles.',
+      payments: 'Intégration native Mercado Pago, PayPal ou Stripe via webhooks (<1s).',
+      adminPanel: 'Tableau de bord autonome sous PostgreSQL sans verrouillage fournisseur.',
+      sourceCode: 'Dépôt Git 100 % à votre nom (TypeScript / React / Next.js ou Java Spring Boot).',
+      latency: 'Latence Edge moyenne (TTFB) mesurée sur les nœuds Amérique du Sud / LATAM.',
     },
     plans: {
       'landing-express': {
@@ -640,9 +709,10 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     ctaShort: 'تواصل',
     linuxBadge: 'جرّبه الآن · 0$ تراخيص',
     linuxExploreBtn: 'استكشاف أنظمة Linux POS (/linux)',
-    heroTitle: 'ExePaginasWeb — خدمات مباشرة ومصفوفة تقنية',
+    architectBadge: 'Exequiel Echevarría · Software & Web Architect · كود مملوك 100% · تأسست 2025',
+    heroTitle: 'ExePaginasWeb — هندسة ويب وأنظمة مخصصة بملكية كود 100%',
     heroSubtitle:
-      'اختر أي بطاقة أو عمود لمقارنة النطاق ووقت التسليم والبنية التقنية مباشرة. كود مملوك 100% بدون وسطاء.',
+      'تواصل مباشر مع مهندس البرمجيات بدون وكالات وسيطة أو قوالب مؤجرة. قارن النطاق ووقت التسليم الفعلي (48 ساعة إلى 7 أيام عمل) وملكية المستودع الكاملة.',
     deskOpenBadge: 'مكتب الهندسة متصل الآن',
     deskClosedBadge: 'خارج أوقات العمل · أيام العمل فقط',
     deskHoursRule: 'الإثنين–الجمعة · 08:00–18:00 (توقيت الأرجنتين UTC-3)',
@@ -675,6 +745,15 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
       adminPanel: 'لوحة التحكم',
       sourceCode: 'ملكية الكود',
       latency: 'زمن الاستجابة',
+    },
+    rowTooltips: {
+      sslEdge: 'نشر سحابي مع شهادات TLS 1.3 SSL تلقائية وشبكة CDN.',
+      seoSchema: 'بنية HTML دلالية، بيانات OpenGraph، خريطة موقع و Schema.org JSON-LD.',
+      whatsappFunnel: 'مسار تحويل مباشر وسريع مصمم لمستخدمي الهواتف.',
+      payments: 'ربط مباشر مع Mercado Pago أو PayPal أو Stripe عبر Webhooks (<1 ثانية).',
+      adminPanel: 'لوحة تحكم ذاتية مدعومة بقاعدة بيانات PostgreSQL بدون قيود.',
+      sourceCode: 'مستودع كود مملوك لك 100% (TypeScript / React / Next.js أو Java Spring Boot).',
+      latency: 'متوسط زمن الاستجابة السحابي عبر خوادم أمريكا الجنوبية.',
     },
     plans: {
       'landing-express': {
@@ -725,8 +804,10 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
     ctaShort: '联系我们',
     linuxBadge: '强烈推荐 · $0 授权费',
     linuxExploreBtn: '探索 Linux POS 终端架构 (/linux)',
-    heroTitle: 'ExePaginasWeb — 直达服务与技术矩阵',
-    heroSubtitle: '点击任意卡片或列对比交付周期与真实架构。无外包套路，100% 自主源代码。',
+    architectBadge: 'Exequiel Echevarría · Software & Web Architect · 100% 自主源码 · 创立于 2025',
+    heroTitle: 'ExePaginasWeb — 定制 Web 架构与 100% 自主源代码',
+    heroSubtitle:
+      '与软件架构师直接对接，无外包中介或租用模板。对比功能范围、真实交付周期（48 工作小时至 7 个工作日）与完整代码仓库所有权。',
     deskOpenBadge: '工程团队在线',
     deskClosedBadge: '非工作时间 · 仅限工作日',
     deskHoursRule: '周一至周五 · 08:00–18:00（阿根廷时间 UTC-3）',
@@ -759,6 +840,15 @@ export const V2_COPY: Record<V2Lang, V2Copy> = {
       adminPanel: '后台管理',
       sourceCode: '源码归属',
       latency: '边缘延迟',
+    },
+    rowTooltips: {
+      sslEdge: '边缘节点部署，配备自动 TLS 1.3 SSL 证书与 CDN 加速。',
+      seoSchema: '语义化 HTML、OpenGraph 元数据、站点地图与 Schema.org JSON-LD。',
+      whatsappFunnel: '专为移动端设计的零摩擦直达转化漏斗。',
+      payments: '原生集成 Mercado Pago、PayPal 或 Stripe Webhook（<1 秒响应）。',
+      adminPanel: '基于 PostgreSQL 的自主管理后台，零供应商锁定。',
+      sourceCode: '100% 归您所有的 Git 仓库（TypeScript / React / Next.js 或 Java Spring Boot）。',
+      latency: '南美 / 拉美边缘节点实测平均首字节延迟（TTFB）。',
     },
     plans: {
       'landing-express': {

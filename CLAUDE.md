@@ -27,9 +27,12 @@ See `docs/agents/domain.md`.
 3. **Calidad & Robustez**: TDD, BigInt en finanzas, cero errores de tipo y 100% de tests pasando.
 4. **Módulos Profundos**: Interfaces públicas compactas y limpias hacia afuera con gran potencia interna (Deep Modules).
 
-## 🚀 Comandos Principales
+## 🚀 Comandos Principales & Auto-Verificación (Arquitectura Dune)
 
 - `npm run dev`: Servidor de desarrollo Next.js.
-- `npm test`: Ejecución de tests unitarios y de integración con Vitest.
-- `npm run typecheck`: Validación estricta de tipos TypeScript sin emitir código.
-- `npm run lint`: Verificación de reglas de ESLint.
+- `npm run verify:loop`: Feedback loop automático obligatorio (`typecheck` + `eslint` + `audit:guardrails --changed` + `audit:imports --changed` + `vitest`).
+- `npm run verify:full`: Pipeline completo (+ `next build` + `playwright test`).
+- `npm run evals:agents`: Auto-test de guardrails y fronteras de imports.
+- `npm test` / `npm run typecheck` / `npm run lint`: Checks individuales.
+
+Ver `AGENTS.md` para la tabla de auto-activación automática de skills (`.agents/skills/`) según el tipo de tarea.

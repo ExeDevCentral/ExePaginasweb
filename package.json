@@ -78,7 +78,7 @@
     "sonner": "^2.0.8",
     "svix": "^1.99.1",
     "tailwind-merge": "^3.7.0",
-    "three": "^0.185.1",
+    "three": "^0.187.0",
     "zod": "^4.6.7",
     "zustand": "^5.0.16"
   },
@@ -94,7 +94,7 @@
     "@types/node": "^26.4.1",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@types/three": "^0.185.4",
+    "@types/three": "^0.187.0",
     "@vitejs/plugin-react": "^4.7.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "^16.6.1",

@@ -87,6 +87,13 @@ const THREAT_PATTERNS: readonly ThreatPattern[] = [
     regex:
       /\b(repeat|repite|transcribe|escribe\s*textualmente|output\s*verbatim)\b.{0,40}\b(everything\s*above|todo\s*lo\s*anterior|desde\s*["']?eres\s*el|starting\s*from\s*["']?you\s*are)\b/i,
   },
+  {
+    id: 'pi_system_header_spoof_or_cot_distill',
+    category: 'prompt_injection',
+    score: 100,
+    regex:
+      /(?:WARNING:\s*JAILBREAK\s*DETECTED|SPECIAL\s+INSTRUCTION:\s*think\s+silently|\bdeclaration\s*:\s*google\s*:|(?:emit|dump|export|output|muestra|revela)\b.{0,40}\b(?:full\s+)?chain\s+of\s+thought\b)/i,
+  },
 
   // 3. Reconocimiento Ciberdelictivo / Sondeo de Infraestructura, Claves y Base de Datos
   {

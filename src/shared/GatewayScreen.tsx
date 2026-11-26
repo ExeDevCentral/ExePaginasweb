@@ -1,26 +1,110 @@
 /**
  * © 2025 Exequiel Echevarria — ExePaginasWeb
- * Gateway Screen: Split-Screen Executive Choice con Spotlight reactivo al puntero,
- * Aurora Mesh sutil, paleta unificada (Obsidian #050811 + Cyan #38bdf8 + Violet #a855f7 + Emerald #047857)
- * y atajos de teclado directos (1 = Classic, 2 = V2).
+ * Gateway Editorial Minimalista: Díptico arquitectónico asimétrico con
+ * cuadrícula de doble escala y cadencia cromática psicológica cada 6s
+ * (Confianza · Seguridad · Previsibilidad · Estabilidad), autodetección i18n
+ * y selector de globo en 7 idiomas.
  */
 'use client'
 
-import { type MouseEvent, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowRight, Check, Lock, Mail, Sparkles, Terminal } from 'lucide-react'
+import { ArrowUpRight, Check, Globe } from 'lucide-react'
+import i18n, { syncHtmlLangAttributes } from '@/core/i18n/config'
+import {
+  SUPPORTED_LANGUAGES,
+  detectClientLanguage,
+  persistLanguagePreference,
+  type DetectionSource,
+  type SupportedLang,
+} from '@/core/i18n/languageDetector'
+import { GATEWAY_COPY } from '@/shared/gateway-i18n'
 import { type SiteFace, useFacePreference } from '@/shared/face-preference'
-import { getArgentinaDeskStatus, type ArtDeskStatus } from '@/faces/v2/v2-i18n'
 
-function prefetchFaceChunk(face: SiteFace): void {
-  if (face === 'classic') {
-    void import('@/faces/classic/ClassicFaceView')
-  } else {
-    void import('@/faces/v2/V2CloudUtilityApp')
+interface LocalDeskClock {
+  timeText: string
+  isBusinessWindow: boolean
+}
+
+interface GridTonePhase {
+  id: 'trust' | 'security' | 'predictability' | 'stability'
+  layerClass: string
+  accentHex: string
+  badgeTextClass: string
+  groupHoverTextClass: string
+  dotBgClass: string
+  keycapHoverClass: string
+}
+
+const GRID_PHASES: readonly GridTonePhase[] = [
+  {
+    id: 'trust',
+    layerClass: 'gw-grid-trust',
+    accentHex: '#3b82f6',
+    badgeTextClass: 'text-blue-300',
+    groupHoverTextClass: 'group-hover:text-blue-300',
+    dotBgClass: 'bg-blue-400',
+    keycapHoverClass: 'group-hover:border-blue-400/60 group-hover:text-blue-300',
+  },
+  {
+    id: 'security',
+    layerClass: 'gw-grid-security',
+    accentHex: '#10b981',
+    badgeTextClass: 'text-emerald-300',
+    groupHoverTextClass: 'group-hover:text-emerald-300',
+    dotBgClass: 'bg-emerald-400',
+    keycapHoverClass: 'group-hover:border-emerald-400/60 group-hover:text-emerald-300',
+  },
+  {
+    id: 'predictability',
+    layerClass: 'gw-grid-predictability',
+    accentHex: '#0ea5e9',
+    badgeTextClass: 'text-sky-300',
+    groupHoverTextClass: 'group-hover:text-sky-300',
+    dotBgClass: 'bg-sky-400',
+    keycapHoverClass: 'group-hover:border-sky-400/60 group-hover:text-sky-300',
+  },
+  {
+    id: 'stability',
+    layerClass: 'gw-grid-stability',
+    accentHex: '#94a3b8',
+    badgeTextClass: 'text-slate-200',
+    groupHoverTextClass: 'group-hover:text-slate-200',
+    dotBgClass: 'bg-slate-300',
+    keycapHoverClass: 'group-hover:border-slate-300/60 group-hover:text-slate-200',
+  },
+]
+
+const PHASE_INTERVAL_MS = 6000
+
+function readArgentinaClock(): LocalDeskClock {
+  try {
+    const now = new Date()
+    const parts = new Intl.DateTimeFormat('es-AR', {
+      timeZone: 'America/Argentina/Buenos_Aires',
+      weekday: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).formatToParts(now)
+
+    const hour = Number(parts.find((p) => p.type === 'hour')?.value ?? '12')
+    const minute = parts.find((p) => p.type === 'minute')?.value ?? '00'
+    const weekday = (parts.find((p) => p.type === 'weekday')?.value ?? '').toLowerCase()
+    const isWeekend =
+      weekday.startsWith('sáb') || weekday.startsWith('sab') || weekday.startsWith('dom')
+
+    return {
+      timeText: `${String(hour).padStart(2, '0')}:${minute} ART`,
+      isBusinessWindow: !isWeekend && hour >= 9 && hour < 19,
+    }
+  } catch {
+    return { timeText: 'UTC-3 ART', isBusinessWindow: true }
   }
 }
 
-function ExeLogo({ dotColor, className }: { dotColor: string; className?: string }) {
+function ExeMark({ accentHex, className }: { accentHex: string; className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -41,9 +125,30 @@ function ExeLogo({ dotColor, className }: { dotColor: string; className?: string
         d="M 480 0 L 342.5 0 L 374 42 L 438 42 L 438 79 L 385 79 L 385 121 L 438 121 L 438 158 L 374 158 L 342.5 200 L 480 200 Z"
         fill="currentColor"
       />
-      <rect x="493" y="165" width="35" height="35" fill={dotColor} rx="3" />
+      <rect
+        x="493"
+        y="165"
+        width="35"
+        height="35"
+        fill={accentHex}
+        rx="3"
+        className="transition-[fill] duration-1000"
+      />
     </svg>
   )
+}
+
+function runWithViewTransition(action: () => void): void {
+  if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+    const docWithVT = document as Document & {
+      startViewTransition?: (cb: () => void) => unknown
+    }
+    if (typeof docWithVT.startViewTransition === 'function') {
+      docWithVT.startViewTransition(action)
+      return
+    }
+  }
+  action()
 }
 
 export default function GatewayScreen() {
@@ -51,15 +156,70 @@ export default function GatewayScreen() {
   const searchParams = useSearchParams()
   const { face, isReady, setFace } = useFacePreference()
   const [navigatingTo, setNavigatingTo] = useState<SiteFace | null>(null)
-  const [deskStatus, setDeskStatus] = useState<ArtDeskStatus>(() => getArgentinaDeskStatus())
-  const [spotlight, setSpotlight] = useState<{ x: number; y: number }>({ x: 50, y: 30 })
+  const [hoveredDoor, setHoveredDoor] = useState<SiteFace | null>(null)
+  const [clock, setClock] = useState<LocalDeskClock | null>(null)
+  const [phaseIndex, setPhaseIndex] = useState<number>(0)
+  const [lockedByUser, setLockedByUser] = useState<boolean>(false)
+  const [lang, setLang] = useState<SupportedLang>('es')
+  const [detectionSource, setDetectionSource] = useState<DetectionSource>('fallback')
+  const [langMenuOpen, setLangMenuOpen] = useState<boolean>(false)
+  const langMenuRef = useRef<HTMLDivElement | null>(null)
 
   const forceChoose = searchParams?.get('choose') === '1'
+  const activePhase = GRID_PHASES[phaseIndex] ?? GRID_PHASES[0]!
+  const copy = GATEWAY_COPY[lang] ?? GATEWAY_COPY.es
+  const activeLangOption =
+    SUPPORTED_LANGUAGES.find((item) => item.code === lang) ?? SUPPORTED_LANGUAGES[0]!
 
+  // guardrail-ok(useEffect): hidratación de reloj local ART + autodetección de idioma tras SSR
   useEffect(() => {
-    setDeskStatus(getArgentinaDeskStatus())
+    setClock(readArgentinaClock())
+    const detected = detectClientLanguage()
+    setLang(detected.lang)
+    setDetectionSource(detected.source)
+    syncHtmlLangAttributes(detected.lang)
+    if (i18n.language !== detected.lang) {
+      void i18n.changeLanguage(detected.lang)
+    }
   }, [])
 
+  // guardrail-ok(useEffect): cierre del menú de idioma al hacer clic fuera o presionar Escape
+  useEffect(() => {
+    if (!langMenuOpen) return
+    const handleOutside = (event: MouseEvent | TouchEvent) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(event.target as Node)) {
+        setLangMenuOpen(false)
+      }
+    }
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setLangMenuOpen(false)
+    }
+    document.addEventListener('mousedown', handleOutside)
+    document.addEventListener('touchstart', handleOutside)
+    window.addEventListener('keydown', handleEsc)
+    return () => {
+      document.removeEventListener('mousedown', handleOutside)
+      document.removeEventListener('touchstart', handleOutside)
+      window.removeEventListener('keydown', handleEsc)
+    }
+  }, [langMenuOpen])
+
+  // guardrail-ok(useEffect): cadencia metronómica previsible cada 6s sobre la cuadrícula (respeta prefers-reduced-motion)
+  useEffect(() => {
+    if (lockedByUser || typeof window === 'undefined') return
+    if (
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return
+    }
+    const timer = window.setInterval(() => {
+      setPhaseIndex((prev) => (prev + 1) % GRID_PHASES.length)
+    }, PHASE_INTERVAL_MS)
+    return () => window.clearInterval(timer)
+  }, [lockedByUser])
+
+  // guardrail-ok(useEffect): redirección de preferencia persistida en localStorage hacia /classic o /v2
   useEffect(() => {
     if (!isReady || forceChoose) return
     if (face === 'classic' || face === 'v2') {
@@ -67,16 +227,30 @@ export default function GatewayScreen() {
     }
   }, [face, forceChoose, isReady, router])
 
+  const handleSelectLanguage = useCallback((nextLang: SupportedLang) => {
+    setLang(nextLang)
+    setDetectionSource('localStorage')
+    setLangMenuOpen(false)
+    persistLanguagePreference(nextLang)
+    syncHtmlLangAttributes(nextLang)
+    void i18n.changeLanguage(nextLang)
+  }, [])
+
   const handleSelectFace = useCallback(
     (selected: SiteFace) => {
       setNavigatingTo(selected)
       setFace(selected)
-      router.push(`/${selected}`)
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      }
+      runWithViewTransition(() => {
+        router.push(`/${selected}`, { scroll: true })
+      })
     },
     [router, setFace]
   )
 
-  // Keyboard shortcuts: press "1" for Classic, "2" for V2
+  // guardrail-ok(useEffect): suscripción global de teclado (teclas físicas 1 y 2)
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return
@@ -90,262 +264,331 @@ export default function GatewayScreen() {
   }, [handleSelectFace])
 
   const handlePrefetch = (target: SiteFace) => {
-    prefetchFaceChunk(target)
     router.prefetch(`/${target}`)
   }
 
-  const handlePointerMove = (event: MouseEvent<HTMLDivElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect()
-    const x = ((event.clientX - rect.left) / rect.width) * 100
-    const y = ((event.clientY - rect.top) / rect.height) * 100
-    setSpotlight({ x, y })
-  }
+  const gridTemplateClass =
+    hoveredDoor === 'classic'
+      ? 'md:grid-cols-[1.14fr_0.86fr]'
+      : hoveredDoor === 'v2'
+        ? 'md:grid-cols-[0.86fr_1.14fr]'
+        : 'md:grid-cols-2'
 
   return (
     <div
       data-face="gateway"
-      onMouseMove={handlePointerMove}
-      className="relative flex min-h-screen flex-col justify-between overflow-hidden bg-[#050811] text-slate-100"
+      dir={lang === 'ar' ? 'rtl' : 'ltr'}
+      className="relative flex min-h-[100dvh] flex-col justify-between bg-[#080b11] text-[#f2f2ee] selection:bg-blue-500/25 selection:text-white"
     >
-      {/* Ambient Grid + Aurora Mesh + Pointer Spotlight (100% GPU CSS, cero librerías) */}
-      <div className="gw-grid-bg pointer-events-none absolute inset-0" aria-hidden="true" />
-      <div
-        className="gw-aurora pointer-events-none absolute -top-40 left-1/4 h-[420px] w-[420px] rounded-full bg-sky-500/20 blur-[120px]"
-        aria-hidden="true"
-      />
-      <div
-        className="gw-aurora pointer-events-none absolute -bottom-40 right-1/4 h-[420px] w-[420px] rounded-full bg-fuchsia-500/15 blur-[120px]"
-        style={{ animationDelay: '3s' }}
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-300"
-        style={{
-          background: `radial-gradient(520px circle at ${spotlight.x}% ${spotlight.y}%, rgba(56, 189, 248, 0.09), transparent 65%)`,
-        }}
-        aria-hidden="true"
-      />
+      {/* Cuadrícula arquitectónica de doble escala con transición GPU previsible (1.8s) */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+        {GRID_PHASES.map((phase, idx) => (
+          <div
+            key={phase.id}
+            className={`gw-grid-layer ${phase.layerClass} absolute inset-0 transition-opacity duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              idx === phaseIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        ))}
+      </div>
 
-      {/* Top Executive Bar — Marca viva con identidad real EXE // PAGINASWEB.COM */}
-      <header className="relative z-10 overflow-hidden border-b border-white/[0.08] bg-[#050811]/80 px-4 py-3.5 backdrop-blur-md sm:px-8">
-        {/* Haz luminoso sutil recorriendo el borde inferior */}
-        <div
-          className="gw-header-beam pointer-events-none absolute bottom-0 left-0 h-[1.5px] w-1/3 bg-gradient-to-r from-transparent via-sky-400/80 to-transparent"
-          aria-hidden="true"
-        />
-
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
-          <div className="group flex items-center gap-3.5">
-            <div className="relative flex items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1.5 shadow-[0_0_20px_-6px_rgba(56,189,248,0.45)] transition-all duration-200 group-hover:border-sky-400/40 group-hover:shadow-[0_0_24px_-4px_rgba(56,189,248,0.65)]">
-              <ExeLogo dotColor="#38bdf8" className="h-4 w-auto text-white" />
-            </div>
-
-            <div className="flex flex-col leading-none">
-              <div className="flex items-center gap-1 text-[13px] font-extrabold tracking-wide text-white sm:text-[14px]">
-                <span>EXE</span>
-                <span className="font-black text-amber-400">{'//'}</span>
-                <span>PAGINASWEB</span>
-                <span className="bg-gradient-to-r from-sky-400 to-cyan-300 bg-clip-text text-transparent">
-                  .COM
-                </span>
-              </div>
-              <div className="mt-1 hidden items-center gap-1.5 text-[10.5px] font-medium tracking-wide text-slate-400 sm:flex">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
-                <span>Arquitectura Web Propia · Est. 2025</span>
-              </div>
-            </div>
+      {/* Cabecera Editorial Minimalista */}
+      <header className="relative z-20 border-b border-white/[0.08] px-5 py-4 sm:px-10">
+        <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-3.5 sm:gap-4">
+            <ExeMark
+              accentHex={activePhase.accentHex}
+              className="h-3.5 w-auto shrink-0 text-[#f2f2ee]"
+            />
+            <span className="hidden h-3.5 w-px bg-white/15 sm:block" aria-hidden="true" />
+            <span className="hidden truncate text-xs font-medium tracking-tight text-zinc-400 sm:inline">
+              {copy.headerRole}
+            </span>
           </div>
 
-          <div className="flex items-center gap-2.5">
-            <span
-              className={`hidden items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold md:inline-flex ${
-                deskStatus.isOpen
-                  ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-300'
-                  : 'border-amber-400/30 bg-amber-500/10 text-amber-300'
-              }`}
+          <div className="flex shrink-0 items-center gap-3 sm:gap-4 text-xs text-zinc-400">
+            {/* Selector / Metrónomo discreto del plano cromático */}
+            <div
+              role="group"
+              aria-label="Cadencia cromática del plano"
+              className="hidden items-center gap-2 lg:flex"
             >
-              {deskStatus.isOpen ? (
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
-              ) : (
-                <Lock className="h-3 w-3" aria-hidden="true" />
-              )}
-              <span>
-                {deskStatus.isOpen ? 'Mesa Activa' : 'Solo Días Hábiles'} ·{' '}
-                {deskStatus.artTimeFormatted}
+              <span className="font-mono text-[11px] text-zinc-500">
+                {copy.phases[activePhase.id]}
               </span>
-            </span>
+              <div className="flex items-center gap-1">
+                {GRID_PHASES.map((phase, idx) => {
+                  const isCurrent = idx === phaseIndex
+                  const phaseLabel = copy.phases[phase.id]
+                  return (
+                    <button
+                      key={phase.id}
+                      type="button"
+                      title={phaseLabel}
+                      aria-label={phaseLabel}
+                      aria-pressed={isCurrent}
+                      onClick={() => {
+                        if (isCurrent && lockedByUser) {
+                          setLockedByUser(false)
+                        } else {
+                          setPhaseIndex(idx)
+                          setLockedByUser(true)
+                        }
+                      }}
+                      className="group flex h-5 cursor-pointer items-center px-0.5 focus-visible:outline-1 focus-visible:outline-white/50"
+                    >
+                      <span
+                        className={`block h-[3px] rounded-full transition-all duration-500 ${
+                          isCurrent
+                            ? `w-5 ${phase.dotBgClass}`
+                            : 'w-2 bg-white/15 group-hover:bg-white/35'
+                        }`}
+                      />
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {clock && (
+              <span className="hidden items-center gap-2 font-mono text-[11px] tabular-nums md:inline-flex">
+                <span
+                  className={`h-1.5 w-1.5 rounded-full transition-colors duration-1000 ${
+                    clock.isBusinessWindow ? activePhase.dotBgClass : 'bg-zinc-500'
+                  }`}
+                  aria-hidden="true"
+                />
+                <span>Rosario · {clock.timeText}</span>
+              </span>
+            )}
+
+            {/* Globo Selector de Idioma + Indicador de Autodetección */}
+            <div ref={langMenuRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setLangMenuOpen((open) => !open)}
+                aria-expanded={langMenuOpen}
+                aria-haspopup="menu"
+                aria-label={`${copy.languageMenuLabel}: ${activeLangOption.nativeName}`}
+                className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-white/15 bg-white/[0.03] px-2.5 font-mono text-[11px] text-zinc-200 transition-colors hover:border-white/35 hover:bg-white/[0.07] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+              >
+                <Globe
+                  className={`h-3.5 w-3.5 shrink-0 transition-colors duration-700 ${activePhase.badgeTextClass}`}
+                  aria-hidden="true"
+                />
+                <span className="font-semibold">{activeLangOption.short}</span>
+                {detectionSource === 'navigator' && (
+                  <span className="hidden text-[9px] text-zinc-400 sm:inline">
+                    · {copy.autoDetectedTag}
+                  </span>
+                )}
+              </button>
+
+              {langMenuOpen && (
+                <div
+                  role="menu"
+                  aria-label={copy.languageMenuLabel}
+                  className="absolute inset-e-0 top-full z-50 mt-2 w-48 overflow-hidden rounded-xl border border-white/15 bg-[#0c1018] p-1.5 shadow-2xl"
+                >
+                  <div className="mb-1 flex items-center justify-between border-b border-white/[0.08] px-2.5 py-1.5 font-mono text-[10px] text-zinc-400">
+                    <span>{copy.languageMenuLabel}</span>
+                    <span>7 locales</span>
+                  </div>
+                  {SUPPORTED_LANGUAGES.map((option) => {
+                    const isSelected = option.code === lang
+                    return (
+                      <button
+                        key={option.code}
+                        type="button"
+                        role="menuitemradio"
+                        aria-checked={isSelected}
+                        onClick={() => handleSelectLanguage(option.code)}
+                        className={`flex w-full cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 text-start text-xs transition-colors ${
+                          isSelected
+                            ? 'bg-white/[0.09] font-semibold text-white'
+                            : 'text-zinc-300 hover:bg-white/[0.05] hover:text-white'
+                        }`}
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <span className="w-5 font-mono text-[10px] text-zinc-400">
+                            {option.short}
+                          </span>
+                          <span>{option.nativeName}</span>
+                        </span>
+                        {isSelected && (
+                          <Check
+                            className={`h-3.5 w-3.5 shrink-0 ${activePhase.badgeTextClass}`}
+                            aria-hidden="true"
+                          />
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
 
             <a
               href="mailto:exemetal@hotmail.com"
-              className="inline-flex items-center gap-1.5 rounded-md border border-sky-400/30 bg-sky-500/10 px-3 py-1.5 text-xs font-semibold text-sky-200 transition-colors hover:border-sky-300/60 hover:bg-sky-500/20 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+              className="inline-flex min-h-[36px] items-center text-xs font-medium text-zinc-200 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400"
             >
-              <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Contacto</span>
+              {copy.directContact}
             </a>
           </div>
         </div>
       </header>
 
-      {/* Main Split-Screen Executive Choice */}
-      <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:px-8">
-        <div className="mb-9 max-w-3xl">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-500/10 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-widest text-fuchsia-200">
-            <Sparkles className="h-3 w-3 text-fuchsia-300" aria-hidden="true" />
-            <span>Exequiel Echevarría · Software &amp; Web Architect</span>
-          </div>
-
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
-            Dos formas de entrar a{' '}
-            <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-emerald-400 bg-clip-text text-transparent">
-              ExePaginasWeb
-            </span>
+      {/* Cuerpo Central Asimétrico — Encuadre completo en el primer vistazo (768p–1080p) */}
+      <main className="relative z-10 mx-auto flex w-full max-w-[1320px] flex-1 flex-col justify-center px-5 py-6 sm:px-10 sm:py-8">
+        <div className="mb-6 max-w-3xl sm:mb-8">
+          <h1 className="text-[clamp(1.85rem,3.9vw,3.35rem)] font-semibold leading-[1.06] tracking-[-0.03em] text-[#f2f2ee]">
+            {copy.heroBefore}{' '}
+            <span
+              className={`mx-1 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3.5 py-1 align-middle font-mono text-[clamp(0.72rem,1.1vw,0.88rem)] font-normal tracking-normal transition-colors duration-1000 ${activePhase.badgeTextClass}`}
+            >
+              <span
+                className={`gw-dot-breathe h-1.5 w-1.5 rounded-full transition-colors duration-1000 ${activePhase.dotBgClass}`}
+              />
+              {copy.heroPill}
+            </span>{' '}
+            {copy.heroAfter}
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
-            Elegí la experiencia que mejor encaja con tu visita hoy. Guardamos tu elección para el
-            próximo ingreso y podés alternar cuando quieras.
+          <p className="mt-4 max-w-[60ch] text-sm leading-relaxed text-zinc-400 sm:text-base">
+            {copy.heroSubtitle}
           </p>
         </div>
 
+        {/* Díptico Arquitectónico Proporcional */}
         <div
-          className="grid grid-cols-1 gap-6 md:grid-cols-2"
           role="group"
-          aria-label="Selector de versión del sitio"
+          aria-label={copy.selectorAria}
+          onMouseLeave={() => setHoveredDoor(null)}
+          className={`grid grid-cols-1 border-y border-white/[0.11] bg-[#080b11]/55 backdrop-blur-[2px] transition-[grid-template-columns] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:divide-x md:divide-white/[0.11] ${gridTemplateClass}`}
         >
-          {/* Puerta 1: Classic (Estudio Interactivo Completo — Paleta Cyan/Violeta fiel a tu sitio) */}
+          {/* Entrada 01 — Classic */}
           <button
             type="button"
             onClick={() => handleSelectFace('classic')}
-            onMouseEnter={() => handlePrefetch('classic')}
-            onFocus={() => handlePrefetch('classic')}
+            onMouseEnter={() => {
+              setHoveredDoor('classic')
+              handlePrefetch('classic')
+            }}
+            onFocus={() => {
+              setHoveredDoor('classic')
+              handlePrefetch('classic')
+            }}
             disabled={navigatingTo !== null}
-            className="group relative flex min-h-[310px] cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-sky-400/20 bg-[#0b1120]/85 p-6 text-left backdrop-blur-md transition-[transform,opacity,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-sky-400/60 hover:shadow-[0_20px_50px_-15px_rgba(56,189,248,0.28)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 disabled:opacity-60 sm:p-8"
+            className="group relative flex min-h-[240px] cursor-pointer flex-col justify-between border-b border-white/[0.11] bg-transparent py-6 text-start transition-colors duration-300 hover:bg-white/[0.025] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-400 active:scale-[0.998] disabled:opacity-50 md:border-b-0 md:px-7"
           >
             <div>
-              <div className="mb-5 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-400/30 bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-300">
-                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                  Classic · Estudio Completo
-                </span>
-                <span className="inline-flex items-center gap-1.5 font-mono text-xs text-slate-400">
-                  <kbd className="rounded border border-slate-700 bg-slate-800/80 px-1.5 py-0.5 text-[10px] text-slate-300">
-                    1
-                  </kbd>
-                  <span>/classic</span>
-                </span>
+              <div className="flex items-center justify-between gap-4 font-mono text-xs tabular-nums text-zinc-500">
+                <span className="text-zinc-300">{copy.classicTag}</span>
+                <kbd
+                  className={`inline-flex h-6 min-w-[24px] items-center justify-center rounded border border-white/15 bg-white/[0.03] px-1.5 text-[11px] text-zinc-300 transition-colors ${activePhase.keycapHoverClass}`}
+                >
+                  1
+                </kbd>
               </div>
 
-              <h2 className="text-2xl font-bold text-white">Explorar el Ecosistema</h2>
-              <p className="mt-2 text-sm leading-relaxed text-slate-300">
-                La experiencia inmersiva completa de ExePaginasWeb: portafolio interactivo, demos en
-                vivo, cotizador, tienda y asistente IA integrado.
+              <h2 className="mt-6 text-2xl font-semibold tracking-[-0.02em] text-[#f2f2ee] sm:text-3xl">
+                {copy.classicTitle}
+              </h2>
+              <p className="mt-2.5 max-w-[46ch] text-sm leading-relaxed text-zinc-400">
+                {copy.classicDesc}
               </p>
-
-              <ul className="mt-5 space-y-2 text-xs text-slate-300">
-                <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-sky-400" aria-hidden="true" />
-                  Portafolio interactivo, demos y arquitectura real
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-fuchsia-400" aria-hidden="true" />
-                  Cotizador, tienda online y panel de cliente
-                </li>
-              </ul>
-
-              {/* Micro-Preview vivo: Ecosistema interactivo */}
-              <div
-                aria-hidden="true"
-                className="mt-5 flex items-center justify-between rounded-lg border border-sky-400/15 bg-[#050811]/80 px-3.5 py-2.5 font-mono text-[11px]"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="gw-dot-breathe h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_10px_#38bdf8]" />
-                  <span className="gw-dot-breathe h-1.5 w-1.5 rounded-full bg-fuchsia-400 [animation-delay:600ms]" />
-                  <span className="text-slate-300">interactive.studio</span>
-                </div>
-                <span className="text-[10px] text-sky-300/90">3D · Demos · AI Chat</span>
-              </div>
             </div>
 
-            <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-sm font-semibold text-sky-300">
-              <span>{navigatingTo === 'classic' ? 'Abriendo Classic...' : 'Entrar a Classic'}</span>
-              <ArrowRight
-                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
-                aria-hidden="true"
-              />
+            <div className="mt-8 flex items-center justify-between border-t border-white/[0.07] pt-4">
+              <span className="font-mono text-[11px] text-zinc-500">{copy.classicMeta}</span>
+              <span
+                className={`inline-flex items-center gap-1.5 text-xs font-medium text-[#f2f2ee] transition-colors duration-500 ${activePhase.groupHoverTextClass}`}
+              >
+                <span>{navigatingTo === 'classic' ? copy.classicOpening : copy.classicCta}</span>
+                <ArrowUpRight
+                  className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:-scale-x-100"
+                  aria-hidden="true"
+                />
+              </span>
             </div>
           </button>
 
-          {/* Puerta 2: V2 (Cloud Utility — Contraste Claro Ejecutivo + Esmeralda #047857) */}
+          {/* Entrada 02 — V2 Cloud Utility */}
           <button
             type="button"
             onClick={() => handleSelectFace('v2')}
-            onMouseEnter={() => handlePrefetch('v2')}
-            onFocus={() => handlePrefetch('v2')}
+            onMouseEnter={() => {
+              setHoveredDoor('v2')
+              handlePrefetch('v2')
+            }}
+            onFocus={() => {
+              setHoveredDoor('v2')
+              handlePrefetch('v2')
+            }}
             disabled={navigatingTo !== null}
-            className="group relative flex min-h-[310px] cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-[#ffffff] via-[#f8fafc] to-[#ecfdf5]/70 p-6 text-left text-[#0f172a] transition-[transform,opacity,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[#047857] hover:shadow-[0_20px_50px_-15px_rgba(16,185,129,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#047857] disabled:opacity-60 sm:p-8"
+            className="group relative flex min-h-[240px] cursor-pointer flex-col justify-between bg-transparent py-6 text-start transition-colors duration-300 hover:bg-white/[0.025] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-400 active:scale-[0.998] disabled:opacity-50 md:px-7"
           >
             <div>
-              <div className="mb-5 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0f172a] px-3 py-1 text-xs font-semibold text-white">
-                  <Terminal className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-                  V2 · Cloud Utility
+              <div className="flex items-center justify-between gap-4 font-mono text-xs tabular-nums text-zinc-500">
+                <span className={`transition-colors duration-1000 ${activePhase.badgeTextClass}`}>
+                  {copy.v2Tag}
                 </span>
-                <span className="inline-flex items-center gap-1.5 font-mono text-xs text-slate-500">
-                  <kbd className="rounded border border-slate-300 bg-white px-1.5 py-0.5 text-[10px] text-slate-700">
-                    2
-                  </kbd>
-                  <span>/v2</span>
-                </span>
+                <kbd
+                  className={`inline-flex h-6 min-w-[24px] items-center justify-center rounded border border-white/15 bg-white/[0.03] px-1.5 text-[11px] text-zinc-300 transition-colors ${activePhase.keycapHoverClass}`}
+                >
+                  2
+                </kbd>
               </div>
 
-              <h2 className="text-2xl font-bold text-[#0f172a]">Servicios Directos &amp; SLA</h2>
-              <p className="mt-2 text-sm leading-relaxed text-[#475569]">
-                Interfaz ejecutiva estilo AWS Cloud Utility: matriz comparativa en vivo, precios
-                transparentes, 7 idiomas y activación directa en 1 clic.
+              <h2 className="mt-6 text-2xl font-semibold tracking-[-0.02em] text-[#f2f2ee] sm:text-3xl">
+                {copy.v2Title}
+              </h2>
+              <p className="mt-2.5 max-w-[46ch] text-sm leading-relaxed text-zinc-400">
+                {copy.v2Desc}
               </p>
-
-              <ul className="mt-5 space-y-2 text-xs text-[#334155]">
-                <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-[#047857]" aria-hidden="true" />
-                  Matriz técnica interactiva + entrega y precios claros
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-[#047857]" aria-hidden="true" />7 idiomas,
-                  horario ART en vivo y brief copiable
-                </li>
-              </ul>
-
-              {/* Micro-Preview vivo: Matriz Cloud Utility */}
-              <div
-                aria-hidden="true"
-                className="mt-5 flex items-center justify-between rounded-lg border border-emerald-600/20 bg-white px-3.5 py-2.5 font-mono text-[11px] shadow-2xs"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="gw-dot-breathe h-2 w-2 rounded-full bg-[#047857]" />
-                  <span className="font-semibold text-[#0f172a]">edge-latam · 14ms</span>
-                </div>
-                <span className="rounded bg-[#ecfdf5] px-1.5 py-0.5 text-[10px] font-bold text-[#047857]">
-                  ✓ 99.9% SLA
-                </span>
-              </div>
             </div>
 
-            <div className="mt-6 flex items-center justify-between border-t border-slate-200/90 pt-4 text-sm font-bold text-[#047857]">
-              <span>{navigatingTo === 'v2' ? 'Abriendo V2...' : 'Entrar a V2 Cloud Utility'}</span>
-              <ArrowRight
-                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
-                aria-hidden="true"
-              />
+            <div className="mt-8 flex items-center justify-between border-t border-white/[0.07] pt-4">
+              <span className="font-mono text-[11px] text-zinc-500">{copy.v2Meta}</span>
+              <span
+                className={`inline-flex items-center gap-1.5 text-xs font-medium text-[#f2f2ee] transition-colors duration-500 ${activePhase.groupHoverTextClass}`}
+              >
+                <span>{navigatingTo === 'v2' ? copy.v2Opening : copy.v2Cta}</span>
+                <ArrowUpRight
+                  className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:-scale-x-100"
+                  aria-hidden="true"
+                />
+              </span>
             </div>
           </button>
         </div>
       </main>
 
-      <footer className="relative z-10 border-t border-white/[0.08] px-4 py-4 text-xs text-slate-400 sm:px-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 sm:flex-row">
+      {/* Pie Técnico con Accesos Directos Silenciosos */}
+      <footer className="relative z-10 border-t border-white/[0.08] px-5 py-4 text-xs text-zinc-500 sm:px-10">
+        <div className="mx-auto flex max-w-[1320px] flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
           <span>© 2025 Exequiel Echevarría — ExePaginasWeb</span>
-          <span className="font-mono text-[11px] text-slate-500">
-            Atajos: [1] Classic · [2] V2 Cloud Utility
-          </span>
+
+          <nav
+            aria-label="Accesos rápidos"
+            className="flex flex-wrap items-center gap-5 font-mono text-[11px]"
+          >
+            <Link
+              href="/cotizador"
+              className="text-zinc-400 transition-colors hover:text-[#f2f2ee]"
+            >
+              /cotizador
+            </Link>
+            <Link href="/tienda" className="text-zinc-400 transition-colors hover:text-[#f2f2ee]">
+              /tienda
+            </Link>
+            <Link
+              href="/dashboard"
+              className="text-zinc-400 transition-colors hover:text-[#f2f2ee]"
+            >
+              /panel
+            </Link>
+            <span className="hidden text-zinc-600 md:inline">{copy.footerKeyboard}</span>
+          </nav>
         </div>
       </footer>
     </div>

@@ -12,7 +12,9 @@
 'use client'
 
 import React, { useState, useEffect, useMemo, useRef } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { ArrowUpRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@astryxdesign/core'
 import HudButton from '@/components/HudButton'
@@ -66,6 +68,7 @@ export const OptimusScaleHero: React.FC = () => {
     return ROTATING_WORDS
   }, [t])
 
+  // guardrail-ok(useEffect): setInterval para rotar palabras animadas — suscripción DOM externa
   useEffect(() => {
     const interval = setInterval(() => {
       setWordIndex((prev) => (prev + 1) % rotatingWords.length)

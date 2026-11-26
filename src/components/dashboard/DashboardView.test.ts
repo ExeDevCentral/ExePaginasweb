@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
@@ -9,6 +9,7 @@ import { DASHBOARD_VIEWS, isDashboardView, setTabInUrl } from './DashboardView'
 describe('DashboardView', () => {
   it('reconoce vistas válidas', () => {
     expect(isDashboardView('overview')).toBe(true)
+    expect(isDashboardView('instagram')).toBe(true)
     expect(isDashboardView('admin')).toBe(true)
     expect(isDashboardView('settings')).toBe(true)
   })
@@ -26,6 +27,7 @@ describe('DashboardView', () => {
       'workgroups',
       'sla',
       'invoices',
+      'instagram',
       'settings',
       'admin',
     ])

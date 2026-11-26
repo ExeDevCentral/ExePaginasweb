@@ -37,6 +37,7 @@ Single-context repo (one `CONTEXT.md` + `GLOSSARY.md` + `docs/adr/` at the root)
   - **Bugs / Errores / Regresiones**: `diagnose` / `systematic-debugging` + `tdd`.
   - **Seguridad / APIs / Auth / Pagos**: `security-and-hardening` + `supabase-migration-checker` / `supabase-postgres-best-practices`.
   - **Performance / Core Web Vitals**: `performance-optimization` + `vercel-react-best-practices`.
+  - **Contenido Orgánico / Reels / Copywriting Minimalista**: `instagram-studio` + `.agents/instagram/voice.md` (cero datos inventados, cero slop IA, voz directa ES-AR).
   - **Evals & Mejora de Skills**: `promptfoo-evals`, `skill-creator`, `.agents/evals/lessons.md`.
 - **Feedback Loop obligatorio (económico y automático antes de cerrar cualquier tarea con código)**:
   1. Elegir **Tier mínimo** (1 agente por defecto; máx. 2–3 workers en `/teamwork`) e iterar primero con tests puntuales y checks `--changed`.

@@ -161,49 +161,79 @@
 [data-face='gateway'] {
   position: relative;
   z-index: 10;
-  background-color: #050811;
-  color: #f8fafc;
+  background-color: #080b11;
+  color: #f2f2ee;
 }
 
-@keyframes gwAuroraDrift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-    opacity: 0.42;
-  }
-  50% {
-    transform: translate3d(24px, -18px, 0) scale(1.06);
-    opacity: 0.62;
-  }
+/* Capas de cuadrícula arquitectónica de doble escala (64px menor + 256px estructural)
+   Animadas exclusivamente por opacidad en GPU para 0 repaints y máxima fluidez. */
+[data-face='gateway'] .gw-grid-layer {
+  mask-image: radial-gradient(ellipse 92% 78% at 38% 34%, #000 30%, rgba(0, 0, 0, 0.45) 68%, transparent 100%);
+  will-change: opacity;
 }
 
-@keyframes gwBorderSweep {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-[data-face='gateway'] .gw-aurora {
-  animation: gwAuroraDrift 9s ease-in-out infinite;
-}
-
-[data-face='gateway'] .gw-grid-bg {
+/* 01 · Azul Cobalto Institucional — Confianza & Autoridad Técnica */
+[data-face='gateway'] .gw-grid-trust {
   background-image:
-    linear-gradient(to right, rgba(56, 189, 248, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 25%, #000 35%, transparent 100%);
+    linear-gradient(to right, rgba(59, 130, 246, 0.16) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.16) 1px, transparent 1px),
+    linear-gradient(to right, rgba(59, 130, 246, 0.065) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.065) 1px, transparent 1px),
+    radial-gradient(circle at 32% 24%, rgba(37, 99, 235, 0.11), transparent 58%);
+  background-size:
+    256px 256px,
+    256px 256px,
+    64px 64px,
+    64px 64px,
+    100% 100%;
 }
 
-[data-face='gateway'] .gw-shimmer-border {
-  background-size: 200% 200%;
-  animation: gwBorderSweep 6s ease infinite;
+/* 02 · Verde Jade de Bóveda — Seguridad & Integridad Operativa */
+[data-face='gateway'] .gw-grid-security {
+  background-image:
+    linear-gradient(to right, rgba(16, 185, 129, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 185, 129, 0.15) 1px, transparent 1px),
+    linear-gradient(to right, rgba(16, 185, 129, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 185, 129, 0.06) 1px, transparent 1px),
+    radial-gradient(circle at 36% 28%, rgba(5, 150, 105, 0.11), transparent 58%);
+  background-size:
+    256px 256px,
+    256px 256px,
+    64px 64px,
+    64px 64px,
+    100% 100%;
+}
+
+/* 03 · Petróleo Ártico — Previsibilidad & Exactitud de Plano */
+[data-face='gateway'] .gw-grid-predictability {
+  background-image:
+    linear-gradient(to right, rgba(14, 165, 233, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(14, 165, 233, 0.15) 1px, transparent 1px),
+    linear-gradient(to right, rgba(20, 184, 166, 0.065) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20, 184, 166, 0.065) 1px, transparent 1px),
+    radial-gradient(circle at 40% 26%, rgba(2, 132, 199, 0.11), transparent 58%);
+  background-size:
+    256px 256px,
+    256px 256px,
+    64px 64px,
+    64px 64px,
+    100% 100%;
+}
+
+/* 04 · Acero Templado — Estabilidad & Permanencia Estructural */
+[data-face='gateway'] .gw-grid-stability {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.15) 1px, transparent 1px),
+    linear-gradient(to right, rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    radial-gradient(circle at 34% 26%, rgba(100, 116, 139, 0.12), transparent 58%);
+  background-size:
+    256px 256px,
+    256px 256px,
+    64px 64px,
+    64px 64px,
+    100% 100%;
 }
 
 @keyframes gwBeamSlide {

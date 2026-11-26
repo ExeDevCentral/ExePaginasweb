@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
@@ -33,6 +33,7 @@ import WorkGroupsPanel from '../workgroups/WorkGroupsPanel'
 import ServicesPanel, { type EcosystemSubTab } from '../services/ServicesPanel'
 import SLADashboard from '../sla/SLADashboard'
 import InvoicesPanel from '../invoices/InvoicesPanel'
+import InstagramStudioPanel from './InstagramStudioPanel'
 import SettingsPanel from './SettingsPanel'
 import SupportTicketPanel, { type TicketDraft } from './SupportTicketPanel'
 import CheckoutModal from '../store/CheckoutModal'
@@ -381,6 +382,14 @@ export function DashboardViewport({
                       onRefresh={handleGlobalRefresh}
                     />
                   </div>
+                </PanelErrorBoundary>
+              </motion.div>
+            )}
+
+            {activeView === 'instagram' && (
+              <motion.div key="view-instagram" {...VIEW_TRANSITION}>
+                <PanelErrorBoundary panelName="Mesa Editorial IG">
+                  <InstagramStudioPanel />
                 </PanelErrorBoundary>
               </motion.div>
             )}

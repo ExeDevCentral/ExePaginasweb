@@ -25,6 +25,7 @@ import {
   Zap,
 } from 'lucide-react'
 import i18n, { syncHtmlLangAttributes } from '@/core/i18n/config'
+import { detectClientLanguage, persistLanguagePreference } from '@/core/i18n/languageDetector'
 import {
   formatTierSetup,
   type PricingTier,
@@ -202,39 +203,53 @@ export default function V2CloudUtilityApp() {
     window.requestAnimationFrame(() => {
       if (scrollToMatrix) {
         const headerBtn = matrixHeaderRefs.current[planId]
+        const briefEl = briefBarRef.current
         const matrixEl = matrixSectionRef.current
-        if (headerBtn && typeof headerBtn.scrollIntoView === 'function') {
-          headerBtn.scrollIntoView({
-            behavior: prefersReduced ? 'auto' : 'smooth',
-            block: 'nearest',
-            inline: 'center',
-          })
+
+        if (headerBtn) {
           headerBtn.focus({ preventScroll: true })
-        } else if (matrixEl && typeof matrixEl.scrollIntoView === 'function') {
-          matrixEl.scrollIntoView({
-            behavior: prefersReduced ? 'auto' : 'smooth',
-            block: 'nearest',
-          })
+        }
+
+        // Solo desplazar suavemente si la barra resumen o el encabezado de la matriz quedan cortados fuera de vista
+        const anchorEl = briefEl ?? matrixEl
+        if (anchorEl && typeof anchorEl.scrollIntoView === 'function') {
+          const rect = anchorEl.getBoundingClientRect()
+          const headerSafeOffset = window.innerWidth < 640 ? 106 : 72
+          const matrixTop = matrixEl?.getBoundingClientRect().top ?? rect.bottom
+          const isCutOff = rect.top < headerSafeOffset || matrixTop > window.innerHeight - 140
+          if (isCutOff) {
+            anchorEl.scrollIntoView({
+              behavior: prefersReduced ? 'auto' : 'smooth',
+              block: 'start',
+            })
+          }
         }
       } else {
         const briefEl = briefBarRef.current
         if (briefEl && typeof briefEl.scrollIntoView === 'function') {
-          briefEl.scrollIntoView({
-            behavior: prefersReduced ? 'auto' : 'smooth',
-            block: 'nearest',
-          })
+          const rect = briefEl.getBoundingClientRect()
+          const headerSafeOffset = window.innerWidth < 640 ? 106 : 72
+          if (rect.top < headerSafeOffset || rect.bottom > window.innerHeight - 24) {
+            briefEl.scrollIntoView({
+              behavior: prefersReduced ? 'auto' : 'smooth',
+              block: 'nearest',
+            })
+          }
         }
       }
     })
   }, [])
 
-  // guardrail-ok(useEffect): external-sync hydrate initial language from localStorage / i18n
+  // guardrail-ok(useEffect): autodetección de idioma tras hidratación SSR sin mismatch
   useEffect(() => {
     try {
-      const saved = window.localStorage.getItem('lang') || i18n.language
-      const resolved = normalizeV2Lang(saved)
+      const { lang: detected } = detectClientLanguage()
+      const resolved = normalizeV2Lang(detected)
       setLang(resolved)
       syncHtmlLangAttributes(resolved)
+      if (i18n.language !== resolved) {
+        void i18n.changeLanguage(resolved)
+      }
     } catch {
       setLang('es')
     }
@@ -243,41 +258,49 @@ export default function V2CloudUtilityApp() {
   const handleLanguageChange = (nextLang: V2Lang) => {
     setLang(nextLang)
     syncHtmlLangAttributes(nextLang)
-    try {
-      window.localStorage.setItem('lang', nextLang)
-      void i18n.changeLanguage(nextLang)
-    } catch {
-      // safe fallback
-    }
+    persistLanguagePreference(nextLang)
+    void i18n.changeLanguage(nextLang)
   }
 
-  const runLiveMatrixCheck = useCallback(() => {
+  const triggerMatrixSweepOnly = useCallback(() => {
     setCellState('checking')
     setCheckRunId((n) => n + 1)
     setDeskStatus(getArgentinaDeskStatus())
     const timer = window.setTimeout(() => {
       setCellState('ok')
     }, 380)
+    return () => window.clearTimeout(timer)
+  }, [])
+
+  const runLiveMatrixCheck = useCallback(() => {
+    const cleanup = triggerMatrixSweepOnly()
 
     if (typeof window !== 'undefined' && matrixSectionRef.current) {
       const prefersReduced =
         typeof window.matchMedia === 'function' &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      if (typeof matrixSectionRef.current.scrollIntoView === 'function') {
+      const rect = matrixSectionRef.current.getBoundingClientRect()
+      if (
+        (rect.top < 72 || rect.top > window.innerHeight - 160) &&
+        typeof matrixSectionRef.current.scrollIntoView === 'function'
+      ) {
         matrixSectionRef.current.scrollIntoView({
           behavior: prefersReduced ? 'auto' : 'smooth',
-          block: 'nearest',
+          block: 'start',
         })
       }
     }
 
-    return () => window.clearTimeout(timer)
-  }, [])
+    return cleanup
+  }, [triggerMatrixSweepOnly])
 
-  // guardrail-ok(useEffect): timer trigger live matrix verification sweep on mount
+  // guardrail-ok(useEffect): inicia verificación visual de celdas y garantiza foco superior limpio (y=0) al abrir /v2
   useEffect(() => {
-    return runLiveMatrixCheck()
-  }, [runLiveMatrixCheck])
+    if (typeof window !== 'undefined' && !window.location.hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    }
+    return triggerMatrixSweepOnly()
+  }, [triggerMatrixSweepOnly])
 
   // guardrail-ok(useEffect): timer refresh Argentina business clock every 60s
   useEffect(() => {
@@ -494,10 +517,10 @@ export default function V2CloudUtilityApp() {
         </div>
       </header>
 
-      {/* 2. CONTENIDO PRINCIPAL */}
-      <main className="mx-auto w-[94vw] max-w-[1380px] pt-[108px] pb-[72px] sm:w-[92vw] sm:pt-[76px] sm:pb-[84px]">
+      {/* 2. CONTENIDO PRINCIPAL — Proporción calibrada para que Hero + 5 Planes + Resumen entren enteros en el primer vistazo */}
+      <main className="mx-auto w-[94vw] max-w-[1380px] pt-[98px] pb-[64px] sm:w-[92vw] sm:pt-[68px] sm:pb-[76px]">
         {/* Hero + Sello Permanente de Autoría Directa + Estado Real de Mesa de Ingeniería (Lun–Vie 08:00–18:00 ART) */}
-        <section className="v2-enter v2-blueprint-hero mb-5 flex flex-col justify-between gap-4 rounded-xl border border-[#e2e8f0] bg-white/85 p-4 shadow-2xs sm:mb-6 sm:p-5 lg:flex-row lg:items-end lg:px-6">
+        <section className="v2-enter v2-blueprint-hero mb-3.5 flex flex-col justify-between gap-3.5 rounded-xl border border-[#e2e8f0] bg-white/90 p-3.5 shadow-2xs sm:mb-4 sm:p-4 lg:flex-row lg:items-end lg:px-5">
           <div className="max-w-3xl">
             <div className="mb-2.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
               <span
@@ -583,8 +606,8 @@ export default function V2CloudUtilityApp() {
         </section>
 
         {/* 3. CARDS INTERACTIVAS SINCRONIZADAS CON LA MATRIZ */}
-        <section aria-label="Service cards" className="mb-7">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <section aria-label="Service cards" className="mb-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {SERVICE_PLANS.map((plan, index) => {
               const planCopy = copy.plans[plan.id] ?? copy.plans['tienda-turnos']!
               const isSelected = plan.id === selectedPlan.id
@@ -745,7 +768,7 @@ export default function V2CloudUtilityApp() {
             ref={briefBarRef}
             key={`${selectedPlan.id}-${lang}-${focusPulseKey}`}
             data-brief-bar="true"
-            className={`v2-enter relative mt-4 flex flex-col justify-between gap-3 overflow-hidden rounded-lg border bg-white p-4 shadow-xs lg:flex-row lg:items-center lg:px-5 ${
+            className={`v2-enter relative mt-3 flex scroll-mt-[106px] flex-col justify-between gap-3 overflow-hidden rounded-lg border bg-white p-3.5 shadow-xs sm:scroll-mt-[72px] lg:flex-row lg:items-center lg:px-5 ${
               selectedPlan.isLinuxSpecial
                 ? 'v2-focus-ring-amber border-[#f59e0b]/45'
                 : 'v2-focus-ring border-[#047857]/35'
@@ -804,7 +827,11 @@ export default function V2CloudUtilityApp() {
         </section>
 
         {/* 4. MATRIZ ESTILO AWS WORKSPACES */}
-        <section ref={matrixSectionRef} aria-label="Technical comparison matrix">
+        <section
+          ref={matrixSectionRef}
+          aria-label="Technical comparison matrix"
+          className="scroll-mt-[106px] sm:scroll-mt-[72px]"
+        >
           {/* Selector rápido de columna + Ficha móvil del plan activo (visible en pantallas chicas <md) */}
           <div className="mb-3 rounded-lg border border-[#e2e8f0] bg-white p-3.5 shadow-2xs md:hidden">
             <div className="mb-2.5 flex flex-wrap gap-1.5" role="group" aria-label="Plan selector">

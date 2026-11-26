@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
@@ -21,6 +21,7 @@ import {
   Shield,
   Package,
   Calculator,
+  FileText,
   Plus,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -157,6 +158,18 @@ export function DashboardSidebar({
         accentClass: 'text-cyan-500',
         isActive: activeView === 'services' && activeEcosystemTab === 'quoter',
         onSelect: () => triggerEcosystem('quoter'),
+      },
+      {
+        id: 'hub-instagram',
+        label: t('dashboard.nav_mesa_editorial_ig', 'Mesa Editorial · IG'),
+        keywords: 'instagram reels hooks caption humanizer guion beat sheet contenido',
+        icon: FileText,
+        accentClass: 'text-emerald-500',
+        isActive: activeView === 'instagram',
+        onSelect: () => {
+          onNavigate('instagram')
+          onCloseSidebar()
+        },
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps

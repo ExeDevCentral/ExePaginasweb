@@ -1,5 +1,5 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
@@ -78,6 +78,12 @@ export function DashboardHeader({
       label: t('dashboard.quick_facturas', 'Facturas'),
       active: activeView === 'invoices',
       onClick: () => onNavigate?.('invoices'),
+    },
+    {
+      id: 'q-instagram',
+      label: t('dashboard.quick_instagram', 'Mesa IG'),
+      active: activeView === 'instagram',
+      onClick: () => onNavigate?.('instagram'),
     },
   ]
 

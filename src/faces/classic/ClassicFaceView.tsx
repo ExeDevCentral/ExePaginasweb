@@ -12,7 +12,7 @@ import BrandIntroSplash from '@/components/layout/BrandIntroSplash'
 import MobileLandingView from '@/components/landing/MobileLandingView'
 import DesktopLandingView from '@/components/landing/DesktopLandingView'
 import BackToTopButton from '@/components/layout/BackToTopButton'
-import { SwitchFaceLink } from '@/shared/SwitchFaceLink'
+import { FaceReturnDock } from '@/shared/FaceReturnDock'
 
 const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatWidget'), {
   ssr: false,
@@ -72,10 +72,8 @@ export default function ClassicFaceView() {
           )}
         </main>
 
-        {/* Floating non-intrusive switch link back to Gateway (?choose=1) */}
-        <div className="fixed bottom-4 left-4 z-40">
-          <SwitchFaceLink currentFace="classic" />
-        </div>
+        {/* Umbral de versiones: doble hover para volver a elegir Classic o V2 */}
+        <FaceReturnDock currentFace="classic" />
 
         <BackToTopButton />
         <DeferredChatWidget />

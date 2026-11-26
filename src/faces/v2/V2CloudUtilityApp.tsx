@@ -16,7 +16,6 @@ import {
   Copy,
   Globe,
   Info,
-  Layers,
   Lock,
   RefreshCw,
   ShieldCheck,
@@ -32,6 +31,10 @@ import {
   type ServiceRateCard,
   UNIFIED_PRICING,
 } from '@/shared/pricing-catalog'
+import { FaceReturnDock } from '@/shared/FaceReturnDock'
+import { readStoredPricingTier, writeStoredPricingTier } from '@/shared/pricing-preference'
+import { readStoredV2PlanId, writeStoredV2PlanId } from '@/shared/v2-plan-preference'
+import V2BackToTopButton from './V2BackToTopButton'
 import {
   getArgentinaDeskStatus,
   normalizeV2Lang,
@@ -180,7 +183,7 @@ export default function V2CloudUtilityApp() {
   const [tier, setTier] = useState<PricingTier>('ARS_PYME')
   const [selectedId, setSelectedId] = useState<string>('tienda-turnos')
   const [cellState, setCellState] = useState<CellState>('checking')
-  const [deskStatus, setDeskStatus] = useState<ArtDeskStatus>(() => getArgentinaDeskStatus())
+  const [deskStatus, setDeskStatus] = useState<ArtDeskStatus | null>(null)
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
   const [checkRunId, setCheckRunId] = useState(0)
   const [briefCopied, setBriefCopied] = useState(false)
@@ -193,6 +196,7 @@ export default function V2CloudUtilityApp() {
 
   const focusMatrixColumn = useCallback((planId: string, scrollToMatrix: boolean) => {
     setSelectedId(planId)
+    writeStoredV2PlanId(planId as ServiceRateCard['id'])
     setFocusPulseKey((k) => k + 1)
 
     if (typeof window === 'undefined') return
@@ -255,6 +259,18 @@ export default function V2CloudUtilityApp() {
     }
   }, [])
 
+  // guardrail-ok(useEffect): restaura la modalidad de precio elegida por el cliente tras recargar
+  useEffect(() => {
+    const storedTier = readStoredPricingTier()
+    if (storedTier) setTier(storedTier)
+  }, [])
+
+  // guardrail-ok(useEffect): restaura el plan seleccionado sin forzar scroll al montar
+  useEffect(() => {
+    const storedPlanId = readStoredV2PlanId()
+    if (storedPlanId) setSelectedId(storedPlanId)
+  }, [])
+
   const handleLanguageChange = (nextLang: V2Lang) => {
     setLang(nextLang)
     syncHtmlLangAttributes(nextLang)
@@ -262,10 +278,15 @@ export default function V2CloudUtilityApp() {
     void i18n.changeLanguage(nextLang)
   }
 
+  const handleTierChange = (nextTier: PricingTier) => {
+    setTier(nextTier)
+    writeStoredPricingTier(nextTier)
+  }
+
   const triggerMatrixSweepOnly = useCallback(() => {
     setCellState('checking')
     setCheckRunId((n) => n + 1)
-    setDeskStatus(getArgentinaDeskStatus())
+    if (typeof window !== 'undefined') setDeskStatus(getArgentinaDeskStatus())
     const timer = window.setTimeout(() => {
       setCellState('ok')
     }, 380)
@@ -302,8 +323,9 @@ export default function V2CloudUtilityApp() {
     return triggerMatrixSweepOnly()
   }, [triggerMatrixSweepOnly])
 
-  // guardrail-ok(useEffect): timer refresh Argentina business clock every 60s
+  // guardrail-ok(useEffect): hidrata estado de mesa en cliente para evitar mismatch SSR/cliente (#418)
   useEffect(() => {
+    setDeskStatus(getArgentinaDeskStatus())
     const interval = window.setInterval(() => {
       setDeskStatus(getArgentinaDeskStatus())
     }, 60_000)
@@ -334,7 +356,11 @@ export default function V2CloudUtilityApp() {
       `Architect: Exequiel Echevarría (Software & Web Architect · Est. 2025 · 100% Owned Code)`,
       `Plan: ${selectedPlanCopy.name} | ${formatPlanPrice(selectedPlan)} (${getTierTag(tier)}) | ${selectedPlanCopy.deliveryTime}`,
       `Included: ${selectedPlanCopy.highlights.join(' · ')}`,
-      `Desk Status: ${deskStatus.isOpen ? 'OPEN' : 'BUSINESS DAYS ONLY (Mon-Fri 08:00-18:00 ART)'} (${deskStatus.artTimeFormatted})`,
+      `Desk Status: ${
+        deskStatus
+          ? `${deskStatus.isOpen ? 'OPEN' : 'BUSINESS DAYS ONLY (Mon-Fri 08:00-18:00 ART)'} (${deskStatus.artTimeFormatted})`
+          : 'Mon-Fri 08:00-18:00 ART'
+      }`,
       `Contact: https://exepaginasweb.com | exemetal@hotmail.com`,
     ].join('\n')
 
@@ -370,20 +396,30 @@ export default function V2CloudUtilityApp() {
 
             <span
               className={`hidden shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] leading-none font-semibold whitespace-nowrap 2xl:inline-flex ${
-                deskStatus.isOpen
+                deskStatus?.isOpen
                   ? 'border-[#047857]/25 bg-[#ecfdf5] text-[#047857]'
-                  : 'border-[#b45309]/25 bg-[#fffbeb] text-[#b45309]'
+                  : deskStatus
+                    ? 'border-[#b45309]/25 bg-[#fffbeb] text-[#b45309]'
+                    : 'border-[#cbd5e1] bg-[#f8fafc] text-[#475569]'
               }`}
               title={copy.deskHoursRule}
             >
               <span
                 className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-                  deskStatus.isOpen ? 'bg-[#047857]' : 'bg-[#b45309]'
+                  deskStatus?.isOpen ? 'bg-[#047857]' : deskStatus ? 'bg-[#b45309]' : 'bg-[#94a3b8]'
                 }`}
                 aria-hidden="true"
               />
-              <span>{deskStatus.isOpen ? copy.deskOpenBadge : copy.deskClosedBadge}</span>
-              <span className="v2-mono-num opacity-85">· {deskStatus.artTimeFormatted}</span>
+              <span>
+                {deskStatus
+                  ? deskStatus.isOpen
+                    ? copy.deskOpenBadge
+                    : copy.deskClosedBadge
+                  : copy.deskHoursRule}
+              </span>
+              {deskStatus ? (
+                <span className="v2-mono-num opacity-85">· {deskStatus.artTimeFormatted}</span>
+              ) : null}
             </span>
           </div>
 
@@ -397,7 +433,7 @@ export default function V2CloudUtilityApp() {
               <button
                 type="button"
                 aria-pressed={tier === 'ARS_PYME'}
-                onClick={() => setTier('ARS_PYME')}
+                onClick={() => handleTierChange('ARS_PYME')}
                 title="Precios en Pesos para PyMEs y Emprendedores de Argentina"
                 className={`inline-flex h-full shrink-0 cursor-pointer items-center justify-center rounded px-2.5 leading-none whitespace-nowrap transition-colors ${
                   tier === 'ARS_PYME'
@@ -410,7 +446,7 @@ export default function V2CloudUtilityApp() {
               <button
                 type="button"
                 aria-pressed={tier === 'USD_AR'}
-                onClick={() => setTier('USD_AR')}
+                onClick={() => handleTierChange('USD_AR')}
                 title="Precios en USD para Empresas de Argentina (~31% bonificación sobre tarifa internacional)"
                 className={`v2-mono-num inline-flex h-full shrink-0 cursor-pointer items-center justify-center rounded px-2.5 leading-none whitespace-nowrap transition-colors ${
                   tier === 'USD_AR'
@@ -423,7 +459,7 @@ export default function V2CloudUtilityApp() {
               <button
                 type="button"
                 aria-pressed={tier === 'USD_INTL'}
-                onClick={() => setTier('USD_INTL')}
+                onClick={() => handleTierChange('USD_INTL')}
                 title="International / Global USD Rate"
                 className={`inline-flex h-full shrink-0 cursor-pointer items-center justify-center rounded px-2.5 leading-none whitespace-nowrap transition-colors ${
                   tier === 'USD_INTL'
@@ -454,15 +490,6 @@ export default function V2CloudUtilityApp() {
               </select>
             </label>
 
-            <Link
-              href="/?choose=1"
-              className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-[#e2e8f0] bg-white px-2 text-xs leading-none font-semibold whitespace-nowrap text-[#334155] transition-all duration-150 hover:border-[#cbd5e1] hover:bg-[#f8fafc] hover:text-[#0f172a] sm:px-2.5"
-              title={copy.switchVersion}
-            >
-              <Layers className="h-3.5 w-3.5 shrink-0 text-[#047857]" aria-hidden="true" />
-              <span className="hidden md:inline">{copy.switchVersion}</span>
-            </Link>
-
             <a
               href={whatsappUrl(selectedPlan)}
               target="_blank"
@@ -486,7 +513,7 @@ export default function V2CloudUtilityApp() {
             <button
               type="button"
               aria-pressed={tier === 'ARS_PYME'}
-              onClick={() => setTier('ARS_PYME')}
+              onClick={() => handleTierChange('ARS_PYME')}
               className={`inline-flex h-7 cursor-pointer items-center justify-center rounded px-1.5 leading-none whitespace-nowrap transition-colors ${
                 tier === 'ARS_PYME' ? 'bg-[#047857] text-white' : 'text-[#475569]'
               }`}
@@ -496,7 +523,7 @@ export default function V2CloudUtilityApp() {
             <button
               type="button"
               aria-pressed={tier === 'USD_AR'}
-              onClick={() => setTier('USD_AR')}
+              onClick={() => handleTierChange('USD_AR')}
               className={`v2-mono-num inline-flex h-7 cursor-pointer items-center justify-center rounded px-1.5 leading-none whitespace-nowrap transition-colors ${
                 tier === 'USD_AR' ? 'bg-[#0f172a] text-white' : 'text-[#475569]'
               }`}
@@ -506,7 +533,7 @@ export default function V2CloudUtilityApp() {
             <button
               type="button"
               aria-pressed={tier === 'USD_INTL'}
-              onClick={() => setTier('USD_INTL')}
+              onClick={() => handleTierChange('USD_INTL')}
               className={`inline-flex h-7 cursor-pointer items-center justify-center rounded px-1.5 leading-none whitespace-nowrap transition-colors ${
                 tier === 'USD_INTL' ? 'bg-[#2563eb] text-white' : 'text-[#475569]'
               }`}
@@ -518,31 +545,42 @@ export default function V2CloudUtilityApp() {
       </header>
 
       {/* 2. CONTENIDO PRINCIPAL — Proporción calibrada para que Hero + 5 Planes + Resumen entren enteros en el primer vistazo */}
-      <main className="mx-auto w-[94vw] max-w-[1380px] pt-[98px] pb-[64px] sm:w-[92vw] sm:pt-[68px] sm:pb-[76px]">
+      <main className="mx-auto w-[94vw] max-w-[1380px] pt-[98px] pb-[104px] sm:w-[92vw] sm:pt-[68px] sm:pb-[112px]">
         {/* Hero + Sello Permanente de Autoría Directa + Estado Real de Mesa de Ingeniería (Lun–Vie 08:00–18:00 ART) */}
         <section className="v2-enter v2-blueprint-hero mb-3.5 flex flex-col justify-between gap-3.5 rounded-xl border border-[#e2e8f0] bg-white/90 p-3.5 shadow-2xs sm:mb-4 sm:p-4 lg:flex-row lg:items-end lg:px-5">
           <div className="max-w-3xl">
             <div className="mb-2.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] leading-snug font-semibold sm:px-3 sm:text-[11.5px] ${
-                  deskStatus.isOpen
+                  deskStatus?.isOpen
                     ? 'border-[#047857]/25 bg-[#ecfdf5] text-[#047857]'
-                    : 'border-[#b45309]/30 bg-[#fffbeb] text-[#92400e]'
+                    : deskStatus
+                      ? 'border-[#b45309]/30 bg-[#fffbeb] text-[#92400e]'
+                      : 'border-[#cbd5e1] bg-[#f8fafc] text-[#475569]'
                 }`}
+                title={copy.deskHoursRule}
               >
-                {deskStatus.isOpen ? (
+                {deskStatus?.isOpen ? (
                   <span className="relative flex h-2 w-2 shrink-0" aria-hidden="true">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#10b981] opacity-75" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-[#047857]" />
                   </span>
-                ) : (
+                ) : deskStatus ? (
                   <Lock className="h-3 w-3 shrink-0 text-[#b45309]" aria-hidden="true" />
+                ) : (
+                  <Clock className="h-3 w-3 shrink-0 text-[#64748b]" aria-hidden="true" />
                 )}
                 <span>
-                  {deskStatus.isOpen ? copy.deskOpenBadge : copy.deskClosedBadge} ·{' '}
-                  <span className="v2-mono-num whitespace-nowrap">
-                    {deskStatus.artTimeFormatted}
-                  </span>
+                  {deskStatus ? (
+                    <>
+                      {deskStatus.isOpen ? copy.deskOpenBadge : copy.deskClosedBadge} ·{' '}
+                      <span className="v2-mono-num whitespace-nowrap">
+                        {deskStatus.artTimeFormatted}
+                      </span>
+                    </>
+                  ) : (
+                    copy.deskHoursRule
+                  )}
                 </span>
               </span>
 
@@ -564,11 +602,19 @@ export default function V2CloudUtilityApp() {
             </p>
             <p
               className={`mt-2 text-[12px] font-medium sm:text-[12.5px] ${
-                deskStatus.isOpen ? 'text-[#047857]' : 'text-[#92400e]'
+                deskStatus?.isOpen
+                  ? 'text-[#047857]'
+                  : deskStatus
+                    ? 'text-[#92400e]'
+                    : 'text-[#475569]'
               }`}
               aria-live="polite"
             >
-              {deskStatus.isOpen ? copy.deskOpenNotice : copy.deskClosedNotice}
+              {deskStatus?.isOpen
+                ? copy.deskOpenNotice
+                : deskStatus
+                  ? copy.deskClosedNotice
+                  : copy.deskHoursRule}
             </p>
           </div>
 
@@ -590,15 +636,15 @@ export default function V2CloudUtilityApp() {
               target="_blank"
               rel="noopener noreferrer"
               className={`inline-flex min-h-[40px] w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-center text-[12.5px] font-semibold text-white shadow-xs transition-all duration-150 hover:-translate-y-[1px] active:translate-y-0 sm:w-auto sm:px-5 sm:text-[13px] ${
-                deskStatus.isOpen
-                  ? 'bg-[#047857] hover:bg-[#065f46]'
-                  : 'bg-[#0f172a] hover:bg-[#1e293b]'
+                deskStatus?.isOpen === false
+                  ? 'bg-[#0f172a] hover:bg-[#1e293b]'
+                  : 'bg-[#047857] hover:bg-[#065f46]'
               }`}
             >
               <span className="v2-mono-num">
-                {deskStatus.isOpen
-                  ? `${copy.btnRequestPrefix} ${selectedPlanCopy.name} (${formatPlanPrice(selectedPlan)})`
-                  : `${copy.btnReserveSlot} · ${selectedPlanCopy.name}`}
+                {deskStatus?.isOpen === false
+                  ? `${copy.btnReserveSlot} · ${selectedPlanCopy.name}`
+                  : `${copy.btnRequestPrefix} ${selectedPlanCopy.name} (${formatPlanPrice(selectedPlan)})`}
               </span>
               <ArrowRight className="h-4 w-4 shrink-0 rtl:-scale-x-100" aria-hidden="true" />
             </a>
@@ -1132,12 +1178,14 @@ export default function V2CloudUtilityApp() {
           <Link href="/terminos" className="text-[#cbd5e1] transition-colors hover:text-white">
             {copy.footerTerms}
           </Link>
-          <Link href="/classic" className="text-[#cbd5e1] transition-colors hover:text-white">
-            {copy.footerClassic}
-          </Link>
         </div>
         <div className="hidden shrink-0 whitespace-nowrap md:block">{copy.footerRights}</div>
       </footer>
+
+      <V2BackToTopButton />
+
+      {/* 6. UMBRAL DE VERSIONES — doble hover para volver a elegir Classic o V2 */}
+      <FaceReturnDock currentFace="v2" />
     </div>
   )
 }

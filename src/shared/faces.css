@@ -265,8 +265,38 @@
   animation: gwDotBreathe 2.8s ease-in-out infinite;
 }
 
+/* Umbral de versiones (FaceReturnDock): la puerta se abre desde el borde inferior */
+@keyframes faceDockOpen {
+  from {
+    opacity: 0;
+    clip-path: inset(100% 0 0 0 round 0.75rem);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 0.75rem);
+  }
+}
+
+.face-dock-panel {
+  animation: faceDockOpen 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.face-dock-root {
+  bottom: 1rem;
+}
+
+/* V2 tiene barra inferior fija de 36px: el dock flota por encima sin taparla */
+[data-face='v2'] .face-dock-root {
+  bottom: calc(36px + 1rem);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .face-dock-panel {
+    animation: none;
+  }
+
   [data-face='gateway'] *,
+  [data-face='classic'] *,
   [data-face='v2'] * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: 'Panel de Control | ExeSistemasWEB',
   description:
     'Panel de gestión para clientes y administración de servicios web, tickets de soporte, métricas y facturación.',
+  alternates: { canonical: '/dashboard' },
+  robots: { index: false, follow: false },
 }
 
 export default function DashboardPage() {

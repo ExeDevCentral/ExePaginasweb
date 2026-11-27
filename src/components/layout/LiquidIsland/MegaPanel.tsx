@@ -892,7 +892,7 @@ export default function MegaPanel({
                       { href: '/precios', label: t('nav.planes') },
                       { href: '/demos', label: t('footer.nav_demo') },
                       { href: '/linux', label: t('nav.linux') },
-                      { href: '/#contact', label: t('nav.contacto') },
+                      { href: '/classic#contact', label: t('nav.contacto') },
                     ].map((quickLink) => (
                       <Link
                         key={quickLink.href}

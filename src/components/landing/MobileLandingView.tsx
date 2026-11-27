@@ -564,7 +564,7 @@ export default function MobileLandingView() {
       {/* ==============================================================
           5. CIERRE DIRECTO + PIE COMPACTO MÓVIL
          ============================================================== */}
-      <section className="px-4 pt-4 pb-2">
+      <section id="contact" className="scroll-mt-24 px-4 pt-4 pb-2">
         <div className="max-w-sm mx-auto space-y-6">
           <div className="p-5 rounded-2xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 dark:border-emerald-500/30 text-white text-center space-y-3">
             <p className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-semibold">

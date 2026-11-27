@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: 'Tienda de Servicios y Abonos de Mantenimiento',
   description:
     'Contratá abonos de mantenimiento web, soporte técnico y horas de desarrollo para tu negocio en ExeSistemasWEB.',
+  alternates: { canonical: '/tienda' },
 }
 
 export default function TiendaPage() {

@@ -785,7 +785,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
                   <span>{t('products.want_custom')}</span>
                 </div>
                 <a
-                  href="#contact"
+                  href="/classic#contact"
                   onClick={onClose}
                   className={`px-6 py-2.5 rounded-xl bg-gradient-to-r ${config.themeGradient} text-foreground font-black text-xs hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] transition-all border border-white/30 flex items-center gap-2 cursor-pointer`}
                 >

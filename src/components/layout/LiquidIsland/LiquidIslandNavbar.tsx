@@ -48,10 +48,10 @@ export default function LiquidIslandNavbar({
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
   const [contactInView, setContactInView] = useState(false)
 
-  // Scroll-spy de la sección de contacto (solo en la home)
+  // Scroll-spy de la sección de contacto en Classic
   // guardrail-ok(useEffect): scroll/resize listener for navbar state
   useEffect(() => {
-    if (pathname !== '/') {
+    if (pathname !== '/classic') {
       setContactInView(false)
       return
     }
@@ -232,7 +232,7 @@ export default function LiquidIslandNavbar({
 
               {/* Contacto directo */}
               <NavLink
-                href="/#contact"
+                href="/classic#contact"
                 label={getNavLabel('nav.contacto', 'Contacto')}
                 isActive={contactInView}
                 ariaCurrent="location"

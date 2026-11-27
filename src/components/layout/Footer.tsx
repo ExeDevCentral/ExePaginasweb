@@ -324,7 +324,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href="/#contact"
+                    href="/classic#contact"
                     className="text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
                   >
                     {t('footer.nav_auditoria') || 'Auditoría Gratuita'}

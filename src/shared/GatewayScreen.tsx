@@ -369,7 +369,7 @@ export default function GatewayScreen() {
                 onClick={() => setLangMenuOpen((open) => !open)}
                 aria-expanded={langMenuOpen}
                 aria-haspopup="menu"
-                aria-label={`${copy.languageMenuLabel}: ${activeLangOption.nativeName}`}
+                aria-label={`${copy.languageMenuLabel}: ${activeLangOption.nativeName} (${activeLangOption.short})`}
                 className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-white/15 bg-white/[0.03] px-2.5 font-mono text-[11px] text-zinc-200 transition-colors hover:border-white/35 hover:bg-white/[0.07] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
               >
                 <Globe

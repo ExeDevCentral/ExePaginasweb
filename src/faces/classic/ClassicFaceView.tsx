@@ -23,12 +23,19 @@ type ViewportMode = 'ssr' | 'mobile' | 'desktop'
 export default function ClassicFaceView() {
   const [viewportMode, setViewportMode] = useState<ViewportMode>('ssr')
 
-  // guardrail-ok(useEffect): garantiza inicio limpio en el borde superior (y=0) al entrar desde el umbral salvo navegación por ancla
+  // guardrail-ok(useEffect): restaura anclas tras resolver el viewport y conserva el inicio limpio sin hash
   useEffect(() => {
-    if (typeof window !== 'undefined' && !window.location.hash) {
+    if (typeof window === 'undefined' || viewportMode === 'ssr') return
+
+    if (window.location.hash === '#contact') {
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'auto', block: 'start' })
+      return
+    }
+
+    if (!window.location.hash) {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
     }
-  }, [])
+  }, [viewportMode])
 
   // guardrail-ok(useEffect): sincroniza rama móvil vs escritorio mediante matchMedia para montar un único árbol activo
   useEffect(() => {

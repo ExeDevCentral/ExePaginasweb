@@ -13,6 +13,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import { Badge } from '@astryxdesign/core'
 import {
   Sparkles,
@@ -262,8 +263,8 @@ export const OwnershipVsSubscription: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/75 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 backdrop-blur-md text-slate-700 dark:text-slate-300 text-[11px] font-mono font-semibold tracking-wider mb-4">
             <Sparkles className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
-            <span>{t('ownership.badge', 'MINI-AUDITORÍA HECHA CON IA · HONESTIDAD BRUTAL')}</span>
-            <Badge label={t('ownership.badge_months', '36 MESES')} variant="cyan" />
+            <span>{t('ownership.badge')}</span>
+            <Badge label={t('ownership.badge_months')} variant="cyan" />
           </div>
 
           <h2
@@ -274,10 +275,7 @@ export const OwnershipVsSubscription: React.FC = () => {
           </h2>
 
           <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
-            {t(
-              'ownership.subtitle',
-              'Si estás experimentando sin ventas validadas, te decimos la verdad: alquilá algo barato para probar. Pero si tu negocio ya vende, mirá cuánto capital retenés siendo dueño.'
-            )}
+            {t('ownership.subtitle')}
           </p>
         </div>
 
@@ -300,7 +298,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                   <span className="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 font-black inline-flex items-center justify-center text-[10px]">
                     1
                   </span>
-                  <span>{t('ownership.step1_label', 'Elegí la etapa hoy de tu negocio:')}</span>
+                  <span>{t('ownership.step1_label')}</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -343,15 +341,19 @@ export const OwnershipVsSubscription: React.FC = () => {
                             <Icon className="w-4 h-4" />
                           </div>
                           <span className="text-[9px] font-mono font-bold opacity-75 uppercase">
-                            {t(`ownership.scenarios.${item.id}.badge`, item.badge).split('·')[0]}
+                            {
+                              ti(t, `ownership.scenarios.${item.id}.badge`, item.badge).split(
+                                '·'
+                              )[0]
+                            }
                           </span>
                         </div>
                         <div>
                           <div className="text-xs sm:text-sm font-extrabold leading-tight">
-                            {t(`ownership.scenarios.${item.id}.shortLabel`, item.shortLabel)}
+                            {ti(t, `ownership.scenarios.${item.id}.shortLabel`, item.shortLabel)}
                           </div>
                           <div className="text-[11px] opacity-75 mt-0.5 leading-snug">
-                            {t(`ownership.scenarios.${item.id}.subtitle`, item.subtitle)}
+                            {ti(t, `ownership.scenarios.${item.id}.subtitle`, item.subtitle)}
                           </div>
                         </div>
                       </button>
@@ -363,6 +365,7 @@ export const OwnershipVsSubscription: React.FC = () => {
               {/* 2. Simulador de Ventas + Comisión */}
               <div
                 data-energy-reactor="true"
+                data-label="CAPITAL PROTEGIDO"
                 data-capital-simulator="true"
                 className="rounded-2xl bg-slate-50 dark:bg-slate-900/75 border border-slate-200/90 dark:border-white/10 p-4"
               >
@@ -371,7 +374,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                     <span className="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-black inline-flex items-center justify-center text-[10px]">
                       2
                     </span>
-                    <span>{t('ownership.step2_label', 'Tus ventas por mes:')}</span>
+                    <span>{t('ownership.step2_label')}</span>
                   </span>
                   <span className="text-lg font-black font-mono text-emerald-600 dark:text-emerald-400">
                     {stats.monthlySalesFormatted}
@@ -426,9 +429,9 @@ export const OwnershipVsSubscription: React.FC = () => {
                 </div>
 
                 <div className="mt-2.5 pt-2 border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
-                  <span>{t('ownership.capital_protected', 'CAPITAL PROTEGIDO // 0% FUGAS')}</span>
+                  <span>{t('ownership.capital_protected')}</span>
                   <span>
-                    {t('ownership.annual_savings', 'Ahorro anual')}: +{stats.drainYear1Formatted}
+                    {t('ownership.annual_savings')}: +{stats.drainYear1Formatted}
                   </span>
                 </div>
               </div>
@@ -461,20 +464,23 @@ export const OwnershipVsSubscription: React.FC = () => {
                       <Zap className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400 shrink-0" />
                     )}
                     <span>
-                      {t(
+                      {ti(
+                        t,
                         `ownership.scenarios.${currentScenario.id}.aiVerdictTag`,
                         currentScenario.aiVerdictTag
                       )}
                     </span>
                   </div>
                   <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white leading-snug">
-                    {t(
+                    {ti(
+                      t,
                       `ownership.scenarios.${currentScenario.id}.aiHeadline`,
                       currentScenario.aiHeadline
                     )}
                   </h3>
                   <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    {t(
+                    {ti(
+                      t,
                       `ownership.scenarios.${currentScenario.id}.aiExplanation`,
                       currentScenario.aiExplanation
                     )}
@@ -488,10 +494,10 @@ export const OwnershipVsSubscription: React.FC = () => {
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400">
-                    {t('ownership.projection_eyebrow', 'PROYECCIÓN A 36 MESES')}
+                    {t('ownership.projection_eyebrow')}
                   </span>
                   <h3 className="text-base font-extrabold text-white mt-0.5">
-                    {t('ownership.projection_title', 'Alquiler vs. Activo Propio')}
+                    {t('ownership.projection_title')}
                   </h3>
                 </div>
 
@@ -506,9 +512,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                 >
                   {stressCutActive ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
                   <span>
-                    {stressCutActive
-                      ? t('ownership.sim_restore', 'Restaurar')
-                      : t('ownership.sim_cut', '¿Si dejás de pagar?')}
+                    {stressCutActive ? t('ownership.sim_restore') : t('ownership.sim_cut')}
                   </span>
                 </button>
               </div>
@@ -517,17 +521,17 @@ export const OwnershipVsSubscription: React.FC = () => {
               <div className="space-y-3 py-1">
                 {[
                   {
-                    label: t('ownership.year_1', 'AÑO 1'),
+                    label: t('ownership.year_1'),
                     amount: stats.drainYear1Formatted,
                     pct: 33,
                   },
                   {
-                    label: t('ownership.year_2', 'AÑO 2'),
+                    label: t('ownership.year_2'),
                     amount: stats.drainYear2Formatted,
                     pct: 66,
                   },
                   {
-                    label: t('ownership.year_3', 'AÑO 3'),
+                    label: t('ownership.year_3'),
                     amount: stats.drainYear3Formatted,
                     pct: 100,
                   },
@@ -557,29 +561,27 @@ export const OwnershipVsSubscription: React.FC = () => {
                   }`}
                 >
                   <div className="text-[10px] font-mono uppercase text-rose-300 font-bold">
-                    {stressCutActive
-                      ? t('ownership.rent_offline', 'HTTP 402 · CAÍDA')
-                      : t('ownership.rent_3y', 'ALQUILER (3 AÑOS)')}
+                    {stressCutActive ? t('ownership.rent_offline') : t('ownership.rent_3y')}
                   </div>
                   <div className="text-base sm:text-lg font-black font-mono text-rose-400 mt-0.5">
                     -{stats.drainYear3Formatted}
                   </div>
                   <div className="text-[10px] text-rose-200/75 mt-0.5">
                     {stressCutActive
-                      ? t('ownership.rent_suspended', 'Tienda suspendida')
-                      : `${stats.monthlyDrainFormatted}/${t('ownership.month_abbr', 'mes')}`}
+                      ? t('ownership.rent_suspended')
+                      : `${stats.monthlyDrainFormatted}/${t('ownership.month_abbr')}`}
                   </div>
                 </div>
 
                 <div className="rounded-xl p-3 bg-emerald-500/10 border border-emerald-500/35">
                   <div className="text-[10px] font-mono uppercase text-emerald-300 font-bold">
-                    {t('ownership.own_3y', 'SISTEMA PROPIO')}
+                    {t('ownership.own_3y')}
                   </div>
                   <div className="text-base sm:text-lg font-black font-mono text-emerald-400 mt-0.5">
                     +{stats.drainYear3Formatted}
                   </div>
                   <div className="text-[10px] text-emerald-200/80 mt-0.5">
-                    {t('ownership.own_zero_fee', '$0/mes · HTTP 200 OK')}
+                    {t('ownership.own_zero_fee')}
                   </div>
                 </div>
               </div>
@@ -609,7 +611,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                       }`}
                     >
                       {pillar.number}.{' '}
-                      {t(`ownership.pillars.${pillar.id}.axisTitle`, pillar.axisTitle)}
+                      {ti(t, `ownership.pillars.${pillar.id}.axisTitle`, pillar.axisTitle)}
                     </button>
                   )
                 })}
@@ -625,11 +627,7 @@ export const OwnershipVsSubscription: React.FC = () => {
                 }`}
               >
                 <Terminal className="w-3.5 h-3.5" />
-                <span>
-                  {showTechXray
-                    ? t('ownership.xray_hide', 'Ocultar CLI')
-                    : t('ownership.xray_show', 'Rayos X CLI')}
-                </span>
+                <span>{showTechXray ? t('ownership.xray_hide') : t('ownership.xray_show')}</span>
               </button>
             </div>
 
@@ -638,12 +636,12 @@ export const OwnershipVsSubscription: React.FC = () => {
                 <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-rose-700 dark:text-rose-300 mb-1">
                   <XCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                   <span>
-                    {t('ownership.rent_platform_label', 'En Plataforma Alquilada')} (
-                    {t('ownership.your_control', 'Tu control')}: {activePillar.rentControlPct}%)
+                    {t('ownership.rent_platform_label')} ({t('ownership.your_control')}:{' '}
+                    {activePillar.rentControlPct}%)
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
-                  {t(`ownership.pillars.${activePillar.id}.rentPain`, activePillar.rentPain)}
+                  {ti(t, `ownership.pillars.${activePillar.id}.rentPain`, activePillar.rentPain)}
                 </p>
               </div>
 
@@ -651,12 +649,11 @@ export const OwnershipVsSubscription: React.FC = () => {
                 <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-emerald-800 dark:text-emerald-300 mb-1">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                   <span>
-                    {t('ownership.own_platform_label', 'Con ExePaginasWeb')} (
-                    {t('ownership.your_control', 'Tu control')}: 100%)
+                    {t('ownership.own_platform_label')} ({t('ownership.your_control')}: 100%)
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
-                  {t(`ownership.pillars.${activePillar.id}.ownGain`, activePillar.ownGain)}
+                  {ti(t, `ownership.pillars.${activePillar.id}.ownGain`, activePillar.ownGain)}
                 </p>
               </div>
             </div>
@@ -665,13 +662,15 @@ export const OwnershipVsSubscription: React.FC = () => {
               <div className="mt-3 rounded-xl bg-slate-950 border border-slate-800 p-3.5 font-mono text-xs space-y-1.5">
                 <div className="text-slate-400">{activePillar.terminalCmd}</div>
                 <div className="text-rose-400">
-                  {t(
+                  {ti(
+                    t,
                     `ownership.pillars.${activePillar.id}.terminalRentOut`,
                     activePillar.terminalRentOut
                   )}
                 </div>
                 <div className="text-emerald-400 font-bold">
-                  {t(
+                  {ti(
+                    t,
                     `ownership.pillars.${activePillar.id}.terminalOwnOut`,
                     activePillar.terminalOwnOut
                   )}
@@ -686,6 +685,7 @@ export const OwnershipVsSubscription: React.FC = () => {
            ============================================================ */}
         <div
           data-notarial-seal="true"
+          data-deliverable="Transferencia de Repositorio GitHub"
           className="rounded-2xl bg-white/90 dark:bg-[#081022]/90 border border-slate-200/90 dark:border-emerald-500/30 shadow-lg p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
         >
           <div className="flex items-center gap-3.5">
@@ -694,20 +694,14 @@ export const OwnershipVsSubscription: React.FC = () => {
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono font-bold text-emerald-700 dark:text-emerald-400">
-                <span>{t('ownership.seal_badge', 'GARANTÍA DE PROPIEDAD REAL · ORIGEN 2025')}</span>
+                <span>{t('ownership.seal_badge')}</span>
                 <CyberInsignia size={12} className="text-cyan-500" />
               </div>
               <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                {t(
-                  'ownership.seal_title',
-                  'Trato directo con Exequiel Echevarría — Sin agencias ni alquileres ocultos'
-                )}
+                {t('ownership.seal_title')}
               </p>
               <p className="text-[11px] text-slate-600 dark:text-slate-300">
-                {t(
-                  'ownership.seal_desc',
-                  'Transferencia de Repositorio GitHub a tu nombre, base de datos PostgreSQL dedicada y 0% comisiones por venta.'
-                )}
+                {t('ownership.seal_desc')}
               </p>
             </div>
           </div>
@@ -764,7 +758,7 @@ export const OwnershipVsSubscription: React.FC = () => {
 
               {/* Texto principal con gradiente nítido */}
               <span className="relative text-xs sm:text-sm font-black tracking-wide bg-linear-to-r from-white via-cyan-100 to-emerald-200 bg-clip-text text-transparent">
-                {t('ownership.seal_cta', 'Cotizar Mi Propio Sistema')}
+                {t('ownership.seal_cta')}
               </span>
 
               {/* Cápsula cinética de flecha */}

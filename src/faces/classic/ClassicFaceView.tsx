@@ -12,7 +12,7 @@ import BrandIntroSplash from '@/components/layout/BrandIntroSplash'
 import MobileLandingView from '@/components/landing/MobileLandingView'
 import DesktopLandingView from '@/components/landing/DesktopLandingView'
 import BackToTopButton from '@/components/layout/BackToTopButton'
-import { SwitchFaceLink } from '@/shared/SwitchFaceLink'
+import { FaceReturnDock } from '@/shared/FaceReturnDock'
 
 const DeferredChatWidget = dynamic(() => import('@/components/chat/DeferredChatWidget'), {
   ssr: false,
@@ -23,6 +23,21 @@ type ViewportMode = 'ssr' | 'mobile' | 'desktop'
 export default function ClassicFaceView() {
   const [viewportMode, setViewportMode] = useState<ViewportMode>('ssr')
 
+  // guardrail-ok(useEffect): restaura anclas tras resolver el viewport y conserva el inicio limpio sin hash
+  useEffect(() => {
+    if (typeof window === 'undefined' || viewportMode === 'ssr') return
+
+    if (window.location.hash === '#contact') {
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'auto', block: 'start' })
+      return
+    }
+
+    if (!window.location.hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    }
+  }, [viewportMode])
+
+  // guardrail-ok(useEffect): sincroniza rama móvil vs escritorio mediante matchMedia para montar un único árbol activo
   useEffect(() => {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return
 
@@ -64,10 +79,8 @@ export default function ClassicFaceView() {
           )}
         </main>
 
-        {/* Floating non-intrusive switch link back to Gateway (?choose=1) */}
-        <div className="fixed bottom-4 left-4 z-40">
-          <SwitchFaceLink currentFace="classic" />
-        </div>
+        {/* Umbral de versiones: doble hover para volver a elegir Classic o V2 */}
+        <FaceReturnDock currentFace="classic" />
 
         <BackToTopButton />
         <DeferredChatWidget />

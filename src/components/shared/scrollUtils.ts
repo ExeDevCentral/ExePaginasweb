@@ -30,7 +30,7 @@ export function navigateToSection(
   const el = document.getElementById(cleanId)
   if (!el) {
     if (typeof window !== 'undefined') {
-      window.location.href = '/#' + cleanId
+      window.location.href = '/classic#' + cleanId
     }
     return false
   }

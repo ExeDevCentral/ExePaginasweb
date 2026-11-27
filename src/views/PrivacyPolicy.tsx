@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import {
   ArrowLeft,
   Shield,
@@ -152,10 +153,10 @@ const PrivacyPolicy: React.FC = () => {
                     </div>
                     <div className="flex-1">
                       <h2 className="text-lg font-bold text-foreground mb-2 flex items-center gap-2">
-                        {t(`privacypolicy.${sec.id}_titulo`)}
+                        {ti(t, `privacypolicy.${sec.id}_titulo`)}
                       </h2>
                       <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                        {t(`privacypolicy.${sec.id}_texto`)}
+                        {ti(t, `privacypolicy.${sec.id}_texto`)}
                       </p>
                     </div>
                   </div>
@@ -212,14 +213,14 @@ const PrivacyPolicy: React.FC = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                   <h4 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                    {t(`privacypolicy.pais_${selectedCountry}_titulo`)}
+                    {ti(t, `privacypolicy.pais_${selectedCountry}_titulo`)}
                   </h4>
                   <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-medium bg-accent-cyan/10 border border-accent-cyan/20 text-cyan-800 dark:text-cyan-300">
-                    {t(`privacypolicy.pais_${selectedCountry}_badge`)}
+                    {ti(t, `privacypolicy.pais_${selectedCountry}_badge`)}
                   </span>
                 </div>
                 <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  {t(`privacypolicy.pais_${selectedCountry}_texto`)}
+                  {ti(t, `privacypolicy.pais_${selectedCountry}_texto`)}
                 </p>
               </motion.div>
             </AnimatePresence>

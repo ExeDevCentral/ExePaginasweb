@@ -25,35 +25,23 @@ export const StoreGuarantees: React.FC = () => {
 
   const faqs = [
     {
-      q: t('store.faq1_q', '¿Cómo funciona la facturación y qué métodos de pago aceptan?'),
-      a: t(
-        'store.faq1_a',
-        'Para Argentina podés abonar mensualmente vía Transferencia Bancaria Directa o Mercado Pago con Factura Fiscal A o B. Para clientes internacionales aceptamos PayPal o transferencia internacional en USD.'
-      ),
+      q: t('store.faq1_q'),
+      a: t('store.faq1_a'),
       icon: CyberPaymentCard,
     },
     {
-      q: t('store.faq2_q', '¿Qué sucede si necesito cambios o nuevas funcionalidades?'),
-      a: t(
-        'store.faq2_a',
-        'El Abono Premium incluye 2 horas mensuales de desarrollo de nuevas funciones. Para los planes Básico y Avanzado, contás con un 20% de descuento preferencial en horas de ingeniería de software.'
-      ),
+      q: t('store.faq2_q'),
+      a: t('store.faq2_a'),
       icon: CyberTechCode,
     },
     {
-      q: t('store.faq3_q', '¿Cómo es el proceso de migración si ya tengo mi web en otro hosting?'),
-      a: t(
-        'store.faq3_a',
-        'Nosotros nos encargamos del 100% del traslado (código, base de datos, correos corporativos y registros DNS) de forma bonificada, garantizando 0 tiempo de inactividad durante la migración.'
-      ),
+      q: t('store.faq3_q'),
+      a: t('store.faq3_a'),
       icon: CyberRocketLaunch,
     },
     {
-      q: t('store.faq4_q', '¿Tengo algún contrato de permanencia obligatoria?'),
-      a: t(
-        'store.faq4_a',
-        'No, ninguno. Podés cancelar, pausar o cambiar de nivel de abono en cualquier momento desde tu panel de cliente o avisándonos con un mensaje por WhatsApp sin penalizaciones.'
-      ),
+      q: t('store.faq4_q'),
+      a: t('store.faq4_a'),
       icon: CyberRealPropertyShield,
     },
   ]
@@ -77,15 +65,8 @@ export const StoreGuarantees: React.FC = () => {
           <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
             <CyberRocketLaunch size={24} className="text-cyan-600 dark:text-cyan-400" />
           </div>
-          <h4 className="text-xl font-bold text-foreground mb-2">
-            {t('store.pillar1_title', 'Migración 100% Bonificada')}
-          </h4>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {t(
-              'store.pillar1_desc',
-              'Trasladamos tu sitio, bases de datos y DNS sin interrumpir tus ventas ni un solo minuto.'
-            )}
-          </p>
+          <h4 className="text-xl font-bold text-foreground mb-2">{t('store.pillar1_title')}</h4>
+          <p className="text-sm text-muted-foreground leading-relaxed">{t('store.pillar1_desc')}</p>
         </motion.div>
 
         <motion.div
@@ -98,15 +79,8 @@ export const StoreGuarantees: React.FC = () => {
           <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
             <CyberServerUptime size={24} className="text-emerald-600 dark:text-emerald-400" />
           </div>
-          <h4 className="text-xl font-bold text-foreground mb-2">
-            {t('store.pillar2_title', 'Uptime Garantizado 99.98%')}
-          </h4>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {t(
-              'store.pillar2_desc',
-              'Infraestructura Edge distribuida globalmente con redundancia y monitoreo proactivo 24/7.'
-            )}
-          </p>
+          <h4 className="text-xl font-bold text-foreground mb-2">{t('store.pillar2_title')}</h4>
+          <p className="text-sm text-muted-foreground leading-relaxed">{t('store.pillar2_desc')}</p>
         </motion.div>
 
         <motion.div
@@ -119,15 +93,8 @@ export const StoreGuarantees: React.FC = () => {
           <div className="w-12 h-12 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
             <CyberRealPropertyShield size={24} className="text-pink-600 dark:text-pink-400" />
           </div>
-          <h4 className="text-xl font-bold text-foreground mb-2">
-            {t('store.pillar3_title', 'Sin Permanencias')}
-          </h4>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {t(
-              'store.pillar3_desc',
-              'Libertad absoluta. Podés pausar, mejorar o dar de baja tu abono cuando quieras con 1 clic.'
-            )}
-          </p>
+          <h4 className="text-xl font-bold text-foreground mb-2">{t('store.pillar3_title')}</h4>
+          <p className="text-sm text-muted-foreground leading-relaxed">{t('store.pillar3_desc')}</p>
         </motion.div>
       </div>
 
@@ -138,15 +105,8 @@ export const StoreGuarantees: React.FC = () => {
             <CyberSparkleIcon size={20} />
           </div>
           <div>
-            <h3 className="text-2xl font-bold text-foreground">
-              {t('store.faq_heading', 'Preguntas Frecuentes sobre Abonos')}
-            </h3>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              {t(
-                'store.faq_subheading',
-                'Todo lo que necesitás saber sobre la contratación y soporte'
-              )}
-            </p>
+            <h3 className="text-2xl font-bold text-foreground">{t('store.faq_heading')}</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t('store.faq_subheading')}</p>
           </div>
         </div>
 

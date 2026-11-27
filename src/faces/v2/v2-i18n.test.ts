@@ -3,7 +3,7 @@
  * Unit tests for Argentina Engineering Desk business hours (Mon–Fri, 08:00–18:00 ART).
  */
 import { describe, expect, it } from 'vitest'
-import { getArgentinaDeskStatus, normalizeV2Lang } from './v2-i18n'
+import { getArgentinaDeskStatus, normalizeV2Lang, V2_COPY, V2_LANGUAGES } from './v2-i18n'
 
 describe('V2 Argentina Desk Hours (Mon–Fri 08:00–18:00 ART)', () => {
   it('returns OPEN on a Wednesday at 14:30 ART (17:30 UTC)', () => {
@@ -34,5 +34,15 @@ describe('V2 Argentina Desk Hours (Mon–Fri 08:00–18:00 ART)', () => {
     expect(normalizeV2Lang('ar')).toBe('ar')
     expect(normalizeV2Lang('en-US')).toBe('en')
     expect(normalizeV2Lang('unknown')).toBe('es')
+  })
+
+  it('enforces 7-language parity for architectBadge, 2025 copyright, and rowTooltips', () => {
+    for (const lang of V2_LANGUAGES) {
+      const entry = V2_COPY[lang.code]
+      expect(entry.architectBadge).toContain('Exequiel Echevarría')
+      expect(entry.architectBadge).toContain('2025')
+      expect(entry.footerRights).toContain('© 2025 Exequiel Echevarría')
+      expect(Object.keys(entry.rowTooltips)).toEqual(Object.keys(entry.rows))
+    }
   })
 })

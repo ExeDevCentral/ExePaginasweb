@@ -45,6 +45,7 @@ export default function HeroCompare() {
   }, [])
 
   // Auto demo sweep al montar: animación fluida directa en DOM (cero re-renders de React)
+  // guardrail-ok(useEffect): sync external/browser state
   useEffect(() => {
     let demoTime = 0
     const sweep = () => {
@@ -68,6 +69,7 @@ export default function HeroCompare() {
   }, [updatePosition])
 
   // Matrix Digital Rain Canvas Effect en el lado de Herramienta Digital
+  // guardrail-ok(useEffect): sync external/browser state
   useEffect(() => {
     const canvas = matrixCanvasRef.current
     if (!canvas) return
@@ -196,21 +198,21 @@ export default function HeroCompare() {
               <div className="hc-before-warnings">
                 <span className="hc-warning-item flex items-center gap-1.5">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                  <span>Límite mensual de visitas</span>
+                  <span>{t('hero.compare_warn_1')}</span>
                 </span>
                 <span className="hc-warning-item flex items-center gap-1.5">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                  <span>Comisiones por venta</span>
+                  <span>{t('hero.compare_warn_2')}</span>
                 </span>
                 <span className="hc-warning-item flex items-center gap-1.5">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                  <span>Sin acceso al código fuente</span>
+                  <span>{t('hero.compare_warn_3')}</span>
                 </span>
               </div>
 
               <div className="hc-spinner-wrapper">
                 <div className="hc-spinner" />
-                <span className="hc-spinner-text">Cargando plugins lentos (3.8s)...</span>
+                <span className="hc-spinner-text">{t('hero.compare_loading')}</span>
               </div>
             </div>
           </div>

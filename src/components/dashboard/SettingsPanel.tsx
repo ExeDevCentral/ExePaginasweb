@@ -22,7 +22,7 @@ import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import type { Cliente } from '../../core/domain/entities/Cliente'
 import type { IAuthRepository } from '../../core/domain/repositories/IAuthRepository'
-import { SupabaseAuthRepository } from '../../core/infra/repositories/SupabaseAuthRepository'
+import { authRepository } from '../../hooks/useAuthRepository'
 import { firstPasswordRuleFailed } from '../../core/domain/auth/passwordPolicy'
 
 interface SettingsPanelProps {
@@ -45,7 +45,7 @@ export default function SettingsPanel({
   authRepo,
 }: Readonly<SettingsPanelProps>) {
   const { t } = useTranslation()
-  const repo = authRepo ?? new SupabaseAuthRepository()
+  const repo = authRepo ?? authRepository
   const [fullName, setFullName] = useState(cliente?.full_name || '')
   const [savingProfile, setSavingProfile] = useState(false)
 
@@ -61,7 +61,7 @@ export default function SettingsPanel({
     try {
       await repo.updateProfile({ clienteId: cliente.id, fullName })
 
-      toast.success(t('dashboard.perfil_actualizado', 'Perfil actualizado'), {
+      toast.success(t('dashboard.perfil_actualizado'), {
         description: 'Tus datos de cuenta fueron guardados correctamente.',
       })
       onRefreshProfile?.()
@@ -118,7 +118,7 @@ export default function SettingsPanel({
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2.5">
             <User className="w-6 h-6 text-[#38BDF8]" />
-            <span>Configuración de Cuenta & Seguridad</span>
+            <span>{t('settings.account_security')}</span>
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1 font-medium">
             Administrá tus credenciales de acceso, datos personales y espacio de trabajo.
@@ -280,7 +280,7 @@ export default function SettingsPanel({
 
           <div className="space-y-2.5 text-xs">
             <div className="flex justify-between items-center py-1 border-b border-border/50">
-              <span className="text-muted-foreground">Organización:</span>
+              <span className="text-muted-foreground">{t('settings.organization')}</span>
               <span className="font-semibold text-foreground">
                 {currentTenant?.nombre || 'Espacio Predeterminado'}
               </span>
@@ -308,7 +308,7 @@ export default function SettingsPanel({
               <Laptop className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-foreground">Sesión Activa</h3>
+              <h3 className="text-sm font-bold text-foreground">{t('settings.active_session')}</h3>
               <p className="text-[11px] text-muted-foreground">Control de acceso seguro</p>
             </div>
           </div>

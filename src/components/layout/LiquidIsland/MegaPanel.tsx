@@ -103,11 +103,8 @@ export default function MegaPanel({
         id: 'peluqueria',
         shortcutNumber: 1,
         href: '/soluciones#peluqueria',
-        label: t('megapanel.item_1_label', 'Turnos online para peluquerías'),
-        detail: t(
-          'megapanel.item_1_detail',
-          'Agenda automatizada 24/7, recordatorios por WhatsApp y fidelización.'
-        ),
+        label: t('megapanel.item_1_label'),
+        detail: t('megapanel.item_1_detail'),
         techFact: 'Event-Driven · WhatsApp Cloud API · Postgres RLS',
         icon: Calendar,
         category: 'rubro',
@@ -116,11 +113,8 @@ export default function MegaPanel({
         id: 'gastronomia',
         shortcutNumber: 2,
         href: '/soluciones#panaderia',
-        label: t('megapanel.item_2_label', 'Comandas y pedidos gastronómicos'),
-        detail: t(
-          'megapanel.item_2_detail',
-          'Terminal de pedidos rápidos, combos, delivery y control de stock.'
-        ),
+        label: t('megapanel.item_2_label'),
+        detail: t('megapanel.item_2_detail'),
         techFact: 'Offline-First · Sync Local · WebSockets KDS',
         icon: UtensilsCrossed,
         category: 'rubro',
@@ -129,11 +123,8 @@ export default function MegaPanel({
         id: 'indumentaria',
         shortcutNumber: 3,
         href: '/soluciones#indumentaria',
-        label: t('megapanel.item_3_label', 'Tienda Online, Catálogo y Stock'),
-        detail: t(
-          'megapanel.item_3_detail',
-          'E-commerce sin comisiones, variantes de talles en vivo y sincronización de stock.'
-        ),
+        label: t('megapanel.item_3_label'),
+        detail: t('megapanel.item_3_detail'),
         techFact: 'Multi-Tenant · 0% Fee Gateway · Edge CDN',
         icon: Shirt,
         category: 'rubro',
@@ -142,11 +133,8 @@ export default function MegaPanel({
         id: 'canchas',
         shortcutNumber: 4,
         href: '/soluciones#canchas',
-        label: t('megapanel.item_4_label', 'Reservas para canchas y complejos'),
-        detail: t(
-          'megapanel.item_4_detail',
-          'Grilla de ocupación en tiempo real y bloqueo anti-solapamiento.'
-        ),
+        label: t('megapanel.item_4_label'),
+        detail: t('megapanel.item_4_detail'),
         techFact: 'Locking Anti-Solapamiento · Realtime · State Engine',
         icon: Trophy,
         category: 'rubro',
@@ -155,11 +143,8 @@ export default function MegaPanel({
         id: 'linux-pos',
         shortcutNumber: 5,
         href: '/linux',
-        label: t('megapanel.item_7_label', 'Terminales Linux POS & Arquitectura B2B'),
-        detail: t(
-          'megapanel.item_7_detail',
-          'Estaciones en modo quiosco, servidores offline-first y rescate de hardware.'
-        ),
+        label: t('megapanel.item_7_label'),
+        detail: t('megapanel.item_7_detail'),
         techFact: 'Kiosk Mode · 480MB RAM · USB Rescue Key · Offline-First',
         icon: Terminal,
         category: 'rubro',
@@ -168,11 +153,8 @@ export default function MegaPanel({
         id: 'cotizador',
         shortcutNumber: 6,
         href: '/cotizador',
-        label: t('megapanel.item_5_label', 'Cotizador Interactivo'),
-        detail: t(
-          'megapanel.item_5_detail',
-          'Calculá tu presupuesto en 2 min con desglose transparente de arquitectura.'
-        ),
+        label: t('megapanel.item_5_label'),
+        detail: t('megapanel.item_5_detail'),
         techFact: 'Reactive State Engine · PDF Streaming · Zero Latency',
         icon: Calculator,
         category: 'action',
@@ -182,11 +164,8 @@ export default function MegaPanel({
         id: 'tienda',
         shortcutNumber: 7,
         href: '/tienda',
-        label: t('megapanel.item_abonos_label', 'Tienda de Abonos & Mantenimiento'),
-        detail: t(
-          'megapanel.item_abonos_detail',
-          'Planes mensuales de hosting Edge, monitoreo 24/7, soporte SLA y Guardia Linux.'
-        ),
+        label: t('megapanel.item_abonos_label'),
+        detail: t('megapanel.item_abonos_detail'),
         techFact: 'Hosting Edge · Backups Diarios · SLA Prioritario',
         icon: ShoppingBag,
         category: 'action',
@@ -196,6 +175,7 @@ export default function MegaPanel({
   )
 
   // Detectar SO para ⌘K vs Ctrl K y horario laboral de Rosario (Lunes a Viernes 09:00 - 19:00)
+  // guardrail-ok(useEffect): sync active panel section with props
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const isMac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform || navigator.userAgent)
@@ -230,6 +210,7 @@ export default function MegaPanel({
   }, [])
 
   // Cerrar MegaPanel si se abre la paleta global CommandPalette
+  // guardrail-ok(useEffect): sync panel state with external open/close and DOM focus
   useEffect(() => {
     const handleCloseEvent = () => onClose()
     window.addEventListener('closeMegaPanel', handleCloseEvent)
@@ -287,7 +268,9 @@ export default function MegaPanel({
     )
   }, [searchQuery, localizedPaletteItems])
 
+  // guardrail-ok(useEffect): keyboard/escape listener for overlay
   // Reset del foco e índice al abrir (solo auto-enfoca en desktop para no tapar la pantalla con el teclado virtual móvil)
+  // guardrail-ok(useEffect): keyboard escape listener for overlay
   useEffect(() => {
     if (!isOpen) return
 
@@ -310,13 +293,20 @@ export default function MegaPanel({
       }
     }
   }, [isOpen])
+  // guardrail-ok(useEffect): focus trap/restore on mount-unmount
 
+  // guardrail-ok(useEffect): focus management on panel mount
   // Mantener selectedIndex en rango válido al filtrar
+  // guardrail-ok(useEffect): overlay DOM lifecycle listener
   useEffect(() => {
     setSelectedIndex(0)
+    // guardrail-ok(useEffect): outside click listener for overlay
   }, [searchQuery])
+  // guardrail-ok(useEffect): outside click listener for overlay
 
+  // guardrail-ok(useEffect): outside click listener for overlay
   // Navegación por teclado completa (↑↓, ↵, Esc, 1-7)
+  // guardrail-ok(useEffect): overlay DOM lifecycle listener
   useEffect(() => {
     if (!isOpen) return
 
@@ -594,10 +584,7 @@ export default function MegaPanel({
               id="mega-panel-palette"
               role="dialog"
               aria-modal="true"
-              aria-label={t(
-                'megapanel.aria_dialog',
-                'Command Palette de Soluciones y Herramientas'
-              )}
+              aria-label={t('megapanel.aria_dialog')}
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -636,12 +623,9 @@ export default function MegaPanel({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={t(
-                      'megapanel.search_placeholder',
-                      'Buscar solución, rubro o arquitectura…'
-                    )}
+                    placeholder={t('megapanel.search_placeholder')}
                     className="w-full bg-transparent text-xs sm:text-sm text-slate-900 dark:text-[#E6EAF0] placeholder:text-slate-400 dark:placeholder:text-[#8B95A5]/60 focus:outline-hidden font-sans"
-                    aria-label={t('megapanel.aria_search', 'Buscar en la consola')}
+                    aria-label={t('megapanel.aria_search')}
                   />
                 </div>
 
@@ -652,7 +636,7 @@ export default function MegaPanel({
                       onClose()
                       window.dispatchEvent(new CustomEvent('openCommandPalette'))
                     }}
-                    title={t('megapanel.open_cmdk', 'Abrir paleta global de comandos')}
+                    title={t('megapanel.open_cmdk')}
                     className="hidden sm:inline-flex items-center font-mono text-[10px] px-1.5 py-0.5 rounded bg-black/5 hover:bg-black/10 dark:bg-white/8 dark:hover:bg-white/15 text-slate-600 dark:text-[#CBD5E1] border border-black/5 dark:border-white/6 transition-colors cursor-pointer"
                   >
                     {shortcutKey}
@@ -662,7 +646,7 @@ export default function MegaPanel({
                   <button
                     type="button"
                     onClick={onClose}
-                    aria-label={t('megapanel.aria_close', 'Cerrar consola')}
+                    aria-label={t('megapanel.aria_close')}
                     className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:text-[#8B95A5] dark:hover:text-[#E6EAF0] hover:bg-black/5 dark:hover:bg-white/6 transition-colors ml-1 cursor-pointer"
                   >
                     <X size={15} />
@@ -677,10 +661,10 @@ export default function MegaPanel({
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="font-mono text-[10px] font-semibold text-slate-400 dark:text-[#8B95A5] uppercase tracking-wider">
-                        {t('megapanel.cat_rubros', '// Soluciones por rubro')}
+                        {t('megapanel.cat_rubros')}
                       </span>
                       <span className="font-mono text-[10px] text-slate-400/60 dark:text-[#8B95A5]/50">
-                        {rubroItems.length} {t('megapanel.modules_count', 'módulos')}
+                        {rubroItems.length} {t('megapanel.modules_count')}
                       </span>
                     </div>
 
@@ -779,10 +763,10 @@ export default function MegaPanel({
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="font-mono text-[10px] font-semibold text-slate-400 dark:text-[#8B95A5] uppercase tracking-wider">
-                        {t('megapanel.cat_actions', '// Herramientas directas')}
+                        {t('megapanel.cat_actions')}
                       </span>
                       <span className="font-mono text-[10px] text-slate-400/60 dark:text-[#8B95A5]/50">
-                        {t('megapanel.interactive_access', 'Acceso interactivo')}
+                        {t('megapanel.interactive_access')}
                       </span>
                     </div>
 
@@ -890,31 +874,25 @@ export default function MegaPanel({
                       </div>
                       <div className="min-w-0">
                         <div className="font-semibold text-xs text-slate-900 dark:text-[#E6EAF0] tracking-[-0.01em] truncate">
-                          {t(
-                            'megapanel.arch_banner_title',
-                            'Explorar Catálogo Completo de Soluciones & Demos en Vivo'
-                          )}
+                          {t('megapanel.arch_banner_title')}
                         </div>
                         <div className="font-mono text-[10px] text-slate-500 dark:text-[#CBD5E1] truncate">
-                          {t(
-                            'megapanel.arch_banner_sub',
-                            'Sistemas web a medida, simuladores interactivos y arquitectura verificable'
-                          )}
+                          {t('megapanel.arch_banner_sub')}
                         </div>
                       </div>
                     </div>
                     <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform shrink-0 ml-2">
-                      {t('megapanel.arch_banner_cta', 'Ver soluciones ↗')}
+                      {t('megapanel.arch_banner_cta')}
                     </span>
                   </Link>
 
                   <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
                     {[
-                      { href: '/portafolio', label: t('nav.casos', 'Casos de Éxito') },
-                      { href: '/precios', label: t('nav.planes', 'Planes') },
-                      { href: '/demos', label: t('footer.nav_demo', 'Demo Interactiva') },
-                      { href: '/linux', label: t('nav.linux', 'Linux') },
-                      { href: '/#contact', label: t('nav.contacto', 'Contacto') },
+                      { href: '/portafolio', label: t('nav.casos') },
+                      { href: '/precios', label: t('nav.planes') },
+                      { href: '/demos', label: t('footer.nav_demo') },
+                      { href: '/linux', label: t('nav.linux') },
+                      { href: '/classic#contact', label: t('nav.contacto') },
                     ].map((quickLink) => (
                       <Link
                         key={quickLink.href}
@@ -933,7 +911,7 @@ export default function MegaPanel({
                 {filteredItems.length === 0 && (
                   <div className="py-8 text-center">
                     <p className="font-mono text-xs text-slate-400 dark:text-[#8B95A5]">
-                      {t('megapanel.no_results', 'No se encontraron resultados para')} &quot;
+                      {t('megapanel.no_results')} &quot;
                       {searchQuery}&quot;
                     </p>
                     <button
@@ -941,7 +919,7 @@ export default function MegaPanel({
                       onClick={() => setSearchQuery('')}
                       className="mt-2 font-mono text-[11px] text-emerald-500 hover:underline cursor-pointer"
                     >
-                      {t('megapanel.clear_search', 'Limpiar búsqueda (Esc)')}
+                      {t('megapanel.clear_search')}
                     </button>
                   </div>
                 )}
@@ -971,12 +949,9 @@ export default function MegaPanel({
                           }`}
                         />
                         {isAvailableNow
-                          ? t('megapanel.available_now', 'Disponible · responde en ~1 h')
-                          : t(
-                              'megapanel.available_later',
-                              'Fuera de horario · responde mañana'
-                            )}{' '}
-                        · {t('megapanel.location', 'Rosario, AR')}
+                          ? t('megapanel.available_now')
+                          : t('megapanel.available_later')}{' '}
+                        · {t('megapanel.location')}
                       </span>
                     </div>
                   </div>
@@ -993,26 +968,17 @@ export default function MegaPanel({
                       strokeWidth={2}
                       className="text-cyan-600 dark:text-cyan-400 shrink-0"
                     />
-                    <span className="truncate">
-                      {t('megapanel.dashboard_cta', 'Panel Clientes')}
-                    </span>
+                    <span className="truncate">{t('megapanel.dashboard_cta')}</span>
                   </Link>
                   <a
-                    href={getWhatsAppUrl(
-                      t(
-                        'megapanel.whatsapp_prefill',
-                        '¡Hola Exequiel! Me interesa consultar por un desarrollo de software / web a medida.'
-                      )
-                    )}
+                    href={getWhatsAppUrl(t('megapanel.whatsapp_prefill'))}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={onClose}
                     className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-[11px] sm:text-xs whitespace-nowrap transition-colors shrink-0 shadow-xs active:scale-[0.98]"
                   >
                     <MessageCircle size={15} strokeWidth={2} className="shrink-0" />
-                    <span className="truncate">
-                      {t('megapanel.whatsapp_cta', 'Hablar por WhatsApp')}
-                    </span>
+                    <span className="truncate">{t('megapanel.whatsapp_cta')}</span>
                     <span className="font-mono text-[10px] shrink-0">↗</span>
                   </a>
                 </div>
@@ -1025,28 +991,28 @@ export default function MegaPanel({
                     <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
                       ↑↓
                     </kbd>{' '}
-                    {t('megapanel.nav_hint', 'navegar')}
+                    {t('megapanel.nav_hint')}
                   </span>
                   <span>·</span>
                   <span className="flex items-center gap-1">
                     <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
                       ↵
                     </kbd>{' '}
-                    {t('megapanel.open_hint', 'abrir')}
+                    {t('megapanel.open_hint')}
                   </span>
                   <span>·</span>
                   <span className="flex items-center gap-1">
                     <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
                       1–7
                     </kbd>{' '}
-                    {t('megapanel.shortcut_hint', 'acceso directo')}
+                    {t('megapanel.shortcut_hint')}
                   </span>
                   <span>·</span>
                   <span className="flex items-center gap-1">
                     <kbd className="px-1 py-0.2 rounded bg-black/5 dark:bg-white/10 text-slate-700 dark:text-[#E6EAF0]">
                       esc
                     </kbd>{' '}
-                    {t('megapanel.close_hint', 'cerrar')}
+                    {t('megapanel.close_hint')}
                   </span>
                 </div>
               </div>

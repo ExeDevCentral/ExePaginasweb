@@ -103,10 +103,10 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
 
   const rolLabels = useMemo<Record<WorkMemberRol, string>>(
     () => ({
-      owner: t('workgroups.rol_owner', 'Propietario'),
-      admin: t('workgroups.rol_admin', 'Administrador'),
-      member: t('workgroups.rol_member', 'Miembro / Operador'),
-      viewer: t('workgroups.rol_viewer', 'Observador'),
+      owner: t('workgroups.rol_owner'),
+      admin: t('workgroups.rol_admin'),
+      member: t('workgroups.rol_member'),
+      viewer: t('workgroups.rol_viewer'),
     }),
     [t]
   )
@@ -125,11 +125,11 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
       setNewGroupName('')
       setNewGroupDesc('')
       setShowNewGroup(false)
-      toast.success(t('workgroups.grupo_creado', 'Grupo creado'), {
+      toast.success(t('workgroups.grupo_creado'), {
         description: `"${newGroupName}" fue creado correctamente`,
       })
     } catch (e) {
-      toast.error(t('common.error', 'Error'), {
+      toast.error(t('common.error'), {
         description: e instanceof Error ? e.message : 'No se pudo crear el grupo',
       })
     }
@@ -140,9 +140,9 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
       if (!confirm(`¿Eliminar a ${member.nombre}?`)) return
       try {
         await deleteMember.mutateAsync(member.id)
-        toast.success(t('workgroups.miembro_eliminado', 'Miembro eliminado'))
+        toast.success(t('workgroups.miembro_eliminado'))
       } catch (e) {
-        toast.error(t('common.error', 'Error'), {
+        toast.error(t('common.error'), {
           description: e instanceof Error ? e.message : 'No se pudo eliminar',
         })
       }
@@ -154,7 +154,7 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
     () => [
       {
         accessorKey: 'nombre',
-        header: t('workgroups.col_miembro', 'Miembro / Personal'),
+        header: t('workgroups.col_miembro'),
         cell: ({ row }) => (
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#4361EE] to-[#38BDF8] flex items-center justify-center text-xs font-bold text-white shrink-0 shadow-sm">
@@ -174,7 +174,7 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
       },
       {
         accessorKey: 'email',
-        header: t('workgroups.col_email', 'Email de Contacto'),
+        header: t('workgroups.col_email'),
         cell: ({ row }) => (
           <span className="text-xs text-muted-foreground font-mono flex items-center gap-1.5">
             <Mail className="w-3.5 h-3.5 text-muted-foreground" />
@@ -184,7 +184,7 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
       },
       {
         accessorKey: 'rol',
-        header: t('workgroups.col_rol', 'Nivel de Acceso'),
+        header: t('workgroups.col_rol'),
         cell: ({ row }) => (
           <span
             className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
@@ -197,7 +197,7 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
       },
       {
         accessorKey: 'work_group_id',
-        header: t('workgroups.col_grupo', 'Sede / Área'),
+        header: t('workgroups.col_grupo'),
         cell: ({ row }) => {
           const grp = groups.find((g) => g.id === row.original.work_group_id)
           return (
@@ -209,13 +209,13 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
       },
       {
         id: 'actions',
-        header: t('workgroups.col_acciones', 'Acciones'),
+        header: t('workgroups.col_acciones'),
         cell: ({ row }) => (
           <button
             type="button"
             onClick={() => handleDeleteMember(row.original)}
             className="p-1.5 rounded-lg hover:bg-rose-500/10 text-muted-foreground hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
-            title={t('workgroups.eliminar_miembro', 'Eliminar miembro')}
+            title={t('workgroups.eliminar_miembro')}
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -240,7 +240,7 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2.5">
             <Users className="w-6 h-6 text-[#38BDF8]" />
-            <span>{t('workgroups.titulo', 'Equipo de Trabajo & Sedes')}</span>
+            <span>{t('workgroups.titulo')}</span>
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1 font-medium">
             Personal autorizado para administrar turnos, atención de clientes y canales de soporte.
@@ -280,7 +280,7 @@ export default function WorkGroupsPanel({ tenantId }: Readonly<Props>) {
             <div className="rounded-2xl border border-border bg-muted/40 p-5 space-y-4 shadow-sm">
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Users className="w-4 h-4 text-[#38BDF8]" />
-                <span>Crear Nueva Sede o Área de Trabajo</span>
+                <span>{t('workgroups.create_title')}</span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input

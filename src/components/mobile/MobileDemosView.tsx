@@ -9,6 +9,7 @@
 'use client'
 
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import Link from 'next/link'
 import { ArrowUpRight, ChevronRight } from 'lucide-react'
 import { INITIAL_PROJECTS } from '@/data/projects'
@@ -17,6 +18,7 @@ import { trackEvent } from '@/core/analytics/trackEvent'
 const FEATURED_DEMO_IDS = ['restoai', 'sportmanager', 'celstore', 'pelu-rosario', 'fixi'] as const
 
 export default function MobileDemosView() {
+  const { t } = useTranslation()
   const demos = FEATURED_DEMO_IDS.map((id) => INITIAL_PROJECTS.find((p) => p.id === id)).filter(
     (p): p is NonNullable<typeof p> => Boolean(p)
   )
@@ -79,7 +81,7 @@ export default function MobileDemosView() {
                     onClick={() => trackEvent('demo_interactive_used', { demoId: demo.id })}
                     className="w-full h-10 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 active:scale-[0.98] transition-transform"
                   >
-                    <span>Abrir demo en producción</span>
+                    <span>{t('mobile.open_demo_prod')}</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </a>
                 )}

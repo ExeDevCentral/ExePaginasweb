@@ -88,9 +88,9 @@ export default function LinuxPage() {
       {
         id: 'catalogo-linux',
         num: '01',
-        heroLabel: t('linux_page.station_1_hero', '1. Servicios Linux'),
-        dockLabel: t('linux_page.station_1_dock', 'Servicios'),
-        mobileLabel: t('linux_page.station_1_mobile', 'POS'),
+        heroLabel: t('linux_page.station_1_hero'),
+        dockLabel: t('linux_page.station_1_dock'),
+        mobileLabel: t('linux_page.station_1_mobile'),
         activePillClass:
           'bg-emerald-600 dark:bg-emerald-500 text-white dark:text-slate-950 shadow-[0_4px_14px_rgba(16,185,129,0.35)]',
         heroActiveClass:
@@ -100,9 +100,9 @@ export default function LinuxPage() {
       {
         id: 'simulador-ahorro',
         num: '02',
-        heroLabel: t('linux_page.station_2_hero', '2. Simulador de Flota'),
-        dockLabel: t('linux_page.station_2_dock', 'Simulador'),
-        mobileLabel: t('linux_page.station_2_mobile', 'Flota'),
+        heroLabel: t('linux_page.station_2_hero'),
+        dockLabel: t('linux_page.station_2_dock'),
+        mobileLabel: t('linux_page.station_2_mobile'),
         activePillClass:
           'bg-cyan-600 dark:bg-cyan-400 text-white dark:text-slate-950 shadow-[0_4px_14px_rgba(6,182,212,0.35)]',
         heroActiveClass:
@@ -112,9 +112,9 @@ export default function LinuxPage() {
       {
         id: 'consola-tecnica',
         num: '03',
-        heroLabel: t('linux_page.station_3_hero', '3. Telemetría Kernel'),
-        dockLabel: t('linux_page.station_3_dock', 'Kernel'),
-        mobileLabel: t('linux_page.station_3_mobile', 'TTY'),
+        heroLabel: t('linux_page.station_3_hero'),
+        dockLabel: t('linux_page.station_3_dock'),
+        mobileLabel: t('linux_page.station_3_mobile'),
         activePillClass:
           'bg-teal-600 dark:bg-teal-400 text-white dark:text-slate-950 shadow-[0_4px_14px_rgba(20,184,166,0.35)]',
         heroActiveClass:
@@ -124,9 +124,9 @@ export default function LinuxPage() {
       {
         id: 'planes-linux',
         num: '04',
-        heroLabel: t('linux_page.station_4_hero', '4. Planes & Precios'),
-        dockLabel: t('linux_page.station_4_dock', 'Planes'),
-        mobileLabel: t('linux_page.station_4_mobile', 'Planes'),
+        heroLabel: t('linux_page.station_4_hero'),
+        dockLabel: t('linux_page.station_4_dock'),
+        mobileLabel: t('linux_page.station_4_mobile'),
         activePillClass:
           'bg-violet-600 dark:bg-violet-500 text-white dark:text-white shadow-[0_4px_14px_rgba(139,92,246,0.35)]',
         heroActiveClass:
@@ -143,15 +143,9 @@ export default function LinuxPage() {
         label: 'tty1:pos-kiosk',
         path: '/etc/udev/rules.d/99-escpos.rules',
         lines: [
-          t(
-            'linux_page.snippet_pos_comment_1',
-            '# Puerto fijo permanente para impresora térmica ESC/POS y lector láser'
-          ),
+          t('linux_page.snippet_pos_comment_1'),
           'SUBSYSTEM=="usb", ATTR{idVendor}=="04b8", MODE="0660", GROUP="lp", SYMLINK+="escpos0"',
-          t(
-            'linux_page.snippet_pos_comment_2',
-            '# Servicio gráfico aislado (Wayland Cage · reinicio automático en 5s)'
-          ),
+          t('linux_page.snippet_pos_comment_2'),
           'ExecStart=/usr/bin/cage -s -- chromium --kiosk --noerrdialogs --app=https://pos.local',
         ],
       },
@@ -159,15 +153,9 @@ export default function LinuxPage() {
         label: 'tty2:zram-fleet',
         path: '/etc/systemd/zram-generator.conf',
         lines: [
-          t(
-            'linux_page.snippet_fleet_comment_1',
-            '# Compresión zstd en memoria RAM: multiplica fluidez en PCs de 4GB / 8GB'
-          ),
+          t('linux_page.snippet_fleet_comment_1'),
           '[zram0] zram-size = ram / 2 | compression-algorithm = zstd',
-          t(
-            'linux_page.snippet_fleet_comment_2',
-            '# Snapshot automático en disco previo a cualquier parche nocturno'
-          ),
+          t('linux_page.snippet_fleet_comment_2'),
           'timeshift --create --comments "Nightly Atomic Point" --scripted',
         ],
       },
@@ -175,15 +163,9 @@ export default function LinuxPage() {
         label: 'tty3:lan-postgres',
         path: '/etc/systemd/system/exe-outbox-sync.service',
         lines: [
-          t(
-            'linux_page.snippet_lan_comment_1',
-            '# PostgreSQL 15 en red local LAN (<0.3ms) + réplica asíncrona hacia la nube'
-          ),
+          t('linux_page.snippet_lan_comment_1'),
           'pg_isready -h 127.0.0.1 -p 5432 && systemctl status exe-outbox-sync.service',
-          t(
-            'linux_page.snippet_lan_comment_2',
-            '# Respuesta local ininterrumpida ante corte total de fibra óptica:'
-          ),
+          t('linux_page.snippet_lan_comment_2'),
           '64 bytes from 192.168.1.10 (pos-server.local): icmp_seq=1 ttl=64 time=0.19 ms',
         ],
       },
@@ -195,111 +177,69 @@ export default function LinuxPage() {
     () => [
       {
         id: 'kiosk-pos',
-        code: t('linux_page.srv_1_code', 'SRV-LNX-01 // TERMINALES DE CAJA'),
-        title: t('linux_page.srv_1_title', 'Terminales Linux POS & Modo Quiosco Blindado'),
-        subtitle: t(
-          'linux_page.srv_1_subtitle',
-          'Mostradores, gastronomía, farmacias y retail de alto tráfico'
-        ),
-        description: t(
-          'linux_page.srv_1_desc',
-          'Convertimos la PC de tu caja en un electrodoméstico dedicado: enciende en 4.5 segundos directo a tu sistema de cobro o comandas, sin escritorio distraído, sin actualizaciones forzadas en hora pico y con reglas permanentes para impresoras térmicas.'
-        ),
+        code: t('linux_page.srv_1_code'),
+        title: t('linux_page.srv_1_title'),
+        subtitle: t('linux_page.srv_1_subtitle'),
+        description: t('linux_page.srv_1_desc'),
         icon: Terminal,
         accentText: 'text-emerald-700 dark:text-emerald-400',
         accentBorder: 'border-emerald-500/30 hover:border-emerald-500/60',
         accentBg: 'bg-emerald-500/10',
         specs: [
-          t('linux_page.srv_1_spec_1', 'Arranque determinista en 4.5s (systemd-boot)'),
-          t(
-            'linux_page.srv_1_spec_2',
-            'Reglas udev fijas para impresoras ESC/POS y lectores láser'
-          ),
-          t('linux_page.srv_1_spec_3', 'Bloqueo de sistema contra cierres accidentales o virus'),
+          t('linux_page.srv_1_spec_1'),
+          t('linux_page.srv_1_spec_2'),
+          t('linux_page.srv_1_spec_3'),
         ],
         quoteHref: '/cotizador?plan=linux&type=linux-pos',
       },
       {
         id: 'pc-rescue',
-        code: t('linux_page.srv_2_code', 'SRV-LNX-02 // MIGRACIÓN DE FLOTA'),
-        title: t(
-          'linux_page.srv_2_title',
-          'Rescate y Migración de PCs de Oficina / Administración'
-        ),
-        subtitle: t(
-          'linux_page.srv_2_subtitle',
-          'Extendé 5+ años la vida útil de tu hardware x86_64 actual'
-        ),
-        description: t(
-          'linux_page.srv_2_desc',
-          'Antes de gastar millones renovando computadoras lentas por culpa de sistemas operativos pesados, migramos tus estaciones a Linux LTS optimizado: consumen apenas 480 MB de RAM en reposo y vuelan en tareas administrativas, ERP web y ofimática.'
-        ),
+        code: t('linux_page.srv_2_code'),
+        title: t('linux_page.srv_2_title'),
+        subtitle: t('linux_page.srv_2_subtitle'),
+        description: t('linux_page.srv_2_desc'),
         icon: Cpu,
         accentText: 'text-cyan-700 dark:text-cyan-400',
         accentBorder: 'border-cyan-500/30 hover:border-cyan-500/60',
         accentBg: 'bg-cyan-500/10',
         specs: [
-          t('linux_page.srv_2_spec_1', '480 MB RAM en reposo (revive PCs con 4GB u 8GB RAM)'),
-          t('linux_page.srv_2_spec_2', '$0 en licencias anuales de sistema operativo y antivirus'),
-          t(
-            'linux_page.srv_2_spec_3',
-            'Navegador aislado, suite ofimática completa y cero telemetría'
-          ),
+          t('linux_page.srv_2_spec_1'),
+          t('linux_page.srv_2_spec_2'),
+          t('linux_page.srv_2_spec_3'),
         ],
         quoteHref: '/cotizador?plan=linux&type=linux-pos',
       },
       {
         id: 'lan-node',
-        code: t('linux_page.srv_3_code', 'SRV-LNX-03 // CONTINUIDAD OPERATIVA'),
-        title: t('linux_page.srv_3_title', 'Nodo Servidor Local LAN & PostgreSQL Offline-First'),
-        subtitle: t(
-          'linux_page.srv_3_subtitle',
-          'Operación ininterrumpida a 0.4ms aunque se corte internet'
-        ),
-        description: t(
-          'linux_page.srv_3_desc',
-          'Instalamos un nodo servidor Linux físico dentro de tu comercio o planta con PostgreSQL local y sincronización asíncrona hacia la nube. Tus cajas, KDS de cocina y terminales internas siguen operando a velocidad de cable de red sin depender del proveedor de fibra.'
-        ),
+        code: t('linux_page.srv_3_code'),
+        title: t('linux_page.srv_3_title'),
+        subtitle: t('linux_page.srv_3_subtitle'),
+        description: t('linux_page.srv_3_desc'),
         icon: Server,
         accentText: 'text-violet-700 dark:text-violet-400',
         accentBorder: 'border-violet-500/30 hover:border-violet-500/60',
         accentBg: 'bg-violet-500/10',
         specs: [
-          t('linux_page.srv_3_spec_1', 'Latencia sub-milisegundo (<0.4ms) en red local LAN'),
-          t(
-            'linux_page.srv_3_spec_2',
-            'Replicación automática en segundo plano al volver internet'
-          ),
-          t('linux_page.srv_3_spec_3', 'Backups diarios encriptados locales + copia en la nube'),
+          t('linux_page.srv_3_spec_1'),
+          t('linux_page.srv_3_spec_2'),
+          t('linux_page.srv_3_spec_3'),
         ],
         quoteHref: '/cotizador?plan=linux&type=edge-server',
       },
       {
         id: 'ssh-guard',
-        code: t('linux_page.srv_4_code', 'SRV-LNX-04 // BLINDAJE & RESCATE'),
-        title: t('linux_page.srv_4_title', 'Guardia Remota SSH, Hardening & Llave USB Física'),
-        subtitle: t(
-          'linux_page.srv_4_subtitle',
-          'Recuperación ante desastres en 3 minutos sin depender de nadie'
-        ),
-        description: t(
-          'linux_page.srv_4_desc',
-          'Cada despliegue incluye firewall nftables, monitoreo predictivo de salud de discos (S.M.A.R.T.) y la entrega en mano de un pendrive físico booteable configurado a medida para restaurar una terminal completa al estado exacto de fábrica en 3 minutos.'
-        ),
+        code: t('linux_page.srv_4_code'),
+        title: t('linux_page.srv_4_title'),
+        subtitle: t('linux_page.srv_4_subtitle'),
+        description: t('linux_page.srv_4_desc'),
         icon: HardDrive,
         accentText: 'text-amber-700 dark:text-amber-400',
         accentBorder: 'border-amber-500/30 hover:border-amber-500/60',
         accentBg: 'bg-amber-500/10',
         specs: [
-          t('linux_page.srv_4_spec_1', 'Pendrive físico Live USB (Timeshift / imagen clonada)'),
-          t(
-            'linux_page.srv_4_spec_2',
-            'Túnel seguro WireGuard / SSH con llave criptográfica Ed25519'
-          ),
-          t(
-            'linux_page.srv_4_spec_3',
-            'Ventanas de mantenimiento atómicas fuera de horario comercial'
-          ),
+          t('linux_page.srv_4_spec_1'),
+          t('linux_page.srv_4_spec_2'),
+          t('linux_page.srv_4_spec_3'),
         ],
         quoteHref: '/cotizador?plan=linux&type=linux-pos',
       },
@@ -330,6 +270,7 @@ export default function LinuxPage() {
   }, [])
 
   // Visibilidad flotante estrictamente acotada a la zona Linux + Scroll-Spy en vivo
+  // guardrail-ok(useEffect): sync query params / external system state
   useEffect(() => {
     if (typeof window === 'undefined') return
 
@@ -370,7 +311,9 @@ export default function LinuxPage() {
     }
   }, [])
 
+  // guardrail-ok(useEffect): DOM observer for scroll/visibility
   // Atajos rápidos 1–4 por teclado mientras se explora la sección Linux
+  // guardrail-ok(useEffect): scroll/observer sync for linux page
   useEffect(() => {
     if (!isDockVisible || typeof window === 'undefined') return
 
@@ -427,26 +370,18 @@ export default function LinuxPage() {
           >
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 font-mono text-[11px] font-bold uppercase tracking-widest mb-5">
               <Terminal className="w-3.5 h-3.5" />
-              <span>
-                {t(
-                  'linux_page.hero_badge',
-                  'DIVISIÓN INFRAESTRUCTURA LINUX // POS · FLOTAS · NODOS LAN'
-                )}
-              </span>
+              <span>{t('linux_page.hero_badge')}</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.08] max-w-4xl mx-auto">
-              {t('linux_page.hero_title_1', 'Tus cajas y computadoras actuales,')}{' '}
+              {t('linux_page.hero_title_1')}{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-cyan-600 to-teal-600 dark:from-emerald-400 dark:via-cyan-400 dark:to-teal-300">
-                {t('linux_page.hero_title_highlight', 'blindadas con Linux dedicado')}
+                {t('linux_page.hero_title_highlight')}
               </span>
             </h1>
 
             <p className="mt-5 text-sm sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-              {t(
-                'linux_page.hero_subtitle',
-                'Transformamos PCs lentas de mostrador u oficina en terminales de misión crítica con arranque en 4.5s, cero licencias, soporte nativo para impresoras térmicas y servidores locales que siguen facturando aunque se corte internet.'
-              )}
+              {t('linux_page.hero_subtitle')}
             </p>
 
             {/* Barra inicial sincronizada (al scrollear se transforma en el Dock Flotante) */}
@@ -474,38 +409,32 @@ export default function LinuxPage() {
 
               <div
                 role="group"
-                aria-label={t('linux_page.currency_selector_aria', 'Seleccionar moneda')}
+                aria-label={t('linux_page.currency_selector_aria')}
                 className="inline-flex items-center rounded-xl bg-slate-200/80 dark:bg-white/[0.05] border border-slate-300 dark:border-white/10 p-1 ml-0 sm:ml-2 font-mono text-xs"
               >
                 <button
                   type="button"
                   onClick={() => setCurrency('ARS')}
-                  title={t(
-                    'linux_page.currency_ars_title',
-                    'Ver precios en Pesos Argentinos (ARS)'
-                  )}
+                  title={t('linux_page.currency_ars_title')}
                   className={`px-3 py-1 rounded-lg font-bold transition-colors cursor-pointer ${
                     currency === 'ARS'
                       ? 'bg-white dark:bg-emerald-500 text-slate-900 dark:text-slate-950 shadow-2xs'
                       : 'text-slate-500 dark:text-slate-400'
                   }`}
                 >
-                  {t('linux_page.currency_ars_label', 'ARS ($)')}
+                  {t('linux_page.currency_ars_label')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setCurrency('USD')}
-                  title={t(
-                    'linux_page.currency_usd_title',
-                    'Ver precios en Dólares Estadounidenses (USD)'
-                  )}
+                  title={t('linux_page.currency_usd_title')}
                   className={`px-3 py-1 rounded-lg font-bold transition-colors cursor-pointer ${
                     currency === 'USD'
                       ? 'bg-white dark:bg-emerald-500 text-slate-900 dark:text-slate-950 shadow-2xs'
                       : 'text-slate-500 dark:text-slate-400'
                   }`}
                 >
-                  {t('linux_page.currency_usd_label', 'USD (u$s)')}
+                  {t('linux_page.currency_usd_label')}
                 </button>
               </div>
             </div>
@@ -574,7 +503,7 @@ export default function LinuxPage() {
                         className={`inline-flex items-center gap-1.5 font-mono text-xs font-bold ${srv.accentText} hover:underline`}
                       >
                         <Calculator className="w-3.5 h-3.5" />
-                        <span>{t('linux_page.srv_cta_quote', 'Cotizar este módulo')}</span>
+                        <span>{t('linux_page.srv_cta_quote')}</span>
                       </Link>
 
                       <a
@@ -592,7 +521,7 @@ export default function LinuxPage() {
                         }
                         className="inline-flex items-center gap-1 font-mono text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                       >
-                        <span>{t('linux_page.srv_cta_consult', 'Consultar ingeniería')}</span>
+                        <span>{t('linux_page.srv_cta_consult')}</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />
                       </a>
                     </div>
@@ -614,41 +543,27 @@ export default function LinuxPage() {
                 <div className="lg:w-7/12 space-y-4">
                   <div className="inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
                     <Sliders className="w-3.5 h-3.5" />
-                    <span>
-                      {t(
-                        'linux_page.sim_badge',
-                        'SIMULADOR TCO // RECUPERACIÓN DE HARDWARE EXISTENTE'
-                      )}
-                    </span>
+                    <span>{t('linux_page.sim_badge')}</span>
                   </div>
 
                   <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-                    {t(
-                      'linux_page.sim_title',
-                      '¿Cuántas PCs de caja u oficina tenés hoy funcionando lentas?'
-                    )}
+                    {t('linux_page.sim_title')}
                   </h2>
 
                   <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                    {t(
-                      'linux_page.sim_subtitle',
-                      'La mayoría de los comercios descartan computadoras con procesadores Intel/AMD totalmente sanos sólo porque el sistema tradicional satura la memoria y el disco. Deslizá para estimar el capital que retenés migrando tu flota actual:'
-                    )}
+                    {t('linux_page.sim_subtitle')}
                   </p>
 
                   <div className="pt-2 space-y-2">
                     <div className="flex items-center justify-between font-mono text-xs">
                       <span className="text-slate-500 dark:text-slate-400">
-                        {t(
-                          'linux_page.sim_slider_label',
-                          'CANTIDAD DE TERMINALES / PCS A BLINDAR:'
-                        )}
+                        {t('linux_page.sim_slider_label')}
                       </span>
                       <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-bold text-sm">
                         {pcCount}{' '}
                         {pcCount === 1
-                          ? t('linux_page.sim_unit_singular', 'equipo')
-                          : t('linux_page.sim_unit_plural', 'equipos')}
+                          ? t('linux_page.sim_unit_singular')
+                          : t('linux_page.sim_unit_plural')}
                       </span>
                     </div>
                     <input
@@ -657,14 +572,14 @@ export default function LinuxPage() {
                       max={20}
                       value={pcCount}
                       onChange={(e) => setPcCount(Number(e.target.value))}
-                      aria-label={t('linux_page.sim_slider_aria', 'Cantidad de terminales o PCs')}
+                      aria-label={t('linux_page.sim_slider_aria')}
                       className="w-full accent-emerald-500 cursor-pointer h-2 rounded-lg bg-slate-200 dark:bg-white/10"
                     />
                     <div className="flex justify-between font-mono text-[10px] text-slate-400">
-                      <span>{t('linux_page.sim_scale_1', '1 Caja / PC')}</span>
-                      <span>{t('linux_page.sim_scale_5', '5 Equipos')}</span>
-                      <span>{t('linux_page.sim_scale_10', '10 Equipos')}</span>
-                      <span>{t('linux_page.sim_scale_20', '20 Equipos (Sucursales)')}</span>
+                      <span>{t('linux_page.sim_scale_1')}</span>
+                      <span>{t('linux_page.sim_scale_5')}</span>
+                      <span>{t('linux_page.sim_scale_10')}</span>
+                      <span>{t('linux_page.sim_scale_20')}</span>
                     </div>
                   </div>
                 </div>
@@ -672,7 +587,7 @@ export default function LinuxPage() {
                 <div className="lg:w-5/12 rounded-2xl bg-slate-50 dark:bg-[#050811] border border-slate-200/80 dark:border-white/[0.08] p-5 sm:p-6 space-y-4 font-mono">
                   <div className="flex items-center justify-between text-xs pb-3 border-b border-slate-200 dark:border-white/[0.06]">
                     <span className="text-slate-500 dark:text-slate-400">
-                      {t('linux_page.sim_row_replace', 'Recambio + Licencias:')}
+                      {t('linux_page.sim_row_replace')}
                     </span>
                     <motion.span
                       key={`old-${currency}-${pcCount}`}
@@ -689,7 +604,7 @@ export default function LinuxPage() {
 
                   <div className="flex items-center justify-between text-xs pb-3 border-b border-slate-200 dark:border-white/[0.06]">
                     <span className="text-slate-600 dark:text-slate-300">
-                      {t('linux_page.sim_row_migration', 'Migración Linux Determinista:')}
+                      {t('linux_page.sim_row_migration')}
                     </span>
                     <motion.span
                       key={`mig-${currency}-${pcCount}`}
@@ -706,7 +621,7 @@ export default function LinuxPage() {
 
                   <div className="pt-1">
                     <span className="text-[10px] uppercase tracking-wider text-emerald-700 dark:text-emerald-400 font-bold block mb-1">
-                      {t('linux_page.sim_saved_label', 'CAPITAL DIRECTO AHORRADO POR TU NEGOCIO')}
+                      {t('linux_page.sim_saved_label')}
                     </span>
                     <motion.div
                       key={`save-${currency}-${pcCount}`}
@@ -718,10 +633,7 @@ export default function LinuxPage() {
                       {currency === 'ARS' ? formatARS(savedARS) : formatUSD(savedUSD)}
                     </motion.div>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-sans">
-                      {t(
-                        'linux_page.sim_footnote',
-                        'Incluye aprovisionamiento en lote, reglas ESC/POS y pendrive físico de rescate.'
-                      )}
+                      {t('linux_page.sim_footnote')}
                     </p>
                   </div>
 
@@ -764,10 +676,7 @@ export default function LinuxPage() {
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
                   </span>
                   <span className="text-emerald-400 font-bold text-[11px]">
-                    {t(
-                      'linux_page.tty_window_title',
-                      'root@exe-pos-node:~ (Linux 6.12-LTS x86_64 · Benchmark en mismo hardware 8GB NVMe)'
-                    )}
+                    {t('linux_page.tty_window_title')}
                   </span>
                 </div>
 
@@ -781,7 +690,7 @@ export default function LinuxPage() {
                         : 'text-slate-400 hover:text-white'
                     }`}
                   >
-                    {t('linux_page.tty_mode_linux', 'LINUX LTS DEDICADO')}
+                    {t('linux_page.tty_mode_linux')}
                   </button>
                   <button
                     type="button"
@@ -792,7 +701,7 @@ export default function LinuxPage() {
                         : 'text-slate-400 hover:text-rose-300'
                     }`}
                   >
-                    {t('linux_page.tty_mode_commercial', 'OS COMERCIAL ESTÁNDAR')}
+                    {t('linux_page.tty_mode_commercial')}
                   </button>
                 </div>
               </div>
@@ -802,17 +711,15 @@ export default function LinuxPage() {
                 <div className="lg:col-span-6 p-5 sm:p-6 space-y-4 text-xs bg-[#03060c]">
                   <div>
                     <div className="flex justify-between mb-1.5">
-                      <span className="text-slate-400">
-                        {t('linux_page.tty_metric_ram_label', 'MEM[||] Consumo RAM en reposo')}
-                      </span>
+                      <span className="text-slate-400">{t('linux_page.tty_metric_ram_label')}</span>
                       <span
                         className={`font-bold ${
                           osMode === 'linux' ? 'text-emerald-400' : 'text-rose-400'
                         }`}
                       >
                         {osMode === 'linux'
-                          ? t('linux_page.tty_metric_ram_linux', '480 MB / 8192 MB (5.8%)')
-                          : t('linux_page.tty_metric_ram_commercial', '4310 MB / 8192 MB (52.6%)')}
+                          ? t('linux_page.tty_metric_ram_linux')
+                          : t('linux_page.tty_metric_ram_commercial')}
                       </span>
                     </div>
                     <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
@@ -827,7 +734,7 @@ export default function LinuxPage() {
                   <div>
                     <div className="flex justify-between mb-1.5">
                       <span className="text-slate-400">
-                        {t('linux_page.tty_metric_boot_label', 'BOOT[|] Encendido → Caja lista')}
+                        {t('linux_page.tty_metric_boot_label')}
                       </span>
                       <span
                         className={`font-bold ${
@@ -835,11 +742,8 @@ export default function LinuxPage() {
                         }`}
                       >
                         {osMode === 'linux'
-                          ? t('linux_page.tty_metric_boot_linux', '4.5s (systemd-analyze)')
-                          : t(
-                              'linux_page.tty_metric_boot_commercial',
-                              '48s – 90s (I/O bloqueante)'
-                            )}
+                          ? t('linux_page.tty_metric_boot_linux')
+                          : t('linux_page.tty_metric_boot_commercial')}
                       </span>
                     </div>
                     <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
@@ -853,20 +757,15 @@ export default function LinuxPage() {
 
                   <div>
                     <div className="flex justify-between mb-1.5">
-                      <span className="text-slate-400">
-                        {t(
-                          'linux_page.tty_metric_irq_label',
-                          'IRQ[0] Reinicios en horario comercial'
-                        )}
-                      </span>
+                      <span className="text-slate-400">{t('linux_page.tty_metric_irq_label')}</span>
                       <span
                         className={`font-bold ${
                           osMode === 'linux' ? 'text-emerald-400' : 'text-rose-400'
                         }`}
                       >
                         {osMode === 'linux'
-                          ? t('linux_page.tty_metric_irq_linux', '0 (Ventana nocturna)')
-                          : t('linux_page.tty_metric_irq_commercial', 'Actualizaciones forzadas')}
+                          ? t('linux_page.tty_metric_irq_linux')
+                          : t('linux_page.tty_metric_irq_commercial')}
                       </span>
                     </div>
                     <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
@@ -882,22 +781,12 @@ export default function LinuxPage() {
                     {osMode === 'linux' ? (
                       <div className="flex items-center gap-2 text-emerald-400 font-bold text-[11px]">
                         <CheckCircle2 className="w-4 h-4 shrink-0" />
-                        <span>
-                          {t(
-                            'linux_page.tty_status_linux',
-                            'NODO DETERMINISTA ACTIVO · UPTIME 99.98% · INMUNE A .EXE'
-                          )}
-                        </span>
+                        <span>{t('linux_page.tty_status_linux')}</span>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2 text-rose-400 font-bold text-[11px]">
                         <XCircle className="w-4 h-4 shrink-0" />
-                        <span>
-                          {t(
-                            'linux_page.tty_status_commercial',
-                            'DEGRADACIÓN DE I/O Y RIESGO DE BLOQUEO EN HORA PICO'
-                          )}
-                        </span>
+                        <span>{t('linux_page.tty_status_commercial')}</span>
                       </div>
                     )}
                   </div>
@@ -908,7 +797,7 @@ export default function LinuxPage() {
                   <div>
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                       <span className="text-[11px] text-cyan-400 font-bold">
-                        {t('linux_page.tty_config_header', 'CONFIGURACIÓN AUDITABLE:')}
+                        {t('linux_page.tty_config_header')}
                       </span>
                       <div className="flex items-center gap-1">
                         {(Object.keys(kernelSnippets) as SnippetKey[]).map((k) => (
@@ -937,10 +826,7 @@ export default function LinuxPage() {
                   </div>
 
                   <p className="text-[11px] text-slate-400 font-sans leading-relaxed">
-                    {t(
-                      'linux_page.tty_config_footer',
-                      'Código y scripts bash 100% documentados y transferidos con acceso root completo a tu comercio o equipo IT, sin cajas negras ni ataduras.'
-                    )}
+                    {t('linux_page.tty_config_footer')}
                   </p>
                 </div>
               </div>
@@ -956,10 +842,10 @@ export default function LinuxPage() {
           >
             <div className="text-center max-w-2xl mx-auto mb-10">
               <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">
-                {t('linux_page.plans_eyebrow', 'ESQUEMA TRANSPARENTE // SIN COSTOS OCULTOS')}
+                {t('linux_page.plans_eyebrow')}
               </span>
               <h2 className="mt-2 text-2xl sm:text-4xl font-display font-bold text-slate-900 dark:text-white tracking-tight">
-                {t('linux_page.plans_heading', 'Modalidades de Implementación y Guardia')}
+                {t('linux_page.plans_heading')}
               </h2>
             </div>
 
@@ -968,11 +854,11 @@ export default function LinuxPage() {
               <div className="rounded-2xl p-6 bg-white dark:bg-[#070b14]/90 border border-slate-300 dark:border-white/[0.08] shadow-sm flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between font-mono text-[11px] text-cyan-700 dark:text-cyan-400 font-bold mb-2">
-                    <span>{t('linux_page.plan_1_badge_left', 'ESTACIÓN INDIVIDUAL')}</span>
-                    <span>{t('linux_page.plan_1_badge_right', 'PAGO ÚNICO')}</span>
+                    <span>{t('linux_page.plan_1_badge_left')}</span>
+                    <span>{t('linux_page.plan_1_badge_right')}</span>
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                    {t('linux_page.plan_1_title', 'Terminal Linux POS / Workstation')}
+                    {t('linux_page.plan_1_title')}
                   </h3>
                   <motion.div
                     key={`plan1-${currency}`}
@@ -986,21 +872,15 @@ export default function LinuxPage() {
                   <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 mb-6 font-mono">
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
-                      <span>
-                        {t('linux_page.plan_1_feat_1', 'Modo Quiosco o Escritorio Productivo')}
-                      </span>
+                      <span>{t('linux_page.plan_1_feat_1')}</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
-                      <span>
-                        {t('linux_page.plan_1_feat_2', 'Drivers térmicos ESC/POS y lectores')}
-                      </span>
+                      <span>{t('linux_page.plan_1_feat_2')}</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
-                      <span>
-                        {t('linux_page.plan_1_feat_3', 'Pendrive USB físico de rescate (3 min)')}
-                      </span>
+                      <span>{t('linux_page.plan_1_feat_3')}</span>
                     </li>
                   </ul>
                 </div>
@@ -1008,7 +888,7 @@ export default function LinuxPage() {
                   href={`/cotizador?plan=linux&type=linux-pos&currency=${currency}`}
                   className="w-full py-2.5 rounded-xl border border-slate-300 dark:border-white/15 hover:border-cyan-500 text-slate-900 dark:text-white font-mono text-xs font-bold text-center transition-colors"
                 >
-                  {t('linux_page.plan_1_cta', 'Configurar Terminal')}
+                  {t('linux_page.plan_1_cta')}
                 </Link>
               </div>
 
@@ -1018,12 +898,12 @@ export default function LinuxPage() {
                   <div className="flex items-center justify-between font-mono text-[11px] text-emerald-700 dark:text-emerald-400 font-bold mb-2">
                     <span className="inline-flex items-center gap-1">
                       <WifiOff className="w-3.5 h-3.5" />
-                      {t('linux_page.plan_2_badge_left', 'MISIÓN CRÍTICA LAN')}
+                      {t('linux_page.plan_2_badge_left')}
                     </span>
-                    <span>{t('linux_page.plan_2_badge_right', 'PAGO ÚNICO')}</span>
+                    <span>{t('linux_page.plan_2_badge_right')}</span>
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                    {t('linux_page.plan_2_title', 'Nodo Servidor Local Offline-First')}
+                    {t('linux_page.plan_2_title')}
                   </h3>
                   <motion.div
                     key={`plan2-${currency}`}
@@ -1037,21 +917,15 @@ export default function LinuxPage() {
                   <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 mb-6 font-mono">
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                      <span>
-                        {t('linux_page.plan_2_feat_1', 'PostgreSQL en red local (<0.4ms)')}
-                      </span>
+                      <span>{t('linux_page.plan_2_feat_1')}</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                      <span>
-                        {t('linux_page.plan_2_feat_2', 'Sincronización asíncrona con la nube')}
-                      </span>
+                      <span>{t('linux_page.plan_2_feat_2')}</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                      <span>
-                        {t('linux_page.plan_2_feat_3', 'Firewall nftables + Backups encriptados')}
-                      </span>
+                      <span>{t('linux_page.plan_2_feat_3')}</span>
                     </li>
                   </ul>
                 </div>
@@ -1059,7 +933,7 @@ export default function LinuxPage() {
                   href={`/cotizador?plan=linux&type=edge-server&currency=${currency}`}
                   className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-slate-950 font-mono text-xs font-bold text-center transition-colors"
                 >
-                  {t('linux_page.plan_2_cta', 'Cotizar Nodo Local LAN')}
+                  {t('linux_page.plan_2_cta')}
                 </Link>
               </div>
 
@@ -1069,12 +943,12 @@ export default function LinuxPage() {
                   <div className="flex items-center justify-between font-mono text-[11px] text-violet-700 dark:text-violet-400 font-bold mb-2">
                     <span className="inline-flex items-center gap-1">
                       <Activity className="w-3.5 h-3.5" />
-                      {t('linux_page.plan_3_badge_left', 'GUARDIA PREVENTIVA')}
+                      {t('linux_page.plan_3_badge_left')}
                     </span>
-                    <span>{t('linux_page.plan_3_badge_right', '100% OPCIONAL')}</span>
+                    <span>{t('linux_page.plan_3_badge_right')}</span>
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                    {t('linux_page.plan_3_title', 'Telemetría S.M.A.R.T. & Soporte SSH')}
+                    {t('linux_page.plan_3_title')}
                   </h3>
                   <motion.div
                     key={`plan3-${currency}`}
@@ -1086,27 +960,21 @@ export default function LinuxPage() {
                     {currency === 'ARS' ? '$55.000' : 'u$s 48'}
                     <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
                       {' '}
-                      {t('linux_page.plan_3_period', '/mes')}
+                      {t('linux_page.plan_3_period')}
                     </span>
                   </motion.div>
                   <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 mb-6 font-mono">
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-violet-500 shrink-0" />
-                      <span>
-                        {t('linux_page.plan_3_feat_1', 'Alertas tempranas de desgaste SSD/NVMe')}
-                      </span>
+                      <span>{t('linux_page.plan_3_feat_1')}</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-violet-500 shrink-0" />
-                      <span>
-                        {t('linux_page.plan_3_feat_2', 'Parches de seguridad en horario nocturno')}
-                      </span>
+                      <span>{t('linux_page.plan_3_feat_2')}</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Lock className="w-3.5 h-3.5 text-violet-500 shrink-0" />
-                      <span>
-                        {t('linux_page.plan_3_feat_3', 'Asistencia remota directa por túnel SSH')}
-                      </span>
+                      <span>{t('linux_page.plan_3_feat_3')}</span>
                     </li>
                   </ul>
                 </div>
@@ -1114,7 +982,7 @@ export default function LinuxPage() {
                   href="/tienda#linux"
                   className="w-full py-2.5 rounded-xl border border-slate-300 dark:border-white/15 hover:border-violet-500 text-slate-900 dark:text-white font-mono text-xs font-bold text-center transition-colors"
                 >
-                  {t('linux_page.plan_3_cta', 'Ver en Tienda de Abonos')}
+                  {t('linux_page.plan_3_cta')}
                 </Link>
               </div>
             </div>
@@ -1128,7 +996,7 @@ export default function LinuxPage() {
         <AnimatePresence>
           {isDockVisible && (
             <motion.nav
-              aria-label={t('linux_page.dock_aria_label', 'Navegación rápida de secciones Linux')}
+              aria-label={t('linux_page.dock_aria_label')}
               initial={{ opacity: 0, y: 26, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 26, scale: 0.96 }}
@@ -1209,7 +1077,7 @@ export default function LinuxPage() {
                   onClick={() => jumpToStation(nextStationIdx)}
                   title={
                     isLastStation
-                      ? t('linux_page.dock_reset_title', 'Volver al inicio de Servicios Linux')
+                      ? t('linux_page.dock_reset_title')
                       : t('linux_page.dock_next_title', {
                           label: nextStation.heroLabel,
                           defaultValue: 'Avanzar a {{label}}',
@@ -1219,7 +1087,7 @@ export default function LinuxPage() {
                 >
                   <span className="hidden md:inline">
                     {isLastStation
-                      ? t('linux_page.dock_reset_label', 'Inicio')
+                      ? t('linux_page.dock_reset_label')
                       : t('linux_page.dock_next_label', {
                           num: nextStation.num,
                           defaultValue: 'Sig · {{num}}',
@@ -1243,14 +1111,8 @@ export default function LinuxPage() {
                         onClick={() => setCurrency(curr)}
                         title={
                           curr === 'ARS'
-                            ? t(
-                                'linux_page.currency_ars_title',
-                                'Ver precios en Pesos Argentinos (ARS)'
-                              )
-                            : t(
-                                'linux_page.currency_usd_title',
-                                'Ver precios en Dólares Estadounidenses (USD)'
-                              )
+                            ? t('linux_page.currency_ars_title')
+                            : t('linux_page.currency_usd_title')
                         }
                         className={`relative px-2.5 py-1 rounded-lg font-bold transition-colors cursor-pointer ${
                           activeCurr
@@ -1267,8 +1129,8 @@ export default function LinuxPage() {
                         )}
                         <span className="relative z-10">
                           {curr === 'ARS'
-                            ? t('linux_page.dock_currency_ars', '$ ARS')
-                            : t('linux_page.dock_currency_usd', 'u$s')}
+                            ? t('linux_page.dock_currency_ars')
+                            : t('linux_page.dock_currency_usd')}
                         </span>
                       </button>
                     )
@@ -1280,15 +1142,12 @@ export default function LinuxPage() {
                   type="button"
                   whileTap={{ scale: 0.92 }}
                   onClick={() => setCurrency((c) => (c === 'ARS' ? 'USD' : 'ARS'))}
-                  aria-label={t(
-                    'linux_page.dock_currency_mobile_aria',
-                    'Cambiar moneda entre ARS y USD'
-                  )}
+                  aria-label={t('linux_page.dock_currency_mobile_aria')}
                   className="sm:hidden px-2 py-1.5 rounded-xl bg-slate-100 dark:bg-white/[0.06] border border-slate-300 dark:border-white/15 text-[10px] font-bold text-slate-900 dark:text-emerald-300 cursor-pointer"
                 >
                   {currency === 'ARS'
-                    ? t('linux_page.dock_currency_ars', '$ ARS')
-                    : t('linux_page.dock_currency_usd', 'u$s')}
+                    ? t('linux_page.dock_currency_ars')
+                    : t('linux_page.dock_currency_usd')}
                 </motion.button>
               </div>
             </motion.nav>

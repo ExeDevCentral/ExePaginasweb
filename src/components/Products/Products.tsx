@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import { toast } from 'sonner'
 import confetti from 'canvas-confetti'
 import {
@@ -163,6 +164,7 @@ const Products = () => {
   const [selectedCourtSlot, setSelectedCourtSlot] = useState('19:00 Hs')
 
   // Sync URL hash (#peluqueria, #panaderia, #indumentaria, #canchas)
+  // guardrail-ok(useEffect): sync selected rubro from URL hash for deep-link navigation
   useEffect(() => {
     const syncHash = () => {
       const matched = HASH_TO_RUBRO[window.location.hash]
@@ -177,14 +179,8 @@ const Products = () => {
   const ActiveIcon = activeRubro.icon
   const estimatedTotal = activeRubro.basePrice * sucursales + (includeWhatsAppBot ? 80 : 0)
 
-  const stylists = [
-    t('products.widget_pelu_stylist_1', 'Sofía (Estilista)'),
-    t('products.widget_pelu_stylist_2', 'Lucas (Barbero)'),
-  ]
-  const garmentColors = [
-    t('products.widget_ropa_color_1', 'Negro'),
-    t('products.widget_ropa_color_2', 'Beige'),
-  ]
+  const stylists = [t('products.widget_pelu_stylist_1'), t('products.widget_pelu_stylist_2')]
+  const garmentColors = [t('products.widget_ropa_color_1'), t('products.widget_ropa_color_2')]
   const stockMatrix: Record<'S' | 'M' | 'L' | 'XL', number> = {
     S: 6,
     M: 14,
@@ -316,10 +312,10 @@ const Products = () => {
                       </span>
                     </div>
                     <h3 className="text-2xl sm:text-3xl font-bold text-white font-montserrat">
-                      {t(`products.${activeRubro.tKey}_titulo`)}
+                      {ti(t, `products.${activeRubro.tKey}_titulo`)}
                     </h3>
                     <p className="text-slate-300 text-sm sm:text-base mt-2 leading-relaxed">
-                      {t(`products.${activeRubro.tKey}_desc`)}
+                      {ti(t, `products.${activeRubro.tKey}_desc`)}
                     </p>
                   </div>
                 </div>
@@ -351,7 +347,7 @@ const Products = () => {
                       className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.07] text-xs sm:text-sm text-slate-200"
                     >
                       <CyberCheckMark className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>{t(`products.${activeRubro.tKey}_feat_${idx}`)}</span>
+                      <span>{ti(t, `products.${activeRubro.tKey}_feat_${idx}`)}</span>
                     </li>
                   ))}
                 </ul>
@@ -361,7 +357,7 @@ const Products = () => {
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <div>
                       <span className="text-[11px] uppercase tracking-wider text-slate-400 block">
-                        {t('products.inversion', 'Inversión estimada')}
+                        {t('products.inversion')}
                       </span>
                       <span className="text-2xl font-black text-white font-mono">
                         {showEstimator ? `$${estimatedTotal} USD` : activeRubro.price}
@@ -421,7 +417,7 @@ const Products = () => {
                 {/* Action Links */}
                 <div className="flex flex-wrap items-center gap-3 pt-1">
                   <HudButton
-                    label={t('products.ver_demo', 'VER DEMO EN VIVO')}
+                    label={t('products.ver_demo')}
                     variant="primary"
                     size="md"
                     onClick={() => setDemoOpen(true)}
@@ -433,7 +429,7 @@ const Products = () => {
                     href={`/cotizador?rubro=${activeRubro.tKey}`}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-sm font-semibold text-white transition-all"
                   >
-                    <span>Cotizar sistema</span>
+                    <span>{t('products.quote_system')}</span>
                     <ArrowRight className="w-4 h-4 text-cyan-400" />
                   </Link>
 
@@ -442,7 +438,7 @@ const Products = () => {
                     onClick={() => scrollToDemoZone(activeRubro.demoZoneAnchor)}
                     className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-cyan-300 hover:text-cyan-200 hover:bg-cyan-500/10 transition-colors"
                   >
-                    <span>Ver subpágina 3D</span>
+                    <span>{t('products.view_3d')}</span>
                     <ChevronDown className="w-4 h-4" />
                   </button>
                 </div>
@@ -519,7 +515,7 @@ const Products = () => {
                           }
                           className="w-full py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white text-xs font-bold hover:brightness-110 transition-all"
                         >
-                          Confirmar Turno (Simulación)
+                          {t('products.confirm_sim')}
                         </button>
                       </>
                     )}
@@ -527,7 +523,7 @@ const Products = () => {
                     {activeRubro.tKey === 'panaderia' && (
                       <>
                         <div className="flex items-center justify-between text-xs">
-                          <span className="text-slate-400">Tanda Recién Horneada:</span>
+                          <span className="text-slate-400">{t('products.fresh_batch')}</span>
                           <span className="text-amber-300 font-mono font-bold">
                             17:30 Hs (Listo)
                           </span>

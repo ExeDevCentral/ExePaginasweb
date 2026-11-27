@@ -47,6 +47,7 @@ export default function CommandPalette() {
   const { t, i18n } = useTranslation()
 
   // Listener global de teclado (Ctrl+K o Cmd+K)
+  // guardrail-ok(useEffect): keyboard shortcut listener for command palette
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
@@ -69,7 +70,7 @@ export default function CommandPalette() {
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
       void navigator.clipboard.writeText(window.location.origin)
-      toast.success(t('cmd.toast_copied', '🔗 Enlace copiado al portapapeles'))
+      toast.success(t('cmd.toast_copied'))
     }
   }
 
@@ -85,21 +86,13 @@ export default function CommandPalette() {
   const toggleLanguage = () => {
     const nextLang = i18n.language === 'en' ? 'es' : 'en'
     void i18n.changeLanguage(nextLang)
-    toast.success(
-      nextLang === 'en'
-        ? t('cmd.toast_lang_en', '🌐 Language switched to English')
-        : t('cmd.toast_lang_es', '🌐 Idioma cambiado a Español')
-    )
+    toast.success(nextLang === 'en' ? t('cmd.toast_lang_en') : t('cmd.toast_lang_es'))
   }
 
   const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark'
     setTheme(nextTheme)
-    toast.success(
-      nextTheme === 'dark'
-        ? t('cmd.toast_dark', '🌙 Modo Oscuro Activado')
-        : t('cmd.toast_light', '☀️ Modo Claro Activado')
-    )
+    toast.success(nextTheme === 'dark' ? t('cmd.toast_dark') : t('cmd.toast_light'))
   }
 
   return (
@@ -127,17 +120,14 @@ export default function CommandPalette() {
               className="relative w-full max-w-xl rounded-2xl bg-slate-900/95 dark:bg-[#0b101d]/95 border border-cyan-500/30 dark:border-cyan-400/30 shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_24px_rgba(6,182,212,0.2)] overflow-hidden z-10 text-white"
             >
               <Command
-                label={t('cmd.aria_label', 'Comandos y Navegación Rápida')}
+                label={t('cmd.aria_label')}
                 className="flex flex-col w-full focus:outline-hidden"
               >
                 {/* Cabecera de búsqueda con icono animado */}
                 <div className="flex items-center px-4 border-b border-white/10 gap-3">
                   <Search className="w-5 h-5 text-cyan-400 shrink-0" />
                   <Command.Input
-                    placeholder={t(
-                      'cmd.placeholder',
-                      'Escribe un comando o busca una sección... (ej. cotizador, tienda, whatsapp)'
-                    )}
+                    placeholder={t('cmd.placeholder')}
                     className="w-full py-4 bg-transparent text-sm sm:text-base text-white placeholder-slate-400 focus:outline-hidden"
                     autoFocus
                   />
@@ -145,7 +135,7 @@ export default function CommandPalette() {
                     type="button"
                     onClick={() => setOpen(false)}
                     className="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
-                    aria-label={t('cmd.close_aria', 'Cerrar paleta de comandos')}
+                    aria-label={t('cmd.close_aria')}
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -154,12 +144,12 @@ export default function CommandPalette() {
                 {/* Lista de resultados */}
                 <Command.List className="max-h-80 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
                   <Command.Empty className="py-8 text-center text-sm text-slate-400">
-                    {t('cmd.empty', 'No se encontraron comandos o secciones coincidentes.')}
+                    {t('cmd.empty')}
                   </Command.Empty>
 
                   {/* GRUPO: NAVEGACIÓN */}
                   <Command.Group
-                    heading={t('cmd.group_nav', 'Navegación Rápida')}
+                    heading={t('cmd.group_nav')}
                     className="text-[11px] font-mono uppercase tracking-wider text-cyan-400/80 px-2 pt-2 pb-1"
                   >
                     <Command.Item
@@ -167,7 +157,7 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-cyan-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <Laptop className="w-4 h-4 text-cyan-400 shrink-0" />
-                      <span>{t('cmd.nav_home', 'Inicio')}</span>
+                      <span>{t('cmd.nav_home')}</span>
                       <kbd className="ml-auto text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-slate-300">
                         /
                       </kbd>
@@ -178,7 +168,7 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-cyan-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <ShoppingBag className="w-4 h-4 text-purple-400 shrink-0" />
-                      <span>{t('cmd.nav_store', 'Tienda de Abonos y Mantenimiento')}</span>
+                      <span>{t('cmd.nav_store')}</span>
                       <kbd className="ml-auto text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-slate-300">
                         /tienda
                       </kbd>
@@ -189,9 +179,7 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-cyan-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <Calculator className="w-4 h-4 text-pink-400 shrink-0" />
-                      <span>
-                        {t('cmd.nav_quote', 'Cotizador Interactivo Online (Web + Linux POS)')}
-                      </span>
+                      <span>{t('cmd.nav_quote')}</span>
                       <kbd className="ml-auto text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-slate-300">
                         /cotizador
                       </kbd>
@@ -202,9 +190,7 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-emerald-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <Laptop className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>
-                        {t('cmd.nav_linux', 'Portal de Servicios Linux, POS & Nodos Locales')}
-                      </span>
+                      <span>{t('cmd.nav_linux')}</span>
                       <kbd className="ml-auto text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-slate-300">
                         /linux
                       </kbd>
@@ -215,7 +201,7 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-cyan-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <Layers className="w-4 h-4 text-blue-400 shrink-0" />
-                      <span>{t('cmd.nav_solutions', 'Soluciones de Software y Arquitectura')}</span>
+                      <span>{t('cmd.nav_solutions')}</span>
                       <kbd className="ml-auto text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-slate-300">
                         /soluciones
                       </kbd>
@@ -226,7 +212,7 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-cyan-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <Briefcase className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>{t('cmd.nav_portfolio', 'Portafolio de Sistemas y Clientes')}</span>
+                      <span>{t('cmd.nav_portfolio')}</span>
                       <kbd className="ml-auto text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-slate-300">
                         /portafolio
                       </kbd>
@@ -237,7 +223,7 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-cyan-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <LayoutDashboard className="w-4 h-4 text-amber-400 shrink-0" />
-                      <span>{t('cmd.nav_dashboard', 'Portal / Dashboard de Clientes')}</span>
+                      <span>{t('cmd.nav_dashboard')}</span>
                       <kbd className="ml-auto text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-slate-300">
                         /dashboard
                       </kbd>
@@ -246,19 +232,14 @@ export default function CommandPalette() {
 
                   {/* GRUPO: ACCIONES */}
                   <Command.Group
-                    heading={t('cmd.group_actions', 'Acciones Rápidas')}
+                    heading={t('cmd.group_actions')}
                     className="text-[11px] font-mono uppercase tracking-wider text-cyan-400/80 px-2 pt-3 pb-1"
                   >
                     <Command.Item
                       onSelect={() =>
                         executeAction(() =>
                           window.open(
-                            getWhatsAppUrl(
-                              t(
-                                'cmd.wa_message',
-                                '¡Hola Exe! Me contacto desde la paleta de comandos.'
-                              )
-                            ),
+                            getWhatsAppUrl(t('cmd.wa_message')),
                             '_blank',
                             'noopener,noreferrer'
                           )
@@ -267,9 +248,9 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-emerald-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>{t('cmd.action_wa', 'Conversar por WhatsApp Directo')}</span>
+                      <span>{t('cmd.action_wa')}</span>
                       <span className="ml-auto text-[10px] text-emerald-400 font-medium">
-                        {t('cmd.online', 'En línea')}
+                        {t('cmd.online')}
                       </span>
                     </Command.Item>
 
@@ -283,11 +264,8 @@ export default function CommandPalette() {
                         <Moon className="w-4 h-4 text-cyan-400 shrink-0" />
                       )}
                       <span>
-                        {t('cmd.action_theme', 'Alternar Tema')} (
-                        {theme === 'dark'
-                          ? t('cmd.light_mode', 'Modo Claro')
-                          : t('cmd.dark_mode', 'Modo Oscuro')}
-                        )
+                        {t('cmd.action_theme')} (
+                        {theme === 'dark' ? t('cmd.light_mode') : t('cmd.dark_mode')})
                       </span>
                     </Command.Item>
 
@@ -297,8 +275,7 @@ export default function CommandPalette() {
                     >
                       <Globe className="w-4 h-4 text-cyan-400 shrink-0" />
                       <span>
-                        {t('cmd.action_lang', 'Cambiar Idioma')} (
-                        {i18n.language === 'en' ? 'Español' : 'English'})
+                        {t('cmd.action_lang')} ({i18n.language === 'en' ? 'Español' : 'English'})
                       </span>
                     </Command.Item>
 
@@ -307,7 +284,7 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-cyan-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <Copy className="w-4 h-4 text-sky-400 shrink-0" />
-                      <span>{t('cmd.action_copy', 'Copiar Enlace de ExePaginasWeb')}</span>
+                      <span>{t('cmd.action_copy')}</span>
                     </Command.Item>
 
                     <Command.Item
@@ -315,7 +292,7 @@ export default function CommandPalette() {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 aria-selected:bg-cyan-500/20 aria-selected:text-white cursor-pointer transition-colors"
                     >
                       <ArrowUp className="w-4 h-4 text-teal-400 shrink-0" />
-                      <span>{t('cmd.action_top', 'Volver al Inicio Superior')}</span>
+                      <span>{t('cmd.action_top')}</span>
                     </Command.Item>
                   </Command.Group>
                 </Command.List>
@@ -325,15 +302,15 @@ export default function CommandPalette() {
                   <div className="flex items-center gap-3">
                     <span className="flex items-center gap-1">
                       <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-slate-300">↑↓</kbd>{' '}
-                      {t('cmd.hint_nav', 'Navegar')}
+                      {t('cmd.hint_nav')}
                     </span>
                     <span className="flex items-center gap-1">
                       <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-slate-300">↵</kbd>{' '}
-                      {t('cmd.hint_select', 'Seleccionar')}
+                      {t('cmd.hint_select')}
                     </span>
                     <span className="flex items-center gap-1">
                       <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-slate-300">ESC</kbd>{' '}
-                      {t('cmd.hint_close', 'Cerrar')}
+                      {t('cmd.hint_close')}
                     </span>
                   </div>
                   <div className="flex items-center gap-1 text-cyan-400/90 font-medium">

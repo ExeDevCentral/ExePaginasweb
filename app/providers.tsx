@@ -16,6 +16,7 @@ import { PostHogProvider } from '@/lib/posthog/PostHogProvider'
 import dynamic from 'next/dynamic'
 import ThemedToaster from '@/components/shared/ThemedToaster'
 import i18n, { syncHtmlLangAttributes } from '@/core/i18n/config'
+import { detectClientLanguage } from '@/core/i18n/languageDetector'
 
 const PremiumBackground = dynamic(() => import('@/components/Effects/PremiumBackground'), {
   ssr: false,
@@ -85,13 +86,14 @@ export default function Providers({ children }: { readonly children: React.React
     }
   }
 
+  // guardrail-ok(useEffect): autodetección de idioma tras hidratación SSR sin mismatch
   useEffect(() => {
     try {
-      const savedLang = localStorage.getItem('lang')
-      if (savedLang && savedLang !== i18n.language) {
-        void i18n.changeLanguage(savedLang)
+      const { lang: detected } = detectClientLanguage()
+      if (detected !== i18n.language) {
+        void i18n.changeLanguage(detected)
       } else {
-        syncHtmlLangAttributes(i18n.language)
+        syncHtmlLangAttributes(detected)
       }
     } catch {
       // safe fallback

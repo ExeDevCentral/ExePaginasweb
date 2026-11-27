@@ -49,14 +49,11 @@ interface StepItem {
 const getSteps = (t: TFunction): StepItem[] => [
   {
     step: '01',
-    phase: t('how_we_work.phase_1_phase', 'FASE 01 / 03'),
-    badge: t('how_we_work.phase_1_badge', '15 MIN · DIAGNÓSTICO'),
-    title: t('how_we_work.phase_1_title', 'Charla técnica de 15 minutos'),
-    subtitle: t('how_we_work.phase_1_subtitle', 'Relevamiento del modelo de negocio'),
-    desc: t(
-      'how_we_work.phase_1_desc',
-      'Sin tecnicismos innecesarios. Analizamos tu oferta, perfil de cliente y objetivos de conversión para proyectar la arquitectura exacta de software.'
-    ),
+    phase: t('how_we_work.phase_1_phase'),
+    badge: t('how_we_work.phase_1_badge'),
+    title: t('how_we_work.phase_1_title'),
+    subtitle: t('how_we_work.phase_1_subtitle'),
+    desc: t('how_we_work.phase_1_desc'),
     icon: PhoneCall,
     tone: 'emerald',
     laser: 'via-emerald-500/90 dark:via-emerald-400',
@@ -74,21 +71,18 @@ const getSteps = (t: TFunction): StepItem[] => [
     dotColor: 'bg-emerald-500',
     checkColor: 'text-emerald-600 dark:text-emerald-400',
     points: [
-      t('how_we_work.phase_1_point_1', 'Diagnóstico de tu negocio'),
-      t('how_we_work.phase_1_point_2', 'Propuesta de arquitectura clara'),
-      t('how_we_work.phase_1_point_3', 'Cero compromiso inicial'),
+      t('how_we_work.phase_1_point_1'),
+      t('how_we_work.phase_1_point_2'),
+      t('how_we_work.phase_1_point_3'),
     ],
   },
   {
     step: '02',
-    phase: t('how_we_work.phase_2_phase', 'FASE 02 / 03'),
-    badge: t('how_we_work.phase_2_badge', 'VALIDACIÓN · PROTOTIPO'),
-    title: t('how_we_work.phase_2_title', 'Diseño e ingeniería de interfaz'),
-    subtitle: t('how_we_work.phase_2_subtitle', 'Revisión interactiva antes de desplegar'),
-    desc: t(
-      'how_we_work.phase_2_desc',
-      'Construimos la estructura optimizada para ventas y performance. Inspeccionamos cada módulo y flujo juntos para que apruebes con total tranquilidad.'
-    ),
+    phase: t('how_we_work.phase_2_phase'),
+    badge: t('how_we_work.phase_2_badge'),
+    title: t('how_we_work.phase_2_title'),
+    subtitle: t('how_we_work.phase_2_subtitle'),
+    desc: t('how_we_work.phase_2_desc'),
     icon: LayoutDashboard,
     tone: 'amber',
     laser: 'via-amber-500/90 dark:via-amber-400',
@@ -106,21 +100,18 @@ const getSteps = (t: TFunction): StepItem[] => [
     dotColor: 'bg-amber-500',
     checkColor: 'text-amber-600 dark:text-amber-400',
     points: [
-      t('how_we_work.phase_2_point_1', 'Entregas iterativas visibles'),
-      t('how_we_work.phase_2_point_2', 'Ajustes guiados de precisión'),
-      t('how_we_work.phase_2_point_3', 'Sin sorpresas en entrega'),
+      t('how_we_work.phase_2_point_1'),
+      t('how_we_work.phase_2_point_2'),
+      t('how_we_work.phase_2_point_3'),
     ],
   },
   {
     step: '03',
-    phase: t('how_we_work.phase_3_phase', 'FASE 03 / 03'),
-    badge: t('how_we_work.phase_3_badge', 'PRODUCCIÓN · 100% TUYO'),
-    title: t('how_we_work.phase_3_title', 'Lanzamiento y transferencia'),
-    subtitle: t('how_we_work.phase_3_subtitle', 'Infraestructura online lista para facturar'),
-    desc: t(
-      'how_we_work.phase_3_desc',
-      'Desplegamos tu sitio con métricas Core Web Vitals optimizadas. Te entregamos el acceso total y te capacitamos para operar cobros y pedidos.'
-    ),
+    phase: t('how_we_work.phase_3_phase'),
+    badge: t('how_we_work.phase_3_badge'),
+    title: t('how_we_work.phase_3_title'),
+    subtitle: t('how_we_work.phase_3_subtitle'),
+    desc: t('how_we_work.phase_3_desc'),
     icon: Rocket,
     tone: 'cyan',
     laser: 'via-cyan-500/90 dark:via-cyan-400',
@@ -138,9 +129,9 @@ const getSteps = (t: TFunction): StepItem[] => [
     dotColor: 'bg-cyan-500',
     checkColor: 'text-cyan-600 dark:text-cyan-400',
     points: [
-      t('how_we_work.phase_3_point_1', 'Puesta en línea de alta velocidad'),
-      t('how_we_work.phase_3_point_2', 'Video instructivo personalizado'),
-      t('how_we_work.phase_3_point_3', 'Soporte de arquitectura post-lanzamiento'),
+      t('how_we_work.phase_3_point_1'),
+      t('how_we_work.phase_3_point_2'),
+      t('how_we_work.phase_3_point_3'),
     ],
   },
 ]
@@ -176,19 +167,16 @@ export default function HowWeWorkSection() {
       <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-brand/10 border border-brand/25 text-brand dark:text-emerald-400 font-mono text-[11px] uppercase tracking-widest font-semibold mb-4">
           <span className="w-1.5 h-1.5 rounded-full bg-brand dark:bg-emerald-400 animate-pulse" />
-          <span>{t('how_we_work.fig_badge', 'FIG. 01 — PROTOCOLO DE DESARROLLO // 2025')}</span>
+          <span>{t('how_we_work.fig_badge')}</span>
         </div>
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-950 dark:text-white leading-tight font-display">
-          {t('how_we_work.title_pre', 'Cómo construimos: ')}
+          {t('how_we_work.title_pre')}
           <span className="font-serif italic font-normal text-brand dark:text-emerald-400">
-            {t('how_we_work.title_highlight', '3 fases sin fricción')}
+            {t('how_we_work.title_highlight')}
           </span>
         </h2>
         <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-          {t(
-            'how_we_work.subtitle',
-            'Del primer relevamiento de necesidades al sistema en producción captando operaciones comerciales.'
-          )}
+          {t('how_we_work.subtitle')}
         </p>
       </div>
 
@@ -370,7 +358,7 @@ export default function HowWeWorkSection() {
             }
             className="px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-xs shadow-md shadow-emerald-600/25 transition-all shrink-0 cursor-pointer flex items-center gap-1.5 hover:scale-102 active:scale-98"
           >
-            <span>Pedir video</span>
+            <span>{t('how_we_work.audit_cta')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>
@@ -407,7 +395,7 @@ export default function HowWeWorkSection() {
       {/* Botón principal centrado (HUD Chaflanado) */}
       <div className="mt-10 text-center flex justify-center">
         <HudButton
-          label={t('how_we_work.cta_charla', 'Coordinar charla de 15 minutos')}
+          label={t('how_we_work.cta_charla')}
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"

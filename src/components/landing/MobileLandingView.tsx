@@ -187,12 +187,12 @@ export default function MobileLandingView() {
           {/* Eyebrow único y limpio (sin duplicar 2025) */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 text-[10px] font-mono font-semibold tracking-wider text-slate-700 dark:text-slate-300 uppercase mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-            <span>Exequiel Echevarría · Architect · 2025</span>
+            <span>{t('mobile.architect_badge')}</span>
           </div>
 
           {/* Titular nítido y directo */}
           <h1 className="text-[28px] min-[390px]:text-[32px] font-display font-bold tracking-tight leading-[1.08] text-foreground">
-            {t('mobile.h1', 'Tu Web & Software a Medida')}
+            {t('mobile.h1')}
           </h1>
 
           {/* Propuesta en 1 línea pragmática */}
@@ -210,7 +210,7 @@ export default function MobileLandingView() {
             />
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/70 dark:border-white/8 text-[10px] font-mono text-muted-foreground -mt-3">
               <Compass className="w-3 h-3 text-emerald-500 dark:text-cyan-400" />
-              <span>Deslizá para girar</span>
+              <span>{t('mobile.swipe_to_spin')}</span>
             </span>
           </div>
 
@@ -225,7 +225,7 @@ export default function MobileLandingView() {
             >
               <span className="flex items-center gap-2.5">
                 <WhatsAppVectorIcon className="w-4.5 h-4.5 shrink-0" />
-                <span>Cotizar por WhatsApp</span>
+                <span>{t('mobile.cta_quote_whatsapp')}</span>
               </span>
               <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold px-2 py-0.5 rounded-lg bg-slate-950/12">
                 <span>15 min</span>
@@ -242,7 +242,7 @@ export default function MobileLandingView() {
                 className="h-11 px-3 rounded-xl bg-slate-100/90 dark:bg-white/[0.05] border border-slate-200/90 dark:border-white/10 text-foreground text-xs font-semibold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all"
               >
                 <Calculator className="w-3.5 h-3.5 text-emerald-600 dark:text-cyan-400 shrink-0" />
-                <span>Cotizador</span>
+                <span>{t('mobile.cta_calculator')}</span>
               </Link>
 
               <a
@@ -253,7 +253,7 @@ export default function MobileLandingView() {
                 className="h-11 px-3 rounded-xl bg-slate-100/90 dark:bg-white/[0.05] border border-slate-200/90 dark:border-white/10 text-foreground text-xs font-semibold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all"
               >
                 <Layers className="w-3.5 h-3.5 text-emerald-600 dark:text-cyan-400 shrink-0" />
-                <span>Ver Demos</span>
+                <span>{t('mobile.cta_view_demos')}</span>
               </a>
             </div>
           </div>
@@ -262,7 +262,7 @@ export default function MobileLandingView() {
           <div className="mt-4 w-full grid grid-cols-3 divide-x divide-slate-200 dark:divide-white/10 rounded-xl bg-slate-50/90 dark:bg-white/[0.03] border border-slate-200/70 dark:border-white/8 py-2">
             <div className="px-2">
               <p className="text-xs font-bold font-mono text-foreground">100%</p>
-              <p className="text-[10px] text-muted-foreground">Código tuyo</p>
+              <p className="text-[10px] text-muted-foreground">{t('mobile.own_code')}</p>
             </div>
             <div className="px-2">
               <p className="text-xs font-bold font-mono text-emerald-600 dark:text-emerald-400">
@@ -296,7 +296,7 @@ export default function MobileLandingView() {
               href="/portafolio"
               className="text-xs font-semibold text-emerald-600 dark:text-cyan-400 inline-flex items-center gap-0.5 shrink-0"
             >
-              <span>Ver los 11</span>
+              <span>{t('mobile.view_all_11')}</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -379,7 +379,7 @@ export default function MobileLandingView() {
                   onClick={() => trackEvent('demo_interactive_used', { demoId: activeDemo.id })}
                   className="w-full h-11 px-4 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-bold text-xs flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
                 >
-                  <span>Probar sistema en vivo</span>
+                  <span>{t('mobile.try_live_system')}</span>
                   <ArrowUpRight className="w-4 h-4" />
                 </a>
               </div>
@@ -484,7 +484,7 @@ export default function MobileLandingView() {
               }
               className="w-full h-11 px-4 rounded-xl bg-emerald-500/15 dark:bg-emerald-500/15 border border-emerald-500/35 text-emerald-700 dark:text-emerald-300 font-bold text-xs flex items-center justify-center gap-1.5 active:scale-[0.98] transition-transform"
             >
-              <span>Personalizar este plan</span>
+              <span>{t('mobile.customize_plan')}</span>
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -508,7 +508,7 @@ export default function MobileLandingView() {
                 </li>
                 <li className="flex items-center gap-1.5">
                   <Check className="w-3 h-3 text-emerald-500 shrink-0" />
-                  <span>Código tuyo</span>
+                  <span>{t('mobile.own_code')}</span>
                 </li>
                 <li className="flex items-center gap-1.5">
                   <Check className="w-3 h-3 text-emerald-500 shrink-0" />
@@ -524,15 +524,15 @@ export default function MobileLandingView() {
               <ul className="space-y-1.5 text-[11px] text-slate-600 dark:text-slate-400">
                 <li className="flex items-center gap-1.5">
                   <X className="w-3 h-3 text-rose-500 shrink-0" />
-                  <span>Cuota eterna</span>
+                  <span>{t('mobile.eternal_fee')}</span>
                 </li>
                 <li className="flex items-center gap-1.5">
                   <X className="w-3 h-3 text-rose-500 shrink-0" />
-                  <span>Fees por venta</span>
+                  <span>{t('mobile.sale_fees')}</span>
                 </li>
                 <li className="flex items-center gap-1.5">
                   <X className="w-3 h-3 text-rose-500 shrink-0" />
-                  <span>Sitio cautivo</span>
+                  <span>{t('mobile.captive_site')}</span>
                 </li>
               </ul>
             </div>
@@ -564,7 +564,7 @@ export default function MobileLandingView() {
       {/* ==============================================================
           5. CIERRE DIRECTO + PIE COMPACTO MÓVIL
          ============================================================== */}
-      <section className="px-4 pt-4 pb-2">
+      <section id="contact" className="scroll-mt-24 px-4 pt-4 pb-2">
         <div className="max-w-sm mx-auto space-y-6">
           <div className="p-5 rounded-2xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 dark:border-emerald-500/30 text-white text-center space-y-3">
             <p className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-semibold">
@@ -586,7 +586,7 @@ export default function MobileLandingView() {
               className="w-full h-11 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
             >
               <WhatsAppVectorIcon className="w-4 h-4" />
-              <span>Abrir WhatsApp Directo</span>
+              <span>{t('mobile.open_whatsapp_direct')}</span>
             </a>
           </div>
 

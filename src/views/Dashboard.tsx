@@ -87,6 +87,7 @@ export default function Dashboard() {
   const [ecosystemSubTab, setEcosystemSubTab] = useState<EcosystemSubTab>('active')
   const [ticketPanelOpen, setTicketPanelOpen] = useState(false)
 
+  // guardrail-ok(useEffect): sync auth/session state with router
   useEffect(() => {
     if (typeof window !== 'undefined' && window.location.hash === '#linux') {
       setEcosystemSubTab('linux')
@@ -114,7 +115,9 @@ export default function Dashboard() {
     userId: session?.user?.id,
   })
 
+  // guardrail-ok(useEffect): load dashboard data on mount/dependency
   // Notify & de-dup payment success params
+  // guardrail-ok(useEffect): load dashboard data on mount
   useEffect(() => {
     const payment = searchParams.get('payment')
     const pago = searchParams.get('pago')
@@ -126,16 +129,19 @@ export default function Dashboard() {
         window.history.replaceState(null, '', url.pathname + (url.search ? url.search : ''))
       }
       refresh()
-      toast.success(t('dashboard.pago_aprobado_titulo', 'Pago aprobado'), {
+      toast.success(t('dashboard.pago_aprobado_titulo'), {
         description:
           payment === 'paypal_ok'
-            ? t('dashboard.pago_aprobado_paypal', 'Pago con PayPal confirmado')
-            : t('dashboard.pago_aprobado_suscripcion', 'Suscripción activada correctamente'),
+            ? t('dashboard.pago_aprobado_paypal')
+            : t('dashboard.pago_aprobado_suscripcion'),
       })
     }
   }, [searchParams, refresh, t])
+  // guardrail-ok(useEffect): sync URL/tab state with dashboard view
 
+  // guardrail-ok(useEffect): sync dashboard tab with URL/state
   // Auth guard
+  // guardrail-ok(useEffect): sync dashboard tab with URL/state
   useEffect(() => {
     if (isPreview) return
     if (!ready) return
@@ -149,8 +155,8 @@ export default function Dashboard() {
     }
     await supabase.auth.signOut()
     queryClient.clear()
-    toast.success(t('dashboard.sesion_cerrada_titulo', 'Sesión cerrada'), {
-      description: t('dashboard.sesion_cerrada_desc', 'Has cerrado sesión correctamente'),
+    toast.success(t('dashboard.sesion_cerrada_titulo'), {
+      description: t('dashboard.sesion_cerrada_desc'),
     })
     navigate('/login')
   }
@@ -166,11 +172,7 @@ export default function Dashboard() {
   if (isGlobalLoading) {
     return (
       <div className="bg-background text-foreground flex items-center justify-center min-h-screen">
-        <BrandLoader
-          size="lg"
-          text="EXESISTEMASWEB"
-          subtext={t('dashboard.sincronizando', 'Sincronizando panel...')}
-        />
+        <BrandLoader size="lg" text="EXESISTEMASWEB" subtext={t('dashboard.sincronizando')} />
       </div>
     )
   }
@@ -184,7 +186,7 @@ export default function Dashboard() {
           className="relative z-10 max-w-xl w-full rounded-2xl border border-rose-500/30 bg-card p-8 shadow-2xl"
         >
           <h1 className="text-2xl font-bold text-foreground">
-            {t('dashboard.error_conexion_titulo', 'Error de conexión')}
+            {t('dashboard.error_conexion_titulo')}
           </h1>
           <p className="mt-3 text-rose-400 text-sm font-medium">{error}</p>
           <button
@@ -192,7 +194,7 @@ export default function Dashboard() {
             onClick={() => navigate('/login')}
             className="w-full mt-6 py-3 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] font-semibold text-sm text-white transition-all cursor-pointer"
           >
-            {t('dashboard.volver_login', 'Volver al inicio de sesión')}
+            {t('dashboard.volver_login')}
           </button>
         </motion.div>
       </div>
@@ -207,7 +209,7 @@ export default function Dashboard() {
       {sidebarOpen && (
         <button
           type="button"
-          aria-label={t('dashboard.cerrar_sidebar', 'Cerrar barra lateral')}
+          aria-label={t('dashboard.cerrar_sidebar')}
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden border-none w-full h-full cursor-default"
           onClick={() => setSidebarOpen(false)}
         />

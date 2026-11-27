@@ -118,7 +118,7 @@ export const INITIAL_PROJECTS: Project[] = [
       'Formulario con Vercel Serverless Functions',
       'Alineación ESOMAR & ISO 20252',
     ],
-    link: 'https://noema-ivory.vercel.app',
+    link: 'https://noema.com.py',
     status: 'live',
     statusLabel: 'EN PRODUCCIÓN',
   },

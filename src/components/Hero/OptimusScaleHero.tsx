@@ -12,7 +12,9 @@
 'use client'
 
 import React, { useState, useEffect, useMemo, useRef } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { ArrowUpRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@astryxdesign/core'
 import HudButton from '@/components/HudButton'
@@ -29,13 +31,49 @@ import { trackEvent } from '@/core/analytics/trackEvent'
 
 const ROTATING_WORDS = ['escalar', 'vender 24/7', 'automatizar', 'innovar']
 
-const TICKER_ITEMS = [
-  { value: '0%', label: 'comisiones por ventas', tag: 'GANANCIA 100% TUYA' },
-  { value: '< 1s', label: 'velocidad de carga móvil', tag: 'CERO CLIENTES PERDIDOS' },
-  { value: '24/7', label: 'turnos y cobros automáticos', tag: 'SEÑAS DIRECTAS A TU BANCO' },
-  { value: '100%', label: 'código propio sin plantillas', tag: 'DISEÑO EXCLUSIVO' },
-  { value: '+85%', label: 'más consultas calificadas', tag: 'CIERRES POR WHATSAPP' },
-  { value: '7 a 15', label: 'días puesta en marcha', tag: 'ENTREGA LLAVE EN MANO' },
+const TICKER_BASE = [
+  {
+    value: '0%',
+    labelKey: 'hero.ticker.0.label',
+    label: 'comisiones por ventas',
+    tagKey: 'hero.ticker.0.tag',
+    tag: 'GANANCIA 100% TUYA',
+  },
+  {
+    value: '< 1s',
+    labelKey: 'hero.ticker.1.label',
+    label: 'velocidad de carga móvil',
+    tagKey: 'hero.ticker.1.tag',
+    tag: 'CERO CLIENTES PERDIDOS',
+  },
+  {
+    value: '24/7',
+    labelKey: 'hero.ticker.2.label',
+    label: 'turnos y cobros automáticos',
+    tagKey: 'hero.ticker.2.tag',
+    tag: 'SEÑAS DIRECTAS A TU BANCO',
+  },
+  {
+    value: '100%',
+    labelKey: 'hero.ticker.3.label',
+    label: 'código propio sin plantillas',
+    tagKey: 'hero.ticker.3.tag',
+    tag: 'DISEÑO EXCLUSIVO',
+  },
+  {
+    value: '+85%',
+    labelKey: 'hero.ticker.4.label',
+    label: 'más consultas calificadas',
+    tagKey: 'hero.ticker.4.tag',
+    tag: 'CIERRES POR WHATSAPP',
+  },
+  {
+    value: '7 a 15',
+    labelKey: 'hero.ticker.5.label',
+    label: 'días puesta en marcha',
+    tagKey: 'hero.ticker.5.tag',
+    tag: 'ENTREGA LLAVE EN MANO',
+  },
 ]
 
 export const OptimusScaleHero: React.FC = () => {
@@ -66,6 +104,17 @@ export const OptimusScaleHero: React.FC = () => {
     return ROTATING_WORDS
   }, [t])
 
+  const tickerItems = useMemo(
+    () =>
+      TICKER_BASE.map((it) => ({
+        ...it,
+        label: t(it.labelKey, it.label),
+        tag: t(it.tagKey, it.tag),
+      })),
+    [t]
+  )
+
+  // guardrail-ok(useEffect): setInterval para rotar palabras animadas — suscripción DOM externa
   useEffect(() => {
     const interval = setInterval(() => {
       setWordIndex((prev) => (prev + 1) % rotatingWords.length)
@@ -118,7 +167,7 @@ export const OptimusScaleHero: React.FC = () => {
 
               {/* Título H1 */}
               <h1 className="mt-6 text-4xl sm:text-5xl xl:text-[3.55rem] font-display font-semibold tracking-[-0.025em] leading-[1.06] text-foreground">
-                <span className="sr-only">Exe Páginas Web - </span>
+                <span className="sr-only">{t('hero.optimus_brand')} </span>
                 <span className="block">
                   {safeT('hero.titulo_prefijo', 'Páginas web y sistemas a medida')}
                 </span>
@@ -234,7 +283,7 @@ export const OptimusScaleHero: React.FC = () => {
           }}
         >
           <div className="flex w-max animate-marquee gap-10 sm:gap-14 items-center">
-            {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
+            {[...tickerItems, ...tickerItems].map((item, idx) => (
               <div
                 key={'ticker-' + item.label + '-' + idx}
                 className="flex items-center gap-2.5 shrink-0"

@@ -1,10 +1,10 @@
 /**
- * © 2026 Exequiel Echevarria — ExePaginasWeb
+ * © 2025 Exequiel Echevarria — ExePaginasWeb
  * Todos los derechos reservados.
  * Prohibida su reproducción total o parcial sin autorización.
  */
 export type DashboardView =
-  'overview' | 'services' | 'workgroups' | 'sla' | 'invoices' | 'settings' | 'admin'
+  'overview' | 'services' | 'workgroups' | 'sla' | 'invoices' | 'instagram' | 'settings' | 'admin'
 
 export const DASHBOARD_VIEWS: DashboardView[] = [
   'overview',
@@ -12,6 +12,7 @@ export const DASHBOARD_VIEWS: DashboardView[] = [
   'workgroups',
   'sla',
   'invoices',
+  'instagram',
   'settings',
   'admin',
 ]

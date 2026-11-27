@@ -4,6 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import i18n from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 import es from './locales/es.json'
 import en from './locales/en.json'
@@ -12,17 +13,20 @@ import fr from './locales/fr.json'
 import ar from './locales/ar.json'
 import ptBR from './locales/pt-BR.json'
 import zhCN from './locales/zh-CN.json'
-
-const RTL_LANGS = new Set(['ar'])
+import { RTL_LANG_SET, normalizeSupportedLang } from './languageDetector'
 
 export function syncHtmlLangAttributes(lng: string) {
   if (typeof document === 'undefined') return
-  const normalized = lng || 'es'
+  const normalized = normalizeSupportedLang(lng)
   document.documentElement.lang = normalized
-  document.documentElement.dir = RTL_LANGS.has(normalized) ? 'rtl' : 'ltr'
+  document.documentElement.dir = RTL_LANG_SET.has(normalized) ? 'rtl' : 'ltr'
 }
 
 if (!i18n.isInitialized) {
+  if (typeof window !== 'undefined') {
+    i18n.use(LanguageDetector)
+  }
+
   i18n.use(initReactI18next).init({
     resources: {
       es: { translation: es },
@@ -33,8 +37,18 @@ if (!i18n.isInitialized) {
       'pt-BR': { translation: ptBR },
       'zh-CN': { translation: zhCN },
     },
+    // Mantiene 'es' como base SSR determinística y sincroniza tras hidratar en cliente
     lng: 'es',
     fallbackLng: 'es',
+    supportedLngs: ['es', 'en', 'pt-BR', 'de', 'fr', 'ar', 'zh-CN'],
+    detection: {
+      order: ['querystring', 'localStorage', 'cookie', 'navigator'],
+      lookupQuerystring: 'lang',
+      lookupLocalStorage: 'lang',
+      lookupCookie: 'exe_lang',
+      caches: ['localStorage', 'cookie'],
+      convertDetectedLanguage: (lng: string) => normalizeSupportedLang(lng),
+    },
     interpolation: { escapeValue: false },
   })
 

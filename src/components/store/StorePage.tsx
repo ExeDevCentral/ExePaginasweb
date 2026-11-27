@@ -54,62 +54,53 @@ function getStorePlans(t: TFunction): PlanData[] {
   const configs = [
     {
       id: 'mantenimiento-basico',
-      title: t('store.abono_basico_title', 'Abono Básico'),
-      description: t(
-        'store.abono_basico_desc',
-        'Mantenimiento mensual para Landing Pages y sitios institucionales.'
-      ),
+      title: t('store.abono_basico_title'),
+      description: t('store.abono_basico_desc'),
       icon: CyberPlanBasic,
       color: 'from-blue-400 to-cyan-400',
       shadow: 'shadow-cyan-500/20',
       border: 'border-cyan-500/30',
       features: [
-        t('store.abono_basico_feat_1', 'Hosting de alta velocidad Vercel Edge'),
-        t('store.abono_basico_feat_2', 'Monitoreo de uptime y disponibilidad 24/7'),
-        t('store.abono_basico_feat_3', 'Actualizaciones continuas de seguridad'),
-        t('store.abono_basico_feat_4', 'Certificado SSL bancario automático'),
-        t('store.abono_basico_feat_5', 'Soporte técnico estándar por ticket'),
+        t('store.abono_basico_feat_1'),
+        t('store.abono_basico_feat_2'),
+        t('store.abono_basico_feat_3'),
+        t('store.abono_basico_feat_4'),
+        t('store.abono_basico_feat_5'),
       ],
       popular: false,
     },
     {
       id: 'mantenimiento-avanzado',
-      title: t('store.abono_avanzado_title', 'Abono Avanzado'),
-      description: t(
-        'store.abono_avanzado_desc',
-        'Mantenimiento integral para Sistemas Web, Reservas y E-Commerce.'
-      ),
+      title: t('store.abono_avanzado_title'),
+      description: t('store.abono_avanzado_desc'),
       icon: CyberPlanAdvanced,
       color: 'from-cyan-400 to-purple-500',
       shadow: 'shadow-purple-500/30',
       border: 'border-purple-500/50',
       features: [
-        t('store.abono_avanzado_feat_1', 'Todo lo del Abono Básico'),
-        t('store.abono_avanzado_feat_2', 'Renovación de dominio anual bonificada*'),
-        t('store.abono_avanzado_feat_3', 'Gestión y monitoreo de Base de Datos'),
-        t('store.abono_avanzado_feat_4', 'Backups diarios automáticos en la nube'),
-        t('store.abono_avanzado_feat_5', 'Monitoreo de pasarelas de pago y webhooks'),
-        t('store.abono_avanzado_feat_6', 'Soporte técnico prioritario por WhatsApp'),
+        t('store.abono_avanzado_feat_1'),
+        t('store.abono_avanzado_feat_2'),
+        t('store.abono_avanzado_feat_3'),
+        t('store.abono_avanzado_feat_4'),
+        t('store.abono_avanzado_feat_5'),
+        t('store.abono_avanzado_feat_6'),
       ],
       popular: true,
     },
     {
       id: 'mantenimiento-premium',
-      title: t('store.abono_premium_title', 'Abono Premium'),
-      description: t(
-        'store.abono_premium_desc',
-        'Evolución continua, nuevas funcionalidades y bolsa de horas de desarrollo.'
-      ),
+      title: t('store.abono_premium_title'),
+      description: t('store.abono_premium_desc'),
       icon: CyberPlanPremium,
       color: 'from-purple-500 to-pink-500',
       shadow: 'shadow-pink-500/20',
       border: 'border-pink-500/30',
       features: [
-        t('store.abono_premium_feat_1', 'Todo lo del Abono Avanzado'),
-        t('store.abono_premium_feat_2', 'Servidor Edge de máxima prioridad y SLA'),
-        t('store.abono_premium_feat_3', 'Bolsa de horas de desarrollo (2hs/mes)'),
-        t('store.abono_premium_feat_4', 'Consultoría estratégica de crecimiento'),
-        t('store.abono_premium_feat_5', 'Account Manager e informes de métricas'),
+        t('store.abono_premium_feat_1'),
+        t('store.abono_premium_feat_2'),
+        t('store.abono_premium_feat_3'),
+        t('store.abono_premium_feat_4'),
+        t('store.abono_premium_feat_5'),
       ],
       popular: false,
     },
@@ -125,7 +116,7 @@ function getStorePlans(t: TFunction): PlanData[] {
       rawPriceUSD: rawUSD,
       price: formatARS(rawARS),
       priceUSD: formatUSD(rawUSD),
-      period: t('store.period_month', '/mes'),
+      period: t('store.period_month'),
     }
   })
 }
@@ -144,6 +135,7 @@ export default function StorePage() {
   const [isAnnual, setIsAnnual] = useState(false)
   const [soundEnabled, setSoundEnabled] = useState(true)
 
+  // guardrail-ok(useEffect): sync selected plan/currency from URL params on mount
   useEffect(() => {
     setSoundEnabled(storeAudio.isEnabled())
   }, [])
@@ -190,7 +182,7 @@ export default function StorePage() {
         {/* NAVEGACIÓN SUPERIOR ELEGANTE */}
         <header className="relative z-30 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 max-w-6xl mx-auto pt-2">
           <HudButton
-            label={t('store.volver_inicio', 'Volver al Inicio')}
+            label={t('store.volver_inicio')}
             variant="secondary"
             size="sm"
             onClick={() => {
@@ -220,7 +212,7 @@ export default function StorePage() {
                 <VolumeX className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
               )}
               <span className="text-xs font-mono hidden sm:inline">
-                {soundEnabled ? t('store.audio_on', 'Audio ON') : t('store.audio_mute', 'Mute')}
+                {soundEnabled ? t('store.audio_on') : t('store.audio_mute')}
               </span>
               <span className="sr-only sm:hidden">
                 {soundEnabled ? 'Silenciar sonidos' : 'Activar efectos de sonido'}
@@ -240,9 +232,7 @@ export default function StorePage() {
                 <Moon className="w-4 h-4 text-indigo-400" aria-hidden="true" />
               )}
               <span className="hidden sm:inline text-xs font-bold font-mono">
-                {isDark
-                  ? `☀️ ${t('store.tema_claro', 'Claro')}`
-                  : `🌙 ${t('store.tema_oscuro', 'Oscuro')}`}
+                {isDark ? `☀️ ${t('store.tema_claro')}` : `🌙 ${t('store.tema_oscuro')}`}
               </span>
             </button>
           </div>
@@ -262,7 +252,7 @@ export default function StorePage() {
 
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold leading-tight text-slate-900 dark:text-white mb-6 tracking-tight">
               <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                {t('store.subtitulo', 'Abonos de Mantenimiento')}
+                {t('store.subtitulo')}
               </span>
             </h1>
 
@@ -321,7 +311,7 @@ export default function StorePage() {
                 }`}
               >
                 <Calendar size={14} />
-                <span>{t('store.mensual', 'Mensual')}</span>
+                <span>{t('store.mensual')}</span>
               </button>
               <button
                 type="button"
@@ -332,9 +322,9 @@ export default function StorePage() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <span>{t('store.anual', 'Anual')}</span>
+                <span>{t('store.anual')}</span>
                 <span className="text-[10px] font-black uppercase bg-emerald-400 text-slate-950 px-2 py-0.5 rounded-full shadow-sm">
-                  {t('store.descuento_anual', '20% OFF')}
+                  {t('store.descuento_anual')}
                 </span>
               </button>
             </div>
@@ -359,18 +349,17 @@ export default function StorePage() {
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-400 font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
                   <Terminal className="w-3.5 h-3.5" />
-                  <span>DIVISIÓN #LINUX // HARDWARE LOCAL, CAJAS POS & GUARDIA SSH</span>
+                  <span>{t('store.linux_division_badge')}</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground tracking-tight">
-                  Infraestructura Linux para Comercios y Oficinas
+                  {t('store.linux_title')}
                 </h2>
                 <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-2xl">
-                  Complementá tu plataforma web blindando las PCs físicas de tu mostrador o sumando
-                  un servidor local PostgreSQL para seguir facturando sin cortes de internet.
+                  {t('store.linux_desc')}
                 </p>
               </div>
               <HudButton
-                label="Portal Completo /linux"
+                label={t('store.linux_portal_cta')}
                 variant="secondary"
                 size="sm"
                 onClick={() => navigate('/linux')}
@@ -384,8 +373,8 @@ export default function StorePage() {
               <div className="rounded-2xl border border-border bg-background/60 p-5 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase text-emerald-600 dark:text-emerald-400 mb-2">
-                    <span>ABONO GUARDIA LINUX</span>
-                    <span>MENSUAL</span>
+                    <span>{t('store.linux_module1_badge')}</span>
+                    <span>{t('store.monthly')}</span>
                   </div>
                   <h3 className="text-base font-bold text-foreground flex items-center gap-2">
                     <HardDrive className="w-4 h-4 text-emerald-500 shrink-0" />
@@ -426,7 +415,7 @@ export default function StorePage() {
                 <div>
                   <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase text-cyan-600 dark:text-cyan-400 mb-2">
                     <span>APROVISIONAMIENTO</span>
-                    <span>PAGO ÚNICO</span>
+                    <span>{t('store.one_time')}</span>
                   </div>
                   <h3 className="text-base font-bold text-foreground flex items-center gap-2">
                     <Terminal className="w-4 h-4 text-cyan-500 shrink-0" />
@@ -438,7 +427,10 @@ export default function StorePage() {
                   </p>
                   <div className="mt-4 text-2xl font-mono font-black text-foreground">
                     {currency === 'ARS' ? '$350.000' : 'u$s 320'}
-                    <span className="text-xs font-normal text-muted-foreground"> único</span>
+                    <span className="text-xs font-normal text-muted-foreground">
+                      {' '}
+                      {t('store.one_time_short')}
+                    </span>
                   </div>
                 </div>
                 <button
@@ -457,7 +449,7 @@ export default function StorePage() {
                 <div>
                   <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase text-purple-600 dark:text-purple-400 mb-2">
                     <span>CONTINUIDAD 24/7</span>
-                    <span>PAGO ÚNICO</span>
+                    <span>{t('store.one_time')}</span>
                   </div>
                   <h3 className="text-base font-bold text-foreground flex items-center gap-2">
                     <Server className="w-4 h-4 text-purple-500 shrink-0" />
@@ -469,7 +461,10 @@ export default function StorePage() {
                   </p>
                   <div className="mt-4 text-2xl font-mono font-black text-foreground">
                     {currency === 'ARS' ? '$680.000' : 'u$s 620'}
-                    <span className="text-xs font-normal text-muted-foreground"> único</span>
+                    <span className="text-xs font-normal text-muted-foreground">
+                      {' '}
+                      {t('store.one_time_short')}
+                    </span>
                   </div>
                 </div>
                 <button

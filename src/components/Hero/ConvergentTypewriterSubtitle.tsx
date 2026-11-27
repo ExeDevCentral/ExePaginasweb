@@ -73,6 +73,7 @@ export const ConvergentTypewriterSubtitle: React.FC<ConvergentTypewriterSubtitle
     setTimeout(typeStep, 350)
   }, [totalChars, fullText])
 
+  // guardrail-ok(useEffect): sync external/browser state
   useEffect(() => {
     isMounted.current = true
     startTyping()
@@ -195,7 +196,7 @@ export const ConvergentTypewriterSubtitle: React.FC<ConvergentTypewriterSubtitle
       {/* Indicador sutil de interacción */}
       <div className="flex items-center gap-1.5 mt-2.5 text-[11px] font-mono text-cyan-600/70 dark:text-cyan-400/70 select-none opacity-0 group-hover/typewriter:opacity-100 transition-opacity duration-300">
         <SparklesIcon className="w-3 h-3 text-cyan-500 animate-pulse" />
-        <span>Interactúa con las cápsulas o haz clic para reiniciar el tipeo</span>
+        <span>{t('hero.typewriter_hint')}</span>
       </div>
 
       <style jsx>{`

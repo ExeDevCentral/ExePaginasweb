@@ -8,6 +8,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import { Badge } from '@astryxdesign/core'
 import {
   Calendar,
@@ -41,11 +42,11 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
   const CATEGORIES = [
-    { id: 'all', label: t('portfolio.cat_todos', 'Todos los Proyectos'), icon: Layers },
-    { id: 'saas', label: t('portfolio.cat_saas', 'SaaS & Seguridad'), icon: Zap },
-    { id: 'turnos', label: t('portfolio.cat_turnos', 'Turnos & Reservas'), icon: Calendar },
-    { id: 'ecommerce', label: t('portfolio.cat_ecommerce', 'E-Commerce'), icon: ShoppingBag },
-    { id: 'web', label: t('portfolio.cat_web', 'Landings & Web'), icon: Globe },
+    { id: 'all', label: t('portfolio.cat_todos'), icon: Layers },
+    { id: 'saas', label: t('portfolio.cat_saas'), icon: Zap },
+    { id: 'turnos', label: t('portfolio.cat_turnos'), icon: Calendar },
+    { id: 'ecommerce', label: t('portfolio.cat_ecommerce'), icon: ShoppingBag },
+    { id: 'web', label: t('portfolio.cat_web'), icon: Globe },
   ]
 
   const hasProjects = INITIAL_PROJECTS.length > 0
@@ -89,7 +90,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
           >
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-              {t('portfolio.fig_badge', 'FIG. 03 — CASOS EN PRODUCCIÓN')}
+              {t('portfolio.fig_badge')}
             </span>
             <Badge label="LIVE" variant="success" />
           </motion.div>
@@ -102,7 +103,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
             className="text-3xl sm:text-5xl font-display font-bold tracking-tight text-foreground mb-4"
           >
             Arquitectura de Software en{' '}
-            <span className="font-serif italic text-brand">producción real</span>
+            <span className="font-serif italic text-brand">{t('portfolio.real_production')}</span>
           </motion.h2>
 
           <motion.p
@@ -112,10 +113,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
             transition={{ delay: 0.2 }}
             className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto"
           >
-            {t(
-              'portfolio.subtitulo',
-              'Sistemas web con código propio, aislamiento de datos, conciliación automática y despliegue en la nube para empresas que escalan sus ingresos.'
-            )}
+            {t('portfolio.subtitulo')}
           </motion.p>
 
           {/* Acceso a CV Profesional */}
@@ -132,7 +130,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
               rel="noopener noreferrer"
               variant="secondary"
               size="sm"
-              label={t('portfolio.ver_cv', 'Ver Mi CV Profesional Completo')}
+              label={t('portfolio.ver_cv')}
               icon={<FileText className="w-3.5 h-3.5 text-brand" />}
               iconPosition="left"
             />
@@ -214,9 +212,10 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                         <div className="absolute top-3.5 left-3.5">
                           <span className="px-2.5 py-0.5 rounded-full bg-slate-950/75 backdrop-blur-md border border-emerald-400/35 text-[10px] font-mono text-emerald-300 flex items-center gap-1.5 font-medium">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                            {t(
+                            {ti(
+                              t,
                               `portfolio.items.${project.id}.statusLabel`,
-                              project.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')
+                              project.statusLabel || t('portfolio.en_produccion')
                             )}
                           </span>
                         </div>
@@ -229,12 +228,12 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                             rel="noopener noreferrer"
                             aria-label={t('portfolio.view_live_aria', {
                               defaultValue: 'Ver sitio web de {{title}} en producción',
-                              title: t(`portfolio.items.${project.id}.title`, project.title),
+                              title: ti(t, `portfolio.items.${project.id}.title`, project.title),
                             })}
                             className="absolute top-3.5 right-3.5 p-1.5 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/15 text-slate-200 hover:bg-emerald-500 hover:text-slate-950 hover:border-emerald-400 transition-colors flex items-center justify-center cursor-pointer"
                             title={t('portfolio.view_live_aria', {
                               defaultValue: 'Ver sitio web de {{title}} en producción',
-                              title: t(`portfolio.items.${project.id}.title`, project.title),
+                              title: ti(t, `portfolio.items.${project.id}.title`, project.title),
                             })}
                           >
                             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -246,10 +245,10 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                           <div>
                             <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider block mb-0.5 font-semibold">
                               0{idx + 1} ·{' '}
-                              {t(`portfolio.items.${project.id}.client`, project.client)}
+                              {ti(t, `portfolio.items.${project.id}.client`, project.client)}
                             </span>
                             <h3 className="text-base sm:text-lg font-bold text-white font-display leading-tight group-hover:text-emerald-300 transition-colors">
-                              {t(`portfolio.items.${project.id}.title`, project.title)}
+                              {ti(t, `portfolio.items.${project.id}.title`, project.title)}
                             </h3>
                           </div>
                         </div>
@@ -258,7 +257,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                       {/* Contenido & Detalles */}
                       <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                         <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3 min-h-[3.2rem]">
-                          {t(`portfolio.items.${project.id}.description`, project.description)}
+                          {ti(t, `portfolio.items.${project.id}.description`, project.description)}
                         </p>
 
                         {/* Métricas destacadas limpias sin sombra pesada */}
@@ -266,10 +265,18 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                           {project.metrics.map((m, mIdx) => (
                             <div key={m.label} className="px-2">
                               <div className="text-sm font-bold text-slate-950 dark:text-white font-mono">
-                                {t(`portfolio.items.${project.id}.metric_${mIdx}_value`, m.value)}
+                                {ti(
+                                  t,
+                                  `portfolio.items.${project.id}.metric_${mIdx}_value`,
+                                  m.value
+                                )}
                               </div>
                               <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
-                                {t(`portfolio.items.${project.id}.metric_${mIdx}_label`, m.label)}
+                                {ti(
+                                  t,
+                                  `portfolio.items.${project.id}.metric_${mIdx}_label`,
+                                  m.label
+                                )}
                               </div>
                             </div>
                           ))}
@@ -295,7 +302,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                             className="text-xs font-mono text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1.5 transition-colors cursor-pointer py-1 font-semibold"
                           >
                             <Maximize2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                            <span>{t('portfolio.detalles', 'FICHA TÉCNICA')}</span>
+                            <span>{t('portfolio.detalles')}</span>
                           </button>
 
                           {project.link && (
@@ -381,13 +388,10 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                     OBRA A MEDIDA // 2025
                   </span>
                   <h3 className="text-base sm:text-lg font-bold font-display text-foreground mb-1">
-                    {t('portfolio.custom_card_titulo', '¿Querés tu sistema en producción?')}
+                    {t('portfolio.custom_card_titulo')}
                   </h3>
                   <p className="text-xs text-muted-foreground max-w-xs mx-auto">
-                    {t(
-                      'portfolio.custom_card_desc',
-                      'Creamos desarrollos a medida con 100% código propio, arquitectura robusta y despliegue llave en mano.'
-                    )}
+                    {t('portfolio.custom_card_desc')}
                   </p>
                 </div>
 
@@ -395,7 +399,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                   href="/cotizador"
                   size="sm"
                   variant="primary"
-                  label={t('portfolio.pedir_presupuesto', 'Iniciar Proyecto [1:1]')}
+                  label={t('portfolio.pedir_presupuesto')}
                   icon={<Zap className="w-3.5 h-3.5" />}
                   iconPosition="left"
                 />
@@ -419,17 +423,11 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
               </div>
 
               <h3 className="text-2xl sm:text-4xl font-black font-montserrat text-foreground tracking-tight">
-                {t(
-                  'portfolio.banner_titulo',
-                  '¿Tenés un proyecto o sistema para llevar a producción?'
-                )}
+                {t('portfolio.banner_titulo')}
               </h3>
 
               <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                {t(
-                  'portfolio.banner_desc',
-                  'Desarrollamos soluciones web a medida de punta a punta: desde plataformas SaaS y sistemas de agendamiento de turnos, hasta tiendas e-commerce de alto impacto y landings corporativas ultra-rápidas.'
-                )}
+                {t('portfolio.banner_desc')}
               </p>
 
               {/* Grid de capacidades */}
@@ -437,53 +435,35 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                 <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
                   <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{t('portfolio.cap_saas', 'SaaS & Cloud')}</span>
+                    <span>{t('portfolio.cap_saas')}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{t('portfolio.cap_saas_desc')}</p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
+                  <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <span>{t('portfolio.cap_ecommerce')}</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {t(
-                      'portfolio.cap_saas_desc',
-                      'Paneles administrativos, gestión de datos y arquitecturas escalables.'
-                    )}
+                    {t('portfolio.cap_ecommerce_desc')}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
                   <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{t('portfolio.cap_ecommerce', 'E-Commerce')}</span>
+                    <span>{t('portfolio.cap_turnos')}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {t(
-                      'portfolio.cap_ecommerce_desc',
-                      'Tiendas online con pasarelas de pago y conversión optimizada.'
-                    )}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{t('portfolio.cap_turnos_desc')}</p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
                   <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{t('portfolio.cap_turnos', 'Turnos Online')}</span>
+                    <span>{t('portfolio.cap_webs')}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {t(
-                      'portfolio.cap_turnos_desc',
-                      'Agendamiento en tiempo real sin registro obligatorio ni fricción.'
-                    )}
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-background/60 border border-border space-y-1.5">
-                  <div className="flex items-center gap-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>{t('portfolio.cap_webs', 'Webs & Landings')}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {t(
-                      'portfolio.cap_webs_desc',
-                      'Carga ultrarrápida, SEO técnico de primer nivel y diseño moderno.'
-                    )}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{t('portfolio.cap_webs_desc')}</p>
                 </div>
               </div>
 
@@ -493,7 +473,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                   href="/cotizador"
                   variant="primary"
                   size="md"
-                  label={t('portfolio.cta_cotizar', 'Cotizar Mi Proyecto a Medida')}
+                  label={t('portfolio.cta_cotizar')}
                   icon={<Zap className="w-4 h-4" />}
                   iconPosition="left"
                 />
@@ -503,7 +483,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                     href="/portafolio"
                     variant="secondary"
                     size="md"
-                    label={t('portfolio.ver_todos', 'Ver todos los proyectos')}
+                    label={t('portfolio.ver_todos')}
                     icon={<ArrowUpRight className="w-4 h-4 text-accent-cyan" />}
                     iconPosition="right"
                   />
@@ -540,42 +520,45 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                   <span className="px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 font-black text-xs uppercase tracking-wider flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                     <span>
-                      {t(
+                      {ti(
+                        t,
                         `portfolio.items.${selectedProject.id}.statusLabel`,
-                        selectedProject.statusLabel || t('portfolio.en_produccion', 'EN PRODUCCIÓN')
+                        selectedProject.statusLabel || t('portfolio.en_produccion')
                       )}
                     </span>
                   </span>
                   <span className="px-3 py-1 rounded-full bg-accent-cyan/20 text-accent-cyan font-bold text-xs uppercase tracking-wider">
-                    {t(
+                    {ti(
+                      t,
                       `portfolio.items.${selectedProject.id}.categoryLabel`,
                       selectedProject.categoryLabel
                     )}
                   </span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-black text-foreground font-montserrat">
-                  {t(`portfolio.items.${selectedProject.id}.title`, selectedProject.title)}
+                  {ti(t, `portfolio.items.${selectedProject.id}.title`, selectedProject.title)}
                 </h3>
                 <p className="text-xs text-muted-foreground font-medium">
-                  {t('portfolio.client_domain', 'Cliente / Dominio')}:{' '}
-                  {t(`portfolio.items.${selectedProject.id}.client`, selectedProject.client)}
+                  {t('portfolio.client_domain')}:{' '}
+                  {ti(t, `portfolio.items.${selectedProject.id}.client`, selectedProject.client)}
                 </p>
               </div>
 
               <div className="rounded-2xl overflow-hidden border border-border h-60 sm:h-72 bg-muted">
                 <img
                   src={selectedProject.image}
-                  alt={t(`portfolio.items.${selectedProject.id}.title`, selectedProject.title)}
+                  alt={ti(t, `portfolio.items.${selectedProject.id}.title`, selectedProject.title)}
                   className="w-full h-full object-cover"
                 />
               </div>
 
               <div className="space-y-4">
                 <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
-                  {t('portfolio.dev_summary', 'Resumen del Desarrollo')}
+                  {t('portfolio.dev_summary')}
                 </h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t(
+                  {ti(
+                    t,
                     `portfolio.items.${selectedProject.id}.description`,
                     selectedProject.description
                   )}
@@ -584,7 +567,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
 
               <div className="space-y-3">
                 <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
-                  {t('portfolio.key_features', 'Características Clave')}
+                  {t('portfolio.key_features')}
                 </h4>
                 <div className="space-y-2">
                   {selectedProject.highlights.map((h, hIdx) => (
@@ -593,7 +576,9 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                       className="flex items-start gap-2.5 text-xs sm:text-sm text-foreground/90"
                     >
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{t(`portfolio.items.${selectedProject.id}.highlight_${hIdx}`, h)}</span>
+                      <span>
+                        {ti(t, `portfolio.items.${selectedProject.id}.highlight_${hIdx}`, h)}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -605,7 +590,7 @@ export const PortfolioSection: React.FC<{ featuredOnly?: boolean }> = ({
                   onClick={() => setSelectedProject(null)}
                   className="px-5 py-2.5 rounded-xl border border-border text-xs font-bold text-foreground hover:bg-muted transition-colors"
                 >
-                  {t('portfolio.close', 'Cerrar')}
+                  {t('portfolio.close')}
                 </button>
 
                 {selectedProject.link && (

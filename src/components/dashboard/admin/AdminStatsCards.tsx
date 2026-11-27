@@ -4,6 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { Users, TrendingUp, Ticket, DollarSign, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import type { AdminStats } from '../../../hooks/useAdminDashboard'
 
@@ -12,6 +13,7 @@ interface AdminStatsCardsProps {
 }
 
 export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
+  const { t } = useTranslation()
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <motion.div
@@ -87,7 +89,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
           {stats.ticketsAbiertos > 0 ? (
             <>
               <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-              <span>Requiere atención inmediata</span>
+              <span>{t('admin.needs_attention')}</span>
             </>
           ) : (
             <>

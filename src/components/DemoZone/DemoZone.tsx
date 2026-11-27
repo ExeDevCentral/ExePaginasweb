@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { useState, useMemo, useRef, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import {
   X,
   ShoppingCart,
@@ -426,7 +427,7 @@ const TiltCard = ({
           {/* Micro-badge flotante 3D */}
           <div className="absolute bottom-2.5 left-3 px-2.5 py-1 rounded-lg bg-background/85 backdrop-blur-md border border-border/70 text-[10px] font-bold text-foreground flex items-center gap-1.5 shadow-md">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>{t(`demozone.${project.id}_stats`, project.statsBadge)}</span>
+            <span>{ti(t, `demozone.${project.id}_stats`, project.statsBadge)}</span>
           </div>
         </div>
 
@@ -446,7 +447,7 @@ const TiltCard = ({
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-muted/60 border border-border/60 text-[10px] font-semibold text-foreground/80 group-hover:border-accent-cyan/30 transition-colors"
             >
               <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
-              <span>{t(`demozone.${project.id}_feat_${idx + 1}`, feat)}</span>
+              <span>{ti(t, `demozone.${project.id}_feat_${idx + 1}`, feat)}</span>
             </span>
           ))}
         </div>
@@ -538,7 +539,7 @@ const DemoZone = () => {
     setFlyingItem(product.id)
     setTimeout(() => {
       setFlyingItem(null)
-      const translatedName = t(`demozone.coffee_prod_${product.id}_name`, product.name)
+      const translatedName = ti(t, `demozone.coffee_prod_${product.id}_name`, product.name)
       setCartItems((prev) => [
         ...prev,
         { id: product.id, name: translatedName, price: product.price },
@@ -583,6 +584,7 @@ const DemoZone = () => {
   )
 
   // Cerrar modal con la tecla Escape
+  // guardrail-ok(useEffect): sync demo animation/observer with viewport
   useEffect(() => {
     if (!selectedProject) return
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -657,15 +659,15 @@ const DemoZone = () => {
             <TiltCard
               key={project.title}
               project={project}
-              category={t(project.categoryKey)}
+              category={ti(t, project.categoryKey)}
               title={project.title}
-              summary={t(project.summaryKey)}
+              summary={ti(t, project.summaryKey)}
               visualMode={visualMode}
               onOpen={() =>
                 openProject({
                   title: project.title,
-                  category: t(project.categoryKey),
-                  summary: t(project.summaryKey),
+                  category: ti(t, project.categoryKey),
+                  summary: ti(t, project.summaryKey),
                 })
               }
             />
@@ -821,7 +823,7 @@ const DemoZone = () => {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                     >
-                      {t(`demozone.prop_${auraFeatured.id}_tag`, auraFeatured.tag)}
+                      {ti(t, `demozone.prop_${auraFeatured.id}_tag`, auraFeatured.tag)}
                     </motion.span>
                     {/* Info panel bottom */}
                     <AnimatePresence mode="wait">
@@ -925,7 +927,7 @@ const DemoZone = () => {
                                 {prop.name}
                               </p>
                               <span className="text-muted-foreground text-[10px] shrink-0">
-                                {t(`demozone.prop_${prop.id}_tag`, prop.tag)}
+                                {ti(t, `demozone.prop_${prop.id}_tag`, prop.tag)}
                               </span>
                             </div>
                             <p className="text-muted-foreground text-xs truncate mt-0.5">
@@ -1086,11 +1088,11 @@ const DemoZone = () => {
                         <div className="text-5xl mb-1 text-center">{product.emoji}</div>
                         <div>
                           <p className="font-bold text-foreground text-sm">
-                            {t(`demozone.coffee_prod_${product.id}_name`, product.name)}
+                            {ti(t, `demozone.coffee_prod_${product.id}_name`, product.name)}
                           </p>
                           <p className="text-xs text-muted-foreground mt-0.5">
                             {t('demozone.coffee_origin')}{' '}
-                            {t(`demozone.coffee_prod_${product.id}_origin`, product.origin)}
+                            {ti(t, `demozone.coffee_prod_${product.id}_origin`, product.origin)}
                           </p>
                         </div>
                         <p className="text-2xl font-black text-amber-400">
@@ -1228,7 +1230,7 @@ const DemoZone = () => {
                         ].map((k) => (
                           <li key={k} className="flex items-center gap-2">
                             <span className="text-yellow-400">✓</span>
-                            {t(k)}
+                            {ti(t, k)}
                           </li>
                         ))}
                       </ul>
@@ -1271,7 +1273,7 @@ const DemoZone = () => {
                         ].map((k) => (
                           <li key={k} className="flex items-center gap-2">
                             <span className="text-yellow-400">✓</span>
-                            {t(k)}
+                            {ti(t, k)}
                           </li>
                         ))}
                       </ul>
@@ -1304,7 +1306,7 @@ const DemoZone = () => {
                         ].map((k) => (
                           <li key={k} className="flex items-center gap-2">
                             <span className="text-yellow-400">✓</span>
-                            {t(k)}
+                            {ti(t, k)}
                           </li>
                         ))}
                       </ul>
@@ -1414,14 +1416,14 @@ const DemoZone = () => {
                         >
                           <div className="text-4xl mb-4">{testimonial.avatar}</div>
                           <p className="text-muted-foreground font-inter text-sm mb-4">
-                            "{t(testimonial.textKey)}"
+                            "{ti(t, testimonial.textKey)}"
                           </p>
                           <div>
                             <p className="text-foreground font-montserrat font-bold text-sm">
                               {testimonial.name}
                             </p>
                             <p className="text-pink-500 font-montserrat font-semibold text-xs">
-                              {t(testimonial.roleKey)}
+                              {ti(t, testimonial.roleKey)}
                             </p>
                           </div>
                         </motion.div>

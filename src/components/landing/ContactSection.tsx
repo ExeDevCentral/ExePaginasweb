@@ -57,6 +57,7 @@ const ContactSection = () => {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [feedback, setFeedback] = useState('')
 
+  // guardrail-ok(useEffect): reset form feedback state when contact modal/section remounts
   useEffect(() => {
     try {
       const stored = localStorage.getItem('exe_visitor_name')
@@ -262,7 +263,9 @@ const ContactSection = () => {
                   </div>
                   <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
                     <span>RESPUESTA ESTIMADA:</span>
-                    <span className="font-bold text-signal">&lt; 2 HORAS HÁBILES</span>
+                    <span className="font-bold text-signal">
+                      {t('contact.response_time_value')}
+                    </span>
                   </div>
                 </div>
 
@@ -332,7 +335,7 @@ const ContactSection = () => {
                       htmlFor="contact-phone"
                       className="absolute left-4 top-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400/80 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-xs peer-placeholder-shown:font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-emerald-600 dark:peer-focus:text-emerald-400"
                     >
-                      {t('contact.form_telefono', 'WhatsApp / Teléfono')}
+                      {t('contact.form_telefono')}
                     </label>
                   </div>
 

@@ -128,6 +128,7 @@ const N8nExecutionCard: React.FC<{
   automationType = 'Cotización / Flujo n8n',
   status = 'EJECUTADO',
 }) => {
+  const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
@@ -163,7 +164,7 @@ const N8nExecutionCard: React.FC<{
           </span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-slate-400">Acción:</span>
+          <span className="text-slate-400">{t('chat.action_label')}</span>
           <span className="text-cyan-300 font-mono text-[10px]">{automationType}</span>
         </div>
         <div className="flex items-center justify-between">
@@ -337,11 +338,12 @@ export interface AIChatWidgetProps {
 }
 
 export const AIChatWidget: React.FC<AIChatWidgetProps> = ({ initialOpenChat = false }) => {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [isOpen, setIsOpen] = useState(initialOpenChat)
   const [hubView, setHubView] = useState<'menu' | 'chat'>(initialOpenChat ? 'chat' : 'menu')
   const [hasUnread, setHasUnread] = useState(!initialOpenChat)
 
+  // guardrail-ok(useEffect): focus trap and body scroll lock while chat modal is open
   useEffect(() => {
     const handleExternalOpen = () => {
       setIsOpen(true)
@@ -426,6 +428,7 @@ export const AIChatWidget: React.FC<AIChatWidgetProps> = ({ initialOpenChat = fa
     }
   }
 
+  // guardrail-ok(useEffect): hydrate visitor name from localStorage on mount
   useEffect(() => {
     try {
       const stored = localStorage.getItem('exe_visitor_name')
@@ -504,6 +507,7 @@ export const AIChatWidget: React.FC<AIChatWidgetProps> = ({ initialOpenChat = fa
 
   const isLoading = status === 'streaming' || status === 'submitted'
 
+  // guardrail-ok(useEffect): scroll to latest message and extract ticket when chat updates
   useEffect(() => {
     if (isOpen && hubView === 'chat') {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -699,24 +703,25 @@ export const AIChatWidget: React.FC<AIChatWidgetProps> = ({ initialOpenChat = fa
                         </div>
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <h4 className="text-sm font-bold text-white">Hablar con Exequiel</h4>
+                            <h4 className="text-sm font-bold text-white">
+                              {t('chat.talk_exequiel')}
+                            </h4>
                             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                           </div>
                           <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping inline-block" />
-                            <span>En línea · Respuesta en &lt; 5 min</span>
+                            <span>{t('chat.online_reply')}</span>
                           </span>
                         </div>
                       </div>
 
                       <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-mono text-emerald-300 font-bold shrink-0">
-                        HUMANO
+                        {t('chat.human_badge')}
                       </span>
                     </div>
 
                     <p className="text-xs text-slate-300 mb-3.5 leading-relaxed">
-                      Atención directa por WhatsApp para cotizaciones, dudas técnicas o acordar tu
-                      web sin esperas.
+                      {t('chat.direct_whatsapp_desc')}
                     </p>
 
                     {/* Chips de 1 clic */}
@@ -743,7 +748,7 @@ export const AIChatWidget: React.FC<AIChatWidgetProps> = ({ initialOpenChat = fa
                         }
                         className="w-full text-left p-2 rounded-xl bg-black/40 hover:bg-emerald-900/40 border border-emerald-500/20 hover:border-emerald-400/50 text-[11px] font-medium text-slate-200 hover:text-white transition-all flex items-center justify-between group cursor-pointer"
                       >
-                        <span>🎁 Pedir auditoría en video gratis</span>
+                        <span>{t('chat.free_video_audit')}</span>
                         <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                       </button>
                     </div>

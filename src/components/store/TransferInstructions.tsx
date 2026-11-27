@@ -4,6 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Wallet, Mail, Loader2, LogIn, CheckCircle2, ArrowRight, MessageCircle } from 'lucide-react'
@@ -25,6 +26,7 @@ export default function TransferInstructions({
   planPrice,
   projectType,
 }: TransferInstructionsProps) {
+  const { t } = useTranslation()
   const router = useRouter()
   const { session } = useAuthSession()
   const [copied, setCopied] = useState(false)
@@ -34,6 +36,7 @@ export default function TransferInstructions({
   const [error, setError] = useState('')
   const [idempotencyKey] = useState(() => crypto.randomUUID())
 
+  // guardrail-ok(useEffect): poll/confirm transfer status side effect
   useEffect(() => {
     if (session?.user?.email) setEmail(session.user.email)
   }, [session])
@@ -230,7 +233,7 @@ export default function TransferInstructions({
           </div>
 
           <div>
-            <p className="text-lg font-bold text-foreground">¡Suscripción confirmada!</p>
+            <p className="text-lg font-bold text-foreground">{t('store.subscription_confirmed')}</p>
             <p className="text-xs text-muted-foreground mt-1 max-w-xs mx-auto leading-relaxed">
               Registramos tu solicitud para el plan <strong>{planTitle}</strong>. Ya podés ingresar
               a tu panel para adjuntar tu comprobante de pago.

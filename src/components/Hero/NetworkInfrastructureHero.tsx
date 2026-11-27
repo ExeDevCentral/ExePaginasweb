@@ -5,6 +5,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import Image from 'next/image'
 import { Store, Server, Radio, Orbit, Activity, Zap } from 'lucide-react'
 
@@ -68,10 +69,12 @@ const NODES: NodeData[] = [
 ]
 
 export const NetworkInfrastructureHero: React.FC = () => {
+  const { t } = useTranslation()
   const [activeNode, setActiveNode] = useState<number>(0)
   const [utcTime, setUtcTime] = useState<string>('')
 
   // Reloj de telemetría UTC en tiempo real estilo COMPUTE
+  // guardrail-ok(useEffect): sync external/browser state
   useEffect(() => {
     const updateTime = () => {
       const now = new Date()
@@ -83,6 +86,7 @@ export const NetworkInfrastructureHero: React.FC = () => {
   }, [])
 
   // Rotación suave del foco entre nodos para dar sensación de pulso
+  // guardrail-ok(useEffect): drive animation/timer with browser scheduling
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveNode((prev) => (prev + 1) % NODES.length)
@@ -296,7 +300,7 @@ export const NetworkInfrastructureHero: React.FC = () => {
                     </div>
 
                     <div className="mt-3 pt-2.5 border-t border-white/6 flex items-center justify-between text-[10px] font-mono text-slate-400">
-                      <span>MÉTRICA</span>
+                      <span>{t('hero.network_metric')}</span>
                       <span className="text-emerald-400 font-semibold">{node.stats}</span>
                     </div>
                   </div>

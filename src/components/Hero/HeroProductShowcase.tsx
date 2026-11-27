@@ -11,6 +11,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -46,11 +47,11 @@ interface TabConfig {
   accent: 'cyan' | 'emerald' | 'amber'
 }
 
-const TABS: TabConfig[] = [
+const buildTabs = (t: any): TabConfig[] => [
   {
     id: 'turnos',
-    label: 'Turnos & Citas',
-    shortLabel: 'Turnos',
+    label: t('showcase.tab_turnos'),
+    shortLabel: t('showcase.tab_turnos_short'),
     accent: 'cyan',
     icon: (
       <CyberPitchRadarIcon
@@ -59,12 +60,12 @@ const TABS: TabConfig[] = [
       />
     ),
     url: 'https://sportmanager.app/reservas',
-    badge: 'COBROS 24/7',
+    badge: t('showcase.badge_247'),
   },
   {
     id: 'ecommerce',
-    label: 'Tienda Online',
-    shortLabel: 'Tienda',
+    label: t('showcase.tab_tienda'),
+    shortLabel: t('showcase.tab_tienda_short'),
     accent: 'emerald',
     icon: (
       <CyberShopBagIcon
@@ -73,12 +74,12 @@ const TABS: TabConfig[] = [
       />
     ),
     url: 'https://celstore.com/catalogo',
-    badge: '0% COMISIONES',
+    badge: t('showcase.badge_0'),
   },
   {
     id: 'gestion',
-    label: 'Sistema a Medida',
-    shortLabel: 'Sistemas',
+    label: t('showcase.tab_gestion'),
+    shortLabel: t('showcase.tab_gestion_short'),
     accent: 'amber',
     icon: (
       <RestoiaEngineIcon
@@ -87,12 +88,12 @@ const TABS: TabConfig[] = [
       />
     ),
     url: 'https://restoai.com/panel-control',
-    badge: 'CONTROL TOTAL',
+    badge: t('showcase.badge_control'),
   },
   {
     id: 'video',
-    label: 'Video Demo',
-    shortLabel: 'Video',
+    label: t('showcase.tab_video'),
+    shortLabel: t('showcase.tab_video_short'),
     accent: 'cyan',
     icon: (
       <CyberPlayIcon
@@ -101,7 +102,7 @@ const TABS: TabConfig[] = [
       />
     ),
     url: 'https://exepaginasweb.com/demo-en-accion',
-    badge: 'OPCIONAL // 4K',
+    badge: t('showcase.badge_video'),
   },
 ]
 
@@ -120,6 +121,8 @@ function getTabButtonClasses(tab: TabConfig, isActive: boolean): string {
 }
 
 export default function HeroProductShowcase({ className = '' }: Readonly<{ className?: string }>) {
+  const { t } = useTranslation()
+  const TABS = React.useMemo(() => buildTabs(t), [t])
   const [activeTab, setActiveTab] = useState<ShowcaseTab>('turnos')
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [videoError, setVideoError] = useState(false)
@@ -128,6 +131,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
   const [isCinemaMode, setIsCinemaMode] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
 
+  // guardrail-ok(useEffect): sync external/browser state
   useEffect(() => {
     setIsMounted(true)
   }, [])
@@ -166,6 +170,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
   }, [isPlaying])
 
   // Iniciar auto-ocultado al reproducir o cambiar a la pestaña de video
+  // guardrail-ok(useEffect): sync external/browser state
   useEffect(() => {
     if (activeTab === 'video') {
       if (isPlaying) {
@@ -229,6 +234,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
   }
 
   // Cerrar Modo Cine con tecla Escape y bloquear scroll del body
+  // guardrail-ok(useEffect): sync external/browser state
   useEffect(() => {
     if (!isCinemaMode) return
     const prevOverflow = document.body.style.overflow
@@ -246,6 +252,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
   }, [isCinemaMode])
 
   // Autoplay del video al montar o cambiar de pestaña
+  // guardrail-ok(useEffect): sync external/browser state
   useEffect(() => {
     if (activeTab === 'video' && videoRef.current) {
       videoRef.current.defaultMuted = true
@@ -327,11 +334,11 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                 <button
                   type="button"
                   onClick={() => setIsCinemaMode(true)}
-                  title="Modo Cine a Pantalla Completa"
+                  title={t('showcase.cinema_mode')}
                   className="hidden sm:flex items-center gap-1 p-1 px-2 rounded-md bg-white/80 dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/10 transition-colors text-[10px] font-mono cursor-pointer shadow-xs"
                 >
                   <Maximize2 className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
-                  <span>Cine</span>
+                  <span>{t('showcase.cinema')}</span>
                 </button>
               </div>
             </div>
@@ -339,7 +346,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
             {/* Selector de Soluciones / Pestañas con separación física y contornos nítidos */}
             <div
               role="tablist"
-              aria-label="Pestañas interactivas de demostración de productos"
+              aria-label={t('showcase.tabs_aria')}
               className="grid grid-cols-4 gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-slate-200/90 dark:bg-black/75 border-b border-slate-300 dark:border-white/10 text-xs font-mono transition-colors"
             >
               {TABS.map((tab) => {
@@ -593,7 +600,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                   >
                     <Image
                       src="/portfolio/sportmanager.webp"
-                      alt="Sistema de reservas de canchas y turnos de pádel"
+                      alt={t('showcase.alt_padel')}
                       fill
                       priority
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 672px"
@@ -602,15 +609,11 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
                     <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-white bg-black/60 p-2.5 sm:p-3 rounded-xl border border-cyan-500/30 backdrop-blur-md">
                       <div>
-                        <div className="font-bold text-cyan-400">
-                          SportManager · Software de Pádel
-                        </div>
-                        <div className="text-[11px] text-slate-300">
-                          Reservas de canchas 24/7 y señas bancarias directas
-                        </div>
+                        <div className="font-bold text-cyan-400">{t('showcase.padel_title')}</div>
+                        <div className="text-[11px] text-slate-300">{t('showcase.padel_desc')}</div>
                       </div>
                       <LiveSystemLauncherButton
-                        label="PROBAR PÁDEL EN VIVO"
+                        label={t('showcase.try_padel_live')}
                         href="https://sportmanager-playhub.vercel.app"
                         icon={<CyberPitchRadarIcon size={14} />}
                         color="cyan"
@@ -632,7 +635,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                   >
                     <Image
                       src="/portfolio/restoai.webp"
-                      alt="Panel de control para gastronomía y servicios"
+                      alt={t('showcase.alt_gestion')}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 672px"
                       className="object-cover"
@@ -640,15 +643,11 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
                     <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-white bg-black/60 p-2.5 sm:p-3 rounded-xl border border-white/15 backdrop-blur-md">
                       <div>
-                        <div className="font-bold text-amber-400">
-                          RESTOia · Gastronomía & Comandas
-                        </div>
-                        <div className="text-[11px] text-slate-300">
-                          Motor KOBE 100% offline y mapa interactivo
-                        </div>
+                        <div className="font-bold text-amber-400">{t('showcase.resto_title')}</div>
+                        <div className="text-[11px] text-slate-300">{t('showcase.resto_desc')}</div>
                       </div>
                       <LiveSystemLauncherButton
-                        label="PROBAR RESTOIA"
+                        label={t('showcase.try_resto')}
                         href="https://kobe-sand.vercel.app/"
                         icon={<RestoiaEngineIcon size={14} />}
                         color="amber"
@@ -673,10 +672,10 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
                     <Zap className="w-3 h-3 text-cyan-400" />
                     <span>
                       {activeTab === 'turnos'
-                        ? 'SIMULAR TURNO EN VIVO'
+                        ? t('showcase.sim_turno')
                         : activeTab === 'ecommerce'
-                          ? 'SIMULAR COBRO 0% COMISIÓN'
-                          : 'SIMULAR COMANDA KDS'}
+                          ? t('showcase.sim_cobro')
+                          : t('showcase.sim_comanda')}
                     </span>
                   </button>
 
@@ -697,7 +696,7 @@ export default function HeroProductShowcase({ className = '' }: Readonly<{ class
             <div className="px-4 py-2.5 bg-[#070b14] border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-slate-400">
               <span className="flex items-center gap-2 text-slate-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
-                <span>Probá sistemas reales desplegados en producción Vercel</span>
+                <span>{t('showcase_prod.live_systems')}</span>
               </span>
               <span className="text-emerald-400 font-semibold">ExePaginasWeb © 2025</span>
             </div>

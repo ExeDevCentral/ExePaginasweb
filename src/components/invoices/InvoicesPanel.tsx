@@ -49,27 +49,27 @@ export default function InvoicesPanel({
       borrador: {
         icon: Clock,
         color: 'text-muted-foreground',
-        label: t('invoices.estado_borrador', 'Borrador'),
+        label: t('invoices.estado_borrador'),
       },
       emitida: {
         icon: AlertCircle,
         color: 'text-amber-600 dark:text-amber-400',
-        label: t('invoices.estado_emitida', 'Emitida'),
+        label: t('invoices.estado_emitida'),
       },
       pagada: {
         icon: CheckCircle,
         color: 'text-emerald-600 dark:text-emerald-400',
-        label: t('invoices.estado_pagada', 'Pagada'),
+        label: t('invoices.estado_pagada'),
       },
       vencida: {
         icon: XCircle,
         color: 'text-rose-600 dark:text-rose-400',
-        label: t('invoices.estado_vencida', 'Vencida'),
+        label: t('invoices.estado_vencida'),
       },
       cancelada: {
         icon: XCircle,
         color: 'text-muted-foreground',
-        label: t('invoices.estado_cancelada', 'Cancelada'),
+        label: t('invoices.estado_cancelada'),
       },
     }),
     [t]
@@ -79,7 +79,7 @@ export default function InvoicesPanel({
     () => [
       {
         accessorKey: 'numero',
-        header: t('invoices.col_numero', 'Número'),
+        header: t('invoices.col_numero'),
         cell: ({ row }) => (
           <div>
             <span className="font-mono font-bold text-foreground text-xs sm:text-sm">
@@ -93,7 +93,7 @@ export default function InvoicesPanel({
       },
       {
         accessorKey: 'concepto',
-        header: t('invoices.col_concepto', 'Concepto'),
+        header: t('invoices.col_concepto'),
         cell: ({ row }) => (
           <span className="text-xs text-muted-foreground font-medium block max-w-sm sm:max-w-md truncate">
             {row.original.concepto}
@@ -102,7 +102,7 @@ export default function InvoicesPanel({
       },
       {
         accessorKey: 'total',
-        header: t('invoices.col_total', 'Total'),
+        header: t('invoices.col_total'),
         cell: ({ row }) => (
           <div className="font-bold font-mono text-foreground text-xs sm:text-sm">
             $
@@ -117,7 +117,7 @@ export default function InvoicesPanel({
       },
       {
         accessorKey: 'estado',
-        header: t('invoices.col_estado', 'Estado'),
+        header: t('invoices.col_estado'),
         cell: ({ row }) => {
           const config = estadoConfig[row.original.estado] || estadoConfig.borrador
           const Icon = config.icon
@@ -133,7 +133,7 @@ export default function InvoicesPanel({
       },
       {
         accessorKey: 'fecha_emision',
-        header: t('invoices.col_fecha', 'Fecha'),
+        header: t('invoices.col_fecha'),
         cell: ({ row }) => (
           <span className="text-xs text-muted-foreground font-medium">
             {row.original.fecha_emision
@@ -175,11 +175,11 @@ export default function InvoicesPanel({
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2.5">
             <FileText className="w-6 h-6 text-[#38BDF8]" />
-            <span>{t('invoices.titulo', 'Facturación & Comprobantes')}</span>
+            <span>{t('invoices.titulo')}</span>
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1 font-medium">
             {invoices.length > 0
-              ? `${invoices.length} ${t('invoices.facturas_registradas', 'facturas registradas')}`
+              ? `${invoices.length} ${t('invoices.facturas_registradas')}`
               : 'Control de abonos mensuales y estado de cuenta contable'}
           </p>
         </div>
@@ -242,7 +242,7 @@ export default function InvoicesPanel({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="rounded-2xl border border-slate-300/85 dark:border-border bg-card p-6 shadow-sm">
           <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
-            {t('invoices.total_pagado', 'Total Abonado')}
+            {t('invoices.total_pagado')}
           </p>
           <p className="text-2xl sm:text-3xl font-bold font-mono text-foreground mt-2">
             $
@@ -256,7 +256,7 @@ export default function InvoicesPanel({
         </div>
         <div className="rounded-2xl border border-slate-300/85 dark:border-border bg-card p-6 shadow-sm">
           <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
-            {t('invoices.pendientes', 'Facturas Pendientes')}
+            {t('invoices.pendientes')}
           </p>
           <p className="text-2xl sm:text-3xl font-bold font-mono text-foreground mt-2">
             {pendingCount}
@@ -273,15 +273,9 @@ export default function InvoicesPanel({
           <DataTable
             columns={columns}
             data={invoices}
-            searchPlaceholder={t(
-              'invoices.buscar_placeholder',
-              'Buscar factura por número o concepto...'
-            )}
+            searchPlaceholder={t('invoices.buscar_placeholder')}
             pageSize={5}
-            emptyMessage={t(
-              'invoices.sin_coincidencias',
-              'No se encontraron facturas coincidentes.'
-            )}
+            emptyMessage={t('invoices.sin_coincidencias')}
           />
         </div>
       ) : (

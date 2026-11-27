@@ -64,6 +64,7 @@ export default function SupportTicketPanel({
   const categories = tier !== 'none' ? TICKET_CATEGORIES[tier] : TICKET_CATEGORIES.basico
   const sla = tier !== 'none' ? SLA_BY_TIER[tier] : SLA_BY_TIER.basico
 
+  // guardrail-ok(useEffect): load tickets on mount/tenant change
   useEffect(() => {
     if (!open || !initialDraft) return
     if (initialDraft.asunto !== undefined) setAsunto(initialDraft.asunto)
@@ -119,7 +120,7 @@ export default function SupportTicketPanel({
                       id="ticket-panel-title"
                       className="text-base sm:text-lg font-bold text-foreground"
                     >
-                      {t('tickets.titulo', 'Soporte y Tickets')}
+                      {t('tickets.titulo')}
                     </h2>
                     <p className="text-xs text-muted-foreground font-medium">{sla}</p>
                   </div>

@@ -69,8 +69,8 @@ const TICKET_STATUS_BADGE: Record<string, { label: string; style: string }> = {
   },
 }
 
-function formatMinutes(minutos: number, t: (key: string, def: string) => string) {
-  if (minutos >= 1440) return `${Math.floor(minutos / 1440)} ${t('common.dias', 'días')}`
+function formatMinutes(minutos: number, t: any) {
+  if (minutos >= 1440) return `${Math.floor(minutos / 1440)} ${String(t('common.dias'))}`
   if (minutos >= 60) return `${Math.floor(minutos / 60)}h`
   return `${minutos} min`
 }
@@ -105,12 +105,12 @@ export default function SLADashboard({
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2.5 tracking-tight">
             <Shield className="w-6 h-6 text-[#38BDF8]" />
-            <span>Mesa de Ayuda, Tickets & Garantía SLA</span>
+            <span>{t('sla.panel_title')}</span>
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1 font-medium">
             {openCount > 0
               ? `${openCount} ${openCount === 1 ? 'ticket activo' : 'tickets activos'} en seguimiento directo con ingeniería.`
-              : t('sla.garantia', 'Tiempos de respuesta y resolución garantizados por contrato')}
+              : t('sla.garantia')}
           </p>
         </div>
 
@@ -172,7 +172,7 @@ export default function SLADashboard({
             </div>
             <div>
               <p className="text-xs font-bold text-foreground">Asistencia Linux / Servidor</p>
-              <p className="text-[11px] text-muted-foreground">Guardia técnica & nodos POS</p>
+              <p className="text-[11px] text-muted-foreground">{t('sla.guard_nodes')}</p>
             </div>
           </button>
 
@@ -191,7 +191,7 @@ export default function SLADashboard({
               <FileText className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-foreground">Facturación & Abonos</p>
+              <p className="text-xs font-bold text-foreground">{t('sla.billing_subs')}</p>
               <p className="text-[11px] text-muted-foreground">Comprobantes o cambios de plan</p>
             </div>
           </button>
@@ -272,7 +272,7 @@ export default function SLADashboard({
                 {breaches.filter((b: SLABreach) => b.estado_sla === 'ok').length}
               </p>
               <p className="text-xs font-semibold text-muted-foreground mt-1">
-                {t('sla.dentro_sla', 'Dentro del SLA')}
+                {t('sla.dentro_sla')}
               </p>
             </div>
 
@@ -284,7 +284,7 @@ export default function SLADashboard({
                 {warningCount}
               </p>
               <p className="text-xs font-semibold text-muted-foreground mt-1">
-                {t('sla.por_vencer', 'Por vencer')}
+                {t('sla.por_vencer')}
               </p>
             </div>
 
@@ -296,7 +296,7 @@ export default function SLADashboard({
                 {breachCount}
               </p>
               <p className="text-xs font-semibold text-muted-foreground mt-1">
-                {t('sla.incumplidos', 'Incumplidos')}
+                {t('sla.incumplidos')}
               </p>
             </div>
           </div>
@@ -314,7 +314,7 @@ export default function SLADashboard({
       {breaches.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-            {t('sla.tickets_con_sla', 'Tickets con SLA activo')}
+            {t('sla.tickets_con_sla')}
           </h3>
           <div className="space-y-3">
             {breaches.map((breach: SLABreach) => (
@@ -343,7 +343,7 @@ function SLACard({ sla }: Readonly<{ sla: SLAContract }>) {
           <span
             className={`text-xs font-bold uppercase tracking-wider ${config.color} mt-1 inline-block`}
           >
-            {t('sla.nivel', 'Nivel')} {sla.nivel}
+            {t('sla.nivel')} {sla.nivel}
           </span>
         </div>
         {sla.horas_por_mes > 0 && (
@@ -352,7 +352,7 @@ function SLACard({ sla }: Readonly<{ sla: SLAContract }>) {
               {sla.horas_por_mes}h
             </p>
             <p className="text-xs text-muted-foreground font-medium">
-              {t('sla.horas_desarrollo_mes', 'de desarrollo/mes')}
+              {t('sla.horas_desarrollo_mes')}
             </p>
           </div>
         )}
@@ -362,9 +362,7 @@ function SLACard({ sla }: Readonly<{ sla: SLAContract }>) {
         <div className="flex items-center gap-3 p-4 rounded-2xl bg-card border border-border shadow-xs">
           <Clock className="w-5 h-5 text-[#38BDF8] shrink-0" />
           <div>
-            <p className="text-xs font-bold text-muted-foreground">
-              {t('sla.tiempo_respuesta', 'Tiempo de respuesta')}
-            </p>
+            <p className="text-xs font-bold text-muted-foreground">{t('sla.tiempo_respuesta')}</p>
             <p className="text-sm font-bold font-mono text-foreground mt-0.5">
               {formatMinutes(sla.tiempo_respuesta_minutos, t)}
             </p>
@@ -373,9 +371,7 @@ function SLACard({ sla }: Readonly<{ sla: SLAContract }>) {
         <div className="flex items-center gap-3 p-4 rounded-2xl bg-card border border-border shadow-xs">
           <Clock className="w-5 h-5 text-[#818CF8] shrink-0" />
           <div>
-            <p className="text-xs font-bold text-muted-foreground">
-              {t('sla.tiempo_resolucion', 'Tiempo de resolución')}
-            </p>
+            <p className="text-xs font-bold text-muted-foreground">{t('sla.tiempo_resolucion')}</p>
             <p className="text-sm font-bold font-mono text-foreground mt-0.5">
               {formatMinutes(sla.tiempo_resolucion_minutos, t)}
             </p>
@@ -402,10 +398,10 @@ function getBreachBadgeStyle(estado: string) {
   return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
 }
 
-function getBreachBadgeText(estado: string, t: (key: string, def: string) => string) {
-  if (estado === 'breach') return t('sla.badge_incumplido', 'INCUMPLIDO')
-  if (estado === 'warning') return t('sla.badge_alerta', 'ALERTA')
-  return t('sla.badge_ok', 'OK')
+function getBreachBadgeText(estado: string, t: any) {
+  if (estado === 'breach') return String(t('sla.badge_incumplido'))
+  if (estado === 'warning') return String(t('sla.badge_alerta'))
+  return String(t('sla.badge_ok'))
 }
 
 function BreachRow({ breach }: Readonly<{ breach: SLABreach }>) {
@@ -420,11 +416,10 @@ function BreachRow({ breach }: Readonly<{ breach: SLABreach }>) {
         <p className="text-sm font-bold text-foreground truncate">{breach.asunto}</p>
         <div className="flex items-center gap-3 mt-1.5 flex-wrap">
           <span className="text-xs text-muted-foreground font-medium">
-            {Math.floor(elapsed / 60)}h {Math.floor(elapsed % 60)}m{' '}
-            {t('sla.transcurridos', 'transcurridos')}
+            {Math.floor(elapsed / 60)}h {Math.floor(elapsed % 60)}m {t('sla.transcurridos')}
           </span>
           <span className="text-xs text-muted-foreground font-medium">
-            {t('sla.limite', 'Límite')}: {formatMinutes(limit, t)}
+            {t('sla.limite')}: {formatMinutes(limit, t)}
           </span>
         </div>
         <div className="mt-2.5 h-2 bg-muted/40 rounded-full overflow-hidden">

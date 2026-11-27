@@ -12,6 +12,7 @@
 'use client'
 
 import React, { useState, useMemo, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import {
@@ -155,6 +156,7 @@ const WhatsAppVectorIcon = ({ className = 'w-4 h-4' }: { className?: string }) =
 )
 
 export default function MobileQuoteView() {
+  const { t } = useTranslation()
   const [mode, setMode] = useState<QuoteMode>('plans')
   const [currency, setCurrency] = useState<Currency>('ARS')
   const [step, setStep] = useState<0 | 1 | 2>(0)
@@ -166,6 +168,7 @@ export default function MobileQuoteView() {
   const [contact, setContact] = useState('')
   const [sending, setSending] = useState(false)
 
+  // guardrail-ok(useEffect): sync quote state from URL params on mount
   useEffect(() => {
     if (typeof window === 'undefined') return
     const params = new URLSearchParams(window.location.search)
@@ -576,7 +579,7 @@ export default function MobileQuoteView() {
                     className="w-full h-12 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all"
                   >
                     <WhatsAppVectorIcon className="w-4.5 h-4.5" />
-                    <span>Enviar cotización por WhatsApp</span>
+                    <span>{t('mobile.quote_send_whatsapp')}</span>
                   </a>
 
                   {/* Alternativa: Formulario ultracorto (2 campos) */}
@@ -585,13 +588,13 @@ export default function MobileQuoteView() {
                     className="p-4 rounded-2xl bg-white dark:bg-[#0b101d] border border-slate-200/80 dark:border-white/10 space-y-3"
                   >
                     <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-                      O dejame tu contacto y te escribo
+                      {t('mobile.quote_or_contact')}
                     </p>
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Tu nombre"
+                      placeholder={t('mobile.quote_name_placeholder')}
                       required
                       className="w-full h-11 px-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/12 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-emerald-500"
                     />

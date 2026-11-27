@@ -23,6 +23,7 @@ import {
   Trophy,
 } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useFocusTrap } from '../../hooks/useFocusTrap'
 import { toast } from 'sonner'
 
@@ -36,6 +37,7 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
   const [display, setDisplay] = useState(0)
   const hasAnimated = useRef(false)
 
+  // guardrail-ok(useEffect): sync external/browser state
   useEffect(() => {
     if (hasAnimated.current) return
     hasAnimated.current = true
@@ -99,6 +101,7 @@ const PRODUCT_CONFIG = {
 }
 
 const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('calendar')
   const modalRef = useFocusTrap(isOpen)
 
@@ -171,6 +174,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
   const config = PRODUCT_CONFIG[productType] || PRODUCT_CONFIG.padel
 
   // Default tab sync
+  // guardrail-ok(useEffect): sync default tab when productType prop changes
   useEffect(() => {
     if (productType === 'peluqueria') setActiveTab('agenda')
     if (productType === 'panaderia') setActiveTab('pos')
@@ -291,7 +295,9 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               >
                 <div>
                   <p className="text-sm font-bold text-foreground">{s.name}</p>
-                  <p className="text-xs text-muted-foreground">Duración estimada: {s.duration}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t('products.duration_est')} {s.duration}
+                  </p>
                 </div>
                 <span className="text-sm font-bold font-mono text-pink-400">{s.price}</span>
               </div>
@@ -776,7 +782,7 @@ const ProductDemo = ({ isOpen, onClose, productType }: ProductDemoProps) => {
               <div className="p-4 sm:p-5 border-t border-border bg-muted/40 flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
                   <ShieldCheck className={`w-4 h-4 ${config.accentColor}`} />
-                  <span>¿Querés este sistema personalizado con tu marca y dominio propio?</span>
+                  <span>{t('products.want_custom')}</span>
                 </div>
                 <a
                   href="#contact"

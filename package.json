@@ -40,11 +40,13 @@
     "audit:imports": "node scripts/audit-imports.mjs",
     "evals:agents": "node scripts/run-agent-evals.mjs",
     "verify:loop": "node scripts/verify-loop.mjs",
-    "verify:full": "node scripts/verify-loop.mjs --build --e2e",
+    "verify:full": "node scripts/audit-i18n.mjs && node scripts/verify-loop.mjs --build --e2e",
     "webhooks:heal": "node scripts/heal-webhooks.mjs",
     "export:templates": "node scripts/export-resend-templates.mjs",
     "check:deps": "npx npm-check-updates",
-    "postinstall": "node scripts/patch-astryx.mjs"
+    "postinstall": "node scripts/patch-astryx.mjs",
+    "audit:i18n": "node scripts/audit-i18n.mjs",
+    "i18n:codemod:defaults": "node scripts/codemod-i18n-remove-defaults.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.67",

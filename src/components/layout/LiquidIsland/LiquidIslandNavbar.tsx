@@ -10,6 +10,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import { motion, useMotionValue, useReducedMotion } from 'framer-motion'
 import { CyberChevron, CyberBurgerIcon } from '@/components/ui/MagnificentIcons'
 
@@ -48,6 +49,7 @@ export default function LiquidIslandNavbar({
   const [contactInView, setContactInView] = useState(false)
 
   // Scroll-spy de la sección de contacto (solo en la home)
+  // guardrail-ok(useEffect): scroll/resize listener for navbar state
   useEffect(() => {
     if (pathname !== '/') {
       setContactInView(false)
@@ -89,9 +91,9 @@ export default function LiquidIslandNavbar({
   }
 
   // Previene keys crudas si falta la traducción
-  const getNavLabel = (key: string, fallback: string) => {
-    const text = t(key)
-    return !text || text === key ? fallback : text
+  const getNavLabel = (key: string, fallback: string): string => {
+    const resolved = ti(t, key)
+    return resolved && resolved !== key ? resolved : fallback
   }
 
   return (

@@ -7,7 +7,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { SupabaseTenantRepository } from '../core/infra/repositories/SupabaseTenantRepository'
 import type { Tenant } from '../core/domain/entities/Tenant'
 
-const repo = new SupabaseTenantRepository()
+export const tenantRepository = new SupabaseTenantRepository()
+const repo = tenantRepository
 
 export function useTenant(ownerId: string | null, enabled = true) {
   return useQuery({

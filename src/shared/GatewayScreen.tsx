@@ -566,7 +566,7 @@ export default function GatewayScreen() {
       {/* Pie Técnico con Accesos Directos Silenciosos */}
       <footer className="relative z-10 border-t border-white/[0.08] px-5 py-4 text-xs text-zinc-500 sm:px-10">
         <div className="mx-auto flex max-w-[1320px] flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-          <span>© 2025 Exequiel Echevarría — ExePaginasWeb</span>
+          <span>{copy.footerCopyright}</span>
 
           <nav
             aria-label="Accesos rápidos"

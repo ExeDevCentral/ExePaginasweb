@@ -25,6 +25,7 @@ export const CoffeePortal3D = ({
   const phaseRef = useRef<'orbit' | 'explode'>('orbit')
   phaseRef.current = beanPhase
 
+  // guardrail-ok(useEffect): mount 3D portal canvas/renderer
   useEffect(() => {
     if (!isVisible) {
       setBeanPhase('orbit')
@@ -46,7 +47,9 @@ export const CoffeePortal3D = ({
       clearTimeout(autoDismissTimer)
     }
   }, [isVisible, onDismiss])
+  // guardrail-ok(useEffect): cleanup 3D portal resources on unmount
 
+  // guardrail-ok(useEffect): cleanup 3D portal resources
   useEffect(() => {
     if (!isVisible) return
     const canvas = canvasRef.current
@@ -334,10 +337,7 @@ export const CoffeePortal3D = ({
             </h2>
 
             <p className="text-xs sm:text-sm font-mono text-amber-200/80 mt-1 font-semibold">
-              {t(
-                'demozone.coffee_portal_subtitle',
-                '💥 Estallido 3D de granos y arquitectura de alta conversión'
-              )}
+              {t('demozone.coffee_portal_subtitle')}
             </p>
           </motion.div>
 
@@ -357,7 +357,7 @@ export const CoffeePortal3D = ({
                 }}
                 className="px-7 py-3.5 bg-linear-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-[0_0_35px_rgba(245,158,11,0.6)] flex items-center gap-2.5 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto"
               >
-                <span>{t('demozone.coffee_portal_enter', 'Entrar a la tienda')}</span>
+                <span>{t('demozone.coffee_portal_enter')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </motion.div>

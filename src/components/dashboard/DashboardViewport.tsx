@@ -157,7 +157,7 @@ export function DashboardViewport({
   }, [onRefreshClient, refreshTickets])
 
   const adminPanel = (
-    <PanelErrorBoundary panelName={t('dashboard.panel_admin', 'Admin Dashboard')}>
+    <PanelErrorBoundary panelName={t('dashboard.panel_admin')}>
       <AdminDashboardView
         clientes={adminClientes}
         suscripciones={adminSuscripciones}
@@ -177,7 +177,7 @@ export function DashboardViewport({
         <button
           type="button"
           onClick={onOpenSidebar}
-          aria-label={t('dashboard.abrir_navegacion', 'Abrir navegación')}
+          aria-label={t('dashboard.abrir_navegacion')}
           className="p-2 rounded-xl bg-muted/40 text-foreground border border-border cursor-pointer"
         >
           <Menu className="w-5 h-5" />
@@ -186,10 +186,10 @@ export function DashboardViewport({
         <button
           type="button"
           onClick={onLogout}
-          aria-label={t('dashboard.salir', 'Salir')}
+          aria-label={t('dashboard.salir')}
           className="text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-500/10 px-3 py-1.5 rounded-xl border border-rose-500/20 cursor-pointer"
         >
-          {t('dashboard.salir', 'Salir')}
+          {t('dashboard.salir')}
         </button>
       </div>
 
@@ -219,14 +219,14 @@ export function DashboardViewport({
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] uppercase tracking-[0.25em] text-amber-600 dark:text-amber-400 font-bold font-mono">
-                      {t('dashboard.super_admin', 'SUPER ADMIN')}
+                      {t('dashboard.super_admin')}
                     </span>
                     <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                   </div>
                   <p className="text-muted-foreground text-xs font-medium">
                     {viewMode === 'admin'
-                      ? t('dashboard.consola_central_operativa', 'Consola central operativa')
-                      : t('dashboard.vista_cliente_activa', 'Vista de cliente activa')}
+                      ? t('dashboard.consola_central_operativa')
+                      : t('dashboard.vista_cliente_activa')}
                   </p>
                 </div>
               </div>
@@ -245,7 +245,7 @@ export function DashboardViewport({
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    {t('dashboard.consola_admin', 'Consola Admin')}
+                    {t('dashboard.consola_admin')}
                   </button>
                   <button
                     type="button"
@@ -259,7 +259,7 @@ export function DashboardViewport({
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    {t('dashboard.simular_cliente', 'Simular Cliente')}
+                    {t('dashboard.simular_cliente')}
                   </button>
                 </div>
 

@@ -119,7 +119,7 @@ export function QuickActionsHub({
     <div className="rounded-2xl border border-slate-300/85 dark:border-border bg-card p-6 space-y-4 shadow-xs">
       <div className="flex items-center justify-between gap-2">
         <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-          {t('dashboard.acciones_rapidas', 'Acciones Directas en 1 Clic (Sin Recargas)')}
+          {t('dashboard.acciones_rapidas')}
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -136,11 +136,9 @@ export function QuickActionsHub({
           className="p-4 rounded-xl bg-muted/40 border border-slate-300/80 dark:border-border hover:border-[#4361EE]/60 hover:bg-muted dark:hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
           <Zap className="w-5 h-5 text-[#38BDF8] mb-2 group-hover:scale-110 transition-transform" />
-          <p className="text-xs font-bold text-foreground">
-            {t('dashboard.solicitar_mejora', 'Solicitar Mejora / Ticket')}
-          </p>
+          <p className="text-xs font-bold text-foreground">{t('dashboard.solicitar_mejora')}</p>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {t('dashboard.abrir_ticket_prioritario', 'Abre bandeja directa en este panel')}
+            {t('dashboard.abrir_ticket_prioritario')}
           </p>
         </motion.button>
 
@@ -152,7 +150,7 @@ export function QuickActionsHub({
           className="p-4 rounded-xl bg-muted/40 border border-slate-300/80 dark:border-border hover:border-cyan-500/60 hover:bg-muted dark:hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
           <Calculator className="w-5 h-5 text-cyan-600 dark:text-cyan-400 mb-2 group-hover:scale-110 transition-transform" />
-          <p className="text-xs font-bold text-foreground">Cotizar &amp; Sumar Módulos</p>
+          <p className="text-xs font-bold text-foreground">{t('dashboard.quote_add_modules')}</p>
           <p className="text-xs text-muted-foreground mt-0.5">
             Turnos, Canchas o Tienda 0% comisión
           </p>
@@ -180,12 +178,8 @@ export function QuickActionsHub({
           className="p-4 rounded-xl bg-muted/40 border border-slate-300/80 dark:border-border hover:border-violet-500/60 hover:bg-muted dark:hover:bg-[#1C2438] text-left transition-all group cursor-pointer"
         >
           <FileText className="w-5 h-5 text-violet-600 dark:text-violet-400 mb-2 group-hover:scale-110 transition-transform" />
-          <p className="text-xs font-bold text-foreground">
-            {t('dashboard.descargar_factura', 'Facturas & Comprobantes')}
-          </p>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {t('dashboard.pdfs_historial', 'Historial contable y carga en 1 clic')}
-          </p>
+          <p className="text-xs font-bold text-foreground">{t('dashboard.descargar_factura')}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{t('dashboard.pdfs_historial')}</p>
         </motion.button>
       </div>
     </div>
@@ -215,7 +209,7 @@ export function WeeklyChart({
       <div className="flex items-center justify-between mb-5">
         <p className="text-xs font-bold uppercase tracking-wider text-foreground">{label}</p>
         <span className="font-mono text-xs text-emerald-700 dark:text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
-          {t('dashboard.en_vivo_7d', 'live · 7d')}
+          {t('dashboard.en_vivo_7d')}
         </span>
       </div>
       <div className="h-40 flex items-end gap-2 sm:gap-3 pt-4">
@@ -257,15 +251,12 @@ export function ActivityTimeline({
       className="rounded-2xl bg-card border border-slate-300/85 dark:border-border p-6 shadow-xs"
     >
       <p className="text-xs font-bold uppercase tracking-wider text-foreground mb-4">
-        {t('dashboard.actividad_reciente', 'Actividad Reciente')}
+        {t('dashboard.actividad_reciente')}
       </p>
       <div className="space-y-2.5">
         {items.length === 0 ? (
           <div className="rounded-xl bg-muted/40 border border-dashed border-border px-4 py-6 text-center text-xs text-muted-foreground">
-            {t(
-              'dashboard.sin_actividad',
-              'Tu historial real aparecerá acá a medida que registres pagos, comprobantes o tickets.'
-            )}
+            {t('dashboard.sin_actividad')}
           </div>
         ) : (
           items.map((item, i) => (
@@ -303,7 +294,7 @@ export function PerksPanel({
   return (
     <div className="rounded-2xl bg-card border border-slate-300/85 dark:border-border p-6 shadow-xs">
       <p className="text-xs font-bold uppercase tracking-wider text-foreground mb-4">
-        {t('dashboard.beneficios_incluidos', 'Beneficios Incluidos')}
+        {t('dashboard.beneficios_incluidos')}
       </p>
       <ul className="space-y-2.5">
         {perks.map((p) => (
@@ -335,13 +326,13 @@ export function SupportCard({
   return (
     <div className="rounded-2xl bg-card border border-slate-300/85 dark:border-border p-6 shadow-xs">
       <p className="text-xs uppercase tracking-wider text-muted-foreground font-bold">
-        {t('dash.chat', 'Soporte Directo')}
+        {t('dash.chat')}
       </p>
       <p className="mt-2 text-xl font-bold text-foreground">{theme.supportLabel}</p>
       <p className="mt-1 text-xs sm:text-sm text-muted-foreground">{theme.supportDetail}</p>
       {openCount > 0 && (
         <p className="mt-2.5 text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full inline-block">
-          {openCount} {t('dashboard.tickets_abiertos_badge', 'ticket(s) activos')}
+          {openCount} {t('dashboard.tickets_abiertos_badge')}
         </p>
       )}
       <HudButton
@@ -351,7 +342,7 @@ export function SupportCard({
         onClick={onOpenTicket}
         className="mt-4 w-full justify-center"
       >
-        {t('tickets.nuevo_ticket', 'Nuevo Ticket')}
+        {t('tickets.nuevo_ticket')}
       </HudButton>
     </div>
   )

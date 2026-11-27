@@ -4,6 +4,7 @@
  * Prohibida su reproducción total o parcial sin autorización.
  */
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AnimatePresence } from 'framer-motion'
 import { Users, CreditCard, Ticket, Search, Filter } from 'lucide-react'
 import { supabase } from '../../core/infra/supabase/client'
@@ -39,6 +40,7 @@ export default function AdminDashboardView({
   stats,
   onRefresh,
 }: AdminDashboardViewProps) {
+  const { t } = useTranslation()
   const {
     activeTab,
     searchQuery,
@@ -164,7 +166,7 @@ export default function AdminDashboardView({
                   className="bg-card border border-border text-foreground rounded-2xl px-4 py-3 text-sm focus:border-accent-cyan focus:outline-none shadow-xs cursor-pointer"
                 >
                   <option value="todos">Todos los Planes</option>
-                  <option value="basico">Plan Básico</option>
+                  <option value="basico">{t('admin.basic_plan')}</option>
                   <option value="avanzado">Plan Avanzado</option>
                   <option value="premium">Plan Premium</option>
                   <option value="sin_plan">Sin Plan Activo</option>

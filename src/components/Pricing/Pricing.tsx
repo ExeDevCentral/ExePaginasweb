@@ -8,6 +8,7 @@
 import React, { useState } from 'react'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import {
   CyberCheckMark,
   CyberCrossMark,
@@ -154,10 +155,10 @@ const PricingCard = ({
 
       <div className="relative z-10 flex-1 flex flex-col">
         <h3 className="text-2xl sm:text-3xl font-outfit font-black text-foreground mb-2 sm:mb-3">
-          {t(`pricing.${plan.tKey}_nombre`)}
+          {ti(t, `pricing.${plan.tKey}_nombre`)}
         </h3>
         <p className="text-xs sm:text-sm text-muted-foreground mb-5 sm:mb-8 min-h-0 sm:min-h-10">
-          {t(`pricing.${plan.tKey}_desc`)}
+          {ti(t, `pricing.${plan.tKey}_desc`)}
         </p>
 
         <div className="mb-6 sm:mb-8 p-4 sm:p-6 rounded-2xl bg-muted/60 dark:bg-emerald-950/20 border border-border dark:border-emerald-500/30">
@@ -228,7 +229,7 @@ const PricingCard = ({
               <span
                 className={`text-sm ${included ? 'text-muted-foreground' : 'text-muted-foreground line-through decoration-slate-600/50'}`}
               >
-                {t(`pricing.${plan.tKey}_feat_${i + 1}`)}
+                {ti(t, `pricing.${plan.tKey}_feat_${i + 1}`)}
               </span>
             </li>
           ))}
@@ -237,9 +238,7 @@ const PricingCard = ({
         <div className="w-full flex justify-center">
           <HudButton
             label={
-              currency === 'ARS'
-                ? t('pricing.solicitar_pesos', 'Solicitar Cotización')
-                : t('pricing.request_quotation', 'Solicitar Cotización')
+              currency === 'ARS' ? t('pricing.solicitar_pesos') : t('pricing.request_quotation')
             }
             variant={plan.popular ? 'primary' : 'secondary'}
             onClick={handleRequestClick}
@@ -349,24 +348,13 @@ const Pricing = () => {
             <div className="space-y-2 max-w-2xl">
               <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest text-emerald-700 dark:text-emerald-400 font-bold">
                 <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
-                <span>
-                  {t(
-                    'pricing.linux_banner_badge',
-                    'INFRAESTRUCTURA FÍSICA // LINUX POS, WORKSTATIONS & SERVIDORES LOCALES'
-                  )}
-                </span>
+                <span>{t('pricing.linux_banner_badge')}</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-outfit font-black text-foreground font-sans">
-                {t(
-                  'pricing.linux_banner_title',
-                  'Terminales de Punto de Venta en Modo Quiosco y Nodos Offline-First'
-                )}
+                {t('pricing.linux_banner_title')}
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">
-                {t(
-                  'pricing.linux_banner_desc',
-                  'Aprovisionamos tus PCs actuales con imágenes Linux deterministas (arranque en 4.5s, reglas fijas para impresoras térmicas ESC/POS, PostgreSQL en red local LAN y pendrive USB físico de rescate en 3 minutos).'
-                )}
+                {t('pricing.linux_banner_desc')}
               </p>
             </div>
 
@@ -392,13 +380,13 @@ const Pricing = () => {
               </div>
               <div className="flex flex-wrap gap-2.5">
                 <HudButton
-                  label={t('pricing.linux_banner_cta_quote', 'Cotizar Infraestructura')}
+                  label={t('pricing.linux_banner_cta_quote')}
                   href={`/cotizador?type=linux-pos&currency=${currency}`}
                   variant="primary"
                   size="sm"
                 />
                 <HudButton
-                  label={t('pricing.linux_banner_cta_specs', 'Ver Especificación')}
+                  label={t('pricing.linux_banner_cta_specs')}
                   href="/linux"
                   variant="secondary"
                   size="sm"

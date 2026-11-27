@@ -6,6 +6,7 @@
 import type { SupportedLang } from '@/core/i18n/languageDetector'
 
 export interface GatewayCopy {
+  footerCopyright: string
   headerRole: string
   directContact: string
   languageMenuLabel: string
@@ -38,6 +39,7 @@ export interface GatewayCopy {
 
 export const GATEWAY_COPY: Record<SupportedLang, GatewayCopy> = {
   es: {
+    footerCopyright: '© 2025 Exequiel Echevarria — ExePaginasWeb',
     headerRole: 'Exequiel Echevarría · Arquitectura de Software',
     directContact: 'Contacto directo',
     languageMenuLabel: 'Idioma',
@@ -71,6 +73,7 @@ export const GATEWAY_COPY: Record<SupportedLang, GatewayCopy> = {
     },
   },
   en: {
+    footerCopyright: '© 2025 Exequiel Echevarria — ExePaginasWeb',
     headerRole: 'Exequiel Echevarría · Software Architecture',
     directContact: 'Direct contact',
     languageMenuLabel: 'Language',
@@ -104,6 +107,7 @@ export const GATEWAY_COPY: Record<SupportedLang, GatewayCopy> = {
     },
   },
   'pt-BR': {
+    footerCopyright: '© 2025 Exequiel Echevarria — ExePaginasWeb',
     headerRole: 'Exequiel Echevarría · Arquitetura de Software',
     directContact: 'Contato direto',
     languageMenuLabel: 'Idioma',
@@ -137,6 +141,7 @@ export const GATEWAY_COPY: Record<SupportedLang, GatewayCopy> = {
     },
   },
   de: {
+    footerCopyright: '© 2025 Exequiel Echevarria — ExePaginasWeb',
     headerRole: 'Exequiel Echevarría · Softwarearchitektur',
     directContact: 'Direktkontakt',
     languageMenuLabel: 'Sprache',
@@ -170,6 +175,7 @@ export const GATEWAY_COPY: Record<SupportedLang, GatewayCopy> = {
     },
   },
   fr: {
+    footerCopyright: '© 2025 Exequiel Echevarria — ExePaginasWeb',
     headerRole: 'Exequiel Echevarría · Architecture Logicielle',
     directContact: 'Contact direct',
     languageMenuLabel: 'Langue',
@@ -203,6 +209,7 @@ export const GATEWAY_COPY: Record<SupportedLang, GatewayCopy> = {
     },
   },
   ar: {
+    footerCopyright: '© 2025 Exequiel Echevarria — ExePaginasWeb',
     headerRole: 'Exequiel Echevarría · هندسة البرمجيات',
     directContact: 'تواصل مباشر',
     languageMenuLabel: 'اللغة',
@@ -236,6 +243,7 @@ export const GATEWAY_COPY: Record<SupportedLang, GatewayCopy> = {
     },
   },
   'zh-CN': {
+    footerCopyright: '© 2025 Exequiel Echevarria — ExePaginasWeb',
     headerRole: 'Exequiel Echevarría · 软件架构',
     directContact: '直接联系',
     languageMenuLabel: '语言',

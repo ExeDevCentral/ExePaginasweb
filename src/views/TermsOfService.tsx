@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import {
   ArrowLeft,
   FileText,
@@ -154,10 +155,10 @@ const TermsOfService: React.FC = () => {
                     </div>
                     <div className="flex-1">
                       <h2 className="text-lg font-bold text-foreground mb-2 flex items-center gap-2">
-                        {t(`termsofservice.${sec.id}_titulo`)}
+                        {ti(t, `termsofservice.${sec.id}_titulo`)}
                       </h2>
                       <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                        {t(`termsofservice.${sec.id}_texto`)}
+                        {ti(t, `termsofservice.${sec.id}_texto`)}
                       </p>
                     </div>
                   </div>
@@ -214,14 +215,14 @@ const TermsOfService: React.FC = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                   <h4 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                    {t(`termsofservice.pais_${selectedCountry}_titulo`)}
+                    {ti(t, `termsofservice.pais_${selectedCountry}_titulo`)}
                   </h4>
                   <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-medium bg-accent-magenta/10 border border-accent-magenta/20 text-fuchsia-800 dark:text-fuchsia-300">
-                    {t(`termsofservice.pais_${selectedCountry}_badge`)}
+                    {ti(t, `termsofservice.pais_${selectedCountry}_badge`)}
                   </span>
                 </div>
                 <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  {t(`termsofservice.pais_${selectedCountry}_texto`)}
+                  {ti(t, `termsofservice.pais_${selectedCountry}_texto`)}
                 </p>
               </motion.div>
             </AnimatePresence>

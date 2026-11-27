@@ -125,12 +125,12 @@ const Footer = () => {
             <span className="hidden md:inline text-slate-300 dark:text-white/10">·</span>
             <span className="hidden md:inline-flex items-center gap-1.5">
               <Code2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-              <span>100% Código Propio · SLA &lt;2h</span>
+              <span>{t('footer.own_code_sla')}</span>
             </span>
             <span className="hidden lg:inline text-slate-300 dark:text-white/10">·</span>
             <span className="hidden lg:inline-flex items-center gap-1 text-slate-500 dark:text-slate-400">
               <MapPin className="w-3 h-3 text-violet-500 dark:text-violet-400 shrink-0" />
-              <span>Exequiel Echevarría — Architect (Rosario, AR)</span>
+              <span>{t('footer.architect_location')}</span>
             </span>
           </div>
         </div>

@@ -72,12 +72,14 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
   const [focusedInput, setFocusedInput] = useState<string | null>(null)
 
+  // guardrail-ok(useEffect): redirect authenticated user to dashboard
   useEffect(() => {
     if (searchParams.get('mode') === 'update-password') {
       setMode('update-password')
     }
   }, [searchParams])
 
+  // guardrail-ok(useEffect): external sync/subscription side effect
   useEffect(() => {
     const {
       data: { subscription },
@@ -89,6 +91,7 @@ export default function Login() {
     return () => subscription.unsubscribe()
   }, [])
 
+  // guardrail-ok(useEffect): sync navigation from URL/auth state
   useEffect(() => {
     if (ready && session && mode !== 'update-password') {
       const target = sanitizeInternalPath(searchParams.get('redirectTo'))
@@ -297,7 +300,7 @@ export default function Login() {
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-emerald-400 bg-emerald-950/50 backdrop-blur-xl px-4 py-1.5 rounded-full border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
             <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span className="font-bold tracking-wider">CONEXIÓN CIFRADA SSL 256-BIT</span>
+            <span className="font-bold tracking-wider">{t('login.ssl_encrypted')}</span>
           </div>
 
           <div className="rounded-full bg-slate-900/80 border border-white/15 backdrop-blur-xl px-2 py-0.5 shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex items-center">

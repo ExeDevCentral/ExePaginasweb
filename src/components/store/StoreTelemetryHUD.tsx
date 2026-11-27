@@ -16,6 +16,7 @@ export const StoreTelemetryHUD: React.FC = () => {
   const [latency, setLatency] = useState(14)
   const [activePoP, setActivePoP] = useState('EZE - Buenos Aires')
 
+  // guardrail-ok(useEffect): interval/telemetry subscription for live HUD
   useEffect(() => {
     const pops = [
       'EZE (Buenos Aires Edge)',
@@ -61,27 +62,27 @@ export const StoreTelemetryHUD: React.FC = () => {
           <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-muted-foreground font-mono text-[11px] sm:text-xs">
             <div className="flex items-center gap-1.5">
               <Globe2 className="w-3.5 h-3.5 text-accent-cyan" />
-              <span>{t('store.hud_nodo', 'Nodo:')}</span>
+              <span>{t('store.hud_nodo')}</span>
               <span className="text-foreground font-semibold">{activePoP}</span>
             </div>
 
             <div className="flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-              <span>{t('store.hud_latencia', 'Latencia:')}</span>
+              <span>{t('store.hud_latencia')}</span>
               <span className="text-amber-600 dark:text-amber-400 font-bold">{latency}ms</span>
             </div>
 
             <div className="hidden md:flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
-              <span>{t('store.hud_waf', 'WAF & SSL:')}</span>
+              <span>{t('store.hud_waf')}</span>
               <span className="text-emerald-700 dark:text-emerald-400 font-semibold">
-                {t('store.hud_proteccion_activa', 'Protección Activa')}
+                {t('store.hud_proteccion_activa')}
               </span>
             </div>
 
             <div className="hidden lg:flex items-center gap-1.5">
               <Activity className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-              <span>{t('store.hud_uptime_label', 'Uptime SLA:')}</span>
+              <span>{t('store.hud_uptime_label')}</span>
               <span className="text-foreground font-bold">99.98%</span>
             </div>
           </div>

@@ -79,7 +79,7 @@ export function DashboardSidebar({
     () => [
       {
         id: 'overview',
-        label: t('dashboard.nav_resumen_ejecutivo', 'Resumen Ejecutivo'),
+        label: t('dashboard.nav_resumen_ejecutivo'),
         keywords: 'inicio resumen metricas trafico pulso general overview',
         icon: LayoutDashboard,
         isActive: activeView === 'overview',
@@ -87,7 +87,7 @@ export function DashboardSidebar({
       },
       {
         id: 'services',
-        label: t('dashboard.nav_mis_servicios', 'Mis Servicios & Web'),
+        label: t('dashboard.nav_mis_servicios'),
         keywords: 'servicios hosting dominio web turnos canchas activos services',
         icon: Package,
         isActive: activeView === 'services' && activeEcosystemTab === 'active',
@@ -95,7 +95,7 @@ export function DashboardSidebar({
       },
       {
         id: 'sla',
-        label: t('dashboard.nav_tickets_sla', 'Tickets & Garantía SLA'),
+        label: t('dashboard.nav_tickets_sla'),
         keywords: 'tickets soporte ayuda reclamo sla garantia respuesta support',
         icon: Shield,
         isActive: activeView === 'sla',
@@ -103,7 +103,7 @@ export function DashboardSidebar({
       },
       {
         id: 'invoices',
-        label: t('dashboard.nav_facturas_pagos', 'Facturas & Pagos'),
+        label: t('dashboard.nav_facturas_pagos'),
         keywords: 'facturas pagos comprobante transferencia recibos contable invoices billing',
         icon: DollarSign,
         isActive: activeView === 'invoices',
@@ -111,7 +111,7 @@ export function DashboardSidebar({
       },
       {
         id: 'workgroups',
-        label: t('dashboard.nav_equipo_sedes', 'Equipo & Sedes'),
+        label: t('dashboard.nav_equipo_sedes'),
         keywords: 'equipo usuarios operadores sucursales sedes miembros team workgroups',
         icon: Users,
         isActive: activeView === 'workgroups',
@@ -119,7 +119,7 @@ export function DashboardSidebar({
       },
       {
         id: 'settings',
-        label: t('dashboard.nav_cuenta_ajustes', 'Cuenta & Ajustes'),
+        label: t('dashboard.nav_cuenta_ajustes'),
         keywords: 'perfil cuenta configuracion ajustes email seguridad settings account',
         icon: Settings,
         isActive: activeView === 'settings',
@@ -134,7 +134,7 @@ export function DashboardSidebar({
     () => [
       {
         id: 'hub-store',
-        label: t('dashboard.nav_tienda_upgrades', 'Tienda & Upgrades'),
+        label: t('dashboard.nav_tienda_upgrades'),
         keywords: 'tienda abonos planes basico avanzado premium paypal cbu upgrade store',
         icon: ShoppingBag,
         accentClass: 'text-violet-500',
@@ -143,7 +143,7 @@ export function DashboardSidebar({
       },
       {
         id: 'hub-linux',
-        label: t('dashboard.nav_linux_flota', 'Linux POS & Flota'),
+        label: t('dashboard.nav_linux_flota'),
         keywords: 'linux pos cajas quiosco simulador flota servidor lan offline ssh',
         icon: Terminal,
         accentClass: 'text-emerald-500',
@@ -152,7 +152,7 @@ export function DashboardSidebar({
       },
       {
         id: 'hub-quoter',
-        label: t('dashboard.nav_cotizador_rapido', 'Cotizador Rápido'),
+        label: t('dashboard.nav_cotizador_rapido'),
         keywords: 'cotizador presupuesto calcular ecommerce turnos canchas quoter quote',
         icon: Calculator,
         accentClass: 'text-cyan-500',
@@ -161,7 +161,7 @@ export function DashboardSidebar({
       },
       {
         id: 'hub-instagram',
-        label: t('dashboard.nav_mesa_editorial_ig', 'Mesa Editorial · IG'),
+        label: t('dashboard.nav_mesa_editorial_ig'),
         keywords: 'instagram reels hooks caption humanizer guion beat sheet contenido',
         icon: FileText,
         accentClass: 'text-emerald-500',
@@ -225,7 +225,7 @@ export function DashboardSidebar({
                 ExeSistemasWEB
               </span>
               <span className="text-[10px] text-muted-foreground font-mono">
-                {t('dashboard.panel_unificado', 'Panel Unificado')}
+                {t('dashboard.panel_unificado')}
               </span>
             </div>
           </button>
@@ -233,7 +233,7 @@ export function DashboardSidebar({
             type="button"
             onClick={onCloseSidebar}
             className="text-muted-foreground hover:text-foreground p-1 md:hidden"
-            aria-label={t('dashboard.cerrar_menu', 'Cerrar menú')}
+            aria-label={t('dashboard.cerrar_menu')}
           >
             <X className="w-5 h-5" />
           </button>
@@ -244,7 +244,7 @@ export function DashboardSidebar({
           <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
-            placeholder={t('dashboard.search_placeholder', 'Ir a Linux, facturas, cotizar...')}
+            placeholder={t('dashboard.search_placeholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleSearchKeyDown}
@@ -254,7 +254,7 @@ export function DashboardSidebar({
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              aria-label={t('dashboard.limpiar_filtro', 'Limpiar filtro')}
+              aria-label={t('dashboard.limpiar_filtro')}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
@@ -266,7 +266,7 @@ export function DashboardSidebar({
         {filteredPrimary.length > 0 && (
           <div className="space-y-1">
             <p className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-wider px-2.5 py-1">
-              {t('dashboard.gestion_principal', 'Gestión Principal')}
+              {t('dashboard.gestion_principal')}
             </p>
             {filteredPrimary.map((item) => {
               const Icon = item.icon
@@ -304,7 +304,7 @@ export function DashboardSidebar({
         {filteredDirect.length > 0 && (
           <div className="space-y-1 pt-2 border-t border-border">
             <p className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-wider px-2.5 py-1">
-              {t('dashboard.modulos_directos', 'Módulos Directos (1 Clic)')}
+              {t('dashboard.modulos_directos')}
             </p>
             {filteredDirect.map((item) => {
               const Icon = item.icon
@@ -356,7 +356,7 @@ export function DashboardSidebar({
           >
             <span className="flex items-center gap-2.5">
               <Globe className="w-4 h-4 text-[#38BDF8]" />
-              <span>{t('dashboard.sitio_principal', 'Sitio Principal')}</span>
+              <span>{t('dashboard.sitio_principal')}</span>
             </span>
             <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
           </button>
@@ -377,7 +377,7 @@ export function DashboardSidebar({
             <div className="min-w-0">
               <p className="text-xs font-semibold text-foreground truncate">{userName}</p>
               <p className="text-[10px] text-muted-foreground truncate">
-                {t('dashboard.editar_perfil_acceso', 'Editar perfil & acceso')}
+                {t('dashboard.editar_perfil_acceso')}
               </p>
             </div>
           </div>
@@ -396,7 +396,7 @@ export function DashboardSidebar({
           className="w-full py-2.5 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white font-semibold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer active:scale-95"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>{t('dashboard.nuevo_ticket_directo', 'Nuevo Ticket Directo')}</span>
+          <span>{t('dashboard.nuevo_ticket_directo')}</span>
         </button>
       </div>
     </aside>

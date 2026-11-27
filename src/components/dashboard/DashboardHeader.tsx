@@ -40,13 +40,13 @@ export function DashboardHeader({
   const quickTabs = [
     {
       id: 'q-overview',
-      label: t('dashboard.quick_resumen', 'Resumen'),
+      label: t('dashboard.quick_resumen'),
       active: activeView === 'overview',
       onClick: () => onNavigate?.('overview'),
     },
     {
       id: 'q-ecosystem',
-      label: t('dashboard.quick_servicios_tienda', 'Servicios & Tienda'),
+      label: t('dashboard.quick_servicios_tienda'),
       active:
         activeView === 'services' &&
         (activeEcosystemTab === 'active' || activeEcosystemTab === 'store'),
@@ -55,33 +55,33 @@ export function DashboardHeader({
     },
     {
       id: 'q-linux',
-      label: t('dashboard.quick_linux_pos', 'Linux POS'),
+      label: t('dashboard.quick_linux_pos'),
       active: activeView === 'services' && activeEcosystemTab === 'linux',
       onClick: () =>
         onOpenEcosystemSubTab ? onOpenEcosystemSubTab('linux') : onNavigate?.('services'),
     },
     {
       id: 'q-quoter',
-      label: t('dashboard.quick_cotizar', 'Cotizar'),
+      label: t('dashboard.quick_cotizar'),
       active: activeView === 'services' && activeEcosystemTab === 'quoter',
       onClick: () =>
         onOpenEcosystemSubTab ? onOpenEcosystemSubTab('quoter') : onNavigate?.('services'),
     },
     {
       id: 'q-sla',
-      label: t('dashboard.quick_tickets', 'Tickets'),
+      label: t('dashboard.quick_tickets'),
       active: activeView === 'sla',
       onClick: () => onNavigate?.('sla'),
     },
     {
       id: 'q-invoices',
-      label: t('dashboard.quick_facturas', 'Facturas'),
+      label: t('dashboard.quick_facturas'),
       active: activeView === 'invoices',
       onClick: () => onNavigate?.('invoices'),
     },
     {
       id: 'q-instagram',
-      label: t('dashboard.quick_instagram', 'Mesa IG'),
+      label: t('dashboard.quick_instagram'),
       active: activeView === 'instagram',
       onClick: () => onNavigate?.('instagram'),
     },
@@ -93,21 +93,21 @@ export function DashboardHeader({
         <motion.button
           type="button"
           onClick={() => navigate('/')}
-          aria-label={t('dashboard.sitio_web', 'Sitio Web')}
+          aria-label={t('dashboard.sitio_web')}
           className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl bg-muted/50 hover:bg-muted border border-slate-300/80 dark:border-border text-foreground transition-all cursor-pointer"
           {...(!prefersReducedMotion
             ? { whileHover: { scale: 1.02 }, whileTap: { scale: 0.97 } }
             : {})}
         >
           <ArrowLeft size={13} className="text-[#4361EE] dark:text-[#38BDF8]" />
-          <span>{t('dashboard.sitio_web', 'Sitio Web')}</span>
+          <span>{t('dashboard.sitio_web')}</span>
         </motion.button>
       </div>
 
       {/* Barra central rápida de 1 clic con píldora elástica (Desktop) */}
       {onNavigate && (
         <nav
-          aria-label={t('dashboard.cambio_rapido_vista', 'Cambio rápido de vista')}
+          aria-label={t('dashboard.cambio_rapido_vista')}
           className="hidden xl:flex items-center gap-0.5 p-1 rounded-xl bg-slate-100/90 dark:bg-muted/50 border border-slate-300/85 dark:border-border"
         >
           {quickTabs.map((qt) => (
@@ -151,8 +151,8 @@ export function DashboardHeader({
             type="button"
             onClick={() => onNavigate?.('settings')}
             className="hidden sm:block text-xs font-medium text-foreground bg-muted/40 hover:bg-muted px-3 py-1.5 rounded-xl border border-border max-w-[180px] truncate cursor-pointer transition-colors"
-            title={t('dashboard.ir_cuenta_ajustes', 'Ir a Cuenta & Ajustes')}
-            aria-label={t('dashboard.ir_cuenta_ajustes', 'Ir a Cuenta & Ajustes')}
+            title={t('dashboard.ir_cuenta_ajustes')}
+            aria-label={t('dashboard.ir_cuenta_ajustes')}
           >
             {userEmail}
           </button>
@@ -161,11 +161,11 @@ export function DashboardHeader({
         <button
           type="button"
           onClick={onLogout}
-          aria-label={t('dashboard.salir', 'Salir')}
+          aria-label={t('dashboard.salir')}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/25 bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-400 text-xs font-semibold transition-all cursor-pointer active:scale-95"
         >
           <LogOut className="w-3.5 h-3.5" />
-          <span>{t('dashboard.salir', 'Salir')}</span>
+          <span>{t('dashboard.salir')}</span>
         </button>
       </div>
     </header>

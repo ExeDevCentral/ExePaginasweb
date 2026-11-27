@@ -54,133 +54,61 @@ export default function LinuxBusinessSection({
         id: 'caja-pos' as const,
         code: '01',
         tty: 'tty1:pos-kiosk',
-        badge: t('linux_pos.tab_1_badge', 'TERMINAL POS QUIOSCO'),
-        title: t(
-          'linux_pos.tab_1_title',
-          'Estación de Punto de Venta Inmutable (Wayland / X11 Kiosk)'
-        ),
-        subtitle: t(
-          'linux_pos.tab_1_sub',
-          'Para cajas gastronómicas, retail, farmacias y mostradores de alta rotación'
-        ),
-        problem: t(
-          'linux_pos.tab_1_problem',
-          'En hora pico el sistema operativo actualiza en segundo plano, el navegador colapsa la RAM o el operador altera la configuración de impresoras térmicas y puertos COM/USB.'
-        ),
-        solution: t(
-          'linux_pos.tab_1_solution',
-          'Sesión gráfica dedicada sin entorno de escritorio distractivo: bootea en 4.5s directo al cliente POS/KDS. Reglas udev fijas para impresoras ESC/POS y lectores de códigos.'
-        ),
-        specs: t(
-          'linux_pos.tab_1_specs',
-          'Arranque en 4.5s vía systemd-boot + dracut|Reglas udev estáticas para periféricos ESC/POS y balanzas|Usuario sin privilegios (nopasswd acotado) y FS protegido|Rollback instantáneo con Timeshift RSYNC + llave USB'
-        ).split('|'),
-        archStack: t(
-          'linux_pos.tab_1_arch_stack',
-          'Kernel: linux-lts + zram-generator | Display: Cage / Chromium Kiosk --kiosk --noerrdialogs | Periféricos: CUPS / udev rules persistentes (/dev/ttyUSB0 fijo) | Seguridad: nftables drop-by-default + AppArmor.'
-        ),
+        badge: t('linux_pos.tab_1_badge'),
+        title: t('linux_pos.tab_1_title'),
+        subtitle: t('linux_pos.tab_1_sub'),
+        problem: t('linux_pos.tab_1_problem'),
+        solution: t('linux_pos.tab_1_solution'),
+        specs: t('linux_pos.tab_1_specs').split('|'),
+        archStack: t('linux_pos.tab_1_arch_stack'),
         cliSnippet: [
           '# /etc/udev/rules.d/99-escpos-thermal.rules',
           'SUBSYSTEM=="usb", ATTR{idVendor}=="04b8", MODE="0660", GROUP="lp", SYMLINK+="escpos0"',
           '# systemd unit: exe-pos-kiosk.service (Restart=always, WatchdogSec=5s)',
           'ExecStart=/usr/bin/cage -s -- chromium --kiosk --app=https://pos.local',
         ],
-        savings: t(
-          'linux_pos.tab_1_savings',
-          '$0 en licencias perpetuas de OS y antivirus corporativo'
-        ),
-        whatsappPrompt: t(
-          'linux_pos.tab_1_wa',
-          '¡Hola Exequiel! Quiero consultar por la implementación de Terminales Linux POS / Modo Quiosco para mi negocio o proyecto.'
-        ),
+        savings: t('linux_pos.tab_1_savings'),
+        whatsappPrompt: t('linux_pos.tab_1_wa'),
       },
       {
         id: 'reciclaje-pc' as const,
         code: '02',
         tty: 'tty2:x86-fleet',
-        badge: t('linux_pos.tab_2_badge', 'RESCATE HARDWARE x86'),
-        title: t(
-          'linux_pos.tab_2_title',
-          'Reacondicionamiento de Flota PC para Oficinas y Consultorios'
-        ),
-        subtitle: t(
-          'linux_pos.tab_2_sub',
-          'Extensión de vida útil (CAPEX $0) para parques informáticos con CPUs Intel/AMD previos'
-        ),
-        problem: t(
-          'linux_pos.tab_2_problem',
-          'Presupuestos millonarios para descartar PCs funcionales solo porque no cumplen los requisitos artificiales de TPM 2.0 o RAM de Windows 11.'
-        ),
-        solution: t(
-          'linux_pos.tab_2_solution',
-          'Migración transparente de toda la flota actual a estaciones Linux empresariales optimizadas: 4x más velocidad de respuesta en ERP web, planillas, PDF, firma digital y WhatsApp.'
-        ),
-        specs: t(
-          'linux_pos.tab_2_specs',
-          'Reutilización del 100% del parque de PCs y notebooks actuales|Inmunidad nativa contra ransomware y malware binario (.exe/.msi)|Automatización de backups incrementales (rsync / Borg)|Administración remota vía SSH con claves Ed25519'
-        ).split('|'),
-        archStack: t(
-          'linux_pos.tab_2_arch_stack',
-          'Gestión de paquetes: pacman / Flatpak sandboxed | Compresión en RAM: zstd zram | Sistema de archivos: ext4 (noatime) / Btrfs con snapshots | Telemetría: node_exporter / systemd-journald persistente.'
-        ),
+        badge: t('linux_pos.tab_2_badge'),
+        title: t('linux_pos.tab_2_title'),
+        subtitle: t('linux_pos.tab_2_sub'),
+        problem: t('linux_pos.tab_2_problem'),
+        solution: t('linux_pos.tab_2_solution'),
+        specs: t('linux_pos.tab_2_specs').split('|'),
+        archStack: t('linux_pos.tab_2_arch_stack'),
         cliSnippet: [
           '# /etc/systemd/zram-generator.conf — Compresión zstd en RAM',
           '[zram0] zram-size = ram / 2 | compression-algorithm = zstd',
           '# Snapshot automático previo a cada actualización de paquetes',
           'timeshift --create --comments "Pre-Update Hook" --scripted',
         ],
-        savings: t(
-          'linux_pos.tab_2_savings',
-          'Ahorro del 100% en CAPEX de recambio de computadoras'
-        ),
-        whatsappPrompt: t(
-          'linux_pos.tab_2_wa',
-          '¡Hola Exequiel! Quiero evaluar la migración y optimización de nuestra flota de PCs a estaciones Linux empresariales.'
-        ),
+        savings: t('linux_pos.tab_2_savings'),
+        whatsappPrompt: t('linux_pos.tab_2_wa'),
       },
       {
         id: 'servidor-local' as const,
         code: '03',
         tty: 'tty3:edge-node',
-        badge: t('linux_pos.tab_3_badge', 'NODO EDGE OFFLINE-FIRST'),
-        title: t(
-          'linux_pos.tab_3_title',
-          'Servidor Local de Misión Crítica + Sincronización Cloud'
-        ),
-        subtitle: t(
-          'linux_pos.tab_3_sub',
-          'Arquitectura híbrida para negocios e ingenieros que exigen 0% downtime ante cortes de fibra'
-        ),
-        problem: t(
-          'linux_pos.tab_3_problem',
-          'Cuando se corta el enlace del ISP un viernes a la noche, un SaaS exclusivamente en la nube deja al local ciego: sin comandas de cocina, sin stock y sin arqueo de caja.'
-        ),
-        solution: t(
-          'linux_pos.tab_3_solution',
-          'Desplegamos un micro-servidor Linux on-premise en la LAN del comercio (< 0.3ms de latencia) con PostgreSQL local y cola de eventos idempotente que replica a Supabase/Cloud al volver la red.'
-        ),
-        specs: t(
-          'linux_pos.tab_3_specs',
-          'Continuidad operativa 100% offline en red local (LAN)|PostgreSQL 15+ local con replicación y colas transaccionales|Backups cifrados SHA-256 horarios en disco y USB externo|Túnel WireGuard / Tailscale para auditoría de arquitectura'
-        ).split('|'),
-        archStack: t(
-          'linux_pos.tab_3_arch_stack',
-          'Runtime: Docker / Podman rootless + systemd units | DB: PostgreSQL 15 (WAL archiving) + Redis local | Red: Nginx reverse proxy con TLS local + mDNS (Avahi) | Sync: Outbox pattern con reintentos exponenciales.'
-        ),
+        badge: t('linux_pos.tab_3_badge'),
+        title: t('linux_pos.tab_3_title'),
+        subtitle: t('linux_pos.tab_3_sub'),
+        problem: t('linux_pos.tab_3_problem'),
+        solution: t('linux_pos.tab_3_solution'),
+        specs: t('linux_pos.tab_3_specs').split('|'),
+        archStack: t('linux_pos.tab_3_arch_stack'),
         cliSnippet: [
           '# Réplica local PostgreSQL + Outbox Sync Worker hacia Supabase Cloud',
           'pg_isready -h 127.0.0.1 -p 5432 && systemctl status exe-outbox-sync.service',
           '# Latencia en red local (LAN) ante caída total de fibra óptica:',
           '64 bytes from 192.168.1.10 (pos-server.local): icmp_seq=1 ttl=64 time=0.19 ms',
         ],
-        savings: t(
-          'linux_pos.tab_3_savings',
-          'Cero lucro cesante por caídas de internet o proveedores cloud'
-        ),
-        whatsappPrompt: t(
-          'linux_pos.tab_3_wa',
-          '¡Hola Exequiel! Soy arquitecto/analista o dueño de negocio y quiero implementar un nodo servidor Linux local Offline-First.'
-        ),
+        savings: t('linux_pos.tab_3_savings'),
+        whatsappPrompt: t('linux_pos.tab_3_wa'),
       },
     ],
     [t]
@@ -203,26 +131,18 @@ export default function LinuxBusinessSection({
       <div className="max-w-3xl mx-auto text-center mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 font-mono text-[11px] uppercase tracking-widest font-bold mb-4">
           <Terminal className="w-3.5 h-3.5" />
-          <span>
-            {t(
-              'linux_pos.eyebrow',
-              'INFRAESTRUCTURA LINUX // TERMINALES POS, WORKSTATIONS & NODOS LOCALES'
-            )}
-          </span>
+          <span>{t('linux_pos.eyebrow')}</span>
         </div>
 
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight text-slate-950 dark:text-white leading-tight">
-          {t('linux_pos.title_1', 'Infraestructura Linux y Terminales Dedicadas')}{' '}
+          {t('linux_pos.title_1')}{' '}
           <span className="font-serif italic font-normal text-emerald-600 dark:text-emerald-400 block sm:inline">
-            {t('linux_pos.title_2', 'para puntos de venta y equipos de ingeniería')}
+            {t('linux_pos.title_2')}
           </span>
         </h2>
 
         <p className="mt-4 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-          {t(
-            'linux_pos.subtitle',
-            'Configuramos estaciones de trabajo, terminales en modo quiosco y servidores locales sobre tu hardware x86_64 actual. Arranque con systemd-boot, aislamiento de procesos, base de datos local con sincronización asíncrona y recuperación en vivo por USB.'
-          )}
+          {t('linux_pos.subtitle')}
         </p>
       </div>
 
@@ -240,10 +160,7 @@ export default function LinuxBusinessSection({
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
             </span>
             <span className="text-emerald-400 font-bold truncate text-[11px]">
-              {t(
-                'linux_pos.session_hdr',
-                'tty1 — root@exe-pos-node:~ (Linux 6.12-LTS x86_64 · systemd 256)'
-              )}
+              {t('linux_pos.session_hdr')}
             </span>
           </div>
 
@@ -259,7 +176,7 @@ export default function LinuxBusinessSection({
               }`}
             >
               <Code2 className="w-3 h-3" />
-              <span>{t('linux_pos.view_architect', '[02: ARQUITECTURA & STACK]')}</span>
+              <span>{t('linux_pos.view_architect')}</span>
             </button>
             <button
               type="button"
@@ -271,7 +188,7 @@ export default function LinuxBusinessSection({
               }`}
             >
               <Layers className="w-3 h-3" />
-              <span>{t('linux_pos.view_executive', '[01: OPERACIÓN & COSTOS]')}</span>
+              <span>{t('linux_pos.view_executive')}</span>
             </button>
           </div>
         </div>
@@ -306,12 +223,7 @@ export default function LinuxBusinessSection({
           <div className="lg:col-span-5 p-5 sm:p-6 bg-[#03060c] flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-[11px] text-slate-400 pb-3 mb-4 border-b border-white/10">
-                <span className="text-cyan-400 font-bold">
-                  {t(
-                    'linux_pos.bench_header',
-                    'TELEMETRÍA DE PROCESOS (htop) // MISMO NODO (8GB DDR4 · NVMe)'
-                  )}
-                </span>
+                <span className="text-cyan-400 font-bold">{t('linux_pos.bench_header')}</span>
               </div>
 
               {/* Selector de Kernel / OS */}
@@ -326,9 +238,7 @@ export default function LinuxBusinessSection({
                   }`}
                 >
                   <Cpu className="w-3.5 h-3.5" />
-                  <span className="truncate">
-                    {t('linux_pos.mode_linux', 'LINUX POS (KERNEL LTS)')}
-                  </span>
+                  <span className="truncate">{t('linux_pos.mode_linux')}</span>
                 </button>
                 <button
                   type="button"
@@ -339,9 +249,7 @@ export default function LinuxBusinessSection({
                       : 'text-slate-400 hover:text-rose-300'
                   }`}
                 >
-                  <span className="truncate">
-                    {t('linux_pos.mode_win', 'OS COMERCIAL ESTÁNDAR')}
-                  </span>
+                  <span className="truncate">{t('linux_pos.mode_win')}</span>
                 </button>
               </div>
 
@@ -349,17 +257,15 @@ export default function LinuxBusinessSection({
               <div className="space-y-4 text-xs">
                 <div>
                   <div className="flex justify-between mb-1">
-                    <span className="text-slate-400">
-                      MEM[||] {t('linux_pos.metric_ram', 'Huella de memoria en reposo (RSS)')}
-                    </span>
+                    <span className="text-slate-400">MEM[||] {t('linux_pos.metric_ram')}</span>
                     <span
                       className={`font-bold ${
                         osMode === 'linux' ? 'text-emerald-400' : 'text-rose-400'
                       }`}
                     >
                       {osMode === 'linux'
-                        ? t('linux_pos.metric_ram_linux', '480 MB / 8192 MB (5.8%)')
-                        : t('linux_pos.metric_ram_win', '4310 MB / 8192 MB (52.6%)')}
+                        ? t('linux_pos.metric_ram_linux')
+                        : t('linux_pos.metric_ram_win')}
                     </span>
                   </div>
                   <div className="w-full h-2 bg-white/10 overflow-hidden">
@@ -373,17 +279,15 @@ export default function LinuxBusinessSection({
 
                 <div>
                   <div className="flex justify-between mb-1">
-                    <span className="text-slate-400">
-                      BOOT[|] {t('linux_pos.metric_boot', 'Cold Boot → Socket POS activo')}
-                    </span>
+                    <span className="text-slate-400">BOOT[|] {t('linux_pos.metric_boot')}</span>
                     <span
                       className={`font-bold ${
                         osMode === 'linux' ? 'text-cyan-400' : 'text-amber-400'
                       }`}
                     >
                       {osMode === 'linux'
-                        ? t('linux_pos.metric_boot_linux', '4.5s (systemd-analyze)')
-                        : t('linux_pos.metric_boot_win', '48s – 90s (I/O bloqueante)')}
+                        ? t('linux_pos.metric_boot_linux')
+                        : t('linux_pos.metric_boot_win')}
                     </span>
                   </div>
                   <div className="w-full h-2 bg-white/10 overflow-hidden">
@@ -397,17 +301,15 @@ export default function LinuxBusinessSection({
 
                 <div>
                   <div className="flex justify-between mb-1">
-                    <span className="text-slate-400">
-                      IRQ[0] {t('linux_pos.metric_upd', 'Interrupciones por actualización')}
-                    </span>
+                    <span className="text-slate-400">IRQ[0] {t('linux_pos.metric_upd')}</span>
                     <span
                       className={`font-bold ${
                         osMode === 'linux' ? 'text-emerald-400' : 'text-rose-400'
                       }`}
                     >
                       {osMode === 'linux'
-                        ? t('linux_pos.metric_upd_linux', '0 (Ventana atómica programada)')
-                        : t('linux_pos.metric_upd_win', 'Reinicios forzados / CPU throttling')}
+                        ? t('linux_pos.metric_upd_linux')
+                        : t('linux_pos.metric_upd_win')}
                     </span>
                   </div>
                   <div className="w-full h-2 bg-white/10 overflow-hidden">
@@ -439,36 +341,20 @@ export default function LinuxBusinessSection({
                 <div className="space-y-1">
                   <div className="font-bold flex items-center gap-1.5 text-emerald-400">
                     <CheckCircle2 className="w-4 h-4 shrink-0" />
-                    <span>
-                      {t(
-                        'linux_pos.status_linux_title',
-                        'STATUS: NODO DETERMINISTA ACTIVO (UPTIME 99.98%)'
-                      )}
-                    </span>
+                    <span>{t('linux_pos.status_linux_title')}</span>
                   </div>
                   <p className="text-slate-400 text-[11px] leading-relaxed font-sans">
-                    {t(
-                      'linux_pos.status_linux_desc',
-                      'Sin demonios de telemetría comercial ni antivirus consumiendo IOPS. Incluye imagen de recuperación en vivo (Ventoy + arch-chroot / Timeshift) en USB.'
-                    )}
+                    {t('linux_pos.status_linux_desc')}
                   </p>
                 </div>
               ) : (
                 <div className="space-y-1">
                   <div className="font-bold flex items-center gap-1.5 text-rose-400">
                     <XCircle className="w-4 h-4 shrink-0" />
-                    <span>
-                      {t(
-                        'linux_pos.status_win_title',
-                        'WARN: DEGRADACIÓN DE I/O Y SUPERFICIE DE ATAQUE .EXE'
-                      )}
-                    </span>
+                    <span>{t('linux_pos.status_win_title')}</span>
                   </div>
                   <p className="text-slate-400 text-[11px] leading-relaxed font-sans">
-                    {t(
-                      'linux_pos.status_win_desc',
-                      'Más del 50% de la RAM se pierde en servicios de fondo. Cualquier binario .exe ejecutado desde correo o USB compromete la facturación.'
-                    )}
+                    {t('linux_pos.status_win_desc')}
                   </p>
                 </div>
               )}
@@ -503,7 +389,7 @@ export default function LinuxBusinessSection({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-1">
                 <div className="border-l-2 border-rose-500/80 pl-3.5">
                   <span className="font-mono text-[11px] font-bold text-rose-600 dark:text-rose-400 uppercase block mb-1">
-                    {t('linux_pos.label_problem', '✗ CUELLO DE BOTELLA OPERATIVO')}
+                    {t('linux_pos.label_problem')}
                   </span>
                   <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     {activeProfile.problem}
@@ -512,7 +398,7 @@ export default function LinuxBusinessSection({
 
                 <div className="border-l-2 border-emerald-500 pl-3.5">
                   <span className="font-mono text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase block mb-1">
-                    {t('linux_pos.label_solution', '✓ IMPLEMENTACIÓN TÉCNICA')}
+                    {t('linux_pos.label_solution')}
                   </span>
                   <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
                     {activeProfile.solution}
@@ -524,10 +410,7 @@ export default function LinuxBusinessSection({
               {specDepth === 'architect' && (
                 <div className="p-3.5 rounded bg-slate-100 dark:bg-cyan-950/20 border-l-2 border-cyan-500 font-mono text-xs">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-400 block mb-1">
-                    {t(
-                      'linux_pos.label_arch_spec',
-                      'ARQUITECTURA DE SISTEMA Y CONFIGURACIÓN BASE:'
-                    )}
+                    {t('linux_pos.label_arch_spec')}
                   </span>
                   <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
                     {activeProfile.archStack}
@@ -538,7 +421,7 @@ export default function LinuxBusinessSection({
               {/* Parámetros de Entrega y Auditoría */}
               <div className="pt-2 border-t border-slate-200/80 dark:border-white/10">
                 <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 block mb-2.5">
-                  {t('linux_pos.label_deliverables', 'CRITERIOS DE ENTREGA Y AUDITORÍA:')}
+                  {t('linux_pos.label_deliverables')}
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
                   {activeProfile.specs.map((spec) => (
@@ -560,7 +443,7 @@ export default function LinuxBusinessSection({
                 <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0" />
                 <div>
                   <span className="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 block">
-                    {t('linux_pos.label_impact', 'IMPACTO FINANCIERO (TCO / CAPEX)')}
+                    {t('linux_pos.label_impact')}
                   </span>
                   <span className="text-xs sm:text-sm font-bold text-slate-950 dark:text-white">
                     {activeProfile.savings}
@@ -579,7 +462,7 @@ export default function LinuxBusinessSection({
                   />
                 )}
                 <HudButton
-                  label={t('linux_pos.cta_quote', 'Cotizar en línea')}
+                  label={t('linux_pos.cta_quote')}
                   href={
                     activeProfile.id === 'servidor-local'
                       ? '/cotizador?type=edge-server'
@@ -590,7 +473,7 @@ export default function LinuxBusinessSection({
                   icon={<Calculator className="w-4 h-4" />}
                 />
                 <HudButton
-                  label={t('linux_pos.cta_consult', 'Solicitar especificación o despliegue')}
+                  label={t('linux_pos.cta_consult')}
                   href={getWhatsAppUrl(activeProfile.whatsappPrompt)}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -614,13 +497,10 @@ export default function LinuxBusinessSection({
             <HardDrive className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
             <div>
               <strong className="font-mono text-white text-[11px] block">
-                {t('linux_pos.strip_1_title', '1. Live USB de Recuperación (Ventoy + Chroot)')}
+                {t('linux_pos.strip_1_title')}
               </strong>
               <span className="text-slate-400 text-[11px] leading-snug block mt-0.5">
-                {t(
-                  'linux_pos.strip_1_desc',
-                  'Entregamos un pendrive físico booteable con tus paquetes, fstab, scripts y restauración automática en 3 minutos.'
-                )}
+                {t('linux_pos.strip_1_desc')}
               </span>
             </div>
           </div>
@@ -629,13 +509,10 @@ export default function LinuxBusinessSection({
             <Lock className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
             <div>
               <strong className="font-mono text-white text-[11px] block">
-                {t('linux_pos.strip_2_title', '2. Entorno Determinista & Sin Lock-in')}
+                {t('linux_pos.strip_2_title')}
               </strong>
               <span className="text-slate-400 text-[11px] leading-snug block mt-0.5">
-                {t(
-                  'linux_pos.strip_2_desc',
-                  'Documentación técnica completa, scripts bash auditables y control root 100% transferido a tu equipo IT o negocio.'
-                )}
+                {t('linux_pos.strip_2_desc')}
               </span>
             </div>
           </div>
@@ -644,13 +521,10 @@ export default function LinuxBusinessSection({
             <WifiOff className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
             <div>
               <strong className="font-mono text-white text-[11px] block">
-                {t('linux_pos.strip_3_title', '3. Integración Vertical Software + Metal')}
+                {t('linux_pos.strip_3_title')}
               </strong>
               <span className="text-slate-400 text-[11px] leading-snug block mt-0.5">
-                {t(
-                  'linux_pos.strip_3_desc',
-                  'Diseñamos el sistema web/SaaS y aprovisionamos el sistema operativo base para garantizar latencia sub-milisegundo.'
-                )}
+                {t('linux_pos.strip_3_desc')}
               </span>
             </div>
           </div>

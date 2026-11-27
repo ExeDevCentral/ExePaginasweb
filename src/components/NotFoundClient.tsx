@@ -59,7 +59,7 @@ export default function NotFoundClient() {
         {/* Eyebrow de calibración */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-signal/10 border border-signal/30 text-signal font-mono text-[10px] uppercase tracking-widest font-semibold mb-6">
           <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse" />
-          <span>ERROR 404 // COORDENADAS FUERA DE PLANO</span>
+          <span>{t('notfound.eyebrow')}</span>
         </div>
 
         {/* 404 Técnico Mono */}
@@ -72,25 +72,22 @@ export default function NotFoundClient() {
         </h1>
 
         <p className="text-xs sm:text-sm text-muted-foreground mt-3 max-w-sm mx-auto leading-relaxed">
-          {t(
-            'notfound.descripcion',
-            'La coordenada solicitada no se encuentra proyectada en los planos de arquitectura del sistema.'
-          )}
+          {t('notfound.descripcion')}
         </p>
 
         {/* Cajetín técnico de diagnóstico */}
         <div className="mt-6 mb-8 text-left rounded-sm border border-border bg-muted/40 p-4 font-mono text-[11px] space-y-1.5">
           <div className="flex items-center justify-between text-muted-foreground">
-            <span>ESTADO:</span>
-            <span className="text-signal font-bold">DESVIACIÓN DE RUTA</span>
+            <span>{t('notfound.status_label')}</span>
+            <span className="text-signal font-bold">{t('notfound.status_value')}</span>
           </div>
           <div className="flex items-center justify-between text-muted-foreground">
-            <span>SISTEMA:</span>
-            <span className="text-foreground">EXEPAGINASWEB // 2025</span>
+            <span>{t('notfound.system_label')}</span>
+            <span className="text-foreground">{t('notfound.system_value')}</span>
           </div>
           <div className="flex items-center justify-between text-muted-foreground">
-            <span>PROTOCOLO:</span>
-            <span className="text-primary font-bold">RETORNO A PLANO MATRIZ</span>
+            <span>{t('notfound.protocol_label')}</span>
+            <span className="text-primary font-bold">{t('notfound.protocol_value')}</span>
           </div>
         </div>
 
@@ -98,7 +95,7 @@ export default function NotFoundClient() {
         <div className="flex justify-center">
           <HudButton
             href="/"
-            label={t('notfound.boton', 'Volver al plano principal')}
+            label={t('notfound.boton')}
             size="lg"
             variant="primary"
             icon={<Home className="w-4 h-4" />}

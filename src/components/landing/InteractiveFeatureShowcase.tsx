@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import { motion, AnimatePresence, useInView, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import { Badge } from '@astryxdesign/core'
@@ -84,410 +85,555 @@ interface MainStep {
   stages: SubStage[]
 }
 
-const STEPS: MainStep[] = [
-  {
-    id: 'trato-directo',
-    number: '01',
-    title: 'Trato Directo',
-    subtitle: 'Sin intermediarios ni agencias',
-    theme: {
-      hex: '#06b6d4',
-      sidebarActiveCard:
-        'bg-white dark:bg-[#091826] border-cyan-500/80 dark:border-cyan-400/40 shadow-[0_8px_20px_-6px_rgba(6,182,212,0.2)] dark:shadow-[0_0_25px_-5px_rgba(6,182,212,0.22)] ring-1 ring-cyan-500/15 dark:ring-0',
-      sidebarActiveBadge:
-        'bg-cyan-600 text-white dark:bg-cyan-500/20 dark:text-cyan-300 dark:border dark:border-cyan-400/40',
-      progressBar: 'bg-cyan-600 dark:bg-cyan-400',
-      subTabActive:
-        'bg-white text-cyan-950 border border-cyan-500/60 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border-cyan-400/30 font-bold shadow-xs',
-      widgetCard:
-        'bg-slate-50/95 dark:bg-[#091322] border-cyan-400/75 dark:border-cyan-500/30 shadow-[0_10px_26px_-8px_rgba(6,182,212,0.14),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_0_35px_-12px_rgba(6,182,212,0.22)]',
-      codeHighlight: 'text-cyan-400 font-semibold',
-      pillBadge:
-        'bg-cyan-500/12 text-cyan-900 dark:text-cyan-300 border border-cyan-500/35 dark:border-cyan-400/20',
-      accentText: 'text-cyan-700 dark:text-cyan-400',
-      checkIcon: 'text-cyan-600 dark:text-cyan-400',
-      dotBg: 'bg-cyan-500',
-      ctaBtn:
-        'bg-cyan-600 hover:bg-cyan-500 text-white dark:bg-cyan-500 dark:hover:bg-cyan-400 dark:text-slate-950 shadow-sm shadow-cyan-500/20',
+function buildSteps(t: any): MainStep[] {
+  return [
+    {
+      id: 'trato-directo',
+      number: '01',
+      title: ti(t, 'showcase.steps.trato-directo.title'),
+      subtitle: ti(t, 'showcase.steps.trato-directo.subtitle'),
+      theme: {
+        hex: '#06b6d4',
+        sidebarActiveCard:
+          'bg-white dark:bg-[#091826] border-cyan-500/80 dark:border-cyan-400/40 shadow-[0_8px_20px_-6px_rgba(6,182,212,0.2)] dark:shadow-[0_0_25px_-5px_rgba(6,182,212,0.22)] ring-1 ring-cyan-500/15 dark:ring-0',
+        sidebarActiveBadge:
+          'bg-cyan-600 text-white dark:bg-cyan-500/20 dark:text-cyan-300 dark:border dark:border-cyan-400/40',
+        progressBar: 'bg-cyan-600 dark:bg-cyan-400',
+        subTabActive:
+          'bg-white text-cyan-950 border border-cyan-500/60 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border-cyan-400/30 font-bold shadow-xs',
+        widgetCard:
+          'bg-slate-50/95 dark:bg-[#091322] border-cyan-400/75 dark:border-cyan-500/30 shadow-[0_10px_26px_-8px_rgba(6,182,212,0.14),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_0_35px_-12px_rgba(6,182,212,0.22)]',
+        codeHighlight: 'text-cyan-400 font-semibold',
+        pillBadge:
+          'bg-cyan-500/12 text-cyan-900 dark:text-cyan-300 border border-cyan-500/35 dark:border-cyan-400/20',
+        accentText: 'text-cyan-700 dark:text-cyan-400',
+        checkIcon: 'text-cyan-600 dark:text-cyan-400',
+        dotBg: 'bg-cyan-500',
+        ctaBtn:
+          'bg-cyan-600 hover:bg-cyan-500 text-white dark:bg-cyan-500 dark:hover:bg-cyan-400 dark:text-slate-950 shadow-sm shadow-cyan-500/20',
+      },
+      stages: [
+        {
+          id: 'diagnostico',
+          label: ti(t, 'showcase.stages.diagnostico.label'),
+          icon: PhoneCall,
+          eyebrow: ti(t, 'showcase.stages.diagnostico.eyebrow'),
+          title: ti(t, 'showcase.stages.diagnostico.title'),
+          description: ti(t, 'showcase.stages.diagnostico.desc'),
+          tags: [
+            ti(t, 'showcase.stages.diagnostico.tag1'),
+            ti(t, 'showcase.stages.diagnostico.tag2'),
+            ti(t, 'showcase.stages.diagnostico.tag3'),
+          ],
+          visual: {
+            type: 'ring',
+            primaryMetric: '100%',
+            primaryLabel: ti(t, 'showcase.stages.diagnostico.metric_label'),
+            ringPercent: 100,
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.diagnostico.m1l'),
+                value: ti(t, 'showcase.stages.diagnostico.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.diagnostico.m2l'),
+                value: ti(t, 'showcase.stages.diagnostico.m2v'),
+              },
+              {
+                label: ti(t, 'showcase.stages.diagnostico.m3l'),
+                value: ti(t, 'showcase.stages.diagnostico.m3v'),
+              },
+            ],
+          },
+        },
+        {
+          id: 'presupuesto',
+          label: ti(t, 'showcase.stages.presupuesto.label'),
+          icon: Award,
+          eyebrow: ti(t, 'showcase.stages.presupuesto.eyebrow'),
+          title: ti(t, 'showcase.stages.presupuesto.title'),
+          description: ti(t, 'showcase.stages.presupuesto.desc'),
+          tags: [
+            ti(t, 'showcase.stages.presupuesto.tag1'),
+            ti(t, 'showcase.stages.presupuesto.tag2'),
+            ti(t, 'showcase.stages.presupuesto.tag3'),
+          ],
+          visual: {
+            type: 'chart',
+            primaryMetric: '$0',
+            primaryLabel: ti(t, 'showcase.stages.presupuesto.metric_label'),
+            chartPoints: 'M 0 70 Q 45 65, 80 45 T 160 28 T 240 12',
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.presupuesto.m1l'),
+                value: ti(t, 'showcase.stages.presupuesto.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.presupuesto.m2l'),
+                value: ti(t, 'showcase.stages.presupuesto.m2v'),
+              },
+            ],
+          },
+        },
+        {
+          id: 'entrega',
+          label: ti(t, 'showcase.stages.entrega.label'),
+          icon: Rocket,
+          eyebrow: ti(t, 'showcase.stages.entrega.eyebrow'),
+          title: ti(t, 'showcase.stages.entrega.title'),
+          description: ti(t, 'showcase.stages.entrega.desc'),
+          tags: [
+            ti(t, 'showcase.stages.entrega.tag1'),
+            ti(t, 'showcase.stages.entrega.tag2'),
+            ti(t, 'showcase.stages.entrega.tag3'),
+          ],
+          visual: {
+            type: 'ring',
+            primaryMetric: '100%',
+            primaryLabel: ti(t, 'showcase.stages.entrega.metric_label'),
+            ringPercent: 100,
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.entrega.m1l'),
+                value: ti(t, 'showcase.stages.entrega.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.entrega.m2l'),
+                value: ti(t, 'showcase.stages.entrega.m2v'),
+              },
+              {
+                label: ti(t, 'showcase.stages.entrega.m3l'),
+                value: ti(t, 'showcase.stages.entrega.m3v'),
+              },
+            ],
+          },
+        },
+      ],
     },
-    stages: [
-      {
-        id: 'diagnostico',
-        label: 'Diagnóstico',
-        icon: PhoneCall,
-        eyebrow: 'PASO 01 · CONTACTO DIRECTO',
-        title: 'Hablás directo con quien construye tu sistema',
-        description:
-          'En 15 minutos definimos la arquitectura exacta para digitalizar tus ventas y reservas, sin vendedores ni pasamanos.',
-        tags: ['Atención de Fundador', 'Diagnóstico en 15m', 'Cero Burocracia'],
-        visual: {
-          type: 'ring',
-          primaryMetric: '100%',
-          primaryLabel: 'Trato con Ingeniería',
-          ringPercent: 100,
-          secondaryMetrics: [
-            { label: 'Tiempo de relevamiento', value: '15 min', accent: true },
-            { label: 'Intermediarios', value: '0 agencias' },
-            { label: 'Arquitecto a cargo', value: 'Exequiel E.' },
-          ],
-        },
+    {
+      id: 'arquitectura-viva',
+      number: '02',
+      title: ti(t, 'showcase.steps.arquitectura-viva.title'),
+      subtitle: ti(t, 'showcase.steps.arquitectura-viva.subtitle'),
+      theme: {
+        hex: '#10b981',
+        sidebarActiveCard:
+          'bg-white dark:bg-[#071915] border-emerald-500/80 dark:border-emerald-400/40 shadow-[0_8px_20px_-6px_rgba(16,185,129,0.2)] dark:shadow-[0_0_25px_-5px_rgba(16,185,129,0.22)] ring-1 ring-emerald-500/15 dark:ring-0',
+        sidebarActiveBadge:
+          'bg-emerald-600 text-white dark:bg-emerald-500/20 dark:text-emerald-300 dark:border dark:border-emerald-400/40',
+        progressBar: 'bg-emerald-600 dark:bg-emerald-400',
+        subTabActive:
+          'bg-white text-emerald-950 border border-emerald-500/60 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-400/30 font-bold shadow-xs',
+        widgetCard:
+          'bg-slate-50/95 dark:bg-[#071512] border-emerald-400/75 dark:border-emerald-500/30 shadow-[0_10px_26px_-8px_rgba(16,185,129,0.14),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_0_35px_-12px_rgba(16,185,129,0.22)]',
+        codeHighlight: 'text-emerald-400 font-semibold',
+        pillBadge:
+          'bg-emerald-500/12 text-emerald-900 dark:text-emerald-300 border border-emerald-500/35 dark:border-emerald-400/20',
+        accentText: 'text-emerald-700 dark:text-emerald-400',
+        checkIcon: 'text-emerald-600 dark:text-emerald-400',
+        dotBg: 'bg-emerald-500',
+        ctaBtn:
+          'bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-slate-950 shadow-sm shadow-emerald-500/20',
       },
-      {
-        id: 'presupuesto',
-        label: 'Propuesta Fija',
-        icon: Award,
-        eyebrow: 'PASO 01 · TRANSPARENCIA TOTAL',
-        title: 'Presupuesto cerrado y plazos por contrato',
-        description:
-          'Recibís un desglose técnico claro con precio fijo en pesos o dólares. Sin costos ocultos ni adicionales sorpresivos.',
-        tags: ['Precio Fijo', 'Plazos Garantizados', '50% Anticipo'],
-        visual: {
-          type: 'chart',
-          primaryMetric: '$0',
-          primaryLabel: 'Costos Ocultos',
-          chartPoints: 'M 0 70 Q 45 65, 80 45 T 160 28 T 240 12',
-          secondaryMetrics: [
-            { label: 'Entrega promedio', value: '7 a 14 días', accent: true },
-            { label: 'Alquiler mensual', value: 'Ninguno' },
+      stages: [
+        {
+          id: 'nextjs',
+          label: ti(t, 'showcase.stages.nextjs.label'),
+          icon: Cpu,
+          eyebrow: ti(t, 'showcase.stages.nextjs.eyebrow'),
+          title: ti(t, 'showcase.stages.nextjs.title'),
+          description: ti(t, 'showcase.stages.nextjs.desc'),
+          tags: [
+            ti(t, 'showcase.stages.nextjs.tag1'),
+            ti(t, 'showcase.stages.nextjs.tag2'),
+            ti(t, 'showcase.stages.nextjs.tag3'),
           ],
+          visual: {
+            type: 'code',
+            primaryMetric: '48 KB',
+            primaryLabel: ti(t, 'showcase.stages.nextjs.metric_label'),
+            codeSnippet: [
+              { line: 'export async function CheckoutFlow() {' },
+              { line: '  const session = await edgeAuth.verify()', highlight: true },
+              { line: '  return <InstantPaymentGateway />' },
+              { line: '}' },
+            ],
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.nextjs.m1l'),
+                value: ti(t, 'showcase.stages.nextjs.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.nextjs.m2l'),
+                value: ti(t, 'showcase.stages.nextjs.m2v'),
+              },
+            ],
+          },
         },
-      },
-      {
-        id: 'entrega',
-        label: 'Llave en Mano',
-        icon: Rocket,
-        eyebrow: 'PASO 01 · PROPIEDAD ABSOLUTA',
-        title: 'Código, dominio y cuentas 100% a tu nombre',
-        description:
-          'Al finalizar, transferimos el repositorio y las credenciales a tu titularidad. Nunca quedás cautivo de un proveedor.',
-        tags: ['Repositorio Propio', 'Dominio Tuyo', 'Soporte Directo'],
-        visual: {
-          type: 'ring',
-          primaryMetric: '100%',
-          primaryLabel: 'Titularidad del Cliente',
-          ringPercent: 100,
-          secondaryMetrics: [
-            { label: 'Repositorio GitHub', value: 'Transferido', accent: true },
-            { label: 'Comisión por ventas', value: '0%' },
-            { label: 'Dependencia mensual', value: 'Nula' },
+        {
+          id: 'cobros',
+          label: ti(t, 'showcase.stages.cobros.label'),
+          icon: Layers,
+          eyebrow: ti(t, 'showcase.stages.cobros.eyebrow'),
+          title: ti(t, 'showcase.stages.cobros.title'),
+          description: ti(t, 'showcase.stages.cobros.desc'),
+          tags: [
+            ti(t, 'showcase.stages.cobros.tag1'),
+            ti(t, 'showcase.stages.cobros.tag2'),
+            ti(t, 'showcase.stages.cobros.tag3'),
           ],
+          visual: {
+            type: 'chart',
+            primaryMetric: '0%',
+            primaryLabel: ti(t, 'showcase.stages.cobros.metric_label'),
+            chartPoints: 'M 0 75 Q 50 60, 95 40 T 175 20 T 240 8',
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.cobros.m1l'),
+                value: ti(t, 'showcase.stages.cobros.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.cobros.m2l'),
+                value: ti(t, 'showcase.stages.cobros.m2v'),
+              },
+            ],
+          },
         },
-      },
-    ],
-  },
-  {
-    id: 'arquitectura-viva',
-    number: '02',
-    title: 'Ingeniería & Pagos',
-    subtitle: 'Stack moderno y cobros directos',
-    theme: {
-      hex: '#10b981',
-      sidebarActiveCard:
-        'bg-white dark:bg-[#071915] border-emerald-500/80 dark:border-emerald-400/40 shadow-[0_8px_20px_-6px_rgba(16,185,129,0.2)] dark:shadow-[0_0_25px_-5px_rgba(16,185,129,0.22)] ring-1 ring-emerald-500/15 dark:ring-0',
-      sidebarActiveBadge:
-        'bg-emerald-600 text-white dark:bg-emerald-500/20 dark:text-emerald-300 dark:border dark:border-emerald-400/40',
-      progressBar: 'bg-emerald-600 dark:bg-emerald-400',
-      subTabActive:
-        'bg-white text-emerald-950 border border-emerald-500/60 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-400/30 font-bold shadow-xs',
-      widgetCard:
-        'bg-slate-50/95 dark:bg-[#071512] border-emerald-400/75 dark:border-emerald-500/30 shadow-[0_10px_26px_-8px_rgba(16,185,129,0.14),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_0_35px_-12px_rgba(16,185,129,0.22)]',
-      codeHighlight: 'text-emerald-400 font-semibold',
-      pillBadge:
-        'bg-emerald-500/12 text-emerald-900 dark:text-emerald-300 border border-emerald-500/35 dark:border-emerald-400/20',
-      accentText: 'text-emerald-700 dark:text-emerald-400',
-      checkIcon: 'text-emerald-600 dark:text-emerald-400',
-      dotBg: 'bg-emerald-500',
-      ctaBtn:
-        'bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-slate-950 shadow-sm shadow-emerald-500/20',
+        {
+          id: 'cloud',
+          label: ti(t, 'showcase.stages.cloud.label'),
+          icon: Database,
+          eyebrow: ti(t, 'showcase.stages.cloud.eyebrow'),
+          title: ti(t, 'showcase.stages.cloud.title'),
+          description: ti(t, 'showcase.stages.cloud.desc'),
+          tags: [
+            ti(t, 'showcase.stages.cloud.tag1'),
+            ti(t, 'showcase.stages.cloud.tag2'),
+            ti(t, 'showcase.stages.cloud.tag3'),
+          ],
+          visual: {
+            type: 'ring',
+            primaryMetric: '99.9%',
+            primaryLabel: ti(t, 'showcase.stages.cloud.metric_label'),
+            ringPercent: 99,
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.cloud.m1l'),
+                value: ti(t, 'showcase.stages.cloud.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.cloud.m2l'),
+                value: ti(t, 'showcase.stages.cloud.m2v'),
+              },
+              {
+                label: ti(t, 'showcase.stages.cloud.m3l'),
+                value: ti(t, 'showcase.stages.cloud.m3v'),
+              },
+            ],
+          },
+        },
+      ],
     },
-    stages: [
-      {
-        id: 'nextjs',
-        label: 'Next.js 16 SSR',
-        icon: Cpu,
-        eyebrow: 'PASO 02 · CÓDIGO PURO',
-        title: 'Ingeniería empresarial sin plantillas lentas',
-        description:
-          'Desarrollado en React 19 y Next.js 16. Tu plataforma compila en el servidor para cargar al instante en cualquier móvil.',
-        tags: ['Server-Side Rendering', '0 Plugins Basura', 'TypeScript Estricto'],
-        visual: {
-          type: 'code',
-          primaryMetric: '48 KB',
-          primaryLabel: 'Bundle Inicial Ultra-Liviano',
-          codeSnippet: [
-            { line: 'export async function CheckoutFlow() {' },
-            { line: '  const session = await edgeAuth.verify()', highlight: true },
-            { line: '  return <InstantPaymentGateway />' },
-            { line: '}' },
-          ],
-          secondaryMetrics: [
-            { label: 'Motor de render', value: 'Next.js 16 Edge', accent: true },
-            { label: 'Plantillas WordPress', value: '0%' },
-          ],
-        },
+    {
+      id: 'rendimiento',
+      number: '03',
+      title: ti(t, 'showcase.steps.rendimiento.title'),
+      subtitle: ti(t, 'showcase.steps.rendimiento.subtitle'),
+      theme: {
+        hex: '#f59e0b',
+        sidebarActiveCard:
+          'bg-white dark:bg-[#1c1306] border-amber-500/80 dark:border-amber-400/40 shadow-[0_8px_20px_-6px_rgba(245,158,11,0.2)] dark:shadow-[0_0_25px_-5px_rgba(245,158,11,0.22)] ring-1 ring-amber-500/15 dark:ring-0',
+        sidebarActiveBadge:
+          'bg-amber-600 text-white dark:bg-amber-500/20 dark:text-amber-300 dark:border dark:border-amber-400/40',
+        progressBar: 'bg-amber-600 dark:bg-amber-400',
+        subTabActive:
+          'bg-white text-amber-950 border border-amber-500/60 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-400/30 font-bold shadow-xs',
+        widgetCard:
+          'bg-slate-50/95 dark:bg-[#171005] border-amber-400/80 dark:border-amber-500/30 shadow-[0_10px_26px_-8px_rgba(245,158,11,0.15),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_0_35px_-12px_rgba(245,158,11,0.22)]',
+        codeHighlight: 'text-amber-400 font-semibold',
+        pillBadge:
+          'bg-amber-500/12 text-amber-900 dark:text-amber-300 border border-amber-500/35 dark:border-amber-400/20',
+        accentText: 'text-amber-700 dark:text-amber-400',
+        checkIcon: 'text-amber-600 dark:text-amber-400',
+        dotBg: 'bg-amber-500',
+        ctaBtn:
+          'bg-amber-600 hover:bg-amber-500 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 shadow-sm shadow-amber-500/20',
       },
-      {
-        id: 'cobros',
-        label: 'Cobros Directos',
-        icon: Layers,
-        eyebrow: 'PASO 02 · FINANZAS DIRECTAS',
-        title: 'El dinero entra directo a tu CBU o Mercado Pago',
-        description:
-          'Integramos pasarelas oficiales con acreditación inmediata. No retenemos porcentajes ni tocamos tu recaudación.',
-        tags: ['Mercado Pago API', 'Transferencia CBU', '0% Comisión Nuestra'],
-        visual: {
-          type: 'chart',
-          primaryMetric: '0%',
-          primaryLabel: 'Comisión por Transacción',
-          chartPoints: 'M 0 75 Q 50 60, 95 40 T 175 20 T 240 8',
-          secondaryMetrics: [
-            { label: 'Liquidación', value: 'Directa a tu cuenta', accent: true },
-            { label: 'Conciliación', value: 'Automática 24/7' },
+      stages: [
+        {
+          id: 'lighthouse',
+          label: ti(t, 'showcase.stages.lighthouse.label'),
+          icon: Zap,
+          eyebrow: ti(t, 'showcase.stages.lighthouse.eyebrow'),
+          title: ti(t, 'showcase.stages.lighthouse.title'),
+          description: ti(t, 'showcase.stages.lighthouse.desc'),
+          tags: [
+            ti(t, 'showcase.stages.lighthouse.tag1'),
+            ti(t, 'showcase.stages.lighthouse.tag2'),
+            ti(t, 'showcase.stages.lighthouse.tag3'),
           ],
+          visual: {
+            type: 'ring',
+            primaryMetric: '100',
+            primaryLabel: ti(t, 'showcase.stages.lighthouse.metric_label'),
+            ringPercent: 100,
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.lighthouse.m1l'),
+                value: ti(t, 'showcase.stages.lighthouse.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.lighthouse.m2l'),
+                value: ti(t, 'showcase.stages.lighthouse.m2v'),
+              },
+              {
+                label: ti(t, 'showcase.stages.lighthouse.m3l'),
+                value: ti(t, 'showcase.stages.lighthouse.m3v'),
+              },
+            ],
+          },
         },
-      },
-      {
-        id: 'cloud',
-        label: 'Base de Datos',
-        icon: Database,
-        eyebrow: 'PASO 02 · SEGURIDAD BANCARIA',
-        title: 'PostgreSQL dedicado con respaldos diarios',
-        description:
-          'Tus clientes, turnos y ventas se almacenan con aislamiento criptográfico y copias de seguridad automáticas.',
-        tags: ['PostgreSQL Cloud', 'SSL / TLS 1.3', 'Backups Diarios'],
-        visual: {
-          type: 'ring',
-          primaryMetric: '99.9%',
-          primaryLabel: 'Uptime Global Edge',
-          ringPercent: 99,
-          secondaryMetrics: [
-            { label: 'Encriptación', value: 'AES-256 + SSL', accent: true },
-            { label: 'Nodos CDN', value: 'Multi-Región' },
-            { label: 'Respaldo', value: 'Automático' },
+        {
+          id: 'seo',
+          label: ti(t, 'showcase.stages.seo.label'),
+          icon: Globe,
+          eyebrow: ti(t, 'showcase.stages.seo.eyebrow'),
+          title: ti(t, 'showcase.stages.seo.title'),
+          description: ti(t, 'showcase.stages.seo.desc'),
+          tags: [
+            ti(t, 'showcase.stages.seo.tag1'),
+            ti(t, 'showcase.stages.seo.tag2'),
+            ti(t, 'showcase.stages.seo.tag3'),
           ],
+          visual: {
+            type: 'chart',
+            primaryMetric: '#1',
+            primaryLabel: ti(t, 'showcase.stages.seo.metric_label'),
+            chartPoints: 'M 0 80 Q 60 70, 100 45 T 180 22 T 240 6',
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.seo.m1l'),
+                value: ti(t, 'showcase.stages.seo.m1v'),
+                accent: true,
+              },
+              { label: ti(t, 'showcase.stages.seo.m2l'), value: ti(t, 'showcase.stages.seo.m2v') },
+            ],
+          },
         },
-      },
-    ],
-  },
-  {
-    id: 'rendimiento',
-    number: '03',
-    title: 'Velocidad 0.38s',
-    subtitle: 'Auditoría Google 100/100 real',
-    theme: {
-      hex: '#f59e0b',
-      sidebarActiveCard:
-        'bg-white dark:bg-[#1c1306] border-amber-500/80 dark:border-amber-400/40 shadow-[0_8px_20px_-6px_rgba(245,158,11,0.2)] dark:shadow-[0_0_25px_-5px_rgba(245,158,11,0.22)] ring-1 ring-amber-500/15 dark:ring-0',
-      sidebarActiveBadge:
-        'bg-amber-600 text-white dark:bg-amber-500/20 dark:text-amber-300 dark:border dark:border-amber-400/40',
-      progressBar: 'bg-amber-600 dark:bg-amber-400',
-      subTabActive:
-        'bg-white text-amber-950 border border-amber-500/60 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-400/30 font-bold shadow-xs',
-      widgetCard:
-        'bg-slate-50/95 dark:bg-[#171005] border-amber-400/80 dark:border-amber-500/30 shadow-[0_10px_26px_-8px_rgba(245,158,11,0.15),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_0_35px_-12px_rgba(245,158,11,0.22)]',
-      codeHighlight: 'text-amber-400 font-semibold',
-      pillBadge:
-        'bg-amber-500/12 text-amber-900 dark:text-amber-300 border border-amber-500/35 dark:border-amber-400/20',
-      accentText: 'text-amber-700 dark:text-amber-400',
-      checkIcon: 'text-amber-600 dark:text-amber-400',
-      dotBg: 'bg-amber-500',
-      ctaBtn:
-        'bg-amber-600 hover:bg-amber-500 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 shadow-sm shadow-amber-500/20',
+        {
+          id: 'blindaje',
+          label: ti(t, 'showcase.stages.blindaje.label'),
+          icon: Lock,
+          eyebrow: ti(t, 'showcase.stages.blindaje.eyebrow'),
+          title: ti(t, 'showcase.stages.blindaje.title'),
+          description: ti(t, 'showcase.stages.blindaje.desc'),
+          tags: [
+            ti(t, 'showcase.stages.blindaje.tag1'),
+            ti(t, 'showcase.stages.blindaje.tag2'),
+            ti(t, 'showcase.stages.blindaje.tag3'),
+          ],
+          visual: {
+            type: 'code',
+            primaryMetric: '24/7',
+            primaryLabel: ti(t, 'showcase.stages.blindaje.metric_label'),
+            codeSnippet: [
+              { line: '[WAF] Edge Firewall: ACTIVE' },
+              { line: '[TLS] Strict-Transport-Security: max-age=63072000', highlight: true },
+              { line: '[CDN] Cache-Control: public, s-maxage=31536000' },
+              { line: '[STATUS] 200 OK · Latency: 14ms' },
+            ],
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.blindaje.m1l'),
+                value: ti(t, 'showcase.stages.blindaje.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.blindaje.m2l'),
+                value: ti(t, 'showcase.stages.blindaje.m2v'),
+              },
+            ],
+          },
+        },
+        {
+          id: 'linux-pos',
+          label: ti(t, 'showcase.stages.linux-pos.label'),
+          icon: Terminal,
+          eyebrow: ti(t, 'showcase.stages.linux-pos.eyebrow'),
+          title: ti(t, 'showcase.stages.linux-pos.title'),
+          description: ti(t, 'showcase.stages.linux-pos.desc'),
+          tags: [
+            ti(t, 'showcase.stages.linux-pos.tag1'),
+            ti(t, 'showcase.stages.linux-pos.tag2'),
+            ti(t, 'showcase.stages.linux-pos.tag3'),
+          ],
+          visual: {
+            type: 'code',
+            primaryMetric: '480 MB',
+            primaryLabel: ti(t, 'showcase.stages.linux-pos.metric_label'),
+            codeSnippet: [
+              { line: '$ systemd-analyze -> boot in 4.48s', highlight: true },
+              { line: '[UDEV] ESC/POS Thermal Printer: READY' },
+              { line: '[LAN] PostgreSQL Local Replica: 0.4ms' },
+              { line: '[GUARD] S.M.A.R.T. Disk Health: 100% OK' },
+            ],
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.linux-pos.m1l'),
+                value: ti(t, 'showcase.stages.linux-pos.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.linux-pos.m2l'),
+                value: ti(t, 'showcase.stages.linux-pos.m2v'),
+              },
+            ],
+          },
+        },
+      ],
     },
-    stages: [
-      {
-        id: 'lighthouse',
-        label: 'Google 100/100',
-        icon: Zap,
-        eyebrow: 'PASO 03 · VELOCIDAD EXTREMA',
-        title: 'Carga en 0.38 segundos comprobable en vivo',
-        description:
-          'Superamos el puntaje máximo en Google PageSpeed Insights. Una web instantánea retiene al doble de visitantes.',
-        tags: ['0.38s Carga Real', 'Core Web Vitals OK', 'Mobile First'],
-        visual: {
-          type: 'ring',
-          primaryMetric: '100',
-          primaryLabel: 'Google Lighthouse Score',
-          ringPercent: 100,
-          secondaryMetrics: [
-            { label: 'First Paint (FCP)', value: '0.38 seg', accent: true },
-            { label: 'Accesibilidad & SEO', value: '100 / 100' },
-            { label: 'Rebote por lentitud', value: 'Eliminado' },
-          ],
-        },
+    {
+      id: 'conversion-escala',
+      number: '04',
+      title: ti(t, 'showcase.steps.conversion-escala.title'),
+      subtitle: ti(t, 'showcase.steps.conversion-escala.subtitle'),
+      theme: {
+        hex: '#8b5cf6',
+        sidebarActiveCard:
+          'bg-white dark:bg-[#150e28] border-violet-500/80 dark:border-violet-400/40 shadow-[0_8px_20px_-6px_rgba(139,92,246,0.2)] dark:shadow-[0_0_25px_-5px_rgba(139,92,246,0.25)] ring-1 ring-violet-500/15 dark:ring-0',
+        sidebarActiveBadge:
+          'bg-violet-600 text-white dark:bg-violet-500/20 dark:text-violet-300 dark:border dark:border-violet-400/40',
+        progressBar: 'bg-violet-600 dark:bg-violet-400',
+        subTabActive:
+          'bg-white text-violet-950 border border-violet-500/60 dark:bg-violet-500/15 dark:text-violet-300 dark:border-violet-400/30 font-bold shadow-xs',
+        widgetCard:
+          'bg-slate-50/95 dark:bg-[#120b22] border-violet-400/75 dark:border-violet-500/30 shadow-[0_10px_26px_-8px_rgba(139,92,246,0.14),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_0_35px_-12px_rgba(139,92,246,0.25)]',
+        codeHighlight: 'text-violet-400 font-semibold',
+        pillBadge:
+          'bg-violet-500/12 text-violet-900 dark:text-violet-300 border border-violet-500/35 dark:border-violet-400/20',
+        accentText: 'text-violet-700 dark:text-violet-400',
+        checkIcon: 'text-violet-600 dark:text-violet-400',
+        dotBg: 'bg-violet-500',
+        ctaBtn:
+          'bg-violet-600 hover:bg-violet-500 text-white dark:bg-violet-500 dark:hover:bg-violet-400 dark:text-white shadow-sm shadow-violet-500/20',
       },
-      {
-        id: 'seo',
-        label: 'SEO Técnico',
-        icon: Globe,
-        eyebrow: 'PASO 03 · POSICIONAMIENTO ORGÁNICO',
-        title: 'Indexación prioritaria en buscadores',
-        description:
-          'Incluimos metadatos dinámicos y marcado Schema.org para que tu negocio destaque en Google desde el primer día.',
-        tags: ['Schema.org JSON-LD', 'Sitemap Dinámico', 'OpenGraph Pro'],
-        visual: {
-          type: 'chart',
-          primaryMetric: '#1',
-          primaryLabel: 'Arquitectura SEO Semántica',
-          chartPoints: 'M 0 80 Q 60 70, 100 45 T 180 22 T 240 6',
-          secondaryMetrics: [
-            { label: 'Indexación Google', value: 'Instantánea', accent: true },
-            { label: 'Estructura HTML', value: '100% Semántica' },
+      stages: [
+        {
+          id: 'embudo',
+          label: ti(t, 'showcase.stages.embudo.label'),
+          icon: Target,
+          eyebrow: ti(t, 'showcase.stages.embudo.eyebrow'),
+          title: ti(t, 'showcase.stages.embudo.title'),
+          description: ti(t, 'showcase.stages.embudo.desc'),
+          tags: [
+            ti(t, 'showcase.stages.embudo.tag1'),
+            ti(t, 'showcase.stages.embudo.tag2'),
+            ti(t, 'showcase.stages.embudo.tag3'),
           ],
+          visual: {
+            type: 'chart',
+            primaryMetric: '+210%',
+            primaryLabel: ti(t, 'showcase.stages.embudo.metric_label'),
+            chartPoints: 'M 0 78 Q 55 68, 105 38 T 185 18 T 240 5',
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.embudo.m1l'),
+                value: ti(t, 'showcase.stages.embudo.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.embudo.m2l'),
+                value: ti(t, 'showcase.stages.embudo.m2v'),
+              },
+            ],
+          },
         },
-      },
-      {
-        id: 'blindaje',
-        label: 'Blindaje Cloud',
-        icon: Lock,
-        eyebrow: 'PASO 03 · CERO CAÍDAS',
-        title: 'Inmune a picos de tráfico y ataques',
-        description:
-          'Despliegue sobre red distribuida con mitigación DDoS automática. Tu sistema responde igual con 10 o 10.000 usuarios.',
-        tags: ['Firewall WAF Activo', 'Auto-Escalado', 'Monitoreo 24/7'],
-        visual: {
-          type: 'code',
-          primaryMetric: '24/7',
-          primaryLabel: 'Protección Edge Activa',
-          codeSnippet: [
-            { line: '[WAF] Edge Firewall: ACTIVE' },
-            { line: '[TLS] Strict-Transport-Security: max-age=63072000', highlight: true },
-            { line: '[CDN] Cache-Control: public, s-maxage=31536000' },
-            { line: '[STATUS] 200 OK · Latency: 14ms' },
+        {
+          id: 'metricas',
+          label: ti(t, 'showcase.stages.metricas.label'),
+          icon: BarChart3,
+          eyebrow: ti(t, 'showcase.stages.metricas.eyebrow'),
+          title: ti(t, 'showcase.stages.metricas.title'),
+          description: ti(t, 'showcase.stages.metricas.desc'),
+          tags: [
+            ti(t, 'showcase.stages.metricas.tag1'),
+            ti(t, 'showcase.stages.metricas.tag2'),
+            ti(t, 'showcase.stages.metricas.tag3'),
           ],
-          secondaryMetrics: [
-            { label: 'Latencia promedio', value: '14 ms', accent: true },
-            { label: 'Certificado SSL', value: 'Renovación Auto' },
-          ],
+          visual: {
+            type: 'ring',
+            primaryMetric: '3.4x',
+            primaryLabel: ti(t, 'showcase.stages.metricas.metric_label'),
+            ringPercent: 88,
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.metricas.m1l'),
+                value: ti(t, 'showcase.stages.metricas.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.metricas.m2l'),
+                value: ti(t, 'showcase.stages.metricas.m2v'),
+              },
+              {
+                label: ti(t, 'showcase.stages.metricas.m3l'),
+                value: ti(t, 'showcase.stages.metricas.m3v'),
+              },
+            ],
+          },
         },
-      },
-      {
-        id: 'linux-pos',
-        label: 'Linux POS · 4.5s',
-        icon: Terminal,
-        eyebrow: 'PASO 03 · INFRAESTRUCTURA FÍSICA & LINUX',
-        title: 'Tus PCs de caja u oficina blindadas con Linux',
-        description:
-          'Recuperamos tus computadoras actuales con imágenes Linux deterministas: arranque en 4.5s directo al sistema, $0 en licencias y servidor local LAN sin cortes.',
-        tags: ['Arranque 4.5s', '$0 Licencias', 'USB Rescate 3 min'],
-        visual: {
-          type: 'code',
-          primaryMetric: '480 MB',
-          primaryLabel: 'Consumo RAM · Kernel LTS',
-          codeSnippet: [
-            { line: '$ systemd-analyze -> boot in 4.48s', highlight: true },
-            { line: '[UDEV] ESC/POS Thermal Printer: READY' },
-            { line: '[LAN] PostgreSQL Local Replica: 0.4ms' },
-            { line: '[GUARD] S.M.A.R.T. Disk Health: 100% OK' },
+        {
+          id: 'autonomia',
+          label: ti(t, 'showcase.stages.autonomia.label'),
+          icon: FileCode,
+          eyebrow: ti(t, 'showcase.stages.autonomia.eyebrow'),
+          title: ti(t, 'showcase.stages.autonomia.title'),
+          description: ti(t, 'showcase.stages.autonomia.desc'),
+          tags: [
+            ti(t, 'showcase.stages.autonomia.tag1'),
+            ti(t, 'showcase.stages.autonomia.tag2'),
+            ti(t, 'showcase.stages.autonomia.tag3'),
           ],
-          secondaryMetrics: [
-            { label: 'Costo en licencias', value: '$0 Vitalicio', accent: true },
-            { label: 'Continuidad sin fibra', value: '100% Offline LAN' },
-          ],
+          visual: {
+            type: 'code',
+            primaryMetric: '2 seg',
+            primaryLabel: ti(t, 'showcase.stages.autonomia.metric_label'),
+            codeSnippet: [
+              { line: ti(t, 'showcase.stages.autonomia.c1') },
+              { line: ti(t, 'showcase.stages.autonomia.c2'), highlight: true },
+              { line: ti(t, 'showcase.stages.autonomia.c3') },
+              { line: ti(t, 'showcase.stages.autonomia.c4') },
+            ],
+            secondaryMetrics: [
+              {
+                label: ti(t, 'showcase.stages.autonomia.m1l'),
+                value: ti(t, 'showcase.stages.autonomia.m1v'),
+                accent: true,
+              },
+              {
+                label: ti(t, 'showcase.stages.autonomia.m2l'),
+                value: ti(t, 'showcase.stages.autonomia.m2v'),
+              },
+            ],
+          },
         },
-      },
-    ],
-  },
-  {
-    id: 'conversion-escala',
-    number: '04',
-    title: 'Conversión & Escala',
-    subtitle: 'Diseñado para facturar más',
-    theme: {
-      hex: '#8b5cf6',
-      sidebarActiveCard:
-        'bg-white dark:bg-[#150e28] border-violet-500/80 dark:border-violet-400/40 shadow-[0_8px_20px_-6px_rgba(139,92,246,0.2)] dark:shadow-[0_0_25px_-5px_rgba(139,92,246,0.25)] ring-1 ring-violet-500/15 dark:ring-0',
-      sidebarActiveBadge:
-        'bg-violet-600 text-white dark:bg-violet-500/20 dark:text-violet-300 dark:border dark:border-violet-400/40',
-      progressBar: 'bg-violet-600 dark:bg-violet-400',
-      subTabActive:
-        'bg-white text-violet-950 border border-violet-500/60 dark:bg-violet-500/15 dark:text-violet-300 dark:border-violet-400/30 font-bold shadow-xs',
-      widgetCard:
-        'bg-slate-50/95 dark:bg-[#120b22] border-violet-400/75 dark:border-violet-500/30 shadow-[0_10px_26px_-8px_rgba(139,92,246,0.14),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_0_35px_-12px_rgba(139,92,246,0.25)]',
-      codeHighlight: 'text-violet-400 font-semibold',
-      pillBadge:
-        'bg-violet-500/12 text-violet-900 dark:text-violet-300 border border-violet-500/35 dark:border-violet-400/20',
-      accentText: 'text-violet-700 dark:text-violet-400',
-      checkIcon: 'text-violet-600 dark:text-violet-400',
-      dotBg: 'bg-violet-500',
-      ctaBtn:
-        'bg-violet-600 hover:bg-violet-500 text-white dark:bg-violet-500 dark:hover:bg-violet-400 dark:text-white shadow-sm shadow-violet-500/20',
+      ],
     },
-    stages: [
-      {
-        id: 'embudo',
-        label: 'Embudo Directo',
-        icon: Target,
-        eyebrow: 'PASO 04 · ARQUITECTURA DE VENTAS',
-        title: 'De visitante a cliente en 3 clics',
-        description:
-          'Interfaces limpias y libres de distracciones que guían al usuario directo a reservar o comprar en segundos.',
-        tags: ['UX de Alta Conversión', 'Checkout en 3 Clics', 'Sin Fricción'],
-        visual: {
-          type: 'chart',
-          primaryMetric: '+210%',
-          primaryLabel: 'Incremento en Conversión',
-          chartPoints: 'M 0 78 Q 55 68, 105 38 T 185 18 T 240 5',
-          secondaryMetrics: [
-            { label: 'Pasos al pago', value: 'Solo 3 clics', accent: true },
-            { label: 'Abandono de carrito', value: '-65%' },
-          ],
-        },
-      },
-      {
-        id: 'metricas',
-        label: 'Pixel & Analytics',
-        icon: BarChart3,
-        eyebrow: 'PASO 04 · MEDICIÓN EXACTA',
-        title: 'Rastreo quirúrgico para tus campañas',
-        description:
-          'Dejamos configurados los eventos de conversión para Meta Ads y Google Ads para optimizar cada peso invertido.',
-        tags: ['Meta Pixel API', 'Google Analytics 4', 'Eventos Medidos'],
-        visual: {
-          type: 'ring',
-          primaryMetric: '3.4x',
-          primaryLabel: 'Retorno Publicitario (ROAS)',
-          ringPercent: 88,
-          secondaryMetrics: [
-            { label: 'Tracking de eventos', value: '100% Medido', accent: true },
-            { label: 'Costo por Lead', value: '-48% promedio' },
-            { label: 'Atribución', value: 'Tiempo Real' },
-          ],
-        },
-      },
-      {
-        id: 'autonomia',
-        label: 'Panel Autónomo',
-        icon: FileCode,
-        eyebrow: 'PASO 04 · CONTROL TOTAL',
-        title: 'Administrá precios, stock y clientes desde el celular',
-        description:
-          'Panel de control intuitivo para gestionar tu operación en segundos sin depender de programadores.',
-        tags: ['Panel Autogestionable', '100% Mobile', 'Reportes Claros'],
-        visual: {
-          type: 'code',
-          primaryMetric: '2 seg',
-          primaryLabel: 'Actualización en Tiempo Real',
-          codeSnippet: [
-            { line: '✓ Catálogo sincronizado en vivo' },
-            { line: '✓ Reserva #1042 confirmada y cobrada', highlight: true },
-            { line: '✓ Notificación enviada al cliente' },
-            { line: '✓ Balance diario actualizado' },
-          ],
-          secondaryMetrics: [
-            { label: 'Curva de aprendizaje', value: 'Inmediata', accent: true },
-            { label: 'Soporte técnico', value: 'Incluido' },
-          ],
-        },
-      },
-    ],
-  },
-]
+  ]
+}
 
 export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
   className = '',
 }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const STEPS = React.useMemo(() => buildSteps(t), [t, i18n.language])
   const [activeStepIdx, setActiveStepIdx] = useState(0)
   const [subStageIdx, setSubStageIdx] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -522,6 +668,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
     [activeStepIdx, subStageIdx]
   )
 
+  // guardrail-ok(useEffect): timer externo para autosecuencia de etapas; requiere sincronizar intervalo con visibilidad/pausa
   useEffect(() => {
     if (isPaused || !isInView || reduceMotion) return
 
@@ -586,24 +733,21 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               className={`w-3.5 h-3.5 transition-colors duration-300 ${theme.checkIcon}`}
             />
             <span className="text-slate-700 dark:text-neutral-300 font-semibold">
-              {t('showcase.eyebrow', 'Ingeniería Transparente')}
+              {ti(t, 'showcase.eyebrow')}
             </span>
-            <Badge label={t('showcase.badge', '4 ETAPAS')} variant="cyan" />
+            <Badge label={ti(t, 'showcase.badge')} variant="cyan" />
           </div>
 
           <h2 className="text-2xl sm:text-4xl font-semibold tracking-[-0.028em] text-slate-900 dark:text-white leading-tight">
-            {t('showcase.heading_prefix', 'Cómo construimos y escalamos tu')}{' '}
+            {ti(t, 'showcase.heading_prefix')}{' '}
             <span className="text-cyan-600 dark:text-cyan-400">
-              {t('showcase.heading_accent', 'activo digital')}
+              {ti(t, 'showcase.heading_accent')}
             </span>
           </h2>
         </div>
 
         <p className="max-w-sm text-sm text-muted-foreground leading-relaxed md:text-right">
-          {t(
-            'showcase.subtitle',
-            'Cuatro etapas, una sola persona responsable. Sin intermediarios ni capas que diluyan decisiones.'
-          )}
+          {t('showcase.subtitle')}
         </p>
       </div>
 
@@ -684,7 +828,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               : 'text-slate-700 dark:text-neutral-400 group-hover:text-slate-950 dark:group-hover:text-neutral-200'
                           }`}
                         >
-                          {t(`showcase.steps.${step.id}.title`, step.title)}
+                          {ti(t, `showcase.steps.${step.id}.title`, step.title)}
                         </h3>
                         <p
                           className={`text-xs truncate mt-0.5 transition-colors ${
@@ -693,7 +837,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                               : 'text-slate-500 dark:text-neutral-600'
                           }`}
                         >
-                          {t(`showcase.steps.${step.id}.subtitle`, step.subtitle)}
+                          {ti(t, `showcase.steps.${step.id}.subtitle`, step.subtitle)}
                         </p>
                       </div>
                     </div>
@@ -718,9 +862,9 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
 
           {/* Nota discreta al pie del sidebar */}
           <div className="hidden lg:flex items-center justify-between pt-4 mt-4 border-t border-slate-300/80 dark:border-white/[0.06] text-[11px] font-mono text-slate-600 dark:text-neutral-500">
-            <span>{t('showcase.auto_seq', 'Secuencia automática')}</span>
+            <span>{ti(t, 'showcase.auto_seq')}</span>
             <span className={`font-bold transition-colors duration-300 ${theme.accentText}`}>
-              {t('showcase.step_counter', 'Paso')} 0{activeStepIdx + 1} / 04
+              {ti(t, 'showcase.step_counter')} 0{activeStepIdx + 1} / 04
             </span>
           </div>
         </div>
@@ -738,7 +882,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
             }
           }}
           role="region"
-          aria-label="Detalle de las capacidades destacadas"
+          aria-label={ti(t, 'showcase.detail_aria')}
           tabIndex={0}
           className="relative w-full lg:w-[71%] p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white dark:bg-[#070b14] overflow-hidden"
         >
@@ -770,7 +914,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5 shrink-0" />
-                    <span>{t(`showcase.stages.${stg.id}.label`, stg.label)}</span>
+                    <span>{ti(t, `showcase.stages.${stg.id}.label`, stg.label)}</span>
                   </button>
                 )
               })}
@@ -790,12 +934,10 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                 />
               )}
               <span className="hidden sm:inline">
-                {isPaused ? t('showcase.resume', 'Reanudar') : t('showcase.pause', 'Pausa')}
+                {isPaused ? ti(t, 'showcase.resume') : ti(t, 'showcase.pause')}
               </span>
               <span className="sr-only sm:hidden">
-                {isPaused
-                  ? t('showcase.resume_aria', 'Reanudar rotación')
-                  : t('showcase.pause_aria', 'Pausar rotación')}
+                {isPaused ? ti(t, 'showcase.resume_aria') : ti(t, 'showcase.pause_aria')}
               </span>
             </button>
           </div>
@@ -851,7 +993,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                         <span
                           className={`text-[11px] font-mono uppercase tracking-wider font-semibold block ${theme.accentText}`}
                         >
-                          Métrica Verificada
+                          {ti(t, 'showcase.verified_metric')}
                         </span>
                         <span className="text-sm font-semibold text-slate-900 dark:text-white">
                           {currentStage.visual.primaryLabel}
@@ -959,15 +1101,19 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                   <span
                     className={`inline-block font-mono text-[11px] font-bold uppercase tracking-widest ${theme.accentText}`}
                   >
-                    {t(`showcase.stages.${currentStage.id}.eyebrow`, currentStage.eyebrow)}
+                    {ti(t, `showcase.stages.${currentStage.id}.eyebrow`, currentStage.eyebrow)}
                   </span>
 
                   <h3 className="text-xl sm:text-2xl lg:text-[26px] font-semibold text-slate-900 dark:text-white tracking-[-0.025em] leading-snug">
-                    {t(`showcase.stages.${currentStage.id}.title`, currentStage.title)}
+                    {ti(t, `showcase.stages.${currentStage.id}.title`, currentStage.title)}
                   </h3>
 
                   <p className="text-sm sm:text-base text-slate-600 dark:text-neutral-300 leading-relaxed">
-                    {t(`showcase.stages.${currentStage.id}.description`, currentStage.description)}
+                    {ti(
+                      t,
+                      `showcase.stages.${currentStage.id}.description`,
+                      currentStage.description
+                    )}
                   </p>
 
                   <div className="flex flex-wrap gap-2 pt-1">
@@ -992,7 +1138,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               <span
                 className={`w-2 h-2 rounded-full transition-colors duration-300 ${theme.dotBg}`}
               />
-              <span>{t('showcase.footer_badge', 'Sistemas en producción verificables')}</span>
+              <span>{ti(t, 'showcase.footer_badge')}</span>
             </div>
 
             <div className="flex items-center gap-2.5">
@@ -1002,8 +1148,8 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
               >
                 <span>
                   {currentStage.id === 'linux-pos'
-                    ? t('showcase.portal_linux', 'Portal /linux')
-                    : t('showcase.view_arch', 'Ver arquitectura')}
+                    ? ti(t, 'showcase.portal_linux')
+                    : ti(t, 'showcase.view_arch')}
                 </span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -1016,7 +1162,7 @@ export const InteractiveFeatureShowcase: React.FC<{ className?: string }> = ({
                 }
                 className={`px-3.5 py-1.5 rounded-lg font-mono text-xs font-bold flex items-center gap-1.5 transition-all duration-300 ${theme.ctaBtn}`}
               >
-                <span>{t('showcase.diagnose_cta', 'Diagnosticar Proyecto')}</span>
+                <span>{ti(t, 'showcase.diagnose_cta')}</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
             </div>

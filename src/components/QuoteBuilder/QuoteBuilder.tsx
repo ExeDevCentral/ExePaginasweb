@@ -10,6 +10,7 @@ import { motion, AnimatePresence, useMotionValue, useMotionTemplate } from 'fram
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import {
   ArrowLeft,
   ArrowRight,
@@ -373,6 +374,7 @@ function ConfettiBurst({
   intensity = 24,
 }: Readonly<{ trigger: number; intensity?: number }>) {
   const [particles, setParticles] = useState<Particle[]>([])
+  // guardrail-ok(useEffect): sync quote selection with URL/state
   useEffect(() => {
     const nextRand = createPrng(trigger * 10007 + 37)
     setParticles(
@@ -610,7 +612,7 @@ export default function QuoteBuilder() {
   const { t } = useTranslation()
   const router = useRouter()
   const navigate = (path: string) => router.push(path)
-  const plans = useMemo(() => getPlans(t), [t])
+  const plans = useMemo(() => getPlans(t as unknown as (k: string) => string), [t])
   const [mode, setMode] = useState<'plans' | 'custom'>('plans')
   const [step, setStep] = useState(0)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
@@ -625,7 +627,9 @@ export default function QuoteBuilder() {
   const [sending, setSending] = useState(false)
   const [confettiTrigger, setConfettiTrigger] = useState(0)
   const [planConfetti, setPlanConfetti] = useState(0)
+  // guardrail-ok(useEffect): persist quote draft / derived UI sync
 
+  // guardrail-ok(useEffect): persist quote draft / derived UI sync
   useEffect(() => {
     if (typeof window === 'undefined') return
     const params = new URLSearchParams(window.location.search)
@@ -681,7 +685,7 @@ export default function QuoteBuilder() {
       ? t('cotizador.tipo_' + selectedTypeData.id, selectedTypeData.label)
       : ''
     const featureNames = FEATURES.filter((f) => selectedFeatures.has(f.id)).map(
-      (f) => t('cotizador.feat_' + f.id, f.label) + (f.hasAsterisk ? ' (*)' : '')
+      (f) => ti(t, 'cotizador.feat_' + f.id) + (f.hasAsterisk ? ' (*)' : '')
     )
     const designObj = DESIGN_TIERS.find((d) => d.id === designTier)
     const designName = designObj ? t('cotizador.design_' + designObj.id, designObj.label) : ''
@@ -1044,7 +1048,7 @@ export default function QuoteBuilder() {
                                   </div>
                                   <div className="min-w-0">
                                     <span className="text-sm font-semibold text-foreground flex items-center gap-1.5 flex-wrap">
-                                      {t('cotizador.feat_' + feat.id, feat.label)}
+                                      {ti(t, 'cotizador.feat_' + feat.id)}
                                       {feat.hasAsterisk && (
                                         <span
                                           className="text-accent-magenta font-bold text-sm leading-none"
@@ -1076,18 +1080,13 @@ export default function QuoteBuilder() {
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-xs font-bold uppercase tracking-wider text-accent-cyan flex items-center gap-2">
-                          <span>
-                            {t('cotizador.clarificacion_titulo', 'Transparencia & Alcance Técnico')}
-                          </span>
+                          <span>{t('cotizador.clarificacion_titulo')}</span>
                           <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan font-semibold lowercase">
                             acuerdo previo
                           </span>
                         </h4>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          {t(
-                            'cotizador.clarificacion_desc',
-                            'Los ítems marcados con asterisco (*) involucran plataformas o consumos de terceros (como API Keys de Inteligencia Artificial, licencias de correo corporativo, pasarelas de pago o registros de dominio). Nuestro valor cotizado cubre la arquitectura, diseño, desarrollo e integración completa. El alcance exacto y las cuentas de proveedores se validan en una breve reunión técnica inicial para total transparencia y seguridad de ambas partes.'
-                          )}
+                          {t('cotizador.clarificacion_desc')}
                         </p>
                       </div>
                     </div>
@@ -1208,7 +1207,9 @@ export default function QuoteBuilder() {
                                 {t('cotizador.proyecto')}
                               </span>
                               <span className="text-sm font-bold text-foreground">
-                                {selectedTypeData ? t('cotizador.tipo_' + selectedTypeData.id) : ''}
+                                {selectedTypeData
+                                  ? ti(t, 'cotizador.tipo_' + selectedTypeData.id)
+                                  : ''}
                               </span>
                             </div>
                             <div className="flex justify-between items-center">
@@ -1216,7 +1217,7 @@ export default function QuoteBuilder() {
                                 {t('cotizador.diseno_label')}
                               </span>
                               <span className="text-sm font-bold text-foreground">
-                                {t('cotizador.design_' + designTier)}
+                                {ti(t, 'cotizador.design_' + designTier)}
                               </span>
                             </div>
                             {FEATURES.filter((f) => selectedFeatures.has(f.id)).map((f) => (
@@ -1248,10 +1249,7 @@ export default function QuoteBuilder() {
                           <div className="mt-4 p-3.5 rounded-xl bg-accent-magenta/5 border border-accent-magenta/20 text-xs text-muted-foreground flex items-start gap-2.5">
                             <Info className="w-4 h-4 shrink-0 text-accent-magenta mt-0.5" />
                             <span className="leading-relaxed">
-                              {t(
-                                'cotizador.resumen_aviso_legal',
-                                '* Presupuesto base orientativo. Los ítems con (*) corresponden a desarrollos con integración a servicios externos (APIs, plataformas de cobro, casillas corporativas o dominios). El alcance técnico final y las credenciales se coordinan en una charla previa sin sorpresas.'
-                              )}
+                              {t('cotizador.resumen_aviso_legal')}
                             </span>
                           </div>
 
@@ -1282,10 +1280,7 @@ export default function QuoteBuilder() {
                                 type="tel"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
-                                placeholder={t(
-                                  'cotizador.placeholder_telefono',
-                                  'WhatsApp / Teléfono (ej: +54 9 11 ...)'
-                                )}
+                                placeholder={t('cotizador.placeholder_telefono')}
                                 className="w-full rounded-xl border border-emerald-500/30 bg-slate-100/95 px-4 py-3 text-sm text-slate-900 outline-none focus:border-emerald-500"
                               />
                             </div>

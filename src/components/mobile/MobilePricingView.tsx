@@ -9,6 +9,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import Link from 'next/link'
 import { ArrowUpRight, Calculator, Check, ShieldCheck, TrendingUp } from 'lucide-react'
 import { getWhatsAppUrl } from '@/core/utils/whatsappUtils'
@@ -76,6 +77,7 @@ const PLANS: readonly MobilePlan[] = [
 ]
 
 export default function MobilePricingView() {
+  const { t } = useTranslation()
   const [currency, setCurrency] = useState<Currency>('ARS')
   const [monthlyRevenueMillions, setMonthlyRevenueMillions] = useState<number>(6)
 
@@ -212,7 +214,7 @@ export default function MobilePricingView() {
           <div className="flex items-center justify-between gap-2">
             <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400">
               <TrendingUp className="w-3.5 h-3.5" />
-              Ahorro vs alquiler (3% + cuota)
+              {t('mobile.savings_vs_rent')}
             </span>
             <span className="text-xs font-mono font-bold text-slate-300">
               ${monthlyRevenueMillions}M/mes
@@ -220,7 +222,7 @@ export default function MobilePricingView() {
           </div>
 
           <label className="block">
-            <span className="sr-only">Facturación mensual estimada en millones</span>
+            <span className="sr-only">{t('mobile.monthly_revenue_sr')}</span>
             <input
               type="range"
               min={1}
@@ -233,7 +235,7 @@ export default function MobilePricingView() {
           </label>
 
           <div className="flex items-baseline justify-between pt-1 border-t border-white/10">
-            <span className="text-xs text-slate-300">Ahorrás por año:</span>
+            <span className="text-xs text-slate-300">{t('mobile.annual_savings')}</span>
             <span className="text-xl font-display font-black text-emerald-400">
               {annualSavingsFormatted}
             </span>
@@ -243,7 +245,7 @@ export default function MobilePricingView() {
         {/* Garantía */}
         <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-emerald-500/8 border border-emerald-500/20 text-xs text-slate-700 dark:text-slate-300">
           <ShieldCheck className="w-4.5 h-4.5 text-emerald-500 shrink-0" />
-          <span>El mantenimiento mensual es 100% opcional. Tu código nunca caduca.</span>
+          <span>{t('mobile.maintenance_optional')}</span>
         </div>
       </div>
     </div>

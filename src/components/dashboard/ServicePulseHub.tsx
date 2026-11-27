@@ -39,10 +39,7 @@ export default function ServicePulseHub({
   onMarkRead,
 }: Readonly<ServicePulseHubProps>) {
   const { t } = useTranslation()
-  const defaultSla =
-    tier !== 'none'
-      ? SLA_BY_TIER[tier]
-      : t('dashboard.activar_abono_soporte', 'Activá un abono para soporte dedicado')
+  const defaultSla = tier !== 'none' ? SLA_BY_TIER[tier] : t('dashboard.activar_abono_soporte')
 
   return (
     <motion.div
@@ -56,11 +53,11 @@ export default function ServicePulseHub({
           <div className="flex items-center gap-2 mb-1.5">
             <Zap className="w-4 h-4 text-[#38BDF8]" />
             <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-              {t('dashboard.pulse_servicio', 'Pulse del Servicio')}
+              {t('dashboard.pulse_servicio')}
             </p>
           </div>
           <h3 className="text-lg sm:text-xl font-bold text-foreground">
-            {t('dashboard.operacion_un_lugar', 'Tu operación en un solo lugar')}
+            {t('dashboard.operacion_un_lugar')}
           </h3>
           <p className="mt-1 text-xs sm:text-sm text-muted-foreground font-medium max-w-lg">
             {defaultSla}
@@ -73,14 +70,14 @@ export default function ServicePulseHub({
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all shrink-0 shadow-sm cursor-pointer"
         >
           <LifeBuoy size={16} className="text-white" />
-          <span>{t('dashboard.abrir_ticket', 'Abrir ticket')}</span>
+          <span>{t('dashboard.abrir_ticket')}</span>
           <ArrowRight size={14} />
         </button>
       </div>
 
       <div className="relative mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
         <PulseStat
-          label={t('dashboard.tickets_abiertos', 'Tickets abiertos')}
+          label={t('dashboard.tickets_abiertos')}
           value={String(openTickets)}
           icon={LifeBuoy}
           accent="text-[#38BDF8]"
@@ -99,17 +96,17 @@ export default function ServicePulseHub({
             {unreadNotifications}
           </p>
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1.5 font-bold">
-            {t('dashboard.alertas', 'Alertas')}
+            {t('dashboard.alertas')}
           </p>
         </div>
         <PulseStat
-          label={t('dashboard.plan_actual', 'Plan')}
+          label={t('dashboard.plan_actual')}
           value={planLabel || (tier === 'none' ? 'Base' : tier.toUpperCase())}
           icon={Shield}
           accent="text-[#38BDF8]"
         />
         <PulseStat
-          label={t('dashboard.estado', 'Estado')}
+          label={t('dashboard.estado')}
           value={accountStatus || (tier === 'none' ? 'Registrada' : 'Activa')}
           icon={Zap}
           accent="text-emerald-600 dark:text-emerald-400"
@@ -135,7 +132,7 @@ export default function ServicePulseHub({
                   onClick={() => onMarkRead(n.id)}
                   className="shrink-0 text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400 hover:underline px-2 py-1 rounded-md bg-amber-500/10"
                 >
-                  {t('dashboard.marcar_leida', 'Marcar leída')}
+                  {t('dashboard.marcar_leida')}
                 </button>
               )}
             </li>

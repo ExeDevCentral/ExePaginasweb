@@ -205,17 +205,17 @@ export default function DashboardFree({
               <div className="flex items-center gap-2 flex-wrap">
                 <p className="text-xs uppercase tracking-wider text-[#4361EE] dark:text-[#38BDF8] font-bold">
                   {suscripciones.length > 0
-                    ? t('dash.suscripcion_en_revision', 'Cuenta Registrada')
-                    : t('dash.sin_suscripcion', 'Panel Unificado de Cliente')}
+                    ? t('dash.suscripcion_en_revision')
+                    : t('dash.sin_suscripcion')}
                 </p>
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                   <CheckCircle2 className="w-3 h-3" />
-                  {t('dash.cuenta_activa', 'Sesión Activa')}
+                  {t('dash.cuenta_activa')}
                 </span>
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground mt-1 tracking-tight">
-                {t('dashboard.hola', 'Hola')}, {nombre}
+                {t('dashboard.hola')}, {nombre}
               </h1>
 
               <p className="mt-1.5 text-sm text-muted-foreground max-w-xl font-medium leading-relaxed">
@@ -232,7 +232,7 @@ export default function DashboardFree({
               className="flex-1 lg:flex-initial px-4 py-2.5 rounded-xl bg-muted/50 hover:bg-muted text-foreground border border-slate-300/80 dark:border-border font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plus size={16} />
-              <span>{t('dashboard.abrir_ticket', 'Abrir Ticket')}</span>
+              <span>{t('dashboard.abrir_ticket')}</span>
             </button>
 
             <button
@@ -258,7 +258,7 @@ export default function DashboardFree({
               onClick={() => handleDirectPlanActivate('avanzado', 'mantenimiento-avanzado')}
               className="flex-1 lg:flex-initial px-5 py-2.5 rounded-xl bg-[#4361EE] hover:bg-[#3854E0] text-white font-semibold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
             >
-              <span>{t('dash.subir_plan', 'Activar Abono')}</span>
+              <span>{t('dash.subir_plan')}</span>
               <ArrowRight size={16} />
             </button>
           </div>
@@ -393,7 +393,7 @@ export default function DashboardFree({
       {/* 5. Activación Directa de Planes (Checkout en Modal sin Salir del Dashboard) */}
       <div className="pt-1">
         <p className="mb-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-          {t('dashboard.vista_previa_planes', 'Activación Directa en 1 Clic (Sin Salir del Panel)')}
+          {t('dashboard.vista_previa_planes')}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">

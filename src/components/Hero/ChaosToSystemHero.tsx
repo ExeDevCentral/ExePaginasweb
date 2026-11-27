@@ -13,6 +13,7 @@
 'use client'
 
 import React, { useRef, useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion'
 import {
   Zap,
@@ -136,11 +137,13 @@ export const ChaosToSystemHero: React.FC<ChaosToSystemHeroProps> = ({
   primaryCtaText = 'Construir Mi Sistema',
   secondaryCtaText = 'Explorar Arquitectura',
 }) => {
+  const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeAct, setActiveAct] = useState<ActNumber>(1)
   const [isMobile, setIsMobile] = useState<boolean>(false)
 
   // Track window size for mobile adjustments
+  // guardrail-ok(useEffect): subscribe/unsubscribe external DOM event
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024)
@@ -164,6 +167,7 @@ export const ChaosToSystemHero: React.FC<ChaosToSystemHeroProps> = ({
   })
 
   // Map progress to acts
+  // guardrail-ok(useEffect): sync external/browser state
   useEffect(() => {
     return smoothProgress.on('change', (latest) => {
       if (latest < 0.33) {
@@ -325,19 +329,19 @@ export const ChaosToSystemHero: React.FC<ChaosToSystemHeroProps> = ({
                 {activeAct === 1 && (
                   <>
                     <AlertTriangle className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
-                    <span>Fase 01: El coste del caos técnico</span>
+                    <span>{t('chaos.phase1_eyebrow')}</span>
                   </>
                 )}
                 {activeAct === 2 && (
                   <>
                     <Cpu className="w-3.5 h-3.5 text-indigo-400 animate-spin" />
-                    <span>Fase 02: Reestructuración y Enlace</span>
+                    <span>{t('chaos.phase2_eyebrow')}</span>
                   </>
                 )}
                 {activeAct === 3 && (
                   <>
                     <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-                    <span>Fase 03: Ciudad de Servidores</span>
+                    <span>{t('chaos.phase3_eyebrow')}</span>
                   </>
                 )}
               </motion.div>
@@ -594,7 +598,7 @@ export const ChaosToSystemHero: React.FC<ChaosToSystemHeroProps> = ({
 
                     {/* Metric */}
                     <div className="mt-1.5 pt-1.5 border-t border-white/10 flex items-center justify-between font-mono text-[10px]">
-                      <span className="text-slate-500">MÉTRICA:</span>
+                      <span className="text-slate-500">{t('chaos.metric_label')}</span>
                       <span
                         className={`font-bold ${
                           isChaos

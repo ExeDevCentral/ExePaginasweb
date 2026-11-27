@@ -21,7 +21,7 @@ import HudButton from '../HudButton'
 import type { Cliente } from '../../core/domain/entities/Cliente'
 import { toast } from 'sonner'
 import type { ITenantRepository } from '../../core/domain/repositories/ITenantRepository'
-import { SupabaseTenantRepository } from '../../core/infra/repositories/SupabaseTenantRepository'
+import { tenantRepository } from '../../hooks/useTenant'
 import { WorkspaceOnboardingService } from '../../core/domain/onboarding/WorkspaceOnboardingService'
 import {
   EMPTY_ONBOARDING_FORM,
@@ -38,9 +38,10 @@ interface Props {
 }
 
 export default function OnboardingWizard({ cliente, planTier, onComplete, tenantRepo }: Props) {
+  const { t } = useTranslation()
   const { theme, setTheme } = useTheme()
   const { i18n } = useTranslation()
-  const service = new WorkspaceOnboardingService(tenantRepo ?? new SupabaseTenantRepository())
+  const service = new WorkspaceOnboardingService(tenantRepo ?? tenantRepository)
 
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [formData, setFormData] = useState({
@@ -122,7 +123,9 @@ export default function OnboardingWizard({ cliente, planTier, onComplete, tenant
               <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-mono">
                 Configuración Inicial
               </p>
-              <h2 className="text-lg font-bold text-foreground">Creá tu Workspace</h2>
+              <h2 className="text-lg font-bold text-foreground">
+                {t('onboarding.create_workspace')}
+              </h2>
             </div>
           </div>
           <div className="flex gap-2">
@@ -388,7 +391,9 @@ export default function OnboardingWizard({ cliente, planTier, onComplete, tenant
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Suscripción Inicial</span>
+                    <span className="text-muted-foreground">
+                      {t('onboarding.initial_subscription')}
+                    </span>
                     <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30 uppercase tracking-wider">
                       {planTier === 'none' ? 'Demo Trial (14 días)' : planTier}
                     </span>

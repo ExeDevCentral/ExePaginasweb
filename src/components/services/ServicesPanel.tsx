@@ -143,10 +143,12 @@ export default function ServicesPanel({
   const [osMode, setOsMode] = useState<'linux' | 'comercial'>('linux')
   const [selectedModuleIds, setSelectedModuleIds] = useState<string[]>(['turnos-247'])
 
+  // guardrail-ok(useEffect): sync selected service from external prop/hash changes
   useEffect(() => {
     setSubTab(initialSubTab)
   }, [initialSubTab])
 
+  // guardrail-ok(useEffect): sync component state from URL params/hash
   useEffect(() => {
     if (typeof window !== 'undefined' && window.location.hash === '#linux') {
       setSubTab('linux')
@@ -290,32 +292,32 @@ export default function ServicesPanel({
     () => ({
       activo: {
         color: 'text-emerald-700 dark:text-emerald-400',
-        label: t('services.estado_activo', 'Activo'),
+        label: t('services.estado_activo'),
         icon: CheckCircle,
       },
       suspendido: {
         color: 'text-amber-700 dark:text-amber-400',
-        label: t('services.estado_suspendido', 'Suspendido'),
+        label: t('services.estado_suspendido'),
         icon: Clock,
       },
       pausado: {
         color: 'text-amber-700 dark:text-amber-400',
-        label: t('services.estado_pausado', 'Pausado'),
+        label: t('services.estado_pausado'),
         icon: Clock,
       },
       cancelado: {
         color: 'text-rose-700 dark:text-rose-400',
-        label: t('services.estado_cancelado', 'Cancelado'),
+        label: t('services.estado_cancelado'),
         icon: XCircle,
       },
       vencido: {
         color: 'text-rose-700 dark:text-rose-400',
-        label: t('services.estado_vencido', 'Vencido'),
+        label: t('services.estado_vencido'),
         icon: XCircle,
       },
       pendiente: {
         color: 'text-sky-700 dark:text-sky-400',
-        label: t('services.estado_pendiente', 'Pendiente'),
+        label: t('services.estado_pendiente'),
         icon: ShieldAlert,
       },
     }),
@@ -324,12 +326,12 @@ export default function ServicesPanel({
 
   const tipoLabels = useMemo<Record<string, string>>(
     () => ({
-      plan: t('services.tipo_plan', 'Plan Base'),
-      addon: t('services.tipo_addon', 'Módulo Adicional'),
-      hosting: t('services.tipo_hosting', 'Hosting & Dominio'),
-      saas: t('services.tipo_saas', 'Software SaaS'),
-      professional: t('services.tipo_profesional', 'Servicio Profesional'),
-      one_time: t('services.tipo_one_time', 'Pago Único'),
+      plan: t('services.tipo_plan'),
+      addon: t('services.tipo_addon'),
+      hosting: t('services.tipo_hosting'),
+      saas: t('services.tipo_saas'),
+      professional: t('services.tipo_profesional'),
+      one_time: t('services.tipo_one_time'),
     }),
     [t]
   )
@@ -338,7 +340,7 @@ export default function ServicesPanel({
     () => [
       {
         accessorKey: 'service.nombre',
-        header: t('services.col_servicio', 'Servicio'),
+        header: t('services.col_servicio'),
         cell: ({ row }) => (
           <div>
             <span className="font-bold text-foreground text-xs sm:text-sm">
@@ -354,7 +356,7 @@ export default function ServicesPanel({
       },
       {
         accessorKey: 'service.tipo',
-        header: t('services.col_tipo', 'Tipo'),
+        header: t('services.col_tipo'),
         cell: ({ row }) => (
           <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-muted/60 text-[#38BDF8] border border-border uppercase tracking-wider">
             {tipoLabels[row.original.service?.tipo || ''] || row.original.service?.tipo || '—'}
@@ -363,7 +365,7 @@ export default function ServicesPanel({
       },
       {
         accessorKey: 'precio_actual',
-        header: t('services.col_precio', 'Precio'),
+        header: t('services.col_precio'),
         cell: ({ row }) => (
           <div className="font-bold font-mono text-foreground text-xs sm:text-sm">
             ${row.original.precio_actual.toLocaleString(i18n.language || 'es-AR')}
@@ -375,7 +377,7 @@ export default function ServicesPanel({
       },
       {
         accessorKey: 'estado',
-        header: t('services.col_estado', 'Estado'),
+        header: t('services.col_estado'),
         cell: ({ row }) => {
           const config = estadoConfig[row.original.estado] || estadoConfig.activo
           const Icon = config.icon
@@ -391,7 +393,7 @@ export default function ServicesPanel({
       },
       {
         accessorKey: 'started_at',
-        header: t('services.col_inicio', 'Inicio'),
+        header: t('services.col_inicio'),
         cell: ({ row }) => (
           <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
             <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
@@ -581,15 +583,9 @@ export default function ServicesPanel({
               <DataTable
                 columns={columns}
                 data={services}
-                searchPlaceholder={t(
-                  'services.buscar_placeholder',
-                  'Buscar servicio por nombre...'
-                )}
+                searchPlaceholder={t('services.buscar_placeholder')}
                 pageSize={5}
-                emptyMessage={t(
-                  'services.sin_servicios',
-                  'No se encontraron servicios contratados.'
-                )}
+                emptyMessage={t('services.sin_servicios')}
               />
             </div>
 
@@ -667,7 +663,7 @@ export default function ServicesPanel({
             ).length > 0 && (
               <div className="pt-2">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-                  {t('services.disponible_agregar', 'Módulos adicionales disponibles')}
+                  {t('services.disponible_agregar')}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {catalog
@@ -935,7 +931,7 @@ export default function ServicesPanel({
                     </span>
                   </div>
                   <div className="flex justify-between text-xs pb-2 border-b border-border">
-                    <span className="text-muted-foreground">Migración Linux:</span>
+                    <span className="text-muted-foreground">{t('services.linux_migration')}</span>
                     <span className="text-foreground font-bold">
                       {currency === 'ARS'
                         ? formatARS(linuxMigrationARS)
@@ -1147,7 +1143,9 @@ export default function ServicesPanel({
                       <span className="font-bold text-foreground">
                         {currency === 'ARS' ? formatARS(mod.priceARS) : formatUSD(mod.priceUSD)}
                       </span>
-                      <span className="text-[10px] text-muted-foreground">~{mod.days} días</span>
+                      <span className="text-[10px] text-muted-foreground">
+                        {t('services.days_est').replace('{{days}}', String(mod.days))}
+                      </span>
                     </div>
                   </motion.button>
                 )
@@ -1177,7 +1175,7 @@ export default function ServicesPanel({
 
               {hasMultiDiscount && (
                 <div className="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-400 text-[11px] font-bold flex items-center justify-between">
-                  <span>Bonificación pack (-10%)</span>
+                  <span>{t('services.pack_bonus')}</span>
                   <span>Aplicada ✓</span>
                 </div>
               )}

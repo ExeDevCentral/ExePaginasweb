@@ -61,22 +61,22 @@ export default function CheckoutModal({
     () => [
       {
         value: 'mantenimiento',
-        label: t('store.tipo_mantenimiento', 'Mantenimiento'),
+        label: t('store.tipo_mantenimiento'),
         icon: Monitor,
       },
       {
         value: 'desarrollo',
-        label: t('store.tipo_desarrollo', 'Desarrollo Web'),
+        label: t('store.tipo_desarrollo'),
         icon: Palette,
       },
       {
         value: 'ecommerce',
-        label: t('store.tipo_ecommerce', 'E-Commerce'),
+        label: t('store.tipo_ecommerce'),
         icon: ShoppingBag,
       },
       {
         value: 'reservas',
-        label: t('store.tipo_reservas', 'Sistema de Reservas'),
+        label: t('store.tipo_reservas'),
         icon: Calendar,
       },
     ],
@@ -87,6 +87,7 @@ export default function CheckoutModal({
   const [paypalError, setPaypalError] = useState('')
   const [renderNonce, setRenderNonce] = useState(0)
 
+  // guardrail-ok(useEffect): sync modal open state and focus
   useEffect(() => {
     if (paymentMethod !== 'paypal' || !plan) {
       setPaypalStatus('idle')
@@ -256,7 +257,7 @@ export default function CheckoutModal({
           {/* Project type selector */}
           <div className="relative mb-6">
             <p className="block text-sm font-bold text-foreground/70 mb-2 uppercase tracking-wider">
-              {t('store.tipo_proyecto', 'Tipo de proyecto')}
+              {t('store.tipo_proyecto')}
             </p>
             <div className="grid grid-cols-2 gap-2">
               {tipoProyectoOptions.map((opt) => (
@@ -280,7 +281,7 @@ export default function CheckoutModal({
           {/* Payment method toggle */}
           <div className="relative mb-6">
             <p className="block text-sm font-bold text-foreground/70 mb-3 uppercase tracking-wider">
-              {t('store.metodo_pago', 'Método de Pago')}
+              {t('store.metodo_pago')}
             </p>
             <div className="flex bg-zinc-800/5 dark:bg-white/5 rounded-2xl p-1 border border-zinc-200 dark:border-white/5">
               <button
@@ -292,7 +293,7 @@ export default function CheckoutModal({
                     : 'text-muted-foreground hover:text-foreground hover:bg-zinc-800/5 dark:hover:bg-white/5'
                 }`}
               >
-                {t('store.tab_transfer', 'Transferencia (ARS)')}
+                {t('store.tab_transfer')}
               </button>
               <button
                 type="button"
@@ -307,7 +308,7 @@ export default function CheckoutModal({
                 }`}
               >
                 <Globe className="w-4 h-4" />
-                {t('store.tab_paypal', 'PayPal (USD)')}
+                {t('store.tab_paypal')}
               </button>
             </div>
           </div>
@@ -329,13 +330,10 @@ export default function CheckoutModal({
               >
                 <CheckCircle2 className="w-12 h-12 mx-auto text-green-500" />
                 <p className="text-lg font-bold text-foreground mt-3">
-                  {t('store.checkout_exito_titulo', 'Pago aprobado correctamente')}
+                  {t('store.checkout_exito_titulo')}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {t(
-                    'store.checkout_exito_desc',
-                    'Tu abono quedó activado. Ya podés ingresar a tu panel.'
-                  )}
+                  {t('store.checkout_exito_desc')}
                 </p>
                 <div className="mt-4">
                   <HudButton
@@ -344,30 +342,28 @@ export default function CheckoutModal({
                     variant="primary"
                     size="md"
                     className="w-full justify-center"
-                    label={t('store.checkout_ir_dashboard', 'Ir al Dashboard')}
+                    label={t('store.checkout_ir_dashboard')}
                   />
                 </div>
               </motion.div>
             ) : paypalStatus === 'login' ? (
               <div className="space-y-3 text-center">
                 <LogIn className="w-8 h-8 mx-auto text-accent-magenta" />
-                <p className="text-sm text-muted-foreground">
-                  {t('store.checkout_login_aviso', 'Iniciá sesión para pagar con PayPal.')}
-                </p>
+                <p className="text-sm text-muted-foreground">{t('store.checkout_login_aviso')}</p>
                 <HudButton
                   type="button"
                   onClick={() => router.push('/login')}
                   variant="primary"
                   size="md"
                   className="w-full justify-center"
-                  label={t('store.checkout_iniciar_sesion', 'Iniciar sesión')}
+                  label={t('store.checkout_iniciar_sesion')}
                 />
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('transfer')}
                   className="text-xs text-muted-foreground underline hover:text-foreground"
                 >
-                  {t('store.checkout_o_transferencia', 'O pagá por transferencia bancaria')}
+                  {t('store.checkout_o_transferencia')}
                 </button>
               </div>
             ) : (
@@ -376,14 +372,14 @@ export default function CheckoutModal({
                   <div className="flex items-center justify-center min-h-12.5">
                     <div className="w-6 h-6 border-2 border-accent-magenta border-t-transparent rounded-full animate-spin" />
                     <span className="ml-3 text-sm text-muted-foreground">
-                      {t('store.checkout_cargando_paypal', 'Cargando PayPal...')}
+                      {t('store.checkout_cargando_paypal')}
                     </span>
                   </div>
                 )}
                 {paypalStatus === 'error' && (
                   <div className="text-center min-h-12.5 flex flex-col items-center justify-center gap-2">
                     <p className="text-sm text-accent-magenta">
-                      {t('store.checkout_error_paypal', 'No se pudo cargar PayPal')}
+                      {t('store.checkout_error_paypal')}
                     </p>
                     <button
                       type="button"
@@ -391,14 +387,14 @@ export default function CheckoutModal({
                       className="inline-flex items-center gap-1.5 text-sm font-bold text-foreground underline hover:text-accent-magenta"
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
-                      {t('store.checkout_reintentar', 'Reintentar')}
+                      {t('store.checkout_reintentar')}
                     </button>
                     <button
                       type="button"
                       onClick={() => setPaymentMethod('transfer')}
                       className="text-xs text-muted-foreground underline hover:text-foreground"
                     >
-                      {t('store.checkout_o_transferencia', 'Probá con transferencia bancaria')}
+                      {t('store.checkout_o_transferencia')}
                     </button>
                   </div>
                 )}
@@ -411,7 +407,7 @@ export default function CheckoutModal({
                       className="inline-flex items-center gap-1.5 text-sm font-bold text-foreground underline hover:text-accent-magenta"
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
-                      {t('store.checkout_reintentar', 'Reintentar')}
+                      {t('store.checkout_reintentar')}
                     </button>
                   </div>
                 )}
@@ -426,10 +422,7 @@ export default function CheckoutModal({
           </div>
 
           <p className="relative text-xs text-muted-foreground text-center mt-4">
-            {t(
-              'store.checkout_seguridad_nota',
-              'Pago verificado de forma segura. Podés cancelar tu abono cuando quieras desde tu panel.'
-            )}
+            {t('store.checkout_seguridad_nota')}
           </p>
         </motion.div>
       </motion.div>

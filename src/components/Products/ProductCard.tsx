@@ -16,6 +16,7 @@ import {
   WhatsAppLiveIcon,
 } from '@/components/ui/MagnificentIcons'
 import { useTranslation } from 'react-i18next'
+import { ti } from '@/core/i18n/typedT'
 import HudButton from '@/components/HudButton'
 
 type Product = {
@@ -77,20 +78,14 @@ export default function ProductCard({
   const [includeWhatsAppBot, setIncludeWhatsAppBot] = useState(true)
 
   const roi = ROI_BADGES[product.tKey] || {
-    label: t('products.roi_default', 'Máximo Rendimiento'),
+    label: t('products.roi_default'),
     color: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20',
     dotColor: 'bg-cyan-400',
   }
 
-  const stylists = [
-    t('products.widget_pelu_stylist_1', 'Sofía (Estilista)'),
-    t('products.widget_pelu_stylist_2', 'Lucas (Barbero)'),
-  ]
-  const hairService = t('products.widget_pelu_service_name', 'Corte & Peinado')
-  const garmentColors = [
-    t('products.widget_ropa_color_1', 'Negro'),
-    t('products.widget_ropa_color_2', 'Beige'),
-  ]
+  const stylists = [t('products.widget_pelu_stylist_1'), t('products.widget_pelu_stylist_2')]
+  const hairService = t('products.widget_pelu_service_name')
+  const garmentColors = [t('products.widget_ropa_color_1'), t('products.widget_ropa_color_2')]
 
   const match = /(\d+)/.exec(product.price)
   const basePriceNum = match ? Number.parseInt(match[1]!, 10) : 300
@@ -150,33 +145,33 @@ export default function ProductCard({
               <span
                 className={`w-1.5 h-1.5 rounded-full ${roi.dotColor || 'bg-cyan-400'} animate-pulse`}
               />
-              {t(`products.${product.tKey}_roi`, roi.label)}
+              {ti(t, `products.${product.tKey}_roi`, roi.label)}
             </span>
           </div>
 
           {/* Título y Descripción */}
           <div>
             <h3 className="text-xl sm:text-2xl font-semibold mb-2 font-display leading-tight text-foreground group-hover:text-accent-cyan transition-colors duration-300">
-              {t(`products.${product.tKey}_titulo`)}
+              {ti(t, `products.${product.tKey}_titulo`)}
             </h3>
             <p className="text-xs sm:text-sm text-muted-foreground mb-5 sm:mb-6 leading-relaxed">
-              {t(`products.${product.tKey}_desc`)}
+              {ti(t, `products.${product.tKey}_desc`)}
             </p>
 
             {/* INTERACTIVE MICRO-WIDGET ADAPTED PER RUBRO */}
             <div className="mb-5 sm:mb-6 p-3.5 sm:p-4 rounded-xl border border-white/10 bg-card/60 backdrop-blur-md shadow-inner">
               <p className="text-[10px] font-extrabold uppercase tracking-wider text-accent-cyan mb-2 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
-                {t('products.simulador_en_vivo', 'Simulador del Rubro en Vivo')}
+                {t('products.simulador_en_vivo')}
               </p>
 
               {/* Peluquería / Beauty Widget */}
               {product.tKey === 'peluqueria' && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-foreground font-medium">
-                    <span>{t('products.widget_pelu_select', 'Seleccionar Estilista:')}</span>
+                    <span>{t('products.widget_pelu_select')}</span>
                     <span className="text-pink-400 font-bold">
-                      ✨ {t('products.widget_available', 'Disponible')}
+                      ✨ {t('products.widget_available')}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
@@ -200,7 +195,7 @@ export default function ProductCard({
                   </div>
                   <div className="flex justify-between items-center text-[11px] pt-1 text-muted-foreground">
                     <span>
-                      {t('products.widget_pelu_service_label', 'Servicio:')}{' '}
+                      {t('products.widget_pelu_service_label')}{' '}
                       <strong className="text-foreground">{hairService}</strong>
                     </span>
                     <span className="text-pink-400 font-bold font-mono">$4.500 ARS</span>
@@ -212,15 +207,15 @@ export default function ProductCard({
               {product.tKey === 'panaderia' && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-foreground font-medium">
-                    <span>🥖 {t('products.widget_pan_batch', 'Tanda Recién Horneada:')}</span>
+                    <span>🥖 {t('products.widget_pan_batch')}</span>
                     <span className="text-amber-400 font-bold font-mono">
-                      {t('products.widget_pan_ready', '17:30 Hs (Listo)')}
+                      {t('products.widget_pan_ready')}
                     </span>
                   </div>
                   <div className="flex items-center justify-between gap-2 bg-muted/30 p-2 rounded-lg border border-border">
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
                       <Coffee className="w-3.5 h-3.5 text-amber-400" />
-                      {bakeryItems} {t('products.widget_pan_items', 'Facturas / Medialunas')}
+                      {bakeryItems} {t('products.widget_pan_items')}
                     </span>
                     <button
                       type="button"
@@ -231,7 +226,7 @@ export default function ProductCard({
                       className="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-400 text-xs font-bold hover:bg-amber-500/30 transition-colors flex items-center gap-1"
                     >
                       <CyberPlusIcon size={12} className="text-amber-400" />{' '}
-                      {t('products.widget_pan_add', 'Sumar Docena')}
+                      {t('products.widget_pan_add')}
                     </button>
                   </div>
                 </div>
@@ -241,9 +236,9 @@ export default function ProductCard({
               {product.tKey === 'ropa' && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-foreground font-medium">
-                    <span>{t('products.widget_ropa_item', 'Campera Eco-Cuero Urban:')}</span>
+                    <span>{t('products.widget_ropa_item')}</span>
                     <span className="text-emerald-400 font-bold font-mono">
-                      {t('products.widget_ropa_stock', 'Stock: 14 un.')}
+                      {t('products.widget_ropa_stock')}
                     </span>
                   </div>
                   <div className="flex items-center justify-between gap-2">
@@ -293,11 +288,9 @@ export default function ProductCard({
               {product.tKey === 'padel' && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-foreground font-medium">
-                    <span>
-                      {t('products.widget_padel_court', 'Turno Cancha 1 (Sintético Blindex):')}
-                    </span>
+                    <span>{t('products.widget_padel_court')}</span>
                     <span className="text-cyan-400 font-bold">
-                      {t('products.widget_available', 'Disponible')}
+                      {t('products.widget_available')}
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
@@ -332,7 +325,7 @@ export default function ProductCard({
                   className="flex items-start gap-2.5 text-xs text-muted-foreground font-medium"
                 >
                   <CyberCheckMark size={16} className="mt-0.5 shrink-0" />
-                  <span>{t(`products.${product.tKey}_feat_${idx + 1}`)}</span>
+                  <span>{ti(t, `products.${product.tKey}_feat_${idx + 1}`)}</span>
                 </li>
               ))}
             </ul>
@@ -350,16 +343,15 @@ export default function ProductCard({
                   <div className="flex items-center justify-between text-xs font-bold text-accent-cyan">
                     <span className="flex items-center gap-1.5">
                       <CyberCalculatorIcon size={16} className="text-accent-cyan" />{' '}
-                      {t('products.calc_for', 'Cotizador para')}{' '}
-                      {t(`products.${product.tKey}_titulo`)}
+                      {t('products.calc_for')} {ti(t, `products.${product.tKey}_titulo`)}
                     </span>
                     <span>
-                      {t('products.calc_estimated', 'Estimado')}: ${estimatedTotal} USD
+                      {t('products.calc_estimated')}: ${estimatedTotal} USD
                     </span>
                   </div>
                   <div className="space-y-2 text-xs text-foreground">
                     <div className="flex items-center justify-between">
-                      <span>{t('products.calc_branches', 'Sucursales o Puntos de Atención:')}</span>
+                      <span>{t('products.calc_branches')}</span>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
@@ -385,12 +377,7 @@ export default function ProductCard({
                         onChange={(e) => setIncludeWhatsAppBot(e.target.checked)}
                         className="rounded border-border text-accent-cyan focus:ring-accent-cyan"
                       />
-                      <span>
-                        {t(
-                          'products.calc_whatsapp_bot',
-                          'Incluir Notificaciones por WhatsApp automatizadas (+$80 USD)'
-                        )}
-                      </span>
+                      <span>{t('products.calc_whatsapp_bot')}</span>
                     </label>
                   </div>
                   <a
@@ -398,7 +385,7 @@ export default function ProductCard({
                       t('products.calc_wa_msg', {
                         defaultValue:
                           'Hola ExePaginasWeb! Quiero consultar para mi rubro por {{product}} para {{count}} sucursal(es). Presupuesto estimado: ${{total}} USD.',
-                        product: t(`products.${product.tKey}_titulo`),
+                        product: ti(t, `products.${product.tKey}_titulo`),
                         count: sucursales,
                         total: estimatedTotal,
                       })
@@ -408,8 +395,7 @@ export default function ProductCard({
                     className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-extrabold text-xs hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-500/20"
                   >
                     <WhatsAppLiveIcon size={16} />
-                    {t('products.calc_wa_cta', 'Enviar Consulta Directa por WhatsApp')}{' '}
-                    <CyberArrowRight size={14} />
+                    {t('products.calc_wa_cta')} <CyberArrowRight size={14} />
                   </a>
                 </motion.div>
               )}
@@ -432,7 +418,7 @@ export default function ProductCard({
                     setShowCalculator((prev) => !prev)
                   }}
                   className="p-2.5 rounded-xl border border-border bg-card/60 hover:bg-accent-cyan/10 text-muted-foreground hover:text-accent-cyan transition-colors"
-                  title={t('products.calc_btn_title', 'Calcular presupuesto a medida')}
+                  title={t('products.calc_btn_title')}
                 >
                   <CyberCalculatorIcon size={16} />
                 </button>
